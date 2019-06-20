@@ -2,52 +2,58 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC379C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4206AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AC6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABBE20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053648;
-	bh=Rk1LHz/PcXT+5T73VuOJd3OSv+wOezI5GbsdmU5Ndc8=;
+	s=default; t=1561053655;
+	bh=H/Oz7X7/nW3FTr2cRjEkaTcDt1nImZOdKJfO0etYTrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EaeLKdTuVHGNboQsWJnolwOXiSKXVEBnlBEFck+xzDf8lbjyFf+gaZdB2mtlHrLoi
-	 SkhrW5uX+WNdVO5/LWXVctGKXCECi8MhcnBpJhjKn3hCbdWolfjQm0iwU83fhLUE5l
-	 vZLaTSVpQ0JBoZMACvBrN9ZAR4xYGEGk2rNU58VY=
+	b=ufgCk2TbatZXCPbMiTvYnjVYLoonznKLopnbIvXd6ZOXYcRA5viKadykULB3/La2U
+	 UduYtDk3W8MuLMd+DQnpQtgGxpsF6XhN/ks/2zwdibMAE4cCkpI0ZVMua6HXU91W1p
+	 8e6r1TaffZvtusrgKnYThM+kGnf747bGTuTf7aIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfFTSAr (ORCPT
+        id S1727096AbfFTSAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfFTSAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:45 -0400
+        id S1727076AbfFTSAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D10821530;
-        Thu, 20 Jun 2019 18:00:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F26C32084A;
+        Thu, 20 Jun 2019 18:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053644;
-        bh=Rk1LHz/PcXT+5T73VuOJd3OSv+wOezI5GbsdmU5Ndc8=;
+        s=default; t=1561053650;
+        bh=H/Oz7X7/nW3FTr2cRjEkaTcDt1nImZOdKJfO0etYTrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHI+eCRYV6P0EvPjkNvk4x89VM7HqbLBox/FVrlkVZSnyhPvlI49daR7hulse3Ww2
-         kueRpPinnC5lTP6EV3VNKCOST58zuTtznrEFciFdGYcbeA2UZ5vrGl06IpU5hQ0boo
-         GzZl2OcXqlt9U/sEKJxELN73HLNbV+qiDUbpcmoo=
+        b=yKHneP8gkvBNACx8CLRJeaUjr749x8GdQvwBhVt0jnf26Yoh86tpln+sByajr5J0L
+         4/v06JbkHZSLdi3UVeHG2vnbuMf7nsrG13s8WeGY/WSJJeX1NSALW4EpwYbRzPsvMe
+         bk4Okh4kurtEVGDUb9Z1qMnvotS1On/9LTX/ebk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 61/84] USB: serial: option: add support for Simcom SIM7500/SIM7600 RNDIS mode
-Date:   Thu, 20 Jun 2019 19:56:58 +0200
-Message-Id: <20190620174347.906675796@linuxfoundation.org>
+        stable@vger.kernel.org, Phong Hoang <phong.hoang.wz@renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Hoan Nguyen An <na-hoan@jinso.co.jp>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 36/84] pwm: Fix deadlock warning when removing PWM device
+Date:   Thu, 20 Jun 2019 19:56:33 +0200
+Message-Id: <20190620174343.531074876@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,48 +66,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+[ Upstream commit 347ab9480313737c0f1aaa08e8f2e1a791235535 ]
 
-commit 5417a7e482962952e622eabd60cd3600dd65dedf upstream.
+This patch fixes deadlock warning if removing PWM device
+when CONFIG_PROVE_LOCKING is enabled.
 
-Added IDs for Simcom SIM7500/SIM7600 series cellular module in RNDIS
-mode. Reserved the interface for ADB.
+This issue can be reproceduced by the following steps on
+the R-Car H3 Salvator-X board if the backlight is disabled:
 
-T:  Bus=03 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  7 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1e0e ProdID=9011 Rev=03.18
-S:  Manufacturer=SimTech, Incorporated
-S:  Product=SimTech, Incorporated
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 8 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=02 Prot=ff Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x6 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x7 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+ # cd /sys/class/pwm/pwmchip0
+ # echo 0 > export
+ # ls
+ device  export  npwm  power  pwm0  subsystem  uevent  unexport
+ # cd device/driver
+ # ls
+ bind  e6e31000.pwm  uevent  unbind
+ # echo e6e31000.pwm > unbind
 
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[   87.659974] ======================================================
+[   87.666149] WARNING: possible circular locking dependency detected
+[   87.672327] 5.0.0 #7 Not tainted
+[   87.675549] ------------------------------------------------------
+[   87.681723] bash/2986 is trying to acquire lock:
+[   87.686337] 000000005ea0e178 (kn->count#58){++++}, at: kernfs_remove_by_name_ns+0x50/0xa0
+[   87.694528]
+[   87.694528] but task is already holding lock:
+[   87.700353] 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
+[   87.707405]
+[   87.707405] which lock already depends on the new lock.
+[   87.707405]
+[   87.715574]
+[   87.715574] the existing dependency chain (in reverse order) is:
+[   87.723048]
+[   87.723048] -> #1 (pwm_lock){+.+.}:
+[   87.728017]        __mutex_lock+0x70/0x7e4
+[   87.732108]        mutex_lock_nested+0x1c/0x24
+[   87.736547]        pwm_request_from_chip.part.6+0x34/0x74
+[   87.741940]        pwm_request_from_chip+0x20/0x40
+[   87.746725]        export_store+0x6c/0x1f4
+[   87.750820]        dev_attr_store+0x18/0x28
+[   87.754998]        sysfs_kf_write+0x54/0x64
+[   87.759175]        kernfs_fop_write+0xe4/0x1e8
+[   87.763615]        __vfs_write+0x40/0x184
+[   87.767619]        vfs_write+0xa8/0x19c
+[   87.771448]        ksys_write+0x58/0xbc
+[   87.775278]        __arm64_sys_write+0x18/0x20
+[   87.779721]        el0_svc_common+0xd0/0x124
+[   87.783986]        el0_svc_compat_handler+0x1c/0x24
+[   87.788858]        el0_svc_compat+0x8/0x18
+[   87.792947]
+[   87.792947] -> #0 (kn->count#58){++++}:
+[   87.798260]        lock_acquire+0xc4/0x22c
+[   87.802353]        __kernfs_remove+0x258/0x2c4
+[   87.806790]        kernfs_remove_by_name_ns+0x50/0xa0
+[   87.811836]        remove_files.isra.1+0x38/0x78
+[   87.816447]        sysfs_remove_group+0x48/0x98
+[   87.820971]        sysfs_remove_groups+0x34/0x4c
+[   87.825583]        device_remove_attrs+0x6c/0x7c
+[   87.830197]        device_del+0x11c/0x33c
+[   87.834201]        device_unregister+0x14/0x2c
+[   87.838638]        pwmchip_sysfs_unexport+0x40/0x4c
+[   87.843509]        pwmchip_remove+0xf4/0x13c
+[   87.847773]        rcar_pwm_remove+0x28/0x34
+[   87.852039]        platform_drv_remove+0x24/0x64
+[   87.856651]        device_release_driver_internal+0x18c/0x21c
+[   87.862391]        device_release_driver+0x14/0x1c
+[   87.867175]        unbind_store+0xe0/0x124
+[   87.871265]        drv_attr_store+0x20/0x30
+[   87.875442]        sysfs_kf_write+0x54/0x64
+[   87.879618]        kernfs_fop_write+0xe4/0x1e8
+[   87.884055]        __vfs_write+0x40/0x184
+[   87.888057]        vfs_write+0xa8/0x19c
+[   87.891887]        ksys_write+0x58/0xbc
+[   87.895716]        __arm64_sys_write+0x18/0x20
+[   87.900154]        el0_svc_common+0xd0/0x124
+[   87.904417]        el0_svc_compat_handler+0x1c/0x24
+[   87.909289]        el0_svc_compat+0x8/0x18
+[   87.913378]
+[   87.913378] other info that might help us debug this:
+[   87.913378]
+[   87.921374]  Possible unsafe locking scenario:
+[   87.921374]
+[   87.927286]        CPU0                    CPU1
+[   87.931808]        ----                    ----
+[   87.936331]   lock(pwm_lock);
+[   87.939293]                                lock(kn->count#58);
+[   87.945120]                                lock(pwm_lock);
+[   87.950599]   lock(kn->count#58);
+[   87.953908]
+[   87.953908]  *** DEADLOCK ***
+[   87.953908]
+[   87.959821] 4 locks held by bash/2986:
+[   87.963563]  #0: 00000000ace7bc30 (sb_writers#6){.+.+}, at: vfs_write+0x188/0x19c
+[   87.971044]  #1: 00000000287991b2 (&of->mutex){+.+.}, at: kernfs_fop_write+0xb4/0x1e8
+[   87.978872]  #2: 00000000f739d016 (&dev->mutex){....}, at: device_release_driver_internal+0x40/0x21c
+[   87.988001]  #3: 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
+[   87.995481]
+[   87.995481] stack backtrace:
+[   87.999836] CPU: 0 PID: 2986 Comm: bash Not tainted 5.0.0 #7
+[   88.005489] Hardware name: Renesas Salvator-X board based on r8a7795 ES1.x (DT)
+[   88.012791] Call trace:
+[   88.015235]  dump_backtrace+0x0/0x190
+[   88.018891]  show_stack+0x14/0x1c
+[   88.022204]  dump_stack+0xb0/0xec
+[   88.025514]  print_circular_bug.isra.32+0x1d0/0x2e0
+[   88.030385]  __lock_acquire+0x1318/0x1864
+[   88.034388]  lock_acquire+0xc4/0x22c
+[   88.037958]  __kernfs_remove+0x258/0x2c4
+[   88.041874]  kernfs_remove_by_name_ns+0x50/0xa0
+[   88.046398]  remove_files.isra.1+0x38/0x78
+[   88.050487]  sysfs_remove_group+0x48/0x98
+[   88.054490]  sysfs_remove_groups+0x34/0x4c
+[   88.058580]  device_remove_attrs+0x6c/0x7c
+[   88.062671]  device_del+0x11c/0x33c
+[   88.066154]  device_unregister+0x14/0x2c
+[   88.070070]  pwmchip_sysfs_unexport+0x40/0x4c
+[   88.074421]  pwmchip_remove+0xf4/0x13c
+[   88.078163]  rcar_pwm_remove+0x28/0x34
+[   88.081906]  platform_drv_remove+0x24/0x64
+[   88.085996]  device_release_driver_internal+0x18c/0x21c
+[   88.091215]  device_release_driver+0x14/0x1c
+[   88.095478]  unbind_store+0xe0/0x124
+[   88.099048]  drv_attr_store+0x20/0x30
+[   88.102704]  sysfs_kf_write+0x54/0x64
+[   88.106359]  kernfs_fop_write+0xe4/0x1e8
+[   88.110275]  __vfs_write+0x40/0x184
+[   88.113757]  vfs_write+0xa8/0x19c
+[   88.117065]  ksys_write+0x58/0xbc
+[   88.120374]  __arm64_sys_write+0x18/0x20
+[   88.124291]  el0_svc_common+0xd0/0x124
+[   88.128034]  el0_svc_compat_handler+0x1c/0x24
+[   88.132384]  el0_svc_compat+0x8/0x18
 
+The sysfs unexport in pwmchip_remove() is completely asymmetric
+to what we do in pwmchip_add_with_polarity() and commit 0733424c9ba9
+("pwm: Unexport children before chip removal") is a strong indication
+that this was wrong to begin with. We should just move
+pwmchip_sysfs_unexport() where it belongs, which is right after
+pwmchip_sysfs_unexport_children(). In that case, we do not need
+separate functions anymore either.
+
+We also really want to remove sysfs irrespective of whether or not
+the chip will be removed as a result of pwmchip_remove(). We can only
+assume that the driver will be gone after that, so we shouldn't leave
+any dangling sysfs files around.
+
+This warning disappears if we move pwmchip_sysfs_unexport() to
+the top of pwmchip_remove(), pwmchip_sysfs_unexport_children().
+That way it is also outside of the pwm_lock section, which indeed
+doesn't seem to be needed.
+
+Moving the pwmchip_sysfs_export() call outside of that section also
+seems fine and it'd be perfectly symmetric with pwmchip_remove() again.
+
+So, this patch fixes them.
+
+Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
+[shimoda: revise the commit log and code]
+Fixes: 76abbdde2d95 ("pwm: Add sysfs interface")
+Fixes: 0733424c9ba9 ("pwm: Unexport children before chip removal")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pwm/core.c  | 10 +++++-----
+ drivers/pwm/sysfs.c | 14 +-------------
+ include/linux/pwm.h |  5 -----
+ 3 files changed, 6 insertions(+), 23 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1767,6 +1767,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE(ALINK_VENDOR_ID, SIMCOM_PRODUCT_SIM7100E),
- 	  .driver_info = RSVD(5) | RSVD(6) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9003, 0xff) },	/* Simcom SIM7500/SIM7600 MBIM mode */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9011, 0xff),	/* Simcom SIM7500/SIM7600 RNDIS mode */
-+	  .driver_info = RSVD(7) },
- 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X060S_X200),
- 	  .driver_info = NCTRL(0) | NCTRL(1) | RSVD(4) },
- 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X220_X500D),
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index ec84ff8ad1b4..6911f9662300 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -284,10 +284,12 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
+ 	if (IS_ENABLED(CONFIG_OF))
+ 		of_pwmchip_add(chip);
+ 
+-	pwmchip_sysfs_export(chip);
+-
+ out:
+ 	mutex_unlock(&pwm_lock);
++
++	if (!ret)
++		pwmchip_sysfs_export(chip);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_add_with_polarity);
+@@ -321,7 +323,7 @@ int pwmchip_remove(struct pwm_chip *chip)
+ 	unsigned int i;
+ 	int ret = 0;
+ 
+-	pwmchip_sysfs_unexport_children(chip);
++	pwmchip_sysfs_unexport(chip);
+ 
+ 	mutex_lock(&pwm_lock);
+ 
+@@ -341,8 +343,6 @@ int pwmchip_remove(struct pwm_chip *chip)
+ 
+ 	free_pwms(chip);
+ 
+-	pwmchip_sysfs_unexport(chip);
+-
+ out:
+ 	mutex_unlock(&pwm_lock);
+ 	return ret;
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 375008e2be20..199370e41da9 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -338,19 +338,6 @@ void pwmchip_sysfs_export(struct pwm_chip *chip)
+ }
+ 
+ void pwmchip_sysfs_unexport(struct pwm_chip *chip)
+-{
+-	struct device *parent;
+-
+-	parent = class_find_device(&pwm_class, NULL, chip,
+-				   pwmchip_sysfs_match);
+-	if (parent) {
+-		/* for class_find_device() */
+-		put_device(parent);
+-		device_unregister(parent);
+-	}
+-}
+-
+-void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+ {
+ 	struct device *parent;
+ 	unsigned int i;
+@@ -368,6 +355,7 @@ void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+ 	}
+ 
+ 	put_device(parent);
++	device_unregister(parent);
+ }
+ 
+ static int __init pwm_sysfs_init(void)
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index aa8736d5b2f3..cfc3ed46cad2 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -331,7 +331,6 @@ static inline void pwm_remove_table(struct pwm_lookup *table, size_t num)
+ #ifdef CONFIG_PWM_SYSFS
+ void pwmchip_sysfs_export(struct pwm_chip *chip);
+ void pwmchip_sysfs_unexport(struct pwm_chip *chip);
+-void pwmchip_sysfs_unexport_children(struct pwm_chip *chip);
+ #else
+ static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
+ {
+@@ -340,10 +339,6 @@ static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
+ static inline void pwmchip_sysfs_unexport(struct pwm_chip *chip)
+ {
+ }
+-
+-static inline void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+-{
+-}
+ #endif /* CONFIG_PWM_SYSFS */
+ 
+ #endif /* __LINUX_PWM_H */
+-- 
+2.20.1
+
 
 
