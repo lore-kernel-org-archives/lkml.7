@@ -2,89 +2,218 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3ADC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30A12080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561033064;
-	bh=4HHw+Qp9H8V6fIHDzF9H81gSOxHTNJsMIKqmfY8FN5U=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ie116C58WDWmctC0dDA98lA4WfQMj+4YbL93Cc9YuIEltsJ9IUjBK8A9aXzcSN44Y
-	 tD13yqEo0vslo77H8Zh8taxCD0HqH3xnmeSTZv/nCQniEl+LihoHCuiUAewKYZIHJq
-	 61tkxOEmXZTL4gQGWf8tsJ663AKCy+m6+pR9nAwc=
+	by mail.kernel.org (Postfix) with ESMTP id A37FA2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbfFTMRm (ORCPT
+        id S1731817AbfFTMSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730886AbfFTMRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:17:42 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C4732080C;
-        Thu, 20 Jun 2019 12:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561033061;
-        bh=4HHw+Qp9H8V6fIHDzF9H81gSOxHTNJsMIKqmfY8FN5U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=wWnIlZri2kxT/nVZV5on/30xs5MxQPQKduIZbSz+ZVepm9GPxHfB+ByXIoEp7twuA
-         Gw0iqjZ7/1r7svIJ4PFNskjJDTa5Lm6YrYpyGIkGZF3BrHbnef7COwAnqg2u0rPkPV
-         S13vc9/seZPKRGMkLHjOKNGZQV8GXBjy20WLrZDI=
-Date:   Thu, 20 Jun 2019 21:17:37 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: No invalid histogram error
-Message-Id: <20190620211737.993b09619af1fc58222549b4@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Jun 2019 08:18:44 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35271 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFTMSn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:18:43 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so2829679wrv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:18:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4Enp7W0ESdkTTd9HBh/ANelF/DbInTnKEbgmPM5TYt4=;
+        b=N82snS5sF9zuxOyEHFkfP5+elME+K3z0rlNSkLzkY7x4jXpQ1RtTuWiUsZuVBrOWC7
+         uf7O924YQQduIEcmGvkJ3GzSCz+IBjxGjYFAA7kXSz0rpZMjC+0hGWRTggsE0OfWseIX
+         +at9v9oRYgbwbyR9qwmQqjSPsp6KiTlFtctJO6rp2i6dF6S9a2d1SB9ZG19FKuy3O57h
+         wd0hRGwx65N3m73sd8n0FPI4eeSyttIUYD///Z1DhnvEGJQukPpAhpQI8+rYRBN5Ezg8
+         6EkGA7WZj6sQ22kUH+Kh3hgcuYCEEIqnuUy0lWm1yz3SBRfFpav0H4Eoz5TIkvF5IUYD
+         FIwA==
+X-Gm-Message-State: APjAAAXmfClTKDJLyJvzF59FtSShtBBaWeMMGHigd+xgnd78fw7x5gTi
+        Vzc8GqA1KiLikOCQtxahFwCxzQ==
+X-Google-Smtp-Source: APXvYqw0a0Atzq/xJ79+F6gAc8zeGL5JH3frFK3lbZdQKk6lxNUQWMXbkclgr9eyYNAX/Q6pZQKdcA==
+X-Received: by 2002:adf:eacd:: with SMTP id o13mr19533546wrn.91.1561033120821;
+        Thu, 20 Jun 2019 05:18:40 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id r5sm30834313wrg.10.2019.06.20.05.18.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 05:18:40 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Aaron Lewis <aaronlewis@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: reorganize initial steps of vmx_set_nested_state
+In-Reply-To: <1560959396-13969-1-git-send-email-pbonzini@redhat.com>
+References: <1560959396-13969-1-git-send-email-pbonzini@redhat.com>
+Date:   Thu, 20 Jun 2019 14:18:39 +0200
+Message-ID: <87zhmcfo0w.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-I'm trying to use histogram on a synthetic event, but faced an odd situation.
+> Commit 332d079735f5 ("KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS
+> state before setting new state", 2019-05-02) broke evmcs_test because the
+> eVMCS setup must be performed even if there is no VMXON region defined,
+> as long as the eVMCS bit is set in the assist page.
+>
+> While the simplest possible fix would be to add a check on
+> kvm_state->flags & KVM_STATE_NESTED_EVMCS in the initial "if" that
+> covers kvm_state->hdr.vmx.vmxon_pa == -1ull, that is quite ugly.
+>
+> Instead, this patch moves checks earlier in the function and
+> conditionalizes them on kvm_state->hdr.vmx.vmxon_pa, so that
+> vmx_set_nested_state always goes through vmx_leave_nested
+> and nested_enable_evmcs.
+>
+> Fixes: 332d079735f5
 
-There is a synthetic event, which has foo and bar.
+checkpatch.pl will likely complain here asking for full description, e.g.
 
-/sys/kernel/debug/tracing # cat synthetic_events 
-testevent	int foo; int bar
+Fixes: 332d079735f5 ("KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS state before setting new state")
 
-And when I tried to add hist on trigger, both foo and bar can be used as below.
+There's also something wrong with the patch as it fails to apply because
+of (not only?) whitespace issues or maybe I'm just applying it to the
+wrong tree...
 
-/sys/kernel/debug/tracing # echo "hist:keys=bar" > events/synthetic/testevent/trigger 
-/sys/kernel/debug/tracing # echo "hist:keys=foo" > events/synthetic/testevent/trigger 
+> Cc: Aaron Lewis <aaronlewis@google.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-And, when I missed to specify the sort key, it failed
+Enlightened VMCS migration is just a 'theoretical' feature atm, we don't
+know if it actually works but it's good we have a selftest for it so we
+know when it definitely doesn't :-)
 
-/sys/kernel/debug/tracing # echo "hist:keys=foo:sort=bar" > events/synthetic/testevent/trigger 
-sh: write error: Invalid argument
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-But no error on error_log file.
-
-/sys/kernel/debug/tracing # cat error_log 
-/sys/kernel/debug/tracing #
-
-Could you add some error message? What about below?
-
-[ 5422.134656] hist:synthetic:testevent: error: Sort key must be one of keys.
-  Command: keys=foo;sort=bar
-                               ^
-
-Thank you,
-
+> ---
+>  arch/x86/kvm/vmx/nested.c                          | 26 ++++++++++--------
+>  .../kvm/x86_64/vmx_set_nested_state_test.c         | 32 ++++++++++++++--------
+>  2 files changed, 35 insertions(+), 23 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index fb6d1f7b43f3..5f9c1a200201 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5343,9 +5343,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>  	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_VMX)
+>  		return -EINVAL;
+>  
+> -	if (!nested_vmx_allowed(vcpu))
+> -		return kvm_state->hdr.vmx.vmxon_pa == -1ull ? 0 : -EINVAL;
+> -
+>  	if (kvm_state->hdr.vmx.vmxon_pa == -1ull) {
+>  		if (kvm_state->hdr.vmx.smm.flags)
+>  			return -EINVAL;
+> @@ -5353,12 +5350,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>  		if (kvm_state->hdr.vmx.vmcs12_pa != -1ull)
+>  			return -EINVAL;
+>  
+> -		vmx_leave_nested(vcpu);
+> -		return 0;
+> -	}
+> +		if (kvm_state->flags & ~KVM_STATE_NESTED_EVMCS)
+> +			return -EINVAL;
+> +	} else {
+> +		if (!nested_vmx_allowed(vcpu))
+> +			return -EINVAL;
+>  
+> -	if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
+> -		return -EINVAL;
+> +		if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
+> +			return -EINVAL;
+> +    	}
+>  
+>  	if ((kvm_state->hdr.vmx.smm.flags & KVM_STATE_NESTED_SMM_GUEST_MODE) &&
+>  	    (kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+> @@ -5381,11 +5381,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>  		return -EINVAL;
+>  
+>  	vmx_leave_nested(vcpu);
+> -	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
+> -		return 0;
+> +	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS) {
+> +		if (!nested_vmx_allowed(vcpu))
+> +			return -EINVAL;
+>  
+> -	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS)
+>  		nested_enable_evmcs(vcpu, NULL);
+> +	}
+> +
+> +	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
+> +		return 0;
+>  
+>  	vmx->nested.vmxon_ptr = kvm_state->hdr.vmx.vmxon_pa;
+>  	ret = enter_vmx_operation(vcpu);
+> diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> index 0648fe6df5a8..e64ca20b315a 100644
+> --- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> @@ -123,36 +123,44 @@ void test_vmx_nested_state(struct kvm_vm *vm)
+>  	/*
+>  	 * We cannot virtualize anything if the guest does not have VMX
+>  	 * enabled.  We expect KVM_SET_NESTED_STATE to return 0 if vmxon_pa
+> -	 * is set to -1ull.
+> +	 * is set to -1ull, but the flags must be zero.
+>  	 */
+>  	set_default_vmx_state(state, state_sz);
+>  	state->hdr.vmx.vmxon_pa = -1ull;
+> +	test_nested_state_expect_einval(vm, state);
+> +
+> +	state->hdr.vmx.vmcs12_pa = -1ull;
+> +	state->flags = KVM_STATE_NESTED_EVMCS;
+> +	test_nested_state_expect_einval(vm, state);
+> +
+> +	state->flags = 0;
+>  	test_nested_state(vm, state);
+>  
+>  	/* Enable VMX in the guest CPUID. */
+>  	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+>  
+> -	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
+> +	/*
+> +	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
+> +	 * setting the nested state but flags other than eVMCS must be clear.
+> +	 */
+>  	set_default_vmx_state(state, state_sz);
+>  	state->hdr.vmx.vmxon_pa = -1ull;
+> +	state->hdr.vmx.vmcs12_pa = -1ull;
+> +	test_nested_state_expect_einval(vm, state);
+> +
+> +	state->flags = KVM_STATE_NESTED_EVMCS;
+> +	test_nested_state(vm, state);
+> +
+> +	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
+>  	state->hdr.vmx.smm.flags = 1;
+>  	test_nested_state_expect_einval(vm, state);
+>  
+>  	/* It is invalid to have vmxon_pa == -1ull and vmcs_pa != -1ull. */
+>  	set_default_vmx_state(state, state_sz);
+>  	state->hdr.vmx.vmxon_pa = -1ull;
+> -	state->hdr.vmx.vmcs12_pa = 0;
+> +	state->flags = 0;
+>  	test_nested_state_expect_einval(vm, state);
+>  
+> -	/*
+> -	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
+> -	 * setting the nested state.
+> -	 */
+> -	set_default_vmx_state(state, state_sz);
+> -	state->hdr.vmx.vmxon_pa = -1ull;
+> -	state->hdr.vmx.vmcs12_pa = -1ull;
+> -	test_nested_state(vm, state);
+> -
+>  	/* It is invalid to have vmxon_pa set to a non-page aligned address. */
+>  	set_default_vmx_state(state, state_sz);
+>  	state->hdr.vmx.vmxon_pa = 1;
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Vitaly
