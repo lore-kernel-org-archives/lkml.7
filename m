@@ -2,85 +2,123 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D13C4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF110C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C225E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q8dvbg7Y"
+	by mail.kernel.org (Postfix) with ESMTP id 870EA2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731943AbfFTPtR (ORCPT
+        id S1731980AbfFTPuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:49:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44070 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTPtR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:49:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DEHl/heRoFE3pmtAOs3jRbe+EMJIxlq4+fAPJDAKNqA=; b=Q8dvbg7Y3KEguFux87Tlx8c4nI
-        TzRU0UFrSH0P5s98Ir4S7dS3oFK63/wyKX/EX9awC86Z4Lp/RmiDXdS/rWlSXwuz8FpMlJqT97jzE
-        8BgOhI3ManVmb4M15/4DF851rnD+ujzuR7FcZVkUKPU4StnexKlSXhp3F7yX9fifgd9BHu9mgc/l9
-        Rm8jaiQ+3L1+e4ExkTlf0yQ8G8NiOS9o537wp1iWcdguBUqtBW1oUSLtGWdPNvKqMmHIcOMG/h1Me
-        jU/P1a3P6/0bgnpPWPJGSXH3yUdmgSVkoc+q+jL0vmermx/de1lRLpX4Fny6RGoDoaYx/WOfOHylU
-        v94QgEpQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdzJ5-0000MQ-Ia; Thu, 20 Jun 2019 15:48:59 +0000
-Subject: Re: mmotm 2019-06-19-20-32 uploaded (drivers/base/memory.c)
-To:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        David Hildenbrand <david@redhat.com>
-References: <20190620033253.hao9i0PFT%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bbc205e3-f947-ad46-6b62-afb72af7791e@infradead.org>
-Date:   Thu, 20 Jun 2019 08:48:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 11:50:22 -0400
+Received: from mail.us.es ([193.147.175.20]:50910 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbfFTPuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:50:21 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id AC9CFC1B39
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 17:50:19 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 9B241DA707
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 17:50:19 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 90A97DA705; Thu, 20 Jun 2019 17:50:19 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 4D70EDA702;
+        Thu, 20 Jun 2019 17:50:17 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Thu, 20 Jun 2019 17:50:17 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 253FB4265A2F;
+        Thu, 20 Jun 2019 17:50:17 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 17:50:16 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
+        coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] netfilter: ipv6: Fix build error without
+ CONFIG_IPV6
+Message-ID: <20190620155016.6kk7xi4wldm5ijyh@salvia>
+References: <20190612084715.21656-1-yuehaibing@huawei.com>
+ <d2eba9e4-34be-f9bb-f0fd-024fe81d2b02@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620033253.hao9i0PFT%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2eba9e4-34be-f9bb-f0fd-024fe81d2b02@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 8:32 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2019-06-19-20-32 has been uploaded to
+On Thu, Jun 20, 2019 at 11:26:01PM +0800, Yuehaibing wrote:
+> Friendly ping...
 > 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
+> On 2019/6/12 16:47, YueHaibing wrote:
+> > If CONFIG_IPV6 is not set, building fails:
+> > 
+> > net/bridge/netfilter/nf_conntrack_bridge.o: In function `nf_ct_bridge_pre':
+> > nf_conntrack_bridge.c:(.text+0x41c): undefined symbol `nf_ct_frag6_gather'
+> > net/bridge/netfilter/nf_conntrack_bridge.o: In function `nf_ct_bridge_post':
+> > nf_conntrack_bridge.c:(.text+0x820): undefined symbol `br_ip6_fragment'
 
-on i386 or x86_64:
+Is this one enough to fix this problem?
 
-../drivers/base/memory.c: In function 'find_memory_block':
-../drivers/base/memory.c:621:43: error: 'hint' undeclared (first use in this function); did you mean 'uint'?
-  return find_memory_block_by_id(block_id, hint);
-                                           ^~~~
+https://git.kernel.org/pub/scm/linux/kernel/git/pablo/nf-next.git/commit/?id=16e6427c88c5b7e7b6612f6c286d5f71d659e5be
 
+Thanks.
 
--- 
-~Randy
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Fixes: c9bb6165a16e ("netfilter: nf_conntrack_bridge: fix CONFIG_IPV6=y")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  include/linux/netfilter_ipv6.h | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+> > index 3a3dc4b..0e1febc 100644
+> > --- a/include/linux/netfilter_ipv6.h
+> > +++ b/include/linux/netfilter_ipv6.h
+> > @@ -108,8 +108,11 @@ static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
+> >  		return 1;
+> >  
+> >  	return v6_ops->br_defrag(net, skb, user);
+> > -#else
+> > +#endif
+> > +#if IS_BUILTIN(CONFIG_IPV6)
+> >  	return nf_ct_frag6_gather(net, skb, user);
+> > +#else
+> > +	return 1;
+> >  #endif
+> >  }
+> >  
+> > @@ -133,8 +136,11 @@ static inline int nf_br_ip6_fragment(struct net *net, struct sock *sk,
+> >  		return 1;
+> >  
+> >  	return v6_ops->br_fragment(net, sk, skb, data, output);
+> > -#else
+> > +#endif
+> > +#if IS_BUILTIN(CONFIG_IPV6)
+> >  	return br_ip6_fragment(net, sk, skb, data, output);
+> > +#else
+> > +	return 1;
+> >  #endif
+> >  }
+> >  
+> > 
+> 
