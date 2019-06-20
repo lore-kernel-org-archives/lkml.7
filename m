@@ -2,101 +2,139 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C755BC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC221C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B20B206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56F320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VDxqVuUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732094AbfFTPJq (ORCPT
+        id S1731678AbfFTPL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:09:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54938 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfFTPJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:09:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:09:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="186834808"
-Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.255.31.204]) ([10.255.31.204])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Jun 2019 08:09:42 -0700
-Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
-References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
- <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
- <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
-From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
-Message-ID: <384bc07d-6105-d380-cd44-4518870c15f1@linux.intel.com>
-Date:   Thu, 20 Jun 2019 23:09:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 11:11:56 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:4574 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726512AbfFTPLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:11:55 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KFAHuE008756;
+        Thu, 20 Jun 2019 10:11:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=ln7dkvArTMvPCZI/teQNxY7fYIBJQ2+O3y36iVfwwhU=;
+ b=VDxqVuUIdo+iIzaT7zCSpDT1zuA5PDq2PIx/jYFvgU19t+niTOfjmfGHzGUwW1eriSQ2
+ 6zPpE9ckHy7HugMHyoKWUU2QrIPjly1amfQDc6uKeMQSz4UMcYJ1RjPhWl6hKtuMzozF
+ QfHGQp9ac8zUrzpRnM5Ymer+SlWEwXdFDH0wENa4pfW22BEoxqo+r/qNZbzvEXvJ6itt
+ e7OBgTUp4nkjqtdnslbL1hN61LlfBzfA7ySEjOf4OZlZ0LKFCdydh4PZPZD9wC5tZX0z
+ DUcjgSyVeAnDxJeGXazZc+Bl0B9MGkytFrrdapOY1ytMj40U0TEKyN5EcI8LULkyLlGo 3A== 
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t780ctnwk-1;
+        Thu, 20 Jun 2019 10:11:17 -0500
+Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
+        by mail3.cirrus.com (Postfix) with ESMTP id 4773E615D9D0;
+        Thu, 20 Jun 2019 10:12:03 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 20 Jun
+ 2019 16:11:15 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 20 Jun 2019 16:11:15 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D9A9944;
+        Thu, 20 Jun 2019 16:11:15 +0100 (BST)
+Date:   Thu, 20 Jun 2019 16:11:15 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>,
+        <jarkko.nikula@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v5 2/7] i2c: acpi: Use available IRQ helper functions
+Message-ID: <20190620151115.GA54126@ediswmail.ad.cirrus.com>
+References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
+ <20190620133420.4632-3-ckeepax@opensource.cirrus.com>
+ <20190620145221.GC9224@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190620145221.GC9224@smile.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906200111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-
-On 6/20/2019 8:16 PM, Paolo Bonzini wrote:
-> On 20/06/19 13:21, Jing Liu wrote:
->> +		for (i = 1; i <= times; i++) {
->> +			if (*nent >= maxnent)
->> +				goto out;
->> +			do_cpuid_1_ent(&entry[i], function, i);
->> +			entry[i].eax &= F(AVX512_BF16);
->> +			entry[i].ebx = 0;
->> +			entry[i].ecx = 0;
->> +			entry[i].edx = 0;
->> +			entry[i].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
->> +			++*nent;
+On Thu, Jun 20, 2019 at 05:52:21PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 20, 2019 at 02:34:15PM +0100, Charles Keepax wrote:
+> > Use the available IRQ helper functions, most of the functions have
+> > additional helpful side affects like configuring the trigger type of the
+> > IRQ.
+> > 
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 > 
-> This woud be wrong for i > 1, so instead make this
+> Some last minute observations / questions.
 > 
-> 	if (entry->eax >= 1)
+> > +	struct resource r;
+> > +
+> > +	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
+> > +		*irq = i2c_dev_irq_from_resources(&r, 1);
+> > +
+> > +	return 1; /* No need to add resource to the list */
+> 
+> If we don't add it to the list, do we still need to manage the empty
+> resource_list below?
 > 
 
-I am confused about the @index parameter. @index seems not used for
-every case except 0x07. Since the caller function only has @index=0, so
-all other cases except 0x07 put cpuid info from subleaf=0 to max subleaf.
+I think you are right looking closely I think we can skip this. I
+might update the comment here to make it clear the list needs
+freed if this is changed though.
 
-What do you think about @index in current function? Does it mean, we
-need put cpuid from index to max subleaf to @entry[i]? If so, the logic
-seems as follows,
-
-if (index == 0) {
-     // Put subleaf 0 into @entry
-     // Put subleaf 1 into @entry[1]
-} else if (index < entry->eax) {
-     // Put subleaf 1 into @entry
-} else {
-     // Put all zero into @entry
-}
-
-But this seems not identical with other cases, for current caller
-function. Or we can simply ignore @index in 0x07 and just put all possible
-subleaf info back?
-
-> and define F(AVX512_BF16) as a new constant kvm_cpuid_7_1_eax_features.
+> >  	/* Then fill IRQ number if any */
+> >  	INIT_LIST_HEAD(&resource_list);
+> > -	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+> > +	ret = acpi_dev_get_resources(adev, &resource_list,
+> > +				     i2c_acpi_add_resource, &irq);
+> >  	if (ret < 0)
+> >  		return -EINVAL;
+> >  
+> > -	resource_list_for_each_entry(entry, &resource_list) {
+> > -		if (resource_type(entry->res) == IORESOURCE_IRQ) {
+> > -			info->irq = entry->res->start;
+> > -			break;
+> > -		}
+> > -	}
 > 
-Got it.
+> > +	if (irq > 0)
+> > +		info->irq = irq;
+> 
+> Hmm... can't we just assign it directly inside the _add_resource() call back as
+> original code did?
+> 
 
+Again I think you are correct here, my thinking had been to
+preserve the original functionality of only overwriting the value
+in info->irq if we found one. But it looks like all callers don't
+pass anything meaningful in this field so changing that behaviour
+shouldn't matter.
 
 Thanks,
-Jing
-
-> Paolo
-> 
+Charles
