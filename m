@@ -2,245 +2,185 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893BFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E25C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548B82080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mh/lj1sl"
+	by mail.kernel.org (Postfix) with ESMTP id 881422083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbfFTJp4 (ORCPT
+        id S1730487AbfFTJvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:45:56 -0400
-Received: from mout.web.de ([212.227.17.12]:53955 "EHLO mout.web.de"
+        Thu, 20 Jun 2019 05:51:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54789 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfFTJpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:45:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561023944;
-        bh=FfGf44qHU3BH2AwzhdjXWKQdu8i+SnZZ4/bXILyBf5Y=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=mh/lj1sl1TvZzKv4U32A4ZOw9THZMtJmyCHQNlS4Xb1bnSbAn7aC69HXnvSlYXk1M
-         v7KYJ39B56LHD2H8SONjshS/ZYQNjDtwIw3bSYFuyf1fYY3QS3FBTXm8JFm10hpENf
-         WWrIfB9mtjg3CPz+kSTs5yAlAk3LSGCPbN1YjUwE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from lab-pc08.sra.uni-hannover.de ([130.75.33.87]) by smtp.web.de
- (mrweb102 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0Lo0ZA-1iFQFU1AQi-00fxuz; Thu, 20 Jun 2019 11:45:44 +0200
-From:   =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
-To:     gregkh@linuxfoundation.org
-Cc:     johnfwhitmore@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        felix.trommer@hotmail.de,
-        =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
-Subject: [PATCH 1/1] drivers/staging/rtl8129u: adjust block comments
-Date:   Thu, 20 Jun 2019 11:45:34 +0200
-Message-Id: <20190620094534.5658-2-muellerch-privat@web.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190620094534.5658-1-muellerch-privat@web.de>
-References: <20190620094534.5658-1-muellerch-privat@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+Aun4IcBIEiZXEOeJrPLIWmsjP92Wgc8SynPzkQCeY0uw//XjUf
- 7rnarpX8nue/WR/ps9gjRJ6/gynNGqmseiWOGTIFvftMX5qdd6vwlasOcxhGNYMv29Av4A3
- zFS5h01DlhFL8S5FFv+5NbEYLjiL+p4EkGPNIAJzdEKWI2XoSfxdrM4o2Fie+Dr6PKdfGBq
- qqYQAVvmkpAwBtoftxeQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:r9IqM3e2VM8=:520iQFl3zMf7H2fDf5Ibte
- mxSM9stKNs+YtUbhAWHUNmOI+kS1bnCDhnFURD0xVeaBieR0LbGITzh1+AFoG0hTmL/VhCXkc
- 2r/kf7KpqO7NXGC3bCuQ9ztWw9CJN3EERvrAgu4chIweDyGW21zJbn6Bj6j17MYWdA2mVfc4e
- EuA8V9LMpw7ZtjCHxYvr2ez1WsgDtKtuY5MAvyZvzLmMqobCHLg9zGtoHgyT5ICZX9/kNZg/A
- ay2tw9L6Q4jctAaVijyiYOIZtx+3PRpxVI1BhkFDNI28AyLNwTTnUjOifEMKYFvpdqtI0jDuz
- QWU3ecZPkOYFePEYJPKEA2Lov/yyImoIgL7cYpXq7NXsgzOBD3pe+TAXEX2GD/Oz4EdksJscp
- ykj5DyKO0JlDVKNzOsyEyO1upl/anFUh37K7GWsuUNDCkXZ59bG8xrLCg8ck5YMU8+PtJj0dK
- 8bb/VAv4sf/EpKgQwekpsWU5M6owtzaXWdBo2uZRkwZ10/lfsyqgW/gry1mK61kfFlv0lzYpQ
- lARLr1AKlJioMjVsze/5dw6nYLjhHYfu17Xyx7eAWsgbOOR8Ddj2kZem1xnQ/9ki7lQ69MQqf
- ZXbouudMFsecZ5HvTUY4rIRuTZoAyim8qrZiTXwhXTXcwIYw29E2UE+sO26aDqtmg4rkFKSRq
- nvpi1kZH3pwZT9UM/YsYiwh0jetixX3oFS6j2QQ1Zs0yfUAjom81sXAsjB1oinlHs61LiY+RV
- Ak62Oavcy0gVN0dkoFpvOKgUaFluxiepdjS8tf2DDSZDDfWPIrl981FFJaONjsF8IbuLm3K2M
- GtJA7O6q6mQQuhrJvcGJZ3pT+Ar8EghFwZRQIxAEXql/jW4rsQMItn6V4dUbkoKAfJWXqEnQQ
- 3jJqYy1aItz50ebzas7ahjz8yiq7mtd5+0l7Ccgz6r3mOhnY1FaXHtIp/u2mUMKYuzK/+9rMn
- beKNSRAufOddM3OFu3bBABNexpIVuy4UQEXNSMJh6zNHXQ1ZioQA1
+        id S1726082AbfFTJvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:51:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 02:51:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="165272403"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by orsmga006.jf.intel.com with ESMTP; 20 Jun 2019 02:51:43 -0700
+Message-ID: <b2cfa1d015315c74af6cee1c00185e5c68cfa397.camel@linux.intel.com>
+Subject: Re: [PATCH v5 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Tao Xu <tao3.xu@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, jingqi.liu@intel.com
+Date:   Thu, 20 Jun 2019 17:46:45 +0800
+In-Reply-To: <20190620084620.17974-3-tao3.xu@intel.com>
+References: <20190620084620.17974-1-tao3.xu@intel.com>
+         <20190620084620.17974-3-tao3.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As stated in coding-styles.rst multiline comments should be structured in =
-a way,
-that the actual comment starts on the second line of the commented portion=
-. E.g:
+On Thu, 2019-06-20 at 16:46 +0800, Tao Xu wrote:
+> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
+> to determines the maximum time in TSC-quanta that the processor can reside
+> in either C0.1 or C0.2.
+> 
+> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
+> IA32_UMWAIT_CONTROL between host and guest. The variable
+> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
+> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
+> 
+> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
+> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
+> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+> ---
+> 
+> Changes in v5:
+> 	remove vmx_waitpkg_supported() to fix guest can rdmsr or wrmsr
+> 	when the feature is off (Xiaoyao)
+> 	remove the atomic_switch_ia32_umwait_control() and move the
+> 	codes into vmx_set_msr()
+> 	rebase the patch because the kernel dependcy patch updated to
+> 	v5: https://lkml.org/lkml/2019/6/19/972
+> ---
+>  arch/x86/kernel/cpu/umwait.c |  3 ++-
+>  arch/x86/kvm/vmx/vmx.c       | 24 ++++++++++++++++++++++++
+>  arch/x86/kvm/vmx/vmx.h       |  3 +++
+>  arch/x86/kvm/x86.c           |  1 +
+>  4 files changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+> index 4b2aff7b2d4d..db5c193ef136 100644
+> --- a/arch/x86/kernel/cpu/umwait.c
+> +++ b/arch/x86/kernel/cpu/umwait.c
+> @@ -15,7 +15,8 @@
+>   * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
+>   * is enabled
+>   */
+> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000,
+> UMWAIT_C02_ENABLED);
+> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
+> +EXPORT_SYMBOL_GPL(umwait_control_cached);
+>  
+>  /*
+>   * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b35bfac30a34..0fb55c8426e2 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct
+> msr_data *msr_info)
+>  #endif
+>  	case MSR_EFER:
+>  		return kvm_get_msr_common(vcpu, msr_info);
+> +	case MSR_IA32_UMWAIT_CONTROL:
+> +		if (!guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
+> +			return 1;
+> +
+> +		msr_info->data = vmx->msr_ia32_umwait_control;
+> +		break;
+>  	case MSR_IA32_SPEC_CTRL:
+>  		if (!msr_info->host_initiated &&
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+> @@ -1841,6 +1847,22 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct
+> msr_data *msr_info)
+>  			return 1;
+>  		vmcs_write64(GUEST_BNDCFGS, data);
+>  		break;
+> +	case MSR_IA32_UMWAIT_CONTROL:
+> +		if (!guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
+> +			return 1;
+> +
+> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
+> +		if (data & BIT_ULL(1))
+> +			return 1;
+> +
+> +		vmx->msr_ia32_umwait_control = data;
+> +		if (vmx->msr_ia32_umwait_control != umwait_control_cached)
+> +			add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
+> +				vmx->msr_ia32_umwait_control,
+> +				umwait_control_cached, false);
+> +		else
+> +			clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
 
-/*
- * Multiline comments
- * should look like
- * this.
- */
+You cannot put the atomic switch here. What if umwait_control_cached is changed
+at runtime? Host kernel patch exposed a sysfs interface to let it happen.
 
-The comments in this file were of a format, that looked like this:
-
-/* Multiline comments previous
- * to this patch
- * looked like this.
- */
-
-There is an exception to files in /net and drivers/net,
-where multiline comments are preferred to look like the second example abo=
-ve,
-but since this file resides in a different directory,
-this patch changes the style to match the preferred style.
-
-Signed-off-by: Christian M=C3=BCller <muellerch-privat@web.de>
-Signed-off-by: Felix Trommer <felix.trommer@hotmail.de>
-=2D--
- drivers/staging/rtl8192u/r819xU_phy.c | 39 ++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/staging/rtl8192u/r819xU_phy.c b/drivers/staging/rtl81=
-92u/r819xU_phy.c
-index 5f04afe53d69..a51ed10be431 100644
-=2D-- a/drivers/staging/rtl8192u/r819xU_phy.c
-+++ b/drivers/staging/rtl8192u/r819xU_phy.c
-@@ -363,7 +363,8 @@ static u32 phy_FwRFSerialRead(struct net_device *dev,
- 	u8		time =3D 0;
- 	u32		tmp;
-
--	/* Firmware RF Write control.
-+	/*
-+	 * Firmware RF Write control.
- 	 * We can not execute the scheme in the initial step.
- 	 * Otherwise, RF-R/W will waste much time.
- 	 * This is only for site survey.
-@@ -379,7 +380,8 @@ static u32 phy_FwRFSerialRead(struct net_device *dev,
- 	/* 6. We can not execute read operation if bit 31 is 1. */
- 	read_nic_dword(dev, QPNR, &tmp);
- 	while (tmp & 0x80000000) {
--		/* If FW can not finish RF-R/W for more than ?? times.
-+		/*
-+		 * If FW can not finish RF-R/W for more than ?? times.
- 		 * We must reset FW.
- 		 */
- 		if (time++ < 100) {
-@@ -394,7 +396,8 @@ static u32 phy_FwRFSerialRead(struct net_device *dev,
- 	/* 8. Check if firmware send back RF content. */
- 	read_nic_dword(dev, QPNR, &tmp);
- 	while (tmp & 0x80000000) {
--		/* If FW can not finish RF-R/W for more than ?? times.
-+		/*
-+		 * If FW can not finish RF-R/W for more than ?? times.
- 		 * We must reset FW.
- 		 */
- 		if (time++ < 100) {
-@@ -426,7 +429,8 @@ static void phy_FwRFSerialWrite(struct net_device *dev=
-,
- 	u8	time =3D 0;
- 	u32	tmp;
-
--	/* Firmware RF Write control.
-+	/*
-+	 * Firmware RF Write control.
- 	 * We can not execute the scheme in the initial step.
- 	 * Otherwise, RF-R/W will waste much time.
- 	 * This is only for site survey.
-@@ -445,7 +449,8 @@ static void phy_FwRFSerialWrite(struct net_device *dev=
-,
- 	/* 6. Write operation. We can not write if bit 31 is 1. */
- 	read_nic_dword(dev, QPNR, &tmp);
- 	while (tmp & 0x80000000) {
--		/* If FW can not finish RF-R/W for more than ?? times.
-+		/*
-+		 * If FW can not finish RF-R/W for more than ?? times.
- 		 * We must reset FW.
- 		 */
- 		if (time++ < 100) {
-@@ -455,11 +460,13 @@ static void phy_FwRFSerialWrite(struct net_device *d=
-ev,
- 			break;
- 		}
- 	}
--	/* 7. No matter check bit. We always force the write.
-+	/*
-+	 * 7. No matter check bit. We always force the write.
- 	 * Because FW will not accept the command.
- 	 */
- 	write_nic_dword(dev, QPNR, data);
--	/* According to test, we must delay 20us to wait firmware
-+	/*
-+	 * According to test, we must delay 20us to wait firmware
- 	 * to finish RF write operation.
- 	 */
- 	/* We support delay in firmware side now. */
-@@ -828,7 +835,8 @@ static void rtl8192_BB_Config_ParaFile(struct net_devi=
-ce *dev)
- 				 reg_u32);
- 	}
-
--	/* Check if the CCK HighPower is turned ON.
-+	/*
-+	 * Check if the CCK HighPower is turned ON.
- 	 * This is used to calculate PWDB.
- 	 */
- 	priv->bCckHighPower =3D (u8)rtl8192_QueryBBReg(dev,
-@@ -847,7 +855,8 @@ static void rtl8192_BB_Config_ParaFile(struct net_devi=
-ce *dev)
- void rtl8192_BBConfig(struct net_device *dev)
- {
- 	rtl8192_InitBBRFRegDef(dev);
--	/* config BB&RF. As hardCode based initialization has not been well
-+	/*
-+	 * config BB&RF. As hardCode based initialization has not been well
- 	 * implemented, so use file first.
- 	 * FIXME: should implement it for hardcode?
- 	 */
-@@ -1168,7 +1177,8 @@ bool rtl8192_SetRFPowerState(struct net_device *dev,
- 		case RF_8256:
- 			switch (pHalData->eRFPowerState) {
- 			case eRfOff:
--				/* If Rf off reason is from IPS,
-+				/*
-+				 * If Rf off reason is from IPS,
- 				 * LED should blink with no link
- 				 */
- 				if (pMgntInfo->RfOffReason =3D=3D RF_CHANGE_BY_IPS)
-@@ -1179,7 +1189,8 @@ bool rtl8192_SetRFPowerState(struct net_device *dev,
- 				break;
-
- 			case eRfOn:
--				/* Turn on RF we are still linked, which might
-+				/*
-+				 * Turn on RF we are still linked, which might
- 				 * happen when we quickly turn off and on HW RF.
- 				 */
- 				if (pMgntInfo->bMediaConnect)
-@@ -1274,7 +1285,8 @@ static u8 rtl8192_phy_SwChnlStepByStep(struct net_de=
-vice *dev, u8 channel,
- 		 __func__, *stage, *step, channel);
- 	if (!is_legal_channel(priv->ieee80211, channel)) {
- 		RT_TRACE(COMP_ERR, "set to illegal channel: %d\n", channel);
--		/* return true to tell upper caller function this channel
-+		/*
-+		 * return true to tell upper caller function this channel
- 		 * setting is finished! Or it will in while loop.
- 		 */
- 		return true;
-@@ -1621,7 +1633,8 @@ void rtl8192_SetBWModeWorkItem(struct net_device *de=
-v)
- 		break;
-
- 	}
--	/* Skip over setting of J-mode in BB register here.
-+	/*
-+	 * Skip over setting of J-mode in BB register here.
- 	 * Default value is "None J mode".
- 	 */
-
-=2D-
-2.17.1
+> +		break;
+>  	case MSR_IA32_SPEC_CTRL:
+>  		if (!msr_info->host_initiated &&
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+> @@ -4126,6 +4148,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool
+> init_event)
+>  	vmx->rmode.vm86_active = 0;
+>  	vmx->spec_ctrl = 0;
+>  
+> +	vmx->msr_ia32_umwait_control = 0;
+> +
+>  	vcpu->arch.microcode_version = 0x100000000ULL;
+>  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+>  	kvm_set_cr8(vcpu, 0);
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 61128b48c503..8485bec7c38a 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -14,6 +14,8 @@
+>  extern const u32 vmx_msr_index[];
+>  extern u64 host_efer;
+>  
+> +extern u32 umwait_control_cached;
+> +
+>  #define MSR_TYPE_R	1
+>  #define MSR_TYPE_W	2
+>  #define MSR_TYPE_RW	3
+> @@ -194,6 +196,7 @@ struct vcpu_vmx {
+>  #endif
+>  
+>  	u64		      spec_ctrl;
+> +	u64		      msr_ia32_umwait_control;
+>  
+>  	u32 vm_entry_controls_shadow;
+>  	u32 vm_exit_controls_shadow;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 83aefd759846..4480de459bf4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
+>  	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
+>  	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
+>  	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
+> +	MSR_IA32_UMWAIT_CONTROL,
+>  };
+>  
+>  static unsigned num_msrs_to_save;
 
