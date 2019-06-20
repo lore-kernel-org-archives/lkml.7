@@ -2,102 +2,72 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54602C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8C1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276AB20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6A0206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055226;
-	bh=K0D5RiaBxXVakvVfZoWJm431MDLU2u7E5g65ouIOmp0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCaW2qJTplbZFn8F1ERfuzZYMeCPkoyZYz6HvYUixNGKx1vlSJh1OEwG0UZ7dB9Qu
-	 4alTTgsPSeyuVuMaGltFYJSJ7MbkIdAnqxqOxeIRNpLlTx90VEAXBR0ipI+zh4SOOk
-	 LlMiIaOFZI35iv/XICutLPpRYuVj78zmBB1ysbak=
+	s=default; t=1561055235;
+	bh=Tet6We5LAT61iq9rXmZ/ioron9PWqR4Z/wAcFJW+uaI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=tKEHExrk5RKhVqq0aFUjatVerRwZocn8EawbZzHfVaFkTKOS/wWoMfWCZC1qFCp0D
+	 o8Vmxg2Ss/FvddD/9k20UTrB44AyS/6RIViXsLc3ywKlvvICBImT6t58dPKRR7YzkO
+	 k4loLu+R+B/DsR8T46SvEe9nc+QXhMeIWV9VHST4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfFTS1F (ORCPT
+        id S1727640AbfFTSFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727716AbfFTSFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E9A204FD;
-        Thu, 20 Jun 2019 18:05:23 +0000 (UTC)
+        id S1727968AbfFTSFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:02 -0400
+Subject: Re: [GIT PULL] MMC fixes for v5.2-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053923;
-        bh=K0D5RiaBxXVakvVfZoWJm431MDLU2u7E5g65ouIOmp0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDymvYj4RjXdEGaUGvG1GP0dbPBCYgIuI17STwCAPv/ZzaM4r4GwtNm419LxAvf/r
-         urM3fq5oq3pvCW75ceiRZ4YfkGIfOTvHcboQc2sKscASollAUy4MhJ3VfEqQg10rdn
-         tTHgpqi9ed71g3sjbtl/myLXgDgZ+aZG1jzQ8QVQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/117] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
-Date:   Thu, 20 Jun 2019 19:56:47 +0200
-Message-Id: <20190620174356.961101617@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
-References: <20190620174351.964339809@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1561053901;
+        bh=Tet6We5LAT61iq9rXmZ/ioron9PWqR4Z/wAcFJW+uaI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=d7EaMCPtv36/flzGtvzmdqYDIefPRc5U8lXJV1Ds2TkZj5dbEOUXFFqq1SZt8tOYs
+         BrShsDXKQphFXBUFJrhmPptrObSPZUsh8CpxOMqOnM2RbmvabaaKCADp7OPs3IiWsW
+         hTDSmXdd8lerA+FTxgRD+g0rqW9aL9piJdB99UtQ=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190620111602.17958-1-ulf.hansson@linaro.org>
+References: <20190620111602.17958-1-ulf.hansson@linaro.org>
+X-PR-Tracked-List-Id: <linux-wireless.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190620111602.17958-1-ulf.hansson@linaro.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.2-rc4
+X-PR-Tracked-Commit-Id: 83293386bc95cf5e9f0c0175794455835bd1cb4a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6331d118ac61454ee52d5f9be098e9ddab6d6572
+Message-Id: <156105390175.28041.11147339547209360887.pr-tracker-bot@kernel.org>
+Date:   Thu, 20 Jun 2019 18:05:01 +0000
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        linux-wireless@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
+The pull request you sent on Thu, 20 Jun 2019 13:16:02 +0200:
 
-There is an out-of-bounds access to "config[len - 1]" array when the
-variable "len" is zero.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.2-rc4
 
-See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
-in param_set_kgdboc_var()") for details.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6331d118ac61454ee52d5f9be098e9ddab6d6572
 
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/misc/kgdbts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you!
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index 99635dd9dbac..bb3a76ad80da 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -1132,7 +1132,7 @@ static void kgdbts_put_char(u8 chr)
- 
- static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
- {
--	int len = strlen(kmessage);
-+	size_t len = strlen(kmessage);
- 
- 	if (len >= MAX_CONFIG_LEN) {
- 		printk(KERN_ERR "kgdbts: config string too long\n");
-@@ -1152,7 +1152,7 @@ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
- 
- 	strcpy(config, kmessage);
- 	/* Chop out \n char as a result of echo */
--	if (config[len - 1] == '\n')
-+	if (len && config[len - 1] == '\n')
- 		config[len - 1] = '\0';
- 
- 	/* Go and configure with the new params. */
 -- 
-2.20.1
-
-
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
