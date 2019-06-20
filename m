@@ -2,500 +2,198 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A86C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD86C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715FD20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93215214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfFTDhi (ORCPT
+        id S1731325AbfFTDjs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 23:37:38 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:34962 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726346AbfFTDhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:37:37 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 79E42C6F506DCBE3CE4B;
-        Thu, 20 Jun 2019 11:37:35 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 20 Jun 2019 11:37:34 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 20 Jun 2019 11:37:25 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>, <pavel@ucw.cz>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 1/2] f2fs: use generic EFSBADCRC/EFSCORRUPTED
-Date:   Thu, 20 Jun 2019 11:36:14 +0800
-Message-ID: <20190620033615.32284-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Wed, 19 Jun 2019 23:39:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24694 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbfFTDjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 23:39:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 20:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,395,1557212400"; 
+   d="scan'208";a="358817691"
+Received: from kmsmsx155.gar.corp.intel.com ([172.21.73.106])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Jun 2019 20:39:45 -0700
+Received: from pgsmsx114.gar.corp.intel.com ([169.254.4.160]) by
+ KMSMSX155.gar.corp.intel.com ([169.254.15.69]) with mapi id 14.03.0439.000;
+ Thu, 20 Jun 2019 11:37:52 +0800
+From:   "Ong, Boon Leong" <boon.leong.ong@intel.com>
+To:     "Gomes, Vinicius" <vinicius.gomes@intel.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>
+Subject: RE: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
+ configuration functionalities
+Thread-Topic: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
+ configuration functionalities
+Thread-Index: AQHVJdrXUsdOVQF/k0iKWNkitFHiIaaiw1iAgAEhEnA=
+Date:   Thu, 20 Jun 2019 03:37:51 +0000
+Message-ID: <AF233D1473C1364ABD51D28909A1B1B75C17F536@pgsmsx114.gar.corp.intel.com>
+References: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
+ <1560893778-6838-2-git-send-email-weifeng.voon@intel.com>
+ <874l4lsaue.fsf@intel.com>
+In-Reply-To: <874l4lsaue.fsf@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmE1OTg2NWUtYTA4NS00MWQ0LWFhY2UtODlhNWFhM2Q0OTc4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMDc0SDZua0NoUGhBdjhcL2VpOStiTFNQb1wvczVSdXJoM3hydmE5OEpiVWNlY3RVZ0MrcnF6TWlrU3JvdjZQXC9uSyJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs uses EFAULT as error number to indicate filesystem is corrupted
-all the time, but generic filesystems use EUCLEAN for such condition,
-we need to change to follow others.
+>-----Original Message-----
+>From: Gomes, Vinicius
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/dw_tsn_lib.c
+>> @@ -0,0 +1,790 @@
+>> +
+>> +static struct tsn_hw_cap dw_tsn_hwcap;
+>> +static bool dw_tsn_feat_en[TSN_FEAT_ID_MAX];
+>> +static unsigned int dw_tsn_hwtunable[TSN_HWTUNA_MAX];
+>> +static struct est_gc_config dw_est_gc_config;
+>
+>If it's at all possible to have more than one of these devices in a
+>system, this should be moved to a per-device structure. That
+>mac_device_info struct perhaps?
+I do see value in scaling the code to more than one device there.
+Thanks.
 
-This patch adds two new macros as below to wrap more generic error
-code macros, and spread them in code.
+>> +void dwmac_tsn_init(void *ioaddr)
+>
+>Perhaps this should return an error if TSN is not supported. It may help
+>simplify the initialization below.
+Thanks for the input. It may not be apparent because this code does not
+include Qbu detection yet. The thinking here is to avoid caller function
+not need to handle and IP configuration difference, i.e. SoC-1 may have only
+Qbv and SoC-2 have both. 
 
-EFSBADCRC	EBADMSG		/* Bad CRC detected */
-EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+>
+>> +{
+>> +	unsigned int hwid = TSN_RD32(ioaddr + GMAC4_VERSION) &
+>TSN_VER_MASK;
+>> +	unsigned int hw_cap2 = TSN_RD32(ioaddr + GMAC_HW_FEATURE2);
+>> +	unsigned int hw_cap3 = TSN_RD32(ioaddr + GMAC_HW_FEATURE3);
+>> +	struct tsn_hw_cap *cap = &dw_tsn_hwcap;
+>> +	unsigned int gcl_depth;
+>> +	unsigned int tils_max;
+>> +	unsigned int ti_wid;
+>> +
+>> +	memset(cap, 0, sizeof(*cap));
+>> +
+>> +	if (hwid < TSN_CORE_VER) {
+>> +		TSN_WARN_NA("IP v5.00 does not support TSN\n");
+Perhaps, we just print info here instead of warning because SoC with EQoS v5
+can be built without Qbv. 
 
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/checkpoint.c | 12 +++++++++---
- fs/f2fs/data.c       | 18 +++++++++---------
- fs/f2fs/dir.c        |  2 +-
- fs/f2fs/f2fs.h       |  3 +++
- fs/f2fs/file.c       |  2 +-
- fs/f2fs/gc.c         |  6 +++---
- fs/f2fs/inline.c     |  4 ++--
- fs/f2fs/inode.c      |  4 ++--
- fs/f2fs/node.c       |  6 +++---
- fs/f2fs/recovery.c   |  6 +++---
- fs/f2fs/segment.c    | 10 +++++-----
- fs/f2fs/segment.h    |  4 ++--
- fs/f2fs/super.c      |  2 +-
- fs/f2fs/xattr.c      |  4 ++--
- 14 files changed, 46 insertions(+), 37 deletions(-)
+>> +		return;
+>> +	}
+>> +
+>> +	if (!(hw_cap3 & GMAC_HW_FEAT_ESTSEL)) {
+>> +		TSN_WARN_NA("EST NOT supported\n");
+>> +		cap->est_support = 0;
+Same here. 
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 62c359c91668..a0eef95b9e0e 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -890,6 +890,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	unsigned int cp_blks = 1 + __cp_payload(sbi);
- 	block_t cp_blk_no;
- 	int i;
-+	int err;
- 
- 	sbi->ckpt = f2fs_kzalloc(sbi, array_size(blk_size, cp_blks),
- 				 GFP_KERNEL);
-@@ -917,6 +918,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	} else if (cp2) {
- 		cur_page = cp2;
- 	} else {
-+		err = -EFSCORRUPTED;
- 		goto fail_no_cp;
- 	}
- 
-@@ -929,8 +931,10 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 		sbi->cur_cp_pack = 2;
- 
- 	/* Sanity checking of checkpoint */
--	if (f2fs_sanity_check_ckpt(sbi))
-+	if (f2fs_sanity_check_ckpt(sbi)) {
-+		err = -EFSCORRUPTED;
- 		goto free_fail_no_cp;
-+	}
- 
- 	if (cp_blks <= 1)
- 		goto done;
-@@ -944,8 +948,10 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 		unsigned char *ckpt = (unsigned char *)sbi->ckpt;
- 
- 		cur_page = f2fs_get_meta_page(sbi, cp_blk_no + i);
--		if (IS_ERR(cur_page))
-+		if (IS_ERR(cur_page)) {
-+			err = PTR_ERR(cur_page);
- 			goto free_fail_no_cp;
-+		}
- 		sit_bitmap_ptr = page_address(cur_page);
- 		memcpy(ckpt + i * blk_size, sit_bitmap_ptr, blk_size);
- 		f2fs_put_page(cur_page, 1);
-@@ -960,7 +966,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	f2fs_put_page(cp2, 1);
- fail_no_cp:
- 	kvfree(sbi->ckpt);
--	return -EINVAL;
-+	return err;
- }
- 
- static void __add_dirty_inode(struct inode *inode, enum inode_type type)
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index f4e1672bd96e..1e2d924e2ea7 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -455,7 +455,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
- 	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
- 			fio->is_por ? META_POR : (__is_meta_io(fio) ?
- 			META_GENERIC : DATA_GENERIC_ENHANCE)))
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 
- 	trace_f2fs_submit_page_bio(page, fio);
- 	f2fs_trace_ios(fio, 0);
-@@ -489,7 +489,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- 
- 	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
- 			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 
- 	trace_f2fs_submit_page_bio(page, fio);
- 	f2fs_trace_ios(fio, 0);
-@@ -789,7 +789,7 @@ struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
- 		dn.data_blkaddr = ei.blk + index - ei.fofs;
- 		if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), dn.data_blkaddr,
- 						DATA_GENERIC_ENHANCE_READ)) {
--			err = -EFAULT;
-+			err = -EFSCORRUPTED;
- 			goto put_err;
- 		}
- 		goto got_it;
-@@ -809,7 +809,7 @@ struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
- 			!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
- 						dn.data_blkaddr,
- 						DATA_GENERIC_ENHANCE)) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto put_err;
- 	}
- got_it:
-@@ -1155,7 +1155,7 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 
- 	if (__is_valid_data_blkaddr(blkaddr) &&
- 		!f2fs_is_valid_blkaddr(sbi, blkaddr, DATA_GENERIC_ENHANCE)) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto sync_out;
- 	}
- 
-@@ -1625,7 +1625,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
- 
- 		if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), block_nr,
- 						DATA_GENERIC_ENHANCE_READ)) {
--			ret = -EFAULT;
-+			ret = -EFSCORRUPTED;
- 			goto out;
- 		}
- 	} else {
-@@ -1906,7 +1906,7 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
- 
- 		if (!f2fs_is_valid_blkaddr(fio->sbi, fio->old_blkaddr,
- 						DATA_GENERIC_ENHANCE))
--			return -EFAULT;
-+			return -EFSCORRUPTED;
- 
- 		ipu_force = true;
- 		fio->need_lock = LOCK_DONE;
-@@ -1933,7 +1933,7 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
- 	if (__is_valid_data_blkaddr(fio->old_blkaddr) &&
- 		!f2fs_is_valid_blkaddr(fio->sbi, fio->old_blkaddr,
- 						DATA_GENERIC_ENHANCE)) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto out_writepage;
- 	}
- 	/*
-@@ -2606,7 +2606,7 @@ static int f2fs_write_begin(struct file *file, struct address_space *mapping,
- 	} else {
- 		if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
- 				DATA_GENERIC_ENHANCE_READ)) {
--			err = -EFAULT;
-+			err = -EFSCORRUPTED;
- 			goto fail;
- 		}
- 		err = f2fs_submit_page_read(inode, page, blkaddr);
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 0e78edbb8e16..85a1528f319f 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -818,7 +818,7 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
- 			f2fs_warn(sbi, "%s: corrupted namelen=%d, run fsck to fix.",
- 				  __func__, le16_to_cpu(de->name_len));
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
--			err = -EINVAL;
-+			err = -EFSCORRUPTED;
- 			goto out;
- 		}
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9afe15675dbb..d6c2aaae6cb2 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3709,4 +3709,7 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
- 	return false;
- }
- 
-+#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
-+#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
-+
- #endif /* _LINUX_F2FS_H */
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 1180eca87933..ef64eba42a42 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1023,7 +1023,7 @@ static int __read_out_blkaddrs(struct inode *inode, block_t *blkaddr,
- 			!f2fs_is_valid_blkaddr(sbi, *blkaddr,
- 					DATA_GENERIC_ENHANCE)) {
- 			f2fs_put_dnode(&dn);
--			return -EFAULT;
-+			return -EFSCORRUPTED;
- 		}
- 
- 		if (!f2fs_is_checkpointed_data(sbi, *blkaddr)) {
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 5b1076505ade..44b770143b51 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -660,7 +660,7 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
- 		dn.data_blkaddr = ei.blk + index - ei.fofs;
- 		if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
- 						DATA_GENERIC_ENHANCE_READ))) {
--			err = -EFAULT;
-+			err = -EFSCORRUPTED;
- 			goto put_page;
- 		}
- 		goto got_it;
-@@ -678,7 +678,7 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
- 	}
- 	if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
- 						DATA_GENERIC_ENHANCE))) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto put_page;
- 	}
- got_it:
-@@ -1452,7 +1452,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- 
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK)) {
- 		f2fs_err(sbi, "Should run fsck to repair first.");
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	if (test_opt(sbi, DISABLE_CHECKPOINT)) {
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 0d2764c9912d..3613efca8c00 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -142,7 +142,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
- 		set_sbi_flag(fio.sbi, SBI_NEED_FSCK);
- 		f2fs_warn(fio.sbi, "%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, run fsck to fix.",
- 			  __func__, dn->inode->i_ino, dn->data_blkaddr);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	f2fs_bug_on(F2FS_P_SB(page), PageWriteback(page));
-@@ -383,7 +383,7 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
- 		set_sbi_flag(F2FS_P_SB(page), SBI_NEED_FSCK);
- 		f2fs_warn(F2FS_P_SB(page), "%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, run fsck to fix.",
- 			  __func__, dir->i_ino, dn.data_blkaddr);
--		err = -EINVAL;
-+		err = -EFSCORRUPTED;
- 		goto out;
- 	}
- 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 9ea3aedb8213..a33d7a849b2d 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -74,7 +74,7 @@ static int __written_first_block(struct f2fs_sb_info *sbi,
- 	if (!__is_valid_data_blkaddr(addr))
- 		return 1;
- 	if (!f2fs_is_valid_blkaddr(sbi, addr, DATA_GENERIC_ENHANCE))
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 	return 0;
- }
- 
-@@ -358,7 +358,7 @@ static int do_read_inode(struct inode *inode)
- 
- 	if (!sanity_check_inode(inode, node_page)) {
- 		f2fs_put_page(node_page, 1);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* check data exist */
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 4d9b4c58d8a9..a18b2a895771 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -36,7 +36,7 @@ int f2fs_check_nid_range(struct f2fs_sb_info *sbi, nid_t nid)
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
- 		f2fs_warn(sbi, "%s: out-of-range nid=%x, run fsck to fix.",
- 			  __func__, nid);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 	return 0;
- }
-@@ -1288,7 +1288,7 @@ static int read_node_page(struct page *page, int op_flags)
- 	if (PageUptodate(page)) {
- 		if (!f2fs_inode_chksum_verify(sbi, page)) {
- 			ClearPageUptodate(page);
--			return -EBADMSG;
-+			return -EFSBADCRC;
- 		}
- 		return LOCKED_PAGE;
- 	}
-@@ -1372,7 +1372,7 @@ static struct page *__get_node_page(struct f2fs_sb_info *sbi, pgoff_t nid,
- 	}
- 
- 	if (!f2fs_inode_chksum_verify(sbi, page)) {
--		err = -EBADMSG;
-+		err = -EFSBADCRC;
- 		goto out_err;
- 	}
- page_hit:
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 72c2c4ba795f..783773e4560d 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -553,7 +553,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 		f2fs_warn(sbi, "Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
- 			  inode->i_ino, ofs_of_node(dn.node_page),
- 			  ofs_of_node(page));
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto err;
- 	}
- 
-@@ -565,13 +565,13 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 
- 		if (__is_valid_data_blkaddr(src) &&
- 			!f2fs_is_valid_blkaddr(sbi, src, META_POR)) {
--			err = -EFAULT;
-+			err = -EFSCORRUPTED;
- 			goto err;
- 		}
- 
- 		if (__is_valid_data_blkaddr(dest) &&
- 			!f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
--			err = -EFAULT;
-+			err = -EFSCORRUPTED;
- 			goto err;
- 		}
- 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index ee96e6fb1a50..478284db3065 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2819,7 +2819,7 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
- 
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK)) {
- 		f2fs_warn(sbi, "Found FS corruption, run fsck to fix.");
--		return -EIO;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* start/end segment number in main_area */
-@@ -3244,7 +3244,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
- 		f2fs_warn(sbi, "%s: incorrect segment(%u) type, run fsck to fix.",
- 			  __func__, segno);
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	stat_inc_inplace_blocks(fio->sbi);
-@@ -4153,7 +4153,7 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 			f2fs_err(sbi, "Wrong journal entry on segno %u",
- 				 start);
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
--			err = -EINVAL;
-+			err = -EFSCORRUPTED;
- 			break;
- 		}
- 
-@@ -4193,7 +4193,7 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 		f2fs_err(sbi, "SIT is corrupted node# %u vs %u",
- 			 total_node_blocks, valid_node_count(sbi));
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		err = -EINVAL;
-+		err = -EFSCORRUPTED;
- 	}
- 
- 	return err;
-@@ -4311,7 +4311,7 @@ static int sanity_check_curseg(struct f2fs_sb_info *sbi)
- 				 "Current segment's next free block offset is inconsistent with bitmap, logtype:%u, segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
- 				 i, curseg->segno, curseg->alloc_type,
- 				 curseg->next_blkoff, blkofs);
--			return -EINVAL;
-+			return -EFSCORRUPTED;
- 		}
- 	}
- 	return 0;
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 166ac0f07a4e..2263c3fa6630 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -696,7 +696,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
- 		f2fs_err(sbi, "Mismatch valid blocks %d vs. %d",
- 			 GET_SIT_VBLOCKS(raw_sit), valid_blocks);
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* check segment usage, and check boundary of a given segment number */
-@@ -705,7 +705,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
- 		f2fs_err(sbi, "Wrong valid blocks %d or segno %u",
- 			 GET_SIT_VBLOCKS(raw_sit), segno);
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 	return 0;
- }
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 25eca9f14554..7f2829b1192e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2861,7 +2861,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
- 		if (sanity_check_raw_super(sbi, bh)) {
- 			f2fs_err(sbi, "Can't find valid F2FS filesystem in %dth superblock",
- 				 block + 1);
--			err = -EINVAL;
-+			err = -EFSCORRUPTED;
- 			brelse(bh);
- 			continue;
- 		}
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index e791741d193b..963242018663 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -346,7 +346,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 
- 	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
- 	if (!*xe) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto out;
- 	}
- check:
-@@ -622,7 +622,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 	/* find entry with wanted name. */
- 	here = __find_xattr(base_addr, last_base_addr, index, len, name);
- 	if (!here) {
--		error = -EFAULT;
-+		error = -EFSCORRUPTED;
- 		goto exit;
- 	}
- 
--- 
-2.18.0.rc1
+>> +
+>> +		return;
+>> +	}
+>> +
+>> +	gcl_depth = est_get_gcl_depth(hw_cap3);
+>> +	ti_wid = est_get_ti_width(hw_cap3);
+>> +
+>> +	cap->ti_wid = ti_wid;
+>> +	cap->gcl_depth = gcl_depth;
+>> +
+>> +	tils_max = (hw_cap3 & GMAC_HW_FEAT_ESTSEL ? 3 : 0);
+>> +	tils_max = (1 << tils_max) - 1;
+>> +	cap->tils_max = tils_max;
+>> +
+>> +	cap->ext_max = EST_TIWID_TO_EXTMAX(ti_wid);
+>> +	cap->txqcnt = ((hw_cap2 & GMAC_HW_FEAT_TXQCNT) >> 6) + 1;
+>> +	cap->est_support = 1;
+>> +
+>> +	TSN_INFO("EST: depth=%u, ti_wid=%u, tils_max=%u tqcnt=%u\n",
+>> +		 gcl_depth, ti_wid, tils_max, cap->txqcnt);
+>> +}
+
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h
+>b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+>> index 2acfbc70e3c8..518a72805185 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+>> @@ -7,6 +7,7 @@
+>>
+>>  #include <linux/netdevice.h>
+>>  #include <linux/stmmac.h>
+>> +#include "dw_tsn_lib.h"
+>>
+>>  #define stmmac_do_void_callback(__priv, __module, __cname,  __arg0,
+>__args...) \
+>>  ({ \
+>> @@ -311,6 +312,31 @@ struct stmmac_ops {
+>>  			     bool loopback);
+>>  	void (*pcs_rane)(void __iomem *ioaddr, bool restart);
+>>  	void (*pcs_get_adv_lp)(void __iomem *ioaddr, struct rgmii_adv *adv);
+>> +	/* TSN functions */
+>> +	void (*tsn_init)(void __iomem *ioaddr);
+>> +	void (*get_tsn_hwcap)(struct tsn_hw_cap **tsn_hwcap);
+>> +	void (*set_est_gcb)(struct est_gc_entry *gcl,
+>> +			    u32 bank);
+>> +	void (*set_tsn_feat)(enum tsn_feat_id featid, bool enable);
+>> +	int (*set_tsn_hwtunable)(void __iomem *ioaddr,
+>> +				 enum tsn_hwtunable_id id,
+>> +				 const unsigned int *data);
+>> +	int (*get_tsn_hwtunable)(enum tsn_hwtunable_id id,
+>> +				 unsigned int *data);
+>> +	int (*get_est_bank)(void __iomem *ioaddr, u32 own);
+>> +	int (*set_est_gce)(void __iomem *ioaddr,
+>> +			   struct est_gc_entry *gce, u32 row,
+>> +			   u32 dbgb, u32 dbgm);
+>> +	int (*get_est_gcrr_llr)(void __iomem *ioaddr, u32 *gcl_len,
+>> +				u32 dbgb, u32 dbgm);
+>> +	int (*set_est_gcrr_llr)(void __iomem *ioaddr, u32 gcl_len,
+>> +				u32 dbgb, u32 dbgm);
+>> +	int (*set_est_gcrr_times)(void __iomem *ioaddr,
+>> +				  struct est_gcrr *gcrr,
+>> +				  u32 dbgb, u32 dbgm);
+>> +	int (*set_est_enable)(void __iomem *ioaddr, bool enable);
+>> +	int (*get_est_gcc)(void __iomem *ioaddr,
+>> +			   struct est_gc_config **gcc, bool frmdrv);
+>
+>These functions do not seem to be consistent with the rest of the
+>stmmac_ops: most of the operations already there receive an
+>mac_device_info as first argument, which seem much less error prone than
+>a void* ioaddr.
+Thanks for the input. We will look into this together with mac_device_info
+and adjust accordingly. 
 
