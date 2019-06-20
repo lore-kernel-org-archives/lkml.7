@@ -2,113 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80452C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8460C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521ED206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E354206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LnfTfmTp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v5c8EusF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfFTUZs (ORCPT
+        id S1726736AbfFTU37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:25:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42640 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfFTUZs (ORCPT
+        Thu, 20 Jun 2019 16:29:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34540 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfFTU37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:25:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so2289630pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:25:48 -0700 (PDT)
+        Thu, 20 Jun 2019 16:29:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c85so2316640pfc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ycDhdoPGK0tl2WgTFRv4StbyxU966OO2E0jZjJjKefo=;
-        b=LnfTfmTpOc2aDOFcvxvxCyRx2oTQo3uolnpHY/CpqTZYP4dvR5XNkE6ksddEmruRbQ
-         va8N/dMCLiQxEanR2iZyGXYun4/nKM79XDE1/GJgx5bD7Yc64a4eYaH4AzocNkAvznko
-         FEcTm5xUZhg2kW37BqX9OPTzUGNPvIjtIOmNs5ioOPG3tmIXFh4ClycYiDGF7qmYdY/v
-         j3ZqM6OvsYcZZy49XAzng667IFn64Pm0wRHobE2XNni7k2Gjg59eMyDKOIYfoZgAldMZ
-         8iarFmlMFEfcdrPtKnIzLlms1w9bOg65MD3DxOKTAeIZXi7tgKe8FJil4QaUY0Y44+AE
-         E4uw==
+        bh=2JEFir2f91v73nekkwcA/r3dp6L112/g4gH1PpqAdrc=;
+        b=v5c8EusF9ITFTP4DK08HqE6nXYSl1rHuc1AHqHehPJx12PE3Zc2nHCkX/AWSdZ6FZF
+         nQmrtwYX9mvK74iIh/t7AJdwKr/ILOsZftB+QSk4XRjzwt9ZCkxO3d0bvLu0E0NziXOl
+         cWxHDGYAYDxM62VFRLzgZGnB+r2Zza1EXnWoVeO0h1o/iPsLdfMTlaWLCnDLurQ5GIqX
+         jJDzIC8A9KSE3naGVZmDZRqldU9EZFXFww8hJz+qfnqeppgUePTRjE6yLrBTsf/q0+9s
+         +mFkOY/xucJj/h1hsXJzyh6iWZJXpp98u4R6rbaQEcLR+h87PqRwHT3L1l/Ak60kqga6
+         XBPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ycDhdoPGK0tl2WgTFRv4StbyxU966OO2E0jZjJjKefo=;
-        b=uWbgnb5qLNeEZCLuOFhouPXM4EDDoOdrCZBqNdsucQJPPY068pzfKW+IyQhviNIiYk
-         r4JcE00FQOvazFL/wThzeNQjNQILcqfOm8cexIcrjvxYI9Pn7qkF98sIs5co8o87Qt3b
-         RiJ3yl9ljxYvTEa/Uxys8WP+/Jtu1N3o5MXQiYu+Z9OiZuYOch0GimgzXWU/ST+Q3UZP
-         GnppKONz45ZMr7l/y8GukpFDZ/M0SStxoCqU6XOWAKpDH7Tgqkv8iAipoRMszy4mBidh
-         KrPHhMLif2aKnFzW4bOVeipAEGXzvSnV2M9lID+0tXO0ISqSWR/CAfUmkFGcSvjiBHGB
-         VtGw==
-X-Gm-Message-State: APjAAAU7/dRP6tfNxDT3aHo4E7g3XgyPwsE8SfSs5xmPW1F+GKq4I0Sw
-        2HLdlJ9j3fr0Jclcz7mdHvZBIr+EcUHdssVquJPpkg==
-X-Google-Smtp-Source: APXvYqwfuCPR2jr4PyIupl/TQ75vO5GLNJXNZviHm1k/btpNEIQ6pIVqvW1+Bg9SD6e/P3wobLs9tr7obdcIVV4yucI=
-X-Received: by 2002:a63:52:: with SMTP id 79mr14320167pga.381.1561062347264;
- Thu, 20 Jun 2019 13:25:47 -0700 (PDT)
+        bh=2JEFir2f91v73nekkwcA/r3dp6L112/g4gH1PpqAdrc=;
+        b=eP1zthin+JOsX7JJ0zCFNnWgdpx+GxwOx3rGWKX1BVTIYDtoQ6yS3Qi1jjkgACp+tf
+         FhQcOK3AsMdfP2A4nOjW7gX2xokM/2LEJUEe7j2z0Jde/J3SCDt2dm4gt3CnspVV9/i2
+         OjKNJJQiKIrnnaRhFRZkbpHJjuBW+vGnKt2paM2MW9QxwwRA6DjF/NPXXttxqazdvS1z
+         zIHlhH29Tkx+Zt3hgPRYC3LHZncnKuOPpvRdapY//cG0y4uc9G28XPxRyXnKL/kAeJal
+         lN2EGIId7933NAIePZgNkwMbWL15WJI1ZDoqvAezg4vsAZYCsmvkd50pRkEU7wCLOTaI
+         oFhw==
+X-Gm-Message-State: APjAAAXNh1Cb2racR4TfreaNlsW8P24yq6B9f/bdpVisjlJwQSYq/cuU
+        F0nF9PrNhDwIFvdeAtTKMeCGBBSn43iXqRQcOlQUIw==
+X-Google-Smtp-Source: APXvYqz9YdnYhDW70Z3csaomKtslVjyTnCmLX2S88WyqkoxdnVU1AOktxDryJSI1sQQGT7nNmjuI/WkfAL7KmOM2fR0=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr1529248pjs.73.1561062598008;
+ Thu, 20 Jun 2019 13:29:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190620184523.155756-1-mka@chromium.org> <CAKwvOdn-o9UszRW+MQ9Z0Ds9B2wSVBWUsPBPSF0S2DYxVFYpqA@mail.gmail.com>
- <CAD=FV=WcH=dVeVWznO7Ti5A8HBDRM=rPvvH=-XJ2o1PKXvHAQw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WcH=dVeVWznO7Ti5A8HBDRM=rPvvH=-XJ2o1PKXvHAQw@mail.gmail.com>
+References: <20190620155505.27036-1-natechancellor@gmail.com>
+ <CAKwvOdk7ZTcWEXPTBASPzk1SjOdnONawtQJkR-jU=REFSo1hVQ@mail.gmail.com> <20190620201549.GA65397@archlinux-epyc>
+In-Reply-To: <20190620201549.GA65397@archlinux-epyc>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 20 Jun 2019 13:25:36 -0700
-Message-ID: <CAKwvOd=twuZAAyKsBRSeJEFuQZGdyTw+=JAwmJugUhV+bppdtg@mail.gmail.com>
-Subject: Re: [PATCH] gen_compile_command: Add support for separate
- KBUILD_OUTPUT directory
-To:     Doug Anderson <dianders@google.com>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Tom Roeder <tmroeder@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Tom Hughes <tomhughes@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Yu Liu <yudiliu@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+Date:   Thu, 20 Jun 2019 13:29:47 -0700
+Message-ID: <CAKwvOd=okFdfSfGpXTAUqyF=vfnaZFgdwHC-i+CnaFxGSh2Thg@mail.gmail.com>
+Subject: Re: [PATCH] mtd: mtd-abi: Don't use C++ comments
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 1:13 PM Doug Anderson <dianders@google.com> wrote:
-> On Thu, Jun 20, 2019 at 12:53 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > I do miss Doug's Kbuild caching patches' speedup.
+On Thu, Jun 20, 2019 at 1:15 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> You actually get quite a bit of this by grabbing a new version of
-> ccache (assuming you use ccache).  :-P  You still have to pay the
-> penalty (twice) for all the options that are tested that the compiler
-> _doesn't_ support, but at least you get the cache for the commands
-> that the compiler does support.
-
-Hello darkness my old friend:
-https://nickdesaulniers.github.io/blog/2018/06/02/speeding-up-linux-kernel-builds-with-ccache/
-Man, that post has not aged well.  Here's what we do now:
-https://github.com/ClangBuiltLinux/continuous-integration/blob/45ab5842a69cb0c72d27d34e73b0599ec2a0e2ed/driver.sh#L227-L245
-
-> Specifically, make sure you have a ccache with:
+> On Thu, Jun 20, 2019 at 12:56:58PM -0700, Nick Desaulniers wrote:
+> > Should there be a fixes by tag?
 >
->     * https://github.com/ccache/ccache/pull/365
->     * https://github.com/ccache/ccache/pull/370
+> Normally, I would have added one but this issue has been present since
+> the beginning of git history. According to Thomas Gleixner's pre-git
+> history tree, it would be:
+>
+> Fixes: 7df80b4c8964 ("MTD core include and device code cleanup")
+>
+> but since that hash doesn't exist in the normal git history, I don't
+> think it is worth adding. Of course, if the maintainers want to add it,
+> I won't object.
+>
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
 
-Oh! Interesting finds and thanks for the pointers.  Did these make it
-into a release version of ccache, yet? If so, do you know which
-version?
+LOL good point; I wonder if the stable maintainers have thoughts on
+that or how they expect us to signal that case if we even need to do
+anything at all.
 
-> I still have it in my thoughts to avoid the penalty for options that
-> the compiler doesn't support but haven't had time to work on it
-> recently.
-
-It had better not be autoconf! (Hopefully yet-to-be-written GNU C
-extensions can support feature detection via C preprocessor)
+Either way, thanks for the patch and
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 -- 
 Thanks,
 ~Nick Desaulniers
