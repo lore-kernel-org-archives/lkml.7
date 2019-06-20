@@ -2,126 +2,123 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50315C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A391C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297F7208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561015163;
-	bh=ditT581I77m/ZbUu7CLuX7DQIEDwZUnG/8oeauPi0io=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rWrIDT5L6COTiiSZ2JuJjsBB/ikTognoZ1iR9kod3s5Ifx26rRIsdGuJhOKmatcM6
-	 CghfuMs7ENdrF9Dc/aTZ28p1g3PRiL8/wL7mqVOQzbiXzEcjvAFYgH1ljl27fevCxy
-	 jM3InM3W70koRrGh3HeBQGNUy73yfHXVdQ/n+ffY=
+	by mail.kernel.org (Postfix) with ESMTP id 6DB0F2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:20:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="NKyS9gvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfFTHTV (ORCPT
+        id S1730074AbfFTHUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfFTHTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:19:21 -0400
-Received: from devnote2 (113x40x119x170.ap113.ftth.ucom.ne.jp [113.40.119.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81DA02084A;
-        Thu, 20 Jun 2019 07:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561015160;
-        bh=ditT581I77m/ZbUu7CLuX7DQIEDwZUnG/8oeauPi0io=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fyBYqmEqZeklNLUnmdmPM/4625Mcbao07QGNIYQw5knhEZK8wIHjcm8xUL4RmnX0r
-         PMnegxpi1BIQAjhCwgTuEYSEaa/KbTsng4M1dGIJ9/yq3pToiPLhZ1loMNuNQ0OZTt
-         fyFz0fNafXWDnlMWBNAdXCvQrux1gSBdpWnS1k4c=
-Date:   Thu, 20 Jun 2019 16:19:17 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-Message-Id: <20190620161917.a713ea0ff38fa18a2c6f05c2@kernel.org>
-In-Reply-To: <8b184218-6880-204e-a9dd-e627c5ca92ca@synopsys.com>
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-        <e5f45089-c3aa-4d78-2c8d-ed22f863d9ee@synopsys.com>
-        <8b184218-6880-204e-a9dd-e627c5ca92ca@synopsys.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Jun 2019 03:20:13 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37228 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTHUM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:20:12 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so1844995wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5+cZZQUiAbSFZ5vyqDnl6i0sE8+BN4xzCapTjFH6GZ0=;
+        b=NKyS9gvG9OoNVIU+wvtPkKl9LryqEO3a6YKp09Ltgm2Fy2zXIaW8+E4EQ12u7PS2e5
+         8SdpcYMCN6RM9rvJzkG08F/aN5s6RwMWqJBrW6VgRebiPjO4Cn/K87QL7bLl9IHdCIhn
+         UPNizEIG4VXvN0Hn+imu5VErvswc4D7xZte6EuJyp/h0q/Y3YHkIMjmrCjEZiUbUvF6Y
+         ruTi9vRSxs7IkMW0vU9Tagcc4F4LV1PGouu5bl7W1pU+LpTWskTQrVAI99PkoEWuJX7/
+         hIINIgntTJZjYDmA3oVCKI8raOCSyNQSnoDdAO+rvA/gM70m8rf5V/g14DMv3MTB7YGY
+         0SlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5+cZZQUiAbSFZ5vyqDnl6i0sE8+BN4xzCapTjFH6GZ0=;
+        b=O85wt7o24eXbTtbnApCP2JBvYKA3awz5HaIjUNn7dqp+PkIH0PyKCHwvJU6+2UuWc+
+         yIeikTQER7XGn/RxCZYP+gavhOAsSX6E+1KsToCPPsSL4T/l7NRzUdva72DzkgpLIFlM
+         qF/B87mlitcFTwQgMv7mHjG9sYK1XRWO9BRRrp5E2SGk5Vha2G3ysmbrKuyDvZnngowS
+         q5hzJR6deOf8Oe3b1WN3thH+DSIsrJOGYhltCVyMrWCH/B+qcybTvugu3OadS2LaVoST
+         h/5FB559dCKv6/zyof8jd0ttjIn4O7M1EvVqQ9v5loL22S6x4tguB3MfqGl8i3vJ6Exy
+         OQ9w==
+X-Gm-Message-State: APjAAAUfXQsVOOjmD28A3yr1iVevkrL7MLeA0HIHAO7U/rzM1afCpB/f
+        3g/4ABNvbVvwf8jHymMJPFxqGQ==
+X-Google-Smtp-Source: APXvYqzCBzd8J2M9XQvdsbL6G2OSFawF+v3rk18ZoTrCxdyxSjJU1aALri4iTJCgU4AEHIzAuQvoZw==
+X-Received: by 2002:a05:6000:100a:: with SMTP id a10mr20639918wrx.154.1561015210289;
+        Thu, 20 Jun 2019 00:20:10 -0700 (PDT)
+Received: from localhost (ip-78-45-163-56.net.upcbroadband.cz. [78.45.163.56])
+        by smtp.gmail.com with ESMTPSA id f204sm5291869wme.18.2019.06.20.00.20.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 00:20:09 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 09:20:09 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        sdf@google.com, jianbol@mellanox.com, jiri@mellanox.com,
+        mirq-linux@rere.qmqm.pl, willemb@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] flow_dissector: Fix vlan header offset in
+ __skb_flow_dissect
+Message-ID: <20190620072009.GA2504@nanopsycho>
+References: <20190619160132.38416-1-yuehaibing@huawei.com>
+ <20190619183938.GA19111@mini-arch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619183938.GA19111@mini-arch>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Wed, Jun 19, 2019 at 08:39:38PM CEST, sdf@fomichev.me wrote:
+>On 06/20, YueHaibing wrote:
+>> We build vlan on top of bonding interface, which vlan offload
+>> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+>> BOND_XMIT_POLICY_ENCAP34.
+>> 
+>> __skb_flow_dissect() fails to get information from protocol headers
+>> encapsulated within vlan, because 'nhoff' is points to IP header,
+>> so bond hashing is based on layer 2 info, which fails to distribute
+>> packets across slaves.
+>> 
+>> Fixes: d5709f7ab776 ("flow_dissector: For stripped vlan, get vlan info from skb->vlan_tci")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  net/core/flow_dissector.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+>> index 415b95f..2a52abb 100644
+>> --- a/net/core/flow_dissector.c
+>> +++ b/net/core/flow_dissector.c
+>> @@ -785,6 +785,9 @@ bool __skb_flow_dissect(const struct sk_buff *skb,
+>>  		    skb && skb_vlan_tag_present(skb)) {
+>>  			proto = skb->protocol;
+>>  		} else {
+>> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
+>> +				nhoff -=  sizeof(*vlan);
+>> +
+>Should we instead fix the place where the skb is allocated to properly
+>pull vlan (skb_vlan_untag)? I'm not sure this particular place is
 
-On Tue, 18 Jun 2019 08:56:33 -0700
-Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+Yes.
 
-> +CC Masami San, Eugeniy
-> 
-> On 6/13/19 10:57 AM, Vineet Gupta wrote:
-> 
-> 
-> > On 6/13/19 3:07 AM, Anshuman Khandual wrote:
-> >> Questions:
-> >>
-> >> AFAICT there is no equivalent of erstwhile notify_page_fault() during page
-> >> fault handling in arc and mips archs which can call this generic function.
-> >> Please let me know if that is not the case.
-> > 
-> > For ARC do_page_fault() is entered for MMU exceptions (TLB Miss, access violations
-> > r/w/x etc). kprobes uses a combination of UNIMP_S and TRAP_S instructions which
-> > don't funnel into do_page_fault().
-> > 
-> > UINMP_S leads to
-> > 
-> > instr_service
-> >    do_insterror_or_kprobe
-> >       notify_die(DIE_IERR)
-> >          kprobe_exceptions_notify
-> >             arc_kprobe_handler
-> > 
-> > 
-> > TRAP_S 2 leads to
-> > 
-> > EV_Trap
-> >    do_non_swi_trap
-> >       trap_is_kprobe
-> >          notify_die(DIE_TRAP)
-> >             kprobe_exceptions_notify
-> >                arc_post_kprobe_handler
-> > 
-> > But indeed we are *not* calling into kprobe_fault_handler() - from eithet of those
-> > paths and not sure if the existing arc*_kprobe_handler() combination does the
-> > equivalent in tandem.
-
-Interesting, it seems that the kprobe_fault_handler() has never been called.
-Anyway, it is used for handling a page fault in kprobe's user handler or single
-stepping. And a page fault in user handler will not hard to fix up. Only a hard
-case is a page fault in single stepping. If ARC's kprobes using single-stepping
-on copied buffer, it may crashes kernel, since fixup code can not find correct
-address without kprobe_fault_handler.
-
-Thank you,
-
-> 
-> @Eugeniy can you please investigate this - do we have krpobes bit rot in ARC port.
-> 
-> -Vineet
-> 
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>supposed to work with an skb. Having an skb with nhoff pointing to
+>IP header but missing skb_vlan_tag_present() when with
+>proto==ETH_P_8021xx seems weird.
+>
+>>  			vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
+>>  						    data, hlen, &_vlan);
+>>  			if (!vlan) {
+>> -- 
+>> 2.7.0
+>> 
+>> 
