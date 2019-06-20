@@ -2,152 +2,184 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3509C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829622166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205A7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="hK31+SKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfFTBnt (ORCPT
+        id S1731200AbfFTBps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:43:49 -0400
-Received: from mga01.intel.com ([192.55.52.88]:60105 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfFTBnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:43:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 18:43:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="243484910"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 18:43:47 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Tony Luck" <tony.luck@intel.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v5 0/5] x86/umwait: Enable user wait instructions
-Date:   Wed, 19 Jun 2019 18:33:53 -0700
-Message-Id: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
+        Wed, 19 Jun 2019 21:45:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35895 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfFTBps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 21:45:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so682605plt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DKSEIXHg1UC0XInu9UAtk7wXIFZfCDBK9WtdLuyuY3g=;
+        b=hK31+SKrNXkk7jMwMjrK2vfOISTkdlxxDV4W01jF90OPgiOIzIKcB042tzqYmVAPW0
+         tuAoNbHHTS4KoVhvlkqwANjocECouNN4HTlPNiFtweEYhPEZzvgE8p6bHka96mfUR3En
+         0MpukjjzDG9AafufS0jmF+H1TqHQZRQMWiFxEd+ncjoTxZX1MEgBGN+aE2vAAxifYZEW
+         DvfwvsHd4+QcZGPHOu5SUJzgWInhP4L3hJlX/fkip2eyuCfFoVdKJHofzvC+gDB6Blu1
+         Dz8QjhWVydx+pxcW+YRKOFVITNmaI49MBAgZA6V8CY4dBcdXyd+PrSZFr5wtF70/zCeD
+         RvVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DKSEIXHg1UC0XInu9UAtk7wXIFZfCDBK9WtdLuyuY3g=;
+        b=coKm5wCbzUlRy4XHMan0CzqjE8PS6dwh9UTyWF1pxsk6qAuchvqf8Nxvd0ka+Q1YgO
+         Zl8ZhUtCminypjI0SFZLxY/5StwSiahh/2Bm/wOmtc6H8y528Q/qIPutuvIWt8lVbDC4
+         /6Zmyy+FGcpb5UXIkgZ83VuogRWVE8EQ9ybukSEnzxV3E9lG95o3gv0bYzMzyUKfT3xq
+         AlZx9gjnIwQta3l12IuoOL45Zgi0jpGe1ndWs+UqOGGOamMBSVBe9C8hLQ0z6lZ87cSs
+         Aom+nimsdtafd9VJ/gu5Bimye0U089Vbch42lEDBFksLe51UVpy0P4Ap0sAheA1Dhwh1
+         hXdw==
+X-Gm-Message-State: APjAAAVmGFEyRA8dXUO7/ycdjomQ3Psx62CWQE6YYLYP9+1kWaqQdmSs
+        a9ahOP91NicfhoZ407ObJfDGIAgDNGw=
+X-Google-Smtp-Source: APXvYqydlj7IrbaimeUH7eEPfJxfBLMCn/tlktDhrkvDNmwx7Rhr66+loq1aYVEOKXxBDifQtG98Pg==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr117455279plc.272.1560995146988;
+        Wed, 19 Jun 2019 18:45:46 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id y12sm23503945pfn.187.2019.06.19.18.45.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 18:45:46 -0700 (PDT)
+Subject: Re: [PATCH 3/4] powerpc/powernv: remove dead NPU DMA code
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190523074924.19659-1-hch@lst.de>
+ <20190523074924.19659-4-hch@lst.de>
+ <db502ec4-2e8f-fbc3-9db2-3fe98464a62c@ozlabs.ru>
+ <20190619072837.GA6858@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <b0ce7d72-5de7-63d3-cb4e-ea78342cb3fa@ozlabs.ru>
+Date:   Thu, 20 Jun 2019 11:45:42 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190619072837.GA6858@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today, if an application needs to wait for a very short duration
-they have to have spinloops. Spinloops consume more power and continue
-to use execution resources that could hurt its thread siblings in a core
-with hyperthreads. New instructions umonitor, umwait and tpause allow
-a low power alternative waiting at the same time could improve the HT
-sibling perform while giving it any power headroom. These instructions
-can be used in both user space and kernel space.
 
-A new MSR IA32_UMWAIT_CONTROL allows kernel to set a time limit in
-TSC-quanta that prevents user applications from waiting for a long time.
-This allows applications to yield the CPU and the user application
-should consider using other alternatives to wait.
 
-A quote from Andy Lutomirski on setting the time limit:
+On 19/06/2019 17:28, Christoph Hellwig wrote:
+> On Wed, Jun 19, 2019 at 10:34:54AM +1000, Alexey Kardashevskiy wrote:
+>>
+>>
+>> On 23/05/2019 17:49, Christoph Hellwig wrote:
+>>> None of these routines were ever used since they were added to the
+>>> kernel.
+>>
+>>
+>> It is still being used exactly in the way as it was explained before in
+>> previous respins. Thanks.
+> 
+> Please point to the in-kernel user, because that is the only relevant
+> one.  This is not just my opinion but we had a clear discussion on that
+> at least years kernel summit.
 
-"What I want to avoid is the case where it works dramatically
-differently on NO_HZ_FULL systems as compared to everything else.
-Also, UMWAIT may behave a bit differently if the max timeout is hit,
-and I'd like that path to get exercised widely by making it happen
-even on default configs.
 
-So I propose setting the timeout to either 100 microseconds or 100k
-"cycles" by default."
+There is no in-kernel user which still does not mean that the code is
+dead. If it is irrelevant - put this to the commit log instead of saying
+it is dead; also if there was a clear outcome from that discussion, then
+please point me to that, I do not get to attend these discussions. Thanks,
 
-The processor supports two levels of optimized states: a light-weight
-power/performance optimized state (C0.1 state) or an improved
-power/performance optimized state (C0.2 state with deeper power saving
-and higher exit latency). The above MSR can be used to restrict
-entry to C0.2 and then any request for C0.2 will revert to C0.1.
-
-This patch set covers feature discovery, provides initial values for
-the MSR, adds some sysfs control files for admin to tweak the values
-in the MSR if needed.
-
-The sysfs interface files are in /sys/devices/system/cpu/umwait_control/
-
-GCC 9 enables intrinsics for the instructions. To use the instructions,
-user applications should include <immintrin.h> and be compiled with
--mwaitpkg.
-
-Detailed information on the instructions, the MSR, and syntax of the
-intrinsics can be found in the latest Intel Architecture Instruction
-Set Extensions and Future Features Programming Reference and Intel 64
-and IA-32 Architectures Software Developer's Manual.
-
-Changelog:
-v5:
-- Change locking from mutex to disabling irq before wrmsr per
-Andy Lutomirski's comment
-- Add macro UMWAIT_CTRL_VAL to explicitly disable C0.2 per
-Thomas Gleixner's comment
-- Move umwait.c to arch/x86/kernel/cpu/ per Peter Zijlstra's comment
-- Add justification of max time 100k per Peter Zijlstra's comment
-
-v4:
-- Error out when bit[1:0] in IA32_UMWAIT_CONTROL is not zero per
-Andy Lutomirski's comment.
-- Use umwait_control_cached to cache IA32_UMWAIT_CONTROL MSR. This
-variable replaces the two previous variables umwait_max_time and
-umwait_c0_2_enabled. The code is simpler than before and the cached MSR
-will be easier to be used in future KVM support.
-
-v3:
-Address issues pointed out by Andy Lutomirski:
-- Change default umwait max time to 100k TSC cycles
-- Setting up MSR on BSP during resume suspend/hibernation
-- A few other naming and coding changes as suggested
-- Some security concerns of the user wait instructions are not issues
-of the patches and cannot be addressed in the patch set. They will be
-discussed on lkml.
-
-Plus:
-- Add ABI document entry for umwait control sysfs interfaces
-
-v2:
-- Address comments from Thomas Gleixner and Andy Lutomirski
-- Remove vDSO functions
-- Add sysfs control file for umwait max time
-
-v1:
-Based on comments from Thomas:
-- Change user APIs to vDSO functions
-- Changed sysfs per comments from Thomas.
-- Change patch descriptions etc
-
-Fenghua Yu (5):
-  x86/cpufeatures: Enumerate user wait instructions
-  x86/umwait: Initialize umwait control values
-  x86/umwait: Add sysfs interface to control umwait C0.2 state
-  x86/umwait: Add sysfs interface to control umwait maximum time
-  x86/umwait: Document umwait control sysfs interfaces
-
- .../ABI/testing/sysfs-devices-system-cpu      |  21 ++
- arch/x86/include/asm/cpufeatures.h            |   1 +
- arch/x86/include/asm/msr-index.h              |   4 +
- arch/x86/kernel/cpu/Makefile                  |   1 +
- arch/x86/kernel/cpu/umwait.c                  | 205 ++++++++++++++++++
- 5 files changed, 232 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/umwait.c
 
 -- 
-2.19.1
-
+Alexey
