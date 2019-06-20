@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4DAC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4FDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A0F21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E49021744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053895;
-	bh=cRcDWZHkooms6WmCUxm/G7+skOna08W3rNZ4Aa7wVsw=;
+	s=default; t=1561053897;
+	bh=RXSCdDUMopVh8+8d9z183A+gfSEGcEZeZFDCTI3t3fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RATrzWl3XWC8FcOd33xLar8sO7nyXDJukXASxcjhZe5NQb7njIM9TPLAu8jcrKKko
-	 yPxiDizTO7YGOGUrTaOXvhvqIpG08bhE1Wqdz5ON7zZ50C9SIYfxm8GlcXfUFWuDvm
-	 2WpLEhomYc8WVclYtv/5w1mxU07QjYfmsP3q0ZeI=
+	b=ptdAEV/+x2ENsl85JNGTQH9H0y5AfzSQ3ogcdw189dnplkqDK/vD768+ViripGJ/E
+	 0Z2vAZjNpQtGF/MhIA92BdofsIGYI6ozxmD/YTp4t+0jt9HSHOdfN3kQLqUxFfhuRC
+	 yBxdHNpL57luZRQRQYOWjqMLMAJI5MimO4iNh3qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfFTSEx (ORCPT
+        id S1727945AbfFTSE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57548 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbfFTSEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:04:49 -0400
+        id S1727280AbfFTSEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F1792166E;
-        Thu, 20 Jun 2019 18:04:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197B021670;
+        Thu, 20 Jun 2019 18:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053888;
-        bh=cRcDWZHkooms6WmCUxm/G7+skOna08W3rNZ4Aa7wVsw=;
+        s=default; t=1561053891;
+        bh=RXSCdDUMopVh8+8d9z183A+gfSEGcEZeZFDCTI3t3fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBV6E0Zb2PZ5wqBLKZsJp5vu9hDisba6hTn/o1qVFk4Dv2rJU2wmMQ2it+XJX2WXt
-         eez9+i7/aMEsuJZVNpTb7beyDsEp/DbdSWH+JE425QPCPzLyYIg7qgh5IpTaGUHf9l
-         JZc4Z/vows87dM1qoPKu6dkEIkP5vYWSfGWdS3l4=
+        b=uLyuKitGinzQZIvVcBwueGU/i/yq27GwhfgM/bCTp4Y1oguMXHgojg0smeEBYS8RI
+         XlvYzhbcg6f1+m++LQGFYv9TUf37fHdmApzHemnofFnmWbY9IYUF5BoEnckICzU4NI
+         x7SNnR10O7eUyHdPeHB1rDy/gj7NuMcs2qipaf3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.9 062/117] ptrace: restore smp_rmb() in __ptrace_may_access()
-Date:   Thu, 20 Jun 2019 19:56:36 +0200
-Message-Id: <20190620174356.642476782@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH 4.9 063/117] media: v4l2-ioctl: clear fields in s_parm
+Date:   Thu, 20 Jun 2019 19:56:37 +0200
+Message-Id: <20190620174356.670522344@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,63 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-commit f6581f5b55141a95657ef5742cf6a6bfa20a109f upstream.
+commit 8a7c5594c02022ca5fa7fb603e11b3e1feb76ed5 upstream.
 
-Restore the read memory barrier in __ptrace_may_access() that was deleted
-a couple years ago. Also add comments on this barrier and the one it pairs
-with to explain why they're there (as far as I understand).
+Zero the reserved capture/output array.
 
-Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
-Cc: stable@vger.kernel.org
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+Zero the extendedmode (it is never used in drivers).
+
+Clear all flags in capture/outputmode except for V4L2_MODE_HIGHQUALITY,
+as that is the only valid flag.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cred.c   |    9 +++++++++
- kernel/ptrace.c |   10 ++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/media/v4l2-core/v4l2-ioctl.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -447,6 +447,15 @@ int commit_creds(struct cred *new)
- 		if (task->mm)
- 			set_dumpable(task->mm, suid_dumpable);
- 		task->pdeath_signal = 0;
-+		/*
-+		 * If a task drops privileges and becomes nondumpable,
-+		 * the dumpability change must become visible before
-+		 * the credential change; otherwise, a __ptrace_may_access()
-+		 * racing with this change may be able to attach to a task it
-+		 * shouldn't be able to attach to (as if the task had dropped
-+		 * privileges without becoming nondumpable).
-+		 * Pairs with a read barrier in __ptrace_may_access().
-+		 */
- 		smp_wmb();
- 	}
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1959,7 +1959,22 @@ static int v4l_s_parm(const struct v4l2_
+ 	struct v4l2_streamparm *p = arg;
+ 	int ret = check_fmt(file, p->type);
  
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -322,6 +322,16 @@ static int __ptrace_may_access(struct ta
- 	return -EPERM;
- ok:
- 	rcu_read_unlock();
-+	/*
-+	 * If a task drops privileges and becomes nondumpable (through a syscall
-+	 * like setresuid()) while we are trying to access it, we must ensure
-+	 * that the dumpability is read after the credentials; otherwise,
-+	 * we may be able to attach to a task that we shouldn't be able to
-+	 * attach to (as if the task had dropped privileges without becoming
-+	 * nondumpable).
-+	 * Pairs with a write barrier in commit_creds().
-+	 */
-+	smp_rmb();
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	return ret ? ret : ops->vidioc_s_parm(file, fh, p);
++	if (ret)
++		return ret;
++
++	/* Note: extendedmode is never used in drivers */
++	if (V4L2_TYPE_IS_OUTPUT(p->type)) {
++		memset(p->parm.output.reserved, 0,
++		       sizeof(p->parm.output.reserved));
++		p->parm.output.extendedmode = 0;
++		p->parm.output.outputmode &= V4L2_MODE_HIGHQUALITY;
++	} else {
++		memset(p->parm.capture.reserved, 0,
++		       sizeof(p->parm.capture.reserved));
++		p->parm.capture.extendedmode = 0;
++		p->parm.capture.capturemode &= V4L2_MODE_HIGHQUALITY;
++	}
++	return ops->vidioc_s_parm(file, fh, p);
+ }
+ 
+ static int v4l_queryctrl(const struct v4l2_ioctl_ops *ops,
 
 
