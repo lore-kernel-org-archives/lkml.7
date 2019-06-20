@@ -2,174 +2,121 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F2C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB88C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EE82085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244FA2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Sha4u42Y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIsQphDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfFTHvz (ORCPT
+        id S1726634AbfFTHwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:51:55 -0400
-Received: from ozlabs.org ([203.11.71.1]:41009 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfFTHvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:51:54 -0400
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 45TvCn4f3jz9sBr; Thu, 20 Jun 2019 17:51:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1561017109;
-        bh=KY2I3dC1Px56+CQotFXwYFAvhLT69NhbHKJ1Ta4T1+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sha4u42YfDlRkYyVdHB+7UMxiKsSZOusC0WbZTwuwnE6jAKyBBTpF4VPpHzYTPEtf
-         fR8fgbrFr8gql9u7+f6oGqb9NBj9GsSH1lDcxIXx6YDqa+5B8Xx20rm1cPOapz0uy2
-         5TyrJ6kflvOgpok2aWwB5UoydscA5nQ2tjyRqRoM=
-Date:   Thu, 20 Jun 2019 17:45:17 +1000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-spdx@vger.kernel.org,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: SPDX conversion under scripts/dtc/ of Linux Kernel
-Message-ID: <20190620074517.GA2066@umbus.BigPond>
-References: <CAK7LNARHHXv5Tu4BHN1avKOExS6HmPfd2c0ELZiQaxtmETOsDw@mail.gmail.com>
- <20190619125948.GA27090@kroah.com>
- <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
+        Thu, 20 Jun 2019 03:52:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47288 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfFTHwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:52:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=z9K4JaOfCly2PGAOEjcdrFWJOAtSuxbb4GvB+cSG2jg=; b=DIsQphDQ16khJezTqsw/oNAiR
+        5sjLrKDs+Rngi0tKkBKh1rYK17HMeexsoBlVFQPTmmF/gFKgXehYIYRYdsC/E14t8+Ay0Gzl9Bvyo
+        gnby4u0dNTmHjAE6Hmyo9Jtah0SG1RUKaXfhv3AfBlkmw/dG5rSIjPYOol+cLPbU00S21gyCiS6rH
+        F2Gw2SDPp0N7iae6G7o9J5omXNRknXeGYLs2RpMDxuDpKoPyk5r12Exk87b8nc4yy1waOTIwkW4UM
+        tXVt56CiOBmYi+ee/3Gyb/MDDzmFtGmnk8KhtDfDFudtAaXYjZW6WOb7MJlYTlFqRG1xkcBRM38eI
+        0ILa6qk7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdrru-0008Ll-8o; Thu, 20 Jun 2019 07:52:26 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 73A8120098587; Thu, 20 Jun 2019 09:52:24 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 09:52:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Message-ID: <20190620075224.GT3419@hirez.programming.kicks-ass.net>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+ <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 11:55:41PM +0000, Vineet Gupta wrote:
+> On 6/19/19 1:12 AM, Peter Zijlstra wrote:
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >>> +static inline u32 arc_gen_nop(void)
+> >>> +{
+> >>> +	/* 1x 32bit NOP in middle endian */
+> > I dare not ask...
+> 
+> :-) The public PRM is being worked on for *real* so this will be remedied in a few
+> months at best.
+> 
+> Short answer is it specifies how instruction stream is laid out in code memory for
+> efficient next PC decoding given that ARC can freely intermix 2, 4, 6, 8 byte
+> instruction fragments w/o any restrictions.
+> 
+> Consier SWI insn encoding: per PRM is
+> 
+> 31                                     0
+> --------------------------------------------------------------
+> 00100    010    01    101111    0    000    000000    111111
+> --------------------------------------------------------------
+> 
+> In regular little endian notation, in memory it would have looked as
+> 
+> 31                  0
+>  0x22    0x6F    0x00    0x3F 
+>   b3     b2      b1      b0
+> 
+> However in middle endian format, the 2 short words are flipped
+> 
+> 31                   0
+> 0x00    0x3F   0x22     0x6F   
+>   b1     b0      b3       b2
 
-On Wed, Jun 19, 2019 at 09:39:13AM -0600, Rob Herring wrote:
-> On Wed, Jun 19, 2019 at 6:59 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jun 19, 2019 at 07:23:19PM +0900, Masahiro Yamada wrote:
-> > > Hi.
-> > >
-> > > In this development cycle of Linux kernel,
-> > > lots of files were converted to use SPDX
-> > > instead of the license boilerplate.
-> > >
-> > > However.
-> > >
-> > > Some files were imported from a different project,
-> > > and are periodically synchronized with the upstream.
-> > > Have we discussed what to do about this case?
-> > >
-> > >
-> > > For example, scripts/dtc/ is the case.
-> > >
-> > > The files in scripts/dtc/ are synced with the upstream
-> > > device tree compiler.
-> > >
-> > > Rob Herring periodically runs scripts/dtc/update-dtc-source.sh
-> > > to import outcome from the upstream.
-> > >
-> > >
-> > > The upstream DTC has not adopted SPDX yet.
-> > >
-> > > Some files in Linux (e.g. scripts/dtc/dtc.c)
-> > > have been converted to SPDX.
-> > >
-> > > So, they are out of sync now.
-> > >
-> > > The license boilerplate will come back
-> > > when Rob runs scripts/dtc/update-dtc-source.sh
-> > > next time.
->=20
-> Already has. It just happened and is in next. The policy is everything
-> is upstream first and any changes to dtc in the kernel are rejected.
->=20
-> > >
-> > > What shall we do?
-> > >
-> > > [1] Convert upstream DTC to SPDX
-> > >
-> > > This will be a happy solution if it is acceptable in DTC.
-> > > Since we cannot push the decision of the kernel to a different
-> > > project, this is totally up to David Gibson.
-> >
-> > That's fine with me :)
->=20
-> I'll do the work if David is okay with it.
+I'm probably missing something here. I understand the I-fetch likes 2
+byte chunks, but I'm not sure I understand how you end up with middle
+endian.
 
-I have no objection.
+With everything little endian, everything seems just fine. If you load
+the first 2 byte at offset 0, you get the first 2 bytes of the
+instruction.
 
+If OTOH your arch big endian, and you were to load the first two bytes
+at offset 0, you get the top two.
 
-> > > [2] Change scripts/dtc/update-dtc-source.sh to
-> > >     take care of the license block somehow
-> >
-> > That would also be good.
-> >
-> > > [3] Go back to license boilerplate, and keep the files
-> > >     synced with the upstream
-> > >     (and scripts/dtc/ should be excluded from the
-> > >      SPDX conversion tool.)
-> >
-> > nothing is being excluded from the SPDX conversions, sorry.  The goal is
-> > to do this for every file in the kernel tree.  Otherwise it's pointless.
-> >
-> > > Or, what else?
-> >
-> > Rob remembers to keep those first lines of the files intact when doing
-> > the next sync?
->=20
-> Patches to the import script are welcome. The only thing I have to
-> remember running the script is to add any new files. Otherwise, it's
-> scripted so I don't have to remember anything.
->=20
-> Rob
->=20
+So this middle endian scheme, only seems to make sense if you're
+otherwise big endian. But AFAICT ARC is bi-endian and the jump-label
+patch under condsideration is explicitly !CPU_ENDIAN_BE32 -- which
+suggests the instruction stream is sensitive to the endian selection.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Anyway, I was just 'surprised' at seeing middle endian mentioned,
+curiosity killed the cat and all that :-)
 
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl0LOYoACgkQbDjKyiDZ
-s5JO2Q//Qnvu8CIqR9v1DPhq1I1K6wFUT3RxjlX+pE03rujjRcwTv7K7d19AWqdL
-3lwaWAc8faWWg8/ceC8hBN/yXzNwtN1nnPyeeULgVUPWoPPPg4LzWjDFfuy+6M51
-CdS8lSkiCYNR52jEkirsDW6pd6NIwbaAsSgtYxd7EB39HGWwPk6xq726aPKqD6Vo
-ae70uJsDOH3tSbeXwFIx8//wvI1VtylMxROJU6MoKcs7c538jddrJSRQHjI1V0PY
-2Git/vQSI92xIkVc4ZrDCPhZ3TGUUuK+caYaxssLdK2lxd/lrQjL3fUCIoSykzOr
-u5vaBrxoYoP4GbZX9VxCZrwocXgAYn7Qf2ihw3Xs2/StrhdNsLVkrsuzP4A9pDbZ
-73Fr7FIw6UFarugBtKahlDV0yI3mQG42Awk6Is5SxLwFheyhrGMzkk8P33pV4ffb
-RYZ++8GwzVFl3ko0vf7tZIhNnLZLY4/MT+efPfmu+0+YF67oZ/TsdtHu1rHz+cJz
-tDj4hEzPXBRaj3jB3pEw3Xvs9EZvd6a3WeBEBoV8WtJWioS9cqHTvYtq5YQfOqzc
-qg82KlJpZg74ukamcHEmwfooC9AjfKFek/7ecqlBI5fBviEMM6fI7MfyTHAErVya
-ctngxdwSqxU/9DSCo5oRoSS7vgJkaaLo5rgNkd8M2DbmU9EM1ok=
-=vqV0
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
