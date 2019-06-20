@@ -2,113 +2,150 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C65DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D5D2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D132083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ctO7hOId"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yml/HzIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfFUGKt (ORCPT
+        id S1725989AbfFUGLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 02:10:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45768 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfFUGKt (ORCPT
+        Fri, 21 Jun 2019 02:11:17 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53418 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfFUGLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 02:10:49 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so2450873plb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 23:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xzioaCMOpZ9xQIhn8ZgZe3ezoCoNBuqDVW6enXrUWdI=;
-        b=ctO7hOIdc1bJes6IfW+jMC3YvFiVSz45t+/wcP7nl8TQnixOumEuakVUduy54+D7vJ
-         IdmjNUS/kNTfK7m3QaYMos3dbKCZRVWTfrJFCalZJNsrO1H1o/F7taY9HeBHZRisbRgf
-         NjO/pdbW9rE9yRbiBiXHxrhud2JsVcugAKH+sg89svmnAcKH7fuQ0977VQ8x1qNV3YbE
-         QthTsJiP1TuuIINMBQ3GV/EHrVuRwMj7SiMzRwunaN33CqyeO7qPgc4hmRVnbIFXtyop
-         jL+FJiNe7n3XdJTacXjginoA/dKAYtF0soKm0PxiGhj2m7/NHDZNIXnV7rrH0Aosw6a0
-         ZcKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xzioaCMOpZ9xQIhn8ZgZe3ezoCoNBuqDVW6enXrUWdI=;
-        b=LJ8+mB7pRam9x3H03UhWogeI9ePcWGDuXYwHWEJR3Qz/3UP/pMiz2gfwON9xMTH8as
-         BeW/MKDaYKVttYnJbE8oMAiVw2XJkUC9hNTmqctgqOPXGwyWxT1x68pMrkjjre15UFrk
-         ox2zlchGHbXAwwXrOjpHubcCSlFHY+3Dzty8aLIJbTwPi3h6Im2SXgWfvpdH57SLtfK5
-         sEOIe81nghsCIIRRQdWcbZ8uHJueSPB18ArJ+FgpCI6aoUgxnnDnLpymS8EFwjZmFgiX
-         m4E/MEeGq09U1CPqhcz9zRNSokrLCve+Mk/GxzKgoeHWC3kAmpZJjy0zqO262Tz+3R20
-         tcBg==
-X-Gm-Message-State: APjAAAXax4J0VpAFCqbS6lAX4x+9erWG4ZGWWlBmvZgeP+iA5C9s9Ag7
-        kmnLExZg7a9RRIM0SN6sTMJgUA==
-X-Google-Smtp-Source: APXvYqwNG2i/oMNUPGHebpRlmIa/kWkRWV3Ez3z7eWR9nYZaeTxX5aOLEn6fqpOIvgHIP0ZnhK13+w==
-X-Received: by 2002:a17:902:b611:: with SMTP id b17mr77686806pls.261.1561097448592;
-        Thu, 20 Jun 2019 23:10:48 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id x17sm1450053pgk.72.2019.06.20.23.10.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Jun 2019 23:10:47 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, paul.walmsley@sifive.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: dts: Add DT node for SiFive FU540 Ethernet controller driver
-Date:   Fri, 21 Jun 2019 11:40:22 +0530
-Message-Id: <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561097422-25130-1-git-send-email-yash.shah@sifive.com>
-References: <1561097422-25130-1-git-send-email-yash.shah@sifive.com>
+        Fri, 21 Jun 2019 02:11:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5L63hwT133989;
+        Fri, 21 Jun 2019 06:10:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=XQC2vWYEYxVCAdoqaVl6sGe93jBERWNKKPMelCZgp70=;
+ b=yml/HzIfevjcHdXvGkL+F1EBoLnXH+xKybo8yYqgNvrF4fPeXVBFo8srb9b4vrkrp3hA
+ v+4U1TIyat3oDkzYZC2rTKtlxHsx0S/Qeu8+ovo8wNwoK0YPchErb5ElP1VE75Bg5WHa
+ /ANN7n6LXJkbWbbTenZcvSGUZvIUAGpggjfA9POK7CR22phZebRloPwzX/FiYLaJ623k
+ T3cNUNY/E2GRjoYgy+Ex8Ix5qLLXlKYNQDAOCyb3sRxoOQreozGXfckMjqKirjuMPQyd
+ 6d5WMh06ygydHWQnfddmz2cy0PExXRo+66qwlF4RTd66QE83DyspKQqfUbZcuBMzKRkh 2A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t7809mkcc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 06:10:53 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5L69pPM175378;
+        Fri, 21 Jun 2019 06:10:53 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t77yp0x75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 06:10:53 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5L6Ands010731;
+        Fri, 21 Jun 2019 06:10:49 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87) by default (Oracle Beehive
+ Gateway v4.0) with ESMTP ; Thu, 20 Jun 2019 23:10:28 -0700
+MIME-Version: 1.0
+Message-ID: <1561011237-12312-1-git-send-email-zhenzhong.duan@oracle.com>
+Date:   Wed, 19 Jun 2019 23:13:57 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, jgross@suse.com, ndesaulniers@google.com,
+        gregkh@linuxfoundation.org, srinivas.eeda@oracle.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH] x86/speculation/mds: Flush store buffer after wake up from
+ sleep
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=817
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906210052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=860 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+Intel document says: "When a thread wakes from a sleep state, the store
+buffer is repartitioned again. This causes the store buffer to transfer
+store buffer entries from the thread that was already active to the one
+which just woke up."
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+To avoid data leak from sibling thread to the woken thread, flush store
+buffer right after wake up.
+
+Move mds_idle_clear_cpu_buffers() after trace_hardirqs_on() to ensure
+all store buffer entries are flushed before sleep.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/x86/include/asm/irqflags.h | 2 ++
+ arch/x86/include/asm/mwait.h    | 6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 4e8fbde..584e737 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -225,5 +225,25 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-+		eth0: ethernet@10090000 {
-+			compatible = "sifive,fu540-macb";
-+			interrupt-parent = <&plic0>;
-+			interrupts = <53>;
-+			reg = <0x0 0x10090000 0x0 0x2000
-+			       0x0 0x100a0000 0x0 0x1000>;
-+			reg-names = "control";
-+			local-mac-address = [00 00 00 00 00 00];
-+			phy-mode = "gmii";
-+			phy-handle = <&phy1>;
-+			clock-names = "pclk", "hclk";
-+			clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-+				 <&prci PRCI_CLK_GEMGXLPLL>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			phy1: ethernet-phy@0 {
-+				reg = <0>;
-+			};
-+		};
+diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+index 8a0e56e..641c4d8 100644
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -58,12 +58,14 @@ static inline __cpuidle void native_safe_halt(void)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 	asm volatile("sti; hlt": : :"memory");
++	mds_idle_clear_cpu_buffers();
+ }
+ 
+ static inline __cpuidle void native_halt(void)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 	asm volatile("hlt": : :"memory");
++	mds_idle_clear_cpu_buffers();
+ }
+ 
+ #endif
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index eb0f80c..1d145d9 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -46,6 +46,7 @@ static inline void __mwait(unsigned long eax, unsigned long ecx)
+ 	/* "mwait %eax, %ecx;" */
+ 	asm volatile(".byte 0x0f, 0x01, 0xc9;"
+ 		     :: "a" (eax), "c" (ecx));
++	mds_idle_clear_cpu_buffers();
+ }
+ 
+ /*
+@@ -86,12 +87,13 @@ static inline void __mwaitx(unsigned long eax, unsigned long ebx,
+ 
+ static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+ {
+-	mds_idle_clear_cpu_buffers();
+-
+ 	trace_hardirqs_on();
 +
- 	};
- };
++	mds_idle_clear_cpu_buffers();
+ 	/* "mwait %eax, %ecx;" */
+ 	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+ 		     :: "a" (eax), "c" (ecx));
++	mds_idle_clear_cpu_buffers();
+ }
+ 
+ /*
 -- 
-1.9.1
+1.8.3.1
 
