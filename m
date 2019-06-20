@@ -2,129 +2,78 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22135C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77F8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0639C2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0CA20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561030301;
+	bh=T9zyIGBTWEG9JgKSSKBceq6/1rh4Aqo73q8y+fqDCCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OB63B/cyGZgWRxFtKoVT58eiFTBTTi5BhcrpVVMWT4uitIZ8aU1C4jibJH6NTzIvx
+	 Gmnr5wadTYiDOYMxYpBO5bZOR9JcRwYPtPtZT0lAG9WSbHZbjAVrxtJkR2bKZrTv/x
+	 i58WYj/wWwQJ19de1lf82Z2z9nL3ngM7Lj1UCyZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731681AbfFTLbN (ORCPT
+        id S1731713AbfFTLbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:31:13 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41673 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfFTLbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:31:12 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id D30728053C; Thu, 20 Jun 2019 13:30:57 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 13:30:57 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Message-ID: <20190620113057.GA16460@atrey.karlin.mff.cuni.cz>
-References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
- <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
- <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
- <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Thu, 20 Jun 2019 07:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfFTLbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:31:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D2AD2085A;
+        Thu, 20 Jun 2019 11:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561030298;
+        bh=T9zyIGBTWEG9JgKSSKBceq6/1rh4Aqo73q8y+fqDCCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZOGfA2UVQ1Rxrk7fp022CkYJPGhijzIBS43s1iPYliZ/zO7L1qNlaKnF+pRC9SMtH
+         fO4y9zRTrzvOr7GbAUaQvF0v9PCxFZeMtQjnObrhVpTag3/4y0WBSjiXtgERRpA/Mq
+         nMmdM5bOPWfZhOyQY2UtBLBpKMPkYERWkjlLMKnQ=
+Date:   Thu, 20 Jun 2019 13:31:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs fixes for 5.2-rc6
+Message-ID: <20190620113136.GB2275@kroah.com>
+References: <20190620092213.GA16781@ogabbay-VM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190620092213.GA16781@ogabbay-VM>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
-> > Sent: Monday, June 17, 2019 9:15 AM
-> > > ...
-> > > + some ARM experts who worked on arch/arm/kernel/hibernate.c.
-> > >
-> > > drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
-> > > is defined, but it looks this option is not defined on ARM.
-> > >
-> > > It looks ARM does not support the ACPI S4 state, then how do we know
-> > > if an ARM host supports hibernation or not?
-> > 
-> > Maybe we should start from understanding why you need to know whether
-> > Hibernate is possible to answer your question ?
-> > 
-> > On ARM64 platforms system states are entered through PSCI firmware
-> > interface that works for ACPI and device tree alike.
-> > 
-> > Lorenzo
+On Thu, Jun 20, 2019 at 12:22:13PM +0300, Oded Gabbay wrote:
+> Hi Greg,
 > 
-> Hi Lorenzo,
-> It looks I may have confused you as I didn't realize the word "ARM" only means
-> 32-bit ARM. It looks the "ARM" arch and the "ARM64" arch are very different.
+> This is a pull request containing fixes to be merged to 5.2-rc6.
 > 
-> As far as I know, Hyper-V only supports x86 and "ARM64", and it's unlikely to
-> support 32-bit ARM in the future, so actually I don't really need to know if and
-> how a 32-bit ARM machine supports hibernation.
+> It contains a single minor bug fix. See the tag comment for more details.
 > 
-> When a Linux guest runs on Hyper-V (x86_32, x86_64, or ARM64) , we have a
-> front-end balloon driver in the guest, which balloons up/down and
-> hot adds/removes the guest's memory when the host requests that. The problem
-> is: the back-end driver on the host can not really save and restore the states
-> related to the front-end balloon driver on guest hibernation, so we made the
-> decision that balloon up/down and hot-add/remove are not supported when
-> we enable hibernation for a guest; BTW, we still want to load the front-end
-> driver in the guest, because the dirver has a functionality of reporting the
-> guest's memory pressure to the host, which we think is useful.
+> Thanks,
+> Oded
 > 
-> On x86_32 and x86_64, we enable hibernation for a guest by enabling
-> the virtual ACPI S4 state for the guest; on ARM64, so far we don't have the
-> host side changes required to support guest hibernation, so the details are
-> still unclear.
+> The following changes since commit 6ad805b82dc5fc0ffd2de1d1f0de47214a050278:
 > 
-> After I discussed with Michael Kelley, it looks we don't really need to
-> export drivers/acpi/sleep.c: acpi_sleep_state_supported(), but I think we do
-> need to make it non-static.
+>   doc: fix documentation about UIO_MEM_LOGICAL using (2019-06-19 19:31:21 +0200)
 > 
-> Now I propose the below changes. I plan to submit a patch first for the
-> changes made to drivers/acpi/sleep.c and include/acpi/acpi_bus.h in a few
-> days, if there is no objection.
+> are available in the Git repository at:
 > 
-> Please let me know how you think of this. Thanks!
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-06-20
 
-No.
+Pulled and pushed out,t hanks.
 
-Hibernation should be always supported, no matter what firmware. If it
-can powerdown, it can hibernate.
-
-That is for x86-32/64, too.
-									Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+greg k-h
