@@ -7,74 +7,70 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E300C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A46C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A07F2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243E62075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FvObwE+D"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="p6VbguMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbfFTLis (ORCPT
+        id S1731739AbfFTLjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:38:48 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50419 "EHLO
+        Thu, 20 Jun 2019 07:39:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55771 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfFTLis (ORCPT
+        with ESMTP id S1726404AbfFTLjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:38:48 -0400
+        Thu, 20 Jun 2019 07:39:17 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5KBbvCE946199
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5KBcdkL946384
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 20 Jun 2019 04:37:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5KBbvCE946199
+        Thu, 20 Jun 2019 04:38:39 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5KBcdkL946384
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561030678;
-        bh=ZYc0uBa8ZNBgwsdBYLKbYrHpNA6zUOpAOKbGYfv/XGA=;
+        s=2019061801; t=1561030720;
+        bh=tS1XAjpDigpBTn2j4TBO7NVMbdSZzdbdrZXPVG3WvWI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=FvObwE+DdLjWkNPwjt/c+fNRAB23hFkKIB7VGA7yklPd1cb9q5tgKsJSHlt4xXqql
-         69GB9CSU5Cr5G63Xx3WUHMQ1tJVUk9e3AfUY+Ar1IX2+UstIwGZMxVsbmDj0icoicR
-         PMzHuKnUErX5/EMa+HgmXEmSyNtMfEv9Fne/JbDzdLcIuvTljEDxbtGIaPm14E9Rao
-         YMywyMtDzZYvsH7bQd0LjDbN/tPMUi+H1EDjg8OJ8L5eje/uegc+pBVFFM8OGth3Aw
-         WKKstysvmtdj8KyKtmJ+E+TBPmZBr92CHd+SLDn51xUsbICVyb6P7bSdTxuAtEmmM2
-         HYkQulaEu5Flg==
+        b=p6VbguMwCzYM4YHr3lpcPHliZBlrYEA8lz4t2DWFxNacGx+f91/lLK1PuiRd5tU9t
+         t5NOfJ7k0zQA5gXaGSvcxrH/AVPTGfoXmB7aZJIQIGnST11YuJAebAGueRCc4nN0PX
+         mktYFlw4mnrQgdJ/66HOy2ZMA6OF8uASElUzYw0LE/LDJoM5OuYQjtyMn+dXWwDBUx
+         D3sTnT6ftCuqXnVWgaJ1SPk3hN5BqotYEGoHHt5XicwA+tq2HDsBdxgw+c3X9Qul2h
+         CtGtTW6yzFXXVBtWV43R0Ad94ouqOnHglsSjXiKITHaD7APAKP2Inn8BC+Mjy9oQ5w
+         qp2e8/6cyswxw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5KBbtmA946192;
-        Thu, 20 Jun 2019 04:37:55 -0700
-Date:   Thu, 20 Jun 2019 04:37:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5KBccuE946377;
+        Thu, 20 Jun 2019 04:38:38 -0700
+Date:   Thu, 20 Jun 2019 04:38:38 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Fenghua Yu <tipbot@zytor.com>
-Message-ID: <tip-acec0ce081de0c36459eea91647faf99296445a3@git.kernel.org>
-Cc:     pfeiner@google.com, mingo@redhat.com, ravi.v.shankar@intel.com,
-        Thomas.Lendacky@amd.com, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, sean.j.christopherson@intel.com, luto@kernel.org,
-        rafael.j.wysocki@intel.com, mhiramat@kernel.org, jgross@suse.com,
-        yamada.masahiro@socionext.com, fenghua.yu@intel.com,
-        chang.seok.bae@intel.com, peterz@infradead.org,
-        pasha.tatashin@oracle.com, kvm@vger.kernel.org,
-        frederic@kernel.org, babu.moger@amd.com, aaronlewis@google.com,
-        bp@suse.de, konrad.wilk@oracle.com, x86@kernel.org,
-        sherry.hurwitz@amd.com, pbonzini@redhat.com, jannh@google.com,
-        namit@vmware.com, mingo@kernel.org, tglx@linutronix.de,
+Message-ID: <tip-b302e4b176d00e1cbc80148c5d0aee36751f7480@git.kernel.org>
+Cc:     fenghua.yu@intel.com, bp@suse.de, robert.hu@linux.intel.com,
+        Thomas.Lendacky@amd.com, chang.seok.bae@intel.com,
+        pasha.tatashin@oracle.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, frederic@kernel.org, mpe@ellerman.id.au,
+        mingo@kernel.org, hpa@zytor.com, jannh@google.com,
+        pfeiner@google.com, rafael.j.wysocki@intel.com,
+        sean.j.christopherson@intel.com, x86@kernel.org,
+        yamada.masahiro@socionext.com, mingo@redhat.com,
+        pbonzini@redhat.com, ravi.v.shankar@intel.com, namit@vmware.com,
         rkrcmar@redhat.com
-Reply-To: tglx@linutronix.de, rkrcmar@redhat.com, sherry.hurwitz@amd.com,
-          pbonzini@redhat.com, jannh@google.com, namit@vmware.com,
-          mingo@kernel.org, aaronlewis@google.com, bp@suse.de,
-          konrad.wilk@oracle.com, x86@kernel.org, frederic@kernel.org,
-          babu.moger@amd.com, chang.seok.bae@intel.com,
-          peterz@infradead.org, pasha.tatashin@oracle.com,
-          kvm@vger.kernel.org, mhiramat@kernel.org, jgross@suse.com,
-          yamada.masahiro@socionext.com, fenghua.yu@intel.com,
-          sean.j.christopherson@intel.com, luto@kernel.org,
-          rafael.j.wysocki@intel.com, pfeiner@google.com, mingo@redhat.com,
-          Thomas.Lendacky@amd.com, ravi.v.shankar@intel.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <1560794416-217638-2-git-send-email-fenghua.yu@intel.com>
-References: <1560794416-217638-2-git-send-email-fenghua.yu@intel.com>
+Reply-To: fenghua.yu@intel.com, robert.hu@linux.intel.com,
+          pasha.tatashin@oracle.com, Thomas.Lendacky@amd.com,
+          tglx@linutronix.de, frederic@kernel.org,
+          rafael.j.wysocki@intel.com, pfeiner@google.com, x86@kernel.org,
+          sean.j.christopherson@intel.com, bp@suse.de,
+          linux-kernel@vger.kernel.org, chang.seok.bae@intel.com,
+          mpe@ellerman.id.au, jannh@google.com, mingo@kernel.org,
+          hpa@zytor.com, mingo@redhat.com, yamada.masahiro@socionext.com,
+          rkrcmar@redhat.com, namit@vmware.com, pbonzini@redhat.com,
+          ravi.v.shankar@intel.com
+In-Reply-To: <1560794416-217638-3-git-send-email-fenghua.yu@intel.com>
+References: <1560794416-217638-3-git-send-email-fenghua.yu@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/cpufeatures: Combine word 11 and 12 into a new
- scattered features word
-Git-Commit-ID: acec0ce081de0c36459eea91647faf99296445a3
+Subject: [tip:x86/cpu] x86/cpufeatures: Enumerate the new AVX512 BFLOAT16
+ instructions
+Git-Commit-ID: b302e4b176d00e1cbc80148c5d0aee36751f7480
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -88,207 +84,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  acec0ce081de0c36459eea91647faf99296445a3
-Gitweb:     https://git.kernel.org/tip/acec0ce081de0c36459eea91647faf99296445a3
+Commit-ID:  b302e4b176d00e1cbc80148c5d0aee36751f7480
+Gitweb:     https://git.kernel.org/tip/b302e4b176d00e1cbc80148c5d0aee36751f7480
 Author:     Fenghua Yu <fenghua.yu@intel.com>
-AuthorDate: Wed, 19 Jun 2019 18:51:09 +0200
+AuthorDate: Mon, 17 Jun 2019 11:00:16 -0700
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 20 Jun 2019 12:38:44 +0200
+CommitDate: Thu, 20 Jun 2019 12:38:49 +0200
 
-x86/cpufeatures: Combine word 11 and 12 into a new scattered features word
+x86/cpufeatures: Enumerate the new AVX512 BFLOAT16 instructions
 
-It's a waste for the four X86_FEATURE_CQM_* feature bits to occupy two
-whole feature bits words. To better utilize feature words, re-define
-word 11 to host scattered features and move the four X86_FEATURE_CQM_*
-features into Linux defined word 11. More scattered features can be
-added in word 11 in the future.
+AVX512 BFLOAT16 instructions support 16-bit BFLOAT16 floating-point
+format (BF16) for deep learning optimization.
 
-Rename leaf 11 in cpuid_leafs to CPUID_LNX_4 to reflect it's a
-Linux-defined leaf.
+BF16 is a short version of 32-bit single-precision floating-point
+format (FP32) and has several advantages over 16-bit half-precision
+floating-point format (FP16). BF16 keeps FP32 accumulation after
+multiplication without loss of precision, offers more than enough
+range for deep learning training tasks, and doesn't need to handle
+hardware exception.
 
-Rename leaf 12 as CPUID_DUMMY which will be replaced by a meaningful
-name in the next patch when CPUID.7.1:EAX occupies world 12.
+AVX512 BFLOAT16 instructions are enumerated in CPUID.7.1:EAX[bit 5]
+AVX512_BF16.
 
-Maximum number of RMID and cache occupancy scale are retrieved from
-CPUID.0xf.1 after scattered CQM features are enumerated. Carve out the
-code into a separate function.
+CPUID.7.1:EAX contains only feature bits. Reuse the currently empty
+word 12 as a pure features word to hold the feature bits including
+AVX512_BF16.
 
-KVM doesn't support resctrl now. So it's safe to move the
-X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
+Detailed information of the CPUID bit and AVX512 BFLOAT16 instructions
+can be found in the latest Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference.
+
+ [ bp: Check CPUID(7) subleaf validity before accessing subleaf 1. ]
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Aaron Lewis <aaronlewis@google.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Babu Moger <babu.moger@amd.com>
 Cc: "Chang S. Bae" <chang.seok.bae@intel.com>
-Cc: "Sean J Christopherson" <sean.j.christopherson@intel.com>
 Cc: Frederic Weisbecker <frederic@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Jann Horn <jannh@google.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: kvm ML <kvm@vger.kernel.org>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Nadav Amit <namit@vmware.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
 Cc: Peter Feiner <pfeiner@google.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Radim Krcmar <rkrcmar@redhat.com>
 Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
+Cc: "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc: Robert Hoo <robert.hu@linux.intel.com>
+Cc: "Sean J Christopherson" <sean.j.christopherson@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
 Cc: x86 <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1560794416-217638-2-git-send-email-fenghua.yu@intel.com
+Link: https://lkml.kernel.org/r/1560794416-217638-3-git-send-email-fenghua.yu@intel.com
 ---
- arch/x86/include/asm/cpufeature.h  |  4 ++--
- arch/x86/include/asm/cpufeatures.h | 17 ++++++++++-------
- arch/x86/kernel/cpu/common.c       | 38 +++++++++++++++-----------------------
- arch/x86/kernel/cpu/cpuid-deps.c   |  3 +++
- arch/x86/kernel/cpu/scattered.c    |  4 ++++
- arch/x86/kvm/cpuid.h               |  2 --
- 6 files changed, 34 insertions(+), 34 deletions(-)
+ arch/x86/include/asm/cpufeature.h  | 2 +-
+ arch/x86/include/asm/cpufeatures.h | 3 +++
+ arch/x86/kernel/cpu/common.c       | 6 ++++++
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ 4 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 1d337c51f7e6..403f70c2e431 100644
+index 403f70c2e431..58acda503817 100644
 --- a/arch/x86/include/asm/cpufeature.h
 +++ b/arch/x86/include/asm/cpufeature.h
-@@ -22,8 +22,8 @@ enum cpuid_leafs
- 	CPUID_LNX_3,
+@@ -23,7 +23,7 @@ enum cpuid_leafs
  	CPUID_7_0_EBX,
  	CPUID_D_1_EAX,
--	CPUID_F_0_EDX,
--	CPUID_F_1_EDX,
-+	CPUID_LNX_4,
-+	CPUID_DUMMY,
+ 	CPUID_LNX_4,
+-	CPUID_DUMMY,
++	CPUID_7_1_EAX,
  	CPUID_8000_0008_EBX,
  	CPUID_6_EAX,
  	CPUID_8000_000A_EDX,
 diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 1017b9c7dfe0..be858b86023a 100644
+index be858b86023a..8ecd9fac97c3 100644
 --- a/arch/x86/include/asm/cpufeatures.h
 +++ b/arch/x86/include/asm/cpufeatures.h
-@@ -271,13 +271,16 @@
- #define X86_FEATURE_XGETBV1		(10*32+ 2) /* XGETBV with ECX = 1 instruction */
- #define X86_FEATURE_XSAVES		(10*32+ 3) /* XSAVES/XRSTORS instructions */
+@@ -282,6 +282,9 @@
+ #define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
+ #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
  
--/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:0 (EDX), word 11 */
--#define X86_FEATURE_CQM_LLC		(11*32+ 1) /* LLC QoS if 1 */
--
--/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:1 (EDX), word 12 */
--#define X86_FEATURE_CQM_OCCUP_LLC	(12*32+ 0) /* LLC occupancy monitoring */
--#define X86_FEATURE_CQM_MBM_TOTAL	(12*32+ 1) /* LLC Total MBM monitoring */
--#define X86_FEATURE_CQM_MBM_LOCAL	(12*32+ 2) /* LLC Local MBM monitoring */
-+/*
-+ * Extended auxiliary flags: Linux defined - for features scattered in various
-+ * CPUID levels like 0xf, etc.
-+ *
-+ * Reuse free bits when adding new feature flags!
-+ */
-+#define X86_FEATURE_CQM_LLC		(11*32+ 0) /* LLC QoS if 1 */
-+#define X86_FEATURE_CQM_OCCUP_LLC	(11*32+ 1) /* LLC occupancy monitoring */
-+#define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
-+#define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
- 
++/* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
++#define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
++
  /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
  #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+ #define X86_FEATURE_IRPERF		(13*32+ 1) /* Instructions Retired Count */
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index fe6ed9696467..efb114298cfb 100644
+index efb114298cfb..dad20bc891d5 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -803,33 +803,25 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
- 
- static void init_cqm(struct cpuinfo_x86 *c)
- {
--	u32 eax, ebx, ecx, edx;
--
--	/* Additional Intel-defined flags: level 0x0000000F */
--	if (c->cpuid_level >= 0x0000000F) {
-+	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
-+		c->x86_cache_max_rmid  = -1;
-+		c->x86_cache_occ_scale = -1;
-+		return;
-+	}
- 
--		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
--		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
--		c->x86_capability[CPUID_F_0_EDX] = edx;
-+	/* will be overridden if occupancy monitoring exists */
-+	c->x86_cache_max_rmid = cpuid_ebx(0xf);
- 
--		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
--			/* will be overridden if occupancy monitoring exists */
--			c->x86_cache_max_rmid = ebx;
-+	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
-+	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
-+	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
-+		u32 eax, ebx, ecx, edx;
- 
--			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
--			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
--			c->x86_capability[CPUID_F_1_EDX] = edx;
-+		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
-+		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
- 
--			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
--			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
--			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
--				c->x86_cache_max_rmid = ecx;
--				c->x86_cache_occ_scale = ebx;
--			}
--		} else {
--			c->x86_cache_max_rmid = -1;
--			c->x86_cache_occ_scale = -1;
--		}
-+		c->x86_cache_max_rmid  = ecx;
-+		c->x86_cache_occ_scale = ebx;
+@@ -847,6 +847,12 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_7_0_EBX] = ebx;
+ 		c->x86_capability[CPUID_7_ECX] = ecx;
+ 		c->x86_capability[CPUID_7_EDX] = edx;
++
++		/* Check valid sub-leaf index before accessing it */
++		if (eax >= 1) {
++			cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
++			c->x86_capability[CPUID_7_1_EAX] = eax;
++		}
  	}
- }
  
+ 	/* Extended state features: level 0x0000000d */
 diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 2c0bd38a44ab..fa07a224e7b9 100644
+index fa07a224e7b9..a444028d8145 100644
 --- a/arch/x86/kernel/cpu/cpuid-deps.c
 +++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -59,6 +59,9 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
-+	{ X86_FEATURE_CQM_OCCUP_LLC,	X86_FEATURE_CQM_LLC   },
-+	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
-+	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
+@@ -62,6 +62,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_OCCUP_LLC,	X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
++	{ X86_FEATURE_AVX512_BF16,	X86_FEATURE_AVX512VL  },
  	{}
  };
  
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 94aa1c72ca98..adf9b71386ef 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -26,6 +26,10 @@ struct cpuid_bit {
- static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_APERFMPERF,       CPUID_ECX,  0, 0x00000006, 0 },
- 	{ X86_FEATURE_EPB,		CPUID_ECX,  3, 0x00000006, 0 },
-+	{ X86_FEATURE_CQM_LLC,		CPUID_EDX,  1, 0x0000000f, 0 },
-+	{ X86_FEATURE_CQM_OCCUP_LLC,	CPUID_EDX,  0, 0x0000000f, 1 },
-+	{ X86_FEATURE_CQM_MBM_TOTAL,	CPUID_EDX,  1, 0x0000000f, 1 },
-+	{ X86_FEATURE_CQM_MBM_LOCAL,	CPUID_EDX,  2, 0x0000000f, 1 },
- 	{ X86_FEATURE_CAT_L3,		CPUID_EBX,  1, 0x00000010, 0 },
- 	{ X86_FEATURE_CAT_L2,		CPUID_EBX,  2, 0x00000010, 0 },
- 	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1 },
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 9a327d5b6d1f..d78a61408243 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
- 	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
- 	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
- 	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
--	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
--	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
- 	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
- 	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
- 	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
