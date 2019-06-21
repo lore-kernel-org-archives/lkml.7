@@ -2,122 +2,122 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD7C4646C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5809C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB94A20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8252075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PbKjdPWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfFUA40 (ORCPT
+        id S1726106AbfFUBBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 20:56:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42259 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFUA40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 20:56:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 17:56:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
-   d="scan'208";a="168677239"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jun 2019 17:56:25 -0700
-Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 20 Jun 2019 17:56:25 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.157]) by
- fmsmsx116.amr.corp.intel.com ([169.254.2.126]) with mapi id 14.03.0439.000;
- Thu, 20 Jun 2019 17:56:24 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 3/6] libnvdimm/region: Register badblocks before
- namespaces
-Thread-Topic: [PATCH 3/6] libnvdimm/region: Register badblocks before
- namespaces
-Thread-Index: AQHVIK8OAb/oFHOwOkmDOgZcKMJ7d6alzEWA
-Date:   Fri, 21 Jun 2019 00:56:24 +0000
-Message-ID: <76314eeafb50c74afbc77156f65cee2c0949478b.camel@intel.com>
-References: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <156029555941.419799.6074744061405561526.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156029555941.419799.6074744061405561526.stgit@dwillia2-desk3.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DA82E2E746DC7A479D2937AC738F90FA@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 20 Jun 2019 21:01:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46940 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUBBn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 21:01:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v9so2453541pgr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jOk3PreZ3YiInlE3LTXkzPl68+QbundNai30bAJKnEU=;
+        b=PbKjdPWcdAzMqG/JzK1HR0UcqG/UX8eh2967eEegjSLi4avW+I1MWzePzFoaR/RhDz
+         v936+ryvXqtDcxrnJqsy5S/83EDuAVf5GwkEF/Kd7NU5M9kBznE739f8ulkLOKnCN5TP
+         BgbRDjDHZ8uwDaNrUzaVY5sjhf5UK5VV4W7MA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jOk3PreZ3YiInlE3LTXkzPl68+QbundNai30bAJKnEU=;
+        b=iGJ6hErWfJ0BFzM+UWt+b2ImcQoZ+uxz67xGpM22d4iy4HDqQyBlBtTWWXScm6RN1J
+         W8zhl3U0uY6noVMid11G0rlISgvkhY5izwmDYR1MwK3/bJRPX9JmhkfNEdhthASO+1zr
+         CBDwKpNFLf5/247bz8gEI54N5Dx3Mmf1tRt2y4WSQYv9VJ0kyR+F+AcZn6Wl4VjjA/NA
+         0FqCVDzip+766UCQcUa2jJjYYRHiZe4AKp3UYHQYvDJP6IMN21UUIharuuicM8uGxzOD
+         dlId2ONyuYxIfaMR/oZIP1DGe/6RLSalZWDD9S+RGbHHj9uAVHdMJXBHvoEk9Zq3A9fl
+         qMuA==
+X-Gm-Message-State: APjAAAULtw2l6evoh53hS8ClJJICbPxJVZLoNTPYNChw2zbfovH1I+e/
+        Jvy/BHt4Yi3/fdFsAcnuiOp5bA==
+X-Google-Smtp-Source: APXvYqwVLiWe21jhFrAmpCuL2rGWSXFn0Xn+zlSdAo/GWr7qvi7R3zAyZAmL5tMFTjfT5QVEED6QXQ==
+X-Received: by 2002:a65:50c3:: with SMTP id s3mr15343980pgp.177.1561078902926;
+        Thu, 20 Jun 2019 18:01:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v13sm650415pfe.105.2019.06.20.18.01.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 18:01:42 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:01:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, glider@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
+Message-ID: <201906201801.9CFC9225@keescook>
+References: <1561063566-16335-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561063566-16335-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA2LTExIGF0IDE2OjI1IC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
-IE5hbWVzcGFjZSBhY3RpdmF0aW9uIGV4cGVjdHMgdG8gYmUgYWJsZSB0byByZWZlcmVuY2UgcmVn
-aW9uIGJhZGJsb2Nrcy4NCj4gVGhlIGZvbGxvd2luZyB3YXJuaW5nIHNvbWV0aW1lcyB0cmlnZ2Vy
-cyB3aGVuIGFzeW5jaHJvbm91cyBuYW1lc3BhY2UNCj4gYWN0aXZhdGlvbiByYWNlcyBpbiBmcm9u
-dCBvZiB0aGUgY29tcGxldGlvbiBvZiBuYW1lc3BhY2UgcHJvYmluZy4gTW92ZQ0KPiBhbGwgcG9z
-c2libGUgbmFtZXNwYWNlIHByb2JpbmcgYWZ0ZXIgcmVnaW9uIGJhZGJsb2NrcyBpbml0aWFsaXph
-dGlvbi4NCj4gDQo+IE90aGVyd2lzZSwgbG9ja2RlcCBzb21ldGltZXMgY2F0Y2hlcyB0aGUgdW5p
-bml0aWFsaXplZCBzdGF0ZSBvZiB0aGUNCj4gYmFkYmxvY2tzIHNlcWxvY2sgd2l0aCBzdGFjayB0
-cmFjZSBzaWduYXR1cmVzIGxpa2U6DQo+IA0KPiAgICAgSU5GTzogdHJ5aW5nIHRvIHJlZ2lzdGVy
-IG5vbi1zdGF0aWMga2V5Lg0KPiAgICAgcG1lbTI6IGRldGVjdGVkIGNhcGFjaXR5IGNoYW5nZSBm
-cm9tIDAgdG8gMTM2MzY1MjExNjQ4DQo+ICAgICB0aGUgY29kZSBpcyBmaW5lIGJ1dCBuZWVkcyBs
-b2NrZGVwIGFubm90YXRpb24uDQo+ICAgICB0dXJuaW5nIG9mZiB0aGUgbG9ja2luZyBjb3JyZWN0
-bmVzcyB2YWxpZGF0b3IuDQo+ICAgICBDUFU6IDkgUElEOiAzNTggQ29tbToga3dvcmtlci91ODA6
-NSBUYWludGVkOg0KPiBHICAgICAgICAgICBPRSAgICAgNS4yLjAtcmM0KyAjMzM4Mg0KPiAgICAg
-SGFyZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJ
-T1MgMC4wLjANCj4gMDIvMDYvMjAxNQ0KPiAgICAgV29ya3F1ZXVlOiBldmVudHNfdW5ib3VuZCBh
-c3luY19ydW5fZW50cnlfZm4NCj4gICAgIENhbGwgVHJhY2U6DQo+ICAgICAgZHVtcF9zdGFjaysw
-eDg1LzB4YzANCj4gICAgIHBtZW0xLjEyOiBkZXRlY3RlZCBjYXBhY2l0eSBjaGFuZ2UgZnJvbSAw
-IHRvIDg1ODk5MzQ1OTINCj4gICAgICByZWdpc3Rlcl9sb2NrX2NsYXNzKzB4NTZhLzB4NTcwDQo+
-ICAgICAgPyBjaGVja19vYmplY3QrMHgxNDAvMHgyNzANCj4gICAgICBfX2xvY2tfYWNxdWlyZSsw
-eDgwLzB4MTcxMA0KPiAgICAgID8gX19tdXRleF9sb2NrKzB4MzlkLzB4OTEwDQo+ICAgICAgbG9j
-a19hY3F1aXJlKzB4OWUvMHgxODANCj4gICAgICA/IG5kX3Bmbl92YWxpZGF0ZSsweDI4Zi8weDQ0
-MCBbbGlibnZkaW1tXQ0KPiAgICAgIGJhZGJsb2Nrc19jaGVjaysweDkzLzB4MWYwDQo+ICAgICAg
-PyBuZF9wZm5fdmFsaWRhdGUrMHgyOGYvMHg0NDAgW2xpYm52ZGltbV0NCj4gICAgICBuZF9wZm5f
-dmFsaWRhdGUrMHgyOGYvMHg0NDAgW2xpYm52ZGltbV0NCj4gICAgICA/IGxvY2tkZXBfaGFyZGly
-cXNfb24rMHhmMC8weDE4MA0KPiAgICAgIG5kX2RheF9wcm9iZSsweDlhLzB4MTIwIFtsaWJudmRp
-bW1dDQo+ICAgICAgbmRfcG1lbV9wcm9iZSsweDZkLzB4MTgwIFtuZF9wbWVtXQ0KPiAgICAgIG52
-ZGltbV9idXNfcHJvYmUrMHg5MC8weDJjMCBbbGlibnZkaW1tXQ0KPiANCj4gRml4ZXM6IDQ4YWYy
-ZjdlNTJmNCAoImxpYm52ZGltbSwgcGZuOiBkdXJpbmcgaW5pdCwgY2xlYXIgZXJyb3JzLi4uIikN
-Cj4gQ2M6IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPg0KPiBDYzogVmlzaGFsIFZlcm1hIDx2aXNo
-YWwubC52ZXJtYUBpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IERhbiBXaWxsaWFtcyA8ZGFu
-Lmoud2lsbGlhbXNAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbnZkaW1tL3JlZ2lvbi5j
-IHwgICAyMiArKysrKysrKysrKy0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5z
-ZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQoNClRoaXMgbG9va3MgZ29vZCB0byBtZSwNClJl
-dmlld2VkLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbT4NCg0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbi5jIGIvZHJpdmVycy9udmRpbW0v
-cmVnaW9uLmMNCj4gaW5kZXggZWY0NmNjM2E3MWFlLi40ODhjNDdhYzRjNGEgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbi5jDQo+ICsrKyBiL2RyaXZlcnMvbnZkaW1tL3JlZ2lv
-bi5jDQo+IEBAIC0zNCwxNyArMzQsNiBAQCBzdGF0aWMgaW50IG5kX3JlZ2lvbl9wcm9iZShzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQo+ICAJaWYgKHJjKQ0KPiAgCQlyZXR1cm4gcmM7DQo+ICANCj4gLQly
-YyA9IG5kX3JlZ2lvbl9yZWdpc3Rlcl9uYW1lc3BhY2VzKG5kX3JlZ2lvbiwgJmVycik7DQo+IC0J
-aWYgKHJjIDwgMCkNCj4gLQkJcmV0dXJuIHJjOw0KPiAtDQo+IC0JbmRyZCA9IGRldl9nZXRfZHJ2
-ZGF0YShkZXYpOw0KPiAtCW5kcmQtPm5zX2FjdGl2ZSA9IHJjOw0KPiAtCW5kcmQtPm5zX2NvdW50
-ID0gcmMgKyBlcnI7DQo+IC0NCj4gLQlpZiAocmMgJiYgZXJyICYmIHJjID09IGVycikNCj4gLQkJ
-cmV0dXJuIC1FTk9ERVY7DQo+IC0NCj4gIAlpZiAoaXNfbmRfcG1lbSgmbmRfcmVnaW9uLT5kZXYp
-KSB7DQo+ICAJCXN0cnVjdCByZXNvdXJjZSBuZHJfcmVzOw0KPiAgDQo+IEBAIC02MCw2ICs0OSwx
-NyBAQCBzdGF0aWMgaW50IG5kX3JlZ2lvbl9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICAJ
-CW52ZGltbV9iYWRibG9ja3NfcG9wdWxhdGUobmRfcmVnaW9uLCAmbmRfcmVnaW9uLT5iYiwNCj4g
-Jm5kcl9yZXMpOw0KPiAgCX0NCj4gIA0KPiArCXJjID0gbmRfcmVnaW9uX3JlZ2lzdGVyX25hbWVz
-cGFjZXMobmRfcmVnaW9uLCAmZXJyKTsNCj4gKwlpZiAocmMgPCAwKQ0KPiArCQlyZXR1cm4gcmM7
-DQo+ICsNCj4gKwluZHJkID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ICsJbmRyZC0+bnNfYWN0
-aXZlID0gcmM7DQo+ICsJbmRyZC0+bnNfY291bnQgPSByYyArIGVycjsNCj4gKw0KPiArCWlmIChy
-YyAmJiBlcnIgJiYgcmMgPT0gZXJyKQ0KPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gKw0KPiAgCW5k
-X3JlZ2lvbi0+YnR0X3NlZWQgPSBuZF9idHRfY3JlYXRlKG5kX3JlZ2lvbik7DQo+ICAJbmRfcmVn
-aW9uLT5wZm5fc2VlZCA9IG5kX3Bmbl9jcmVhdGUobmRfcmVnaW9uKTsNCj4gIAluZF9yZWdpb24t
-PmRheF9zZWVkID0gbmRfZGF4X2NyZWF0ZShuZF9yZWdpb24pOw0KPiANCg0K
+On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
+> The linux-next commit "mm: security: introduce init_on_alloc=1 and
+> init_on_free=1 boot options" [1] introduced a false positive when
+> init_on_free=1 and page_poison=on, due to the page_poison expects the
+> pattern 0xaa when allocating pages which were overwritten by
+> init_on_free=1 with 0.
+> 
+> Fix it by switching the order between kernel_init_free_pages() and
+> kernel_poison_pages() in free_pages_prepare().
+
+Cool; this seems like the right approach. Alexander, what do you think?
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> 
+> [1] https://patchwork.kernel.org/patch/10999465/
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: After further debugging, the issue after switching order is likely a
+>     separate issue as clear_page() should not cause issues with future
+>     accesses.
+> 
+>  mm/page_alloc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 54dacf35d200..32bbd30c5f85 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1172,9 +1172,10 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>  					   PAGE_SIZE << order);
+>  	}
+>  	arch_free_page(page, order);
+> -	kernel_poison_pages(page, 1 << order, 0);
+>  	if (want_init_on_free())
+>  		kernel_init_free_pages(page, 1 << order);
+> +
+> +	kernel_poison_pages(page, 1 << order, 0);
+>  	if (debug_pagealloc_enabled())
+>  		kernel_map_pages(page, 1 << order, 0);
+>  
+> -- 
+> 1.8.3.1
+> 
+
+-- 
+Kees Cook
