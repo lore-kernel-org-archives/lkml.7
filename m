@@ -2,79 +2,157 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A82C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0085C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE69A20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852992083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfFURm0 (ORCPT
+        id S1726159AbfFURpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:42:26 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:33016 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfFURm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:42:26 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 4044F20020;
-        Fri, 21 Jun 2019 19:42:22 +0200 (CEST)
-Date:   Fri, 21 Jun 2019 19:42:15 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, thierry.reding@gmail.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] MSM8998 MTP Display
-Message-ID: <20190621174215.GA16409@ravnborg.org>
-References: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
- <CAOCk7NoaP=DkNLgdiUw5M0JYRGEGGCFQkn1sCO9dqtexMPC9dQ@mail.gmail.com>
+        Fri, 21 Jun 2019 13:45:46 -0400
+Received: from fieldses.org ([173.255.197.46]:45110 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfFURpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:45:45 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CBC78206B; Fri, 21 Jun 2019 13:45:44 -0400 (EDT)
+Date:   Fri, 21 Jun 2019 13:45:44 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <20190621174544.GC25590@fieldses.org>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOCk7NoaP=DkNLgdiUw5M0JYRGEGGCFQkn1sCO9dqtexMPC9dQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=_aGGFSCzEicpxybLgu0A:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <1561042275-12723-9-git-send-email-bfields@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey.
+I'm not sure who to get review from for this kind of thing.
 
-On Fri, Jun 21, 2019 at 11:31:50AM -0600, Jeffrey Hugo wrote:
-> On Fri, Jun 14, 2019 at 12:55 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > Since we are trying to get the GPU and display hardware in the SoC
-> > supported, it would be nice to be able to put the output on the
-> > integrated panel for the reference platform.  To do so, we need support
-> > in the Truly driver to support the specific panel variant for the
-> > MSM8998 MTP.  This series adds taht support.
-> >
-> > Jeffrey Hugo (2):
-> >   dt-bindings: display: truly: Add MSM8998 MTP panel
-> >   drm/panel: truly: Add MSM8998 MTP support
+Kees, you seem to be one of the only people to touch string_helpers.c
+at all recently, any ideas?
+
+--b.
+
+On Thu, Jun 20, 2019 at 10:51:07AM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> Lets actually hold off on this series.  I thought I could solve an
-> issue in the DSI driver, but thats not working out like how I'd hoped.
-> I may need to rework this.
-
-Thanks for the heads up, and good luck with it.
-Despite the missing response on this patchset please do not hesitate
-to post an updated version or another patchset in the future.
-
-	Sam
+> I'm exposing some information about NFS clients in pseudofiles.  I
+> expect to eventually have simple tools to help read those pseudofiles.
+> 
+> But it's also helpful if the raw files are human-readable to the extent
+> possible.  It aids debugging and makes them usable on systems that don't
+> have the latest nfs-utils.
+> 
+> A minor challenge there is opaque client-generated protocol objects like
+> state owners and client identifiers.  Some clients generate those to
+> include handy information in plain ascii.  But they may also include
+> arbitrary byte sequences.
+> 
+> I think the simplest approach is to limit to isprint(c) && isascii(c)
+> and escape everything else.
+> 
+> That means you can just cat the file and get something that looks OK.
+> Also, I'm trying to keep these files legal YAML, which requires them to
+> UTF-8, and this is a simple way to guarantee that.
+> 
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  fs/seq_file.c                  | 11 +++++++++++
+>  include/linux/seq_file.h       |  1 +
+>  include/linux/string_helpers.h |  3 +++
+>  lib/string_helpers.c           | 19 +++++++++++++++++++
+>  4 files changed, 34 insertions(+)
+> 
+> diff --git a/fs/seq_file.c b/fs/seq_file.c
+> index abe27ec43176..04f09689cd6d 100644
+> --- a/fs/seq_file.c
+> +++ b/fs/seq_file.c
+> @@ -384,6 +384,17 @@ void seq_escape(struct seq_file *m, const char *s, const char *esc)
+>  }
+>  EXPORT_SYMBOL(seq_escape);
+>  
+> +void seq_escape_mem_ascii(struct seq_file *m, const char *src, size_t isz)
+> +{
+> +	char *buf;
+> +	size_t size = seq_get_buf(m, &buf);
+> +	int ret;
+> +
+> +	ret = string_escape_mem_ascii(src, isz, buf, size);
+> +	seq_commit(m, ret < size ? ret : -1);
+> +}
+> +EXPORT_SYMBOL(seq_escape_mem_ascii);
+> +
+>  void seq_vprintf(struct seq_file *m, const char *f, va_list args)
+>  {
+>  	int len;
+> diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+> index a121982af0f5..5998e1f4ff06 100644
+> --- a/include/linux/seq_file.h
+> +++ b/include/linux/seq_file.h
+> @@ -127,6 +127,7 @@ void seq_put_hex_ll(struct seq_file *m, const char *delimiter,
+>  		    unsigned long long v, unsigned int width);
+>  
+>  void seq_escape(struct seq_file *m, const char *s, const char *esc);
+> +void seq_escape_mem_ascii(struct seq_file *m, const char *src, size_t isz);
+>  
+>  void seq_hex_dump(struct seq_file *m, const char *prefix_str, int prefix_type,
+>  		  int rowsize, int groupsize, const void *buf, size_t len,
+> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+> index d23c5030901a..c28955132234 100644
+> --- a/include/linux/string_helpers.h
+> +++ b/include/linux/string_helpers.h
+> @@ -54,6 +54,9 @@ static inline int string_unescape_any_inplace(char *buf)
+>  int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
+>  		unsigned int flags, const char *only);
+>  
+> +int string_escape_mem_ascii(const char *src, size_t isz, char *dst,
+> +					size_t osz);
+> +
+>  static inline int string_escape_mem_any_np(const char *src, size_t isz,
+>  		char *dst, size_t osz, const char *only)
+>  {
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 29c490e5d478..9ca19918ca26 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -539,6 +539,25 @@ int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
+>  }
+>  EXPORT_SYMBOL(string_escape_mem);
+>  
+> +int string_escape_mem_ascii(const char *src, size_t isz, char *dst,
+> +					size_t osz)
+> +{
+> +	char *p = dst;
+> +	char *end = p + osz;
+> +
+> +	while (isz--) {
+> +		unsigned char c = *src++;
+> +
+> +		if (!isprint(c) || !isascii(c) || c == '"' || c == '\\')
+> +			escape_hex(c, &p, end);
+> +		else
+> +			escape_passthrough(c, &p, end);
+> +	}
+> +
+> +	return p - dst;
+> +}
+> +EXPORT_SYMBOL(string_escape_mem_ascii);
+> +
+>  /*
+>   * Return an allocated string that has been escaped of special characters
+>   * and double quotes, making it safe to log in quotes.
+> -- 
+> 2.21.0
