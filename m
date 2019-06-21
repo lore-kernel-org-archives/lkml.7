@@ -2,32 +2,32 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E4CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E735C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17D32084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3F420673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfFUPi5 (ORCPT
+        id S1726564AbfFUPjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:38:57 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40082 "EHLO inva020.nxp.com"
+        Fri, 21 Jun 2019 11:39:01 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48314 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfFUPi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:38:56 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A5C81A0A88;
-        Fri, 21 Jun 2019 17:38:54 +0200 (CEST)
+        id S1726203AbfFUPi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 11:38:58 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E6F852009FA;
+        Fri, 21 Jun 2019 17:38:55 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4CBD71A0A85;
-        Fri, 21 Jun 2019 17:38:54 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D78B0200071;
+        Fri, 21 Jun 2019 17:38:55 +0200 (CEST)
 Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D183820629;
-        Fri, 21 Jun 2019 17:38:53 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6847920629;
+        Fri, 21 Jun 2019 17:38:55 +0200 (CEST)
 From:   Claudiu Manoil <claudiu.manoil@nxp.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -36,54 +36,109 @@ Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         alexandru.marginean@nxp.com, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
-Subject: [PATCH net-next 0/6] Microsemi Felix switch support
-Date:   Fri, 21 Jun 2019 18:38:46 +0300
-Message-Id: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next 3/6] ocelot: Factor out resource ioremap and regmap init common code
+Date:   Fri, 21 Jun 2019 18:38:49 +0300
+Message-Id: <1561131532-14860-4-git-send-email-claudiu.manoil@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device is an ethernet switch core from Microsemi (VSC9959)
-integrated as PCIe endpoint into the LS1028a SoC.
+Let's make this ioremap and regmap init code common.  It should not
+be platform dependent as it should be usable by PCI devices too.
+Use better names where necessary to avoid clashes.
 
-Though this switch core has some particularities (i.e. 6 ports,
-some register mapping differences), functionally this driver relies
-entirely on the Ocelot switch driver providing all the features,
-and is basically an instance of the Ocelot core driver.
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+---
+ drivers/net/ethernet/mscc/ocelot.h       |  4 +---
+ drivers/net/ethernet/mscc/ocelot_board.c | 12 ++++++++----
+ drivers/net/ethernet/mscc/ocelot_io.c    | 14 +++++---------
+ 3 files changed, 14 insertions(+), 16 deletions(-)
 
-The first 3 patches are minor refactoring of the common Ocelot code
-(core driver).  The rest provide the integration code of the switch
-as a PCIe device, the register mapping, corresponding ls1028a DT
-nodes (for switch ports link configuration).  There are also few
-particularities described by individual patch messages.
-
-Claudiu Manoil (6):
-  ocelot: Filter out ocelot SoC specific PCS config from common path
-  ocelot: Refactor common ocelot probing code to ocelot_init
-  ocelot: Factor out resource ioremap and regmap init common code
-  arm64: dts: fsl: ls1028a: Add Felix switch port DT node
-  dt-bindings: net: Add DT bindings for Microsemi Felix Switch
-  net/mssc/ocelot: Add basic Felix switch driver
-
- .../devicetree/bindings/net/mscc-felix.txt    |  77 +++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  58 ++-
- drivers/net/ethernet/mscc/Kconfig             |   8 +
- drivers/net/ethernet/mscc/Makefile            |   9 +-
- drivers/net/ethernet/mscc/felix_board.c       | 392 +++++++++++++++
- drivers/net/ethernet/mscc/felix_regs.c        | 448 ++++++++++++++++++
- drivers/net/ethernet/mscc/ocelot.c            |  23 +-
- drivers/net/ethernet/mscc/ocelot.h            |  13 +-
- drivers/net/ethernet/mscc/ocelot_board.c      |  16 +-
- drivers/net/ethernet/mscc/ocelot_io.c         |  14 +-
- drivers/net/ethernet/mscc/ocelot_regs.c       |  21 +
- 11 files changed, 1041 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/mscc-felix.txt
- create mode 100644 drivers/net/ethernet/mscc/felix_board.c
- create mode 100644 drivers/net/ethernet/mscc/felix_regs.c
-
+diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
+index e21a6fb22ef8..4235d7294772 100644
+--- a/drivers/net/ethernet/mscc/ocelot.h
++++ b/drivers/net/ethernet/mscc/ocelot.h
+@@ -493,9 +493,7 @@ void ocelot_port_writel(struct ocelot_port *port, u32 val, u32 reg);
+ 
+ int ocelot_regfields_init(struct ocelot *ocelot,
+ 			  const struct reg_field *const regfields);
+-struct regmap *ocelot_io_platform_init(struct ocelot *ocelot,
+-				       struct platform_device *pdev,
+-				       const char *name);
++struct regmap *ocelot_io_init(struct ocelot *ocelot, struct resource *res);
+ 
+ #define ocelot_field_write(ocelot, reg, val) regmap_field_write((ocelot)->regfields[(reg)], (val))
+ #define ocelot_field_read(ocelot, reg, val) regmap_field_read((ocelot)->regfields[(reg)], (val))
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index 2a6ee4edb858..489177058d9e 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -182,7 +182,7 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	struct {
+ 		enum ocelot_target id;
+ 		char *name;
+-	} res[] = {
++	} io_target[] = {
+ 		{ SYS, "sys" },
+ 		{ REW, "rew" },
+ 		{ QSYS, "qsys" },
+@@ -201,14 +201,18 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ocelot);
+ 	ocelot->dev = &pdev->dev;
+ 
+-	for (i = 0; i < ARRAY_SIZE(res); i++) {
++	for (i = 0; i < ARRAY_SIZE(io_target); i++) {
+ 		struct regmap *target;
++		struct resource *res;
++
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   io_target[i].name);
+ 
+-		target = ocelot_io_platform_init(ocelot, pdev, res[i].name);
++		target = ocelot_io_init(ocelot, res);
+ 		if (IS_ERR(target))
+ 			return PTR_ERR(target);
+ 
+-		ocelot->targets[res[i].id] = target;
++		ocelot->targets[io_target[i].id] = target;
+ 	}
+ 
+ 	hsio = syscon_regmap_lookup_by_compatible("mscc,ocelot-hsio");
+diff --git a/drivers/net/ethernet/mscc/ocelot_io.c b/drivers/net/ethernet/mscc/ocelot_io.c
+index c6db8ad31fdf..9a9a6766c231 100644
+--- a/drivers/net/ethernet/mscc/ocelot_io.c
++++ b/drivers/net/ethernet/mscc/ocelot_io.c
+@@ -97,20 +97,16 @@ static struct regmap_config ocelot_regmap_config = {
+ 	.reg_stride	= 4,
+ };
+ 
+-struct regmap *ocelot_io_platform_init(struct ocelot *ocelot,
+-				       struct platform_device *pdev,
+-				       const char *name)
++struct regmap *ocelot_io_init(struct ocelot *ocelot, struct resource *res)
+ {
+-	struct resource *res;
+ 	void __iomem *regs;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+ 	regs = devm_ioremap_resource(ocelot->dev, res);
+ 	if (IS_ERR(regs))
+ 		return ERR_CAST(regs);
+ 
+-	ocelot_regmap_config.name = name;
+-	return devm_regmap_init_mmio(ocelot->dev, regs,
+-				     &ocelot_regmap_config);
++	ocelot_regmap_config.name = res->name;
++
++	return devm_regmap_init_mmio(ocelot->dev, regs, &ocelot_regmap_config);
+ }
+-EXPORT_SYMBOL(ocelot_io_platform_init);
++EXPORT_SYMBOL(ocelot_io_init);
 -- 
 2.17.1
 
