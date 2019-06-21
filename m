@@ -2,108 +2,157 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B099CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24890C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815072070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29772070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="byvtoB+Q"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jVf52xl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfFUX32 (ORCPT
+        id S1726134AbfFUXcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:29:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57882 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUX32 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:29:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=veIfsznsGG3ioukN8XMlSwEnuA6OV0M+qbciLbASVM0=; b=byvtoB+Qt9qV9tAMsibhKYm1te
-        LqQN2fCMSI8jm3dpX3kQIk0hUknDDfsVUSWcbZgNihtO/AiSLPju7pzXbldu+cc7rTfvKPRxQfQmu
-        NWvLLzoKvC0m2VJJ+h8zPv7hkv0qvxXZIfkPtEoeSQPinBwpSI/js1PSGrmLOW8sFvrgz1kgJp4nG
-        9vDPnLtc7yqO9MA1pdSl1c1JIvylxFTYKgB2oGV9wdxscJobCOrMlaFbC97qYPNo8GfBE7vn+5myQ
-        GqnSXvJmMQEAJ3XCHrKjb8E6IwCmIb0GyLUl0+xQhnf1Rrl7HgbxYacm9oGnoTgoCQuMp6Iu/Q6jE
-        bULrYjZQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1heSy6-0000Ov-Du; Fri, 21 Jun 2019 23:29:18 +0000
-Subject: Re: [PATCH v6] Documentation: Add section about CPU vulnerabilities
- for Spectre
-To:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mark Gross <mgross@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-References: <20190620231050.22816-1-tim.c.chen@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6cce35f2-4447-7671-54dc-52bbb71ba8b2@infradead.org>
-Date:   Fri, 21 Jun 2019 16:29:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190620231050.22816-1-tim.c.chen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 21 Jun 2019 19:32:02 -0400
+Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:46621
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726045AbfFUXcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:32:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gG4Hwe63tCjsWI4jP5Oz/0cYBkYjsLv1IuBclKOUPIDOkt9u0sFnQy8IVkPxAZbENSuxow0K9AB+eBXIpnvPSg7R4iRPKII4VvRaesszILqPo7xqdXDKRx/Us/s3sPfvqhtGaWBwGWcHq/xtYGiauI+PmtWNiH1OPFoYC0DT7VKZMr4oJssi9H6rFkuKXi8qnqsYQ4BB1+RODIxfNQE0hd1ytjweKP9bNGkrPazhr2RpfGXGGAzlaBWaUxLCQzfEFb0qQEbl52d0ZirzWadBuiHnVqtnTyauwCbuq2BuJGCTK0q8/6YWp2JPcfn7852TBY77ZBn1QuG4LHGEmBVmAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bBuD5mEoEvdnra/uwfToNC9JRtjVPRj+fvFZTcBgYaM=;
+ b=DnTAuvXX+31f4Ckcv7qEhst/Dgk50Sfq0dv9cJwiztMZaOt4+GLE6aX4cJU6k3fN4MdHZBotOA6KnqyNc7qnh0GB+z7tZhEflniD8ZvZQ7BFWNDPW69UNVxRQbr6nbpQmaE73ltNk/z6rCTYDZhSelgSVeJxG8gfILPzgvB8shMlqXgi0UYgAScrfgFm6bRvwIwN5obcpjSJ3IfOmxEnIsSwNsvz6ccJVluRiyo0QN3QkChEcX+M2IB6TPtcQQ1szyoMlTp9rRLpPn/wC3iDzB4zAJNbDa/nBlNeCZfl6rcQk8QgsZvR5zEH9bo2rfUsvPUdD0B1fIm6QJTS4Q9Ptg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bBuD5mEoEvdnra/uwfToNC9JRtjVPRj+fvFZTcBgYaM=;
+ b=jVf52xl6j9x+aafbUfMvSXV1lKQzvoFHXliNWa5ILvLvkaEbHi2nwI/mGGZdWxX+4rPUPiwVT1F/OjT8BFSBYsn7n7yeFB0wPge2RBpLSKbz1AOuSeaAtNBQFkrkgQ7f758jbIsCW170ms+AeHVHpFMr0WVVrTac+RxPpMFcXVY=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.7; Fri, 21 Jun 2019 23:31:15 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::19b8:f479:a623:509b]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::19b8:f479:a623:509b%5]) with mapi id 15.20.2032.008; Fri, 21 Jun 2019
+ 23:31:15 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+CC:     "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>
+Subject: RE: [PATCH] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Thread-Topic: [PATCH] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Thread-Index: AdUoYqahDsLeDiTlTqKiO6h8RAkcdgAJUV9wAABOdvA=
+Date:   Fri, 21 Jun 2019 23:31:14 +0000
+Message-ID: <PU1P153MB01698B532ACE934CBD301C62BFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <PU1P153MB01691036654142C7972F3ACDBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <BYAPR21MB13524CDAAD1F9A19935E5F9BD7E70@BYAPR21MB1352.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB13524CDAAD1F9A19935E5F9BD7E70@BYAPR21MB1352.namprd21.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-21T19:02:22.0981116Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f5ac9eff-e920-4812-8c36-4a93f3cf745c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:3a2e:2bcf:5c00:8eef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e34c4278-5959-42be-9a14-08d6f6a08dcb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0153;
+x-ms-traffictypediagnostic: PU1P153MB0153:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0153DD3FFE09FC65D4A8D916BFE70@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(376002)(366004)(136003)(199004)(189003)(6436002)(55016002)(2906002)(305945005)(52536014)(8936002)(7736002)(6116002)(9686003)(74316002)(25786009)(8990500004)(33656002)(229853002)(76116006)(73956011)(66446008)(66476007)(66946007)(66556008)(64756008)(46003)(10290500003)(478600001)(8676002)(14454004)(7416002)(2201001)(86362001)(256004)(68736007)(53936002)(316002)(22452003)(10090500001)(186003)(4326008)(54906003)(7696005)(486006)(6246003)(71200400001)(71190400001)(6506007)(81156014)(476003)(11346002)(102836004)(76176011)(99286004)(446003)(81166006)(5660300002)(2501003)(110136005)(1511001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ne8apAIAl6CCUxwWnnFrCmrgVcRSrnwkKNv59uWSnNDXXte+Ic/srYpPe1Dqy7Thcqk8UDpKlPAYZEVI3uedfMYgSxulpvt7x7afjgLsWHAOzkmd3jeiGND9kfxye6H1YzRtMkrkiWsJkWbBzbFSxf5gd0Nfnl7vGqOwZd0gaYLJ5OORrJOU494dh8jNY1RxLilKXfkv1oACk4u7F6fxpwjXtvARPTBOU+4IbbNtYedzC1dvNxSqDc1ZNKS38VUCoqm4AsHl7ICFaCddwZJePTfvPN29WsOhaocBugLrQCLUX4I7aJKGSKcT6j3dtjAPcH+WQa+Zqzzs/HG/0T6Ep94Ygla7K94OyIjSjijEZtFFbT7P6YruZ9RpzuVVzKX92aBHoQnf2xb+bOXnXIp5Nmi+liZ0W8iWo8C5n77ZHoA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e34c4278-5959-42be-9a14-08d6f6a08dcb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 23:31:14.9477
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/19 4:10 PM, Tim Chen wrote:
-> Add documentation for Spectre vulnerability and the mitigation mechanisms:
-> 
-> - Explain the problem and risks
-> - Document the mitigation mechanisms
-> - Document the command line controls
-> - Document the sysfs files
-> 
-> Co-developed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> Co-developed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: stable@vger.kernel.org
-> ---
->  Documentation/admin-guide/hw-vuln/index.rst   |   1 +
->  Documentation/admin-guide/hw-vuln/spectre.rst | 697 ++++++++++++++++++
->  Documentation/userspace-api/spec_ctrl.rst     |   2 +
->  3 files changed, 700 insertions(+)
->  create mode 100644 Documentation/admin-guide/hw-vuln/spectre.rst
-> 
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> From: Michael Kelley <mikelley@microsoft.com>
+> > @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct
+> hv_pcibus_device
+> > *hbus,
+> >  static void hv_eject_device_work(struct work_struct *work)
+> >  {
+> >  	struct pci_eject_response *ejct_pkt;
+> > +	struct hv_pcibus_device *hbus;
+> >  	struct hv_pci_dev *hpdev;
+> >  	struct pci_dev *pdev;
+> >  	unsigned long flags;
+> > @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct
+> work_struct *work)
+> >  	} ctxt;
+> >
+> >  	hpdev =3D container_of(work, struct hv_pci_dev, wrk);
+> > +	hbus =3D hpdev->hbus;
+>=20
+> In the lines of code following this new assignment, there are four uses o=
+f
+> hpdev->hbus besides the one at the bottom of the function that causes the
+> use-after-free error.  With 'hbus' now available as a local variable, it =
+looks
+> rather strange to have those other places still using hpdev->hbus.  I'm
+> thinking
+> they should be shortened to just 'hbus' for consistency, even though such
+> changes aren't directly related to fixing the bug.
+>=20
+> Michael
+=20
+Ok, let me post a v2 for this.
 
-Thanks.
-
--- 
-~Randy
+Thanks,
+Dexuan
