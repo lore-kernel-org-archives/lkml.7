@@ -2,113 +2,235 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9707C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD81C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8CD2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6D42064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YwbmlECQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwVLkyUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbfFUBpH (ORCPT
+        id S1726192AbfFUBrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:45:07 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39464 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbfFUBpG (ORCPT
+        Thu, 20 Jun 2019 21:47:20 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42058 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUBrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:45:06 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L1iKEY017834
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:45:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=NrRfeE6O7zXK/MPIrNgUA7F0KokJIm+rRUwD+I5/RIw=;
- b=YwbmlECQarVIHe+7+Zcp+04wW8sLZNiRRKUUlSsjhNCIQFWKP4J3xYvpw7v/ROb40/Hb
- GBwGbQD4Ep2Xan37H+JU2JD19E8FWCBRuN7WcW/N2Q4SVCitMBYFitkW8T2AhjuT+PIN
- SXSxIxhkpvQcMt6F/MSOnXul92qHClbDxPk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t8aj32h9b-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:45:05 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 20 Jun 2019 18:44:56 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 5AFF962E2B4E; Thu, 20 Jun 2019 18:44:56 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>
-CC:     <kernel-team@fb.com>, <acme@redhat.com>, <davidca@fb.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, <stable@vger.kernel.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] perf-script: assume native_arch for pipe mode
-Date:   Thu, 20 Jun 2019 18:44:38 -0700
-Message-ID: <20190621014438.810342-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 20 Jun 2019 21:47:19 -0400
+Received: by mail-io1-f68.google.com with SMTP id u19so202675ior.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9yrO084oxG4dfNiDRfSabLfvEkBQAcPHS7taeQ/jeGI=;
+        b=YwVLkyUOFNcOL0L8d9UZznf+xeeBIZ3g7ZUlrHDcDXBqLeWn0K9Nh1qZw9MCgGaBqb
+         bsZDq3fFnLiUXnPvImtfor3a/phBY9+2zH+Do1BBqFhffuGg56NP49qLr/2sqGmf4RoD
+         dBPVR54f6mQoB6gvXOLPeez5jvChN+nQ+jpNmWMt+CFi5AMLJhrJuktKhq3OI26jj6DA
+         GrvQT8G1lfOsQWFP47xVxQLMf3WpyB4aq7PWUKYCOwYSjf13bJjzA0lXyuF7XawLdCyO
+         7WDd+DM8NXTV1ediGy1tO6AcrJnwj7GMoiz5G4IZu2FIiAPzcKTPqdpqyD0E407nmjBU
+         ZlPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9yrO084oxG4dfNiDRfSabLfvEkBQAcPHS7taeQ/jeGI=;
+        b=Us3xO+nGWTWBWto8YEa5yzjb72tLojUOxFJzOlS7/+dExxaSsn2rgtKIybeoEovP/F
+         dw+n8a9rCAE+yG3n31RBvqCR5wgnYQYrpa2dGobDbipji341perJjUU7l2C4EmO9htXy
+         tPE3M3BljNha4VS/iJwck7nTGRDQhLMmdNfssI2tH6QtMxiohfmAZNaYSRc3SiOizNDZ
+         hPNlmE6NpC/7r/2LTZIjVOPajN3NitJq/ML6ZK6YMrYMLSLrI2Du4Eq6/64dk+wmPiQx
+         NmAhC0EQba28osgeF/ZNIg5K3s0+MrrJaphjMNPJNISvZ6QFBQhoS0ySS84L2n8cmnqs
+         4hRg==
+X-Gm-Message-State: APjAAAWk1NcZAmH8T9EKtsd7SBYrPaZmwdQ5T3p+NRm23IhHg6AW9IJI
+        9B4Y0zarLjVs9YldTRubNfxl3lAYI0LdV/EbrFxkxQ==
+X-Google-Smtp-Source: APXvYqxR8Ec8V67QRIv0YSxrqeF2qZ0ENo0zWc+r/BTUyQHPOeP071K+gI3WACD+zZ/Y6TZ2ZUXUkDwEBHuqzlrfHGY=
+X-Received: by 2002:a5d:8497:: with SMTP id t23mr6017508iom.298.1561081638030;
+ Thu, 20 Jun 2019 18:47:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210013
-X-FB-Internal: deliver
+References: <20190523074924.19659-1-hch@lst.de> <20190523074924.19659-3-hch@lst.de>
+In-Reply-To: <20190523074924.19659-3-hch@lst.de>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 21 Jun 2019 11:47:07 +1000
+Message-ID: <CAOSf1CFu_T=7weW0eagzjTc8474ntVx1uCKdQh8sX85bfaPxCQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] powerpc/powernv: remove the unused tunneling exports
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pipe mode, session->header.env.arch is not populated until the events
-are processed. Therefore, the following command crashes:
+On Thu, May 23, 2019 at 5:51 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> These have been unused ever since they've been added to the kernel.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/powerpc/include/asm/pnv-pci.h        |  4 --
+>  arch/powerpc/platforms/powernv/pci-ioda.c |  4 +-
+>  arch/powerpc/platforms/powernv/pci.c      | 71 -----------------------
+>  arch/powerpc/platforms/powernv/pci.h      |  1 -
+>  4 files changed, 3 insertions(+), 77 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
+> index 9fcb0bc462c6..1ab4b0111abc 100644
+> --- a/arch/powerpc/include/asm/pnv-pci.h
+> +++ b/arch/powerpc/include/asm/pnv-pci.h
+> @@ -27,12 +27,8 @@ extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
+>  extern int pnv_pci_set_power_state(uint64_t id, uint8_t state,
+>                                    struct opal_msg *msg);
+>
+> -extern int pnv_pci_enable_tunnel(struct pci_dev *dev, uint64_t *asnind);
+> -extern int pnv_pci_disable_tunnel(struct pci_dev *dev);
+>  extern int pnv_pci_set_tunnel_bar(struct pci_dev *dev, uint64_t addr,
+>                                   int enable);
+> -extern int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid,
+> -                                     u32 *pid, u32 *tid);
 
-   perf record -o - | perf script
+IIRC as-notify was for CAPI which has an in-tree driver (cxl). Fred or
+Andrew (+cc), what's going on with this? Will it ever see the light of
+day?
 
-(gdb) bt
-
-It fails when we try to compare env.arch against uts.machine:
-
-        if (!strcmp(uts.machine, session->header.env.arch) ||
-            (!strcmp(uts.machine, "x86_64") &&
-             !strcmp(session->header.env.arch, "i386")))
-                native_arch = true;
-
-In pipe mode, it is tricky to find env.arch at this stage. To keep it
-simple, let's just assume native_arch is always true for pipe mode.
-
-Cc: stable@vger.kernel.org #v5.1+
-Fixes: 3ab481a1cfe1 ("perf script: Support insn output for normal samples")
-Reported-by: David Carrillo Cisneros <davidca@fb.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- tools/perf/builtin-script.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 61f00055476a..3355af25e7d0 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3733,7 +3733,8 @@ int cmd_script(int argc, const char **argv)
- 		goto out_delete;
- 
- 	uname(&uts);
--	if (!strcmp(uts.machine, session->header.env.arch) ||
-+	if (data.is_pipe ||  /* assume pipe_mode indicates native_arch */
-+	    !strcmp(uts.machine, session->header.env.arch) ||
- 	    (!strcmp(uts.machine, "x86_64") &&
- 	     !strcmp(session->header.env.arch, "i386")))
- 		native_arch = true;
--- 
-2.17.1
-
+>  int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
+>  int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
+>                            unsigned int virq);
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 126602b4e399..6b0caa2d0425 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -54,6 +54,8 @@
+>  static const char * const pnv_phb_names[] = { "IODA1", "IODA2", "NPU_NVLINK",
+>                                               "NPU_OCAPI" };
+>
+> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
+> +
+>  void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+>                             const char *fmt, ...)
+>  {
+> @@ -2360,7 +2362,7 @@ static long pnv_pci_ioda2_set_window(struct iommu_table_group *table_group,
+>         return 0;
+>  }
+>
+> -void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
+> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
+>  {
+>         uint16_t window_id = (pe->pe_number << 1 ) + 1;
+>         int64_t rc;
+> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+> index 8d28f2932c3b..fc69f5611020 100644
+> --- a/arch/powerpc/platforms/powernv/pci.c
+> +++ b/arch/powerpc/platforms/powernv/pci.c
+> @@ -868,54 +868,6 @@ struct device_node *pnv_pci_get_phb_node(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL(pnv_pci_get_phb_node);
+>
+> -int pnv_pci_enable_tunnel(struct pci_dev *dev, u64 *asnind)
+> -{
+> -       struct device_node *np;
+> -       const __be32 *prop;
+> -       struct pnv_ioda_pe *pe;
+> -       uint16_t window_id;
+> -       int rc;
+> -
+> -       if (!radix_enabled())
+> -               return -ENXIO;
+> -
+> -       if (!(np = pnv_pci_get_phb_node(dev)))
+> -               return -ENXIO;
+> -
+> -       prop = of_get_property(np, "ibm,phb-indications", NULL);
+> -       of_node_put(np);
+> -
+> -       if (!prop || !prop[1])
+> -               return -ENXIO;
+> -
+> -       *asnind = (u64)be32_to_cpu(prop[1]);
+> -       pe = pnv_ioda_get_pe(dev);
+> -       if (!pe)
+> -               return -ENODEV;
+> -
+> -       /* Increase real window size to accept as_notify messages. */
+> -       window_id = (pe->pe_number << 1 ) + 1;
+> -       rc = opal_pci_map_pe_dma_window_real(pe->phb->opal_id, pe->pe_number,
+> -                                            window_id, pe->tce_bypass_base,
+> -                                            (uint64_t)1 << 48);
+> -       return opal_error_code(rc);
+> -}
+> -EXPORT_SYMBOL_GPL(pnv_pci_enable_tunnel);
+> -
+> -int pnv_pci_disable_tunnel(struct pci_dev *dev)
+> -{
+> -       struct pnv_ioda_pe *pe;
+> -
+> -       pe = pnv_ioda_get_pe(dev);
+> -       if (!pe)
+> -               return -ENODEV;
+> -
+> -       /* Restore default real window size. */
+> -       pnv_pci_ioda2_set_bypass(pe, true);
+> -       return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(pnv_pci_disable_tunnel);
+> -
+>  int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
+>  {
+>         __be64 val;
+> @@ -970,29 +922,6 @@ int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
+>  }
+>  EXPORT_SYMBOL_GPL(pnv_pci_set_tunnel_bar);
+>
+> -#ifdef CONFIG_PPC64    /* for thread.tidr */
+> -int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid, u32 *pid,
+> -                              u32 *tid)
+> -{
+> -       struct mm_struct *mm = NULL;
+> -
+> -       if (task == NULL)
+> -               return -EINVAL;
+> -
+> -       mm = get_task_mm(task);
+> -       if (mm == NULL)
+> -               return -EINVAL;
+> -
+> -       *pid = mm->context.id;
+> -       mmput(mm);
+> -
+> -       *tid = task->thread.tidr;
+> -       *lpid = mfspr(SPRN_LPID);
+> -       return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(pnv_pci_get_as_notify_info);
+> -#endif
+> -
+>  void pnv_pci_shutdown(void)
+>  {
+>         struct pci_controller *hose;
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 4f11c077af62..469c24463247 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -195,7 +195,6 @@ extern int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type);
+>  extern void pnv_teardown_msi_irqs(struct pci_dev *pdev);
+>  extern struct pnv_ioda_pe *pnv_ioda_get_pe(struct pci_dev *dev);
+>  extern void pnv_set_msi_irq_chip(struct pnv_phb *phb, unsigned int virq);
+> -extern void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
+>  extern unsigned long pnv_pci_ioda2_get_table_size(__u32 page_shift,
+>                 __u64 window_size, __u32 levels);
+>  extern int pnv_eeh_post_init(void);
+> --
+> 2.20.1
+>
