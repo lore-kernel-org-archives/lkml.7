@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925B6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A98C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AB82168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1624921530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfFUJyN (ORCPT
+        id S1727222AbfFUJyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:54:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:55894 "EHLO foss.arm.com"
+        Fri, 21 Jun 2019 05:54:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:55926 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfFUJyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:54:12 -0400
+        id S1726425AbfFUJyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:54:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CDF3147A;
-        Fri, 21 Jun 2019 02:54:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AAEF1478;
+        Fri, 21 Jun 2019 02:54:14 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C79EE3F246;
-        Fri, 21 Jun 2019 02:54:08 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9293B3F246;
+        Fri, 21 Jun 2019 02:54:11 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -45,9 +46,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Huw Davies <huw@codeweavers.com>,
         Shijith Thotton <sthotton@marvell.com>,
         Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v7 23/25] x86: Add clock_getres entry point
-Date:   Fri, 21 Jun 2019 10:52:50 +0100
-Message-Id: <20190621095252.32307-24-vincenzo.frascino@arm.com>
+Subject: [PATCH v7 24/25] x86: Add clock_gettime64 entry point
+Date:   Fri, 21 Jun 2019 10:52:51 +0100
+Message-Id: <20190621095252.32307-25-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190621095252.32307-1-vincenzo.frascino@arm.com>
 References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
@@ -58,143 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic vDSO library provides an implementation of clock_getres()
-that can be leveraged by each architecture.
+With the release of Linux 5.1 has been added a new syscall,
+clock_gettime64, that provided a 64 bit time value for a specified
+clock_ID to make the kernel Y2038 safe on 32 bit architectures.
 
-Add clock_getres() entry point on x86.
+Update the x86 specific vDSO library accordingly with what it has
+been done for the kernel syscall exposing the clock_gettime64 entry
+point.
 
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/x86/entry/vdso/vclock_gettime.c     | 17 ++++++++++++++
- arch/x86/entry/vdso/vdso.lds.S           |  2 ++
- arch/x86/entry/vdso/vdso32/vdso32.lds.S  |  1 +
- arch/x86/include/asm/vdso/gettimeofday.h | 30 ++++++++++++++++++++++++
- 4 files changed, 50 insertions(+)
+ arch/x86/entry/vdso/vclock_gettime.c    | 7 +++++++
+ arch/x86/entry/vdso/vdso32/vdso32.lds.S | 1 +
+ 2 files changed, 8 insertions(+)
 
 diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
-index 4a7ef4ca4f52..de9212a4833e 100644
+index de9212a4833e..d6d03e933191 100644
 --- a/arch/x86/entry/vdso/vclock_gettime.c
 +++ b/arch/x86/entry/vdso/vclock_gettime.c
-@@ -36,6 +36,7 @@ time_t time(time_t *t)
- #if defined(CONFIG_X86_64) && !defined(BUILD_VDSO32_64)
- /* both 64-bit and x32 use these */
- extern int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts);
-+extern int __vdso_clock_getres(clockid_t clock, struct __kernel_timespec *res);
- 
- int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- {
-@@ -44,9 +45,18 @@ int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- int clock_gettime(clockid_t, struct __kernel_timespec *)
- 	__attribute__((weak, alias("__vdso_clock_gettime")));
- 
-+int __vdso_clock_getres(clockid_t clock,
-+			struct __kernel_timespec *res)
-+{
-+	return __cvdso_clock_getres(clock, res);
-+}
-+int clock_getres(clockid_t, struct __kernel_timespec *)
-+	__attribute__((weak, alias("__vdso_clock_getres")));
-+
- #else
- /* i386 only */
- extern int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts);
-+extern int __vdso_clock_getres(clockid_t clock, struct old_timespec32 *res);
- 
- int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
- {
-@@ -55,4 +65,11 @@ int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
+@@ -65,6 +65,13 @@ int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
  int clock_gettime(clockid_t, struct old_timespec32 *)
  	__attribute__((weak, alias("__vdso_clock_gettime")));
  
-+int __vdso_clock_getres(clockid_t clock,
-+			struct old_timespec32 *res)
++int __vdso_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts)
 +{
-+	return __cvdso_clock_getres_time32(clock, res);
++	return __cvdso_clock_gettime(clock, ts);
 +}
-+int clock_getres(clockid_t, struct old_timespec32 *)
-+	__attribute__((weak, alias("__vdso_clock_getres")));
- #endif
-diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-index d3a2dce4cfa9..36b644e16272 100644
---- a/arch/x86/entry/vdso/vdso.lds.S
-+++ b/arch/x86/entry/vdso/vdso.lds.S
-@@ -25,6 +25,8 @@ VERSION {
- 		__vdso_getcpu;
- 		time;
- 		__vdso_time;
-+		clock_getres;
-+		__vdso_clock_getres;
- 	local: *;
- 	};
- }
++int clock_gettime64(clockid_t, struct __kernel_timespec *)
++	__attribute__((weak, alias("__vdso_clock_gettime64")));
++
+ int __vdso_clock_getres(clockid_t clock,
+ 			struct old_timespec32 *res)
+ {
 diff --git a/arch/x86/entry/vdso/vdso32/vdso32.lds.S b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
-index 422764a81d32..991b26cc855b 100644
+index 991b26cc855b..c7720995ab1a 100644
 --- a/arch/x86/entry/vdso/vdso32/vdso32.lds.S
 +++ b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
-@@ -26,6 +26,7 @@ VERSION
- 		__vdso_clock_gettime;
+@@ -27,6 +27,7 @@ VERSION
  		__vdso_gettimeofday;
  		__vdso_time;
-+		__vdso_clock_getres;
+ 		__vdso_clock_getres;
++		__vdso_clock_gettime64;
  	};
  
  	LINUX_2.5 {
-diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
-index a274d4fea7a5..df8c8dfadfa7 100644
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -24,6 +24,8 @@
- 
- #define VDSO_HAS_TIME 1
- 
-+#define VDSO_HAS_CLOCK_GETRES 1
-+
- #ifdef CONFIG_PARAVIRT_CLOCK
- extern u8 pvclock_page[PAGE_SIZE]
- 	__attribute__((visibility("hidden")));
-@@ -57,6 +59,17 @@ static __always_inline long gettimeofday_fallback(
- 	return ret;
- }
- 
-+static __always_inline long clock_getres_fallback(
-+					clockid_t _clkid,
-+					struct __kernel_timespec *_ts)
-+{
-+	long ret;
-+	asm ("syscall" : "=a" (ret), "=m" (*_ts) :
-+	     "0" (__NR_clock_getres), "D" (_clkid), "S" (_ts) :
-+	     "rcx", "r11");
-+	return ret;
-+}
-+
- #else
- 
- static __always_inline long clock_gettime_fallback(
-@@ -92,6 +105,23 @@ static __always_inline long gettimeofday_fallback(
- 	return ret;
- }
- 
-+static __always_inline long clock_getres_fallback(
-+					clockid_t _clkid,
-+					struct __kernel_timespec *_ts)
-+{
-+	long ret;
-+
-+	asm (
-+		"mov %%ebx, %%edx \n"
-+		"mov %[clock], %%ebx \n"
-+		"call __kernel_vsyscall \n"
-+		"mov %%edx, %%ebx \n"
-+		: "=a" (ret), "=m" (*_ts)
-+		: "0" (__NR_clock_getres_time64), [clock] "g" (_clkid), "c" (_ts)
-+		: "edx");
-+	return ret;
-+}
-+
- #endif
- 
- #ifdef CONFIG_PARAVIRT_CLOCK
 -- 
 2.21.0
 
