@@ -2,133 +2,148 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39998C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5226FC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165C021721
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDEA2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:26:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rNCL4zhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFUMY1 (ORCPT
+        id S1726571AbfFUM00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:24:27 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:40224 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfFUMY1 (ORCPT
+        Fri, 21 Jun 2019 08:26:26 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34467 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfFUM00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:24:27 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23994572AbfFUMYW7BvMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Fri, 21 Jun 2019 14:24:22 +0200
-Date:   Fri, 21 Jun 2019 13:24:22 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Paul Burton <paul.burton@mips.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-In-Reply-To: <CAK8P3a3HWn7RXjcT0KA_qOc+C1SgWd2qXSdCTTAmRKHdc4qNbQ@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.1906211230170.21654@eddie.linux-mips.org>
-References: <20190614063341.1672-1-fancer.lancer@gmail.com> <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org> <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
- <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org> <CAK8P3a3HWn7RXjcT0KA_qOc+C1SgWd2qXSdCTTAmRKHdc4qNbQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 21 Jun 2019 08:26:26 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m29so6704073qtu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qJu/XBwrdsSLLRIcidZtwfJoKMutHo2qTycz/kmN2wg=;
+        b=rNCL4zhw8eHMFBzdfTNk3LaqHtJy2EdKZJhC4JXKAVokf50roNkhJcamXNbNQyIVbk
+         +F17JkX4Da30UUmMIxKB2HEDgT2swpPABPB1JTWNYcIz2BSH6vtRK0RFRpu1WePTy9/F
+         MCSwm4S5qGfQkVVEaPJIoSu7nRJqFislMwMYb3/BeYPK7gGaNHd771r4+0lydNcQWGxn
+         vAwjd47h9gxP8ZfpLWwLEafFXMG3ZHoyNREYtPldn08LG37GPGOV0vCMUAC7aD6fvL68
+         h5FfNck7iuH5lhV5mJ6KI5IRTJMNl8hmI9hIyrop1DU5T5FPvLCGLOc2NSltYwywZ05u
+         hsng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qJu/XBwrdsSLLRIcidZtwfJoKMutHo2qTycz/kmN2wg=;
+        b=SOp5HMcmAH4tibXuYACDWxyNTlakO0OgD6YnNu6qjXXehfRbnGrM7gmbvrRrTL7DSk
+         VOB8QYkGOmCVGTnGt/pb/1pVnu7yG+Y98g7T8GVjGa9Qm6tbnYBxBdrR8MD7f35DS4p8
+         ZU7WxylPWjMeAgW/WCWjieL5Byp54uUvMFrd00BZha2hGT/b2tZik+iezaCnAgTDZ5e1
+         EI0QO0HaIMdeGtAogCCUVRR0cgIHIyjZGcCJccssxQVEMq4riaHousORlhPJ8eC/hSQo
+         T0HXRs3sTktXL84eZguRFZ4YiDcpfQ+VB+tdi7dRNl/m7OQpbn4A1kUsGRiRmZhforbd
+         tvqA==
+X-Gm-Message-State: APjAAAWWFDFjUNj8nnQi+WEeiUUhUSjN6VzSO0V+5z3zg6aWvGa1rMDv
+        fJxIBxa4ab9TV8wLumFz+Dk1rg==
+X-Google-Smtp-Source: APXvYqyGQfBNrLQhGqn1W0umgpDTMCzpvsh9uq4Mq2YLC5VhGLFENF58ZpwrlKTJ4RrZgekglzPwsw==
+X-Received: by 2002:aed:39e5:: with SMTP id m92mr34477935qte.135.1561119985333;
+        Fri, 21 Jun 2019 05:26:25 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y42sm2003943qtc.66.2019.06.21.05.26.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 05:26:24 -0700 (PDT)
+Message-ID: <1561119983.5154.33.camel@lca.pw>
+Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
+From:   Qian Cai <cai@lca.pw>
+To:     Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 21 Jun 2019 08:26:23 -0400
+In-Reply-To: <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
+References: <1561063566-16335-1-git-send-email-cai@lca.pw>
+         <201906201801.9CFC9225@keescook>
+         <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Arnd Bergmann wrote:
-
-> > > The other property of packet memory and similar things is that you
-> > > basically want memcpy()-behavior with no byteswaps. This is one
-> > > of the few cases in which __raw_readq() is actually the right accessor
-> > > in (mostly) portable code.
-> >
-> >  Correct, but we're missing an `__raw_readq_relaxed', etc. interface and
-> > having additional barriers applied on every access would hit performance
-> > very badly;
+On Fri, 2019-06-21 at 12:39 +0200, Alexander Potapenko wrote:
+> On Fri, Jun 21, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
+> > > The linux-next commit "mm: security: introduce init_on_alloc=1 and
+> > > init_on_free=1 boot options" [1] introduced a false positive when
+> > > init_on_free=1 and page_poison=on, due to the page_poison expects the
+> > > pattern 0xaa when allocating pages which were overwritten by
+> > > init_on_free=1 with 0.
+> > > 
+> > > Fix it by switching the order between kernel_init_free_pages() and
+> > > kernel_poison_pages() in free_pages_prepare().
+> > 
+> > Cool; this seems like the right approach. Alexander, what do you think?
 > 
-> How so? __raw_readq() by definition has the least barriers of
-> all, you can't make it more relaxed than it already is.
+> Can using init_on_free together with page_poison bring any value at all?
+> Isn't it better to decide at boot time which of the two features we're
+> going to enable?
 
- Well, `__raw_readq' has all the barriers plain `readq' has except it does 
-not ever do byte-swapping (which may be bad where address swizzling is 
-also present).  Whereas `readq_relaxed' at least avoids the trailing DMA 
-barrier.
+I think the typical use case is people are using init_on_free=1, and then decide
+to debug something by enabling page_poison=on. Definitely, don't want
+init_on_free=1 to disable page_poison as the later has additional checking in
+the allocation time to make sure that poison pattern set in the free time is
+still there.
 
- This is what the MIPS version has:
-
-#define __BUILD_MEMORY_SINGLE(pfx, bwlq, type, barrier, relax, irq)	\
-[...]
-
-#define __BUILD_MEMORY_PFX(bus, bwlq, type, relax)			\
-									\
-__BUILD_MEMORY_SINGLE(bus, bwlq, type, 1, relax, 1)
-
-#define BUILDIO_MEM(bwlq, type)						\
-									\
-__BUILD_MEMORY_PFX(__raw_, bwlq, type, 0)				\
-__BUILD_MEMORY_PFX(__relaxed_, bwlq, type, 1)				\
-__BUILD_MEMORY_PFX(__mem_, bwlq, type, 0)				\
-__BUILD_MEMORY_PFX(, bwlq, type, 0)
-
-So `barrier' is always passed 1 and consequently all the accessors have a 
-leading MMIO ordering barrier inserted and only `__relaxed_*' ones have 
-`relax' set to 0 making them skip the trailing MMIO read vs DMA ordering 
-barrier.  This is in accordance to Documentation/memory-barriers.txt I 
-believe.
-
- NB I got one part wrong in the previous e-mail, sorry, as for packet 
-memory accesses etc. the correct accessors are actually `__mem_*' rather 
-than `__raw_*' ones, but the former ones are not portable.  I always 
-forget about this peculiarity and it took us years to get it right with 
-the MIPS port and the old IDE subsystem when doing PIO.
-
- The `__mem_*' handlers still do whetever system-specific transformation 
-is required to present data in the memory rather than CPU byte ordering.  
-See arch/mips/include/asm/mach-ip27/mangle-port.h for a non-trivial 
-example and arch/mips/include/asm/mach-generic/mangle-port.h for the 
-general case.  Whereas `__raw_*' pass raw data unchanged and are generally 
-only suitable for accesses to onchip SOC MMIO or similar resources that do 
-not traverse any external bus where a system's endianness may be observed.
-
- So contrary to what I have written before for the theoretical case of a 
-big-endian system possibly doing address swizzling we'd have to define and 
-use `__mem_readq_unordered', etc. here rather than `__raw_readq_relaxed', 
-etc.
-
-> > in fact even the barriers `*_relaxed' accessors imply would
-> > best be removed in this use (which is why defza.c uses `readw_o' vs
-> > `readw_u', etc. internally), but after all the struggles over the years
-> > for weakly ordered internal APIs x86 people are so averse to I'm not sure
-> > if I want to start another one.  We can get away with `readq_relaxed' in
-> > this use though as all the systems this device can be used with are
-> > little-endian as is TURBOchannel, so no byte-swapping will ever actually
-> > occur.
 > 
-> I still don't see any downside of using __raw_readq() here, while the
-> upsides are:
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > 
+> > -Kees
+> > 
+> > > 
+> > > [1] https://patchwork.kernel.org/patch/10999465/
+> > > 
+> > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > ---
+> > > 
+> > > v2: After further debugging, the issue after switching order is likely a
+> > >     separate issue as clear_page() should not cause issues with future
+> > >     accesses.
+> > > 
+> > >  mm/page_alloc.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > index 54dacf35d200..32bbd30c5f85 100644
+> > > --- a/mm/page_alloc.c
+> > > +++ b/mm/page_alloc.c
+> > > @@ -1172,9 +1172,10 @@ static __always_inline bool
+> > > free_pages_prepare(struct page *page,
+> > >                                          PAGE_SIZE << order);
+> > >       }
+> > >       arch_free_page(page, order);
+> > > -     kernel_poison_pages(page, 1 << order, 0);
+> > >       if (want_init_on_free())
+> > >               kernel_init_free_pages(page, 1 << order);
+> > > +
+> > > +     kernel_poison_pages(page, 1 << order, 0);
+> > >       if (debug_pagealloc_enabled())
+> > >               kernel_map_pages(page, 1 << order, 0);
+> > > 
+> > > --
+> > > 1.8.3.1
+> > > 
+> > 
+> > --
+> > Kees Cook
 > 
-> - makes the driver portable to big-endian kernels (even though we don't
->   care)
-> - avoids all barriers
-> - fixes the build regression.
-
- Giving my observations above it would only address item #3 on your list, 
-while addressing #1 and #2 would require defining `__mem_readq_unordered', 
-etc. I am afraid.
-
- Have I missed anything?
-
-  Maciej
+> 
+> 
