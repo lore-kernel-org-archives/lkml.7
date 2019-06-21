@@ -2,130 +2,163 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B258DC48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17EDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9899E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9ACE2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QSYZufaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfFUSN4 (ORCPT
+        id S1726455AbfFUSOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:13:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53525 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfFUSN4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:13:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 11:13:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,401,1557212400"; 
-   d="scan'208";a="162947849"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 21 Jun 2019 11:13:50 -0700
-Date:   Fri, 21 Jun 2019 11:13:50 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: speed up check_and_migrate_cma_pages() on huge
- page
-Message-ID: <20190621181349.GA21680@iweiny-DESK2.sc.intel.com>
-References: <1561112116-23072-1-git-send-email-kernelfans@gmail.com>
+        Fri, 21 Jun 2019 14:14:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50798 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfFUSOF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:14:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDeHv044305;
+        Fri, 21 Jun 2019 13:13:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561140820;
+        bh=g9uLF1jjJUIsQ1AcDXMjwDOPIjZXa+0xBvYmXt1MeUk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=QSYZufaj5iFrS1ucxMI0uP3tiHE+ugLdw8LEmlrWn/S/+PQttuJ7em2+elL11bb7Y
+         RelJGFSphs6thLPh/6tBq+JVXxk5SSCkz7BZee6EuAYASSO2TpwUi9Wr47Q3NxsLaN
+         Uq+CjCgqaEpKJS207z+dr2ecRP14Q2QjIm/9O5Vs=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5LIDe37117954
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Jun 2019 13:13:40 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
+ Jun 2019 13:13:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 21 Jun 2019 13:13:39 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDdhC092039;
+        Fri, 21 Jun 2019 13:13:39 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RFC PATCH v4 net-next 03/11] net: ethernet: ti: cpsw: resolve build deps of cpsw drivers
+Date:   Fri, 21 Jun 2019 21:13:06 +0300
+Message-ID: <20190621181314.20778-4-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621181314.20778-1-grygorii.strashko@ti.com>
+References: <20190621181314.20778-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561112116-23072-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 06:15:16PM +0800, Pingfan Liu wrote:
-> Both hugetlb and thp locate on the same migration type of pageblock, since
-> they are allocated from a free_list[]. Based on this fact, it is enough to
-> check on a single subpage to decide the migration type of the whole huge
-> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-> similar on other archs.
-> 
-> Furthermore, when executing isolate_huge_page(), it avoid taking global
-> hugetlb_lock many times, and meanless remove/add to the local link list
-> cma_page_list.
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Linux-kernel@vger.kernel.org
-> ---
->  mm/gup.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097..2eecb16 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1342,16 +1342,19 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  	LIST_HEAD(cma_page_list);
->  
->  check_again:
-> -	for (i = 0; i < nr_pages; i++) {
-> +	for (i = 0; i < nr_pages;) {
-> +
-> +		struct page *head = compound_head(pages[i]);
-> +		long step = 1;
-> +
-> +		if (PageCompound(head))
-> +			step = compound_order(head) - (pages[i] - head);
->  		/*
->  		 * If we get a page from the CMA zone, since we are going to
->  		 * be pinning these entries, we might as well move them out
->  		 * of the CMA zone if possible.
->  		 */
->  		if (is_migrate_cma_page(pages[i])) {
+A following patches introduce new CPSW switchdev driver which uses common
+code with legacy CPSW driver. This will introduce build dependency between
+CPSW switchdev and CPSW legacy drivers related to for_each_slave() and
+cpsw_slave_index() - they can be compiled both, but only one of them will
+be not functional depending in Kconfig settings due to duffrences in Slave
+Ports indexes calculation.
 
-I like this but I think for consistency I would change this pages[i] to be
-head.  Even though it is not required.
+To fix this make for_each_slave() local (it's used now only by legacy CPSW
+driver) and convert cpsw_slave_index() to be a function pointer which is
+assigned in probe. Driver to probe is defined by DT.
 
-Ira
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/cpsw.c      | 13 +++++++++++++
+ drivers/net/ethernet/ti/cpsw_priv.c |  2 ++
+ drivers/net/ethernet/ti/cpsw_priv.h | 10 ++--------
+ 3 files changed, 17 insertions(+), 8 deletions(-)
 
-> -
-> -			struct page *head = compound_head(pages[i]);
-> -
->  			if (PageHuge(head)) {
->  				isolate_huge_page(head, &cma_page_list);
->  			} else {
-> @@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  				}
->  			}
->  		}
-> +
-> +		i += step;
->  	}
->  
->  	if (!list_empty(&cma_page_list)) {
-> -- 
-> 2.7.5
-> 
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index fe3b3b89931b..79ac7c1db22b 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -74,6 +74,17 @@ MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
+ 				(func)(slave++, ##arg);			\
+ 	} while (0)
+ 
++static int cpsw_slave_index_priv(struct cpsw_common *cpsw,
++				 struct cpsw_priv *priv)
++{
++	return cpsw->data.dual_emac ? priv->emac_port : cpsw->data.active_slave;
++}
++
++static int cpsw_get_slave_port(u32 slave_num)
++{
++	return slave_num + 1;
++}
++
+ static int cpsw_ndo_vlan_rx_add_vid(struct net_device *ndev,
+ 				    __be16 proto, u16 vid);
+ 
+@@ -2368,6 +2379,8 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	if (!cpsw)
+ 		return -ENOMEM;
+ 
++	cpsw_slave_index = cpsw_slave_index_priv;
++
+ 	cpsw->dev = dev;
+ 
+ 	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 476d050a022c..a1c83af64835 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -19,6 +19,8 @@
+ #include "cpsw_sl.h"
+ #include "davinci_cpdma.h"
+ 
++int (*cpsw_slave_index)(struct cpsw_common *cpsw, struct cpsw_priv *priv);
++
+ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
+ 		     int ale_ageout, phys_addr_t desc_mem_phys,
+ 		     int descs_pool_size)
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
+index 04795b97ee71..57b109d4758f 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.h
++++ b/drivers/net/ethernet/ti/cpsw_priv.h
+@@ -367,14 +367,8 @@ struct cpsw_priv {
+ #define ndev_to_cpsw(ndev) (((struct cpsw_priv *)netdev_priv(ndev))->cpsw)
+ #define napi_to_cpsw(napi)	container_of(napi, struct cpsw_common, napi)
+ 
+-#define cpsw_slave_index(cpsw, priv)				\
+-		((cpsw->data.dual_emac) ? priv->emac_port :	\
+-		cpsw->data.active_slave)
+-
+-static inline int cpsw_get_slave_port(u32 slave_num)
+-{
+-	return slave_num + 1;
+-}
++extern int (*cpsw_slave_index)(struct cpsw_common *cpsw,
++			       struct cpsw_priv *priv);
+ 
+ struct addr_sync_ctx {
+ 	struct net_device *ndev;
+-- 
+2.17.1
+
