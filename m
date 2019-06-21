@@ -2,206 +2,261 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA33FC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A3F2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFB82083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxdEPz5F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="taQTyJMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfFUTxg (ORCPT
+        id S1726080AbfFUT5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 15:53:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53380 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfFUTxf (ORCPT
+        Fri, 21 Jun 2019 15:57:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51870 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfFUT47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 15:53:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so7308861wmj.3;
-        Fri, 21 Jun 2019 12:53:33 -0700 (PDT)
+        Fri, 21 Jun 2019 15:56:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 207so7346644wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eAnKudYoq6jZczgn9fG4XqCKdkFdaZnAytNFcfCmgvE=;
-        b=fxdEPz5FzKVKBa9ar1R4Ypm9ApuhJ5cxEDRojtGb8AOjecS6PQsIiiczljs19rTEbj
-         o34Ad8cn8nVibM9bxJ0nVL3BpbN8yONpH4/ylD6hxYI/deeLtuO9bm5O+IS68RQ6EiFF
-         Jp5QV5aIaF//3oviBF7c4u1sWZXx+qArjQGny/k8CpP9515YNv82E/AP4c/2Ok2BmpPD
-         HyLoyGEUkXLA0l7dcoYmSuGZkHN2kGWOV8lb4GLs8/vqKHToiqwuvUdAxU4i8KLWkg63
-         mXSQew6DLmEU26P/CuTv9bLDBcLo4oDUgZT1RgR9fgHI+icPPkHQfvknf/A4veSv3eA0
-         1p0w==
+        bh=8vg88vnWRxvLs3lJAdeZfInkp39g26GeybwaZxk7T9o=;
+        b=taQTyJMoizgQS3s08YZ9lVpQa9G2vXWshFvNXTW/nEeG616uGyr93+ASzVRG6Z+acv
+         0yRYPP2+gfPNvG1jMIvWuDxdeygEmW7yIRbOqt8HIJ62iIL9uyD1rIm1701/7GRajHLt
+         gaBvoNudWyDvUuLuMtcmASQWVd+giABCB8/aBfiAQvu1pauA0BP03gTHOn6YSPLhA5F2
+         +BzpelmoGQP5PxzHdC9bxKNd/83U6Hhs63j6vNKMhzUM/L5GxnrWE475gY5ioHOv00S5
+         rZc8Nvuu6FmmYvH889ZLAFgY3ME4EKl+Szl++m6JaFwbBm9IPGpEVXcyhD0S4wIC2BFJ
+         +nhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eAnKudYoq6jZczgn9fG4XqCKdkFdaZnAytNFcfCmgvE=;
-        b=fquXHic7ca0ZY210LsV3NLsk6yx5+siz6G7WJSvkV87GNT9pScSn/WzjJJ/nR4RBZn
-         JoSau2slxsoHQKw2rzG9lJKyCth6+NYTbwVUjiWwtNW+9DEFMifHrsLB/OlWKTmZbSxq
-         ZulF2SmWZdaQf0V8XqxGPDSd+k6VlpOiIW6lPWcSd1Knn4HSb/0/qquA2Pv8nX9+v5vZ
-         bej1v7pkvkzz+qAc0Pw6bGqGs1Pxtlje/4sbSPVP0ro4jxugXU5pEEh0SJMafc24Ph5G
-         XODj1bECkP7a05rsX5GxQ3kJvlnTnbGUyfen3gdj7OZwjYA7vOpqXfkV5xeiRB5X7Jxy
-         DFTA==
-X-Gm-Message-State: APjAAAXjThviEyVtz2RjqBiluK7UFEGYMSBkUf2CUHPJfaJdGh4rufLs
-        vlVRhhz6rio6J8FXnPN4b7U=
-X-Google-Smtp-Source: APXvYqzy1XXzS6iArof8LCwkLyMLZk7HtzDHlHevRk5ukuGMoQ+ynlgmqchqWhz4W52tTyJLLVDYHA==
-X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr4863220wml.59.1561146812417;
-        Fri, 21 Jun 2019 12:53:32 -0700 (PDT)
-Received: from debian64.daheim (pD9E297F7.dip0.t-ipconnect.de. [217.226.151.247])
-        by smtp.gmail.com with ESMTPSA id m9sm364524wrn.92.2019.06.21.12.53.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 12:53:31 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hePbH-0006fn-6g; Fri, 21 Jun 2019 21:53:31 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] usb: xhci: handle uPD720201 and uPD720202 w/o ROM
-Date:   Fri, 21 Jun 2019 21:53:31 +0200
-Message-ID: <2243374.tJjtY2ZRGj@debian64>
-In-Reply-To: <20190621085913.8722-3-vkoul@kernel.org>
-References: <20190621085913.8722-1-vkoul@kernel.org> <20190621085913.8722-3-vkoul@kernel.org>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=8vg88vnWRxvLs3lJAdeZfInkp39g26GeybwaZxk7T9o=;
+        b=dwx8OyKIrtKXCDen+tELXvZ2bIFu+TA/2Z/ucx9I2tZ/x4vixfuj25Em1g0Epaayxr
+         LNglLcELCjnQL+vtlqxmyFo9bk+oTAmMT3TVkpZjd5tv+w7yteyLm7AHH7GGidtqS8wy
+         Qi5HGGVII+mkw4O4NsXjza5NLapS78Y9lvAqssmfmoEST+VHBJarXuSUY9kKsAHwOo5Z
+         Tow9tv/R31a6/mh2ia1bknwvOuDlh/6KrqDfVKt+Jv/4JGiSnBfWcq7rEYZyA2rZJUIZ
+         Df6fROrv+EXONjCcsAI6MRWFGYXIXM3XSYSpNvomGW2sEGmlNybTaLGGPJK1ZmODttlU
+         NNRQ==
+X-Gm-Message-State: APjAAAUYw0D5dCsNp/Ns9YbiLzRtLgHS6BEKjS6nqas1sxCR+R8kW5yV
+        ubRMzVQnY6Bxw2vByueJxdY=
+X-Google-Smtp-Source: APXvYqzaffUIOQsCkuLc1UVQIou04JrR82wZyNCoOhqNV147qPa9kM50/RZsRrPbH2XTto7e6HYUYw==
+X-Received: by 2002:a1c:f319:: with SMTP id q25mr4946871wmq.129.1561147016691;
+        Fri, 21 Jun 2019 12:56:56 -0700 (PDT)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id r5sm7122038wrg.10.2019.06.21.12.56.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Jun 2019 12:56:56 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id BD9ED11459C9; Fri, 21 Jun 2019 21:56:54 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] lib/mpi: fix build with clang
+Date:   Fri, 21 Jun 2019 21:55:54 +0200
+Message-Id: <20190621195555.20615-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190621071342.17897-1-malat@debian.org>
+References: <20190621071342.17897-1-malat@debian.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, June 21, 2019 10:59:10 AM CEST Vinod Koul wrote:
-> From: Christian Lamparter <chunkeey@googlemail.com>
-> 
-> This patch adds a firmware check for the uPD720201K8-711-BAC-A
-> and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> devices which need a firmware in order to work as they do not have
-> support to load the firmware from an external ROM.
-> 
-> Currently, the xhci-pci driver is unable to initialize the hcd in
-> this case. Instead it will wait for 30 seconds and cause a timeout
-> in xhci_handshake() and fails.
-> 
-> [    5.116990] xhci_hcd 0000:45:00.0: new USB bus registered ...
-> [   32.335215] xhci_hcd 0000:45:00.0: can't setup: -110
-> [   32.340179] xhci_hcd 0000:45:00.0: USB bus 2 deregistered
-> [   32.345587] xhci_hcd 0000:45:00.0: init 0000:45:00.0 fail, -110
-> [   32.351496] xhci_hcd: probe of 0000:45:00.0 failed with error -110
-> 
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Remove superfluous casts on output operands to avoid warnings on the
+following macros:
 
-From what I remember, this was the "backup" patch that just prevented
-a stuck device (since the xhci-pci would trigger the watchdog on the
-powerpc APM82181). I posted because it because I didn't get any reply
-from Greg or Felipe. This patch should be skipable since patch 1/5 adds
-the full loader.
+* add_ssaaaa(sh, sl, ah, al, bh, bl)
+* sub_ddmmss(sh, sl, ah, al, bh, bl)
+* umul_ppmm(ph, pl, m0, m1)
 
-> ---
->  drivers/usb/host/xhci-pci.c | 59 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 724d0f567d98..65de5e961892 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -711,6 +711,55 @@ static int renesas_fw_download_to_hw(struct pci_dev *pdev,
->  	return 1;
->  }
->  
-> +static int renesas_check_if_fw_dl_is_needed(struct pci_dev *pdev)
-> +{
-> +	int err;
-> +	u8 fw_state;
-> +
-> +	/*
-> +	 * Only the uPD720201K8-711-BAC-A or uPD720202K8-711-BAA-A
-> +	 * are listed in R19UH0078EJ0500 Rev.5.00 as devices which
-> +	 * need a firmware in order to work.
-> +	 *
-> +	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-> +	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> +	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> +	 */
-> +	if (!((pdev->vendor == PCI_VENDOR_ID_RENESAS) &&
-> +	    ((pdev->device == 0x0015 && pdev->revision == 0x02) ||
-> +	    (pdev->device == 0x0014 &&
-> +	    (pdev->revision == 0x02 || pdev->revision == 0x03)))))
-> +		return 0;
-> +
-> +	/*
-> +	 * Test if the firmware was uploaded and is running.
-> +	 * As most BIOSes will initialize the device for us.
-> +	 */
-> +	err = pci_read_config_byte(pdev, 0xf4, &fw_state);
-> +	if (err)
-> +		return pcibios_err_to_errno(err);
-> +
-> +	/* Check the "Result Code" Bits (6:4) and act accordingly */
-> +	switch (fw_state & 0x70) {
-> +	case 0: /* No result yet */
-> +		dev_err(&pdev->dev, "FW is not ready/loaded yet.");
-> +		return -ENODEV;
-> +
-> +	case BIT(4): /* Success, device should be working. */
-> +		dev_dbg(&pdev->dev, "FW is ready.");
-> +		return 0;
-> +
-> +	case BIT(5): /* Error State */
-> +		dev_err(&pdev->dev, "HW is in an error state.");
-> +		return -ENODEV;
-> +
-> +	default: /* All other states are marked as "Reserved states" */
-> +		dev_err(&pdev->dev, "HW is in an invalid state (%x).",
-> +			(fw_state & 0x70) >> 4);
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  /* called during probe() after chip reset completes */
->  static int xhci_pci_setup(struct usb_hcd *hcd)
->  {
-> @@ -765,6 +814,11 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  		return retval;
->  	};
->  
-> +	/* Check if this device is a RENESAS uPD720201/2 device. */
-> +	retval = renesas_check_if_fw_dl_is_needed(dev);
-> +	if (retval)
-> +		return retval;
-> +
->  	driver = (struct hc_driver *)id->driver_data;
->  
->  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
-> @@ -966,6 +1020,11 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
->  	if (pdev->vendor == PCI_VENDOR_ID_INTEL)
->  		usb_enable_intel_xhci_ports(pdev);
->  
-> +	/* Check if this device is a RENESAS uPD720201/2 device. */
-> +	retval = renesas_check_if_fw_dl_is_needed(pdev);
-> +	if (retval)
-> +		return retval;
-> +
->  	if (xhci->quirks & XHCI_SSIC_PORT_UNUSED)
->  		xhci_ssic_port_unused_quirk(hcd, false);
->  
-> 
+Special care has been taken to keep the diff as minimal as possible from
+the original header file `longlong.h` from gcc, only importing the
+minimal change to make the compilation with clang pass.
 
+Silence the following warnings triggered using W=1:
 
+    CC      lib/mpi/generic_mpih-mul1.o
+  ../lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+        -fheinous-gnu-extensions
+                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+          : "=r" ((USItype) ph) \
+                  ~~~~~~~~~~^~
 
+and
+
+    CC      lib/mpi/generic_mpih-mul2.o
+  ../lib/mpi/generic_mpih-mul2.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+        -fheinous-gnu-extensions
+                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+          : "=r" ((USItype) ph) \
+                  ~~~~~~~~~~^~
+
+  1 warning generated.
+    CC      lib/mpi/generic_mpih-mul3.o
+  ../lib/mpi/generic_mpih-mul3.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+        -fheinous-gnu-extensions
+                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+          : "=r" ((USItype) ph) \
+                  ~~~~~~~~~~^~
+
+Or even:
+
+  ../lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
+                                  sub_ddmmss(n1, n0, n1, n0, d1, d0);
+                                  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+
+Inspiration is taken from commit b682c8692442 ("powerpc/math-emu: Update
+macros from GCC").
+
+Suggested-by: Joel Stanley <joel@jms.id.au>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+v2: Instead of passing compat flag to clang to behave as gcc, remove the superfluous cast
+
+ lib/mpi/longlong.h | 105 +++++++++++++++------------------------------
+ 1 file changed, 35 insertions(+), 70 deletions(-)
+
+diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+index 08c60d10747f..f5503dfa42ed 100644
+--- a/lib/mpi/longlong.h
++++ b/lib/mpi/longlong.h
+@@ -753,79 +753,44 @@ do {									\
+ 	***************************************/
+ #if (defined(_ARCH_PPC) || defined(_IBMR2)) && W_TYPE_SIZE == 32
+ #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+-do { \
+-	if (__builtin_constant_p(bh) && (bh) == 0) \
+-		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "%r" ((USItype)(ah)), \
+-		"%r" ((USItype)(al)), \
+-		"rI" ((USItype)(bl))); \
+-	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+-		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "%r" ((USItype)(ah)), \
+-		"%r" ((USItype)(al)), \
+-		"rI" ((USItype)(bl))); \
+-	else \
+-		__asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "%r" ((USItype)(ah)), \
+-		"r" ((USItype)(bh)), \
+-		"%r" ((USItype)(al)), \
+-		"rI" ((USItype)(bl))); \
+-} while (0)
++  do {									\
++    if (__builtin_constant_p (bh) && (bh) == 0)				\
++      __asm__ ("add%I4c %1,%3,%4\n\taddze %0,%2"		\
++	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\
++    else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
++      __asm__ ("add%I4c %1,%3,%4\n\taddme %0,%2"		\
++	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\
++    else								\
++      __asm__ ("add%I5c %1,%4,%5\n\tadde %0,%2,%3"		\
++	     : "=r" (sh), "=&r" (sl)					\
++	     : "%r" (ah), "r" (bh), "%r" (al), "rI" (bl));		\
++  } while (0)
+ #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+-do { \
+-	if (__builtin_constant_p(ah) && (ah) == 0) \
+-		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "r" ((USItype)(bh)), \
+-		"rI" ((USItype)(al)), \
+-		"r" ((USItype)(bl))); \
+-	else if (__builtin_constant_p(ah) && (ah) == ~(USItype) 0) \
+-		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "r" ((USItype)(bh)), \
+-		"rI" ((USItype)(al)), \
+-		"r" ((USItype)(bl))); \
+-	else if (__builtin_constant_p(bh) && (bh) == 0) \
+-		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "r" ((USItype)(ah)), \
+-		"rI" ((USItype)(al)), \
+-		"r" ((USItype)(bl))); \
+-	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+-		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "r" ((USItype)(ah)), \
+-		"rI" ((USItype)(al)), \
+-		"r" ((USItype)(bl))); \
+-	else \
+-		__asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
+-		: "r" ((USItype)(ah)), \
+-		"r" ((USItype)(bh)), \
+-		"rI" ((USItype)(al)), \
+-		"r" ((USItype)(bl))); \
+-} while (0)
++  do {									\
++    if (__builtin_constant_p (ah) && (ah) == 0)				\
++      __asm__ ("subf%I3c %1,%4,%3\n\tsubfze %0,%2"	\
++	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
++    else if (__builtin_constant_p (ah) && (ah) == ~(USItype) 0)		\
++      __asm__ ("subf%I3c %1,%4,%3\n\tsubfme %0,%2"	\
++	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
++    else if (__builtin_constant_p (bh) && (bh) == 0)			\
++      __asm__ ("subf%I3c %1,%4,%3\n\taddme %0,%2"		\
++	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
++    else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
++      __asm__ ("subf%I3c %1,%4,%3\n\taddze %0,%2"		\
++	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
++    else								\
++      __asm__ ("subf%I4c %1,%5,%4\n\tsubfe %0,%3,%2"	\
++	       : "=r" (sh), "=&r" (sl)					\
++	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl));		\
++  } while (0)
+ #if defined(_ARCH_PPC)
+ #define umul_ppmm(ph, pl, m0, m1) \
+-do { \
+-	USItype __m0 = (m0), __m1 = (m1); \
+-	__asm__ ("mulhwu %0,%1,%2" \
+-	: "=r" ((USItype) ph) \
+-	: "%r" (__m0), \
+-	"r" (__m1)); \
+-	(pl) = __m0 * __m1; \
+-} while (0)
++  do {									\
++    USItype __m0 = (m0), __m1 = (m1);					\
++    __asm__ ("mulhwu %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\
++    (pl) = __m0 * __m1;							\
++  } while (0)
+ #define UMUL_TIME 15
+ #define smul_ppmm(ph, pl, m0, m1) \
+ do { \
+-- 
+2.20.1
 
