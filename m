@@ -2,82 +2,93 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3731CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE1DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DF5208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="S6BOnd4y"
+	by mail.kernel.org (Postfix) with ESMTP id D85EB208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561098089;
+	bh=FzLeeln4yvNk1EUhlNm4sx4apVBZuXfj+bg74Wl6hzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aDuhjIeSO9rCIpitkzHkCcdZ88Y12CZVuZIoUgcxp3YtyNldKX2FRnF50wplVNRPy
+	 FdkzQxQkIvhLrQbPz+nqIFI6OqCg7WFG1nMM27FULl75iMnox8+nGI7YKIxDF3GBSn
+	 oRICYAQXdXqH9PxRw/QVEoTj5Me8T6OaZsYayINk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbfFUGQw (ORCPT
+        id S1726135AbfFUGVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 02:16:52 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:64994 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfFUGQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 02:16:52 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x5L6GlEk022160;
-        Fri, 21 Jun 2019 15:16:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5L6GlEk022160
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561097808;
-        bh=a1r/AXdPUfjndw8LmQLErWaw7Q5y8shtAXjWlzQTg3c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S6BOnd4yTHvHwyp562WmDpcw6/IC4++QneQdjjlMP/28zko30KZpGq1c/wQ4rjKzF
-         DlMfkNnXteCuOK32TW7OTIqjD3t6384lscW3hhn1OHd440kpT7AQKUpwyEePs5iqpi
-         hEIljDYCq426yhPZL7C4SgkiYvOY4+U2dJ7a1GG0WoIHA32Oc5fkxq9VWAJKWfBRx/
-         6cKX9drWwZZlTmKFgYI4i6ts2f/EAVWZCDBBs0tQibZjA56A1o9T5fl8BOfI4ggZ0J
-         wg4hTo2PabQOYNkvH+Zxh6OX/lCBZCpin9gqsQnRAeM2psWO9J73taAFdEVF6u3xb4
-         KVhpuUjtLw5oQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id k9so3129763vso.5;
-        Thu, 20 Jun 2019 23:16:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVRNTHUosTbPQs3caKa1ctEz1bKKi/zUAbE1w+fOouiLUBS15gO
-        BPA5br6mp+2cmr0vO4zMJuAV6y9UleH9s0qDyrQ=
-X-Google-Smtp-Source: APXvYqwHdZIoIyJd+Mcw4P98HkdWmF2Q+PRm9NDtqftuDYgMf/FC7vKJHlCsVLajZw6+wNIrhdv2yhD9KlimPQ5/H0A=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr3990201vsd.215.1561097807250;
- Thu, 20 Jun 2019 23:16:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621060511.29609-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190621060511.29609-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 21 Jun 2019 15:16:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
-Message-ID: <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: remove another TMIO MMC variant usdhi6rol0.c
-To:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rabin Vincent <rabin.vincent@axis.com>,
-        Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+        Fri, 21 Jun 2019 02:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfFUGVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 02:21:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265D4208C3;
+        Fri, 21 Jun 2019 06:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561098077;
+        bh=FzLeeln4yvNk1EUhlNm4sx4apVBZuXfj+bg74Wl6hzI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gUYF/7sqRqsVCMTvwR7UiaaK9FVwW0tcgYEijuWTCJdkBHAUbhgHwe8sknPhoeTpf
+         krczKfl8xWJ+hQMy+QUYjF9N+IZNUmulO+NJAoGJZlYbm2U5yIDOztcJBU4e1nDWSt
+         6qCmDNrHWt4eRonz6LaIBsdFKO8ZL6YA/o0BWKdI=
+Date:   Fri, 21 Jun 2019 08:21:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.com>
+Subject: Re: linux-next: manual merge of the scsi tree with Linus' tree
+Message-ID: <20190621062115.GA11084@kroah.com>
+References: <20190522100808.66994f6b@canb.auug.org.au>
+ <20190528114320.30637398@canb.auug.org.au>
+ <20190621095907.4a6a50fa@canb.auug.org.au>
+ <CAHk-=whVBjssws88tSeoVLG5o5ZWXQu=S7rv-0Hd3qt9=VYsTQ@mail.gmail.com>
+ <1561077341.7970.47.camel@HansenPartnership.com>
+ <yq1fto3pwo0.fsf@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1fto3pwo0.fsf@oracle.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Added Lars Persson, Guennadi Liakhovetski)
+On Thu, Jun 20, 2019 at 09:14:07PM -0400, Martin K. Petersen wrote:
+> 
+> James,
+> 
+> > There's two problems.  One is simple terminology: the
+> > Documentation/process/licence-rules.rst say:
+> >
+> > GPL-2.0 means GPL 2 only
+> > GPL-2.0+ means GPL 2 or later
+> >
+> > I believe RMS made a fuss about this and he finally agreed to 
+> >
+> > GPL-2.0-only
+> > GPL-2.0-or-later
+> 
+> Looks like there are tons of the old style SPDX tags in the kernel. Is
+> there going to be a treewide conversion to the new tag format?
 
-On Fri, Jun 21, 2019 at 3:06 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Not any time soon.  Both are "valid" for us, and the tools.  We are
+focusing on actually tagging all files before we worry about these two
+different types of tag that mean the same thing.
 
-This needs Ack from Renesas.
-But, I do not know if TMIO folks are sure about this driver, though.
-(If they had been sure about it, they should not have duplicated the driver
-in the first place.)
+thanks,
 
--- 
-Best Regards
-Masahiro Yamada
+greg k-h
