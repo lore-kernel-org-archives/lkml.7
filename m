@@ -2,131 +2,114 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DACC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73E8C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582FF2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86F72083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNtMHae5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uifGP4ZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFULoJ (ORCPT
+        id S1726608AbfFULrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:44:09 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36345 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfFULoJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:44:09 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u8so6276475wmm.1;
-        Fri, 21 Jun 2019 04:44:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=671B8ITw4iRBQJ3GVRyh3fkF3c8OsHI/COzEcd1834M=;
-        b=eNtMHae59YB07kaBK2IyGYRtNhXpOIn76XcLvsWX8VXoI+RbfGrhSY+RWVkZkPHSSM
-         Eu1AiEN2RJGwgDZ4nSocPVdPN1JVYHhwL1Tisste7lSrGNbk1cOinEo3W9C/HidX9eoz
-         Nus+QLFisaKhv86/QJ9U8DxYJ5fFa3sMRYZZTMf/jJPMe1pYkcDhGCSLt7MMFuv0T//u
-         Ku4hG5r4nLoPEWdvddObDmdgahkN2hrb8wL/5mXyn7jQLoQUZJYmvxr3GQX07+wR0UF9
-         y0UiOIesN6VH/z4/nBy7aOHbLH5RrVyqgNu1+nnz/XRuEDRAmz1wPlC76SUbevC5ggCk
-         PDxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=671B8ITw4iRBQJ3GVRyh3fkF3c8OsHI/COzEcd1834M=;
-        b=BoH4l9490oZYVWE+iA54R++WDlPVOGHNaTX3L+F5CA6ibUIRJ2aonAgu+86SO7G9qJ
-         3KNpGC98Fi35MYdioyfwQOVmIq1OLPv/l4ODeRRA3TRWwIwe2szOkfeFWbLFBVGNdGyf
-         UEEXPR2t6CBnZcAJmx+vjBJly+pXc+5ae4/AkaAbw2Nt/a/gzA3DwRj8Bo4cexJ3ujmW
-         2REltMw5P5bNRDvUOsJvifY0FMxDQdOndgKhRmY8YcMNBVS/l2SKe0QOw1fMfjMl3Jm9
-         DB2ch9y/Q5vflofVI0FJ9BYdcAg1E31XmVuMT/g13en6zYDdljFgnZ5XzBSK9APxQj0W
-         tCfA==
-X-Gm-Message-State: APjAAAWO6Ww5g5erxjpnA1Ogtfq2OPT26Pu0bCXm0xL2k7aWlXHm1EfR
-        H2VzetWd65QdJqYHcS8R5to=
-X-Google-Smtp-Source: APXvYqwMO1kthRI1MdROhaylSw1sgGK/5sYomAtT784ZV+TKYvX7heUFUkZWJRfM37dLdrva1oW1eA==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr4147489wmj.64.1561117446857;
-        Fri, 21 Jun 2019 04:44:06 -0700 (PDT)
-Received: from alan-laptop.carrier.duckdns.org (host-89-243-246-11.as13285.net. [89.243.246.11])
-        by smtp.gmail.com with ESMTPSA id o2sm1698861wrq.56.2019.06.21.04.44.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 04:44:06 -0700 (PDT)
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] mm: fix setting the high and low watermarks
-Date:   Fri, 21 Jun 2019 12:43:25 +0100
-Message-Id: <20190621114325.711-1-alan.christopher.jenkins@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Jun 2019 07:47:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:41701 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfFULrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:47:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45VcNg3c3zz9s4V;
+        Fri, 21 Jun 2019 21:46:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561117622;
+        bh=goiHVT1iUGD2l33DnwurL5bS+yBEy6KApwjMnYaTsxI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uifGP4ZUU2wtxqOg71WdZY/0n9SJaAiVKPjelcqdNWENlsYIM7yRiDvDvfW3lhJgn
+         zhCiElpBSepXHeRVItdqY30osuxukgLccIbLlKLQ7A2wPTqX6B7iRI5YwIspV3udVa
+         qubXTugaHY92iLHAwJsKNzwQ+HtzeuJ6Lg4AkDjDpIsn0W08UJlvQGRUR9PncKYi0C
+         2a7OB6MpuXpwuYdnPTvItu6seQL06xYcV92zciL0t3E9ybIIb+eUBAot6BLSJ24kTR
+         hXE8UEKKbw+sM869plid4Y4NbXty2zd+SyizosVOMvVs0rD6JC/dklhK4W0VJC+tci
+         vEgFlDKzX6vOg==
+Date:   Fri, 21 Jun 2019 21:46:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: Next 20190620: fails to compile in netfilter on x86-32
+Message-ID: <20190621214657.1624e5a4@canb.auug.org.au>
+In-Reply-To: <20190621110311.GF24145@amd>
+References: <20190621110311.GF24145@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/fB+x7BsJ7wdh58PHPD01xnZ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When setting the low and high watermarks we use min_wmark_pages(zone).
-I guess this is to reduce the line length.  But we forgot that this macro
-includes zone->watermark_boost.  We need to reset zone->watermark_boost
-first.  Otherwise the watermarks will be set inconsistently.
+--Sig_/fB+x7BsJ7wdh58PHPD01xnZ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-E.g. this could cause inconsistent values if the watermarks have been
-boosted, and then you change a sysctl which triggers
-__setup_per_zone_wmarks().
+Hi Pavel,
 
-I strongly suspect this explains why I have seen slightly high watermarks.
-Suspicious-looking zoneinfo below - notice high-low != low-min.
+On Fri, 21 Jun 2019 13:03:11 +0200 Pavel Machek <pavel@ucw.cz> wrote:
+>
+> I get this during compilation:
+>=20
+>   CC      net/netfilter/core.o
+>   In file included from net/netfilter/core.c:19:0:
+>   ./include/linux/netfilter_ipv6.h: In function
+>   =E2=80=98nf_ipv6_cookie_init_sequence=E2=80=99:
+>   ./include/linux/netfilter_ipv6.h:174:2: error: implicit declaration
+>   of function =E2=80=98__cookie_v6_init_sequence=E2=80=99
+>   [-Werror=3Dimplicit-function-declaration]
+>     return __cookie_v6_init_sequence(iph, th, mssp);
+>       ^
+>       ./include/linux/netfilter_ipv6.h: In function
+>   =E2=80=98nf_cookie_v6_check=E2=80=99:
+>   ./include/linux/netfilter_ipv6.h:189:2: error: implicit declaration
+>   of function =E2=80=98__cookie_v6_check=E2=80=99
+>   [-Werror=3Dimplicit-function-declaration]
+>     return __cookie_v6_check(iph, th, cookie);
+>       ^
+>       cc1: some warnings being treated as errors
+>       scripts/Makefile.build:278: recipe for target
+>   'net/netfilter/core.o' failed
+>   make[2]: *** [net/netfilter/core.o] Error 1
+>   scripts/Makefile.build:498: recipe for target 'net/netfilter' failed
+>   make[1]: *** [net/netfilter] Error 2
+>=20
+> Is it known?
 
-Node 0, zone   Normal
-  pages free     74597
-        min      9582
-        low      34505
-        high     36900
+Yes, and should be fixed in next-20190621.
 
-https://unix.stackexchange.com/questions/525674/my-low-and-high-watermarks-seem-higher-than-predicted-by-documentation-sysctl-vm/525687
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
-                      fragmentation event occurs")
-Cc: stable@vger.kernel.org
----
+--Sig_/fB+x7BsJ7wdh58PHPD01xnZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Tested by compiler :-).
+-----BEGIN PGP SIGNATURE-----
 
-Ideally the commit message would be clear about what happens the
-*first* time __setup_per_zone_watermarks() is called.  I guess that
-zone->watermark_boost is *usually* zero, or we would have noticed
-some wild problems :-).  However I am not familiar with how the zone
-structures are allocated & initialized.  Maybe there is a case where
-zone->watermark_boost could contain an arbitrary unitialized value
-at this point.  Can we rule that out?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Mw7EACgkQAVBC80lX
+0Gx2Uwf+OcvRXbTwZiW7IssHj5zEYP+d7wkRVOWoTwGXiWVnlJRL6fRNH7rkYm6l
+z7OMiSWiccESjC5ZtRgIWPnBG9UGDzdRTTuQq9kxf2jsaMcOGsknX6v4CixMG74J
+ZB5lnsd/kpVQm3d8KQn1A3d6rsb4y9bvxuJFTXCOItzw0g1GDXz/cA6sZbHX7Tdl
+UBNGKeXg91RPxDT25pFudMukD8QcLG1MmToy95qWNRXmaVaAJD0izmyBMJgFddCL
+E8neM/A2VhWoMUGHI1gE67BSwu8SP6dzKOCJcrVfzr4PLeQs3JBu82mnADCp+V85
+XYHP/5YlIMr9IAJlUnlWXAMR2OzqtA==
+=xAad
+-----END PGP SIGNATURE-----
 
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c02cff1ed56e..db9758cda6f8 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7606,9 +7606,9 @@ static void __setup_per_zone_wmarks(void)
- 			    mult_frac(zone_managed_pages(zone),
- 				      watermark_scale_factor, 10000));
- 
-+		zone->watermark_boost = 0;
- 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
- 		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
--		zone->watermark_boost = 0;
- 
- 		spin_unlock_irqrestore(&zone->lock, flags);
- 	}
--- 
-2.20.1
-
+--Sig_/fB+x7BsJ7wdh58PHPD01xnZ--
