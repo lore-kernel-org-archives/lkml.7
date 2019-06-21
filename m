@@ -7,84 +7,154 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B104C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B657C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E845208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112A721530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561134091;
-	bh=i3bOwZCT85Q9yvApyiLHd1cEaAunSmxNvQtZBURK4gA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mVMtBiEpdeFtQbCDLBw3/pvZqxDunDwicUgsUzZEAOYQdpc+P7xeAecCjm+RxAL7y
-	 vZFph++/ZuiSaWm6cwhDs3Eg4umtfBPG9JOiz3yIBbDYlf1UtADB/Pfl2qFv2CrN9m
-	 8PYkLhthkXhWfw791YwLRCcRrHHLIYTjrjEgKwAg=
+	s=default; t=1561134094;
+	bh=hBhbfPIJaS5gpTOkaEMHdnUagHtbsMD87J6VZ2h4tR4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z/P41EM+7nFFKVHgDTSjRAEjMvXRZSzhgjSqcrxCneHi61nvG1paI1wlzbR1XsmVu
+	 QhArmFLS58Cpyboim9Hby0mVHRKtzHPZZQg8SGRMlLy5O/U5OD5eAnnrAqKOrQIC7G
+	 trk4C7JmpZHE/bukwb9fL+qZw4ODK3B/vwDWOtlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfFUQVa (ORCPT
+        id S1726243AbfFUQVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:21:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 12:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbfFUQV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:21:29 -0400
+        id S1726058AbfFUQVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:21:31 -0400
 Received: from localhost.localdomain (unknown [194.230.155.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A322089E;
-        Fri, 21 Jun 2019 16:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80A5B208C3;
+        Fri, 21 Jun 2019 16:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561134088;
-        bh=i3bOwZCT85Q9yvApyiLHd1cEaAunSmxNvQtZBURK4gA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LAovNkRmT7jv/zYTohSOPD5n7AZiXiuDJek2AUQvr38TGR6rgnGIQnNHZfy8QqTr4
-         Fusf7Pxnv817IFYu9Ed5oRY38K5+/x77K0K+IQU6X7UqO1ydcAfJSFCYbTY6N4lPul
-         Mp/EHpW+d5TLkT2v/pliMtBFEqIyW3l9xnGPZXm4=
+        s=default; t=1561134091;
+        bh=hBhbfPIJaS5gpTOkaEMHdnUagHtbsMD87J6VZ2h4tR4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pkdPRMUOaYrlXbmkfdfKkUrlPpjH7kM9njNVF17YrLRBNwZ0XFk4r3nd9EwjFZBzT
+         6KNb+bp7e2+9tmtffkTjZqGF4nxYCznOY3fAC7sTS4NhoyWvSZ7pGlH3U97NN3r8CY
+         p4VDYa6I/pOlfrdVrzd7DkrmZIrPZcYE7DKr+jS4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Qiang Yu <yuq825@gmail.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/4] drm/lima: Mark 64-bit number as ULL to silence Smatch warning
-Date:   Fri, 21 Jun 2019 18:21:14 +0200
-Message-Id: <20190621162117.22533-1-krzk@kernel.org>
+Subject: [PATCH v2 2/4] drm/lima: Reduce the amount of logs on deferred probe
+Date:   Fri, 21 Jun 2019 18:21:15 +0200
+Message-Id: <20190621162117.22533-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621162117.22533-1-krzk@kernel.org>
+References: <20190621162117.22533-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark long numbers with ULL to silence the Smatch warning:
+There is no point to print deferred probe (and its failures to get
+resources) as an error.  For example getting a regulator causes three
+unneeded error messages:
 
-    drivers/gpu/drm/lima/lima_device.c:314:32: warning: constant 0x100000000 is so big it is long long
+    lima 13000000.gpu: failed to get regulator: -517
+    lima 13000000.gpu: regulator init fail -517
+    lima 13000000.gpu: Fatal error during GPU init
+
+Also do not print clock rates before the initialization finishes
+because they will be duplicated after deferral.  Each probe step already
+prints error so remove the final error message "Fatal error during GPU
+init".
+
+In case of multiple probe tries this would pollute the dmesg.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
 ---
 
 Changes since v1:
-1. Add reviewed-by tag
+1. None
 ---
- drivers/gpu/drm/lima/lima_vm.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/lima/lima_device.c | 17 ++++++-----------
+ drivers/gpu/drm/lima/lima_drv.c    |  4 +---
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/lima/lima_vm.h b/drivers/gpu/drm/lima/lima_vm.h
-index caee2f8a29b4..e0bdedcf14dd 100644
---- a/drivers/gpu/drm/lima/lima_vm.h
-+++ b/drivers/gpu/drm/lima/lima_vm.h
-@@ -15,9 +15,9 @@
- #define LIMA_VM_NUM_PT_PER_BT (1 << LIMA_VM_NUM_PT_PER_BT_SHIFT)
- #define LIMA_VM_NUM_BT (LIMA_PAGE_ENT_NUM >> LIMA_VM_NUM_PT_PER_BT_SHIFT)
+diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
+index 570d0e93f9a9..bb2eaa4f370e 100644
+--- a/drivers/gpu/drm/lima/lima_device.c
++++ b/drivers/gpu/drm/lima/lima_device.c
+@@ -80,7 +80,6 @@ const char *lima_ip_name(struct lima_ip *ip)
+ static int lima_clk_init(struct lima_device *dev)
+ {
+ 	int err;
+-	unsigned long bus_rate, gpu_rate;
  
--#define LIMA_VA_RESERVE_START  0xFFF00000
-+#define LIMA_VA_RESERVE_START  0x0FFF00000ULL
- #define LIMA_VA_RESERVE_DLBU   LIMA_VA_RESERVE_START
--#define LIMA_VA_RESERVE_END    0x100000000
-+#define LIMA_VA_RESERVE_END    0x100000000ULL
+ 	dev->clk_bus = devm_clk_get(dev->dev, "bus");
+ 	if (IS_ERR(dev->clk_bus)) {
+@@ -94,12 +93,6 @@ static int lima_clk_init(struct lima_device *dev)
+ 		return PTR_ERR(dev->clk_gpu);
+ 	}
  
- struct lima_device;
+-	bus_rate = clk_get_rate(dev->clk_bus);
+-	dev_info(dev->dev, "bus rate = %lu\n", bus_rate);
+-
+-	gpu_rate = clk_get_rate(dev->clk_gpu);
+-	dev_info(dev->dev, "mod rate = %lu", gpu_rate);
+-
+ 	err = clk_prepare_enable(dev->clk_bus);
+ 	if (err)
+ 		return err;
+@@ -145,7 +138,8 @@ static int lima_regulator_init(struct lima_device *dev)
+ 		dev->regulator = NULL;
+ 		if (ret == -ENODEV)
+ 			return 0;
+-		dev_err(dev->dev, "failed to get regulator: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev->dev, "failed to get regulator: %d\n", ret);
+ 		return ret;
+ 	}
  
+@@ -297,10 +291,8 @@ int lima_device_init(struct lima_device *ldev)
+ 	}
+ 
+ 	err = lima_regulator_init(ldev);
+-	if (err) {
+-		dev_err(ldev->dev, "regulator init fail %d\n", err);
++	if (err)
+ 		goto err_out0;
+-	}
+ 
+ 	ldev->empty_vm = lima_vm_create(ldev);
+ 	if (!ldev->empty_vm) {
+@@ -343,6 +335,9 @@ int lima_device_init(struct lima_device *ldev)
+ 	if (err)
+ 		goto err_out5;
+ 
++	dev_info(ldev->dev, "bus rate = %lu\n", clk_get_rate(ldev->clk_bus));
++	dev_info(ldev->dev, "mod rate = %lu", clk_get_rate(ldev->clk_gpu));
++
+ 	return 0;
+ 
+ err_out5:
+diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+index b29c26cd13b2..cebc44592e47 100644
+--- a/drivers/gpu/drm/lima/lima_drv.c
++++ b/drivers/gpu/drm/lima/lima_drv.c
+@@ -307,10 +307,8 @@ static int lima_pdev_probe(struct platform_device *pdev)
+ 	ldev->ddev = ddev;
+ 
+ 	err = lima_device_init(ldev);
+-	if (err) {
+-		dev_err(&pdev->dev, "Fatal error during GPU init\n");
++	if (err)
+ 		goto err_out1;
+-	}
+ 
+ 	/*
+ 	 * Register the DRM device with the core and the connectors with
 -- 
 2.17.1
 
