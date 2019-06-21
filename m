@@ -2,103 +2,144 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0154C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8AFC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943BD21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9928B21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:10:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XCC3tN48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFULJm (ORCPT
+        id S1726688AbfFULKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:09:42 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35465 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFULJl (ORCPT
+        Fri, 21 Jun 2019 07:10:08 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18160 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfFULKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:09:41 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so6484951qto.2;
-        Fri, 21 Jun 2019 04:09:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xo3SvTstxc7h8VJt3dWmJBpJuemSVAPyqkyjpLinJ9Q=;
-        b=rPMjz6Jvy0o8zHF5mV55OCnizlza5oUVh1Wymk2CnmUzUkayjYT/0cHs/UAKNN7ON5
-         FUkvGHDJoL/mnL4K8bekFYu9xsd40DCGycDxUwm1n3VAipvtC7P1U3w9ZS0zQoRha9j/
-         Yx3TDCvdfEn8Eu2OzpVfqJL/PBxM++CeRw6XQop9oOqTeSbazE4+eqv0oPCYuzM5/Gob
-         YdNAFvOakgfo87XT8/T5iu9KB2ubyqLvcECfTH2zrzWbG+rzHHarjkGl3xNL7pUIksz0
-         +eahEaZUIaNW4IYp/8YWVT87BHouU5vLrLNgzMjmASoccSdE5n2md5Wo8GWdne2dOchm
-         61iQ==
-X-Gm-Message-State: APjAAAXxk3pICnI/rhOAkWHrmSlEapOypjudbea7QYpSXrWQ/y4kyYhn
-        BltiUbXFo1CzHNeHlkm0/cG0WG4+8fSnQynCfw8=
-X-Google-Smtp-Source: APXvYqwF5z4PQ6dvkG543VntOj0Tud/yFvuHJ5kowGF4MTHuP3YLkBNuiGsoZO/lvnBsfzfanGAPBx2TSCqpQE/wIOM=
-X-Received: by 2002:a0c:91dd:: with SMTP id r29mr171346qvr.93.1561115380817;
- Fri, 21 Jun 2019 04:09:40 -0700 (PDT)
+        Fri, 21 Jun 2019 07:10:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0cbb100000>; Fri, 21 Jun 2019 04:10:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 21 Jun 2019 04:10:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 21 Jun 2019 04:10:06 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 11:10:06 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 11:10:06 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 21 Jun 2019 11:10:06 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0cbb0b0000>; Fri, 21 Jun 2019 04:10:05 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
+        <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V6 1/3] PCI: dwc: Add API support to de-initialize host
+Date:   Fri, 21 Jun 2019 16:39:58 +0530
+Message-ID: <20190621111000.23216-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190614063341.1672-1-fancer.lancer@gmail.com>
- <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org>
- <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com> <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org>
-In-Reply-To: <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 13:09:24 +0200
-Message-ID: <CAK8P3a3HWn7RXjcT0KA_qOc+C1SgWd2qXSdCTTAmRKHdc4qNbQ@mail.gmail.com>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561115408; bh=wwTeiqx1VaZAwD/+aEccRj2QwS2Z8qGqimU8knVjXv8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=XCC3tN486+ntgVZ/J08PON9V6xujOsGQkWu865BI9mEOegYtoh0+jP0cWkm5R0sNC
+         SdErpjMj7NEOUJVY1TR+OGH7c8VXmS1Zs266LA2eDfb88inobglKAy3MJyyF/TQfrE
+         p6a1u+Ga4/25q/rgw3kVSFe1VV5EHnq2nVWt8weBhlc9+wUDm26VMeo6uy2kS6Zvw1
+         42jiYIusvdNJxlVN7h8ritMKh3lSEgZK5hFyF8duuGRfb3K7lgtGQGRZWvir0eYj0+
+         t5MZeo1Y0Dht+7Z1W1BB24o7GxdgWRRfTBLcVjBnVQJuYGDH0XTGQ52iQHVsO3cJO+
+         q2fOduukvkznQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:09 PM Maciej W. Rozycki <macro@linux-mips.org> wrote:
->
-> On Fri, 21 Jun 2019, Arnd Bergmann wrote:
->
-> > >  The use of 64-bit operations to access option's packet memory, which is
-> > > true SRAM, i.e. no side effects, is to improve throughput only and there's
-> > > no need for atomicity here nor also any kind of barriers, except at the
-> > > conclusion.  Splitting 64-bit accesses into 32-bit halves in software
-> > > would not be a functional error here.
-> >
-> > The other property of packet memory and similar things is that you
-> > basically want memcpy()-behavior with no byteswaps. This is one
-> > of the few cases in which __raw_readq() is actually the right accessor
-> > in (mostly) portable code.
->
->  Correct, but we're missing an `__raw_readq_relaxed', etc. interface and
-> having additional barriers applied on every access would hit performance
-> very badly;
+Add an API to group all the tasks to be done to de-initialize host which
+can then be called by any DesignWare core based driver implementations
+while adding .remove() support in their respective drivers.
 
-How so? __raw_readq() by definition has the least barriers of
-all, you can't make it more relaxed than it already is.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Changes from v5:
+* None
 
-> in fact even the barriers `*_relaxed' accessors imply would
-> best be removed in this use (which is why defza.c uses `readw_o' vs
-> `readw_u', etc. internally), but after all the struggles over the years
-> for weakly ordered internal APIs x86 people are so averse to I'm not sure
-> if I want to start another one.  We can get away with `readq_relaxed' in
-> this use though as all the systems this device can be used with are
-> little-endian as is TURBOchannel, so no byte-swapping will ever actually
-> occur.
+Changes from v4:
+* None
 
-I still don't see any downside of using __raw_readq() here, while the
-upsides are:
+Changes from v3:
+* Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+  dw_pcie_free_msi() API to mimic init path
 
-- makes the driver portable to big-endian kernels (even though we don't
-  care)
-- avoids all barriers
-- fixes the build regression.
+Changes from v2:
+* Rebased on top of linux-next top of the tree branch
 
-      Arnd
+Changes from v1:
+* s/Designware/DesignWare
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 77db32529319..d069e4290180 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
+ 
++void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++	pci_stop_root_bus(pp->root_bus);
++	pci_remove_root_bus(pp->root_bus);
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
++}
++
+ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				     u32 devfn, int where, int size, u32 *val,
+ 				     bool write)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index b8993f2b78df..14762e262758 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+ void dw_pcie_free_msi(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
++void dw_pcie_host_deinit(struct pcie_port *pp);
+ int dw_pcie_allocate_domains(struct pcie_port *pp);
+ #else
+ static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+@@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static inline void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++}
++
+ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+ {
+ 	return 0;
+-- 
+2.17.1
+
