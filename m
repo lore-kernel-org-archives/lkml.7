@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CF0C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FEDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C6121530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4AB21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFUInP (ORCPT
+        id S1726803AbfFUInT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:43:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:51092 "EHLO foss.arm.com"
+        Fri, 21 Jun 2019 04:43:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:51126 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfFUInL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:43:11 -0400
+        id S1726755AbfFUInQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:43:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFAEF1597;
-        Fri, 21 Jun 2019 01:43:10 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A09915A2;
+        Fri, 21 Jun 2019 01:43:16 -0700 (PDT)
 Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CE983F246;
-        Fri, 21 Jun 2019 01:43:08 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BAECA3F246;
+        Fri, 21 Jun 2019 01:43:13 -0700 (PDT)
 From:   Patrick Bellasi <patrick.bellasi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Steve Muckle <smuckle@google.com>,
         Suren Baghdasaryan <surenb@google.com>,
         Alessio Balsini <balsini@android.com>
-Subject: [PATCH v10 14/16] sched/core: uclamp: Propagate system defaults to root group
-Date:   Fri, 21 Jun 2019 09:42:15 +0100
-Message-Id: <20190621084217.8167-15-patrick.bellasi@arm.com>
+Subject: [PATCH v10 16/16] sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+Date:   Fri, 21 Jun 2019 09:42:17 +0100
+Message-Id: <20190621084217.8167-17-patrick.bellasi@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190621084217.8167-1-patrick.bellasi@arm.com>
 References: <20190621084217.8167-1-patrick.bellasi@arm.com>
@@ -56,69 +56,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clamp values are not tunable at the level of the root task group.
-That's for two main reasons:
+On updates of task group (TG) clamp values, ensure that these new values
+are enforced on all RUNNABLE tasks of the task group, i.e. all RUNNABLE
+tasks are immediately boosted and/or clamped as requested.
 
- - the root group represents "system resources" which are always
-   entirely available from the cgroup standpoint.
-
- - when tuning/restricting "system resources" makes sense, tuning must
-   be done using a system wide API which should also be available when
-   control groups are not.
-
-When a system wide restriction is available, cgroups should be aware of
-its value in order to know exactly how much "system resources" are
-available for the subgroups.
-
-Utilization clamping supports already the concepts of:
-
- - system defaults: which define the maximum possible clamp values
-   usable by tasks.
-
- - effective clamps: which allows a parent cgroup to constraint (maybe
-   temporarily) its descendants without losing the information related
-   to the values "requested" from them.
-
-Exploit these two concepts and bind them together in such a way that,
-whenever system default are tuned, the new values are propagated to
-(possibly) restrict or relax the "effective" value of nested cgroups.
+Do that by slightly refactoring uclamp_bucket_inc(). An additional
+parameter *cgroup_subsys_state (css) is used to walk the list of tasks
+in the TGs and update the RUNNABLE ones. Do that by taking the rq
+lock for each task, the same mechanism used for cpu affinity masks
+updates.
 
 Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Tejun Heo <tj@kernel.org>
 ---
- kernel/sched/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/sched/core.c | 48 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b4d0b9bd6b9..f09712f65017 100644
+index 8070e11cafa0..1ddc37320f3d 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -1006,6 +1006,13 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+@@ -1032,6 +1032,51 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
  		uclamp_rq_dec_id(rq, p, clamp_id);
  }
  
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
-+static void cpu_util_update_eff(struct cgroup_subsys_state *css,
-+				unsigned int clamp_id);
-+#else
-+#define cpu_util_update_eff(...)
-+#endif
++static inline void
++uclamp_update_active(struct task_struct *p, unsigned int clamp_id)
++{
++	struct rq_flags rf;
++	struct rq *rq;
 +
- int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- 				void __user *buffer, size_t *lenp,
- 				loff_t *ppos)
-@@ -1039,6 +1046,9 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- 			      sysctl_sched_uclamp_util_max, false);
- 	}
++	/*
++	 * Lock the task and the rq where the task is (or was) queued.
++	 *
++	 * We might lock the (previous) rq of a !RUNNABLE task, but that's the
++	 * price to pay to safely serialize util_{min,max} updates with
++	 * enqueues, dequeues and migration operations.
++	 * This is the same locking schema used by __set_cpus_allowed_ptr().
++	 */
++	rq = task_rq_lock(p, &rf);
++
++	/*
++	 * Setting the clamp bucket is serialized by task_rq_lock().
++	 * If the task is not yet RUNNABLE and its task_struct is not
++	 * affecting a valid clamp bucket, the next time it's enqueued,
++	 * it will already see the updated clamp bucket value.
++	 */
++	if (!p->uclamp[clamp_id].active)
++		goto done;
++
++	uclamp_rq_dec_id(rq, p, clamp_id);
++	uclamp_rq_inc_id(rq, p, clamp_id);
++
++done:
++
++	task_rq_unlock(rq, p, &rf);
++}
++
++static inline void
++uclamp_update_active_tasks(struct cgroup_subsys_state *css, int clamp_id)
++{
++	struct css_task_iter it;
++	struct task_struct *p;
++
++	css_task_iter_start(css, 0, &it);
++	while ((p = css_task_iter_next(&it)))
++		uclamp_update_active(p, clamp_id);
++	css_task_iter_end(&it);
++}
++
+ #ifdef CONFIG_UCLAMP_TASK_GROUP
+ static void cpu_util_update_eff(struct cgroup_subsys_state *css,
+ 				unsigned int clamp_id);
+@@ -7064,6 +7109,9 @@ static void cpu_util_update_eff(struct cgroup_subsys_state *css,
  
-+	cpu_util_update_eff(&root_task_group.css, UCLAMP_MIN);
-+	cpu_util_update_eff(&root_task_group.css, UCLAMP_MAX);
+ 		uc_se->value = value;
+ 		uc_se->bucket_id = uclamp_bucket_id(value);
 +
- 	/*
- 	 * Updating all the RUNNABLE task is expensive, keep it simple and do
- 	 * just a lazy update at each next enqueue time.
++		/* Immediately update descendants RUNNABLE tasks */
++		uclamp_update_active_tasks(css, clamp_id);
+ 	}
+ }
+ 
 -- 
 2.21.0
 
