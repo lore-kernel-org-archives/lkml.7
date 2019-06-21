@@ -2,203 +2,157 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DADC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E9EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928E321655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F203208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujArdU0a"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iKYkHq1g";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B8cGsKjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfFUKdd (ORCPT
+        id S1726752AbfFUKeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:33:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37985 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfFUKda (ORCPT
+        Fri, 21 Jun 2019 06:34:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56926 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfFUKeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:33:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g4so2790721plb.5;
-        Fri, 21 Jun 2019 03:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zpskMPE9OKTdD4zPuyxeU/1TLb1myVFguUVGtb+4nAs=;
-        b=ujArdU0ao9KvztpXXnIF0b/LNyDio8E3uB+CEa6q3s6SF2q7uWFkyxZY6K0BXkYkaT
-         gQuZ9M1xYi+7pvPv4JV9S2nhknsMNsPkAZodbNReTUOeyXwkW0lC40jbjeKJq0wOJINA
-         F0aJl7OpQvlaL9qlVodOPkymvBUwtWP9uWxQv9Qr6JFcfL5DA4XAkH3AzK7GSvML1JlM
-         GlkVBpYFyFdR892j3FBITgAEDKil0/4jyy7lTJipYEwOrUH64iKgYCK9//ocU0fmf2Xq
-         Mm5nySCfdafySz/P8ePI1hzYDozeoW6xqmwpCZgeJlWXoROtDiqQnILkpP7pMOvcV2PI
-         jaag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zpskMPE9OKTdD4zPuyxeU/1TLb1myVFguUVGtb+4nAs=;
-        b=uf54tpppuHkwdL/mKRYonQITYKfyWmjEUrTla8KW5JTWetZByOkRPNC6zUlaXxgWrw
-         nJCHLV0pU1AkaKeDtFWOSGIky6zOuAox91iiORlxYHJIgQKCvC7LiKoqs4F5MkPjf0sY
-         nVUNqrwsAfaEL72yvXByn2hL39qOlEnoW/sFe0aJRF2NuYcfxfCCFYYPEnLSXX0QPhzz
-         pQYrD+ad9ltWM/ynqQQ1J8kjJFZxjWvPrtZ8d0HFsJVrixGTL5atvxflXlIGSACpsQBa
-         9Wr2RVeNg5Y6vzds0W920LJuq7MjfEcPJOndJLUsw9Y3QxKXbyJBfUXLSnlB48PFNqXd
-         41lA==
-X-Gm-Message-State: APjAAAXMSl4xJ63wAxx6ehsIwGwRmppoLiL1Fc3jORQCn4UKVJs3oxi4
-        GECBSQ8nYXpx0f5hU8PJDY3ZuGzPHv+/Mr8k9khtAQVi
-X-Google-Smtp-Source: APXvYqzb+KJiyIP1rR7QPFyAhavPjo+cePP7gRZEkDElAYTtlI9UER2Pl2DUjFOEtLobLb9SP7kV+lUXmfBBLlZLhvM=
-X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr127848301plr.262.1561113209896;
- Fri, 21 Jun 2019 03:33:29 -0700 (PDT)
+        Fri, 21 Jun 2019 06:34:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AC7DE61CFC; Fri, 21 Jun 2019 10:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561113239;
+        bh=manjW8C5h8K1gbTBvn6fCexwSJjompnXu5lE/tcdFKY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iKYkHq1gwXBlivoLqQsii7tLyDZg4xxxwpTUttdKiNlNQ76JPySFt5jfzyLjLCb0N
+         mtUyLBB3vuvlv2qt0juicNtXw+tjC3NCLrT756NIfQBgfDCW/Iy1GFjMFvuklBbRXr
+         rukOgR6DqpF173p2MGKFJpud5+zGVnguRkMJRltQ=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3EB061CEA;
+        Fri, 21 Jun 2019 10:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561113235;
+        bh=manjW8C5h8K1gbTBvn6fCexwSJjompnXu5lE/tcdFKY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=B8cGsKjFQT3ugVnuB5+GYixr+/lxRDymgmHQ8ZiB++EWTooJeCFs+GV3swYCLzUju
+         mnfJ3q5ODzIBlTOZDatJmPuO4p+oBQdwVPtTIszyRFjkXBjFQh12wCxDMt12bYqOeR
+         R09JtP7QV0wur6wluJhDk86LLlOvcCaSXpb5tamI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3EB061CEA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv2 1/2] coresight: Do not default to CPU0 for missing CPU
+ phandle
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+ <92a33fa58c77206b338220427e92dabbd1d197f7.1561054498.git.saiprakash.ranjan@codeaurora.org>
+ <4176442c-feb8-5245-2b27-afcdb9a6247c@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <f33c524d-2e13-aa4e-0e13-9d89f6ad87dd@codeaurora.org>
+Date:   Fri, 21 Jun 2019 16:03:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <4cd2ece080041d8545cc2f3e86cb1ff7c8a91f5b.1561110859.git.mchehab+samsung@kernel.org>
-In-Reply-To: <4cd2ece080041d8545cc2f3e86cb1ff7c8a91f5b.1561110859.git.mchehab+samsung@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 21 Jun 2019 13:33:18 +0300
-Message-ID: <CAHp75VdSWMzPCEogUMwkjwSx4e=fhd2a6Mu8RkczEaFhwO=rRw@mail.gmail.com>
-Subject: Re: [PATCH] ABI: sysfs-driver-mlxreg-io: fix the what fields
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4176442c-feb8-5245-2b27-afcdb9a6247c@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:54 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> The author of this file should be given an award for creativity:
-> the What: fields on this file technically fulfills the description
-> at README. Yet, the way it is, it can't be parsed on a script,
-> and if someone would try to do something like:
->
->         grep hwmon*/jtag_enable
->
-> It wouldn't find anything.
->
-> Fix the What fields in a way that it can be parseable by a
-> script and other search tools.
->
+Hello Suzuki,
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 6/21/2019 3:18 PM, Suzuki K Poulose wrote:
+> Hi Sai,
+> 
+> 
+> On 06/20/2019 07:31 PM, Sai Prakash Ranjan wrote:
+>> Coresight platform support assumes that a missing "cpu" phandle
+>> defaults to CPU0. This could be problematic and unnecessarily binds
+>> components to CPU0, where they may not be. Let us make the DT binding
+>> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+>> affinity information.
+>>
+>> Also in coresight etm and cpu-debug drivers, abort the probe
+>> for such cases.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> Please drop this tag for now.
+> 
 
-Thanks, Mauro, for fixing this.
+Ok will drop this.
 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  .../ABI/stable/sysfs-driver-mlxreg-io         | 45 ++++++++-----------
->  1 file changed, 19 insertions(+), 26 deletions(-)
->
-> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> index 156319fc5b80..3544968f43cc 100644
-> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> @@ -1,5 +1,4 @@
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       asic_health
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
->
->  Date:          June 2018
->  KernelVersion: 4.19
-> @@ -9,9 +8,8 @@ Description:    This file shows ASIC health status. The possible values are:
->
->                 The files are read only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       cpld1_version
-> -                                                       cpld2_version
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld1_version
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld2_version
->  Date:          June 2018
->  KernelVersion: 4.19
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
-> @@ -20,8 +18,7 @@ Description:  These files show with which CPLD versions have been burned
->
->                 The files are read only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       fan_dir
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
->
->  Date:          December 2018
->  KernelVersion: 5.0
-> @@ -32,8 +29,7 @@ Description:  This file shows the system fans direction:
->
->                 The files are read only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       jtag_enable
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
->
->  Date:          November 2018
->  KernelVersion: 5.0
-> @@ -43,8 +39,7 @@ Description:  These files show with which CPLD versions have been burned
->
->                 The files are read only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       jtag_enable
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
->
->  Date:          November 2018
->  KernelVersion: 5.0
-> @@ -87,16 +82,15 @@ Description:        These files allow asserting system power cycling, switching
->
->                 The files are write only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                                       reset_aux_pwr_or_ref
-> -                                                       reset_asic_thermal
-> -                                                       reset_hotswap_or_halt
-> -                                                       reset_hotswap_or_wd
-> -                                                       reset_fw_reset
-> -                                                       reset_long_pb
-> -                                                       reset_main_pwr_fail
-> -                                                       reset_short_pb
-> -                                                       reset_sw_reset
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_aux_pwr_or_ref
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_asic_thermal
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_halt
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_wd
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_fw_reset
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_long_pb
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_main_pwr_fail
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_short_pb
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sw_reset
->  Date:          June 2018
->  KernelVersion: 4.19
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
-> @@ -110,11 +104,10 @@ Description:      These files show the system reset cause, as following: power
->
->                 The files are read only.
->
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> -                                               reset_comex_pwr_fail
-> -                                               reset_from_comex
-> -                                               reset_system
-> -                                               reset_voltmon_upgrade_fail
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_pwr_fail
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_comex
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
->
->  Date:          November 2018
->  KernelVersion: 5.0
-> --
-> 2.21.0
->
+>> ---
+>>   Documentation/devicetree/bindings/arm/coresight.txt |  2 +-
+>>   drivers/hwtracing/coresight/coresight-cpu-debug.c   |  3 +++
+>>   drivers/hwtracing/coresight/coresight-etm3x.c       |  3 +++
+>>   drivers/hwtracing/coresight/coresight-etm4x.c       |  3 +++
+>>   drivers/hwtracing/coresight/coresight-platform.c    | 10 +++++-----
+>>   5 files changed, 15 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt 
+>> b/Documentation/devicetree/bindings/arm/coresight.txt
+>> index 8a88ddebc1a2..c4659ba9457d 100644
+>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -88,7 +88,7 @@ its hardware characteristcs.
+>>         registers via co-processor 14.
+>>       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+>> -      source is considered to belong to CPU0.
+>> +      affinity is set to invalid.
+> 
+> Please move this from the "Optional properties". It is not "Optional"
+> anymore with this change. Please make sure it is evident that this
+> is mandatory. Also please fix the bindings document for cpu-debug.txt.
+> 
+> 
+>>   * Optional property for TMC:
+> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
+>> b/drivers/hwtracing/coresight/coresight-platform.c
+>> index 3c5ceda8db24..8b03fa573684 100644
+>> --- a/drivers/hwtracing/coresight/coresight-platform.c
+>> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+>> @@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
+>>       struct device_node *dn;
+>>       if (!dev->of_node)
+>> -        return 0;
+>> +        return -ENODEV;
+>> +
+>>       dn = of_parse_phandle(dev->of_node, "cpu", 0);
+>> -    /* Affinity defaults to CPU0 */
+>>       if (!dn)
+>> -        return 0;
+>> +        return -ENODEV;
+>> +
+>>       cpu = of_cpu_node_to_id(dn);
+>>       of_node_put(dn);
+> 
+> Please fix the acpi_coresight_get_cpu() for ACPI.
+> 
 
+Ok will do it. Thanks again for the review comments.
+
+-Sai
 
 -- 
-With Best Regards,
-Andy Shevchenko
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
