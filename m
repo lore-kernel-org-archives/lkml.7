@@ -2,249 +2,223 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5F9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43339C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F00B214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07ACE2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:57:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PvpVgocw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfFUHzV (ORCPT
+        id S1726292AbfFUH5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:55:21 -0400
-Received: from mail4.tencent.com ([183.57.53.109]:54740 "EHLO
-        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfFUHzQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:55:16 -0400
-Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
-        by mail4.tencent.com (Postfix) with ESMTP id 15DA4502D4;
-        Fri, 21 Jun 2019 15:47:20 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.22.120.143) by
- EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 15:47:19 +0800
-From:   <xiaoggchen@tencent.com>
-To:     <jasperwang@tencent.com>, <heddchen@tencent.com>
-CC:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tj@kernel.org>,
-        <lizefan@huawei.com>, <hannes@cmpxchg.org>,
-        <cgroups@vger.kernel.org>, chen xiaoguang <xiaoggchen@tencent.com>,
-        Newton Gao <newtongao@tencent.com>,
-        Shook Liu <shookliu@tencent.com>,
-        Zhiguang Peng <zgpeng@tencent.com>
-Subject: [PATCH 1/5] sched/BT: add BT scheduling entity
-Date:   Fri, 21 Jun 2019 15:45:53 +0800
-Message-ID: <1561103157-11246-2-git-send-email-xiaoggchen@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
-References: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
+        Fri, 21 Jun 2019 03:57:35 -0400
+Received: from mail-eopbgr70088.outbound.protection.outlook.com ([40.107.7.88]:57918
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726045AbfFUH5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:57:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E+aIBM9xufH2iYkg6gzm2BgESEOFOgky7tsRsq0rYi8=;
+ b=PvpVgocw6NX4NhT6iIFD9mkt4VFNf3onMpFKIcjSLJHK51KSh8kQTE+8NPQUwv0KlNeUpihl+3nUlVkD9oJt2f7B3q3CGR+fjiybw1Aki36ISD+qYk98QOFXZ1596eaFJOduNKjgHA6xOaafB4bcRBGwyKLqXiZoBOISPwXIHCo=
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
+ VI1PR08MB3023.eurprd08.prod.outlook.com (52.133.14.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Fri, 21 Jun 2019 07:57:29 +0000
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b]) by VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b%4]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 07:57:29 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH] drm/komeda: Adds system power management support
+Thread-Topic: [PATCH] drm/komeda: Adds system power management support
+Thread-Index: AQHVKAb5akOYxhSrCEW6A4cmWHoQRw==
+Date:   Fri, 21 Jun 2019 07:57:29 +0000
+Message-ID: <1561103814-864-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR01CA0041.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::29) To VI1PR08MB5488.eurprd08.prod.outlook.com
+ (2603:10a6:803:137::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 17f4a2fc-dab9-4cf4-169b-08d6f61e1ba0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3023;
+x-ms-traffictypediagnostic: VI1PR08MB3023:
+x-ms-exchange-purlcount: 3
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR08MB30234A9B59FC87ADDB3E518F9FE70@VI1PR08MB3023.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:568;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(366004)(346002)(39860400002)(189003)(199004)(5024004)(72206003)(8676002)(14454004)(66066001)(966005)(68736007)(186003)(50226002)(4326008)(476003)(5660300002)(86362001)(256004)(6486002)(53936002)(66946007)(6506007)(3846002)(6116002)(66476007)(14444005)(2616005)(6636002)(26005)(73956011)(25786009)(66446008)(2201001)(6512007)(6306002)(478600001)(8936002)(386003)(71200400001)(66556008)(99286004)(36756003)(102836004)(6436002)(64756008)(486006)(55236004)(2501003)(54906003)(81166006)(110136005)(316002)(2906002)(81156014)(52116002)(7736002)(305945005)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3023;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1qd4BYpRivS8Iton37F4nlpOCHn1rIgHqxfC3ZAlPMQdnMyHp7V+hAZa6jov48kkDjc4tcx03V71DGHQXpY4N8E66MDhYYwHz2Adt2HBS4ssYoiO2kWAmleM90X8gQgCXwWKb1g6vkH+Yi7I+X3OVKOtshgZySkHZaEJkhuRmhbixNisbt7LcLTmSBHSFz8BJfm3oGisPjalxQkmTZv341o7lhni601fkwa2SGBQ5+udcxWb1RRYGlDRLIsbLqgL3r6rMmT3j7vVWpPLryh2x98SL7wMbPlRU9MwnMtFdl3Q4Ek31ChFtFUepqXhf8Ol7b36CiL5MlgLfU9IouDSCoC24ipMal/cQKdGHYMJtmqMJ7eUsv+RCMoyGAFOcbdKFPF89hQ0qKflqutE6v/UeC2pCQ8hgHmjFpTUYUziwfk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.22.120.143]
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17f4a2fc-dab9-4cf4-169b-08d6f61e1ba0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 07:57:29.4733
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chen xiaoguang <xiaoggchen@tencent.com>
-
-Signed-off-by: Newton Gao <newtongao@tencent.com>
-Signed-off-by: Shook Liu <shookliu@tencent.com>
-Signed-off-by: Zhiguang Peng <zgpeng@tencent.com>
-Signed-off-by: Xiaoguang Chen <xiaoggchen@tencent.com>
----
- include/linux/sched.h      | 18 ++++++++++++++++++
- include/uapi/linux/sched.h |  1 +
- kernel/sched/Makefile      |  2 +-
- kernel/sched/bt.c          | 17 +++++++++++++++++
- kernel/sched/core.c        | 10 ++++++++++
- kernel/sched/sched.h       | 22 ++++++++++++++++++++++
- 6 files changed, 69 insertions(+), 1 deletion(-)
- create mode 100644 kernel/sched/bt.c
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 1183741..c0dfbb2 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -560,6 +560,23 @@ struct sched_dl_entity {
- 	struct hrtimer inactive_timer;
- };
- 
-+struct sched_bt_entity {
-+	struct load_weight load;
-+	struct rb_node          run_node;
-+	unsigned int            on_rq;
-+
-+	u64                     exec_start;
-+	u64                     sum_exec_runtime;
-+	u64                     vruntime;
-+	u64                     prev_sum_exec_runtime;
-+
-+	u64                     nr_migrations;
-+
-+#if defined(CONFIG_SCHEDSTATS) || defined(CONFIG_LATENCYTOP)
-+	struct sched_statistics *statistics;
-+#endif
-+};
-+
- union rcu_special {
- 	struct {
- 		u8			blocked;
-@@ -639,6 +656,7 @@ struct task_struct {
- 	struct task_group		*sched_task_group;
- #endif
- 	struct sched_dl_entity		dl;
-+	struct sched_bt_entity		bt;
- 
- #ifdef CONFIG_PREEMPT_NOTIFIERS
- 	/* List of struct preempt_notifier: */
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index ed4ee17..410042a 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -41,6 +41,7 @@
- /* SCHED_ISO: reserved but not implemented yet */
- #define SCHED_IDLE		5
- #define SCHED_DEADLINE		6
-+#define SCHED_BT		7
- 
- /* Can be ORed in to make sure the process is reverted back to SCHED_NORMAL on fork */
- #define SCHED_RESET_ON_FORK     0x40000000
-diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
-index 21fb5a5..938e539 100644
---- a/kernel/sched/Makefile
-+++ b/kernel/sched/Makefile
-@@ -17,7 +17,7 @@ CFLAGS_core.o := $(PROFILING) -fno-omit-frame-pointer
- endif
- 
- obj-y += core.o loadavg.o clock.o cputime.o
--obj-y += idle.o fair.o rt.o deadline.o
-+obj-y += idle.o fair.o rt.o deadline.o bt.o
- obj-y += wait.o wait_bit.o swait.o completion.o
- 
- obj-$(CONFIG_SMP) += cpupri.o cpudeadline.o topology.o stop_task.o pelt.o
-diff --git a/kernel/sched/bt.c b/kernel/sched/bt.c
-new file mode 100644
-index 0000000..56566e6
---- /dev/null
-+++ b/kernel/sched/bt.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Background Scheduling Class
-+ */
-+
-+#include "sched.h"
-+
-+void init_bt_rq(struct bt_rq *bt_rq)
-+{
-+	bt_rq->tasks_timeline = RB_ROOT;
-+	bt_rq->min_vruntime = (u64)(-(1LL << 20));
-+#ifndef CONFIG_64BIT
-+	bt_rq->min_vruntime_copy = bt_rq->min_vruntime;
-+#endif
-+}
-+
-+
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427..3eb4723 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2138,6 +2138,13 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	p->se.vruntime			= 0;
- 	INIT_LIST_HEAD(&p->se.group_node);
- 
-+	p->bt.on_rq			= 0;
-+	p->bt.exec_start		= 0;
-+	p->bt.sum_exec_runtime		= 0;
-+	p->bt.prev_sum_exec_runtime	= 0;
-+	p->bt.nr_migrations		= 0;
-+	p->bt.vruntime			= 0;
-+
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	p->se.cfs_rq			= NULL;
- #endif
-@@ -2145,6 +2152,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- #ifdef CONFIG_SCHEDSTATS
- 	/* Even if schedstat is disabled, there should not be garbage */
- 	memset(&p->se.statistics, 0, sizeof(p->se.statistics));
-+	p->bt.statistics = &p->se.statistics;
- #endif
- 
- 	RB_CLEAR_NODE(&p->dl.rb_node);
-@@ -5974,6 +5982,7 @@ void __init sched_init(void)
- 		init_cfs_rq(&rq->cfs);
- 		init_rt_rq(&rq->rt);
- 		init_dl_rq(&rq->dl);
-+		init_bt_rq(&rq->bt);
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
- 		INIT_LIST_HEAD(&rq->leaf_cfs_rq_list);
-@@ -6186,6 +6195,7 @@ void normalize_rt_tasks(void)
- 			continue;
- 
- 		p->se.exec_start = 0;
-+		p->bt.exec_start = 0;
- 		schedstat_set(p->se.statistics.wait_start,  0);
- 		schedstat_set(p->se.statistics.sleep_start, 0);
- 		schedstat_set(p->se.statistics.block_start, 0);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b52ed1a..320c80d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -331,6 +331,7 @@ bool __dl_overflow(struct dl_bw *dl_b, int cpus, u64 old_bw, u64 new_bw)
- 
- struct cfs_rq;
- struct rt_rq;
-+struct bt_rq;
- 
- extern struct list_head task_groups;
- 
-@@ -576,6 +577,25 @@ struct cfs_rq {
- #endif /* CONFIG_FAIR_GROUP_SCHED */
- };
- 
-+struct bt_rq {
-+	struct load_weight load;
-+	unsigned int bt_nr_running;
-+	unsigned long nr_uninterruptible;
-+
-+	u64 exec_clock;
-+	u64 min_vruntime;
-+#ifndef CONFIG_64BIT
-+	u64 min_vruntime_copy;
-+#endif
-+#ifdef CONFIG_SCHED_DEBUG
-+	unsigned int            nr_spread_over;
-+#endif
-+	struct rb_root tasks_timeline;
-+	struct rb_node *rb_leftmost;
-+
-+	struct sched_bt_entity *curr, *next;
-+};
-+
- static inline int rt_bandwidth_enabled(void)
- {
- 	return sysctl_sched_rt_runtime >= 0;
-@@ -838,6 +858,7 @@ struct rq {
- 	struct cfs_rq		cfs;
- 	struct rt_rq		rt;
- 	struct dl_rq		dl;
-+	struct bt_rq		bt;
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	/* list of leaf cfs_rq on this CPU: */
-@@ -2107,6 +2128,7 @@ static inline void double_rq_unlock(struct rq *rq1, struct rq *rq2)
- extern void init_cfs_rq(struct cfs_rq *cfs_rq);
- extern void init_rt_rq(struct rt_rq *rt_rq);
- extern void init_dl_rq(struct dl_rq *dl_rq);
-+extern void init_bt_rq(struct bt_rq *bt_rq);
- 
- extern void cfs_bandwidth_usage_inc(void);
- extern void cfs_bandwidth_usage_dec(void);
--- 
-1.8.3.1
-
+RnJvbTogIkxvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkiIDxMb3dyeS5MaUBhcm0uY29t
+Pg0KDQpBZGRzIHN5c3RlbSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaW4gS01TIGtlcm5lbCBk
+cml2ZXIuDQoNCkRlcGVuZHMgb246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9zZXJpZXMvNjE2NTAvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJp
+ZXMvNjAwODMvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjE2
+NDcvDQoNCkNoYW5nZXMgc2luY2UgdjE6DQpTaW5jZSB3ZSBoYXZlIHVuaWZpZWQgbWNsay9wY2xr
+L3BpcGVsaW5lLT5hY2xrIHRvIG9uZSBtY2xrLCB3aGljaCB3aWxsDQpiZSB0dXJuZWQgb24vb2Zm
+IHdoZW4gY3J0YyBhdG9taWMgZW5hYmxlL2Rpc2FibGUsIHJlbW92ZWQgcnVudGltZSBwb3dlcg0K
+bWFuYWdlbWVudC4NCkFkZHMgdG8gZGlzYWJsZSB0aGUgYWNsayB3aGVuIHJlZ2lzdGVyIGFjY2Vz
+cyBmaW5pc2hlZC4NCg0KQ2hhbmdlcyBzaW5jZSB2MjoNClJlbW92ZXMgcnVuIHRpbWUgZ2V0L3B1
+dCByZWxhdGVkIGZsb3cuDQoNClNpZ25lZC1vZmYtYnk6IExvd3J5IExpIChBcm0gVGVjaG5vbG9n
+eSBDaGluYSkgPGxvd3J5LmxpQGFybS5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9jcnRjLmMgfCAgMSAtDQogZHJpdmVycy9ncHUvZHJtL2FybS9k
+aXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMgIHwgNjMgKysrKysrKysrKysrKysrKysrKysrLS0t
+DQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmggIHwgIDIg
+Kw0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rydi5jICB8IDM1
+ICsrKysrKysrKysrLS0NCiA0IGZpbGVzIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKyksIDEwIGRl
+bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tv
+bWVkYS9rb21lZGFfY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
+b21lZGFfY3J0Yy5jDQppbmRleCBjYWZiNDQ1Li5kMTRlN2YzIDEwMDY0NA0KLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQorKysgYi9kcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jcnRjLmMNCkBAIC01LDcgKzUsNiBA
+QA0KICAqDQogICovDQogI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KLSNpbmNsdWRlIDxsaW51eC9w
+bV9ydW50aW1lLmg+DQogI2luY2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+DQogDQogI2luY2x1ZGUg
+PGRybS9kcm1fYXRvbWljLmg+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfZGV2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
+ZWRhL2tvbWVkYV9kZXYuYw0KaW5kZXggZTFhYTU4ZS4uYzk4MzdkYyAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jDQorKysgYi9kcml2
+ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYw0KQEAgLTIwOSw3ICsy
+MDksNyBAQCBzdHJ1Y3Qga29tZWRhX2RldiAqa29tZWRhX2Rldl9jcmVhdGUoc3RydWN0IGRldmlj
+ZSAqZGV2KQ0KIAkJCSAgcHJvZHVjdC0+cHJvZHVjdF9pZCwNCiAJCQkgIE1BTElEUF9DT1JFX0lE
+X1BST0RVQ1RfSUQobWRldi0+Y2hpcC5jb3JlX2lkKSk7DQogCQllcnIgPSAtRU5PREVWOw0KLQkJ
+Z290byBlcnJfY2xlYW51cDsNCisJCWdvdG8gZGlzYWJsZV9jbGs7DQogCX0NCiANCiAJRFJNX0lO
+Rk8oIkZvdW5kIEFSTSBNYWxpLUQleCB2ZXJzaW9uIHIlZHAlZFxuIiwNCkBAIC0yMjIsMTkgKzIy
+MiwxOSBAQCBzdHJ1Y3Qga29tZWRhX2RldiAqa29tZWRhX2Rldl9jcmVhdGUoc3RydWN0IGRldmlj
+ZSAqZGV2KQ0KIAllcnIgPSBtZGV2LT5mdW5jcy0+ZW51bV9yZXNvdXJjZXMobWRldik7DQogCWlm
+IChlcnIpIHsNCiAJCURSTV9FUlJPUigiZW51bWVyYXRlIGRpc3BsYXkgcmVzb3VyY2UgZmFpbGVk
+LlxuIik7DQotCQlnb3RvIGVycl9jbGVhbnVwOw0KKwkJZ290byBkaXNhYmxlX2NsazsNCiAJfQ0K
+IA0KIAllcnIgPSBrb21lZGFfcGFyc2VfZHQoZGV2LCBtZGV2KTsNCiAJaWYgKGVycikgew0KIAkJ
+RFJNX0VSUk9SKCJwYXJzZSBkZXZpY2UgdHJlZSBmYWlsZWQuXG4iKTsNCi0JCWdvdG8gZXJyX2Ns
+ZWFudXA7DQorCQlnb3RvIGRpc2FibGVfY2xrOw0KIAl9DQogDQogCWVyciA9IGtvbWVkYV9hc3Nl
+bWJsZV9waXBlbGluZXMobWRldik7DQogCWlmIChlcnIpIHsNCiAJCURSTV9FUlJPUigiYXNzZW1i
+bGUgZGlzcGxheSBwaXBlbGluZXMgZmFpbGVkLlxuIik7DQotCQlnb3RvIGVycl9jbGVhbnVwOw0K
+KwkJZ290byBkaXNhYmxlX2NsazsNCiAJfQ0KIA0KIAlkZXYtPmRtYV9wYXJtcyA9ICZtZGV2LT5k
+bWFfcGFybXM7DQpAQCAtMjQ3LDExICsyNDcsMTMgQEAgc3RydWN0IGtvbWVkYV9kZXYgKmtvbWVk
+YV9kZXZfY3JlYXRlKHN0cnVjdCBkZXZpY2UgKmRldikNCiAJaWYgKG1kZXYtPmlvbW11ICYmIG1k
+ZXYtPmZ1bmNzLT5jb25uZWN0X2lvbW11KSB7DQogCQllcnIgPSBtZGV2LT5mdW5jcy0+Y29ubmVj
+dF9pb21tdShtZGV2KTsNCiAJCWlmIChlcnIpIHsNCi0JCQltZGV2LT5pb21tdSA9IE5VTEw7DQot
+CQkJZ290byBlcnJfY2xlYW51cDsNCisJCQlEUk1fRVJST1IoImNvbm5lY3QgaW9tbXUgZmFpbGVk
+LlxuIik7DQorCQkJZ290byBkaXNhYmxlX2NsazsNCiAJCX0NCiAJfQ0KIA0KKwljbGtfZGlzYWJs
+ZV91bnByZXBhcmUobWRldi0+YWNsayk7DQorDQogCWVyciA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgm
+ZGV2LT5rb2JqLCAma29tZWRhX3N5c2ZzX2F0dHJfZ3JvdXApOw0KIAlpZiAoZXJyKSB7DQogCQlE
+Uk1fRVJST1IoImNyZWF0ZSBzeXNmcyBncm91cCBmYWlsZWQuXG4iKTsNCkBAIC0yNjQsNiArMjY2
+LDggQEAgc3RydWN0IGtvbWVkYV9kZXYgKmtvbWVkYV9kZXZfY3JlYXRlKHN0cnVjdCBkZXZpY2Ug
+KmRldikNCiANCiAJcmV0dXJuIG1kZXY7DQogDQorZGlzYWJsZV9jbGs6DQorCWNsa19kaXNhYmxl
+X3VucHJlcGFyZShtZGV2LT5hY2xrKTsNCiBlcnJfY2xlYW51cDoNCiAJa29tZWRhX2Rldl9kZXN0
+cm95KG1kZXYpOw0KIAlyZXR1cm4gRVJSX1BUUihlcnIpOw0KQEAgLTI4MSw2ICsyODUsOSBAQCB2
+b2lkIGtvbWVkYV9kZXZfZGVzdHJveShzdHJ1Y3Qga29tZWRhX2RldiAqbWRldikNCiAJZGVidWdm
+c19yZW1vdmVfcmVjdXJzaXZlKG1kZXYtPmRlYnVnZnNfcm9vdCk7DQogI2VuZGlmDQogDQorCWlm
+IChtZGV2LT5hY2xrKQ0KKwkJY2xrX3ByZXBhcmVfZW5hYmxlKG1kZXYtPmFjbGspOw0KKw0KIAlp
+ZiAobWRldi0+aW9tbXUgJiYgbWRldi0+ZnVuY3MtPmRpc2Nvbm5lY3RfaW9tbXUpDQogCQltZGV2
+LT5mdW5jcy0+ZGlzY29ubmVjdF9pb21tdShtZGV2KTsNCiAJbWRldi0+aW9tbXUgPSBOVUxMOw0K
+QEAgLTMwOCwzICszMTUsNDcgQEAgdm9pZCBrb21lZGFfZGV2X2Rlc3Ryb3koc3RydWN0IGtvbWVk
+YV9kZXYgKm1kZXYpDQogDQogCWRldm1fa2ZyZWUoZGV2LCBtZGV2KTsNCiB9DQorDQoraW50IGtv
+bWVkYV9kZXZfcmVzdW1lKHN0cnVjdCBrb21lZGFfZGV2ICptZGV2KQ0KK3sNCisJaW50IHJldCA9
+IDA7DQorDQorCWNsa19wcmVwYXJlX2VuYWJsZShtZGV2LT5hY2xrKTsNCisNCisJaWYgKG1kZXYt
+PmlvbW11ICYmIG1kZXYtPmZ1bmNzLT5jb25uZWN0X2lvbW11KSB7DQorCQlyZXQgPSBtZGV2LT5m
+dW5jcy0+Y29ubmVjdF9pb21tdShtZGV2KTsNCisJCWlmIChyZXQgPCAwKSB7DQorCQkJRFJNX0VS
+Uk9SKCJjb25uZWN0IGlvbW11IGZhaWxlZC5cbiIpOw0KKwkJCWdvdG8gZGlzYWJsZV9jbGs7DQor
+CQl9DQorCX0NCisNCisJcmV0ID0gbWRldi0+ZnVuY3MtPmVuYWJsZV9pcnEobWRldik7DQorDQor
+ZGlzYWJsZV9jbGs6DQorCWNsa19kaXNhYmxlX3VucHJlcGFyZShtZGV2LT5hY2xrKTsNCisNCisJ
+cmV0dXJuIHJldDsNCit9DQorDQoraW50IGtvbWVkYV9kZXZfc3VzcGVuZChzdHJ1Y3Qga29tZWRh
+X2RldiAqbWRldikNCit7DQorCWludCByZXQgPSAwOw0KKw0KKwljbGtfcHJlcGFyZV9lbmFibGUo
+bWRldi0+YWNsayk7DQorDQorCWlmIChtZGV2LT5pb21tdSAmJiBtZGV2LT5mdW5jcy0+ZGlzY29u
+bmVjdF9pb21tdSkgew0KKwkJcmV0ID0gbWRldi0+ZnVuY3MtPmRpc2Nvbm5lY3RfaW9tbXUobWRl
+dik7DQorCQlpZiAocmV0IDwgMCkgew0KKwkJCURSTV9FUlJPUigiZGlzY29ubmVjdCBpb21tdSBm
+YWlsZWQuXG4iKTsNCisJCQlnb3RvIGRpc2FibGVfY2xrOw0KKwkJfQ0KKwl9DQorDQorCXJldCA9
+IG1kZXYtPmZ1bmNzLT5kaXNhYmxlX2lycShtZGV2KTsNCisNCitkaXNhYmxlX2NsazoNCisJY2xr
+X2Rpc2FibGVfdW5wcmVwYXJlKG1kZXYtPmFjbGspOw0KKw0KKwlyZXR1cm4gcmV0Ow0KK30NCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYu
+aCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5oDQppbmRl
+eCBkMWM4NmI2Li4wOTZmOWY3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfZGV2LmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2Rldi5oDQpAQCAtMjA3LDQgKzIwNyw2IEBAIHN0cnVjdCBrb21lZGFf
+ZGV2IHsNCiANCiBzdHJ1Y3Qga29tZWRhX2RldiAqZGV2X3RvX21kZXYoc3RydWN0IGRldmljZSAq
+ZGV2KTsNCiANCitpbnQga29tZWRhX2Rldl9yZXN1bWUoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYp
+Ow0KK2ludCBrb21lZGFfZGV2X3N1c3BlbmQoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpOw0KICNl
+bmRpZiAvKl9LT01FREFfREVWX0hfKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJt
+L2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2Rydi5jDQppbmRleCBjZmE1MDY4Li41MmIyYTk0IDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZHJ2LmMNCisrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rydi5jDQpAQCAtMzIs
+NiArMzIsNyBAQCBzdGF0aWMgdm9pZCBrb21lZGFfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikN
+CiAJCXJldHVybjsNCiANCiAJa29tZWRhX2ttc19kZXRhY2gobWRydi0+a21zKTsNCisNCiAJa29t
+ZWRhX2Rldl9kZXN0cm95KG1kcnYtPm1kZXYpOw0KIA0KIAlkZXZfc2V0X2RydmRhdGEoZGV2LCBO
+VUxMKTsNCkBAIC01Miw2ICs1Myw3IEBAIHN0YXRpYyBpbnQga29tZWRhX2JpbmQoc3RydWN0IGRl
+dmljZSAqZGV2KQ0KIAkJZXJyID0gUFRSX0VSUihtZHJ2LT5tZGV2KTsNCiAJCWdvdG8gZnJlZV9t
+ZHJ2Ow0KIAl9DQorCWRldl9zZXRfZHJ2ZGF0YShkZXYsIG1kcnYpOw0KIA0KIAltZHJ2LT5rbXMg
+PSBrb21lZGFfa21zX2F0dGFjaChtZHJ2LT5tZGV2KTsNCiAJaWYgKElTX0VSUihtZHJ2LT5rbXMp
+KSB7DQpAQCAtNTksOCArNjEsNiBAQCBzdGF0aWMgaW50IGtvbWVkYV9iaW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldikNCiAJCWdvdG8gZGVzdHJveV9tZGV2Ow0KIAl9DQogDQotCWRldl9zZXRfZHJ2ZGF0
+YShkZXYsIG1kcnYpOw0KLQ0KIAlyZXR1cm4gMDsNCiANCiBkZXN0cm95X21kZXY6DQpAQCAtMTM0
+LDEzICsxMzQsNDIgQEAgc3RhdGljIGludCBrb21lZGFfcGxhdGZvcm1fcmVtb3ZlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwga29tZWRh
+X29mX21hdGNoKTsNCiANCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGtvbWVkYV9wbV9zdXNw
+ZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBrb21lZGFfZHJ2ICptZHJ2ID0g
+ZGV2X2dldF9kcnZkYXRhKGRldik7DQorCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSAmbWRydi0+
+a21zLT5iYXNlOw0KKwlpbnQgcmVzOw0KKw0KKwlkZXZfaW5mbyhkZXYsICIlc1xuIiwgX19mdW5j
+X18pOw0KKwlyZXMgPSBkcm1fbW9kZV9jb25maWdfaGVscGVyX3N1c3BlbmQoZHJtKTsNCisNCisJ
+a29tZWRhX2Rldl9zdXNwZW5kKG1kcnYtPm1kZXYpOw0KKw0KKwlyZXR1cm4gcmVzOw0KK30NCisN
+CitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGtvbWVkYV9wbV9yZXN1bWUoc3RydWN0IGRldmlj
+ZSAqZGV2KQ0KK3sNCisJc3RydWN0IGtvbWVkYV9kcnYgKm1kcnYgPSBkZXZfZ2V0X2RydmRhdGEo
+ZGV2KTsNCisJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9ICZtZHJ2LT5rbXMtPmJhc2U7DQorDQor
+CWRldl9pbmZvKGRldiwgIiVzXG4iLCBfX2Z1bmNfXyk7DQorCWtvbWVkYV9kZXZfcmVzdW1lKG1k
+cnYtPm1kZXYpOw0KKw0KKwlyZXR1cm4gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9yZXN1bWUoZHJt
+KTsNCit9DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGtvbWVkYV9wbV9vcHMg
+PSB7DQorCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKGtvbWVkYV9wbV9zdXNwZW5kLCBrb21lZGFf
+cG1fcmVzdW1lKQ0KK307DQorDQogc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIga29tZWRh
+X3BsYXRmb3JtX2RyaXZlciA9IHsNCiAJLnByb2JlCT0ga29tZWRhX3BsYXRmb3JtX3Byb2JlLA0K
+IAkucmVtb3ZlCT0ga29tZWRhX3BsYXRmb3JtX3JlbW92ZSwNCiAJLmRyaXZlcgk9IHsNCiAJCS5u
+YW1lID0gImtvbWVkYSIsDQogCQkub2ZfbWF0Y2hfdGFibGUJPSBrb21lZGFfb2ZfbWF0Y2gsDQot
+CQkucG0gPSBOVUxMLA0KKwkJLnBtID0gJmtvbWVkYV9wbV9vcHMsDQogCX0sDQogfTsNCiANCi0t
+IA0KMS45LjENCg0K
