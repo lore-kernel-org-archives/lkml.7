@@ -2,89 +2,91 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B512C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03847C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE20208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C761A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="k2RLRaZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfFUOuy (ORCPT
+        id S1726431AbfFUOu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:50:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57150 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbfFUOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:50:54 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E8E6C057F2B;
-        Fri, 21 Jun 2019 14:50:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F1B75D9E2;
-        Fri, 21 Jun 2019 14:50:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190621132839.6ggsppexqfp5htpw@brauner.io>
-References: <20190621132839.6ggsppexqfp5htpw@brauner.io> <20190621094757.zijugn6cfulmchnf@brauner.io> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905627927.1662.13276277442207649583.stgit@warthog.procyon.org.uk> <21652.1561122763@warthog.procyon.org.uk> <E76F5188-CED8-4472-9136-BDCDFDAF57F0@brauner.io>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mszeredi@redhat.com
-Subject: Re: [PATCH 02/25] vfs: Allow fsinfo() to query what's in an fs_context [ver #13]
+        Fri, 21 Jun 2019 10:50:57 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32192 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726135AbfFUOuz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:50:55 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LEbCh7025330;
+        Fri, 21 Jun 2019 16:50:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=HJ0CqY8bW91EX2SWPcZ15rMKds2BBP88CmgxAnUANf4=;
+ b=k2RLRaZLXke5j7JsPj6TviyqvKK/1JGgzJJgk7D9i5hDYpiUCU0KM/MYd92FL/CPCVIx
+ PhBoQRMc92hhBJ8vAquwmJHnX2eFd5XeE65QPa2CrUMQzNOpndLzG5iMlGJZfpLgpRbY
+ 8tOK11PkZ5GXkr1eLs2D+XYMHzoiQB5ycRyVetVhLMMptA/oJkS+xGFg/GmtmbzZ7yxK
+ 8tRSipbt9EMY1eb8AVgiYHqvhkHWKiYK1I1g3Q1t7LHBHQRP7tNuQVl69Y4JmkpkMZEd
+ 6pfM0ipmCgYiJanmnOpdaiiHcpVdXW5Uo+N3KDB/26i0h2K3Vy+UFkMqtbNB5W0/Ac9k HA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2t7wxssnyu-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 21 Jun 2019 16:50:36 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 569C53A;
+        Fri, 21 Jun 2019 14:50:36 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2B1232BD7;
+        Fri, 21 Jun 2019 14:50:36 +0000 (GMT)
+Received: from localhost (10.75.127.49) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Jun 2019 16:50:35
+ +0200
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>, <linux@armlinux.org.uk>,
+        <olof@lixom.net>, <arnd@arndb.de>
+CC:     <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH 0/4] ARM: dts: stm32: enable FMC2 NAND controller on stm32mp157c-ev1
+Date:   Fri, 21 Jun 2019 16:49:46 +0200
+Message-ID: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27767.1561128650.1@warthog.procyon.org.uk>
-Date:   Fri, 21 Jun 2019 15:50:50 +0100
-Message-ID: <27768.1561128650@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 21 Jun 2019 14:50:54 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_10:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian@brauner.io> wrote:
+This patchset adds and enables FMC2 NAND controller used on
+stm32mp157c-ev1.
 
-> > >If you tried to go through /proc/pid/fd with open(O_PATH), I think
-> > >you'd get
-> > >the symlink, not the target.
-> > 
-> > Then you should use fdget(), no? :)
-> 
-> That is unless you want fsinfo() to be useable on any fd and just fds
-> that are returned from the new mount-api syscalls. Maybe that wasn't
-> clear from my first mail.
+Christophe Kerello (4):
+  ARM: dts: stm32: add FMC2 NAND controller support on stm32mp157c
+  ARM: dts: stm32: add FMC2 NAND controller pins muxing on
+    stm32mp157c-ev1
+  ARM: dts: stm32: enable FMC2 NAND controller on stm32mp157c-ev1
+  ARM: multi_v7_defconfig: add FMC2 NAND  controller support
 
-fsinfo(), as coded, is usable on any fd, as for fstat(), statx() and
-fstatfs().
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 44 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     | 16 +++++++++++
+ arch/arm/boot/dts/stm32mp157c.dtsi        | 19 +++++++++++++
+ arch/arm/configs/multi_v7_defconfig       |  1 +
+ 4 files changed, 80 insertions(+)
 
-I have made it such that if you do this on the fd returned by fsopen() or
-fspick(), the access is diverted to the filesystem that the fs_context refers
-to since querying anon_inodes is of little value.
+-- 
+1.9.1
 
-Now, it could be argued that it should require an AT_xxx flag to cause this
-diversion to happen.
-
-> Is the information returned for:
-> 
-> int fd = fsopen()/fspick();
-> fsinfo(fd);
-> 
-> int ofd = open("/", O_PATH);
-> fsinfo(ofd, ...);
-> 
-> the same if they refer to the same mount or would they differ?
-
-At the moment it differs.  In the former case, there may not even be a
-superblock attached to the fd to query, though invariants like filesystem
-parameter types and names can be queried.
-
-David
