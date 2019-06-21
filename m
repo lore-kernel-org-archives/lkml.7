@@ -2,290 +2,437 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855E8C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1664C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A0F2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAC42084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEOnrT54"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B361iDkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFUDnA (ORCPT
+        id S1726100AbfFUDo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:43:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33217 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfFUDm7 (ORCPT
+        Thu, 20 Jun 2019 23:44:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39197 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfFUDo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:42:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m4so2052028pgk.0;
-        Thu, 20 Jun 2019 20:42:59 -0700 (PDT)
+        Thu, 20 Jun 2019 23:44:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so2834729pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gw+oi2R+vwOCcj/WiSNdhsJFxJ/PK3dc9a9ROJYXpVk=;
-        b=VEOnrT540EEP0CoOVoHaAZco6DwH0GP2iC3JCQAFbNpd2d7/A9GlxAu9LUy4GSKd6S
-         246hUCVFL+hF1MxSTaetVzhI1zUkdraeW4V2H+CnxJl2EP1sqrzu8kOuKlJ7gp4DL3O0
-         kMmUM7pooYjMVoZtTffCxt6MjJDEx4udSc3SQ7z6jMz1jmoxXqXfV92pMX1uWgoQnVKt
-         nn5Ngtj3qpWzZKNDUsLT7FjhG5kSKSP57NkWkJPY3XwM/5A72kb1v6n2iz9XV1AnVj/3
-         VGBodd1hxQXD2c2fgZrdSl28TjX0Ce+Zq0FffTfE1BVvyPSeG2lJTaSUaflECP1Torf2
-         asOA==
+         :content-disposition:in-reply-to;
+        bh=PTeOwZy4aOgRuojYRuNXwAvKgqNLH2fT2ARYBGhAVxg=;
+        b=B361iDkAs/UaZmteQUaZv5FCAGFi0l3pG+iIq/rYh15zRDavf2xgXJGXHS98WmBG29
+         1E5bHlbV8k1zOYx+28eFZ/N+u9/nl+KUcXzfh4jruLRUy7AMXuu9qOdcuQTr2laMEIDf
+         ofxvgc7DTPIhZmEB0Ad1gap6aYB8YDoWGhC14=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gw+oi2R+vwOCcj/WiSNdhsJFxJ/PK3dc9a9ROJYXpVk=;
-        b=qPRAl+iCCgxWvL98lpqwHva7KhWQBNPcfmoMNoaksIUkZMOtuAjlGuvi0PU0kZH0Ib
-         bySzewRJvrWyrTki2Pl/UdIUUQ/y9rgPPWCKhAb7105ff6D0wq8mCsvzMqYXsv+Ib0Cj
-         8iHTxmvF/hoVAeS9byXeXXTp1CbGSu7IFMHxOLZwJZz75tz+5L0eQ+sn6pI+jVykbVRb
-         9NXmFLVKI4/lYUxdO2t2HsA6S6NHJ6FY6qyFseDB3bVJWvQJAwRuUqfOe/CPl4vp8Uhi
-         AiG8guuyaZ4ijAgI4RVsvW8awGeTcC5Nnxk+Zvb1CYkcWxBXMkiU6z9qkHPuGlNWV60G
-         Uerg==
-X-Gm-Message-State: APjAAAUpjefp9s7GDJ6GvT/8Pyl9Os89zb+EpuxjZa4pgTdnZSknklgJ
-        aow5Qj4tk6iKmMhSUZqEHSQ=
-X-Google-Smtp-Source: APXvYqwIA6LSHOfhHvOyYT4p73nJmBpIqf49Lt+m8UPqIMrFOg94gnRKdhf7jFiYmq72aGLeuZ+8iQ==
-X-Received: by 2002:a63:570c:: with SMTP id l12mr16263945pgb.252.1561088578314;
-        Thu, 20 Jun 2019 20:42:58 -0700 (PDT)
-Received: from arch ([47.30.150.231])
-        by smtp.gmail.com with ESMTPSA id m2sm927249pgq.48.2019.06.20.20.42.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 20:42:57 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 09:12:40 +0530
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Puranjay Mohan <puranjay12@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net: fddi: skfp: remove generic PCI defines from skfbi.h
-Message-ID: <20190621034159.GA3992@arch>
-References: <20190619174643.21456-1-puranjay12@gmail.com>
- <201906211041.vz3g9kf9%lkp@intel.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=PTeOwZy4aOgRuojYRuNXwAvKgqNLH2fT2ARYBGhAVxg=;
+        b=BUK9KQgtxjGC8Up3jn1vCfAikud/J/2SogQSZm0SKrWe1IksIBZTRSrGay4xiXKfLq
+         7YvYfz790vB/PcG/uXi8XWinAkrUSo0CskxU6vI6ruUCo12xkNMwXlqG9QnMnKxHgdb9
+         vMz1rX7qkNS411bdbduooKVn++KyN5jw5fRTAQjlC6sJDSm+KOmtQ7dMKztc9DA17cHI
+         dKA3iJF/e3KEYY76Ybg5I+sdRV1oSRU9I9ispvZVrhrIJ+ktNtK6dHG3A/WqMwWkAzHj
+         f/zXfjD01XUfu3TWh+TKExAUJSnJJXEjPvXNmcc5AmqSe+JhgHTSKJE477IYCc81IPkY
+         684g==
+X-Gm-Message-State: APjAAAWzhd5Yl93YFC8GOk+kR7Ny08bQVHc6r+6LlEhK3k6RNDQKz/bi
+        HetDTSQm7sFP9FSUuSni88n9Uw==
+X-Google-Smtp-Source: APXvYqweoE6eZMIiQsorYngKSbrl7+Gj9cLyH2cr9VOnsuiNXxN5dFTQXEIgQF8YpPwJHR967l0J0A==
+X-Received: by 2002:a63:6183:: with SMTP id v125mr11440903pgb.221.1561088668128;
+        Thu, 20 Jun 2019 20:44:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n1sm926805pgv.15.2019.06.20.20.44.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 20:44:27 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 20:44:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH V33 03/30] security: Add a static lockdown policy LSM
+Message-ID: <201906202028.5AB58C3@keescook>
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-4-matthewgarrett@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201906211041.vz3g9kf9%lkp@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190621011941.186255-4-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:35:04AM +0800, kbuild test robot wrote:
-> Hi Puranjay,
+On Thu, Jun 20, 2019 at 06:19:14PM -0700, Matthew Garrett wrote:
+> While existing LSMs can be extended to handle lockdown policy,
+> distributions generally want to be able to apply a straightforward
+> static policy. This patch adds a simple LSM that can be configured to
+> reject either integrity or all lockdown queries, and can be configured
+> at runtime (through securityfs), boot time (via a kernel parameter) or
+> build time (via a kconfig option). Based on initial code by David
+> Howells.
 > 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on net/master]
-> [also build test ERROR on v5.2-rc5 next-20190620]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Puranjay-Mohan/net-fddi-skfp-remove-generic-PCI-defines-from-skfbi-h/20190621-081729
-> config: sparc64-allmodconfig (attached as .config)
-> compiler: sparc64-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=sparc64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/net/fddi/skfp/drvfbi.c:17:0:
->    drivers/net/fddi/skfp/drvfbi.c: In function 'card_start':
-> >> drivers/net/fddi/skfp/drvfbi.c:130:21: error: 'PCI_REV_ID' undeclared (first use in this function); did you mean 'PCI_DEVID'?
->      rev_id = inp(PCI_C(PCI_REV_ID)) ;
->                         ^
->    drivers/net/fddi/skfp/h/types.h:28:25: note: in definition of macro 'inp'
->     #define inp(p)  ioread8(p)
->                             ^
-> >> drivers/net/fddi/skfp/h/skfbi.h:916:18: note: in expansion of macro 'ADDR'
->     #define PCI_C(a) ADDR(B3_CFG_SPC + (a)) /* PCI Config Space */
->                      ^~~~
-> >> drivers/net/fddi/skfp/drvfbi.c:130:15: note: in expansion of macro 'PCI_C'
->      rev_id = inp(PCI_C(PCI_REV_ID)) ;
->                   ^~~~~
->    drivers/net/fddi/skfp/drvfbi.c:130:21: note: each undeclared identifier is reported only once for each function it appears in
->      rev_id = inp(PCI_C(PCI_REV_ID)) ;
->                         ^
->    drivers/net/fddi/skfp/h/types.h:28:25: note: in definition of macro 'inp'
->     #define inp(p)  ioread8(p)
->                             ^
-> >> drivers/net/fddi/skfp/h/skfbi.h:916:18: note: in expansion of macro 'ADDR'
->     #define PCI_C(a) ADDR(B3_CFG_SPC + (a)) /* PCI Config Space */
->                      ^~~~
-> >> drivers/net/fddi/skfp/drvfbi.c:130:15: note: in expansion of macro 'PCI_C'
->      rev_id = inp(PCI_C(PCI_REV_ID)) ;
->                   ^~~~~
-> 
-> vim +130 drivers/net/fddi/skfp/drvfbi.c
-> 
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  @17  #include "h/types.h"
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   18  #include "h/fddi.h"
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   19  #include "h/smc.h"
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   20  #include "h/supern_2.h"
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   21  #include "h/skfbiinc.h"
-> bc63eb9c drivers/net/skfp/drvfbi.c Akinobu Mita   2006-12-19   22  #include <linux/bitrev.h>
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   23  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   24  #ifndef	lint
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   25  static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   26  #endif
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   27  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   28  /*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   29   * PCM active state
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   30   */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   31  #define PC8_ACTIVE	8
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   32  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   33  #define	LED_Y_ON	0x11	/* Used for ring up/down indication */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   34  #define	LED_Y_OFF	0x10
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   35  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   36  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   37  #define MS2BCLK(x)	((x)*12500L)
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   38  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   39  /*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   40   * valid configuration values are:
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   41   */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   42  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   43  /*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   44   *	xPOS_ID:xxxx
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   45   *	|	\  /
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   46   *	|	 \/
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   47   *	|	  --------------------- the patched POS_ID of the Adapter
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   48   *	|				xxxx = (Vendor ID low byte,
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   49   *	|					Vendor ID high byte,
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   50   *	|					Device ID low byte,
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   51   *	|					Device ID high byte)
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   52   *	+------------------------------ the patched oem_id must be
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   53   *					'S' for SK or 'I' for IBM
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   54   *					this is a short id for the driver.
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   55   */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   56  #ifndef MULT_OEM
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   57  #ifndef	OEM_CONCEPT
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   58  const u_char oem_id[] = "xPOS_ID:xxxx" ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   59  #else	/* OEM_CONCEPT */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   60  const u_char oem_id[] = OEM_ID ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   61  #endif	/* OEM_CONCEPT */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   62  #define	ID_BYTE0	8
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   63  #define	OEMID(smc,i)	oem_id[ID_BYTE0 + i]
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   64  #else	/* MULT_OEM */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   65  const struct s_oem_ids oem_ids[] = {
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   66  #include "oemids.h"
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   67  {0}
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   68  };
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   69  #define	OEMID(smc,i)	smc->hw.oem_id->oi_id[i]
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   70  #endif	/* MULT_OEM */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   71  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   72  /* Prototypes of external functions */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   73  #ifdef AIX
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   74  extern int AIX_vpdReadByte() ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   75  #endif
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   76  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   77  
-> 7aa55fce drivers/net/skfp/drvfbi.c Adrian Bunk    2005-06-21   78  /* Prototype of a local function. */
-> 7aa55fce drivers/net/skfp/drvfbi.c Adrian Bunk    2005-06-21   79  static void smt_stop_watchdog(struct s_smc *smc);
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   80  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   81  /*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   82   * FDDI card reset
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   83   */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   84  static void card_start(struct s_smc *smc)
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   85  {
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   86  	int i ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   87  #ifdef	PCI
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   88  	u_char	rev_id ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   89  	u_short word;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   90  #endif
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   91  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   92  	smt_stop_watchdog(smc) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   93  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   94  #ifdef	PCI
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   95  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   96  	 * make sure no transfer activity is pending
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   97  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   98  	outpw(FM_A(FM_MDREG1),FM_MINIT) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16   99  	outp(ADDR(B0_CTRL), CTRL_HPI_SET) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  100  	hwt_wait_time(smc,hwt_quick_read(smc),MS2BCLK(10)) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  101  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  102  	 * now reset everything
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  103  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  104  	outp(ADDR(B0_CTRL),CTRL_RST_SET) ;	/* reset for all chips */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  105  	i = (int) inp(ADDR(B0_CTRL)) ;		/* do dummy read */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  106  	SK_UNUSED(i) ;				/* Make LINT happy. */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  107  	outp(ADDR(B0_CTRL), CTRL_RST_CLR) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  108  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  109  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  110  	 * Reset all bits in the PCI STATUS register
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  111  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  112  	outp(ADDR(B0_TST_CTRL), TST_CFG_WRITE_ON) ;	/* enable for writes */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  113  	word = inpw(PCI_C(PCI_STATUS)) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  114  	outpw(PCI_C(PCI_STATUS), word | PCI_ERRBITS) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  115  	outp(ADDR(B0_TST_CTRL), TST_CFG_WRITE_OFF) ;	/* disable writes */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  116  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  117  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  118  	 * Release the reset of all the State machines
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  119  	 * Release Master_Reset
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  120  	 * Release HPI_SM_Reset
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  121  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  122  	outp(ADDR(B0_CTRL), CTRL_MRST_CLR|CTRL_HPI_CLR) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  123  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  124  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  125  	 * determine the adapter type
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  126  	 * Note: Do it here, because some drivers may call card_start() once
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  127  	 *	 at very first before any other initialization functions is
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  128  	 *	 executed.
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  129  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16 @130  	rev_id = inp(PCI_C(PCI_REV_ID)) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  131  	if ((rev_id & 0xf0) == SK_ML_ID_1 || (rev_id & 0xf0) == SK_ML_ID_2) {
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  132  		smc->hw.hw_is_64bit = TRUE ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  133  	} else {
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  134  		smc->hw.hw_is_64bit = FALSE ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  135  	}
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  136  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  137  	/*
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  138  	 * Watermark initialization
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  139  	 */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  140  	if (!smc->hw.hw_is_64bit) {
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  141  		outpd(ADDR(B4_R1_F), RX_WATERMARK) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  142  		outpd(ADDR(B5_XA_F), TX_WATERMARK) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  143  		outpd(ADDR(B5_XS_F), TX_WATERMARK) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  144  	}
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  145  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  146  	outp(ADDR(B0_CTRL),CTRL_RST_CLR) ;	/* clear the reset chips */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  147  	outp(ADDR(B0_LED),LED_GA_OFF|LED_MY_ON|LED_GB_OFF) ; /* ye LED on */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  148  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  149  	/* init the timer value for the watch dog 2,5 minutes */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  150  	outpd(ADDR(B2_WDOG_INI),0x6FC23AC0) ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  151  
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  152  	/* initialize the ISR mask */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  153  	smc->hw.is_imask = ISR_MASK ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  154  	smc->hw.hw_state = STOPPED ;
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  155  #endif
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  156  	GET_PAGE(0) ;		/* necessary for BOOT */
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  157  }
-> ^1da177e drivers/net/skfp/drvfbi.c Linus Torvalds 2005-04-16  158  
-> 
-> :::::: The code at line 130 was first introduced by commit
-> :::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-> 
-> :::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-> :::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: David Howells <dhowells@redhat.com>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>  .../admin-guide/kernel-parameters.txt         |   9 +
+>  include/linux/security.h                      |   4 +
+>  security/Kconfig                              |   3 +-
+>  security/Makefile                             |   2 +
+>  security/lockdown/Kconfig                     |  46 +++++
+>  security/lockdown/Makefile                    |   1 +
+>  security/lockdown/lockdown.c                  | 168 ++++++++++++++++++
+>  7 files changed, 232 insertions(+), 1 deletion(-)
+>  create mode 100644 security/lockdown/Kconfig
+>  create mode 100644 security/lockdown/Makefile
+>  create mode 100644 security/lockdown/lockdown.c
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 2b8ee90bb644..fa336f6cd5bc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2239,6 +2239,15 @@
+>  	lockd.nlm_udpport=M	[NFS] Assign UDP port.
+>  			Format: <integer>
+>  
+> +	lockdown=	[SECURITY]
+> +			{ integrity | confidentiality }
+> +			Enable the kernel lockdown feature. If set to
+> +			integrity, kernel features that allow userland to
+> +			modify the running kernel are disabled. If set to
+> +			confidentiality, kernel features that allow userland
+> +			to extract confidential information from the kernel
+> +			are also disabled.
+> +
+>  	locktorture.nreaders_stress= [KNL]
+>  			Set the number of locking read-acquisition kthreads.
+>  			Defaults to being automatically set based on the
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index b75941c811e6..a86a7739ca24 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -76,6 +76,10 @@ enum lsm_event {
+>  	LSM_POLICY_CHANGE,
+>  };
+>  
+> +/*
+> + *  If you add to this, remember to extend lockdown_reasons in
+> + *  security/lockdown/lockdown.c.
+> + */
 
-I had sent two seperate patches where the second depended on the first,
-I should have had sent them as patch series or made sure that individual
-patches build by themselves. I have corrected this in V2.
-My apologies for the same
+Best to add something like:
 
---Puranjay Mohan
+BUILD_BUG_ON(ARRAY_SIZE(lockdown_reasons), LOCKDOWN_CONFIDENTIALLY_MAX);
+
+to actually enforce this.
+
+>  enum lockdown_reason {
+>  	LOCKDOWN_NONE,
+>  	LOCKDOWN_INTEGRITY_MAX,
+> diff --git a/security/Kconfig b/security/Kconfig
+> index 1d6463fb1450..c35aa72103df 100644
+> --- a/security/Kconfig
+> +++ b/security/Kconfig
+> @@ -236,12 +236,13 @@ source "security/apparmor/Kconfig"
+>  source "security/loadpin/Kconfig"
+>  source "security/yama/Kconfig"
+>  source "security/safesetid/Kconfig"
+> +source "security/lockdown/Kconfig"
+>  
+>  source "security/integrity/Kconfig"
+>  
+>  config LSM
+>  	string "Ordered list of enabled LSMs"
+> -	default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+> +	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+
+Is this needed? It seems like the early LSMs are totally ignored for
+ordering?
+
+>  	help
+>  	  A comma-separated list of LSMs, in initialization order.
+>  	  Any LSMs left off this list will be ignored. This can be
+> diff --git a/security/Makefile b/security/Makefile
+> index c598b904938f..be1dd9d2cb2f 100644
+> --- a/security/Makefile
+> +++ b/security/Makefile
+> @@ -11,6 +11,7 @@ subdir-$(CONFIG_SECURITY_APPARMOR)	+= apparmor
+>  subdir-$(CONFIG_SECURITY_YAMA)		+= yama
+>  subdir-$(CONFIG_SECURITY_LOADPIN)	+= loadpin
+>  subdir-$(CONFIG_SECURITY_SAFESETID)    += safesetid
+> +subdir-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown
+>  
+>  # always enable default capabilities
+>  obj-y					+= commoncap.o
+> @@ -27,6 +28,7 @@ obj-$(CONFIG_SECURITY_APPARMOR)		+= apparmor/
+>  obj-$(CONFIG_SECURITY_YAMA)		+= yama/
+>  obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
+>  obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
+> +obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
+>  obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
+>  
+>  # Object integrity file lists
+> diff --git a/security/lockdown/Kconfig b/security/lockdown/Kconfig
+> new file mode 100644
+> index 000000000000..431cd2b9a14e
+> --- /dev/null
+> +++ b/security/lockdown/Kconfig
+> @@ -0,0 +1,46 @@
+> +config SECURITY_LOCKDOWN_LSM
+> +	bool "Basic module for enforcing kernel lockdown"
+> +	depends on SECURITY
+> +	help
+> +	  Build support for an LSM that enforces a coarse kernel lockdown
+> +	  behaviour.
+> +
+> +config SECURITY_LOCKDOWN_LSM_EARLY
+> +        bool "Enable lockdown LSM early in init"
+
+whitespace glitches?
+
+> +	depends on SECURITY_LOCKDOWN_LSM
+> +	help
+> +	  Enable the lockdown LSM early in boot. This is necessary in order
+> +	  to ensure that lockdown enforcement can be carried out on kernel
+> +	  boot parameters that are otherwise parsed before the security
+> +	  subsystem is fully initialised.
+> +
+> +choice
+> +	prompt "Kernel default lockdown mode"
+> +	default LOCK_DOWN_KERNEL_FORCE_NONE
+> +	depends on SECURITY_LOCKDOWN_LSM
+> +	help
+> +	  The kernel can be configured to default to differing levels of
+> +	  lockdown.
+> +
+> +config LOCK_DOWN_KERNEL_FORCE_NONE
+> +       bool "None"
+> +       help
+> +          No lockdown functionality is enabled by default. Lockdown may be
+> +	  enabled via the kernel commandline or /sys/kernel/security/lockdown.
+> +
+> +config LOCK_DOWN_KERNEL_FORCE_INTEGRITY
+> +       bool "Integrity"
+> +       help
+> +         The kernel runs in integrity mode by default. Features that allow
+> +	 the kernel to be modified at runtime are disabled.
+> +
+> +config LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY
+> +       bool "Confidentiality"
+> +       help
+> +         The kernel runs in confidentiality mode by default. Features that
+> +	 allow the kernel to be modified at runtime or that permit userland
+> +	 code to read confidential material held inside the kernel are
+> +	 disabled.
+> +
+> +endchoice
+> +
+> diff --git a/security/lockdown/Makefile b/security/lockdown/Makefile
+> new file mode 100644
+> index 000000000000..e3634b9017e7
+> --- /dev/null
+> +++ b/security/lockdown/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_SECURITY_LOCKDOWN_LSM) += lockdown.o
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> new file mode 100644
+> index 000000000000..1ecb2eecb245
+> --- /dev/null
+> +++ b/security/lockdown/lockdown.c
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Lock down the kernel
+> + *
+> + * Copyright (C) 2016 Red Hat, Inc. All Rights Reserved.
+> + * Written by David Howells (dhowells@redhat.com)
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public Licence
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the Licence, or (at your option) any later version.
+> + */
+> +
+> +#include <linux/security.h>
+> +#include <linux/export.h>
+> +#include <linux/lsm_hooks.h>
+> +
+> +static enum lockdown_reason kernel_locked_down;
+
+What's the use-case for runtime changing this value? (If you didn't, you
+could make it __ro_after_init.)
+
+> +
+> +static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+> +	[LOCKDOWN_NONE] = "none",
+> +	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+> +	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+> +};
+> +
+> +static enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
+> +						 LOCKDOWN_INTEGRITY_MAX,
+> +						 LOCKDOWN_CONFIDENTIALITY_MAX};
+> +
+> +/*
+> + * Put the kernel into lock-down mode.
+> + */
+> +static int lock_kernel_down(const char *where, enum lockdown_reason level)
+> +{
+> +	if (kernel_locked_down >= level)
+> +		return -EPERM;
+> +
+> +	kernel_locked_down = level;
+> +	pr_notice("Kernel is locked down from %s; see man kernel_lockdown.7\n",
+> +		  where);
+> +	return 0;
+> +}
+> +
+> +static int __init lockdown_param(char *level)
+> +{
+> +	if (!level)
+> +		return -EINVAL;
+> +
+> +	if (strcmp(level, "integrity") == 0)
+> +		lock_kernel_down("command line", LOCKDOWN_INTEGRITY_MAX);
+> +	else if (strcmp(level, "confidentiality") == 0)
+> +		lock_kernel_down("command line", LOCKDOWN_CONFIDENTIALITY_MAX);
+> +	else
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +early_param("lockdown", lockdown_param);
+> +
+> +/**
+> + * lockdown_is_locked_down - Find out if the kernel is locked down
+> + * @what: Tag to use in notice generated if lockdown is in effect
+> + */
+> +static int lockdown_is_locked_down(enum lockdown_reason what)
+> +{	
+> +	if ((kernel_locked_down >= what) && lockdown_reasons[what])
+> +		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
+> +			  lockdown_reasons[what]);
+> +	return (kernel_locked_down >= what);
+> +}
+> +
+> +static struct security_hook_list lockdown_hooks[] __lsm_ro_after_init = {
+> +	LSM_HOOK_INIT(locked_down, lockdown_is_locked_down),
+> +};
+> +
+> +static int __init lockdown_lsm_init(void)
+> +{
+> +#if defined(CONFIG_LOCK_DOWN_KERNEL_FORCE_INTEGRITY)
+> +	lock_kernel_down("Kernel configuration", LOCKDOWN_INTEGRITY_MAX);
+> +#elif defined(CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY)
+> +	lock_kernel_down("Kernel configuration", LOCKDOWN_CONFIDENTIALITY_MAX);
+> +#endif
+> +	security_add_hooks(lockdown_hooks, ARRAY_SIZE(lockdown_hooks),
+> +			   "lockdown");
+> +	return 0;
+> +}
+> +
+> +static ssize_t lockdown_read(struct file *filp, char __user *buf, size_t count,
+> +			     loff_t *ppos)
+> +{
+> +	char temp[80];
+> +	int i, offset=0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lockdown_levels); i++) {
+> +		enum lockdown_reason level = lockdown_levels[i];
+> +
+> +		if (lockdown_reasons[level]) {
+> +			const char *label = lockdown_reasons[level];
+> +
+> +			if (kernel_locked_down == level)
+> +				offset += sprintf(temp+offset, "[%s] ", label);
+> +			else
+> +				offset += sprintf(temp+offset, "%s ", label);
+> +		}
+> +	}
+
+I thought there were helpers for this kind of thing?
+
+> +
+> +	/* Convert the last space to a newline if needed. */
+> +	if (offset > 0)
+> +		temp[offset-1] = '\n';
+> +
+> +	return simple_read_from_buffer(buf, count, ppos, temp, strlen(temp));
+> +}
+> +
+> +static ssize_t lockdown_write(struct file *file, const char __user *buf,
+> +			      size_t n, loff_t *ppos)
+> +{
+> +	char *state;
+> +	int i, len, err = -EINVAL;
+> +
+> +	state = memdup_user_nul(buf, n);
+> +	if (IS_ERR(state))
+> +		return PTR_ERR(state);
+> +
+> +	len = strlen(state);
+> +	if (len && state[len-1] == '\n') {
+> +		state[len-1] = '\0';
+> +		len--;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lockdown_levels); i++) {
+> +		enum lockdown_reason level = lockdown_levels[i];
+> +		const char *label = lockdown_reasons[level];
+> +
+> +		if (label && !strcmp(state, label))
+> +			err = lock_kernel_down("securityfs", level);
+> +	}
+> +
+> +	kfree(state);
+> +	return err ? err : n;
+> +}
+> +
+> +static const struct file_operations lockdown_ops = {
+> +	.read  = lockdown_read,
+> +	.write = lockdown_write,
+> +};
+> +
+> +static int __init lockdown_secfs_init(void)
+> +{
+> +	struct dentry *dentry;
+> +
+> +	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
+> +					&lockdown_ops);
+> +	if (IS_ERR(dentry))
+> +		return PTR_ERR(dentry);
+> +
+> +	return 0;
+> +}
+> +
+> +core_initcall(lockdown_secfs_init);
+> +
+> +#ifdef CONFIG_SECURITY_LOCKDOWN_LSM_EARLY
+> +DEFINE_EARLY_LSM(lockdown) = {
+> +#else
+> +DEFINE_LSM(lockdown) = {
+> +#endif
+
+Ah, I see now: it *might* be an early LSM. What states are missed if not
+early? Only parameters? I think the behavior differences need to be
+spelled out in Kconfig (or somewhere...)
+
+> +	.name = "lockdown",
+> +	.init = lockdown_lsm_init,
+> +};
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
+-- 
+Kees Cook
