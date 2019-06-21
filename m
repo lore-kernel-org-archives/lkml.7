@@ -2,137 +2,115 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCD9C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBEDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0496020449
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4514E20652
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k21ZM2uD"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="pB7XJPRx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cFKxi/Ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfFUPEk (ORCPT
+        id S1726205AbfFUPEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:04:40 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33749 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfFUPEk (ORCPT
+        Fri, 21 Jun 2019 11:04:50 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:33953 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726018AbfFUPEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:04:40 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m8so4037654vsj.0;
-        Fri, 21 Jun 2019 08:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z7+8itbNjVbWEFVe7Q1gJ/IkKA5Mvml8D7msm2siMus=;
-        b=k21ZM2uDf46eU5l4FsI4bUX5Fz3bLPpM7Y17vqd+3+fdIeMyYxeaM3nak9TyHc6IIQ
-         JhXpvZAe55+ABxcBUIuJFP2KUAjIXPrZq4eIChJlsOqRVHC9jLLT8N3lq0/YtiNymP25
-         DE4TBZwMQX2zcZR33spJ/eNJRBA91MIi8wBhFJaONCraODhYxVxgpnWWiusKeIVo7C7U
-         2hFeH6EfajspdHsQ9As2jMSgmISE/0wyMHr4Ti7vuuj/vk9MbvLJ7LyRB/2fdlG3fx1m
-         Ji3CiUE/uFZTrhasxlddJSMjRCxg3Nsf/iwIAaXBt9S6e3R6N1yrJQCIz8P1Neiki3/o
-         P7KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z7+8itbNjVbWEFVe7Q1gJ/IkKA5Mvml8D7msm2siMus=;
-        b=Mwbk+E4P7l3H5MTXKJuDWcF1ntaTR2L5oJYtMRMyBBvrGxExjWpSlU/52IJcIP79Z/
-         XmB33geeV0ZyrD4higiBwv2gH4biHFj3Q0GVHnBoazM5EHu5P2N06RwysQED3YaIcEPz
-         4yX6alHv6ReWKfQMWtiEJ8Jh90P9/3HbAWAAXtt0xG8rvGfci/vSwJ2pvViKGYgbmebf
-         Fk7yjC52NgS99Hbh8h5IBNdPsE3WcCBqjT8YBe5gkziXGkQ7/l3vQfckQhHmxmOxrlye
-         h+hpP+ROkWz0W6a6pZnxrq+PXbkaK67+h9l+XyOMYL+5Upzyd/q1ku5z9NDHEDsOGvOJ
-         Si7w==
-X-Gm-Message-State: APjAAAWv5UAsI/9A2d++04x7gK5JYUKXCbhN8KbHZUV1Jq99AooaUd4/
-        BnNr3WtqWrubURGjQs+G8CaJx4RQh4Fns1phJPU=
-X-Google-Smtp-Source: APXvYqxECcqND+//GgSQB85ap31qfmlFHuFLGwtL3cSpYFZCGpYTkiWbdu3HJZp78o4a27K8jrdR1u3H5B9LypVNee4=
-X-Received: by 2002:a67:320c:: with SMTP id y12mr8546999vsy.30.1561129479136;
- Fri, 21 Jun 2019 08:04:39 -0700 (PDT)
+        Fri, 21 Jun 2019 11:04:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 554112211E;
+        Fri, 21 Jun 2019 11:04:49 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 21 Jun 2019 11:04:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=zG55VncHkz6LJ59AozPYl8biJeb
+        XBi2KCs6/rgVfSUI=; b=pB7XJPRxOuCrgkrA4gKktitowy4ilexVihUO8gYZKjZ
+        0FMVgDfF44jO5GGI67EIFJSvOFViE6HU7p0zzq/X3E58c1ycQ74yEwpx3t6yu0i3
+        JasXbBEt1KuHU7L1SMpHHENWw49FaVmZweCSZ5Q2me/PC7x/WAS4FWoo62+BDZDS
+        ZibN35CqIvrVaV9w/yyL+Q0U9QZIhf/jCZqLs24LRoagtR4Qk3BIFwU145LKXY1t
+        p+kWYpX5Kv/EKjvKZymn90NriXIEn7vplDlsNFsU3oKPwViNbprQ26IKQQzRfmcg
+        jxfE/FrZWkOJJhRn7OXJOPBVfd+mCuM8OKzEeWAxNfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zG55Vn
+        cHkz6LJ59AozPYl8biJebXBi2KCs6/rgVfSUI=; b=cFKxi/SsePJ2Zk5WaOBwLi
+        PFxr+F1UR8S1woEvVHDH4mUuoIjGSRu+l2UGvPJMV38S20S9nlJ5t2ZD5V4C8dp9
+        3xqseobd4GqHVhlIJGAmfCr/+CfPkB12EoIou0Ux+WfRBVhmaKyBtDKjZUbIBcEl
+        2De/o8o47dNQP3ZJ6hWlOd1il1nFr6HZMFjqvTGKHNfnz/tPu0KLdtOoicQnne0A
+        fnBs8u+DPjomTq8UFAoLC8MHwkQg8t7LMN5WugSDdm5pX6fBY/mYIashruwB/Yj3
+        fTZkMZ1HNTpVeSpf99duETsr/jvCdYC8/3Vp55lEi0GG5/6sjjAGsuKDgF8Jr+OQ
+        ==
+X-ME-Sender: <xms:D_IMXWLtzizZ4kAMdsroUXg1NmlavFC3OY2qfqTfO3MnW9oYuLbCUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdeigdekjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:D_IMXbv6_LqrDv8f1EyQvwPzBAPsi9xVwwwjTibGTsbjwE5gjjMmMQ>
+    <xmx:D_IMXdIxDsQcsZa3HEAPObVcIgsA0sVOfMw8mAyAkodxK6B4QvOrNQ>
+    <xmx:D_IMXc-2GozhEI2wpFb8kiwARuVPPwwxrT422ZG8b4l5hVVfq1Zegw>
+    <xmx:EfIMXXlB-6azIiAyDHE555Xzc8YU51uP8p4z1f94K7yRGoO6GGkt9Q>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1A1EE380085;
+        Fri, 21 Jun 2019 11:04:46 -0400 (EDT)
+Date:   Fri, 21 Jun 2019 17:04:45 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v2 00/22] Add ABI and features docs to the Kernel
+ documentation
+Message-ID: <20190621150445.GA11015@kroah.com>
+References: <cover.1561050806.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
- <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
- <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
- <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
- <20190619150406.GB19346@kroah.com> <CAOuPNLgYN3FDvNsaWqom45h7aFz=HczDdL-QoHOc_Sreqf8T2g@mail.gmail.com>
- <22247.1560961607@turing-police>
-In-Reply-To: <22247.1560961607@turing-police>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Fri, 21 Jun 2019 20:34:27 +0530
-Message-ID: <CAOuPNLigooUw7RUj-tYX7isZg2FYRiq=15jduKJy-z6JgPLVVg@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Greg KH <greg@kroah.com>, Fabio Estevam <festevam@gmail.com>,
-        linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 9:56 PM Valdis Kl=C4=93tnieks
-<valdis.kletnieks@vt.edu> wrote:
->
-> On Wed, 19 Jun 2019 20:47:34 +0530, Pintu Agarwal said:
->
-> > No I mean to say, there are lots of features and customization already
-> > done on this version and stabilized.
-> > Upgrading again may require months of effort.
->
-> This is what happens when you don't upstream your local changes.
->
-> And no, saying "But we're a small company and nobody cares" isn't an
-> excuse - Linux carried the entire Voyager architecture around for several=
- years
-> for 2 machines. Not two models, 2 physical machines, the last 2 operation=
-al
-> systems of the product line.
->
-> (Not the Xubuntu-based Voyage distribution either - the Voyager was a mid=
--80s
-> SMP fault-tolerant system from NCR with up to 32 486/586 cores and 4G of
-> memory, which was a honking big system for the day...)
->
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/rzhang/linux/+/v=
-2.6.20-rc1/Documentation/voyager.txt
->
-> The architecture was finally dropped in 2009 when enough hardware failure=
-s
-> had happened that James Bottomley was unable to create a bootable
-> system from the parts from both...
->
-> So if your production run is several thousand systems, that's *plenty* bi=
-g
-> enough for patches and drivers (especially since drivers for hardware you
-> included in your several-thousand system run are also likely applicable t=
-o
-> a half dozen other vendors who made several thousand systems using the
-> same chipset....
+On Thu, Jun 20, 2019 at 02:22:52PM -0300, Mauro Carvalho Chehab wrote:
+> This is a rebased version of the scripts with parse
+> Documentation/ABI and Documentation/feature files
+> and produce a ReST output. Those scripts are added to the
+> Kernel building system, in order to output their contents
+> inside the Kernel documentation.
+> 
+> Please notice that, as discussed, I added support at get_abi.pl
+> to handle ABI files as if they're compatible with ReST. Right
+> now, this feature can't be enabled for normal builds, as it will
+> cause Sphinx crashes. After getting the offending ABI files fixed,
+> a single line change will be enough to make it default.
+> 
+> a version "0" was sent back on 2017.
 
-Yes, I agree, but unfortunately I don't have any control.
-I normally keep finding things, which seems interesting for me and
-propose for upstream (even if it is very small).
-And, I completely agree that system should be designed such a way that
-it can be easily up-gradable.
-But, as I said, its not fully in our hand :(
+Ok, I added the first chunk of these patches to my tree, that add the
+get_abi.pl file to the tree.  I didn't touch the others that touched the
+documentation build or other scripts just yet, as I wanted to get others
+to agree with them before accepting them.
 
-Also, I think this case is slightly different.
-Here, even if I try with latest kernel, there is no use, since
-hibernation feature is not fully support for IMX.
-And I think that is already known.
-I came here looking for some pointers and help and get some clue to
-proceed further.
-If I succeed in making it I will definitely like to contribute upstream :)
+Or we can just wait until after 5.3-rc1 is out and then the rest can go
+through the documentation tree.
 
-Thank You!
+thanks,
 
-Regards,
-Pintu
+greg k-h
