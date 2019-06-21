@@ -2,121 +2,81 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246A0C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC55C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6C4206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JG74n1GE"
+	by mail.kernel.org (Postfix) with ESMTP id 21FB6206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfFUPTn (ORCPT
+        id S1726259AbfFUPUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:19:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33178 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfFUPTn (ORCPT
+        Fri, 21 Jun 2019 11:20:31 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33961 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUPUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:19:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so3786165pfq.0;
-        Fri, 21 Jun 2019 08:19:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wkYJv093Ph/iPqswb4+lpc13NRD+hmqJJxad6v6T4Wg=;
-        b=JG74n1GEpv3kCeplvo4x/WuN7VNLAV3o6XmJ5NxsplUNZojG8xOuo4wLMtEfwA3UFP
-         DNVnx7x8a6Hwedzhz84nYPdNwjT4Y4ft0QUOtVSaiIR6QP2p1WZOQbdNz8PraDw2nFRr
-         lzIRaPAJMrJy+XiaQ7RJcHOoI06br0TzTijIq5ar1nuEvTHTgNm0JArmd9FGbnBKOvJC
-         9lJbEzJOrgYrfCW8jYb27HnFH8NS8Fqqi02DpvXiAdNN/8gL2O0A0C2kzqZKwZqJd2hU
-         2FohhOBL3ghbeKuNnGJnCiTMpNNV7mDXryE4UTyCHHub3QD2HLm8Tx43UroDd1+r4yQ4
-         RHDg==
+        Fri, 21 Jun 2019 11:20:31 -0400
+Received: by mail-qk1-f195.google.com with SMTP id t8so4708445qkt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 08:20:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wkYJv093Ph/iPqswb4+lpc13NRD+hmqJJxad6v6T4Wg=;
-        b=BH+6Xoill4yCvbKRHnxRSwDNICrkudVi5THQLaQRltiQHMCpShY+KxAVhM/ZbjEYqc
-         CRE/u5ltQbwQ9tZgetD9OxwLe5HV/nHMJLSv7dP62qFNuW8eL6LMrOAixxVvbODvoLCt
-         k4iV2axa/fHPfNb/5hPQ0iL7Bhr87XWQ7YJ9hf0NnnyO/M6BVTJSRSGvI6xry34OMtim
-         c7mJiM+wxNgSm+USaAXx1K1MMuoASx8sqgIK0FTFFUqfCq8AEq/NnnwJdR13o19e8qbI
-         E+RrtGESeaGsUW/yoc+l9S8l6NDKq2cqaZfea/PBhaM0xnQ6QZ4EfGqbQCJXXwIkIjSo
-         h1Aw==
-X-Gm-Message-State: APjAAAUSpFl4XCRp67YL1ZzgfZ1ky6MRTTAvHG35I4wtfArSQVF14EAR
-        XtPbfa/ZSGumUS5k0Zsm/EuCSLRBJXVIPQ==
-X-Google-Smtp-Source: APXvYqwdKO8QnReTZDmtgPmfnr2ABDKp3jxXDz3DL9xxFZWLD9xyLVdfrqcULfi/6Fo47NOHO+Wksw==
-X-Received: by 2002:a63:5c19:: with SMTP id q25mr19314252pgb.215.1561130382498;
-        Fri, 21 Jun 2019 08:19:42 -0700 (PDT)
-Received: from arch ([112.196.181.13])
-        by smtp.gmail.com with ESMTPSA id b6sm2800521pgd.5.2019.06.21.08.19.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 08:19:42 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 20:49:28 +0530
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH v4 0/3] net: fddi: skfp: Use PCI generic definitions
- instead of private duplicates
-Message-ID: <20190621151927.GA12091@arch>
-References: <20190621151415.10795-1-puranjay12@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+wP8Hqtmt5Uheo2nSZEeK4MZxkQao5hh8NYgThseHEY=;
+        b=hT7oBNcI/R81H1v4nOQuXVCyOeY/RBE2pZu3pOJqLd2V6pGetGLjfIS3KjesOLF6Xd
+         j3+lz2Szg5gppfkTDavDin1Bj2W8Is+2UGS61n0y7bACkgl+qdG8+VjOYFrlI5+JpTVZ
+         Bce8DpKL/xhCiXARwoYV3m3GMYAeynyKLgsFW6Vph5IQuC37uLTxCzdXALWbVttWoC9y
+         C8Z0JSA+/p2erDyTWRGaA4r+OizVVd2adzAT6IdLDSnjN6zA2lXeLLLHnXP8tzc535YQ
+         wtG5FY4rYOXvwjwMXKdxbqLvZOm9nBEEkfN1lxmYNn72nIIyQR0sEd7EgTNidygGvOOs
+         aceQ==
+X-Gm-Message-State: APjAAAXMHkORIBVwr3YTSI327csJXu3qwe/NuYkwrj4kOmMnUl51yrwy
+        Ktl/piWUuuI7cBiJWmDVbMDmjxATOX+nlAvhCqtvaaCa24o=
+X-Google-Smtp-Source: APXvYqy9KR7oNoQWT/5eLnvUjNCtPMF4D/4fCtMg6abdP9hImSQzlDMlZWHTwiBzkqk/PfRSmiPkTAc+hvKfREynJxs=
+X-Received: by 2002:a37:dcc7:: with SMTP id v190mr111727107qki.286.1561130430344;
+ Fri, 21 Jun 2019 08:20:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621151415.10795-1-puranjay12@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <CAHmME9pyf1AmjWOFFdJFXV9-OBv-ChpKZ130733+x=BtjF62mA@mail.gmail.com>
+ <20190620141159.15965-1-Jason@zx2c4.com> <20190620141159.15965-3-Jason@zx2c4.com>
+ <CAK8P3a1Dfx0MayHFP46KL0RDta9cZYBy3pVRTaVTbEsbMOy5xg@mail.gmail.com>
+ <CAHmME9qDAEzZKBDowLmdaxtc8fJqp-w_cvOWsvubh5Yr=Kgm-g@mail.gmail.com>
+ <CAK8P3a0MWFCvB_pMuYyZbhBQzuA6++i_Y14cJ9n0TozJpqpKPA@mail.gmail.com> <CAHmME9o0+9EKv=ErSUXQivkGoXamFJY3T_KETjf7=SG-FOB+WQ@mail.gmail.com>
+In-Reply-To: <CAHmME9o0+9EKv=ErSUXQivkGoXamFJY3T_KETjf7=SG-FOB+WQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 21 Jun 2019 17:20:13 +0200
+Message-ID: <CAK8P3a2uaNXV35D+DtcJ4Pqm11+ORPr0UQsaA2ts6cQRW7vaMw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] timekeeping: add missing _ns functions for coarse accessors
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 08:44:12PM +0530, Puranjay Mohan wrote:
-> This patch series removes the private duplicates of PCI definitions in
-> favour of generic definitions defined in pci_regs.h.
-> 
-> This driver only uses some of the generic PCI definitons,
-> which are included from pci_regs.h and thier private versions
-> are removed from skfbi.h with all other private defines.
-> 
-> The skfbi.h defines PCI_REV_ID and other private defines with different
-> names, these are renamed to Generic PCI names to make them
-> compatible with defines in pci_regs.h.
-> 
-> All unused defines are removed from skfbi.h.
+On Fri, Jun 21, 2019 at 5:07 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-I left some of the definitions in v4 too!
-will remove them all and send v5
-sorry for the inconvenience
-> Changes in v4:
-> Removed unused PCI definitions which were left in v3
-> 
-> Changes in v3:
-> Renamed all local PCI definitions to Generic names.
-> Corrected coding style mistakes.
-> 
-> Changes in v2:
-> Converted individual patches to a series.
-> Made sure that individual patches build correctly
-> 
-> Puranjay Mohan (3):
->   net: fddi: skfp: Rename local PCI defines to match generic PCI defines
->   net: fddi: skfp: Include generic PCI definitions
->   net: fddi: skfp: Remove unused private PCI definitions
-> 
->  drivers/net/fddi/skfp/drvfbi.c  |   3 +-
->  drivers/net/fddi/skfp/h/skfbi.h | 217 +-------------------------------
->  2 files changed, 6 insertions(+), 214 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+> On Fri, Jun 21, 2019 at 4:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > I care less about these since ktime_get_real_fast_ns() already
+> > exists. My preference would be leaving alons the _fast_ns()
+> > functions for now, but making everything else consistent instead.
+> >
+> > Thomas created the _fast_ns() accessors with a specific application
+> > in mind, and I suppose we don't really want them to be used much
+> > beyond that. I wonder if we should try to come up with a better
+> > name instead of "fast" that makes the purpose clearer and does
+> > not suggest that it's faster to read than the "coarse" version.
+>
+> Oh shoot, I just submitted v3 having not seen this. Does v3's 4/4 look
+> fine, or shall I undo the _fast switcheroo and resubmit?
+
+I'd still prefer to leave out anything touching the _fast functions
+from patches 1 and 4. AFAICT, that would leave ktime_get_tai_ns()
+and ktime_get_boot_ns() to be renamed to clocktai() and bootime()
+respectively.
+
+       Arnd
