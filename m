@@ -2,90 +2,104 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08533C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F77C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42B2205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgGximCk"
+	by mail.kernel.org (Postfix) with ESMTP id 903A8205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfFUVNp (ORCPT
+        id S1726220AbfFUVOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 17:13:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41250 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUVNp (ORCPT
+        Fri, 21 Jun 2019 17:14:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58624 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUVN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 17:13:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id g7so5645466oia.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 14:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9IUC+1FlEWN4tKm0SeOLpdninTmF6qp7MuCWQSXIRz0=;
-        b=EgGximCk5VUAACKrAUkWk4HPsHG5TW9Q2kItYQxrZT4piz7tvdkA7ErNRpdUfgYTz/
-         rApW/8A0zBwoaPh8gPyBvBXE4p4MQdQY5PVrXdPQpdzqHvi/Nxm65xy4BlmYu7862Ymy
-         gdDEkEtwyRZhRDVCPOSOTHUxTXzQ3OZjn21yiAbjiYvXV/a92/NPBxtATIGFDdLzcxP4
-         /9bhou2w+OKNEawob6PgVVubUkYgux8mIJOqchPDyvC8vLvZq3wC5ABvjCfkJWlUk/Km
-         RsALukt/0D3l7eoRIbGbntdPp2gu4dXbDmkGZAWmnXxH0pBSEMT4iUeZm1lK7zCstle3
-         du+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9IUC+1FlEWN4tKm0SeOLpdninTmF6qp7MuCWQSXIRz0=;
-        b=sJQIb0vTa8j+xsvVJrx/rMvCFKAc81NeeFjprKZQqJmfbUPGTILPDJSYDDrUXnqfdY
-         BnzOkuEmaThqlYOfnmrUy2SLDPOE7q5JiulHzc2JCzup8QrfmXld6DG15QVR1J4DkMfO
-         BSTCGar3qLbgLKqfVrG8hF7TgRiVCgEp1DTJO76MwLtjstEhwhMDAS6G78SZIf/9AcQ/
-         TqIbdW1s7qB1fQQvCLTgDSVlodvAnFjgFsddUPXZe3LkjrjYDHyLEa8jZA3NaUIO95TT
-         0m6L38xvumEmgi7I40ZlX1EIVwWxGSLiwAxun/VWxVu40PezwWYBAoRcRCn6SPsM847Q
-         711w==
-X-Gm-Message-State: APjAAAWG7An/h0vStENqvRcErqxk525BfnnUdb6Bi7k8Ohfnmt6qq5pI
-        8XeCDlTmdwND6nvgQ6TdprPHVl5EZqQHHDFPgt2P3w==
-X-Google-Smtp-Source: APXvYqyxyydXVSFfPulOIi8kVAD1JoXVYjMnHyrAQUKHmu3An8stQ4fEJaOVPKC1r0dPwGaIb3ZzO/3MuR63dIStNJk=
-X-Received: by 2002:aca:edc6:: with SMTP id l189mr3939794oih.86.1561151624435;
- Fri, 21 Jun 2019 14:13:44 -0700 (PDT)
+        Fri, 21 Jun 2019 17:13:59 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 13480260195
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-rockchip@lists.infradead.org,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
+        Sean Paul <seanpaul@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 0/3] RK3288 Gamma LUT
+Date:   Fri, 21 Jun 2019 18:13:43 -0300
+Message-Id: <20190621211346.1324-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190527191552.10413-1-TheSven73@gmail.com> <20190621151500.cv57g3al5sadpcum@shell.armlinux.org.uk>
-In-Reply-To: <20190621151500.cv57g3al5sadpcum@shell.armlinux.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Fri, 21 Jun 2019 17:13:33 -0400
-Message-ID: <CAGngYiU_drPPXAzY3W3duxxTcUXUASeuCu_wj8zmxvrasEDq8Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] drm/i2c: tda998x: access chip registers via a regmap
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Rosin <peda@axentia.se>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:15 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> Another con is the need to keep the functions that detail the register
-> properties up to date, which if they're wrong may result in unexpected
-> behaviour.
->
-> I subscribe to the "keep it simple" approach, and regmap, although
-> useful, seems like a giant sledgehammer for this.
->
+Let's support Gamma LUT configuration on RK3288 SoCs.
 
-Thank you for the review !
+In order to do so, this series adds a new and optional
+address resource.
+    
+A separate address resource is required because on this RK3288,
+the LUT address is after the MMU address, which is requested
+by the iommu driver. This prevents the DRM driver
+from requesting an entire register space.
 
-I added this back when I was debugging audio artifacts related to this
-chip. The regmap's debugfs binding was extremely useful. So I
-dressed it up a bit in the hope that it would have some general use.
+The current implementation works for RGB 10-bit tables, as that
+is what seems to work on RK3288.
 
-But if the cons outweigh the pros, then this is as far as this patch
-will go...
+This has been tested on a Rock2 Square board, using
+a hacked 'modetest' tool, with legacy and atomic APIs. 
+
+Thanks,
+Eze
+
+Changes from v1:
+* drop explicit linear LUT after finding a proper
+  way to disable gamma correction.
+* avoid setting gamma is the CRTC is not active.
+* s/int/unsigned int as suggested by Jacopo.
+* only enable color management and set gamma size
+  if gamma LUT is supported, suggested by Doug.
+* drop the reg-names usage, and instead just use indexed reg
+  specifiers, suggested by Doug.
+
+Changes from RFC:
+* Request (an optional) address resource for the LUT.
+* Add devicetree changes.
+* Drop support for RK3399, which doesn't seem to work
+  out of the box and needs more research.
+* Support pass-thru setting when GAMMA_LUT is NULL.
+* Add a check for the gamma size, as suggested by Ilia.
+* Move gamma setting to atomic_commit_tail, as pointed
+  out by Jacopo/Laurent, is the correct way.
+
+Ezequiel Garcia (3):
+  dt-bindings: display: rockchip: document VOP gamma LUT address
+  drm/rockchip: Add optional support for CRTC gamma LUT
+  ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
+
+ .../display/rockchip/rockchip-vop.txt         |   6 +-
+ arch/arm/boot/dts/rk3288.dtsi                 |   4 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |   3 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 114 ++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |   7 ++
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |   2 +
+ 6 files changed, 133 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
+
