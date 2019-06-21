@@ -2,90 +2,89 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29C2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5B9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E52521530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D431208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfFUVOE (ORCPT
+        id S1726293AbfFUVOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 17:14:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58640 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUVOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 17:14:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 3F71428623B
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-rockchip@lists.infradead.org,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 1/3] dt-bindings: display: rockchip: document VOP gamma LUT address
-Date:   Fri, 21 Jun 2019 18:13:44 -0300
-Message-Id: <20190621211346.1324-2-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190621211346.1324-1-ezequiel@collabora.com>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
+        Fri, 21 Jun 2019 17:14:08 -0400
+Received: from sauhun.de ([88.99.104.3]:56086 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfFUVOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 17:14:05 -0400
+Received: from localhost (p5486CF54.dip0.t-ipconnect.de [84.134.207.84])
+        by pokefinder.org (Postfix) with ESMTPSA id 583FB2C077A;
+        Fri, 21 Jun 2019 23:14:03 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 23:14:02 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        marc.w.gonzalez@free.fr, fabien.dessenne@st.com
+Subject: Re: [PATCH v3] i2c: i2c-stm32f7: fix the get_irq error cases
+Message-ID: <20190621211402.GB950@kunai>
+References: <1560757981-10532-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
+Content-Disposition: inline
+In-Reply-To: <1560757981-10532-1-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the register specifier description for an
-optional gamma LUT address.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-Changes from v1:
-* Drop reg-names, suggested by Doug.
----
- .../devicetree/bindings/display/rockchip/rockchip-vop.txt   | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-index 4f58c5a2d195..8b3a5f514205 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-@@ -20,6 +20,10 @@ Required properties:
- 		"rockchip,rk3228-vop";
- 		"rockchip,rk3328-vop";
- 
-+- reg: Must contain one entry corresponding to the base address and length
-+	of the register space. Can optionally contain a second entry
-+	corresponding to the CRTC gamma LUT address.
-+
- - interrupts: should contain a list of all VOP IP block interrupts in the
- 		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
- 		 format depends on the interrupt controller used.
-@@ -48,7 +52,7 @@ Example:
- SoC specific DT entry:
- 	vopb: vopb@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0xff930000 0x19c>;
-+		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--- 
-2.20.1
+On Mon, Jun 17, 2019 at 09:53:01AM +0200, Fabrice Gasnier wrote:
+> During probe, return the "get_irq" error value instead of -EINVAL which
+> allows the driver to be deferred probed if needed.
+> Fix also the case where of_irq_get() returns a negative value.
+> Note :
+> On failure of_irq_get() returns 0 or a negative value while
+> platform_get_irq() returns a negative value.
+>=20
+> Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+>=20
+> Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
+Applied to for-next, thanks!
+
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0NSJoACgkQFA3kzBSg
+KbaKLg/+IDVBZI+FWBpYna0/CpvmO5Uyzx0xj2RFArNr4l7IySOTfA79vSKuZ+cx
+VB+ap4ihOQ5gta95Jt7ZFgHj1h81yy/5ER2C8yCbn9NNkv5NjF3HvVSNaolQuU4q
+LIDq5JjlKMOExTBuRFfDvDC4jnTAPZcIv9KfxsC98tK4u47jzh2GIAnrX/BjIydl
+khpnpg1KwbS52qFfm6OxxKtZBZrIJg42kEt7IH7AYG3IqpE52zO0Xg92e5HVdRJV
+KP/E13T5YZXONCzT8ZB4vYiPC0lpl3QFCEO1VpwVCTM/AqxTA573L9GOmoFurPra
+6vkNeUgZdfBXvTvIQo1Qteuuim8NfpZMy/Q44WZUDNVG5VEGzlDFli3j3z5GON9r
+c0N1SbA9ev+U+4Lrw+6N+RLG3VKNiEAKLILKWzP3Kc4KOlRZDa6mxgTdHL3E9i86
+stVEayxqkOZPiTtmb8AaJz513cWFMIlnqolWZqgl5hXL80JHE7lmebA7xC0GzN6z
+o8V33npjYNMPH8vaS4Fm+2Huo3q95A1DccuN3xqhx6WClG3vrpkImyBOKEla15NT
+Ox70qsmBi2q+rXdqcM/g5gaedc/568Le2FT/whNDxr3mJ8o6lGfwRDupZFKGN8Vm
+8LJRUVAA5fokwSR9C1IJfHHJgGi47RA8dBJy3pLJWV4BbjrbGtg=
+=etZv
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
