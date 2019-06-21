@@ -2,99 +2,123 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E861C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F86C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD04208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE2F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561134717;
-	bh=UcfMc1ASXqklmAnizKrMCBrZWJYP/6BAOOe+TG0bhw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MZ/sDLXv/YBiE3CyrNJ2mAdQK3gYeCOxwKpnMyMRTpLORPiERU/IxhwEk3A36Mf2H
-	 jgGsn6VeetwXG7yf0Q0SyIpzo/IyKHRH8AYjJglD8h+TVDLxpJhNWfQ7Dmq1I8d6K1
-	 g7N0RVhh+9CXIN5OG+bT/7MsYqq3RXiCOEoDbVvs=
+	s=default; t=1561134967;
+	bh=w3MTzlSNPfkJ23jQYVddQNjh5XHgsJVf4841oB0zHcU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=YcdiL6wuRLcr76238/YETAP/NFCmyKOgB6gF8cNqRpeWrGQAwzgVslbUa6DuhTafG
+	 c6xZMMXnUnX8BWCsZcAuJQJ5gOuCg1orRfXxrMznp+6geo5evuw9H4NLz8V84qFsCH
+	 G7+t5KR7zF0egMrwt6D0Nt1pfNd0RnnKr7vppQ7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfFUQby (ORCPT
+        id S1726114AbfFUQgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfFUQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:31:53 -0400
-Received: from linux-8ccs (ip5f5adbc0.dynamic.kabel-deutschland.de [95.90.219.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3874620673;
-        Fri, 21 Jun 2019 16:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561134712;
-        bh=UcfMc1ASXqklmAnizKrMCBrZWJYP/6BAOOe+TG0bhw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A1apq8T89fxZZBpaF4gUEZnjgdRJBnuMF9uzm5yssy3csi3d7C2kVFecBOXZhe814
-         ATVGIVhR1TWYc0fxr6FehNFsGqL/LLXLLVYfpqqvcydjYN6XKNjUzJafFSpiRdDsH/
-         mwWUIA1zZzBEPGRS3ScUA1m811gq4zGarY56MZAo=
-Date:   Fri, 21 Jun 2019 18:31:46 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
- errors
-Message-ID: <20190621163146.GB24038@linux-8ccs>
-References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
- <20190619112350.GN3419@hirez.programming.kicks-ass.net>
+        Fri, 21 Jun 2019 12:36:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46153 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUQgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:36:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so584979iol.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k0Gv8DfD1efOdqhlugZQYcDCnL+VjkQIY1zETUpyLmE=;
+        b=OMHj9VHPqt6HJV5QqUNQBFucnZ816kuNESW2vX7vWTjN2NKZQ0Ssors2vl9q/oyuMH
+         L4gD9fWAwVneJlkOZ5wKA4kPos2/DA0u7tENNy0CRpi1DpOTAoeLOYZzZNuUhqa3NYoO
+         l+m/HJGVQEyGbWRa42bxOPQn5wxbmn1nC6c8E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k0Gv8DfD1efOdqhlugZQYcDCnL+VjkQIY1zETUpyLmE=;
+        b=WcNW1GT7aXwNv5qX43rw07ujtMrWe08i8EO2bhZZ8I884dvx68Sk+6Jv8Icl9AfIRS
+         C+CQNUMnB0lmvMrr1u4JB3UersMr7Yuh1oOcEQCNqlvq0esRsxTi2pANR7yXi6jcGkpL
+         jhJws3KsWMd73V1VkakyhMbmwD5sr/DVskavQaOYGX30AbW54GWNSQ5/mzAzjwKuGMos
+         lJZddv3MdtqT1VYBJMl2azTXxbutn9kF2tjYtuhbGA1QokC6hP3qKJKkDAX9bL8pLQQZ
+         wlDqMMV1gSRrUoyJEOnPy0dkS1nb+cfgJ1E8VHRYqdUsvPLJIUne5YRLLWyXqPvbMDCC
+         URzQ==
+X-Gm-Message-State: APjAAAViGgaiGtdghAcsVHrdfc++WiJMmUTgYzKyMizy1IMqPqVQGKGg
+        8z/xdK3Qzuxj8kYf0d48F24eFfBnU0Q=
+X-Google-Smtp-Source: APXvYqzGFfCvLzH6zCFRfbW14LQqv78O/rLPC0RhDAbvKNQeJ9kfbYFCwBGc/fq8J4aAggu64E2IhQ==
+X-Received: by 2002:a5d:8508:: with SMTP id q8mr14433265ion.31.1561134964449;
+        Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c11sm4374026ioi.72.2019.06.21.09.36.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 09:36:04 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions
+ instead of private duplicates
+To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>, stephen@networkplumber.org,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+References: <20190621094607.15011-1-puranjay12@gmail.com>
+ <20190621162024.53620dd9@alans-desktop>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5f04f52d-8911-4db9-4321-00334d357d54@linuxfoundation.org>
+Date:   Fri, 21 Jun 2019 10:36:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190619112350.GN3419@hirez.programming.kicks-ass.net>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190621162024.53620dd9@alans-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Peter Zijlstra [19/06/19 13:23 +0200]:
->On Wed, Jun 19, 2019 at 01:12:12PM +0200, Miroslav Benes wrote:
->> > @@ -3780,7 +3781,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
->> >
->> >  	err = prepare_coming_module(mod);
->> >  	if (err)
->> > -		goto bug_cleanup;
->> > +		goto coming_cleanup;
+On 6/21/19 9:20 AM, Alan Cox wrote:
+> On Fri, 21 Jun 2019 15:16:04 +0530
+> Puranjay Mohan <puranjay12@gmail.com> wrote:
+> 
+>> This patch series removes the private duplicates of PCI definitions in
+>> favour of generic definitions defined in pci_regs.h.
+> 
+> Why bother ? It's an ancient obsolete card ?
+> 
+> Do you even have one to test ?
+> 
 >>
->> Not good. klp_module_going() is not prepared to be called without
->> klp_module_coming() succeeding. "Funny" things might happen.
->
->Bah, I did look at that but failed to spot it :/
->
->> So it calls for more fine-grained error handling.
->
->Another approach that I considered was trying to re-iterate the notifier
->list up until the point we got, but that was fairly non-trivial and
->needed changes to the notifier crud itself.
->
->I'll try again.
+>> This driver only uses some of the generic PCI definitons,
+>> which are included from pci_regs.h and thier private versions
+>> are removed from skfbi.h with all other private defines.
+>>
+>> The skfbi.h defines PCI_REV_ID and other private defines with different
+>> names, these are renamed to Generic PCI names to make them
+>> compatible with defines in pci_regs.h.
+>>
+>> All unused defines are removed from skfbi.h.
+> 
+> I sincerely doubt anyone on the planet is using this card any more.
+> 
+> Alan
+> 
 
-Hm.. I would prefer if we didn't complicate the error handling too
-much, especially since you mention it seems non-trivial, and it
-doesn't look too nice. You also checked that calling the GOING without
-the COMING notifiers should be safe, so I think we can keep things
-simple. I tried to look at how other places in the kernel handle
-blocking_notifier_call_chain() errors and the places that do look at
-the error code (most invocations of blocking_notifier_call_chain()
-seem to just ignore the return value) just call the opposing notifiers
-(module "going" in our case) to cleanup. I also would not mind
-breaking up prepare_coming_module() to refine the error handling, as I
-mentioned in my other mail.
+Thanks Alan!
 
-Thanks,
+Stephen Hemminger is suggesting removal as well. Makes sense to me.
 
-Jessica
+David!
+
+What would you recommend the next steps are? Would like driver removed?
+
+thanks,
+-- Shuah
