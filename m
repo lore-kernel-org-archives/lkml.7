@@ -2,121 +2,203 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C22C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F265C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BC7215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC08208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOBd+HVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfFUOF6 (ORCPT
+        id S1726121AbfFUOH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:05:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59284 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfFUOF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:05:57 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB4FF30C31B1;
-        Fri, 21 Jun 2019 14:05:57 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1269E61101;
-        Fri, 21 Jun 2019 14:05:53 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 16:05:51 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-Message-ID: <20190621160551.7f11adb7.cohuck@redhat.com>
-In-Reply-To: <20190621153711.7d713c4d.pasic@linux.ibm.com>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-        <20190621115604.0f3e3f69.cohuck@redhat.com>
-        <20190621153711.7d713c4d.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Fri, 21 Jun 2019 10:07:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43546 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUOHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:07:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so3427469pgv.10;
+        Fri, 21 Jun 2019 07:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B9MbqUVZ6G19blzK9C/nkDqisYrvP0LYF0mShhHWuxw=;
+        b=lOBd+HVMv320N1woFRqwNylMIxbiTQfNRbF/AHuUNBEjxQ7emmCHOkdA8QDk0yLfAh
+         aO2GP/DmzWaH4Pg8diNbgfpd9aRePF/Q0xQFQm4ypEqpDDseJ7ogrhg7ogmYI3RPh9I7
+         PXsVpwPcJkNnO4FTqXaCs26yhCYK+NKDiWLiUuH1Fxw35ExG6HP1jA5viTTtVW/oyIOd
+         s+JdJk6eNsPuy6bhZbdMqmKNfRmn34HWx/VgEHKTxq3fccFUYyCc1CEa1VHYLiWwFBW/
+         QT7RzdACqo4tFezRHqjTbdPQX/yAPEjduQwreXBFWMgP6iBIac1GEVLQvo5VrAM4tdOT
+         NVGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B9MbqUVZ6G19blzK9C/nkDqisYrvP0LYF0mShhHWuxw=;
+        b=sZX1LP/dNqSBpSMco0euHeGA57BmV8ghJUnQhIveFPeHcU6nC1unf6Tgvv19FQrvLL
+         3eUwm4scyHOps3ibW6jHrMmPzJ/2L5SGMvO6E+6/qvhVctQ8gceQXlOJ4p/5Zvh8S9Li
+         SmKtgA6mxNRCkFSR5V2gG7uWHOrU0b9wyxX1iZx3qZSDJXYFGBpzpDpykipjLWEunn9o
+         KYC/dBczGx/cSTD3VrGtMCb1GSExkYaRlGTqKUdMQezs7iA9ye7oaGPQrF8o0oh0y1Ud
+         SkK0/ZfjfKZNgHqjMsltwTdeGESlllx0T/W7p3LrZIvCMxH3xBrN3+ra8T0HHxaXUpu0
+         8FtA==
+X-Gm-Message-State: APjAAAW7JJ1Bfx5Pl/EkZCHgKRvtUuNcilOuWge5TKtpJ0BO6UDfatTe
+        AG7Bu3hCivPz6r9OCVGAzAg=
+X-Google-Smtp-Source: APXvYqwrRphIx8JSIR9al4LlncdG1rD27NbYACKxsZn0B4B6xTwrmoSIm8B0VLJd/wYsCPFzfkv8qw==
+X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr6983306pjp.103.1561126044926;
+        Fri, 21 Jun 2019 07:07:24 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.36])
+        by smtp.gmail.com with ESMTPSA id 11sm3041870pfo.19.2019.06.21.07.07.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 07:07:24 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 19:37:17 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] mm: fix setting the high and low watermarks
+Message-ID: <20190621140717.GA28387@bharath12345-Inspiron-5559>
+References: <20190621114325.711-1-alan.christopher.jenkins@gmail.com>
+ <3d15b808-b7cd-7379-a6a9-d3cf04b7dcec@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 21 Jun 2019 14:05:57 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d15b808-b7cd-7379-a6a9-d3cf04b7dcec@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 15:37:11 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> On Fri, 21 Jun 2019 11:56:04 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Thu, 13 Jun 2019 13:08:15 +0200
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> >   
-> > > Sometimes, we want to control which of the matching drivers
-> > > binds to a subchannel device (e.g. for subchannels we want to
-> > > handle via vfio-ccw).
-> > > 
-> > > For pci devices, a mechanism to do so has been introduced in
-> > > 782a985d7af2 ("PCI: Introduce new device binding path using
-> > > pci_dev.driver_override"). It makes sense to introduce the
-> > > driver_override attribute for subchannel devices as well, so
-> > > that we can easily extend the 'driverctl' tool (which makes
-> > > use of the driver_override attribute for pci).
-> > > 
-> > > Note that unlike pci we still require a driver override to
-> > > match the subchannel type; matching more than one subchannel
-> > > type is probably not useful anyway.
-> > > 
-> > > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
-> 
-> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-
-Thanks!
-
-> 
-> I guess the '\n' handling is customary, and is what the same what
-> the pci counterpart (782a985d7af2) does anyway. It bothers
-> me a little that you don't necessarily get back from with show
-> what you stored. E.g. # echo -e "bug\nfree"
-> > /sys/bus/css/devices/0.0.0001/driver_override # echo $?  
-> 0
-> # cat /sys/bus/css/devices/0.0.0001/driver_override
-> bug
-> # echo $?
-> 0
-> But given the previous art (782a985d7af2) I think it is the best way
-> to do it.
-
-Yeah; I shamelessly copied a lot :) And I agree it's probably useful to
-have both act in the same way.
-
-> 
-> The rest is very straightforward.
-> 
-> > > ---
-> > > 
-> > > Lightly tested; did not yet attempt to adapt driverctl to actually
-> > > make use of it.  
+On Fri, Jun 21, 2019 at 02:09:31PM +0200, Vlastimil Babka wrote:
+> On 6/21/19 1:43 PM, Alan Jenkins wrote:
+> > When setting the low and high watermarks we use min_wmark_pages(zone).
+> > I guess this is to reduce the line length.  But we forgot that this macro
+> > includes zone->watermark_boost.  We need to reset zone->watermark_boost
+> > first.  Otherwise the watermarks will be set inconsistently.
 > > 
-> > Friendly ping.
+> > E.g. this could cause inconsistent values if the watermarks have been
+> > boosted, and then you change a sysctl which triggers
+> > __setup_per_zone_wmarks().
 > > 
-> > In the meanwhile, I figured out that you do not need to adapt driverctl
-> > at all, but just need to pass it '-b css' to work on the css bus; this
-> > seems to work just fine with this patch applied.
-> >   
+> > I strongly suspect this explains why I have seen slightly high watermarks.
+> > Suspicious-looking zoneinfo below - notice high-low != low-min.
+> > 
+> > Node 0, zone   Normal
+> >   pages free     74597
+> >         min      9582
+> >         low      34505
+> >         high     36900
+> > 
+> > https://unix.stackexchange.com/questions/525674/my-low-and-high-watermarks-seem-higher-than-predicted-by-documentation-sysctl-vm/525687
+> > 
+> > Signed-off-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+> > Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
+> >                       fragmentation event occurs")
+> > Cc: stable@vger.kernel.org
 > 
-> Interesting. I hope to get around and have a closer look at it
-> eventually.
+> Nice catch, thanks!
+> 
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Personally I would implement it a bit differently, see below. If you
+> agree, it's fine if you keep the authorship of the whole patch.
+> 
+> > ---
+> > 
+> > Tested by compiler :-).
+> > 
+> > Ideally the commit message would be clear about what happens the
+> > *first* time __setup_per_zone_watermarks() is called.  I guess that
+> > zone->watermark_boost is *usually* zero, or we would have noticed
+> > some wild problems :-).  However I am not familiar with how the zone
+> > structures are allocated & initialized.  Maybe there is a case where
+> > zone->watermark_boost could contain an arbitrary unitialized value
+> > at this point.  Can we rule that out?
+> 
+> Dunno if there's some arch override, but generic_alloc_nodedata() uses
+> kzalloc() so it's zeroed.
+> 
+> -----8<-----
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d66bc8abe0af..3b2f0cedf78e 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7624,6 +7624,7 @@ static void __setup_per_zone_wmarks(void)
+>  
+>  	for_each_zone(zone) {
+>  		u64 tmp;
+> +		unsigned long wmark_min;
+>  
+>  		spin_lock_irqsave(&zone->lock, flags);
+>  		tmp = (u64)pages_min * zone_managed_pages(zone);
+> @@ -7642,13 +7643,13 @@ static void __setup_per_zone_wmarks(void)
+>  
+>  			min_pages = zone_managed_pages(zone) / 1024;
+>  			min_pages = clamp(min_pages, SWAP_CLUSTER_MAX, 128UL);
+> -			zone->_watermark[WMARK_MIN] = min_pages;
+> +			wmark_min = min_pages;
+>  		} else {
+>  			/*
+>  			 * If it's a lowmem zone, reserve a number of pages
+>  			 * proportionate to the zone's size.
+>  			 */
+> -			zone->_watermark[WMARK_MIN] = tmp;
+> +			wmark_min = tmp;
+>  		}
+>  
+>  		/*
+> @@ -7660,8 +7661,9 @@ static void __setup_per_zone_wmarks(void)
+>  			    mult_frac(zone_managed_pages(zone),
+>  				      watermark_scale_factor, 10000));
+>  
+> -		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+> -		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+> +		zone->_watermark[WMARK_MIN]  = wmark_min;
+> +		zone->_watermark[WMARK_LOW]  = wmark_min + tmp;
+> +		zone->_watermark[WMARK_HIGH] = wmark_min + tmp * 2;
+>  		zone->watermark_boost = 0;
+Do you think this could cause a race condition between
+__setup_per_zone_wmarks and pgdat_watermark_boosted which checks whether
+the watermark_boost of each zone is non-zero? pgdat_watermark_boosted is
+not called with a zone lock.
+Here is a probable case scenario:
+watermarks are boosted in steal_suitable_fallback(which happens under a
+zone lock). After that kswapd is woken up by
+wakeup_kswapd(zone,0,0,zone_idx(zone)) in rmqueue without holding a
+zone lock. Lets say someone modified min_kfree_bytes, this would lead to
+all the zone->watermark_boost being set to 0. This may cause
+pgdat_watermark_boosted to return false, which would not wakeup kswapd
+as intended by boosting the watermark. This behaviour is similar to waking up kswapd for a
+balanced node.
 
-Nice; somebody else looking at it is always useful :)
+Also if kswapd was woken up successfully because of watermarks being
+boosted. In balance_pgdat, we use nr_boost_reclaim to count number of
+pages to reclaim because of boosting. nr_boost_reclaim is calculated as:
+nr_boost_reclaim = 0;
+for (i = 0; i <= classzone_idx; i++) {
+	zone = pgdat->node_zones + i;
+	if (!managed_zone(zone))
+		continue;
+
+	nr_boost_reclaim += zone->watermark_boost;
+	zone_boosts[i] = zone->watermark_boost;
+}
+boosted = nr_boost_reclaim;
+
+This is not under a zone_lock. This could lead to nr_boost_reclaim to
+be 0 if min_kfree_bytes is set to 0. Which would wake up kcompactd
+without reclaiming memory. 
+kcompactd compaction might be spurious if the if the memory reclaim step is not happening?
+
+Any thoughts?
+>  		spin_unlock_irqrestore(&zone->lock, flags);
+>
+
