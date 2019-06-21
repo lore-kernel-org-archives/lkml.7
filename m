@@ -8,114 +8,169 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25ECC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB132C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5915215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD5620B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InHu5zUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYwGRLvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfFUBlN (ORCPT
+        id S1726331AbfFUBl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:41:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34546 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfFUBlM (ORCPT
+        Thu, 20 Jun 2019 21:41:29 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46280 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfFUBl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:41:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so4756128otk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:41:11 -0700 (PDT)
+        Thu, 20 Jun 2019 21:41:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so4688915ote.13;
+        Thu, 20 Jun 2019 18:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rzeo006/jzKSPbm/r6/uBrpWXDZY3RJIqz2UkltKFyE=;
-        b=InHu5zUe2eCXIwwtW0YOX9gE+fyok9lXwN7cVGa4LDl8uiFbj5KtVU7tjR2Q3cbsZw
-         s7WbGsOSewa1njscsIAyEn7uZrD9r+eyBqXnL2jRE7tXwqRos1abF7o8FHOMd7X/I8KP
-         1TjN7xcOZfVlgnSvgS389tb2seOt2ZZCuALShhDwKxnuzq8DnXkERb83GnpNPkNysW/m
-         SxEGAVKvao4sRWK8IcykA5zInIe1APOFnj261YgJTuIlUjr0mLLpivhtS2kKOr54595j
-         EB9bvH9nEDQO8btvJf4HU7D0VCWn3jyb05uoMVY5FlrSBvmoqiwFHbotzOEeccKodt8B
-         lH5A==
+         :cc:content-transfer-encoding;
+        bh=5K99qU465Y/n1tzLPu9YxwdgC2mSpe51ZhWRmC2pnwU=;
+        b=AYwGRLvpyHTyDwk5RUElurCTbQV5qtO9iO1tbPbw6cEWRiofvEQ7QuT/WxmI9SXcg8
+         PfkrzmiqwtTtreLYNSg4hmjtXwVZJQgjAOHZVdr5lZ2hGTSZd4hx98eRQQErSBtO8CEo
+         b+SDQaN4l6OvDVq7u1H9arQcgb8287eYIP5VmWXJqkpo52/x0zpNBGM4nWRkoxbJbzAv
+         +JFX5Gv5y6kJrwzPTl4j/COxk4GtABFanM5XYU8KCDw9Iysls++BvyZkgNmgJPkcfx+q
+         rDYhF+fexvoCJ7ssv+02EMWrSS3owS9SAFlUnIl3ux/zuZZ39prHaqUMw7ND9gpqdk+L
+         MCGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rzeo006/jzKSPbm/r6/uBrpWXDZY3RJIqz2UkltKFyE=;
-        b=KQkqxR3Ihhnd/zDo9DfFjstp5ZrtXbfsPfksx1V7w79HhKEO9Snu58PQcOaUhNvi6a
-         gu7yBo8LpgUOrNfAnpU3qlralnTvF0TpJxgX3V3s9k1O09djUej1QYr/5eeBriECyPxA
-         Ct+HvDVSpmZhNQXMlb9BAdMrp6Z+PfOc+pw+f0UCkv59DxCeTogRMzr3hieYUy5g0VIO
-         ASXTu2+BOVqA8bPGmmMofMjkCNaobRnE4QME3wvoWdbMX1bMRyfZBLuBMRlzcuvBq00d
-         2otD94pHI4FZ02C8AhMCbHjlia8pQNcLkPPiOPf5tUE8SGAaXOAAosLZ4DHFD3HkYYPO
-         ySKQ==
-X-Gm-Message-State: APjAAAV4+gvTAc1P1fKVCSyQoNLule0WMqwsRMF3DRjnnMrUW7if8y/e
-        wSSwPuIwlXmyYpf+7Ig3dclgewCfuUHFE1fqSPc=
-X-Google-Smtp-Source: APXvYqyc2uHg7iq570Lo7bKCfpjFfDQTFm/HBeMCa5eMK1ady5LaV1BB4tBXqYIIi/0EMVPC2X6gWsvrhstVsfXSfzU=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr5878774otk.56.1561080890907;
- Thu, 20 Jun 2019 18:34:50 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5K99qU465Y/n1tzLPu9YxwdgC2mSpe51ZhWRmC2pnwU=;
+        b=HZGXF4c9sreM+DhkxgL8O4LyivEUlWEE0FFYDg/G3tnbZazmuCJT+laQe9d8j3SXXZ
+         Q7vp+VgSVwz7QrMPLOEl7bgxl6xV7ZgfhvvYHmepNDQ2wVoIcMdkzeRvPHaleoC1pMju
+         29PLM7qgnyaeHaYYLeEaaEYpXRYJbBUWVAYrVE8zQcwr2dR30fwgy5tLRLFaEh7Ry7ZF
+         jwXre//6WWjQD2y5IajiGKPGt1crypYaaYfIf8BOiOhZ0O1r63S6GxpO5ii7G0LQu/Gm
+         R2XrpyBJHe/NClhWmlM3SPbjeiNBFro6VSmmRwY7TdHl7LzUM/KO/7gctYYF2YNDDdaZ
+         RvBw==
+X-Gm-Message-State: APjAAAWur0s2WWCpSDsMs4NjSk0TVbcEmuvRdzar0BTA9KjpETCDwrZr
+        ODqHi/8Ro0l7SBU/n041vUNqqabEaj/jn76H02Q=
+X-Google-Smtp-Source: APXvYqwNyZyAKX6IT31Y1GxMTo6SUdAmyZewWriWRLYIAR4AtWJVG3Aup0uectw1fN8YKxZgIsshrr+N5jyD+xzFeHM=
+X-Received: by 2002:a9d:2c47:: with SMTP id f65mr78355040otb.185.1561081286628;
+ Thu, 20 Jun 2019 18:41:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561030614-17026-1-git-send-email-wanpengli@tencent.com> <20190620123807.GX3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190620123807.GX3436@hirez.programming.kicks-ass.net>
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com> <20190618133541.GA3932@amt.cnet>
+ <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com> <20190619210346.GA13033@amt.cnet>
+In-Reply-To: <20190619210346.GA13033@amt.cnet>
 From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 21 Jun 2019 09:36:04 +0800
-Message-ID: <CANRm+CwfaafP6vwo-zu==G6BTmZb64xUDB+Ko7xsFy-iVGFXUg@mail.gmail.com>
-Subject: Re: [PATCH] sched/isolation: Prefer housekeeping cpu in local node
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
+Date:   Fri, 21 Jun 2019 09:42:39 +0800
+Message-ID: <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 at 20:38, Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wrote:
 >
-> On Thu, Jun 20, 2019 at 07:36:54PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > In real product setup, there will be houseeking cpus in each nodes, it
-> > is prefer to do housekeeping from local node, fallback to global online
-> > cpumask if failed to find houseeking cpu from local node.
-> >
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Frederic Weisbecker <frederic@kernel.org>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  kernel/sched/isolation.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> > index 123ea07..9eb6805 100644
-> > --- a/kernel/sched/isolation.c
-> > +++ b/kernel/sched/isolation.c
-> > @@ -16,9 +16,16 @@ static unsigned int housekeeping_flags;
-> >
-> >  int housekeeping_any_cpu(enum hk_flags flags)
-> >  {
-> > +     int cpu;
-> > +
-> >       if (static_branch_unlikely(&housekeeping_overridden))
-> > -             if (housekeeping_flags & flags)
-> > -                     return cpumask_any_and(housekeeping_mask, cpu_online_mask);
-> > +             if (housekeeping_flags & flags) {
-> > +                     cpu = cpumask_any_and(housekeeping_mask, cpu_cpu_mask(smp_processor_id()));
-> > +                     if (cpu < nr_cpu_ids)
-> > +                             return cpu;
-> > +                     else
-> > +                             return cpumask_any_and(housekeeping_mask, cpu_online_mask);
-> > +             }
-> >       return smp_processor_id();
-> >  }
-> >  EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
+> Hi Li,
 >
-> Why not something like so? IIRC there's more places that want this, but
-> I can't seem to remember quite where.
+> On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
+> > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wro=
+te:
+> > >
+> > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
+> > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > >
+> > > > Dedicated instances are currently disturbed by unnecessary jitter d=
+ue
+> > > > to the emulated lapic timers fire on the same pCPUs which vCPUs res=
+ident.
+> > > > There is no hardware virtual timer on Intel for guest like ARM. Bot=
+h
+> > > > programming timer in guest and the emulated timer fires incur vmexi=
+ts.
+> > > > This patch tries to avoid vmexit which is incurred by the emulated
+> > > > timer fires in dedicated instance scenario.
+> > > >
+> > > > When nohz_full is enabled in dedicated instances scenario, the emul=
+ated
+> > > > timers can be offload to the nearest busy housekeeping cpus since A=
+PICv
+> > > > is really common in recent years. The guest timer interrupt is inje=
+cted
+> > > > by posted-interrupt which is delivered by housekeeping cpu once the=
+ emulated
+> > > > timer fires.
+> > > >
+> > > > The host admin should fine tuned, e.g. dedicated instances scenario=
+ w/
+> > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surpl=
+us
+> > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in n=
+on-root
+> > > > mode, ~3% redis performance benefit can be observed on Skylake serv=
+er.
+> > > >
+> > > > w/o patch:
+> > > >
+> > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time =
+  Avg time
+> > > >
+> > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us =
+  0.71us ( +-   1.09% )
+> > > >
+> > > > w/ patch:
+> > > >
+> > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time =
+        Avg time
+> > > >
+> > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us =
+  0.72us ( +-   4.02% )
+> > > >
+> > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > ---
+> > > >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++---=
+----
+> > > >  arch/x86/kvm/lapic.h            |  1 +
+> > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> > > >  arch/x86/kvm/x86.c              |  5 +++++
+> > > >  arch/x86/kvm/x86.h              |  2 ++
+> > > >  include/linux/sched/isolation.h |  2 ++
+> > > >  kernel/sched/isolation.c        |  6 ++++++
+> > > >  7 files changed, 44 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > > index 87ecb56..9ceeee5 100644
+> > > > --- a/arch/x86/kvm/lapic.c
+> > > > +++ b/arch/x86/kvm/lapic.c
+> > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lap=
+ic *apic)
+> > > >       return apic->vcpu->vcpu_id;
+> > > >  }
+> > > >
+> > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > > +{
+> > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> > >
+> > > Paolo, can you explain the reasoning behind this?
+> > >
+> > > Should not be necessary...
 
-Good point, do it in v2. Btw, could you have a look this patch?
-https://lkml.org/lkml/2019/6/17/1723
+https://lkml.org/lkml/2019/6/5/436  "Here you need to check
+kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
+through kvm_apic_expired if the guest needs to be woken up from
+kvm_vcpu_block."
+
+I think we can still be woken up from kvm_vcpu_block() if pir is set.
 
 Regards,
 Wanpeng Li
