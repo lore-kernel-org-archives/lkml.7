@@ -8,173 +8,114 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE4DC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25ECC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9C520652
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5915215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZmwoFfL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InHu5zUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfFUBkg (ORCPT
+        id S1726245AbfFUBlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:40:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45381 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfFUBkf (ORCPT
+        Thu, 20 Jun 2019 21:41:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34546 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfFUBlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:40:35 -0400
-Received: by mail-io1-f65.google.com with SMTP id e3so679458ioc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:40:34 -0700 (PDT)
+        Thu, 20 Jun 2019 21:41:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so4756128otk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NZnurSBLJdIfkJgx/5dwcZZFf4ycxK72Auy3OJll/TE=;
-        b=bZmwoFfLSb6kDiM4V+mKT/zgbkVVryUT3VZqZx3z8LCa30gAcwILhqnVzvCeC1axv2
-         2VtrpAu1HntKfcuKnqIcXSlnA95ZJlIaoKqsrHOpUOhk/YcBOmPIT4SEuEXJsNHUGn1r
-         ftjM+Ss/P0F6eEsNC5BxEWvXblnx95W7yWgMu+HfjYpeBlxg7zseR5IxmGLOC56SRfDK
-         bWfiQZo296uPVmLZAEu8LNERSBpfJYSuUHDLK0wPZPUW7RH5mEf8/B0aSROBH4vD2iGW
-         F8pL++I/ISEh1EO8XqmHFxjKc2akJGXrBBgGbAK5moVj+u1hKZm7L1NO5KCpaduBsr8N
-         AAhA==
+        bh=Rzeo006/jzKSPbm/r6/uBrpWXDZY3RJIqz2UkltKFyE=;
+        b=InHu5zUe2eCXIwwtW0YOX9gE+fyok9lXwN7cVGa4LDl8uiFbj5KtVU7tjR2Q3cbsZw
+         s7WbGsOSewa1njscsIAyEn7uZrD9r+eyBqXnL2jRE7tXwqRos1abF7o8FHOMd7X/I8KP
+         1TjN7xcOZfVlgnSvgS389tb2seOt2ZZCuALShhDwKxnuzq8DnXkERb83GnpNPkNysW/m
+         SxEGAVKvao4sRWK8IcykA5zInIe1APOFnj261YgJTuIlUjr0mLLpivhtS2kKOr54595j
+         EB9bvH9nEDQO8btvJf4HU7D0VCWn3jyb05uoMVY5FlrSBvmoqiwFHbotzOEeccKodt8B
+         lH5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NZnurSBLJdIfkJgx/5dwcZZFf4ycxK72Auy3OJll/TE=;
-        b=RL1W7nBkY+KryjIgvjYJXgyUjugOYdSs5rufIbBF+QkI9mRumF3etKci3l/SSb/1AN
-         N/AlhRRkBI5gG6BFJQpqwEzKqVjkLOOpjzD9pKLJHx1ZO20SDV630Z4E+G3eV9mg6iny
-         pd1ZVeYl46bjim5POwptT6Q4l4HW+Uh4cHX4QSoWzdr/wx7kmNXyRbOIIbmQghaUPvzt
-         kcDwCmyDaj0HkU2m1iCI1iDG4o7DaTJo13dWjmb1W6Uxq5dAzWCoL+rW/YD8FyzmwOky
-         x3sQvZ/ZYjtyZgzsPAGkbrPdQcNUd8s6RAsXrcxh+7tWZdH4pKBJ43PYMS9dzbCmGrkf
-         8YTQ==
-X-Gm-Message-State: APjAAAX3fsCYslW4hHx9hM2m2YFzdYY9A93VorCW/UR8wXaLB/cV96U+
-        QoeVSG7abLnakyx7ja8gkCHIhX7AKQvn2L89D+M=
-X-Google-Smtp-Source: APXvYqxBNFP14Ny1HpEdhqKlp2lSGyXI+MY93zfhyerR6bNQY9PKTsQuKJnzEgpVU9R+988hLPhXLG2Ed/sLtRjwRW0=
-X-Received: by 2002:a5e:c70c:: with SMTP id f12mr22982280iop.293.1561081234147;
- Thu, 20 Jun 2019 18:40:34 -0700 (PDT)
+        bh=Rzeo006/jzKSPbm/r6/uBrpWXDZY3RJIqz2UkltKFyE=;
+        b=KQkqxR3Ihhnd/zDo9DfFjstp5ZrtXbfsPfksx1V7w79HhKEO9Snu58PQcOaUhNvi6a
+         gu7yBo8LpgUOrNfAnpU3qlralnTvF0TpJxgX3V3s9k1O09djUej1QYr/5eeBriECyPxA
+         Ct+HvDVSpmZhNQXMlb9BAdMrp6Z+PfOc+pw+f0UCkv59DxCeTogRMzr3hieYUy5g0VIO
+         ASXTu2+BOVqA8bPGmmMofMjkCNaobRnE4QME3wvoWdbMX1bMRyfZBLuBMRlzcuvBq00d
+         2otD94pHI4FZ02C8AhMCbHjlia8pQNcLkPPiOPf5tUE8SGAaXOAAosLZ4DHFD3HkYYPO
+         ySKQ==
+X-Gm-Message-State: APjAAAV4+gvTAc1P1fKVCSyQoNLule0WMqwsRMF3DRjnnMrUW7if8y/e
+        wSSwPuIwlXmyYpf+7Ig3dclgewCfuUHFE1fqSPc=
+X-Google-Smtp-Source: APXvYqyc2uHg7iq570Lo7bKCfpjFfDQTFm/HBeMCa5eMK1ady5LaV1BB4tBXqYIIi/0EMVPC2X6gWsvrhstVsfXSfzU=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr5878774otk.56.1561080890907;
+ Thu, 20 Jun 2019 18:34:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523074924.19659-1-hch@lst.de> <20190523074924.19659-5-hch@lst.de>
-In-Reply-To: <20190523074924.19659-5-hch@lst.de>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Fri, 21 Jun 2019 11:40:23 +1000
-Message-ID: <CAOSf1CE2UgF7-BtQj2SfQSUUsctg2boS_kSL-Cs-ugZe4=6N7Q@mail.gmail.com>
-Subject: Re: [PATCH 4/4] powerpc/powernv: remove the unused vas_win_paste_addr
- and vas_win_id functions
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sukadev@linux.ibm.com
+References: <1561030614-17026-1-git-send-email-wanpengli@tencent.com> <20190620123807.GX3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190620123807.GX3436@hirez.programming.kicks-ass.net>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 21 Jun 2019 09:36:04 +0800
+Message-ID: <CANRm+CwfaafP6vwo-zu==G6BTmZb64xUDB+Ko7xsFy-iVGFXUg@mail.gmail.com>
+Subject: Re: [PATCH] sched/isolation: Prefer housekeeping cpu in local node
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 5:56 PM Christoph Hellwig <hch@lst.de> wrote:
+On Thu, 20 Jun 2019 at 20:38, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> These two function have never been used since they were added to the
-> kernel.
+> On Thu, Jun 20, 2019 at 07:36:54PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > In real product setup, there will be houseeking cpus in each nodes, it
+> > is prefer to do housekeeping from local node, fallback to global online
+> > cpumask if failed to find houseeking cpu from local node.
+> >
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  kernel/sched/isolation.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> > index 123ea07..9eb6805 100644
+> > --- a/kernel/sched/isolation.c
+> > +++ b/kernel/sched/isolation.c
+> > @@ -16,9 +16,16 @@ static unsigned int housekeeping_flags;
+> >
+> >  int housekeeping_any_cpu(enum hk_flags flags)
+> >  {
+> > +     int cpu;
+> > +
+> >       if (static_branch_unlikely(&housekeeping_overridden))
+> > -             if (housekeeping_flags & flags)
+> > -                     return cpumask_any_and(housekeeping_mask, cpu_online_mask);
+> > +             if (housekeeping_flags & flags) {
+> > +                     cpu = cpumask_any_and(housekeeping_mask, cpu_cpu_mask(smp_processor_id()));
+> > +                     if (cpu < nr_cpu_ids)
+> > +                             return cpu;
+> > +                     else
+> > +                             return cpumask_any_and(housekeeping_mask, cpu_online_mask);
+> > +             }
+> >       return smp_processor_id();
+> >  }
+> >  EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/powerpc/include/asm/vas.h              | 10 ----------
->  arch/powerpc/platforms/powernv/vas-window.c | 19 -------------------
->  arch/powerpc/platforms/powernv/vas.h        | 20 --------------------
->  3 files changed, 49 deletions(-)
+> Why not something like so? IIRC there's more places that want this, but
+> I can't seem to remember quite where.
 
-Sukadev (+cc), what's the reason this is not being used?
+Good point, do it in v2. Btw, could you have a look this patch?
+https://lkml.org/lkml/2019/6/17/1723
 
-IIRC the VAS hardware on P9 had some issues, but I don't know any of
-the details.
-
-> diff --git a/arch/powerpc/include/asm/vas.h b/arch/powerpc/include/asm/vas.h
-> index 771456227496..9b5b7261df7b 100644
-> --- a/arch/powerpc/include/asm/vas.h
-> +++ b/arch/powerpc/include/asm/vas.h
-> @@ -167,14 +167,4 @@ int vas_copy_crb(void *crb, int offset);
->   */
->  int vas_paste_crb(struct vas_window *win, int offset, bool re);
->
-> -/*
-> - * Return a system-wide unique id for the VAS window @win.
-> - */
-> -extern u32 vas_win_id(struct vas_window *win);
-> -
-> -/*
-> - * Return the power bus paste address associated with @win so the caller
-> - * can map that address into their address space.
-> - */
-> -extern u64 vas_win_paste_addr(struct vas_window *win);
->  #endif /* __ASM_POWERPC_VAS_H */
-> diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-> index e59e0e60e5b5..e48c44cb3a16 100644
-> --- a/arch/powerpc/platforms/powernv/vas-window.c
-> +++ b/arch/powerpc/platforms/powernv/vas-window.c
-> @@ -44,16 +44,6 @@ static void compute_paste_address(struct vas_window *window, u64 *addr, int *len
->         pr_debug("Txwin #%d: Paste addr 0x%llx\n", winid, *addr);
->  }
->
-> -u64 vas_win_paste_addr(struct vas_window *win)
-> -{
-> -       u64 addr;
-> -
-> -       compute_paste_address(win, &addr, NULL);
-> -
-> -       return addr;
-> -}
-> -EXPORT_SYMBOL(vas_win_paste_addr);
-> -
->  static inline void get_hvwc_mmio_bar(struct vas_window *window,
->                         u64 *start, int *len)
->  {
-> @@ -1268,12 +1258,3 @@ int vas_win_close(struct vas_window *window)
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(vas_win_close);
-> -
-> -/*
-> - * Return a system-wide unique window id for the window @win.
-> - */
-> -u32 vas_win_id(struct vas_window *win)
-> -{
-> -       return encode_pswid(win->vinst->vas_id, win->winid);
-> -}
-> -EXPORT_SYMBOL_GPL(vas_win_id);
-> diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-> index f5493dbdd7ff..551affaddd59 100644
-> --- a/arch/powerpc/platforms/powernv/vas.h
-> +++ b/arch/powerpc/platforms/powernv/vas.h
-> @@ -448,26 +448,6 @@ static inline u64 read_hvwc_reg(struct vas_window *win,
->         return in_be64(win->hvwc_map+reg);
->  }
->
-> -/*
-> - * Encode/decode the Partition Send Window ID (PSWID) for a window in
-> - * a way that we can uniquely identify any window in the system. i.e.
-> - * we should be able to locate the 'struct vas_window' given the PSWID.
-> - *
-> - *     Bits    Usage
-> - *     0:7     VAS id (8 bits)
-> - *     8:15    Unused, 0 (3 bits)
-> - *     16:31   Window id (16 bits)
-> - */
-> -static inline u32 encode_pswid(int vasid, int winid)
-> -{
-> -       u32 pswid = 0;
-> -
-> -       pswid |= vasid << (31 - 7);
-> -       pswid |= winid;
-> -
-> -       return pswid;
-> -}
-> -
->  static inline void decode_pswid(u32 pswid, int *vasid, int *winid)
->  {
->         if (vasid)
-> --
-> 2.20.1
->
+Regards,
+Wanpeng Li
