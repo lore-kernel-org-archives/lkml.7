@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37921C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40743C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7EB208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119E2215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561138891;
-	bh=NP/NYZEnEprewmSVTtyT+Nksu73Id+S5luyzTRk68Z4=;
+	s=default; t=1561138897;
+	bh=2NSvVoEmOQn4ssSg5BbvsPREhDCEtvM8C7WmFYOtenw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qf7Gb9mtvKIkH2YO/9beXf+FLHw9zEU2O6+WV5Qb3Ed+C5C5YvwNDvwYOV6sNyubi
-	 C0ixRcG4g69/sG4upvHeEF1oprysQj7+KbdDMmyiutyFwdOkAbwVxwNLz3JHVP6xSF
-	 /hsMaFDLtawnTQQB8/UIWeodYkUW4OKTKi7diwms=
+	b=OHF9UfEM0M94x82uOIVLca5QjhSfNseXFr1A/YasrU9+n0/y6b/rjtqestY0AU/Qk
+	 1ZDmdJd/OIxu1lnyjcxoUjWJdcPVzsPbH1917O+BQeJ/BMw2bUNfbRkGOsq5/LPI/P
+	 ZMVd2N7FtdVtUg4qxC+9sYR7uicE+WERjuZrajB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFURl3 (ORCPT
+        id S1726676AbfFURlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:41:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60554 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 13:41:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfFURl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:41:28 -0400
+        id S1726045AbfFURld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:41:33 -0400
 Received: from quaco.ghostprotocols.net (187-26-104-93.3g.claro.net.br [187.26.104.93])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C57692083B;
-        Fri, 21 Jun 2019 17:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2374B208CA;
+        Fri, 21 Jun 2019 17:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561138887;
-        bh=NP/NYZEnEprewmSVTtyT+Nksu73Id+S5luyzTRk68Z4=;
+        s=default; t=1561138892;
+        bh=2NSvVoEmOQn4ssSg5BbvsPREhDCEtvM8C7WmFYOtenw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7Zo3X10v8x3clhaLYnIHDYtLqYIB/yqwoQxravHJEEhV3nmiiHa+z+hIxGjd1wvL
-         4SKSI+xm7Y4tG1txgkHaEUdpE8oojRPej9hhOVOqfs3qJ14HDrt8VrHF2IFUiW2zeW
-         43CD0flkQfUxNv3PqJSj7BqigYz6vR61ehYgd+84=
+        b=CtD0xUzDLA3JuS29Ntox9LBnitVI1TZ1pAYAZIdDWd9pRjj3jbkyk9bO14ecaZEcT
+         A0UUPdesxkJU7++MA8k7tCppJwuat23LFHmG4b7BhQfUkoKg5ULcUCOZAXiTeIW+Ub
+         gRhZvDUXmNMhsohGs1BPgJ/M9pSTL2KrXplirgFI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 23/25] tools build: Add test to check if slang.h is in /usr/include/slang/
-Date:   Fri, 21 Jun 2019 14:38:29 -0300
-Message-Id: <20190621173831.13780-24-acme@kernel.org>
+Subject: [PATCH 24/25] perf build: Handle slang being in /usr/include and in /usr/include/slang/
+Date:   Fri, 21 Jun 2019 14:38:30 -0300
+Message-Id: <20190621173831.13780-25-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190621173831.13780-1-acme@kernel.org>
 References: <20190621173831.13780-1-acme@kernel.org>
@@ -63,86 +63,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A few odd old distros (rhel5, 6, yeah, lots of those out in use, in many
-cases we want to use upstream perf on it) have the slang header files in
-/usr/include/slang/, so add a test that will be performed only when
-test-all.c (the one with the most common sane settings) fails, either
-because we're in one of these odd distros with slang/slang.h or because
-something else failed (say libelf is not present).
+In some distros slang.h may be in a /usr/include 'slang' subdir, so use
+the if slang is not explicitely disabled (by using NO_SLANG=1) and its
+feature test for the common case (having /usr/include/slang.h) failed,
+use the results for the test that checks if it is in slang/slang.h.
 
-So for the common case nothing changes, no additional test is performed.
+Change the only file in perf that includes slang.h to use
+HAVE_SLANG_INCLUDE_SUBDIR and forget about this for good.
 
-Next step is to check in perf the result of these tests.
+On a rhel6 system now we have:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep libslang
+  	libslang.so.2 => /usr/lib64/libslang.so.2 (0x00007fa2d5a8d000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=0
+  feature-libslang-include-subdir=1
+  $ cat /etc/redhat-release
+  CentOS release 6.10 (Final)
+  $
+
+While on fedora:29:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep slang
+  	libslang.so.2 => /lib64/libslang.so.2 (0x00007f8eb11a7000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=1
+  feature-libslang-include-subdir=1
+  $
+  $ cat /etc/fedora-release
+  Fedora release 29 (Twenty Nine)
+  $
+
+The feature-libslang-include-subdir=1 line is because the 'gettid()'
+test was added to test-all.c as the new glibc has an implementation for
+that, so we soon should have it not failing, i.e. should be the common
+case soon. Perhaps I should move it out till it becomes the norm...
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Fixes: 1955c8cf5e26 ("perf tools: Don't hardcode host include path for libslang")
-Link: https://lkml.kernel.org/n/tip-2sy7hbwkx68jr6n97qxgg0c6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bkgtpsu3uit821fuwsdhj9gd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature                       | 2 +-
- tools/build/feature/Makefile                       | 4 ++++
- tools/build/feature/test-libslang-include-subdir.c | 7 +++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
- create mode 100644 tools/build/feature/test-libslang-include-subdir.c
+ tools/perf/Makefile.config | 11 ++++++++---
+ tools/perf/ui/libslang.h   |  5 +++++
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 50377cc2f5f9..86b793dffbc4 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -53,6 +53,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libpython                       \
-         libpython-version               \
-         libslang                        \
-+        libslang-include-subdir         \
-         libcrypto                       \
-         libunwind                       \
-         pthread-attr-setaffinity-np     \
-@@ -114,7 +115,6 @@ FEATURE_DISPLAY ?=              \
-          numa_num_possible_cpus \
-          libperl                \
-          libpython              \
--         libslang               \
-          libcrypto              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 7ef7cf04a292..0658b8cd0e53 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -31,6 +31,7 @@ FILES=                                          \
-          test-libpython.bin                     \
-          test-libpython-version.bin             \
-          test-libslang.bin                      \
-+         test-libslang-include-subdir.bin       \
-          test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-@@ -184,6 +185,9 @@ $(OUTPUT)test-libaudit.bin:
- $(OUTPUT)test-libslang.bin:
- 	$(BUILD) -lslang
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e04b7a81d221..89ac5a1f1550 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -644,9 +644,14 @@ endif
  
-+$(OUTPUT)test-libslang-include-subdir.bin:
-+	$(BUILD) -lslang
+ ifndef NO_SLANG
+   ifneq ($(feature-libslang), 1)
+-    msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
+-    NO_SLANG := 1
+-  else
++    ifneq ($(feature-libslang-include-subdir), 1)
++      msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
++      NO_SLANG := 1
++    else
++      CFLAGS += -DHAVE_SLANG_INCLUDE_SUBDIR
++    endif
++  endif
++  ifndef NO_SLANG
+     # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
+     CFLAGS += -DHAVE_SLANG_SUPPORT
+     EXTLIBS += -lslang
+diff --git a/tools/perf/ui/libslang.h b/tools/perf/ui/libslang.h
+index c0686cda39a5..991e692b9b46 100644
+--- a/tools/perf/ui/libslang.h
++++ b/tools/perf/ui/libslang.h
+@@ -10,7 +10,12 @@
+ #ifndef HAVE_LONG_LONG
+ #define HAVE_LONG_LONG __GLIBC_HAVE_LONG_LONG
+ #endif
 +
- $(OUTPUT)test-libcrypto.bin:
- 	$(BUILD) -lcrypto
- 
-diff --git a/tools/build/feature/test-libslang-include-subdir.c b/tools/build/feature/test-libslang-include-subdir.c
-new file mode 100644
-index 000000000000..3ea47ec7590e
---- /dev/null
-+++ b/tools/build/feature/test-libslang-include-subdir.c
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
++#ifdef HAVE_SLANG_INCLUDE_SUBDIR
 +#include <slang/slang.h>
-+
-+int main(void)
-+{
-+	return SLsmg_init_smg();
-+}
++#else
+ #include <slang.h>
++#endif
+ 
+ #if SLANG_VERSION < 20104
+ #define slsmg_printf(msg, args...) \
 -- 
 2.20.1
 
