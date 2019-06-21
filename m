@@ -4,70 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1875C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53B72084A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D768B2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NC6cvFMG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="exdVzCNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfFUBVf (ORCPT
+        id S1727016AbfFUBVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:21:35 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:44534 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfFUBUv (ORCPT
+        Thu, 20 Jun 2019 21:21:41 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:33958 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfFUBUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:20:51 -0400
-Received: by mail-pf1-f202.google.com with SMTP id 5so3244800pff.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:51 -0700 (PDT)
+        Thu, 20 Jun 2019 21:20:44 -0400
+Received: by mail-qt1-f201.google.com with SMTP id p34so6139643qtp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=C6hPbD+Iite9Yd/m2NEQoViniv+GetSpL6U00OfqPQs=;
-        b=NC6cvFMGa8LejGjE8bJbN1AjDuFigoPl9T5orQwUKoq5IHOK8TozHCyvx0pPD2Rm8e
-         bAyYl6xX/9Gy6Ipt42VzJZAyzi+X8rwrGgyiJX2wO4FJoIAAshNER1I5g7DXlyexK9si
-         XMGS9K5vDj3tcpUbP2jAxzxgnc44GP4nj6CujSLV5K8B0mf6TsN8S+Umh0dIYpi+cKUv
-         TeeJWfiWg32yGsZouUCqeP0hIShv+te6wXoeV8hILDOXlVOqLKbveOi4H6TW1Z22WtK8
-         PdG1aRyg2ehyWgENrRcZiD1V78WlJpvC7CHV81NGewkkT8mPY/5rO5kwlttQr8GOIH8v
-         cfwQ==
+        bh=fIFhmiOiT1d1AZu2E6BoXeD1gdoYT5pBASREIuKJk5E=;
+        b=exdVzCNpyG+TXdyx1zMSMEGHDhm1ELXYDImiocGB1OExqvAiPAOVH++8fzdCIkF3cX
+         I1YiXiqr2w28TuEDIdAtd4YiyW+PDnGaeZ3dCuFLFcbkuXJzewsLnKGiBFhcTBE1LOLv
+         AK7gdYYpvYGeDpCTs8HA9RCOCWZeh7VVVUwBcLCo0Nj7m6ze/GupP1FtJGynNn0kTRdN
+         zopBAyVpQUfdyBQWl/9Vh5zUILpPGH7+aJMp5jNFGmE7dCU6RtRNkE4QFHNTcDNhsEAJ
+         k2CRVa100Ba7hesTTMPVHSMcnN9GMc3EZdbG2vTXXYuqgOClRWTcQSJp8ZgNqFsSMSBK
+         Wp1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=C6hPbD+Iite9Yd/m2NEQoViniv+GetSpL6U00OfqPQs=;
-        b=SwfgDiUtqgodg/NVXGdH7GrQ5O2QSif++gysVHsFbWW2VsWWiF3Wr/HsOgu0De9ple
-         BfcegiKBjuR9tS7mVurvNPlAx27zesmW2LTBA0ufP9upUkfA1JC6o67b4pB3wjpT6t6M
-         TgcspDcn5PG1ysW70C29S4lKiTJpcEV5WVNg0tzmUC4rSo9m0vhKdP3vTRQYOcTd7NO8
-         lPSJgQXHSfH76H6EaqDcJLiycPauBrxUhMvWjNEcvPs+0qcODDkvCOmyj+uLKyUaGhh4
-         GQOZoQCSOjJwWLLWDMSM6uDZDsy7qjUKM1tbwWWU/HbhzO/UGCC5RwNSohZCLubyiBAC
-         bYuQ==
-X-Gm-Message-State: APjAAAUJ6cvspzc399rV7hpBND2VgZ1mRIPop9xTc5OOB49lnR5Mad3f
-        DcYvsOfINRNh1HLWniKn6/Gx6kWHOhn3QmbmwzhClA==
-X-Google-Smtp-Source: APXvYqxY8KgyzR/E7rGtXtVWwMwLdjH8s+X06tcYPkPHRkAcJ+3cLw9bjREqZyBYZWv/RvvI6zuPEKjeSTS4RGxN0sM41Q==
-X-Received: by 2002:a63:5a02:: with SMTP id o2mr14952617pgb.93.1561080050519;
- Thu, 20 Jun 2019 18:20:50 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:19:36 -0700
+        bh=fIFhmiOiT1d1AZu2E6BoXeD1gdoYT5pBASREIuKJk5E=;
+        b=g0ujNDZxU9jzepz9DL6gDN8PGyvdA67hqybeXxgnb+Kl8S00HNMRl3ShUJac0Nu9kZ
+         UTZEoh6Ny2aiRa6kgRHbnpAclIx7HzyaDa8kvVylO8UsDB7xssGyVeW3PR0q5YRjMhSu
+         x+bi3+5d3R57x2U0hDEuw/lNmrLRt0QyHVPl4HWcQlGRl4taLNT4QRSZciQIPfE4U0Is
+         J/nPX9OrC4J94cGz0AVD1Bu6yZyHiadEOF7ua/bb75rHuehkvQ6o6JQsCTlkeEney0qP
+         RdlFCiCHjzUjrCjQ4oAZLDc2fx9PlIZcQcKmfG6q0kmAU19mfTt+slWx+qm80baU3kxy
+         Pmaw==
+X-Gm-Message-State: APjAAAU/u3ugZXI85ZaBBv7CGFszoxNKEYx3eY3JbIJSrdpv482HiPFU
+        E24DkpoJLVh4pwDCpwkFTCsujUabzIsGgOQpM5kIjQ==
+X-Google-Smtp-Source: APXvYqw3i5yA5qZQZzU45TUnIenX3cSptG593+0RmQ9grKt1vJcRec3c+XBXkp4U7WgWv7QRcx7z37fRGYjRGvArZyEnuw==
+X-Received: by 2002:ac8:38c5:: with SMTP id g5mr117018528qtc.299.1561080043098;
+ Thu, 20 Jun 2019 18:20:43 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:19:33 -0700
 In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
-Message-Id: <20190621011941.186255-26-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-23-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190621011941.186255-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V33 25/30] Lock down perf when in confidentiality mode
+Subject: [PATCH V33 22/30] Lock down /proc/kcore
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+        Matthew Garrett <mjg59@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,57 +72,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Disallow the use of certain perf facilities that might allow userspace to
-access kernel data.
+Disallow access to /proc/kcore when the kernel is locked down to prevent
+access to cryptographic data. This is limited to lockdown
+confidentiality mode and is still permitted in integrity mode.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 ---
+ fs/proc/kcore.c              | 3 +++
  include/linux/security.h     | 1 +
- kernel/events/core.c         | 5 +++++
  security/lockdown/lockdown.c | 1 +
- 3 files changed, 7 insertions(+)
+ 3 files changed, 5 insertions(+)
 
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index d29d869abec1..b410a16b1960 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -31,6 +31,7 @@
+ #include <linux/ioport.h>
+ #include <linux/memory.h>
+ #include <linux/sched/task.h>
++#include <linux/security.h>
+ #include <asm/sections.h>
+ #include "internal.h"
+ 
+@@ -545,6 +546,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 
+ static int open_kcore(struct inode *inode, struct file *filp)
+ {
++	if (security_is_locked_down(LOCKDOWN_KCORE))
++		return -EPERM;
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
+ 
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 8bf426cdd151..36a9daa13bb0 100644
+index 89b7adfae525..6752584729e2 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -98,6 +98,7 @@ enum lockdown_reason {
- 	LOCKDOWN_KCORE,
- 	LOCKDOWN_KPROBES,
- 	LOCKDOWN_BPF,
-+	LOCKDOWN_PERF,
+@@ -95,6 +95,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_MODULE_PARAMETERS,
+ 	LOCKDOWN_MMIOTRACE,
+ 	LOCKDOWN_INTEGRITY_MAX,
++	LOCKDOWN_KCORE,
  	LOCKDOWN_CONFIDENTIALITY_MAX,
  };
  
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 72d06e302e99..ac1045caa44d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10731,6 +10731,11 @@ SYSCALL_DEFINE5(perf_event_open,
- 			return -EINVAL;
- 	}
- 
-+	if ((attr.sample_type & PERF_SAMPLE_REGS_INTR) &&
-+	    security_is_locked_down(LOCKDOWN_PERF))
-+		/* REGS_INTR can leak data, lockdown must prevent this */
-+		return -EPERM;
-+
- 	/* Only privileged users can get physical addresses */
- 	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR) &&
- 	    perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 0a3bbf1ba01d..14edc475d75c 100644
+index 215615e67237..80ff4a31d8aa 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -34,6 +34,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_KCORE] = "/proc/kcore access",
- 	[LOCKDOWN_KPROBES] = "use of kprobes",
- 	[LOCKDOWN_BPF] = "use of bpf",
-+	[LOCKDOWN_PERF] = "unsafe use of perf",
+@@ -31,6 +31,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+ 	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
++	[LOCKDOWN_KCORE] = "/proc/kcore access",
  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
  };
  
