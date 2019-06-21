@@ -2,132 +2,179 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6E3C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C94C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AAF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dvWjgyvf"
+	by mail.kernel.org (Postfix) with ESMTP id AC84D20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfFUIwX (ORCPT
+        id S1726425AbfFUIxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:52:23 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38074 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFUIwX (ORCPT
+        Fri, 21 Jun 2019 04:53:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54823 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfFUIxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:52:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wJEfgdcwxyn0hB47BD9e9IQHK3vkjR82sMxeZtqQdDI=; b=dvWjgyvfVuRpdSQIxY4BMf7lS
-        xWo4p4JbHukIXMlJl47tYGfg1kfDQ0Hzh4kpOws2oOQoqnMBkr9BPnqUP5IDBeY/FIkImHk2bQ+fF
-        UqNZQIdEktkU0wabKBtZnEIs36dcpSeZoSZCbJV9id7flbEye3AW6xrxVMYktUB0cO/YCc8iPBnmr
-        wOKbwl8sFyce22mo6X6TLfMnEucbK+X9y6JRLYkiu+GFZTfcA95djG79SVXaCTSZDGfssQVYxuBC6
-        ZWt6lU1CxibdMgF8xfubJg0txk5b6TlsKNqFFwlKBix+llmYmqYo7tfHdjIuwBrSqvN0K3nYutkfK
-        cDCc/6lMQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58858)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1heFHK-00044z-Tw; Fri, 21 Jun 2019 09:52:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1heFHG-000389-Q4; Fri, 21 Jun 2019 09:52:10 +0100
-Date:   Fri, 21 Jun 2019 09:52:10 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH v3 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190621085210.qa272dzmypb3oe7l@shell.armlinux.org.uk>
-References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
- <1561106090-8465-1-git-send-email-pthombar@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561106090-8465-1-git-send-email-pthombar@cadence.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 21 Jun 2019 04:53:04 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1heFI7-0007Qp-Fi
+        for linux-kernel@vger.kernel.org; Fri, 21 Jun 2019 08:53:03 +0000
+Received: by mail-pl1-f200.google.com with SMTP id e7so3303960plt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:53:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=u1hSlNEter5h1ru+YK0xU7QWME8tCkI1M6jD8mwebc0=;
+        b=bRt/hiP5wINhpFosJ8vOkpXjcPHpm+Ha1L3l/24Ng1ZQ22j/FgNxXi/A8CcX87YfEI
+         97BzIj1jzpzuoBQZ9bvTxAfRPMsrZ8QYoZPcCbNU7sw0AQs+jjvxytrPYlXpfsemT8ol
+         BvdZw24d7EAIkdirqcyC7Y6rb+E5nUEoFiodPvls02ouYnjYfEnBX20igZs3MNrPsjk0
+         R6wKWol+BXPLpmEl6Ckd8Xku2Opsjwu3v8Wcriutff3LFyrCX5GqhRYfhJkJFODH9EQ0
+         +QksVpFUNjg2JzHYWjHli4512YQOJByGtlX1NFfpnzs2o4EAtwTTeDJtTOkw3JjNwNDu
+         Hm6w==
+X-Gm-Message-State: APjAAAVOuAfoMbNDZoV/8KbELAf8SxnJtfFvYwPsGi0wD5cZpAPoEkpU
+        HMCfGDJTgRWQ/c9b9Rg/yK30fMPsZgOrgabAFYJqpV3EAfRM61IOr8Qa0C3xcJ8kpqywKM6fojz
+        aemyUBrdgw9sAMxMve0Um2z/PFXdsnunMWTANp6awEA==
+X-Received: by 2002:a17:902:e281:: with SMTP id cf1mr48855014plb.271.1561107182194;
+        Fri, 21 Jun 2019 01:53:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz8nVP924V3DK7kjmQuC0S7gMYc5j/LFZzSXMJFzmTAzQwvANHE7EWYdGbGTao99GI3cwnXmQ==
+X-Received: by 2002:a17:902:e281:: with SMTP id cf1mr48854995plb.271.1561107181925;
+        Fri, 21 Jun 2019 01:53:01 -0700 (PDT)
+Received: from 2001-b011-380f-3511-28ca-1aa7-7f48-7d86.dynamic-ip6.hinet.net (2001-b011-380f-3511-28ca-1aa7-7f48-7d86.dynamic-ip6.hinet.net. [2001:b011:380f:3511:28ca:1aa7:7f48:7d86])
+        by smtp.gmail.com with ESMTPSA id l44sm4959357pje.29.2019.06.21.01.52.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 01:53:01 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 1/2] PCI: pciehp: Do not disable interrupt twice on
+ suspend
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
+Date:   Fri, 21 Jun 2019 16:52:57 +0800
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <62F7BEE7-F38E-41C8-A181-B03F9308DE81@canonical.com>
+References: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:34:50AM +0100, Parshuram Thombare wrote:
-> @@ -486,23 +503,54 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
+at 20:50, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+
+> We try to keep PCIe hotplug ports runtime suspended when entering system
+> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
+> flag the PM core always calls system suspend/resume hooks even if the
+> device is left runtime suspended. Since PCIe hotplug driver re-uses the
+> same function for both it ends up disabling hotplug interrupt twice and
+> the second time following is printed:
+>
+>   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
+>
+> Prevent this from happening by checking whether the device is already
+> runtime suspended when system suspend hook is called.
+>
+> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+> Reported-by: Kai Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+> ---
+>  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/pciehp_core.c  
+> b/drivers/pci/hotplug/pciehp_core.c
+> index 6ad0d86762cb..3f8c13ddb3e8 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -248,7 +248,7 @@ static bool pme_is_native(struct pcie_device *dev)
+>  	return pcie_ports_native || host->native_pme;
+>  }
+>
+> -static int pciehp_suspend(struct pcie_device *dev)
+> +static void pciehp_disable_interrupt(struct pcie_device *dev)
 >  {
->  	struct net_device *netdev = to_net_dev(pl_config->dev);
->  	struct macb *bp = netdev_priv(netdev);
-> +	bool change_interface = bp->phy_interface != state->interface;
->  	unsigned long flags;
->  
->  	spin_lock_irqsave(&bp->lock, flags);
->  
-> +	if (change_interface) {
-> +		if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
-> +		    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			gem_writel(bp, NCFGR, ~GEM_BIT(SGMIIEN) &
-> +				   ~GEM_BIT(PCSSEL) &
-> +				   gem_readl(bp, NCFGR));
-> +			gem_writel(bp, NCR, ~GEM_BIT(TWO_PT_FIVE_GIG) &
-> +				   gem_readl(bp, NCR));
-> +			gem_writel(bp, PCS_CTRL, gem_readl(bp, PCS_CTRL) |
-> +				   GEM_BIT(PCS_CTRL_RST));
-> +		}
-> +		bp->phy_interface = state->interface;
-> +	}
+>  	/*
+>  	 * Disable hotplug interrupt so that it does not trigger
+> @@ -256,7 +256,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+>  	 */
+>  	if (pme_is_native(dev))
+>  		pcie_disable_interrupt(get_service_data(dev));
+> +}
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pciehp_suspend(struct pcie_device *dev)
+> +{
+> +	/*
+> +	 * If the port is already runtime suspended we can keep it that
+> +	 * way.
+> +	 */
+> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
+> +		return 0;
 > +
->  	if (!phylink_autoneg_inband(mode) &&
->  	    (bp->speed != state->speed ||
-> -	     bp->duplex != state->duplex)) {
-> +	     bp->duplex != state->duplex ||
-> +	     change_interface)) {
->  		u32 reg;
->  
->  		reg = macb_readl(bp, NCFGR);
->  		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
->  		if (macb_is_gem(bp))
->  			reg &= ~GEM_BIT(GBE);
-> +		macb_or_gem_writel(bp, NCFGR, reg);
+> +	pciehp_disable_interrupt(dev);
+>  	return 0;
+>  }
+>
+> @@ -274,6 +286,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+>
+>  	return 0;
+>  }
+> +#endif
+>
+>  static int pciehp_resume(struct pcie_device *dev)
+>  {
+> @@ -287,6 +300,12 @@ static int pciehp_resume(struct pcie_device *dev)
+>  	return 0;
+>  }
+>
+> +static int pciehp_runtime_suspend(struct pcie_device *dev)
+> +{
+> +	pciehp_disable_interrupt(dev);
+> +	return 0;
+> +}
 > +
-> +		if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
-> +		    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
-> +			gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
-> +				   GEM_BIT(PCSSEL) |
-> +				   gem_readl(bp, NCFGR));
+>  static int pciehp_runtime_resume(struct pcie_device *dev)
+>  {
+>  	struct controller *ctrl = get_service_data(dev);
+> @@ -313,10 +332,12 @@ static struct pcie_port_service_driver  
+> hpdriver_portdrv = {
+>  	.remove		= pciehp_remove,
+>
+>  #ifdef	CONFIG_PM
+> +#ifdef	CONFIG_PM_SLEEP
+>  	.suspend	= pciehp_suspend,
+>  	.resume_noirq	= pciehp_resume_noirq,
+> +#endif
+>  	.resume		= pciehp_resume,
+> -	.runtime_suspend = pciehp_suspend,
+> +	.runtime_suspend = pciehp_runtime_suspend,
+>  	.runtime_resume	= pciehp_runtime_resume,
+>  #endif	/* PM */
+>  };
+> -- 
+> 2.20.1
 
-You don't appear to treat SGMII any differently from the 802.3z modes.
-They are certainly not the same thing, so this doesn't seem to be
-correct.  Also, placing this here, I don't see how the MAC gets
-configured for SGMII if in-band mode is enabled.
 
-> +
-> +		reg = macb_readl(bp, NCFGR);
->  		if (state->duplex)
->  			reg |= MACB_BIT(FD);
->  
->  		switch (state->speed) {
-> +		case SPEED_2500:
-> +			gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
-> +				   gem_readl(bp, NCR));
-> +			break;
->  		case SPEED_1000:
->  			reg |= GEM_BIT(GBE);
->  			break;
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
