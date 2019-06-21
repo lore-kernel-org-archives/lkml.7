@@ -2,293 +2,291 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E6EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFADC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D508208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="CYp8tv4K"
+	by mail.kernel.org (Postfix) with ESMTP id 64222208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfFUKeT (ORCPT
+        id S1726663AbfFUKes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:34:19 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:58989 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfFUKeT (ORCPT
+        Fri, 21 Jun 2019 06:34:48 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:37520 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFUKes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:34:19 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,400,1557212400"; 
-   d="scan'208";a="36805013"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jun 2019 03:34:18 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 21 Jun 2019 03:34:16 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 21 Jun 2019 03:34:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j/wCKmvE3kjwA4VVpokNq5UAxZ39CuXL011VCOg2gsw=;
- b=CYp8tv4KGH3JNAL+vLp52Gbz4aA1Li/0Vl1IJnPR9EOx9g7lcgKdb3MUJvsG4m7PJM4eGq/FGHDt4yVe1VMK39riAPxz9G5xfLfouq8/YwtL5Qjbzg7+JhoeBnK0uOfdU4eOta67VjmMB41n76zXGymmvPCpASxDhRuYunSDXvQ=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1454.namprd11.prod.outlook.com (10.172.54.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Fri, 21 Jun 2019 10:34:14 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::7d59:2a2f:90f1:2720]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::7d59:2a2f:90f1:2720%9]) with mapi id 15.20.2008.014; Fri, 21 Jun 2019
- 10:34:14 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <daniel.lezcano@linaro.org>, <alexandre.belloni@bootlin.com>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>, <arnd.bergmann@linaro.org>
-Subject: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
- Microchip PIT64B support
-Thread-Topic: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
- Microchip PIT64B support
-Thread-Index: AQHVKBzfzQ0agx5KQ0Kl3LZf2951sA==
-Date:   Fri, 21 Jun 2019 10:34:14 +0000
-Message-ID: <34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com>
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
- <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
- <20190408121141.GK7480@piout.net>
- <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
- <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
- <5e3d783e-7bcc-64c1-c814-eaf99a6aa205@microchip.com>
- <845acd59-665a-4d0a-3da8-2ba605600928@linaro.org>
-In-Reply-To: <845acd59-665a-4d0a-3da8-2ba605600928@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0150.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::18) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190621133409524
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7cfc4f77-860b-446a-3265-08d6f6340161
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1454;
-x-ms-traffictypediagnostic: MWHPR11MB1454:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <MWHPR11MB145406A08AAF502BA456A6DE87E70@MWHPR11MB1454.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(366004)(136003)(189003)(199004)(66066001)(53936002)(110136005)(68736007)(52116002)(486006)(26005)(6436002)(14444005)(81166006)(25786009)(71200400001)(3846002)(2616005)(71190400001)(72206003)(99286004)(4326008)(11346002)(66556008)(73956011)(81156014)(66446008)(66946007)(476003)(102836004)(5660300002)(76176011)(6246003)(8676002)(8936002)(66476007)(86362001)(6512007)(31696002)(6306002)(316002)(229853002)(186003)(305945005)(54906003)(2906002)(6116002)(386003)(6506007)(446003)(256004)(53546011)(6486002)(31686004)(64756008)(478600001)(14454004)(2501003)(966005)(7736002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1454;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DcW1889NVEFdLV6Ge4PpjcoAkAoCOUevNMdqcFt1nFQm5dV8h/bxE69PHgexakk7oWTyEEKDzOBr1dwqZs2Fm/x6JefFFkYBJd3+p+nFiQVdZO2uSygZQiHfu92jlt9jZOJWO1y52V84JvGJg0qY+9JziLAV0dOgZ7obeOqR5OwxrEkJTQVd97CjcfqTIqMEDGyGQ5joPVMhV5HgRDEgroB7rGieiCpRCFDEUrbAOGSrWf1GTtYwuz7MrWKO5j6XBSrU+2Wr+oupuMFwhAkS0z5bpAZP6mhpJy5pVkCWQWDNga9h6k6a/c8lTo8aEV315hPov70RLmkkBZtJEZ96UH6UtBKoEhvFe09BsGnZiAvdE8/QjRP7nzOZ7/F7lvIzVyu7ntJ8X3PnK8P0FGBVQr/2je0/UfaNo6QqlSFBCbs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <959C1AE612C11047995D122050E5B477@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cfc4f77-860b-446a-3265-08d6f6340161
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 10:34:14.3725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1454
+        Fri, 21 Jun 2019 06:34:48 -0400
+Received: from tony.xie?rock-chips.com (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 08F045683A;
+        Fri, 21 Jun 2019 18:34:43 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P15277T140572333438720S1561113280887162_;
+        Fri, 21 Jun 2019 18:34:42 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <a36fbe699d367dd9b39e64f60b280e0c>
+X-RL-SENDER: tony.xie@rock-chips.com
+X-SENDER: xxx@rock-chips.com
+X-LOGIN-NAME: tony.xie@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Tony Xie <tony.xie@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
+        xsf@rock-chips.com, zhangqing@rock-chips.com,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com
+Subject: [PATCH v10 5/6] rtc: rk808: add RK809 and RK817 support.
+Date:   Fri, 21 Jun 2019 06:34:38 -0400
+Message-Id: <20190621103438.8237-1-tony.xie@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621103258.8154-1-tony.xie@rock-chips.com>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiAyMC4wNi4yMDE5IDExOjUzLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
-Cj4gSGkgQ2xhdWRpdSwNCj4gDQo+IHNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4NCg0KTm8gcHJv
-YmxlbSwgSSB1bmRlcnN0YW5kLg0KDQo+IA0KPiANCj4gT24gMTMvMDYvMjAxOSAxNjoxMiwgQ2xh
-dWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+IEhpIERhbmllbCwNCj4+DQo+PiBP
-biAzMS4wNS4yMDE5IDEzOjQxLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToNCj4+Pg0KPj4+IEhpIENs
-YXVkaXUsDQo+Pj4NCj4+Pg0KPj4+IE9uIDMwLzA1LzIwMTkgMDk6NDYsIENsYXVkaXUuQmV6bmVh
-QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+Pj4+IEhpIERhbmllbCwNCj4+Pj4NCj4+Pj4gVGFraW5n
-IGludG8gYWNjb3VudCB0aGUgZGlzY3Vzc2lvbiBvbiB0aGlzIHRyZWFkIGFuZCB0aGUgZmFjdCB0
-aGF0IHdlIGhhdmUNCj4+Pj4gbm8gYW5zd2VyIGZyb20gUm9iIG9uIHRoaXMgdG9waWMgKEknbSB0
-YWxraW5nIGFib3V0IFsxXSksIHdoYXQgZG8geW91IHRoaW5rDQo+Pj4+IGl0IHdvdWxkIGJlIGJl
-c3QgZm9yIHRoaXMgZHJpdmVyIHRvIGJlIGFjY2VwdGVkIHRoZSBzb29uZXN0PyBXb3VsZCBpdCBi
-ZSBPSw0KPj4+PiBmb3IgeW91IHRvIG1pbWljIHRoZSBhcHByb2FjaCBkb25lIGJ5Og0KPj4+Pg0K
-Pj4+PiBkcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWludGVncmF0b3ItYXAuYw0KPj4+Pg0KPj4+
-PiB3aXRoIHRoZSBmb2xsb3dpbmcgYmluZGluZ3MgaW4gRFQ6DQo+Pj4+DQo+Pj4+IGFsaWFzZXMg
-ew0KPj4+PiAJYXJtLHRpbWVyLXByaW1hcnkgPSAmdGltZXIyOw0KPj4+PiAJYXJtLHRpbWVyLXNl
-Y29uZGFyeSA9ICZ0aW1lcjE7DQo+Pj4+IH07DQo+Pj4+DQo+Pj4+IGFsc28gaW4gUElUNjRCIGRy
-aXZlcj8NCj4+Pj4NCj4+Pj4gT3IgZG8geW91IHRoaW5rIHJlLXNwaW5uaW5nIHRoZSBBbGV4YW5k
-cmUncyBwYXRjaGVzIGF0IFsyXSAod2hpY2ggc2VlbXMgdG8NCj4+Pj4gbWUgbGlrZSB0aGUgZ2Vu
-ZXJpYyB3YXkgdG8gZG8gaXQpIHdvdWxkIGJlIGJldHRlcj8NCj4+Pg0KPj4+IFRoaXMgaGFyZHdh
-cmUgLyBPUyBjb25uZWN0aW9uIHByb2JsZW0gaXMgZ2V0dGluZyByZWFsbHkgYW5ub3lpbmcgZm9y
-DQo+Pj4gZXZlcnlvbmUgYW5kIHRoaXMgcGF0dGVybiBpcyByZXBlYXRpbmcgaXRzZWxmIHNpbmNl
-IHNldmVyYWwgeWVhcnMuIEl0IGlzDQo+Pj4gdGltZSB3ZSBmaXggaXQgcHJvcGVybHkuDQo+Pj4N
-Cj4+PiBUaGUgZmlyc3Qgc29sdXRpb24gbG9va3MgaGFja2lzaCBmcm9tIG15IFBPVi4gVGhlIHNl
-Y29uZCBhcHByb2FjaCBsb29rcw0KPj4+IG5pY2VyIGFuZCBnZW5lcmljIGFzIHlvdSBzYXkuIFNv
-IEkgd291bGQgdm90ZSBmb3IgWzJdDQo+Pj4gZmxhZ2dpbmcgYXBwcm9hY2ggcHJvcG9zZWQgYnkg
-TWFyayBbM10uDQo+Pg0KPj4gV2l0aCB0aGlzIGZsYWdnaW5nIGFwcHJvYWNoIHRoaXMgd291bGQg
-bWVhbiBhIGtpbmQgdW5pZmljYXRpb24gb2YNCj4+IGNsb2Nrc291cmNlIGFuZCBjbG9ja2V2ZW50
-IGZ1bmN0aW9uYWxpdGllcyB1bmRlciBhIHNpbmdsZSBvbmUsIHJpZ2h0PyBTbw0KPj4gdGhhdCB0
-aGUgZHJpdmVyIHdvdWxkIHJlZ2lzdGVyIHRvIHRoZSBhYm92ZSBsYXllcnMgb25seSBvbmUgZGV2
-aWNlIHcvIDINCj4+IGZ1bmN0aW9uYWxpdGllcyAoY2xvY2tzb3VyY2UgYW5kIGNsb2NrZXZlbnQp
-PyBQbGVhc2UgY29ycmVjdCBtZSBpZiBJJ20NCj4+IHdyb25nPyBJZiBzbywgZnJvbSBteSBwb2lu
-dCBvZiB2aWV3IHRoaXMgd291bGQgcmVxdWlyZSBtYWpvciByZS13b3JraW5nIG9mDQo+PiBjbG9j
-a3NvdXJjZSBhbmQgY2xvY2tldmVudCBzdWJzeXN0ZW1zLiBDb3JyZWN0bHkgaWYgSSB3cm9uZ2x5
-IHVuZGVyc3Rvb2QsDQo+PiBwbGVhc2UuDQo+IA0KPiBXZWxsLCBhY3R1YWxseSBJIHdhcyBub3Qg
-ZXhwZWN0aW5nIHRvIGNoYW5nZSBhbGwgdGhlIGZyYW1ld29yayBidXQganVzdA0KPiBwYXNzIGEg
-ZmxhZyB0byB0aGUgcHJvYmUgZnVuY3Rpb24gdGVsbGluZyBpZiB0aGUgbm9kZSBpcyBmb3IgYQ0K
-PiBjbG9ja3NvdXJjZSwgYSBjbG9ja2V2ZW50IG9yIGJvdGguDQo+IA0KDQpHaXZpbmcgc28sIHdo
-aXQgdGhlc2UgcHJvcG9zYWxzIEknbSB0aGlua2luZyBhdCBoYXZpbmcgc29tZXRoaW5nIGxpa2Ug
-dGhpcywNCnVzaW5nIEFsZXhhbmRyZSdzIG5ldyBtYWNyb3MgZnJvbSBbMl0gYW5kIHBhc3Npbmcg
-YSBiaXRtYXNrIHRvIHRpbWVyJ3MNCnByb2JpbmcgZnVuY3Rpb25zIChpbiB0aGUgYWJvdmUgZXhh
-bXBsZSBhZGFwdGVkIG9ubHkgZm9yIHBpdDY0YiBkcml2ZXINCmludHJvZHVjZWQgaW4gdGhpcyB0
-aHJlYWQpOg0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1taWNyb2No
-aXAtcGl0NjRiLmMgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLW1pY3JvY2hpcC1waXQ2NGIu
-Yw0KaW5kZXggNjIzMzlkODE4N2NlLi5iMjgzZDUxYWQ0YzcgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L2Nsb2Nrc291cmNlL3RpbWVyLW1pY3JvY2hpcC1waXQ2NGIuYw0KKysrIGIvZHJpdmVycy9jbG9j
-a3NvdXJjZS90aW1lci1taWNyb2NoaXAtcGl0NjRiLmMNCkBAIC0zNzcsNyArMzc3LDcgQEAgc3Rh
-dGljIGludCBfX2luaXQgbWNocF9waXQ2NGJfZHRfaW5pdF9jbGtldnQoc3RydWN0IG1jaHBfcGl0
-NjRiX2NvbW1vbl9kYXRhICpjZCwNCiAgICAgICAgcmV0dXJuIHJldDsNCiB9DQogDQotc3RhdGlj
-IGludCBfX2luaXQgbWNocF9waXQ2NGJfZHRfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUp
-DQorc3RhdGljIGludCBfX2luaXQgbWNocF9waXQ2NGJfZHRfaW5pdChzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5vZGUsIHUzMiBwcm9wcykNCiB7DQogICAgICAgIHN0cnVjdCBtY2hwX3BpdDY0Yl9jb21t
-b25fZGF0YSAqY2Q7DQogICAgICAgIHUzMiBpcnEsIGZyZXEgPSBNQ0hQX1BJVDY0Ql9ERUZfRlJF
-UTsNCkBAIC00MjYsNyArNDI2LDExIEBAIHN0YXRpYyBpbnQgX19pbml0IG1jaHBfcGl0NjRiX2R0
-X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQ0KICAgICAgICAgICAgICAgICAgICAgICAg
-Z290byBwY2xrX3VucHJlcGFyZTsNCiAgICAgICAgfQ0KIA0KLSAgICAgICBpZiAoIWRhdGEuY2Vk
-KSB7DQorICAgICAgIGlmIChwcm9wcyAmIFRJTUVSX09GX1BST1BFUlRZX0NMT0NLU09VUkNFKSB7
-DQorICAgICAgICAgICAgICAgaWYgKGRhdGEuY2VkKQ0KKyAgICAgICAgICAgICAgICAgICAgICAg
-Z290byBnY2xrX3VucHJlcGFyZTsNCisNCiAgICAgICAgICAgICAgICBpcnEgPSBpcnFfb2ZfcGFy
-c2VfYW5kX21hcChub2RlLCAwKTsNCiAgICAgICAgICAgICAgICBpZiAoIWlycSkgew0KICAgICAg
-ICAgICAgICAgICAgICAgICAgcHJfZGVidWcoIiVzOiBGYWlsZWQgdG8gZ2V0IFBJVDY0QiBjbG9j
-a2V2ZW50IElSUSFcbiIsDQpAQCAtNDM3LDcgKzQ0MSwxMyBAQCBzdGF0aWMgaW50IF9faW5pdCBt
-Y2hwX3BpdDY0Yl9kdF9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkNCiAgICAgICAgICAg
-ICAgICByZXQgPSBtY2hwX3BpdDY0Yl9kdF9pbml0X2Nsa2V2dChjZCwgaXJxKTsNCiAgICAgICAg
-ICAgICAgICBpZiAocmV0KQ0KICAgICAgICAgICAgICAgICAgICAgICAgZ290byBpcnFfdW5tYXA7
-DQotICAgICAgIH0gZWxzZSB7DQorICAgICAgIH0NCisNCisgICAgICAgaWYgKHByb3BzICYgVElN
-RVJfT0ZfUFJPUEVSVFlfQ0xPQ0tFVkVOVCkgew0KKyAgICAgICAgICAgICAgIGlmIChkYXRhLmNz
-ZCkNCisgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZ2Nsa191bnByZXBhcmU7DQorDQogICAg
-ICAgICAgICAgICAgcmV0ID0gbWNocF9waXQ2NGJfZHRfaW5pdF9jbGtzcmMoY2QpOw0KICAgICAg
-ICAgICAgICAgIGlmIChyZXQpDQogICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGdjbGtfdW5w
-cmVwYXJlOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuaCBiL2Ry
-aXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuaA0KaW5kZXggYTU0NzhmM2U4NTg5Li5mYWY5NWM5
-OGI2ZDIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLW9mLmgNCisrKyBi
-L2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuaA0KQEAgLTgsNiArOCwxMCBAQA0KICNkZWZp
-bmUgVElNRVJfT0ZfQ0xPQ0sgMHgyDQogI2RlZmluZSBUSU1FUl9PRl9JUlEgICAweDQNCiANCisj
-ZGVmaW5lIFRJTUVSX09GX1BST1BFUlRZX0NMT0NLU09VUkNFICBCSVQoMCkNCisjZGVmaW5lIFRJ
-TUVSX09GX1BST1BFUlRZX0NMT0NLRVZFTlQgICBCSVQoMSkNCisNCiBzdHJ1Y3Qgb2ZfdGltZXJf
-aXJxIHsNCiAgICAgICAgaW50IGlycTsNCiAgICAgICAgaW50IGluZGV4Ow0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcHJvYmUuYyBiL2RyaXZlcnMvY2xvY2tzb3VyY2Uv
-dGltZXItcHJvYmUuYw0KaW5kZXggMDI4MDc1NzIwMzM0Li42OWM0NWY3ZDE5OGMgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXByb2JlLmMNCisrKyBiL2RyaXZlcnMvY2xv
-Y2tzb3VyY2UvdGltZXItcHJvYmUuYw0KQEAgLTE4LDYgKzE4LDggQEANCiAjaW5jbHVkZSA8bGlu
-dXgvaW5pdC5oPg0KICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KICNpbmNsdWRlIDxsaW51eC9jbG9j
-a3NvdXJjZS5oPg0KKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCisjaW5jbHVkZSAidGlt
-ZXItb2YuaCINCiANCiBleHRlcm4gc3RydWN0IG9mX2RldmljZV9pZCBfX3RpbWVyX29mX3RhYmxl
-W107DQogDQpAQCAtMjgsOCArMzAsOSBAQCB2b2lkIF9faW5pdCB0aW1lcl9wcm9iZSh2b2lkKQ0K
-IHsNCiAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucDsNCiAgICAgICAgY29uc3Qgc3RydWN0
-IG9mX2RldmljZV9pZCAqbWF0Y2g7DQotICAgICAgIG9mX2luaXRfZm5fMV9yZXQgaW5pdF9mdW5j
-X3JldDsNCisgICAgICAgb2ZfaW5pdF9mbl8yX3RpbWVyX3JldCBpbml0X2Z1bmNfcmV0Ow0KICAg
-ICAgICB1bnNpZ25lZCB0aW1lcnMgPSAwOw0KKyAgICAgICB1MzIgcHJvcHMgPSBUSU1FUl9PRl9Q
-Uk9QRVJUWV9DTE9DS1NPVVJDRSB8IFRJTUVSX09GX1BST1BFUlRZX0NMT0NLRVZFTlQ7DQogICAg
-ICAgIGludCByZXQ7DQogDQogICAgICAgIGZvcl9lYWNoX21hdGNoaW5nX25vZGVfYW5kX21hdGNo
-KG5wLCBfX3RpbWVyX29mX3RhYmxlLCAmbWF0Y2gpIHsNCkBAIC0zOCw3ICs0MSwxMiBAQCB2b2lk
-IF9faW5pdCB0aW1lcl9wcm9iZSh2b2lkKQ0KIA0KICAgICAgICAgICAgICAgIGluaXRfZnVuY19y
-ZXQgPSBtYXRjaC0+ZGF0YTsNCiANCi0gICAgICAgICAgICAgICByZXQgPSBpbml0X2Z1bmNfcmV0
-KG5wKTsNCisgICAgICAgICAgICAgICBpZiAodGltZXJfb2ZfaXNfY2xvY2tzb3VyY2UobnApICYm
-DQorCQkgICAgIXRpbWVyX29mX2lzX2Nsb2NrZXZlbnQobnApKQ0KKyAgICAgICAgICAgICAgICAg
-ICAgICAgcHJvcHMgPSBUSU1FUl9PRl9QUk9QRVJUWV9DTE9DS1NPVVJDRTsNCisgICAgICAgICAg
-ICAgICBpZiAodGltZXJfb2ZfaXNfY2xvY2tldmVudChucCkgJiYNCisJCSAgICAhdGltZXJfb2Zf
-aXNfY2xvY2tzb3VyY2UobnApKQ0KKyAgICAgICAgICAgICAgICAgICAgICAgcHJvcHMgPSBUSU1F
-Ul9PRl9QUk9QRVJUWV9DTE9DS0VWRU5UOw0KKw0KKyAgICAgICAgICAgICAgIHJldCA9IGluaXRf
-ZnVuY19yZXQobnAsIHByb3BzKTsNCiAgICAgICAgICAgICAgICBpZiAocmV0KSB7DQogICAgICAg
-ICAgICAgICAgICAgICAgICBwcl9lcnIoIkZhaWxlZCB0byBpbml0aWFsaXplICclcE9GJzogJWRc
-biIsIG5wLCByZXQpOw0KICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQpkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9saW51eC9jbG9ja3NvdXJjZS5oIGIvaW5jbHVkZS9saW51eC9jbG9ja3Nv
-dXJjZS5oDQppbmRleCAzMDg5MTg5Mjg3NjcuLjVjNGRlNDgzM2VkOCAxMDA2NDQNCi0tLSBhL2lu
-Y2x1ZGUvbGludXgvY2xvY2tzb3VyY2UuaA0KKysrIGIvaW5jbHVkZS9saW51eC9jbG9ja3NvdXJj
-ZS5oDQpAQCAtMjU1LDcgKzI1NSw3IEBAIGV4dGVybiBpbnQgY2xvY2tzb3VyY2VfbW1pb19pbml0
-KHZvaWQgX19pb21lbSAqLCBjb25zdCBjaGFyICosDQogZXh0ZXJuIGludCBjbG9ja3NvdXJjZV9p
-ODI1M19pbml0KHZvaWQpOw0KIA0KICNkZWZpbmUgVElNRVJfT0ZfREVDTEFSRShuYW1lLCBjb21w
-YXQsIGZuKSBcDQotICAgICAgIE9GX0RFQ0xBUkVfMV9SRVQodGltZXIsIG5hbWUsIGNvbXBhdCwg
-Zm4pDQorICAgICAgIE9GX0RFQ0xBUkVfMl9USU1FUl9SRVQodGltZXIsIG5hbWUsIGNvbXBhdCwg
-Zm4pDQogDQogI2RlZmluZSBDTE9DS1NPVVJDRV9PRl9ERUNMQVJFKG5hbWUsIGNvbXBhdCwgZm4p
-IFwNCiAgICAgICAgVElNRVJfT0ZfREVDTEFSRShuYW1lLCBjb21wYXQsIGZuKQ0KZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvb2YuaCBiL2luY2x1ZGUvbGludXgvb2YuaA0KaW5kZXggOTliMGVi
-ZjQ5NjMyLi41MGEzYzI3Zjc3MTcgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L29mLmgNCisr
-KyBiL2luY2x1ZGUvbGludXgvb2YuaA0KQEAgLTEyNTgsNiArMTI1OCw3IEBAIHN0YXRpYyBpbmxp
-bmUgaW50IG9mX2dldF9hdmFpbGFibGVfY2hpbGRfY291bnQoY29uc3Qgc3RydWN0IGRldmljZV9u
-b2RlICpucCkNCiAjZW5kaWYNCiANCiB0eXBlZGVmIGludCAoKm9mX2luaXRfZm5fMikoc3RydWN0
-IGRldmljZV9ub2RlICosIHN0cnVjdCBkZXZpY2Vfbm9kZSAqKTsNCit0eXBlZGVmIGludCAoKm9m
-X2luaXRfZm5fMl90aW1lcl9yZXQpKHN0cnVjdCBkZXZpY2Vfbm9kZSAqLCB1MzIpOw0KIHR5cGVk
-ZWYgaW50ICgqb2ZfaW5pdF9mbl8xX3JldCkoc3RydWN0IGRldmljZV9ub2RlICopOw0KIHR5cGVk
-ZWYgdm9pZCAoKm9mX2luaXRfZm5fMSkoc3RydWN0IGRldmljZV9ub2RlICopOw0KIA0KQEAgLTEy
-NjcsNiArMTI2OCw4IEBAIHR5cGVkZWYgdm9pZCAoKm9mX2luaXRfZm5fMSkoc3RydWN0IGRldmlj
-ZV9ub2RlICopOw0KICAgICAgICAgICAgICAgIF9PRl9ERUNMQVJFKHRhYmxlLCBuYW1lLCBjb21w
-YXQsIGZuLCBvZl9pbml0X2ZuXzFfcmV0KQ0KICNkZWZpbmUgT0ZfREVDTEFSRV8yKHRhYmxlLCBu
-YW1lLCBjb21wYXQsIGZuKSBcDQogICAgICAgICAgICAgICAgX09GX0RFQ0xBUkUodGFibGUsIG5h
-bWUsIGNvbXBhdCwgZm4sIG9mX2luaXRfZm5fMikNCisjZGVmaW5lIE9GX0RFQ0xBUkVfMl9USU1F
-Ul9SRVQodGFibGUsIG5hbWUsIGNvbXBhdCwgZm4pIFwNCisgICAgICAgICAgICAgICBfT0ZfREVD
-TEFSRSh0YWJsZSwgbmFtZSwgY29tcGF0LCBmbiwgb2ZfaW5pdF9mbl8yX3RpbWVyX3JldCkNCiAN
-CiAvKioNCiAgKiBzdHJ1Y3Qgb2ZfY2hhbmdlc2V0X2VudHJ5ICAgLSBIb2xkcyBhIGNoYW5nZXNl
-dCBlbnRyeQ0KDQoNClRoZSBvbmx5IGRvd25zaWRlIG9mIHRoaXMgaXMgdGhhdCB3ZSdyZSBwYXJz
-aW5nIHRoZXNlIG5ldyBEVCBiaW5kaW5ncyBiZWZvcmUNCmNhbGxpbmcgcHJvYmUgZnVuY3Rpb24s
-IHRoZW4gd2UncmUgY2hlY2tpbmcgdGhlIHJlc3VsdCBvZiBwYXJzaW5nIGFnYWluLCBpbg0KcHJv
-YmUgZnVuY3Rpb24sIGFuZCBJJ20gdGhpbmtpbmcgaWYgaXQgd291bGRuJ3QgYmUgc2ltcGxlciB0
-byBqdXN0IHBhcnNlIHRoZXNlDQpiaW5kaW5nIGluIHRpbWVyJ3MgcHJvYmUgZnVuY3Rpb24gYXMg
-YWxsIHRoZSBvdGhlciBEVCBiaW5kaW5ncyBhcmUgcGFyc2VkDQoobW9yZW92ZXIgYWxsIHRpbWVy
-cyBwcm9iaW5nIGZ1bmN0aW9ucyBzaG91bGQgYmUgY2hhbmdlcyB0byBnZXQgdGhpcyBuZXcgYXJn
-dW1lbnQpLg0KDQpNb3JlIHRoYW4gdGhpcyBJIHNlZSB0aGF0IHRoZXJlIGlzIG9uZSB0aW1lciBk
-cml2ZXIgd2hpY2ggaXMgbm90IHByb2JlZCB2aWENCnRpbWVyX3Byb2JlKCkgKEknbSBwb2ludGlu
-ZyB0byBkcml2ZXJzL2Nsb2Nrc291cmNlL251bWFjaGlwLmMpLg0KDQpQbGVhc2UgbGV0IG1lIGtu
-b3cgd2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgaXQuDQoNClRoYW5rIHlvdSwNCkNsYXVkaXUgQmV6
-bmVhDQoNCj4gDQo+IA0KPj4gQXQgdGhlIG1vbWVudCB3ZSByZWdpc3RlciBkaWZmZXJlbnQgZnVu
-Y3Rpb25hbGl0aWVzIChjbG9ja3NvdXJjZSBhbmQNCj4+IGNsb2NrZXZlbnQpIHRvIHRoZSBhYm92
-ZSBsYXllcnMgZm9yIGhhcmR3YXJlIGJsb2NrcyAoZS5nLiB3aXRoDQo+PiBjbG9ja3NvdXJjZV9y
-ZWdpc3Rlcl9oeigpIG9yIGNsb2NrZXZlbnRzX2NvbmZpZ19hbmRfcmVnaXN0ZXIoKSkuIElmDQo+
-PiBoYXJkd2FyZSBjYW4gc3VwcG9ydCBjbG9ja3NvdXJjZSBhbmQgY2xvY2tldmVudCB3ZSByZWdp
-c3RlciBib3RoIHRoZXNlDQo+PiBmdW5jdGlvbmFsaXRpZXMsIGlmIG9ubHkgb25lIGlzIHN1cHBv
-cnRlZCB3ZSByZWdpc3RlciBvbmx5IG9uZSBvZiB0aGVzZS4NCj4+IFRoZSBhYm92ZSBsYXllcnMg
-d291bGQgY2hvb3NlIHRoZSBiZXN0IGNsb2Nrc291cmNlL2Nsb2NrZXZlbnQgZGV2aWNlIGZyb20N
-Cj4+IHRoZSBhdmFpbGFibGUgb25lcyBiYXNlZCBvbiByYXRpbmcgZmllbGQgZm9yIGVhY2ggY2xv
-Y2tzb3VyY2UvY2xvY2tldmVudCB3ZQ0KPj4gcmVnaXN0ZXIuIEluIGFsbCB0aGlzIGN1cnJlbnQg
-YmVoYXZpb3IgSSBkb24ndCBzZWUgaG93IHRoZXNlIGZsYWdzIHdvdWxkDQo+PiBpbnRlcmFjdCB3
-aXRoIGNsb2Nrc291cmNlL2Nsb2NrZXZlbnQgc3Vic3lzdGVtLiBDb3VsZCB5b3UgcGxlYXNlIGxl
-dCBtZQ0KPj4ga25vdyBob3cgZG8geW91IHNlZSB0aGVzZSBhbmQgdGhlIHdheSB0aGVzZSBuZXcg
-ZmxhZ3Mgd291bGQgaW50ZXJhY3Qgd2l0aA0KPj4gdGhlIGxheWVycyBhYm92ZSB0aGUgZHJpdmVy
-cz8NCj4+Pg0KPj4+IEkgYWRkZWQgQXJuZCBpbiBDYyBpbiBvcmRlciB0byBoYXZlIGl0cyBvcGlu
-aW9uLg0KPj4+DQo+Pj4gWzNdDQo+Pj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE3
-MTIxNTExMzI0Mi5za21oNW56cjd3cWRtdm53QGxha3JpZHMuY2FtYnJpZGdlLmFybS5jb20vDQo+
-Pj4NCj4+Pj4gWzFdDQo+Pj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA0MDgx
-NTExNTUuMjAyNzktMS1hbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbS8jdA0KPj4+PiBbMl0N
-Cj4+Pj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE3MTIxMzE4NTMxMy4yMDAxNy0x
-LWFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbS8NCj4+Pj4NCj4+Pg0KPj4+DQo+
-Pj4NCj4+Pg0KPj4+DQo+Pj4NCj4gDQo+IA0K
+RK809 and RK817 are power management IC chips for multimedia products.
+Most of their functions and registers are same, including the rtc.
+
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/Kconfig     |  4 +--
+ drivers/rtc/rtc-rk808.c | 68 ++++++++++++++++++++++++++++++++---------
+ 2 files changed, 56 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a819ef07b7ec..8c34f7ec0a59 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -363,11 +363,11 @@ config RTC_DRV_MAX77686
+ 	  will be called rtc-max77686.
+ 
+ config RTC_DRV_RK808
+-	tristate "Rockchip RK805/RK808/RK818 RTC"
++	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
+ 	depends on MFD_RK808
+ 	help
+ 	  If you say yes here you will get support for the
+-	  RTC of RK805, RK808 and RK818 PMIC.
++	  RTC of RK805, RK809 and RK817, RK808 and RK818 PMIC.
+ 
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rk808-rtc.
+diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
+index 739c0d42e835..5bacdafb7b21 100644
+--- a/drivers/rtc/rtc-rk808.c
++++ b/drivers/rtc/rtc-rk808.c
+@@ -50,9 +50,18 @@
+ #define NUM_TIME_REGS	(RK808_WEEKS_REG - RK808_SECONDS_REG + 1)
+ #define NUM_ALARM_REGS	(RK808_ALARM_YEARS_REG - RK808_ALARM_SECONDS_REG + 1)
+ 
++struct rk_rtc_compat_reg {
++	unsigned int ctrl_reg;
++	unsigned int status_reg;
++	unsigned int alarm_seconds_reg;
++	unsigned int int_reg;
++	unsigned int seconds_reg;
++};
++
+ struct rk808_rtc {
+ 	struct rk808 *rk808;
+ 	struct rtc_device *rtc;
++	struct rk_rtc_compat_reg *creg;
+ 	int irq;
+ };
+ 
+@@ -101,7 +110,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
+ 	int ret;
+ 
+ 	/* Force an update of the shadowed registers right now */
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+ 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
+ 				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
+ 	if (ret) {
+@@ -115,7 +124,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
+ 	 * 32khz. If we clear the GET_TIME bit here, the time of i2c transfer
+ 	 * certainly more than 31.25us: 16 * 2.5us at 400kHz bus frequency.
+ 	 */
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+ 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
+ 				 0);
+ 	if (ret) {
+@@ -123,7 +132,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
+ 		return ret;
+ 	}
+ 
+-	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG,
++	ret = regmap_bulk_read(rk808->regmap, rk808_rtc->creg->seconds_reg,
+ 			       rtc_data, NUM_TIME_REGS);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
+@@ -166,7 +175,7 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 	rtc_data[6] = bin2bcd(tm->tm_wday);
+ 
+ 	/* Stop RTC while updating the RTC registers */
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+ 				 BIT_RTC_CTRL_REG_STOP_RTC_M,
+ 				 BIT_RTC_CTRL_REG_STOP_RTC_M);
+ 	if (ret) {
+@@ -174,14 +183,14 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 		return ret;
+ 	}
+ 
+-	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG,
++	ret = regmap_bulk_write(rk808->regmap, rk808_rtc->creg->seconds_reg,
+ 				rtc_data, NUM_TIME_REGS);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
+ 		return ret;
+ 	}
+ 	/* Start RTC again */
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+ 				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to update RTC control: %d\n", ret);
+@@ -199,8 +208,13 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	uint32_t int_reg;
+ 	int ret;
+ 
+-	ret = regmap_bulk_read(rk808->regmap, RK808_ALARM_SECONDS_REG,
++	ret = regmap_bulk_read(rk808->regmap,
++			       rk808_rtc->creg->alarm_seconds_reg,
+ 			       alrm_data, NUM_ALARM_REGS);
++	if (ret) {
++		dev_err(dev, "Failed to read RTC alarm date REG: %d\n", ret);
++		return ret;
++	}
+ 
+ 	alrm->time.tm_sec = bcd2bin(alrm_data[0] & SECONDS_REG_MSK);
+ 	alrm->time.tm_min = bcd2bin(alrm_data[1] & MINUTES_REG_MAK);
+@@ -210,7 +224,7 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
+ 	rockchip_to_gregorian(&alrm->time);
+ 
+-	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
++	ret = regmap_read(rk808->regmap, rk808_rtc->creg->int_reg, &int_reg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
+ 		return ret;
+@@ -231,7 +245,7 @@ static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
+ 	struct rk808 *rk808 = rk808_rtc->rk808;
+ 	int ret;
+ 
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
+ 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
+ 
+ 	return ret;
+@@ -242,7 +256,7 @@ static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
+ 	struct rk808 *rk808 = rk808_rtc->rk808;
+ 	int ret;
+ 
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
+ 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
+ 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
+ 
+@@ -274,7 +288,8 @@ static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
+ 	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
+ 
+-	ret = regmap_bulk_write(rk808->regmap, RK808_ALARM_SECONDS_REG,
++	ret = regmap_bulk_write(rk808->regmap,
++				rk808_rtc->creg->alarm_seconds_reg,
+ 				alrm_data, NUM_ALARM_REGS);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to bulk write: %d\n", ret);
+@@ -318,7 +333,7 @@ static irqreturn_t rk808_alarm_irq(int irq, void *data)
+ 	struct i2c_client *client = rk808->i2c;
+ 	int ret;
+ 
+-	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
++	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
+ 			   RTC_STATUS_MASK);
+ 	if (ret) {
+ 		dev_err(&client->dev,
+@@ -371,6 +386,22 @@ static int rk808_rtc_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(rk808_rtc_pm_ops,
+ 	rk808_rtc_suspend, rk808_rtc_resume);
+ 
++static struct rk_rtc_compat_reg rk808_creg = {
++	.ctrl_reg = RK808_RTC_CTRL_REG,
++	.status_reg = RK808_RTC_STATUS_REG,
++	.alarm_seconds_reg = RK808_ALARM_SECONDS_REG,
++	.int_reg = RK808_RTC_INT_REG,
++	.seconds_reg = RK808_SECONDS_REG,
++};
++
++static struct rk_rtc_compat_reg rk817_creg = {
++	.ctrl_reg = RK817_RTC_CTRL_REG,
++	.status_reg = RK817_RTC_STATUS_REG,
++	.alarm_seconds_reg = RK817_ALARM_SECONDS_REG,
++	.int_reg = RK817_RTC_INT_REG,
++	.seconds_reg = RK817_SECONDS_REG,
++};
++
+ static int rk808_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+@@ -381,11 +412,20 @@ static int rk808_rtc_probe(struct platform_device *pdev)
+ 	if (rk808_rtc == NULL)
+ 		return -ENOMEM;
+ 
++	switch (rk808->variant) {
++	case RK809_ID:
++	case RK817_ID:
++		rk808_rtc->creg = &rk817_creg;
++		break;
++	default:
++		rk808_rtc->creg = &rk808_creg;
++		break;
++	}
+ 	platform_set_drvdata(pdev, rk808_rtc);
+ 	rk808_rtc->rk808 = rk808;
+ 
+ 	/* start rtc running by default, and use shadowed timer. */
+-	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
+ 				 BIT_RTC_CTRL_REG_STOP_RTC_M |
+ 				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
+ 				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
+@@ -395,7 +435,7 @@ static int rk808_rtc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
++	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
+ 			   RTC_STATUS_MASK);
+ 	if (ret) {
+ 		dev_err(&pdev->dev,
+-- 
+2.17.1
+
+
+
