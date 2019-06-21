@@ -2,92 +2,110 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C671C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AE6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4048521670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF6F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="dEwA46sK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfFUI07 (ORCPT
+        id S1726404AbfFUI2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:26:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40716 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfFUI05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:26:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 469931A09B4;
-        Fri, 21 Jun 2019 10:26:55 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63F011A09BD;
-        Fri, 21 Jun 2019 10:26:46 +0200 (CEST)
-Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 827DF402E0;
-        Fri, 21 Jun 2019 16:26:35 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de,
-        abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca,
-        andrew.smirnov@gmail.com, agx@sigxcpu.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] clocksource: imx-sysctr: Add of_clk skip option
-Date:   Fri, 21 Jun 2019 16:28:37 +0800
-Message-Id: <20190621082838.12630-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621082838.12630-1-Anson.Huang@nxp.com>
-References: <20190621082838.12630-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 21 Jun 2019 04:28:37 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39103 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfFUI2g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:28:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v18so5227019ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y/byJ90aNdg3Pqz+FT01BYtKKMWzDXjNty5j77MnPKg=;
+        b=dEwA46sKfRRhifrHIC27/RULTXBoKZ4uCeUXCJTtP0a9w+Nzc2qMNvCT8I2KZDdETX
+         O8OWAWY/PITqJTflD8CLvfNKglM3MGJX6rw637njcWHvh52xJV0XaMAHI66NMbd5eMU8
+         n3m5+8rF468uYmQrfXVQOBHXcSHjpokhO1xiGD0c/EIf1BscV2Ba53pKTDpxFSAY/ODO
+         QJK4tHlKietA5IkWOkTRj/qdzEVV0bhWxgVgz5uQOGE0ESEMdLP5QkGNpEPMxONzQk48
+         cDuvzbeWZgFEzH+h0Pa87g3CpqCBRY5XwUosBT1zOg15/+6PjUm1VwHiW2exg8aEWMP8
+         JyCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y/byJ90aNdg3Pqz+FT01BYtKKMWzDXjNty5j77MnPKg=;
+        b=g4I9L7OR5Fl3OmlcV+ip6mj9IUlR8G92kAmj8L9xyxZcLgcAx/PnY6j4RvfG4In3ER
+         Xt3AI5gM3Wj4uScqqIaXnSjis66V0m5DXn42fQkbI7SQ7yTuT8JOXrpiUJ0voDN6uAh+
+         fPyZtyx1Tn4XGAt1iZWwuq5ghswP6ydMKwuc4GJvzPoS3Qjj2HyF9g0rL/wVY6xU8Ooh
+         71cdPWs8qHlnsWT+kNoE4Dj2avMvkXFVgLac8oeAZZu9tas2G7YMH9PsrZ4o0dDALxTd
+         ZMVrmY2ocJZomBGJQPZj50pjwyxA7Z6BNC/5Pbj2YLRFBODOdp/3ZCywzo4dH3Groocc
+         43fg==
+X-Gm-Message-State: APjAAAVH8fzwdXJ+DdgtKtwckkvXXAvScD9GuM9RLjDpVWilB/e8aUui
+        cu6Se+Cb2zk5M8mk+E9f//Bsww==
+X-Google-Smtp-Source: APXvYqwNSL1uHelWPTEWNV2IUQNYffRO96scF8rXsXvJoqpeVar8A9njpmcrYixAWbYA0AoFEG2tvg==
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr62098450lje.46.1561105714963;
+        Fri, 21 Jun 2019 01:28:34 -0700 (PDT)
+Received: from [192.168.0.199] ([31.173.80.27])
+        by smtp.gmail.com with ESMTPSA id r17sm291512ljb.77.2019.06.21.01.28.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 01:28:34 -0700 (PDT)
+Subject: Re: [PATCH 6/6] usb: bdc: Update compatible match strings
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <facac509-1e64-e35b-ee25-5ba265a514c4@cogentembedded.com>
+Date:   Fri, 21 Jun 2019 11:28:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hello!
 
-On some i.MX8M platforms, clock driver uses platform driver
-model and it is NOT ready during timer initialization phase,
-the clock operations will fail and system counter driver will
-fail too. As all the i.MX8M platforms' system counter clock
-are from OSC which is always enabled, so it is no need to enable
-clock for system counter driver, the ONLY thing is to pass
-clock frequence to driver.
+On 21.06.2019 0:09, Al Cooper wrote:
 
-This patch adds an option of skipping of_clk operation for
-system counter driver, an optional property "clock-frequency"
-is introduced to pass the frequency value to system counter
-driver and indicate driver to skip of_clk operations.
+> Remove "brcm,bdc-v0.16" because it was never used on any system.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clocksource/timer-imx-sysctr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+    You're not really removing it, are you?
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..8ff3d7e 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -129,6 +129,14 @@ static void __init sysctr_clockevent_init(void)
- static int __init sysctr_timer_init(struct device_node *np)
- {
- 	int ret = 0;
-+	u32 rate;
-+
-+	if (!of_property_read_u32(np, "clock-frequency",
-+				  &rate)) {
-+		to_sysctr.of_clk.rate = rate;
-+		to_sysctr.of_clk.period = DIV_ROUND_UP(rate, HZ);
-+		to_sysctr.flags &= ~TIMER_OF_CLOCK;
-+	}
- 
- 	ret = timer_of_init(np, &to_sysctr);
- 	if (ret)
--- 
-2.7.4
+> Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>   drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> index 15e28790142d..e2b2628925e6 100644
+> --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> @@ -644,6 +644,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
+>   		bdc_resume);
+>   
+>   static const struct of_device_id bdc_of_match[] = {
+> +	{ .compatible = "brcm,bdc-udc-v3.1" },
+>   	{ .compatible = "brcm,bdc-v0.16" },
+>   	{ .compatible = "brcm,bdc" },
+>   	{ /* sentinel */ }
 
+MBR, Sergei
