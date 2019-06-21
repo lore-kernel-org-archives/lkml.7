@@ -2,212 +2,164 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7E5C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4093C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0B62084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B8120449
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bVn5kQwO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ehX2A7Xe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfFULas (ORCPT
+        id S1726668AbfFULcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:30:48 -0400
-Received: from mout.web.de ([212.227.15.4]:55765 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfFULar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561116623;
-        bh=ohriBF6Qa7tVQ2jjGMp4RJRZn6wx7ZoLrZZ5Ug7zEPQ=;
-        h=X-UI-Sender-Class:From:Subject:To:Cc:References:Date:In-Reply-To;
-        b=bVn5kQwOil1SMa4VFPYnDQSa2b/R0aDXTLCrDS6EZMRr74WhhqZhhmgNHMtv2mgUn
-         /IToy3dXK5PKoJyejjfNCxtsJiLrEYt4TVng7Gcg89VQq904meXQJXhEqxEcqXF7Rb
-         Dc3giAowNSVkzxiWJqO0S2Xk16Btr3ygWWVwIDTI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.43.108] ([89.15.238.141]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LZeou-1iInVD11FE-00lTMR; Fri, 21
- Jun 2019 13:30:23 +0200
-From:   Soeren Moch <smoch@web.de>
-Subject: Re: [PATCH] rt2x00: fix rx queue hang
-To:     Stanislaw Gruszka <sgruszka@redhat.com>
-Cc:     Helmut Schaa <helmut.schaa@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190617094656.3952-1-smoch@web.de>
- <20190618093431.GA2577@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=smoch@web.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b6899d78-447c-3cb3-4bec-e4050660ccaa@web.de>
-Date:   Fri, 21 Jun 2019 13:30:01 +0200
+        Fri, 21 Jun 2019 07:32:22 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:39859 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfFULcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:32:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190621113219euoutp02a814a87d26a9039f8f0da46332fbf078~qM2dg-pYP3238732387euoutp02N
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:32:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190621113219euoutp02a814a87d26a9039f8f0da46332fbf078~qM2dg-pYP3238732387euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561116739;
+        bh=Ijmfi8RUSvMgpsjjHQ/yJewJXt4xh1RJuge4v7u+ECk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ehX2A7XeV19TIiDly41XBKqRqxZgmW92U9TKI2VQNBs5Wt7GKbute+dqN0PfaKQEi
+         eTAvaYgERX05qaJJ8nMQhBd0JLLuS79AGqiI4flP5qd7SzZkLhAiHfgLk/mcMmkWGl
+         kI0V4qWaSqnIwyIJ7QvNE1umD9TkiYwm+TGyzaZY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190621113219eucas1p1aeb21479f3091c8d8116abb3defd0e8b~qM2dLOaqb0442904429eucas1p1B;
+        Fri, 21 Jun 2019 11:32:19 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 35.5D.04325.340CC0D5; Fri, 21
+        Jun 2019 12:32:19 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621113218eucas1p14650c1edefb2bb338c392714f6893bed~qM2ccSc1u1864218642eucas1p1j;
+        Fri, 21 Jun 2019 11:32:18 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190621113218eusmtrp1e8f98e0a54335937eda7932acfada604~qM2cOQOQJ1786817868eusmtrp1Q;
+        Fri, 21 Jun 2019 11:32:18 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-b1-5d0cc043dd0c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 67.E6.04140.240CC0D5; Fri, 21
+        Jun 2019 12:32:18 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621113218eusmtip1591448ffaa7e94e186e2368a6e2d5eee~qM2b8IEeH1705317053eusmtip1N;
+        Fri, 21 Jun 2019 11:32:18 +0000 (GMT)
+Subject: Re: [PATCH 3/3] jz4740_fb: fix DMA API abuse
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Manuel Lauss <manuel.lauss@gmail.com>, linux-mips@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <16211aea-cd48-2d68-7ba9-d81b126d81cf@samsung.com>
+Date:   Fri, 21 Jun 2019 13:32:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190618093431.GA2577@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8a149d05-047b-6df1-28fc-184dae9c32df@samsung.com>
 Content-Language: en-US
-X-Provags-ID: V03:K1:ejyXhG/mBQ/WrzMP3Mmx9IX2BSWonozc/bSHWkrHyjsjB8cKFWc
- GfSE67GnuQVjuyDKsGoKPtMKpPYBYOv7kCrtU1gonuFbUetA502CeeMjebsszEZdKV80g0j
- BordgU2APkXKkLYGHIDvSm6vjKBCFeRuRuV/jEzaB4of5xBC1gnJu1u+B1XN6IgvJ8xwloa
- U1lu9JLHy8Xk8hu2klTVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pRgjwDXAj78=:RDFFs2kiOmKIpI8TrAZzu9
- /gjuxpS5/K/kg1zVxiZMSM+ZcxF1QmK/qUFcaZGI6bfma1Ddwh0g7y4+mLOJR5g0GiRHM3PQs
- 7lr8Y/hgOfHqfOggkChELk0wI6BmKnEUo7g0p2hBth0GVI/v1s4QvEg320GL2WouKmuUVXu0+
- h91Ky9XqHmgXGJ4OCl1OSlsF/e967CeyeBYUZbjaK7Fy0Z4fHQdzZUcl6MVz85N8Z402JRtE6
- mH4G+QCYXBcxJnFAKKn3UkNqecs2kLNM830sIvE5ShWm5nOWFnAP+H78IfCaU1VBqsFawkran
- 8YgdRJ6/0PsnXjajRZQx0u3gFFPPKkweDI6xNpkqFo1KBaCzw+gj1GptaBxh9ZpII0MpDjcCa
- HUSaPjHYagx8aJLSiponeAWOwDSX3MG72p2lKMnqMWO9X2l3UarPNYMI1oFGTt4yL+9asDqDY
- AbkB2+9eyewGG97yDXUGEwsW3W3/ff3S390abCAYqY3GLv2bopR2xr6vD1NpDuWJ9Z/vUMqZo
- OCNBxBBjNUbduyRURC2rpOb6C3vTdB6Vd79OmLJGZV8vlug5dnuyy/kAtCVA/DxyVnfTsuwS0
- rdPchZrVeTCzEaFHXDMOicJDOk+iducSX5sJjv7CkB4LwaxKSEDy08ZsSlyn5isZNGj41mqCY
- M8nzlRoWDVT8WZR2n6m/oBbJbBHXJzT4IwjFbI4J7kks30+l3sdT/IU87WoD3Gee31FYFtgBf
- wyFOVGOufT1b/NnBBLyhFzEJhgpnKF9iLiV9c3ce1NIEEF22oCR9ssgrMsfLy7AAy8sRhuEuK
- NrO5R1D7yvnmPMGCmCBjltCDacUHHQ9bFUYLZuRERnvR157+IFWQKJxaQQr64H7VMD5l97t0l
- 8FLLmFS4rXSJUuxxOLpPfvJPapvxfL2T+6wyx3ohyJAXPs32bDDzI8w5N/xI2Rqumle0aaVBB
- dVCAKwO9/HFzkKwAbPXUhV8ynLc6xixPYN1gt/3xEkLLcexrpLi2O
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7rOB3hiDb5t47FYufook8WJvg+s
+        Fpd3zWGz6Ny0ldHi2pdH7A6sHjtn3WX32H2zgc3j8ya5AOYoLpuU1JzMstQifbsEroy5nw6z
+        Faznq9jyfAdzA+M97i5GTg4JAROJV2svs3QxcnEICaxglGg8fZQZwvnCKHH39yomCOczo8Sb
+        R22MMC1vH7RCJZYzSpxb0AnV/5ZR4vasDlaQKmEBU4n7Z2czgdhsAlYSE9tXgXWLCChJPH11
+        lhGkgVmgCWjsufnMIAleATuJyZ3H2UBsFgFViR2TH4HZogIREvePbWCFqBGUODnzCQuIzSlg
+        L/Hs414wm1lAXOLWk/lMELa8xPa3c8CekBCYxy5xr+0KE8TdLhKv9m2CsoUlXh3fwg5hy0ic
+        ntzDAtGwjlHib8cLqO7tjBLLJ/9jg6iyljh8/CLQGRxAKzQl1u/Shwg7Sjy73ccMEpYQ4JO4
+        8VYQ4gg+iUnbpkOFeSU62oQgqtUkNizbwAaztmvnSuYJjEqzkLw2C8k7s5C8Mwth7wJGllWM
+        4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBCeb0v+NfdzDu+5N0iFGAg1GJh/fALO5YIdbE
+        suLK3EOMEhzMSiK8PDk8sUK8KYmVValF+fFFpTmpxYcYpTlYlMR5qxkeRAsJpCeWpGanphak
+        FsFkmTg4pRoYlaao3uSv+iN46nKEkJrVpS3Bl9sDbl5c5xP0RZ+X99N2K4evbhdvBnOb6dwV
+        +shqEv4k9fUXC4UeGdnbB+IdLX/Oz9CsDS4o+N/otsn7yO8pu4rr3MPnq1ns3zT/sfztNxck
+        T/0+zzh1u8adza1NDvPE96202PqNf/7p1N6/jxR93F7NXDyLS4mlOCPRUIu5qDgRAKzPre8s
+        AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsVy+t/xu7pOB3hiDabulLNYufook8WJvg+s
+        Fpd3zWGz6Ny0ldHi2pdH7A6sHjtn3WX32H2zgc3j8ya5AOYoPZui/NKSVIWM/OISW6VoQwsj
+        PUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYy5nw6zFaznq9jyfAdzA+M97i5GTg4J
+        AROJtw9amboYuTiEBJYySnR8uszexcgBlJCROL6+DKJGWOLPtS42iJrXjBJdPZPZQRLCAqYS
+        98/OZgKx2QSsJCa2r2IEsUUElCSevjrLCNLALNDEKNE7dylU9z1GiXkz5zCDVPEK2ElM7jzO
+        BmKzCKhK7Jj8CMwWFYiQOPN+BQtEjaDEyZlPwGxOAXuJZx/3gtnMAuoSf+ZdYoawxSVuPZnP
+        BGHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucVGesWJucWleel6yfm5mxiB
+        8bTt2M8tOxi73gUfYhTgYFTi4T0wiztWiDWxrLgy9xCjBAezkggvTw5PrBBvSmJlVWpRfnxR
+        aU5q8SFGU6DnJjJLiSbnA2M9ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFM
+        HxMHp1QDY8/P3nj79BcPk19GLJmUdfXkUw53ofkzlm/4vkE68nAIU9qh5vkLL8V7vX605rK/
+        2I4720x5hW93Xgy90Wy7MrNnznLbi5F7Yz+8u7jzUPopz/Nu8aWXk45Fth0L7bt0ZKJK7JOv
+        9Uc29n+/fetg36kOn4jQ7MaNFteu8Tl+2xvjGNZ1cl20mrISS3FGoqEWc1FxIgBc5QvOvQIA
+        AA==
+X-CMS-MailID: 20190621113218eucas1p14650c1edefb2bb338c392714f6893bed
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190509173943epcas2p27a7106894d5a235a405a94e84340b416
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190509173943epcas2p27a7106894d5a235a405a94e84340b416
+References: <20190509173849.11825-1-hch@lst.de>
+        <CGME20190509173943epcas2p27a7106894d5a235a405a94e84340b416@epcas2p2.samsung.com>
+        <20190509173849.11825-4-hch@lst.de>
+        <8a149d05-047b-6df1-28fc-184dae9c32df@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
 
-On 18.06.19 11:34, Stanislaw Gruszka wrote:
-> Hi
->
-> On Mon, Jun 17, 2019 at 11:46:56AM +0200, Soeren Moch wrote:
->> Since commit ed194d136769 ("usb: core: remove local_irq_save() around
->>  ->complete() handler") the handlers rt2x00usb_interrupt_rxdone() and
->> rt2x00usb_interrupt_txdone() are not running with interrupts disabled
->> anymore. So these handlers are not guaranteed to run completely before=
+Hi,
 
->> workqueue processing starts. So only mark entries ready for workqueue
->> processing after proper accounting in the dma done queue.
-> It was always the case on SMP machines that rt2x00usb_interrupt_{tx/rx}=
-done
-> can run concurrently with rt2x00_work_{rx,tx}done, so I do not
-> understand how removing local_irq_save() around complete handler broke
-> things.
-I think because completion handlers can be interrupted now and scheduled
-away
-in the middle of processing.
-> Have you reverted commit ed194d136769 and the revert does solve the pro=
-blem ?
-Yes, I already sent a patch for this, see [1]. But this was not considere=
-d
-an acceptablesolution. Especially RT folks do not like code running with
-interrupts disabled,particularly when trying to acquire spinlocks then.
+On 6/7/19 2:21 PM, Bartlomiej Zolnierkiewicz wrote:
+> 
+> On 5/9/19 7:38 PM, Christoph Hellwig wrote:
+>> Virtual addresses return from dma(m)_alloc_coherent are opaque in what
+>> backs then, and drivers must not poke into them.  Switch the driver
+>> to use the generic DMA API mmap helper to avoid these problems.
+> Change itself looks fine but the patch description doesn't match what
+> the patch is actually doing (there is no conversion to DMA API helper
+> because the driver is already using it). Please correct it. Thank you.
 
-[1] https://lkml.org/lkml/2019/5/31/863
-> Between 4.19 and 4.20 we have some quite big changes in rt2x00 driver:
->
-> 0240564430c0 rt2800: flush and txstatus rework for rt2800mmio
-> adf26a356f13 rt2x00: use different txstatus timeouts when flushing
-> 5022efb50f62 rt2x00: do not check for txstatus timeout every time on ta=
-sklet
-> 0b0d556e0ebb rt2800mmio: use txdone/txstatus routines from lib
-> 5c656c71b1bf rt2800: move usb specific txdone/txstatus routines to rt28=
-00lib
->
-> so I'm a bit afraid that one of those changes is real cause of
-> the issue not ed194d136769 .
-I tested 4.20 and 5.1 and see the exact same behavior. Reverting this
-usb core patchsolves the problem.
-4.19.x (before this usb core patch) is running fine.
->> Note that rt2x00usb_work_rxdone() processes all available entries, not=
+I've just removed the "Switch the driver.." sentence myself from
+the patch description and applied the change, thanks!
 
->> only such for which queue_work() was called.
->>
->> This fixes a regression on a RT5370 based wifi stick in AP mode, which=
-
->> suddenly stopped data transmission after some period of heavy load. Al=
-so
->> stopping the hanging hostapd resulted in the error message "ieee80211
->> phy0: rt2x00queue_flush_queue: Warning - Queue 14 failed to flush".
->> Other operation modes are probably affected as well, this just was
->> the used testcase.
-> Do you know what actually make the traffic stop,
-> TX queue hung or RX queue hung?
-I think RX queue hang, as stated in the patch title. "Queue 14" means QID=
-_RX
-(rt2x00queue.h, enum data_queue_qid).
-I also tried to re-add local_irq_save() in only one of the handlers. Addi=
-ng
-this tort2x00usb_interrupt_rxdone() alone solved the issue, while doing s=
-o
-for tx alonedid not.
-
-Note that this doesn't mean there is no problem for tx, that's maybe
-just more
-difficult to trigger.
->> diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/=
-net/wireless/ralink/rt2x00/rt2x00dev.c
->> index 1b08b01db27b..9c102a501ee6 100644
->> --- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
->> +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
->> @@ -263,9 +263,9 @@ EXPORT_SYMBOL_GPL(rt2x00lib_dmastart);
->>
->>  void rt2x00lib_dmadone(struct queue_entry *entry)
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>  drivers/video/fbdev/jz4740_fb.c | 7 -------
+>>  1 file changed, 7 deletions(-)
+>> diff --git a/drivers/video/fbdev/jz4740_fb.c b/drivers/video/fbdev/jz4740_fb.c
+>> index b57df83fdbd3..b95cdfa9e0a1 100644
+>> --- a/drivers/video/fbdev/jz4740_fb.c
+>> +++ b/drivers/video/fbdev/jz4740_fb.c
+>> @@ -466,7 +466,6 @@ static int jzfb_alloc_devmem(struct jzfb *jzfb)
 >>  {
->> -	set_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags);
->>  	clear_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags);
->>  	rt2x00queue_index_inc(entry, Q_INDEX_DMA_DONE);
->> +	set_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags);
-> Unfortunately I do not understand how this suppose to fix the problem,
-> could you elaborate more about this change?
->
-Re-adding local_irq_save() around thisrt2x00lib_dmadone()solved
-the issue. So I also tried to reverse the order of these calls.
-It seems totally plausible to me, that the correct sequence is to
-first clear the device assignment, then to set the status to dma_done,
-then to trigger the workqueue processing for this entry. When the handler=
-
-is scheduled away in the middle of this sequence, now there is no
-strange state where the entry can be processed by the workqueue while
-not declared dma_done for it.
-With this changed sequence there is no need anymore to disable interrupts=
-
-for solving the hang issue.
-
-Regards,
-Soeren
-
-
+>>  	int max_videosize = 0;
+>>  	struct fb_videomode *mode = jzfb->pdata->modes;
+>> -	void *page;
+>>  	int i;
+>>  
+>>  	for (i = 0; i < jzfb->pdata->num_modes; ++mode, ++i) {
+>> @@ -491,12 +490,6 @@ static int jzfb_alloc_devmem(struct jzfb *jzfb)
+>>  	if (!jzfb->vidmem)
+>>  		goto err_free_framedesc;
+>>  
+>> -	for (page = jzfb->vidmem;
+>> -		 page < jzfb->vidmem + PAGE_ALIGN(jzfb->vidmem_size);
+>> -		 page += PAGE_SIZE) {
+>> -		SetPageReserved(virt_to_page(page));
+>> -	}
+>> -
+>>  	jzfb->framedesc->next = jzfb->framedesc_phys;
+>>  	jzfb->framedesc->addr = jzfb->vidmem_phys;
+>>  	jzfb->framedesc->id = 0xdeafbead;
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
