@@ -2,63 +2,64 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF35C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8801CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1002921537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563DC215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgUpFjpv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIGoxNHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbfFUN7E (ORCPT
+        id S1726190AbfFUOA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:59:04 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34141 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUN7E (ORCPT
+        Fri, 21 Jun 2019 10:00:27 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41709 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUOA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:59:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so6085190ljg.1;
-        Fri, 21 Jun 2019 06:59:02 -0700 (PDT)
+        Fri, 21 Jun 2019 10:00:26 -0400
+Received: by mail-lj1-f194.google.com with SMTP id s21so6060758lji.8;
+        Fri, 21 Jun 2019 07:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=z+WQ5L7jyykHtcS1CaXqa3gfb+mYN5tnXeopjV9M8CY=;
-        b=vgUpFjpv5ZZqrSFc78/TAZwdLTsExKEeFmU93mFN3yiJ8vozEvyCLfce/BIT0sk3ZX
-         fb4W7rysGrty4ceatf35AHHNPaGDJFsZ+s83f2WToV9Gko+fe3U/fFpD74uHYCMF5r1p
-         U+PfUIRAfCvp/0fY+a3BaBCvBdc+PHZkf9tAE4CCg6Cu96fcJsnwYsDZZoBpm2fxNRAW
-         wIfA5hq/bmruwJ9X1f21bZr8wmLeT30ZRXo5VIficsOnI9KiLr8CQTH/co8nhFGLLZZH
-         131Fl6emwOwazlwG66O/kw9N+SRT7zxvRT6nHm8ltg2by4h8KD6j2/uX14T3jGjNwop4
-         b+pQ==
+        bh=HdPpqlE5KQOryOI+FWcAGSlfSeIeXjYoyYw5O4jWzks=;
+        b=LIGoxNHDQCkPWYXbaamae5C9X8NCDUGNdSiwdnSAcKkGC4KheSc0mzoT1Cskr/yd3g
+         Wr+SU7sDp7Tw4CZQsezQV5/q+W+jASBXRTn4tXM+mHtiTG6qGGoASTAURKHSApuJo8+9
+         QSvN/nn5pFLhP5f1auMMhhQJOUwITRGQmUXw8MOjooFLqNZiGRoAfcCeG2jRn4wRla4B
+         WOxnCjZpJj+JoxeuujISG7BfaNMLW8WNf+KRHTrtZ5JinzZaFhuGLfA64Tt0muspivH1
+         zKh2eVkJotVuzkZGoS8ljYhrxU/37XydWz/dvzJeUU91iFZtbCmsHJOwsPRxLF+825bO
+         N6CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z+WQ5L7jyykHtcS1CaXqa3gfb+mYN5tnXeopjV9M8CY=;
-        b=mjNiIFTmCvVonzI5/Dbc2g3z55mD0/1LPo+A37LzQWi0eDeXOsVIxrx/T0lFsHJf+n
-         S5sBSMS8jsQFNgie1ilB2lJ9ODmeZmdaDHdXRpe2rgeGlx/TGQcySpMnqWFataHfohOi
-         jb/X3R6LKbRjeZTKbdH32U6KHgnpyNcH7niJ6Z3y3NA/DF7tjoPBUW/22vRk49rv5lXT
-         aqjCRASItxXESejOpPemrzuqKc9hIRTmfc1FgjisNf62CnEEhUD8KVH8ZTJQP3iKtwke
-         d6u7Xu9jvL3AVBzHd8Enb167FELcJ0fddZhK2ix0DbuHY6mvwK7NBJSho5yBqU28XD3R
-         HKJQ==
-X-Gm-Message-State: APjAAAX+reoo9KnMyEbXTCT+13Yr+lLArf6H/dzvsU4k6S3bH9xbXt2d
-        plTCgVrSDyXP43NgP/DC+2b+vGjZ3wa+QygfcAo=
-X-Google-Smtp-Source: APXvYqyt8yBta8bXLwF3TPCIh4vXPw+1C+YH2PaA7n6MW+n+xOcCd+FZKm8ynnqW0f6tzdYQjTVqYzRna3Q4v+GilBY=
-X-Received: by 2002:a2e:8650:: with SMTP id i16mr24502679ljj.178.1561125542140;
- Fri, 21 Jun 2019 06:59:02 -0700 (PDT)
+        bh=HdPpqlE5KQOryOI+FWcAGSlfSeIeXjYoyYw5O4jWzks=;
+        b=sSSkcg59vI55eh/8HzeOHMx+4EDGQCY5O0OFTeIixRrcZHAAmSgFm8BvnM+EX2hivC
+         /gcUW6zHgzXHN5/z6okmDSkYhyNMvYOPgVOU/UqQKa8fBIboJA9H+YRR6W9ollIHeTUp
+         RNV6ezGMI0YAX+McEHcY/35atZqNWEFqYpkYwZyw40DmqOl8p7/9WD+ABDs/7xWHmmS5
+         YIMGYTXOVEUuIXnu5LjzlmLV6JW508FqkDtpPSZgfOhp472QvVOQUHp+KwssQS5/7y0z
+         5ZkWT+Yi+ZuYLngIbOKUgMo5/4RyAFwLdZygCMP+Gf1ICZByTuTkEXYmNhIzwL0S1d2k
+         C7xw==
+X-Gm-Message-State: APjAAAU2ANldyoJOCOIoHsd6+WHG7qUPl5Q3t39paaeR+zKSbte6v1x9
+        8wgxXAY6x5CeTZX5nvC17c4mI338VV5HvkvFo6A=
+X-Google-Smtp-Source: APXvYqzHIiebJqKGNowqGUaOStPrvIC4CDHyk3T1vJyUD7aGteNqYdBz5YnghaRqCjI8auZqhyn4Z6jZuR2Eayg9KkA=
+X-Received: by 2002:a2e:8650:: with SMTP id i16mr24506131ljj.178.1561125624436;
+ Fri, 21 Jun 2019 07:00:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com> <1561037428-13855-3-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1561037428-13855-3-git-send-email-robert.chiras@nxp.com>
+References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com> <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 21 Jun 2019 10:59:19 -0300
-Message-ID: <CAOMZO5DS2v15h9E=qKg2vKuFkBSQQwdBHA5Th5mZ+ca6DWgQsw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] drm/panel: Add support for Raydium RM67191 panel driver
+Date:   Fri, 21 Jun 2019 11:00:42 -0300
+Message-ID: <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support for
+ Raydium RM67191 panel
 To:     Robert Chiras <robert.chiras@nxp.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -79,109 +80,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Robert,
 
-On Thu, Jun 20, 2019 at 10:31 AM Robert Chiras <robert.chiras@nxp.com> wrote:
-
-> +fail:
-> +       if (rad->reset)
-> +               gpiod_set_value_cansleep(rad->reset, 1);
-
-gpiod_set_value_cansleep() can handle NULL, so no need for the if() check.
-
-> +static const struct display_timing rad_default_timing = {
-> +       .pixelclock = { 132000000, 132000000, 132000000 },
-
-Having the same information listed three times does not seem useful.
-
-You could use a drm_display_mode structure with a single entry instead.
-
-> +       videomode_from_timing(&rad_default_timing, &panel->vm);
+On Thu, Jun 20, 2019 at 10:32 AM Robert Chiras <robert.chiras@nxp.com> wrote:
+>
+> Add dt-bindings documentation for Raydium RM67191 DSI panel.
+>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../bindings/display/panel/raydium,rm67191.txt     | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+> new file mode 100644
+> index 0000000..52af272
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+> @@ -0,0 +1,39 @@
+> +Raydium RM67171 OLED LCD panel with MIPI-DSI protocol
 > +
-> +       of_property_read_u32(np, "width-mm", &panel->width_mm);
-> +       of_property_read_u32(np, "height-mm", &panel->height_mm);
+> +Required properties:
+> +- compatible:          "raydium,rm67191"
+> +- reg:                 virtual channel for MIPI-DSI protocol
+> +                       must be <0>
+> +- dsi-lanes:           number of DSI lanes to be used
+> +                       must be <3> or <4>
+> +- port:                input port node with endpoint definition as
+> +                       defined in Documentation/devicetree/bindings/graph.txt;
+> +                       the input port should be connected to a MIPI-DSI device
+> +                       driver
 > +
-> +       panel->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +Optional properties:
+> +- reset-gpios:         a GPIO spec for the RST_B GPIO pin
+> +- width-mm:            see panel-common.txt
+> +- height-mm:           see panel-common.txt
+> +- video-mode:          0 - burst-mode
+> +                       1 - non-burst with sync event
+> +                       2 - non-burst with sync po ulse
 
-Since this is optional it would be better to use
-devm_gpiod_get_optional() instead.
-
-
-> +
-> +       if (IS_ERR(panel->reset))
-> +               panel->reset = NULL;
-> +       else
-> +               gpiod_set_value_cansleep(panel->reset, 1);
-
-This is not handling defer probing, so it would be better to do like this:
-
-panel->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-if (IS_ERR(panel->reset))
-      return  PTR_ERR(panel->reset);
-
-> +       memset(&bl_props, 0, sizeof(bl_props));
-> +       bl_props.type = BACKLIGHT_RAW;
-> +       bl_props.brightness = 255;
-> +       bl_props.max_brightness = 255;
-> +
-> +       panel->backlight = devm_backlight_device_register(dev, dev_name(dev),
-> +                                                         dev, dsi,
-> +                                                         &rad_bl_ops,
-> +                                                         &bl_props);
-
-Could you put more parameters into the same line?
-
-Using 4 lines seems excessive.
-
-> +       if (IS_ERR(panel->backlight)) {
-> +               ret = PTR_ERR(panel->backlight);
-> +               dev_err(dev, "Failed to register backlight (%d)\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       drm_panel_init(&panel->panel);
-> +       panel->panel.funcs = &rad_panel_funcs;
-> +       panel->panel.dev = dev;
-> +       dev_set_drvdata(dev, panel);
-> +
-> +       ret = drm_panel_add(&panel->panel);
-> +
-
-Unneeded blank line
-
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = mipi_dsi_attach(dsi);
-> +       if (ret < 0)
-> +               drm_panel_remove(&panel->panel);
-> +
-> +       return ret;
-
-You did not handle the "power" regulator.
-
-> +static int __maybe_unused rad_panel_suspend(struct device *dev)
-> +{
-> +       struct rad_panel *rad = dev_get_drvdata(dev);
-> +
-> +       if (!rad->reset)
-> +               return 0;
-> +
-> +       devm_gpiod_put(dev, rad->reset);
-> +       rad->reset = NULL;
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused rad_panel_resume(struct device *dev)
-> +{
-> +       struct rad_panel *rad = dev_get_drvdata(dev);
-> +
-> +       if (rad->reset)
-> +               return 0;
-> +
-> +       rad->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-
-Why do you call devm_gpiod_get() once again?
-
-I am having a hard time to understand the need for this suspend/resume hooks.
-
-Can't you simply remove them?
+No power-supply property?
