@@ -2,136 +2,191 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EDCC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADCDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878512089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EkOlu8ql"
+	by mail.kernel.org (Postfix) with ESMTP id E9806208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561133888;
+	bh=bmmhinY8SaBf9mjaOoJOC0qxeDwt2Gq/4NQji2bO8nc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vPRol5BWH3jPe30KDo8FltGjX9NjbxYm+DLABzFJmHTb+OoxnyPimPh2+aRl5w2nM
+	 uHBhN/kc7VlWb+LIjvdtzaVvSlLJ2g3hbIHz3riLlDSO5HfLo1c+5kP6aNqJdVoJSc
+	 U7ejKFMcJpEeXlMtQPSIlVLUyvz8EI9gWWEMUE8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfFUQR4 (ORCPT
+        id S1726270AbfFUQSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:17:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39057 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUQRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:17:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id r185so35318iod.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sw0tar4GKNYE+fKeYGxgNKh8+9qTX2z35GEBt1SVpc0=;
-        b=EkOlu8qlRhzBLmqK/JdjBqIW5qryF2RdLS3wOFZsu3n9PHhrG1wi6n0hFXLG1MFQ5/
-         KTBVBI7etM1aU/ONn6Qx3W6uNfI4Yqqc6fdLe5cj+t0vt2i/1/wqMnkttynIQB8/u5cO
-         IAm1ffnYDxs7vAskpJvZyQo38g5G44Rx2R77/kU2bM/oNK5GsXdJG5uhioKfysrK8Lm8
-         2OktVp8osiuoXqbOEL9B58NPIk3A4R/seH4kyi0MzEh7I3xwtNwX/a0GWSgv23582DWp
-         dHjg6Aw7vupuRHaqil5vjLFXql1/9Tc+p0qGWipiN27RVTQV9X4JNJKSd+NJpC5BQfeW
-         PZMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sw0tar4GKNYE+fKeYGxgNKh8+9qTX2z35GEBt1SVpc0=;
-        b=rPqswAChCPQ/8XDzg/Iel3lmL1I4WQ0D0SVoahxzKtjKAB3fAQNmcpgUq1w5XBiZUY
-         QjNmdUcVfFjmkDrBym0HIuVqnRgZqmBPSs7TBPxO4XUpQCE5r5P/F4t0kKmbrqJDJ2Uy
-         rPcmX/IHdGYQXyEYPSWUbmQ4t9yTBhnhTxO2BWudwj0KHN9AwkwL2rhxJ9neU8jkpOzu
-         YS9zNVjYeoSeSAo36bWc6zdMSiL3jfBFoqoy+AqM+PXNEfumDKhm1wZYD1Hiojug4afw
-         0BwUydaU/j1xu9lkJunNjK4I8oLmhHzvZBospV9GgcpbuEUkWa3XThwVhaZCJNUTHdk+
-         8acw==
-X-Gm-Message-State: APjAAAVoGuergrQPmIo+7FEynboK6NQmh6VdB8OyomWhZF9MKOsXzvqk
-        KmQgenSS0H3ykKn+5LzSxY9NhA==
-X-Google-Smtp-Source: APXvYqwrP5rrf+639Ym7wMFWZQdU1WfoVNcgUP+bsXyCprN6Jo1hWnpDosiQ8jA1YW4OBOu8ZR8yFw==
-X-Received: by 2002:a02:22c6:: with SMTP id o189mr3228179jao.35.1561133874834;
-        Fri, 21 Jun 2019 09:17:54 -0700 (PDT)
-Received: from localhost (c-73-24-4-37.hsd1.mn.comcast.net. [73.24.4.37])
-        by smtp.gmail.com with ESMTPSA id f20sm3921317ioh.17.2019.06.21.09.17.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 09:17:53 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 11:17:52 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>, Martin Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
-Message-ID: <20190621161752.d7d7n4m5q67uivys@xps.therub.org>
-References: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
- <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
+        Fri, 21 Jun 2019 12:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfFUQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:18:06 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD3BF208C3;
+        Fri, 21 Jun 2019 16:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561133885;
+        bh=bmmhinY8SaBf9mjaOoJOC0qxeDwt2Gq/4NQji2bO8nc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BbY48cE1dNaor+IBZRQ+fR1dj8L8CUTaDo0zwJlTzdL3r2zHNTT1l/9e72Q3mm1p9
+         t6CyrYhJwHU4F/CGHCFIWJuxKLEQaVj4dlB78l/V6SFRo4fEpY2HBZS2zIpv2DmsSP
+         aVuzIw16Af13DFXAwpqbpvTV0WdSBRHMtEyCb0Nk=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
+Date:   Sat, 22 Jun 2019 01:18:00 +0900
+Message-Id: <156113387975.28344.16009584175308192243.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:17:04PM -0700, Andrii Nakryiko wrote:
-> On Thu, Jun 20, 2019 at 1:08 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > selftests: bpf test_libbpf.sh failed running Linux -next kernel
-> > 20190618 and 20190619.
-> >
-> > Here is the log from x86_64,
-> > # selftests bpf test_libbpf.sh
-> > bpf: test_libbpf.sh_ #
-> > # [0] libbpf BTF is required, but is missing or corrupted.
-> 
-> You need at least clang-9.0.0 (not yet released) to run some of these
-> tests successfully, as they rely on Clang's support for
-> BTF_KIND_VAR/BTF_KIND_DATASEC.
+Hi,
 
-Can there be a runtime check for BTF that emits a skip instead of a fail
-in such a case?
+Here is an RFC series of patches to add boot-time tracing using
+devicetree.
 
-Thanks,
-Dan
+Currently, kernel support boot-time tracing using kernel command-line
+parameters. But that is very limited because of limited expressions
+and limited length of command line. Recently, useful features like
+histogram, synthetic events, etc. are being added to ftrace, but it is
+clear that we can not expand command-line options to support these
+features.
 
-> 
-> > libbpf: BTF_is #
-> > # test_libbpf failed at file test_l4lb.o
-> > failed: at_file #
-> > # selftests test_libbpf [FAILED]
-> > test_libbpf: [FAILED]_ #
-> > [FAIL] 29 selftests bpf test_libbpf.sh
-> > selftests: bpf_test_libbpf.sh [FAIL]
-> >
-> > Full test log,
-> > https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190619/testrun/781777/log
-> >
-> > Test results comparison,
-> > https://qa-reports.linaro.org/lkft/linux-next-oe/tests/kselftest/bpf_test_libbpf.sh
-> >
-> > Good linux -next tag: next-20190617
-> > Bad linux -next tag: next-20190618
-> > git branch     master
-> > git commit    1c6b40509daf5190b1fd2c758649f7df1da4827b
-> > git repo
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> >
-> > Best regards
-> > Naresh Kamboju
+Hoever, I've found that there is a devicetree which can pass more
+structured commands to kernel at boot time :) The devicetree is usually
+used for dscribing hardware configuration, but I think we can expand it
+for software configuration too (e.g. AOSP and OPTEE already introduced
+firmware node.) Also, grub and qemu already supports loading devicetree,
+so we can use it not only on embedded devices but also on x86 PC too.
 
--- 
-Linaro - Kernel Validation
+With the devicetree, we can setup new kprobe and synthetic events, more
+complicated event filters and trigger actions including histogram.
+
+For example, following kernel parameters
+
+trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M
+
+it can be written in devicetree like below.
+
+	ftrace {
+		compatible = "linux,ftrace";
+		options = "sym-addr";
+		events = "initcall:*";
+		tp-printk;
+		buffer-size-kb = <0x400>;	// 1024KB == 1MB
+	};
+
+Moreover, now we can expand it to add filters for events, kprobe events,
+and synthetic events with histogram like below.
+
+	ftrace {
+		compatible = "linux,ftrace";
+		...
+		event0 {
+			event = "task:task_newtask";
+			filter = "pid < 128";	// adding filters
+			enable;
+		};
+		event1 {
+			event = "kprobes:vfs_read";
+			probes = "vfs_read $arg1 $arg2"; // add kprobes
+			filter = "common_pid < 200";
+			enable;
+		};
+		event2 {
+			event = "initcall_latency";	// add synth event
+			fields = "unsigned long func", "u64 lat";
+			// with histogram
+			actions = "hist:keys=func.sym,lat:vals=lat:sort=lat";
+		};
+		// and synthetic event callers
+		event3 {
+			event = "initcall:initcall_start";
+			actions = "hist:keys=func:ts0=common_timestamp.usecs";
+		};
+		event4 {
+			event = "initcall:initcall_finish";
+			actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)";
+		};
+	};
+
+These complex configuration can not be done by kernel parameters.
+However, this is not replacing boot-time tracing by kernel parameters.
+This devicetree settings are applied in fs_initcall() stage, but kernel
+parameters are applied earlier stage. Anyway, this is enough useful
+for debugging/tracing kernel driver initializations.
+
+I would like to discuss on some points about this idea.
+
+- Can we use devicetree for configuring kernel dynamically?
+- Would you have any comment for the devicetree format and default
+  behaviors?
+- Currently, kprobe and synthetic events are defined inside event
+  node, but it is able to define globally in ftrace node. Which is
+  better?
+- Do we need to support "status" property on each event node so
+  that someone can prepare "dtsi" include file and override the status?
+- Do we need instance-wide pid filter (set_event_pid) when boot-time?
+- Do we need more structured tree, like spliting event and group,
+  event actions and probes to be a tree of node, etc?
+- Do we need per group filter & enablement support?
+- How to support instances? (nested tree or different tree?)
+- What kind of options would we need?
+
+Some kernel parameters are not implemented yet, like ftrace_filter,
+ftrace_notrace, etc. These will be implemented afterwards.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (11):
+      tracing: Apply soft-disabled and filter to tracepoints printk
+      tracing: kprobes: Output kprobe event to printk buffer
+      tracing: Expose EXPORT_SYMBOL_GPL symbol
+      tracing: kprobes: Register to dynevent earlier stage
+      tracing: Accept different type for synthetic event fields
+      tracing: Add NULL trace-array check in print_synth_event()
+      dt-bindings: tracing: Add ftrace binding document
+      tracing: of: Add setup tracing by devicetree support
+      tracing: of: Add trace event settings
+      tracing: of: Add kprobe event support
+      tracing: of: Add synthetic event support
+
+
+ .../devicetree/bindings/tracing/ftrace.yaml        |  170 +++++++++++
+ include/linux/trace_events.h                       |    1 
+ kernel/trace/Kconfig                               |   10 +
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |   49 ++-
+ kernel/trace/trace_events.c                        |    3 
+ kernel/trace/trace_events_hist.c                   |   14 +
+ kernel/trace/trace_events_trigger.c                |    2 
+ kernel/trace/trace_kprobe.c                        |   81 +++--
+ kernel/trace/trace_of.c                            |  311 ++++++++++++++++++++
+ 10 files changed, 589 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/tracing/ftrace.yaml
+ create mode 100644 kernel/trace/trace_of.c
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
