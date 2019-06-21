@@ -2,122 +2,150 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5809C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFDDC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8252075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164662085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PbKjdPWc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YT9pP8mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfFUBBo (ORCPT
+        id S1726192AbfFUBDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:01:44 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46940 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFUBBn (ORCPT
+        Thu, 20 Jun 2019 21:03:20 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34085 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfFUBDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:01:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v9so2453541pgr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:01:43 -0700 (PDT)
+        Thu, 20 Jun 2019 21:03:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c85so2656219pfc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:03:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jOk3PreZ3YiInlE3LTXkzPl68+QbundNai30bAJKnEU=;
-        b=PbKjdPWcdAzMqG/JzK1HR0UcqG/UX8eh2967eEegjSLi4avW+I1MWzePzFoaR/RhDz
-         v936+ryvXqtDcxrnJqsy5S/83EDuAVf5GwkEF/Kd7NU5M9kBznE739f8ulkLOKnCN5TP
-         BgbRDjDHZ8uwDaNrUzaVY5sjhf5UK5VV4W7MA=
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:from:subject:cc:user-agent:date;
+        bh=/QNfQWig2oeC5POufHOkxnAuAVkUYpsqHyVQpvyXPFM=;
+        b=YT9pP8mmnoLSnibB3gevIC8O4iva3l7WbYe+TvJLiuO8Sl8rGyxguOWdu9Xkz3aMFK
+         0JcQpSOWMOO4Ipb2MWZdlgVt1gqKnEVbbl/k08kEf7rdSzKoGFDVsTEq54pldf9AvuOi
+         AEJ/VAYyprATMD4PR72B+IkMkBKhPYLYh7Sug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jOk3PreZ3YiInlE3LTXkzPl68+QbundNai30bAJKnEU=;
-        b=iGJ6hErWfJ0BFzM+UWt+b2ImcQoZ+uxz67xGpM22d4iy4HDqQyBlBtTWWXScm6RN1J
-         W8zhl3U0uY6noVMid11G0rlISgvkhY5izwmDYR1MwK3/bJRPX9JmhkfNEdhthASO+1zr
-         CBDwKpNFLf5/247bz8gEI54N5Dx3Mmf1tRt2y4WSQYv9VJ0kyR+F+AcZn6Wl4VjjA/NA
-         0FqCVDzip+766UCQcUa2jJjYYRHiZe4AKp3UYHQYvDJP6IMN21UUIharuuicM8uGxzOD
-         dlId2ONyuYxIfaMR/oZIP1DGe/6RLSalZWDD9S+RGbHHj9uAVHdMJXBHvoEk9Zq3A9fl
-         qMuA==
-X-Gm-Message-State: APjAAAULtw2l6evoh53hS8ClJJICbPxJVZLoNTPYNChw2zbfovH1I+e/
-        Jvy/BHt4Yi3/fdFsAcnuiOp5bA==
-X-Google-Smtp-Source: APXvYqwVLiWe21jhFrAmpCuL2rGWSXFn0Xn+zlSdAo/GWr7qvi7R3zAyZAmL5tMFTjfT5QVEED6QXQ==
-X-Received: by 2002:a65:50c3:: with SMTP id s3mr15343980pgp.177.1561078902926;
-        Thu, 20 Jun 2019 18:01:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v13sm650415pfe.105.2019.06.20.18.01.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 18:01:42 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:01:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, glider@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
-Message-ID: <201906201801.9CFC9225@keescook>
-References: <1561063566-16335-1-git-send-email-cai@lca.pw>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:from:subject:cc
+         :user-agent:date;
+        bh=/QNfQWig2oeC5POufHOkxnAuAVkUYpsqHyVQpvyXPFM=;
+        b=bQFWkMUP3D7sQeg+2h/eCdgQ8AWIOKbRCGIbM3WG7JE8ae4VxekkyuE7SAi048SRZi
+         yzvcrx7HU/zO3NROqaYq8vm7QatOcjbXZilW629jZoKI/2nuDZg3k+958enmHTKfphMT
+         ivtZhrYizEPcZEG60BPnKITSqcRvgKA1wUQPzBdkF8457HHG+LpItaL9DAezo9L2MeJG
+         ghh9d3Lw2yCMelQ7KbXyIdP+vUc4/aHH58O3MDBm/qVnpOlJviWAQcgx58EtF/k/xnSi
+         P1RLk+vfgR6iOdvHyF6qNXYkImQ07GViZ89whxZDPUE6kO+DDdBKIcc5vEvjW5iJxlgS
+         Xdzg==
+X-Gm-Message-State: APjAAAUNzqdNcVUVZ84g4c6VkpoaE7JfoiH8e5aYLR7YCBRBMO6Yaea9
+        d9GOOo1k6hSebHGZ2H8QUEdI3Q==
+X-Google-Smtp-Source: APXvYqw5MjR8b5QF1inGOhF3D0ddQ3KFCau26pbHfnEVTRxI5c2/WPbsRNarL55GkCl3Ecm1fJ+H/A==
+X-Received: by 2002:a63:3c14:: with SMTP id j20mr3859916pga.169.1561078999454;
+        Thu, 20 Jun 2019 18:03:19 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y185sm634195pfy.110.2019.06.20.18.03.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 18:03:18 -0700 (PDT)
+Message-ID: <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561063566-16335-1-git-send-email-cai@lca.pw>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190617225134.GA30762@ziepe.ca>
+References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        <linux-crypto@vger.kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 20 Jun 2019 18:03:17 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
-> The linux-next commit "mm: security: introduce init_on_alloc=1 and
-> init_on_free=1 boot options" [1] introduced a false positive when
-> init_on_free=1 and page_poison=on, due to the page_poison expects the
-> pattern 0xaa when allocating pages which were overwritten by
-> init_on_free=1 with 0.
-> 
-> Fix it by switching the order between kernel_init_free_pages() and
-> kernel_poison_pages() in free_pages_prepare().
+Quoting Jason Gunthorpe (2019-06-17 15:51:34)
+> On Fri, Jun 14, 2019 at 11:12:36AM -0700, Stephen Boyd wrote:
+> > Quoting Jason Gunthorpe (2019-06-13 16:26:13)
+> > > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> > > > From: Andrey Pronin <apronin@chromium.org>
+> > > >=20
+> > > > Other drivers or userspace may initiate sending a message to the tpm
+> > > > while the device itself and the controller of the bus it is on are
+> > > > suspended. That may break the bus driver logic.
+> > > > Block sending messages while the device is suspended.
+> > > >=20
+> > > > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > >=20
+> > > > I don't think this was ever posted before.
+> > >=20
+> > > Use a real lock.
+> > >=20
+> >=20
+> > To make sure the bit is tested under a lock so that suspend/resume can't
+> > update the bit in parallel?
+>=20
+> No, just use a real lock, don't make locks out of test bit/set bit
+>=20
 
-Cool; this seems like the right approach. Alexander, what do you think?
+Ok. I looked back on the history of this change in our kernel (seems it
+wasn't attempted upstream for some time) and it looks like the problem
+may have been that the khwrng kthread (i.e. hwrng_fill()) isn't frozen
+across suspend/resume. This kthread runs concurrently with devices being
+resumed, the cr50 hardware is still suspended, and then a tpm command is
+sent and it hangs the I2C bus because the device hasn't been properly
+resumed yet.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I suspect a better approach than trying to hold of all TPM commands
+across suspend/resume would be to fix the caller here to not even try to
+read the hwrng during this time. It's a general problem for other hwrngs
+that have some suspend/resume hooks too. This kthread is going to be
+running while suspend/resume is going on if the random entropy gets too
+low, and that probably shouldn't be the case.
 
--Kees
+What do you think of the attached patch? I haven't tested it, but it
+would make sure that the kthread is frozen so that the hardware can be
+resumed before the kthread is thawed and tries to go touch the hardware.
 
-> 
-> [1] https://patchwork.kernel.org/patch/10999465/
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: After further debugging, the issue after switching order is likely a
->     separate issue as clear_page() should not cause issues with future
->     accesses.
-> 
->  mm/page_alloc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 54dacf35d200..32bbd30c5f85 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1172,9 +1172,10 @@ static __always_inline bool free_pages_prepare(struct page *page,
->  					   PAGE_SIZE << order);
->  	}
->  	arch_free_page(page, order);
-> -	kernel_poison_pages(page, 1 << order, 0);
->  	if (want_init_on_free())
->  		kernel_init_free_pages(page, 1 << order);
-> +
-> +	kernel_poison_pages(page, 1 << order, 0);
->  	if (debug_pagealloc_enabled())
->  		kernel_map_pages(page, 1 << order, 0);
->  
-> -- 
-> 1.8.3.1
-> 
-
--- 
-Kees Cook
+----8<-----
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 95be7228f327..3b88af3149a7 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/freezer.h>
+ #include <linux/fs.h>
+ #include <linux/hw_random.h>
+ #include <linux/kernel.h>
+@@ -421,7 +422,9 @@ static int hwrng_fillfn(void *unused)
+ {
+ 	long rc;
+=20
+-	while (!kthread_should_stop()) {
++	set_freezable();
++
++	while (!kthread_freezable_should_stop(NULL)) {
+ 		struct hwrng *rng;
+=20
+ 		rng =3D get_current_rng();
