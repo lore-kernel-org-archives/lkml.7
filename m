@@ -2,155 +2,102 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49009C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13064C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1515D208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57DC208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="JgcR0ufG";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="FDdjqAq+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BrskgRFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFUIfe (ORCPT
+        id S1726336AbfFUIgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:35:34 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:37864 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726055AbfFUIfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:35:33 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L8YARY005046;
-        Fri, 21 Jun 2019 01:35:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=bTZct3WyNTs8t7ljibZ5PG06Ui+Yj9uekmABLoOpIrI=;
- b=JgcR0ufGnevNMWVIUuslxI/4jhscmKopIITnh6rf3DUHiHJWwNE83oGGV6LZyOsYjSut
- ZalKDrfRJuolSqjqkX9OrHE4QkLDtHOFN9qDS8g/zXapC0L1zFht39Tl10i3OGhH1331
- SAP1QBOV3QBnmirFv7VrfMH19Wti4HQd+PgV/r5/cZEe+yiuPyvpyja1WaHukkF+2zxh
- 492udt7eFajYARlrbnN4VVC4/nH7MnUzDM/3v9VHCKx1C6bepXaKOFi2j+LY1zkKcd4v
- H4I9ySLH1Rtli2y2Al+YT6/L7v7qCZ990m/0zXGgAJjQxSIJcXd2Phdd7mtSS9h0Dmto 9w== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2053.outbound.protection.outlook.com [104.47.37.53])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t8cht4h9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jun 2019 01:35:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bTZct3WyNTs8t7ljibZ5PG06Ui+Yj9uekmABLoOpIrI=;
- b=FDdjqAq+N3hMBJx/2r+g9IFsz4TuH01UhDCQB3oZQOagYGgPS/9NTvHnBDQknrKCK0KzOQP6UiKS/7o5sGIe9KMXs5EzUCzybAl/fVXmQT3G8Qh3ftqy+5fDnBQsaU+upJpMaJhH0lqKJQ3jKWQgp/91AKgxfngcYT16EyW4s6Y=
-Received: from DM6PR07CA0001.namprd07.prod.outlook.com (2603:10b6:5:94::14) by
- MN2PR07MB6831.namprd07.prod.outlook.com (2603:10b6:208:11e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12; Fri, 21 Jun
- 2019 08:35:22 +0000
-Received: from DM3NAM05FT008.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e51::208) by DM6PR07CA0001.outlook.office365.com
- (2603:10b6:5:94::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.16 via Frontend
- Transport; Fri, 21 Jun 2019 08:35:22 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 199.43.4.28 as permitted sender)
-Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- DM3NAM05FT008.mail.protection.outlook.com (10.152.98.114) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.6 via Frontend Transport; Fri, 21 Jun 2019 08:35:21 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8ZIRQ002547
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 21 Jun 2019 04:35:20 -0400
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 21 Jun 2019 10:35:18 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 21 Jun 2019 10:35:18 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8ZHCs009522;
-        Fri, 21 Jun 2019 09:35:17 +0100
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
-        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <rafalc@cadence.com>, <aniljoy@cadence.com>, <piotrs@cadence.com>,
-        <pthombar@cadence.com>
-Subject: [PATCH v3 5/5] net: macb: parameter added to cadence ethernet controller DT binding
-Date:   Fri, 21 Jun 2019 09:35:16 +0100
-Message-ID: <1561106116-9361-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
-References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+        Fri, 21 Jun 2019 04:36:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:47631 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfFUIgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:36:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45VX994m0Fz9s3l;
+        Fri, 21 Jun 2019 18:36:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561106206;
+        bh=ZlhWhI4DfW1N6bmx8poJ/T6Z6DiwcVEOB8XO8Mu/ruo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BrskgRFT8quZnsC5nJzlwIRCiJ7WDzODd0kKqWUZDdgWqWS5HAmI5gcPuULc3PlbR
+         vOFP7y6Th620AGQqR1ncPLvexiGHurH8UTejZ8DMNGjfZHa/mG5qUV8urDAhiGDngl
+         GhWCMTAnM0MAR0EaZA/QcT7n5dX9JaSldqsos8gLvvrU4HWEwdHvTYwI3fimEIBiFO
+         uOXtkxJhxL6yJH8+Tc/MeGpeet4q8L91FK0/mdHb/jueFCWsl0ETGkCYN08UzmhkVz
+         7p9i/v6ktRGtei4FbNwDNcm/2v3EEdQisOdzWNmidFTAAPiyL90HaUNM+LQFs/CxPW
+         81foCDv2byyrw==
+Date:   Fri, 21 Jun 2019 18:36:43 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the block tree
+Message-ID: <20190621183643.0e9f3fbd@canb.auug.org.au>
+In-Reply-To: <20190621081836.GB17718@lst.de>
+References: <20190621135616.20299058@canb.auug.org.au>
+        <20190621081836.GB17718@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(2980300002)(199004)(189003)(36092001)(7696005)(53416004)(51416003)(70586007)(8936002)(48376002)(81156014)(107886003)(76176011)(47776003)(486006)(68736007)(478600001)(81166006)(50466002)(76130400001)(8676002)(69596002)(36756003)(4326008)(305945005)(77096007)(53936002)(356004)(126002)(110136005)(336012)(426003)(186003)(476003)(86362001)(2906002)(50226002)(4744005)(26005)(316002)(70206006)(2616005)(2201001)(446003)(54906003)(11346002)(5660300002)(26826003)(16586007)(7126003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6831;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1e195dec-79e1-49c4-77ae-08d6f6236685
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:MN2PR07MB6831;
-X-MS-TrafficTypeDiagnostic: MN2PR07MB6831:
-X-Microsoft-Antispam-PRVS: <MN2PR07MB6831E7A40DC69F445279CDE4C1E70@MN2PR07MB6831.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0075CB064E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: yUUiw0ffaakQQQpC44hsLuZjmVZuCp5m0+N3zXB+8j/N19yj4d2CJPHPEYBe6V09Q8LYzfo4jeRcbadMZKm+cMe88V/RFeNVQpgzsJn2SqTcMGVDHbCdBWoN3gkO998iGlb7DxNBjEbtYp7QnUR98PA5DsAE6VqWWuPpqCdCxAqlgjQhCJJk/Dl9xpmAnqwJF9YL5UWFurZhVSoQ8zK6yQc7DxsPPIDXPW511SA4j+LoR0/VcFKoO41V0eVukbS6gnPIRMdQKRrS3uJQPsDnyp68ZFST5AjSzYIjNp0X/YfIGXeWZSg4AGda31hueHMIaARs6dTTUWyeaQQu4qdCWircdVIGkTCTHALAuE/Cm4LCh8Tqk1+7cmHk8EJR3dUr3IxxB7SP8HXXuX4n9XMVR+bPChpybh/Wm9crQpL9ggE=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 08:35:21.8265
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e195dec-79e1-49c4-77ae-08d6f6236685
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6831
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210072
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/t_mFD+sROxCPJ=pV27kzbzz"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New parameters added to Cadence ethernet controller DT binding
-for USXGMII interface.
+--Sig_/t_mFD+sROxCPJ=pV27kzbzz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Hi Christoph,
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 63c73fafe26d..dabdf9d3b574 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -28,6 +28,9 @@ Required properties:
- 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
- 	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
-+- serdes-rate-gbps External serdes rate.Mandatory for USXGMII mode.
-+	5 - 5G
-+	10 - 10G
- 
- The MAC address will be determined using the optional properties
- defined in ethernet.txt.
--- 
-2.17.1
+On Fri, 21 Jun 2019 10:18:36 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Jun 21, 2019 at 01:56:16PM +1000, Stephen Rothwell wrote:
+> > Hi Jens,
+> >=20
+> > After merging the block tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > ERROR: "css_next_descendant_pre" [block/bfq.ko] undefined! =20
+>=20
+> I think the culprit is "bfq-iosched: move bfq_stat_recursive_sum into the=
+ only
+> caller" as that starts using css_next_descendant_pre in bfq.
+>=20
+> I'll send a patch to export it.
 
+Thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/t_mFD+sROxCPJ=pV27kzbzz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0MlxsACgkQAVBC80lX
+0GwWswf/eJZbR3bc56RwbI8GYx87fxwAg6ggyAQMAG2Lazt5yD9bsMT4HVwwpArK
+US93+lcBfQfN/5BDEyegFyDc/F0uMBRAeGBWWSzjENesUIMZ4D22wMBMZj/LzQJm
+H1jBBVxt+OISoVp8pQJFNPoGW1aZYwpQ4tderJOJ8Tq+dnKaeJYQMoJTnTjlnhpR
+GlX5zLyJq7RuQf4LhcX8t5xSsMLgqTt5q6nJz7OMKTcjidYLPmBqPHTHh2M8K01g
+5cMC6k3eySpISYC0/LK7Pi+XRkEM3GyVWF0VE+HnwPYPsffm6MyDJ7JgVfk8zVMe
+Zy1nSiLrq0jhSvNCtbnDBnph+fS+fA==
+=gusO
+-----END PGP SIGNATURE-----
+
+--Sig_/t_mFD+sROxCPJ=pV27kzbzz--
