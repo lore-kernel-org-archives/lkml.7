@@ -2,110 +2,173 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36526C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B52C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6A5208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FAA206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MMv0Ydn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfFUNjp (ORCPT
+        id S1726386AbfFUNjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:39:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55092 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfFUNjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:39:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D9916307D850;
-        Fri, 21 Jun 2019 13:39:44 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-60.sin2.redhat.com [10.67.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CD9C5B689;
-        Fri, 21 Jun 2019 13:38:46 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v14 5/7] dax: check synchronous mapping is supported
-Date:   Fri, 21 Jun 2019 19:04:53 +0530
-Message-Id: <20190621133455.3303-6-pagupta@redhat.com>
-In-Reply-To: <20190621133455.3303-1-pagupta@redhat.com>
-References: <20190621133455.3303-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 21 Jun 2019 13:39:45 +0000 (UTC)
+        Fri, 21 Jun 2019 09:39:51 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35609 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfFUNjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:39:49 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w20so2568952edd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AdpAsciClW5VStBwxplQLFyT5xLaWG5vW4nBjzS9ue8=;
+        b=MMv0Ydn948bMlAsUr3EOQTiiiIsndLshwaLg99cYJeSWvgk03QQ2LSLT1DwHnI+ttt
+         fYLpn0rHMLs5dRVqs577Vdjp9fQVNg1AI7YMotlVBRgN2G+jxYa30fNPDT4cxuIBbnbv
+         dvkhiikckPj8I9WO4qszbrxQqjT4JDmftO4ZkqoU6ylL3W02f46VZgCH18TT1nSpqoIR
+         iYL16BfVrpSfbVFU4fdiZv/1CJyG5zDKZV62sGCL+E2XVUEGFbl4jyZB5dUrvDb+Wm2X
+         ESnK59f5G2A768/OcKoYqJIV3GVjhBwChxmegwrnBe1M3OaBl4qF1jOpFlqBJ6y5eTG+
+         g4KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AdpAsciClW5VStBwxplQLFyT5xLaWG5vW4nBjzS9ue8=;
+        b=SnXyjwC/+oOaRx5+CI1cAeM/59SpwKEpBuzPsnIPOWI8mp4JT8AhK6XRfxg1YeUlR/
+         FDQ+XCciQh4VkYnuAxWzzm9mtBXraE0Z7Qbr+lpFO9IqprkwaeTfiEpcyMlWl+nlf+H3
+         k/oc21ZEzZJPAU2mX6+H6CDxhcbAB4Ep4mBeU6fcGW3aTMwYD2Dp6u7Q+CG2f2GkQJoQ
+         /rAWdmOFObohBSulcGkc5UjLvk+5mP9ceeTENwNcjegbdgZ6u4x696gF7pMnzvQe2l2s
+         vpZr01wCUXTorq28ioSo3yMIcq+VDBZmsM8/SDRvc2rdlj9blbYvAswXoN6sTlXS15E4
+         lvHg==
+X-Gm-Message-State: APjAAAX0E8w3jrf4HXcqaQy818ri8uca0HWSLduK0D4Evn60JuQ5/Nk3
+        Vk5qjRFjmCOj4anqQD6ZbsAebA==
+X-Google-Smtp-Source: APXvYqyfo29+EXbgAlEhNY5mM3p5DZaIm16f0XKm7106HMmSS3lHu91bLkjtSP71e9ueQByDkzUQEg==
+X-Received: by 2002:a50:974b:: with SMTP id d11mr110357427edb.24.1561124387072;
+        Fri, 21 Jun 2019 06:39:47 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id c49sm856113eda.74.2019.06.21.06.39.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 06:39:46 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 779E810289C; Fri, 21 Jun 2019 16:39:48 +0300 (+03)
+Date:   Fri, 21 Jun 2019 16:39:48 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v5 6/6] mm,thp: avoid writes to file with THP in pagecache
+Message-ID: <20190621133948.2pvagzfwpwwk6rho@box>
+References: <20190620205348.3980213-1-songliubraving@fb.com>
+ <20190620205348.3980213-7-songliubraving@fb.com>
+ <20190621130740.ehobvjjj7gjiazjw@box>
+ <ABE906A7-719A-4AFF-8683-B413397C9865@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ABE906A7-719A-4AFF-8683-B413397C9865@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces 'daxdev_mapping_supported' helper
-which checks if 'MAP_SYNC' is supported with filesystem
-mapping. It also checks if corresponding dax_device is
-synchronous. Virtio pmem device is asynchronous and
-does not not support VM_SYNC.
+On Fri, Jun 21, 2019 at 01:10:54PM +0000, Song Liu wrote:
+> 
+> 
+> > On Jun 21, 2019, at 6:07 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > 
+> > On Thu, Jun 20, 2019 at 01:53:48PM -0700, Song Liu wrote:
+> >> In previous patch, an application could put part of its text section in
+> >> THP via madvise(). These THPs will be protected from writes when the
+> >> application is still running (TXTBSY). However, after the application
+> >> exits, the file is available for writes.
+> >> 
+> >> This patch avoids writes to file THP by dropping page cache for the file
+> >> when the file is open for write. A new counter nr_thps is added to struct
+> >> address_space. In do_last(), if the file is open for write and nr_thps
+> >> is non-zero, we drop page cache for the whole file.
+> >> 
+> >> Signed-off-by: Song Liu <songliubraving@fb.com>
+> >> ---
+> >> fs/inode.c         |  3 +++
+> >> fs/namei.c         | 22 +++++++++++++++++++++-
+> >> include/linux/fs.h | 31 +++++++++++++++++++++++++++++++
+> >> mm/filemap.c       |  1 +
+> >> mm/khugepaged.c    |  4 +++-
+> >> 5 files changed, 59 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/fs/inode.c b/fs/inode.c
+> >> index df6542ec3b88..518113a4e219 100644
+> >> --- a/fs/inode.c
+> >> +++ b/fs/inode.c
+> >> @@ -181,6 +181,9 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
+> >> 	mapping->flags = 0;
+> >> 	mapping->wb_err = 0;
+> >> 	atomic_set(&mapping->i_mmap_writable, 0);
+> >> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+> >> +	atomic_set(&mapping->nr_thps, 0);
+> >> +#endif
+> >> 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+> >> 	mapping->private_data = NULL;
+> >> 	mapping->writeback_index = 0;
+> >> diff --git a/fs/namei.c b/fs/namei.c
+> >> index 20831c2fbb34..de64f24b58e9 100644
+> >> --- a/fs/namei.c
+> >> +++ b/fs/namei.c
+> >> @@ -3249,6 +3249,22 @@ static int lookup_open(struct nameidata *nd, struct path *path,
+> >> 	return error;
+> >> }
+> >> 
+> >> +/*
+> >> + * The file is open for write, so it is not mmapped with VM_DENYWRITE. If
+> >> + * it still has THP in page cache, drop the whole file from pagecache
+> >> + * before processing writes. This helps us avoid handling write back of
+> >> + * THP for now.
+> >> + */
+> >> +static inline void release_file_thp(struct file *file)
+> >> +{
+> >> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+> >> +	struct inode *inode = file_inode(file);
+> >> +
+> >> +	if (inode_is_open_for_write(inode) && filemap_nr_thps(inode->i_mapping))
+> >> +		truncate_pagecache(inode, 0);
+> >> +#endif
+> >> +}
+> >> +
+> >> /*
+> >>  * Handle the last step of open()
+> >>  */
+> >> @@ -3418,7 +3434,11 @@ static int do_last(struct nameidata *nd,
+> >> 		goto out;
+> >> opened:
+> >> 	error = ima_file_check(file, op->acc_mode);
+> >> -	if (!error && will_truncate)
+> >> +	if (error)
+> >> +		goto out;
+> >> +
+> >> +	release_file_thp(file);
+> > 
+> > What protects against re-fill the file with THP in parallel?
+> 
+> khugepaged would only process vma with VM_DENYWRITE. So once the
+> file is open for write (i_write_count > 0), khugepage will not 
+> collapse the pages. 
 
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- include/linux/dax.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+I have not look at the patch very closely. Do you only create THP by
+khugepaged? Not in fault path?
 
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 86fc55c99b58..d1bea3979b5a 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -53,6 +53,18 @@ static inline void set_dax_synchronous(struct dax_device *dax_dev)
- {
- 	__set_dax_synchronous(dax_dev);
- }
-+/*
-+ * Check if given mapping is supported by the file / underlying device.
-+ */
-+static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-+					     struct dax_device *dax_dev)
-+{
-+	if (!(vma->vm_flags & VM_SYNC))
-+		return true;
-+	if (!IS_DAX(file_inode(vma->vm_file)))
-+		return false;
-+	return dax_synchronous(dax_dev);
-+}
- #else
- static inline struct dax_device *dax_get_by_host(const char *host)
- {
-@@ -87,6 +99,11 @@ static inline bool dax_synchronous(struct dax_device *dax_dev)
- static inline void set_dax_synchronous(struct dax_device *dax_dev)
- {
- }
-+static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-+				struct dax_device *dax_dev)
-+{
-+	return !(vma->vm_flags & VM_SYNC);
-+}
- #endif
- 
- struct writeback_control;
 -- 
-2.20.1
-
+ Kirill A. Shutemov
