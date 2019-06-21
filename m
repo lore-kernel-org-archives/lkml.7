@@ -2,108 +2,88 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C87C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4905C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207C42089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aVtcCmBw"
+	by mail.kernel.org (Postfix) with ESMTP id A7BDB21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfFUJ2y (ORCPT
+        id S1726414AbfFUJdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:28:54 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51264 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUJ2y (ORCPT
+        Fri, 21 Jun 2019 05:33:08 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40477 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:28:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5L9ShGD052119;
-        Fri, 21 Jun 2019 04:28:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561109323;
-        bh=hXYs9Tgh/MCqVjZYAsTAfOm1NcAJO5FtGUR6Y+0g89g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aVtcCmBwkEqjFApb0qhvUMPAQ1gOgOuAPCn5fDJL+c1VoPsS33HbE/3yF5altuUbA
-         9o5lPXnsGGp2jlw5E4oLV/PWIKxX+CuMzUpgYGXdei9H0gALDv7EmTwKux378TV3gu
-         0EQ1kmHe3z/YSJEppIqQ6p8Xuk3zNWfRMDLQ4qFU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5L9Shk1105743
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 04:28:43 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
- Jun 2019 04:28:43 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 21 Jun 2019 04:28:43 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5L9SdDc130391;
-        Fri, 21 Jun 2019 04:28:40 -0500
-Subject: Re: [PATCH V5 2/3] PCI: dwc: Cleanup DBI read and write APIs
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190621092127.17930-1-vidyas@nvidia.com>
- <20190621092127.17930-2-vidyas@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <63b59d6b-f6d7-fe4f-f319-6459a146ef36@ti.com>
-Date:   Fri, 21 Jun 2019 14:57:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Jun 2019 05:33:07 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E0B1160007;
+        Fri, 21 Jun 2019 09:33:03 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 11:33:02 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        claudiu.beznea@gmail.com
+Subject: Re: [PATCH 0/7] clk: at91: sckc: improve error path
+Message-ID: <20190621093302.GJ23549@piout.net>
+References: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190618095521.GE23549@piout.net>
+ <929ac20b-db1d-3f7a-b37c-0dfb253156d5@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621092127.17930-2-vidyas@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <929ac20b-db1d-3f7a-b37c-0dfb253156d5@microchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vidya,
-
-On 21/06/19 2:51 PM, Vidya Sagar wrote:
-> Cleanup DBI read and write APIs by removing "__" (underscore) from their
-> names as there are no no-underscore versions and the underscore versions
-> are already doing what no-underscore versions typically do.
+On 20/06/2019 10:30:42+0000, Claudiu.Beznea@microchip.com wrote:
+> Hi,
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes from v4:
-> * This is a new patch in this series
+> On 18.06.2019 12:55, Alexandre Belloni wrote:
+> > On 13/06/2019 15:37:06+0000, Claudiu.Beznea@microchip.com wrote:
+> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >>
+> >> Hi,
+> >>
+> >> This series tries to improve error path for slow clock registrations
+> >> by adding functions to free resources and using them on failures.
+> >>
+> > 
+> > Does the platform even boot when the slow clock is not available? 
+> > 
+> > The TCB clocksource would fail at:
+> > 
+> >         tc.slow_clk = of_clk_get_by_name(node->parent, "slow_clk");
+> >         if (IS_ERR(tc.slow_clk))
+> >                 return PTR_ERR(tc.slow_clk);
+> > 
 > 
->  drivers/pci/controller/dwc/pcie-designware.c | 16 ++++-----
->  drivers/pci/controller/dwc/pcie-designware.h | 36 ++++++++++----------
->  2 files changed, 26 insertions(+), 26 deletions(-)
+> In case of using TC as clocksource, yes, the platform wouldn't boot if slow
+> clock is not available, because, anyway the TC needs it. PIT may work
+> without it (if slow clock is not used to drive the PIT).
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 9d7c51c32b3b..5d22028d854e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -52,8 +52,8 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
->  	return PCIBIOS_SUCCESSFUL;
->  }
->  
-> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
-> -		       size_t size)
-> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
-> +		     size_t size)
+> For sure there are other IPs (which may be or are driven by slow clock)
+> which may not work if slow clock is driven them.
+> 
+> Anyway, please let me know if you feel this series has no meaning.
+> 
 
-The "base" here was added when we used the same API for both dbi_base and
-dbi_base2. Now that we have separate APIs, we should be able to remove that.
+Well, I'm not sure it is worth it but at the same time, it is not adding
+many lines and you already developed it...
 
-Thanks
-Kishon
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
