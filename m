@@ -2,167 +2,115 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C254DC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCDDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92187206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED46D2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXDw4OQ8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mxa9wvtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfFUEVH (ORCPT
+        id S1726127AbfFUEeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 00:21:07 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:37605 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfFUEVH (ORCPT
+        Fri, 21 Jun 2019 00:34:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43233 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFUEeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 00:21:07 -0400
-Received: by mail-lj1-f170.google.com with SMTP id 131so4721849ljf.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 21:21:05 -0700 (PDT)
+        Fri, 21 Jun 2019 00:34:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so75954ios.10;
+        Thu, 20 Jun 2019 21:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=3hLICzMUqwSU+OuwUK2lvcj8snry9XL6jJKc3niheNE=;
-        b=KXDw4OQ8tZ6i7Z7qB6RH9z7Elino7fMcSrDl6q2EYTg+21NAIKx4IsOdhp6ChFj+vB
-         VBZlnQTccnMVG9Tu2V7q6P6CBzDeJ/XsfLePFM4jIAwdB81p7URZCr7LzoMWGDfylYUA
-         qc0eBIJgoSkdVbyzAOpVyw7qUCzNXwsrRKL4zM4VKfUVzBn2rc/CRDnYTHluvJ9Cacmc
-         pQzPs73pJncFnNcmfLeCDLsRCdNG9gRKGZU6D4wt9MCg/L1tkOOnrU8Dw8Ey27ATuzpE
-         5+4rg8F34fUE+YuBhAxYc7+unyXu411UbnD4ZmW9OL4PBC/RrPIHBU0KHf1dihQr6Nlj
-         nl0Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ica3ySUaR522yE/ZMxZYijSnhD1xDLlEp+v8Cx/mej0=;
+        b=Mxa9wvtP/UVcehlG+S94/uUMn1COAyoRZ2nTdlBsJ3zad9huyWhwYg/cSWnwOFXbOz
+         lrmnwE1Ha/V1irJ03HR0I9WNPsv0kaCxzt4z8cy0KJMIgB49TKsVhNqNBUoxVLIZ/zWc
+         mVha4mE8S1zpx44V9n5k/ORXV9M4TCZjXUtYknxYbCu2JI+SGYniuPlW84Z19kN7IjUT
+         cQoHtsbVqvxzOBherxXPhGvK137Jsm/Om0hvM5zNbsl3vpkuiDvvCSDVqYnWxfeKm1xT
+         SBoOj7gPBq2khCIR1k3yR+m/yZHVdHpRmC0oOGLT1nM/t0+UWtqP4VY2Lrk1MNKwAm/e
+         7QpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=3hLICzMUqwSU+OuwUK2lvcj8snry9XL6jJKc3niheNE=;
-        b=AefUIbSUGxlbcOqFWjWdZapesE79FytAbXbPKw3dRdrK7M9Y0SnYfYcnKVZHVY//jS
-         p1RhVMfi4ZPRsd1hfmMPrZqwkCpuqjeMH5Xsgp40/n4w7yX4McJ++U4PyEc51Igu+7GU
-         8jynEU4JObXw5io8IwE7xs7jdWHKlRgrV+lRuKxd+MdfAaLQmf4SJ8AHI3vHaKge4KqG
-         yY0sXgdxKh2al6snsym5kuRyGQiwu4pLFw45WQw1To8YYQSz1T94+A4GZ4fa7BysEmTe
-         ZxTzb5/ZhCGSuEToPxz1pcIa2eI2FVrabbC75SIhCD35o7KYzmOn8Fya/PundI4j83r5
-         fGYw==
-X-Gm-Message-State: APjAAAUFRzrZK6wzq9fwvk2tcisqEx6PPxMWvPK3flHDOPtxSylZ9dpt
-        Akh8sFzXwAHc/ojMGiOkR+VaWQWN0AbxnOM5u2s=
-X-Google-Smtp-Source: APXvYqys/YbEVpfpHmSaZKwcjzvR7/Ux+CyWp/DyK9GAWi34XZVCfVdBD0jTd5Q3hCI4mxQoDeT8yzlRkTOaKAkXg20=
-X-Received: by 2002:a2e:5b94:: with SMTP id m20mr62267355lje.7.1561090864887;
- Thu, 20 Jun 2019 21:21:04 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ica3ySUaR522yE/ZMxZYijSnhD1xDLlEp+v8Cx/mej0=;
+        b=WHQK/toU5lubVf5UhB5peFInL4xyfo8JwNE0iGHo3zqrU9AC+sceCsKwfOiNJk8WAN
+         2u98GGRHkjIRFHq7iVrmqGcylIPuRRLqM3JzVlI74/fhbA5uSXYS+h0wFSBlJ6MmT90O
+         mA/D+8YrkKP/H4ssK/x5Gxn7Q2WU+HLr+q0Rm5aD713L+56xaUuOH45YWvnGjxUXkpX2
+         CjCxZOH2k7dmcKqnQXfjQQc1hhotuMPSgRSKX2bjjDFRFN73qoLrqv5Lp4Xv960IAOWB
+         lKQyy2pWfC0hcA0oikjurQZQtKOJKV3ZMEG3Vn+XdUFE0XtN9MYQYdULjQKmqQ216YXK
+         RQIA==
+X-Gm-Message-State: APjAAAVePo1DPVbtqHqDo/G9uLNl+cEfHkHEdy+3T55J9sIisdp4luYj
+        SfIxRfsM3F3I99vwQrxvwmFpU805p9IVM+O2hVI=
+X-Google-Smtp-Source: APXvYqypTQWp8EcBhntIVc2vxfGSjLvBmtNgQYl5tub6+s8/UsvK5TV6Kcvr1YAq20lnIcw9L9ct7MBwgyUvalDzaD0=
+X-Received: by 2002:a5e:de4d:: with SMTP id e13mr20647673ioq.272.1561091662310;
+ Thu, 20 Jun 2019 21:34:22 -0700 (PDT)
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 21 Jun 2019 14:20:53 +1000
-Message-ID: <CAPM=9tyM7BRfAwruJ4QsY_gMCGVHxS=ag7cNA1H304zcnAFK+A@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.2-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com> <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Thu, 20 Jun 2019 21:34:10 -0700
+Message-ID: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        agross@kernel.org, Lee Jones <lee.jones@linaro.org>,
+        xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Linus,
+Hi Jeffrey,
 
-Just catching up on the week since back from holidays, everything
-seems quite sane.
+On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>  #ifdef CONFIG_OF
+> -static const struct of_device_id elan_of_match[] = {
+> -       { .compatible = "elan,ekth3000" },
+> -       { /* sentinel */ }
+> -};
 
-Dave.
+I think OF IDs should stay in this file since we agreed HID will not
+be checking them.
 
-core:
-- copy_to_user fix for really legacy codepaths.
+>  MODULE_DEVICE_TABLE(of, elan_of_match);
+>  #endif
+>
+> diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+> new file mode 100644
+> index 000000000000..8130bbebbdda
+> --- /dev/null
+> +++ b/include/linux/input/elan-i2c-ids.h
+> @@ -0,0 +1,68 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Elan I2C Touchpad devide whitelist
 
-vmwgfx:
-- two dma fixes
-- one virt hw interaction fix
+s/devide/device/
 
-i915:
-- modesetting fix
-- gvt fix
+> + *
+> + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
 
-panfrost:
-- BO unmapping fix
+This just moves the code around. If anything I'd say it should keep
+the original Elan copyright.
 
-imx:
-- image converter fixes
+Thanks.
 
-
-drm-fixes-2019-06-21:
-drm vmwgfx, panfrost, i915, imx fixes
-The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec=
-:
-
-  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-06-21
-
-for you to fetch changes up to 5eab9cf87b6c261f4e2f6c7623171cc2f5ea1a9c:
-
-  Merge tag 'imx-drm-fixes-2019-06-20' of
-git://git.pengutronix.de/git/pza/linux into drm-fixes (2019-06-21
-11:44:24 +1000)
-
-----------------------------------------------------------------
-drm vmwgfx, panfrost, i915, imx fixes
-
-----------------------------------------------------------------
-Boris Brezillon (1):
-      drm/panfrost: Make sure a BO is only unmapped when appropriate
-
-Dan Carpenter (1):
-      drm: return -EFAULT if copy_to_user() fails
-
-Dave Airlie (4):
-      Merge branch 'vmwgfx-fixes-5.2' of
-git://people.freedesktop.org/~thomash/linux into drm-fixes
-      Merge tag 'drm-misc-fixes-2019-06-19' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge tag 'drm-intel-fixes-2019-06-20' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge tag 'imx-drm-fixes-2019-06-20' of
-git://git.pengutronix.de/git/pza/linux into drm-fixes
-
-Jani Nikula (1):
-      Merge tag 'gvt-fixes-2019-06-19' of
-https://github.com/intel/gvt-linux into drm-intel-fixes
-
-Qian Cai (1):
-      drm/vmwgfx: fix a warning due to missing dma_parms
-
-Steve Longerbeam (3):
-      gpu: ipu-v3: image-convert: Fix input bytesperline width/height align
-      gpu: ipu-v3: image-convert: Fix input bytesperline for packed formats
-      gpu: ipu-v3: image-convert: Fix image downsize coefficients
-
-Thomas Hellstrom (2):
-      drm/vmwgfx: Use the backdoor port if the HB port is not available
-      drm/vmwgfx: Honor the sg list segment size limitation
-
-Ville Syrj=C3=A4l=C3=A4 (1):
-      drm/i915: Don't clobber M/N values during fastset check
-
-Weinan Li (1):
-      drm/i915/gvt: ignore unexpected pvinfo write
-
- drivers/gpu/drm/drm_bufs.c                 |   5 +-
- drivers/gpu/drm/drm_ioc32.c                |   5 +-
- drivers/gpu/drm/i915/gvt/handlers.c        |  15 +--
- drivers/gpu/drm/i915/intel_display.c       |  38 ++++++--
- drivers/gpu/drm/panfrost/panfrost_gem.c    |   3 +-
- drivers/gpu/drm/panfrost/panfrost_gem.h    |   1 +
- drivers/gpu/drm/panfrost/panfrost_mmu.c    |   8 ++
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |   3 +
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        | 146 +++++++++++++++++++++++--=
-----
- drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c |  10 +-
- drivers/gpu/ipu-v3/ipu-image-convert.c     |  40 +++++---
- 11 files changed, 209 insertions(+), 65 deletions(-)
+-- 
+Dmitry
