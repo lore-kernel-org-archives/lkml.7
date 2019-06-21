@@ -2,157 +2,173 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FBAC48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0DCC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B64C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuYJxoFO"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA50208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561128641;
+	bh=S09RYkUMMxHYoHx76cTWh53Cqr6Fibp+qLvkSIpPItQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MPDIxRtWG6eluoYt0P1VQfaIXvMEG5z4I2E1RL8D7WVr8IRGpYzX/3hsw3oaU41Fh
+	 CEBO7awlD3nR8DiElYFnC3oYdLTr1zqSUyBfWkiY8UsXBXPdJCUeFrSq2ImPKMUJ/R
+	 k0n7LnHc54rT8W/NSPZkCkfpnj2JqK53Oz4j596U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfFUOtA (ORCPT
+        id S1726233AbfFUOuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:49:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40500 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfFUOtA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:49:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so3123542pla.7;
-        Fri, 21 Jun 2019 07:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xllrJTB8B8ElfqEi7jLajptsKVcgf1poB5tDdPZCtl4=;
-        b=XuYJxoFO8NUo0BlBFOH84oyOAfrNEIBDI8YKQK7b0vcvDzfo+xGDpZNnoD2hg47m5k
-         ziEJORFZ3T0xxTA2+WKsVbCjMJAKIeYXdG1B3dT47n8I05yaodRAVLRIK4d1p3TiJtZZ
-         4zRB0DqxDDF2L/RNsHmB8kRYFARM2GwUrF1Lc9oBekrIuAmArFI0sjARcg1hBxb+Ltda
-         G4BbH3wCT5AlJx/JphPxxfllCuZAl+jSqRYlYLQNuzP55Fx+jHXO7DOBTJrDqqyJnB1d
-         vSR6r++dJ7nmHsqO9E9ajQSYJtsO/voNRg9TQaTNnsWdHMIWvwPGYVhjgyqtZ+VP9+Lr
-         gw3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xllrJTB8B8ElfqEi7jLajptsKVcgf1poB5tDdPZCtl4=;
-        b=r7UieyVGIDeLJANWxj3hX7UxPDaeQIWSkZFa+oFXuHZv8VqhumvI6sM6alEvXTXL3O
-         SeWCbBHD4A3wHSgKTzcPPSk+x+1Lz4h9FRc9GjC+9lzNrOTcSZF8vWOo8KyeAI5fUevi
-         zF4JFwfT9OizQgpbkg4xFholnpJWqeSz5EH2qxN0H2YNg65DX8GiOTUwsd+amaYJR+Js
-         mrSRJXS7mdlrGBH7rpF/9AYQv0nW7Mlr078AxXdusY8b9m57S9rCsFHPxKVPSlveLqUR
-         c3IyAGnp0QaK5bnIHt+XPA/PtqMH7RmeVVz1AfWsU6d2FyDCtwr9qohc74tlR9eKffni
-         NgEQ==
-X-Gm-Message-State: APjAAAXhvO4/FBEnNpG4gNUhoBAtUBbrPvHc9KCq/2W2YB9rdwSwWFOL
-        BkRdEDq3VfaFeCWto+/OJqI=
-X-Google-Smtp-Source: APXvYqzEx9cEX7WhDSf/+AktxcwIhinYzbOG/rbT4THtM4dftSxhhLqbPBS5viOtU6y18WynvQNdSw==
-X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr54044072plb.240.1561128539221;
-        Fri, 21 Jun 2019 07:48:59 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id j8sm2891737pfi.148.2019.06.21.07.48.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 07:48:58 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org, hdegoede@redhat.com, bjorn.andersson@linaro.org,
-        agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v8 0/5] Basic DT support for Lenovo Miix 630
-Date:   Fri, 21 Jun 2019 07:48:54 -0700
-Message-Id: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 21 Jun 2019 10:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbfFUOuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:50:39 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8CC92089E;
+        Fri, 21 Jun 2019 14:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561128638;
+        bh=S09RYkUMMxHYoHx76cTWh53Cqr6Fibp+qLvkSIpPItQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VTUHdnMaOZ0iDcqeySu7ks48hk5JDg+Vls1nObiTqE94DrxyTAcElQrmmD0FfzeE9
+         AwmbDFds/aoQsDKuurx+IyjCDHZpJZduH7+ddd7CTjxtE1jKJw5wlP3K/vPLj2FMDx
+         wx5gT00rQzju9oABrDET2XzyIALVVE/Zxk+5tSlI=
+Date:   Fri, 21 Jun 2019 23:50:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] powerpc/kprobes: Allow probing on any ftrace
+ address
+Message-Id: <20190621235034.acc00fc3e2b2c7e89caa1fd5@kernel.org>
+In-Reply-To: <d26f5467577ff0aeecea55e7035ea64e303bdf17.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <d26f5467577ff0aeecea55e7035ea64e303bdf17.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
-MSM8998) laptops that comes with Windows, and seems to have a dedicated
-following of folks intrested to get Linux up and running on it.
+On Tue, 18 Jun 2019 20:17:06 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
 
-This series adds support for the basic functionality this is validated
-towork using devicetree.  Although the laptops do feed ACPI to Windows,
-the existing MSM8998 support in mainline is DT based, so DT provides a
-quick path to functionality while ACPI support is investigated.
+> With KPROBES_ON_FTRACE, kprobe is allowed to be inserted on instructions
+> that branch to _mcount (referred to as ftrace location). With
+> -mprofile-kernel, we now include the preceding 'mflr r0' as being part
+> of the ftrace location.
+> 
+> However, by default, probing on an instruction that is not actually the
+> branch to _mcount() is prohibited, as that is considered to not be at an
+> instruction boundary. This is not the case on powerpc, so allow the same
+> by overriding arch_check_ftrace_location()
+> 
+> In addition, we update kprobe_ftrace_handler() to detect this scenarios
+> and to pass the proper nip to the pre and post probe handlers.
+> 
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/kernel/kprobes-ftrace.c | 30 ++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
+> index 972cb28174b2..6a0bd3c16cb6 100644
+> --- a/arch/powerpc/kernel/kprobes-ftrace.c
+> +++ b/arch/powerpc/kernel/kprobes-ftrace.c
+> @@ -12,14 +12,34 @@
+>  #include <linux/preempt.h>
+>  #include <linux/ftrace.h>
+>  
+> +/*
+> + * With -mprofile-kernel, we patch two instructions -- the branch to _mcount
+> + * as well as the preceding 'mflr r0'. Both these instructions are claimed
+> + * by ftrace and we should allow probing on either instruction.
+> + */
+> +int arch_check_ftrace_location(struct kprobe *p)
+> +{
+> +	if (ftrace_location((unsigned long)p->addr))
+> +		p->flags |= KPROBE_FLAG_FTRACE;
+> +	return 0;
+> +}
+> +
+>  /* Ftrace callback handler for kprobes */
+>  void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
+>  			   struct ftrace_ops *ops, struct pt_regs *regs)
+>  {
+>  	struct kprobe *p;
+> +	int mflr_kprobe = 0;
+>  	struct kprobe_ctlblk *kcb;
+>  
+>  	p = get_kprobe((kprobe_opcode_t *)nip);
+> +	if (unlikely(!p)) {
 
-The three devices are very similar, but do have differences in the set
-of peripherals supported, so the idea is that the vast majority of the
-support for all three can live in a common include, which should reduce
-overall duplication.  Adding support for the other two devices is tacked
-onto the end of the series.
+Hmm, is this really unlikely? If we put a kprobe on the second instruction address,
+we will see p == NULL always.
 
-The bleeding edge work for these laptops and work in progress can be
-found at https://github.com/aarch64-laptops/prebuilt
+> +		p = get_kprobe((kprobe_opcode_t *)(nip - MCOUNT_INSN_SIZE));
+> +		if (!p)
 
-v8:
--Used original Elan copyright for new header file
--Kept the DT ids in the Elan core driver instead of miving them to the
-header
--Fixed "device" misspelling in new header
+Here will be unlikely, because we can not find kprobe at both of nip and
+nip - MCOUNT_INSN_SIZE.
 
-v7:
--Removed HID matching on compatible strings as it was determined to be
-not needed
+> +			return;
+> +		mflr_kprobe = 1;
+> +	}
+> +
+>  	if (unlikely(!p) || kprobe_disabled(p))
 
-v6:
--Export the elan_i2c DT and ACPI ids so that hid-quirks can use them
--Use the elan_i2c ids within hid-quirks to reduce duplication
--Add DTs for the Asus and HP devices since the DT seems finalized, and
-folks have been asking
+"unlikely(!p)" is not needed here.
 
-v5:
--Split out elan_i2c changes into their own patch
--Use a static list of strings to match
--Fixed typo of "whitelist"
--Dropped incorrect thermal zones
--Dropped tags from Bjorn and Lee since the functional should be
-identical, but the code is structured different
+Thank you,
 
-v4:
--Changed the hid-quirks ELAN handling around per Benjamin Tissoires
--Dropped new DT binding
+>  		return;
+>  
+> @@ -33,6 +53,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
+>  		 */
+>  		regs->nip -= MCOUNT_INSN_SIZE;
+>  
+> +		if (mflr_kprobe)
+> +			regs->nip -= MCOUNT_INSN_SIZE;
+> +
+>  		__this_cpu_write(current_kprobe, p);
+>  		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+>  		if (!p->pre_handler || !p->pre_handler(p, regs)) {
+> @@ -45,6 +68,8 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
+>  				kcb->kprobe_status = KPROBE_HIT_SSDONE;
+>  				p->post_handler(p, regs, 0);
+>  			}
+> +			if (mflr_kprobe)
+> +				regs->nip += MCOUNT_INSN_SIZE;
+>  		}
+>  		/*
+>  		 * If pre_handler returns !0, it changes regs->nip. We have to
+> @@ -57,6 +82,11 @@ NOKPROBE_SYMBOL(kprobe_ftrace_handler);
+>  
+>  int arch_prepare_kprobe_ftrace(struct kprobe *p)
+>  {
+> +	if ((unsigned long)p->addr & 0x03) {
+> +		printk("Attempt to register kprobe at an unaligned address\n");
+> +		return -EILSEQ;
+> +	}
+> +
+>  	p->ainsn.insn = NULL;
+>  	p->ainsn.boostable = -1;
+>  	return 0;
+> -- 
+> 2.22.0
+> 
 
-v3:
--Changed "clam" to "clamshell"
--Defined a dt binding for the combo Elan keyboard + touchpad device
--Adjusted the HID quirk to be correct for dt boot
--Removed extranious comment in board dts
--Fixed board level compatible
-
-v2:
--Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
-but
-"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
-
-Jeffrey Hugo (5):
-  Input: elan_i2c: Export the device id whitelist
-  HID: quirks: Refactor ELAN 400 and 401 handling
-  arm64: dts: qcom: Add Lenovo Miix 630
-  arm64: dts: qcom: Add HP Envy x2
-  arm64: dts: qcom: Add Asus NovaGo TP370QL
-
- arch/arm64/boot/dts/qcom/Makefile             |   3 +
- .../dts/qcom/msm8998-asus-novago-tp370ql.dts  |  47 ++++
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 240 ++++++++++++++++++
- .../boot/dts/qcom/msm8998-hp-envy-x2.dts      |  30 +++
- .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 +++
- drivers/hid/hid-quirks.c                      |  22 +-
- drivers/input/mouse/elan_i2c_core.c           |  50 +---
- include/linux/input/elan-i2c-ids.h            |  76 ++++++
- 8 files changed, 438 insertions(+), 60 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
- create mode 100644 include/linux/input/elan-i2c-ids.h
 
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
