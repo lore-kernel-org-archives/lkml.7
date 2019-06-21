@@ -2,142 +2,114 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB514C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601AFC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AE42085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399322084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHH18yoA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uAl+pb5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfFUBUP (ORCPT
+        id S1726628AbfFUBUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:20:15 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:48242 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfFUBUO (ORCPT
+        Thu, 20 Jun 2019 21:20:19 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:50913 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbfFUBUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:20:14 -0400
-Received: by mail-vk1-f202.google.com with SMTP id f184so1919599vkd.15
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:13 -0700 (PDT)
+        Thu, 20 Jun 2019 21:20:16 -0400
+Received: by mail-pl1-f202.google.com with SMTP id 71so2653718pld.17
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sZPDagH2N6OInO/tFeMg9JGeODlstxnUOt5waxS+/Vg=;
-        b=pHH18yoAvnmfW2qvCxuOEiD2FV/+42fWKCvrpZZu8PPhOc9gYupxE7PK6VpLmLQXUU
-         fve//NFkOKVWipooUBEnA3UcVzYHXWHFA03vNawm1eIL/hRriG8rI4pyD1VJdMiEJqZ8
-         80BEkDl7fWc5uJnNPpj/k+AzYjq/FMeNUF2Z5fTF7XHJdfi2rOzjvKpjlcQFPRd/3wr2
-         QirOfocXpfj5d2J3a+xkXF0J8R5o3pIsDbCwMiw5l1FgVBqeBAZ7mzDeR2s80FZYb/CK
-         wHA8vGJZMP21IqcWXFBAXYdudMiW7M/o0z+aQXYnQOjnTbV8Ev4KFD8GEpSTuHMRcwT0
-         mINA==
+        bh=JqSAbEGn1HiZP7c6GcuMsV6mwVA+ao3NtmgYDy/YB50=;
+        b=uAl+pb5UgR8qbNWvTqgNyUdGrjYg0S8BfztU1IaK3wSoovw9zlPCjs+fxR/Zldidjt
+         wn9jEjHX6zhp2cY/ATrv0Ui2iFYIO/84hN6Y9U0zSrxpdUGNw4l6ofnhy4DW6H1w1REh
+         e7xaSuXohECGbWYKz7+urb02nPjB4dMxHHraE2pgWMJeOrKlP6Brq6ZYzgnti8M6knOD
+         M5dofE5spcg4W1bE+A2c24KQml7+KGHeAK64yt51wq5qc77KvrpFdOMYA4aIUfufBhW/
+         VF40DkSCXitcpI+sAdK9CQdmQyjHL8QEx8o56v+XmnMnicC0CjNjNkw0OspKK1lBtU/2
+         MRZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sZPDagH2N6OInO/tFeMg9JGeODlstxnUOt5waxS+/Vg=;
-        b=RzDobSSS2TJpbHizC9XUTL7EDoz3HyimA+a+drpvv0keFkdxHmsjqLCjrUMh9zQp05
-         6TOpse+Sld/E3g0EddyBTp5Pk7WwG6J/hdru4Hs4oK7dnZk94I2NEHhqilaLfnXuTkib
-         S+qBMYgz1cxooFlCA8/RAgT1wHt2UZDTYkBzVWHNr1fkBQRwVfdhzdstaV25/UgdsZeg
-         QwDeOAYV7bQ+zJo2si9ATVKuO4YYaGJY/hYCN8AhDdXhgVL4moqb4oSVUsuS4pQta4fu
-         AP7PytBaJacNMS+A2ebfuQwTITmOHjSexchZghgZiKgp5uTt5X+4pXnQ6/meoY+vBdwd
-         PErQ==
-X-Gm-Message-State: APjAAAXjgCi+N6bD2E4CMaNVabtgbcNj52HoMIdV3qJKDky38AnKijQD
-        O8xvfCK7d4q9vOkm9BHkDXpE8SA7MRa69gGhjbGXGA==
-X-Google-Smtp-Source: APXvYqxckCwmVhY53ts462jqSAK1H90HXXRRUJIVr6hr3RrpbKSlGb9nn3biH5pst2z8ewo9K52wgg7v3ry/ZnfMXaIzJg==
-X-Received: by 2002:a1f:23d6:: with SMTP id j205mr8388245vkj.52.1561080012958;
- Thu, 20 Jun 2019 18:20:12 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:19:21 -0700
+        bh=JqSAbEGn1HiZP7c6GcuMsV6mwVA+ao3NtmgYDy/YB50=;
+        b=nRT9cI1qSUSE6OADpPit18E2iSxMQX58uvgwwoyWaIgG1bRD1g87/QciWbP4w60RRt
+         jK9XmgVruXF0rSPcjvcdCFR/VGNviqBRaAxqGZOkRjaSV/V2/6Yi3cPax3ZJ3STM6XAI
+         LxQwLOpYjNq3G2Nf3tU8TaW3pyLhzuGxpzGRywePmuMDKsqxfgEi+1tQ0JlnB9nc39G7
+         czOuYM5Q3heMEPCDicSdDgKaRU4uzjDgDlFOQ6zAbzgfx9sbmaI1RENE9Q1ZWtMYxlht
+         JbsNRKI5ApslgAi/yuhrRMsCy3Sdw095edHTjQy3xbQ9uZmLP53n8ljg34LseYAC1e8w
+         fevg==
+X-Gm-Message-State: APjAAAX0nyEVZLxzduT/oc0SgEFeF2TTb+Y7mkESX7KecBTBBXQRqs23
+        IPg90YktgO1v9HIOMH7Q2/jI8Qe5wkXtTmEoTa5gTA==
+X-Google-Smtp-Source: APXvYqwT26wVJK6nFrq7e+H8nLKZxTkGEC6Cm+2MlyXrmHTpSaeB1v4qyUV96R/qlEsGT6gqXZ46YMXwlQeXlC7AVr9xzw==
+X-Received: by 2002:a65:5006:: with SMTP id f6mr10257389pgo.402.1561080015411;
+ Thu, 20 Jun 2019 18:20:15 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:19:22 -0700
 In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
-Message-Id: <20190621011941.186255-11-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-12-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190621011941.186255-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V33 10/30] hibernate: Disable when the kernel is locked down
+Subject: [PATCH V33 11/30] uswsusp: Disable when the kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Josh Boyer <jwboyer@fedoraproject.org>,
+        linux-api@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
         David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>, rjw@rjwysocki.net,
-        pavel@ucw.cz, linux-pm@vger.kernel.org
+        Matthew Garrett <mjg59@google.com>, linux-pm@vger.kernel.org,
+        pavel@ucw.cz, rjw@rjwysocki.net
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Boyer <jwboyer@fedoraproject.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-There is currently no way to verify the resume image when returning
-from hibernate.  This might compromise the signed modules trust model,
-so until we can work with signed hibernate images we disable it when the
-kernel is locked down.
+uswsusp allows a user process to dump and then restore kernel state, which
+makes it possible to modify the running kernel.  Disable this if the kernel
+is locked down.
 
-Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: rjw@rjwysocki.net
-Cc: pavel@ucw.cz
 cc: linux-pm@vger.kernel.org
+Cc: pavel@ucw.cz
+Cc: rjw@rjwysocki.net
 ---
- include/linux/security.h     | 1 +
- kernel/power/hibernate.c     | 4 +++-
- security/lockdown/lockdown.c | 1 +
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ kernel/power/user.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 2d3c69b9fd04..deac722f0d86 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -85,6 +85,7 @@ enum lockdown_reason {
- 	LOCKDOWN_MODULE_SIGNATURE,
- 	LOCKDOWN_DEV_MEM,
- 	LOCKDOWN_KEXEC,
-+	LOCKDOWN_HIBERNATION,
- 	LOCKDOWN_INTEGRITY_MAX,
- 	LOCKDOWN_CONFIDENTIALITY_MAX,
- };
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index abef759de7c8..5804ffeb8622 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -32,6 +32,7 @@
- #include <linux/ctype.h>
- #include <linux/genhd.h>
- #include <linux/ktime.h>
+diff --git a/kernel/power/user.c b/kernel/power/user.c
+index 2d8b60a3c86b..8a8d7f1c8fbb 100644
+--- a/kernel/power/user.c
++++ b/kernel/power/user.c
+@@ -24,6 +24,7 @@
+ #include <linux/console.h>
+ #include <linux/cpu.h>
+ #include <linux/freezer.h>
 +#include <linux/security.h>
- #include <trace/events/power.h>
  
- #include "power.h"
-@@ -70,7 +71,8 @@ static const struct platform_hibernation_ops *hibernation_ops;
+ #include <linux/uaccess.h>
  
- bool hibernation_available(void)
- {
--	return (nohibernate == 0);
-+	return nohibernate == 0 &&
-+		!security_is_locked_down(LOCKDOWN_HIBERNATION);
- }
+@@ -52,6 +53,9 @@ static int snapshot_open(struct inode *inode, struct file *filp)
+ 	if (!hibernation_available())
+ 		return -EPERM;
  
- /**
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 94af1c3583d8..42b7bc467ef6 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -21,6 +21,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
- 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
- 	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
-+	[LOCKDOWN_HIBERNATION] = "hibernation",
- 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
- 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
- };
++	if (security_is_locked_down(LOCKDOWN_HIBERNATION))
++		return -EPERM;
++
+ 	lock_system_sleep();
+ 
+ 	if (!atomic_add_unless(&snapshot_device_available, -1, 0)) {
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
