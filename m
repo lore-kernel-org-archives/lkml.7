@@ -2,72 +2,71 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37384C48BE1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A26C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1079B20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6899B20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zOwG4AOK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxTpHm7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfFUDxN (ORCPT
+        id S1726121AbfFUDy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:53:13 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39204 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfFUDxN (ORCPT
+        Thu, 20 Jun 2019 23:54:26 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37392 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUDyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:53:13 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so4665306ljh.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:53:11 -0700 (PDT)
+        Thu, 20 Jun 2019 23:54:25 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d11so3964539lfb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=FrrvTHho78EP5KoZwnELQ+SwH7ZAGxfQLwF/qbl9Rvc=;
-        b=zOwG4AOKjZuHQO1tV+XR6kkktAAUlYhiKzUk+P70lBPEePHK5/hS/6S5pgENPa0Xxq
-         lKRE6zymJwCCmLjjOgjg91NO3uqY94zYl4NZ6+IzRkn77nLWJeQhYr34yw9QfQB2VAMU
-         eAKCebLsfQR+BtEBWlbBUlnHbwDAdFZZYtCNh5ciC5yJg36lRPJkfDNmT5regus2biQs
-         V5/B5AXgmwIOHhy7TiCetM+famhR8l2+ZF2z7JmxcgCGEUJHM5cneewKqG3YNXAiWr7T
-         eMmnU3X2NAEX/HpPR+wu0IF+iGg19MQY7sT4EnfzaD2YDRep8E3wAAnAB0gRyx4vZ94j
-         nedA==
+        bh=Jn4tGYSJ/BVRJYqeuzvrUB2edC/jmbjSeSFuekjFpaE=;
+        b=UxTpHm7rCec53OY9ETHDHt6KAq5k39cMuHcI1a3Dq2f4pSc24mnlCaxM8Zu3KLgdlI
+         0kwzLI57XCfc0WJXMNoUBdpKRmxtLFPe6GPEpU71c+/qJqTsrwBMZeAuDPfet9m8GUOY
+         cWemjN1l3qpgFLF9pf9vgDOmMF4H3AvHhMwqjW67QrZaayQzNnAcVPbzEGneGj6rZ7DT
+         5akLJVVYypyCw16BN8iDRRF1OfbWkILZ2LSW+WofQ+jxCakLJtUYcZQOMRqJHLrXdsu+
+         G1cvDYTIFEkuebULB54Wq1dRtuhcy3Apj5QEfZtT7v4JzzQFs/tEt95bXb12GdmL7Hb8
+         XkXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FrrvTHho78EP5KoZwnELQ+SwH7ZAGxfQLwF/qbl9Rvc=;
-        b=Mfdo0nu5UMbR8j24sebkhuyx5g6IhTRNV/IvbSILUK6aGkpceYA7eQ6LXIpz5JLpAz
-         vVnVr3Ve8eLWAv46vran9ybVwM7xJXdklMXqlMA+xBkSqx23ZyRHwqJYweETWrX2wfcV
-         edyugKYMxkbdwINcBeFs4TjP6nRUZxPESB1vlPJ1imkwL/rGA1VHPY5tK3XBNMYC2BjN
-         YsGFS92c2Pc5O9M/jpbHQYQCTAlZJc2F+EouZFsK5fhqRp36fOjxWHlQ350K+Hr+G2sR
-         Vb14RiMNCNsjhADVwF8g/OTdko0ENkiH+i3pKkTx2GIWmUv3RKhTvpqdJv8vurq94u9n
-         gw7A==
-X-Gm-Message-State: APjAAAWPv3IsX6hhTGSvS9/jQI5x+A5s0q/8qvgLnAuUyQDR7f1fY50c
-        NtXNo3AMRRV0K+yIHn2xBnaiyfkT5mZaD9J44PjCbQ==
-X-Google-Smtp-Source: APXvYqygyRMTirpZrOw1xE7h5+5DAyC5gzJ/81Sz+cMwydhZF23uBzd0dG2gpwjzZQ12ARBpxnBkOMKPZoxKz//n+1c=
-X-Received: by 2002:a2e:824d:: with SMTP id j13mr70390472ljh.137.1561089190895;
- Thu, 20 Jun 2019 20:53:10 -0700 (PDT)
+        bh=Jn4tGYSJ/BVRJYqeuzvrUB2edC/jmbjSeSFuekjFpaE=;
+        b=eJbglV3Zu/UNkqHqvqviNgA1hQoY1/DWVI/9m1d/g8XbFCH9AtgprajVQC5VwCRYpc
+         EpjxUlTVqEl6EA20WZ4Ryi9CbDpPthrO3wZhmpEoF3jBqfO+FsMBHY1e+Gn2973JYoBs
+         VdsRUtuEdGABGWbKVJuGXYDdzy5x4/bJvSrQtOrhETniYNFouROEd95IAUBUUs+pvoyx
+         OX7I92ZV8YzhVT1luoR0X+S4xey3F65JKw22bBLPdxbMtPHhOFkJModNaB4xJONtPLOU
+         H2V2RWoXz6tYQzOBXWuDf+AVVtRrehRocpsbqcxQgJmeWMOrDo0mcxrXIDMADWwmbNvT
+         MCjg==
+X-Gm-Message-State: APjAAAWY4dvaSoPgoxk3PnOsJEDBqCUKQcWegrqPHuX2NINoOaByzST5
+        Sjmk3UarS2D1Np/1GxerkgltRVg3Mz/9C1w7wMITRPjL
+X-Google-Smtp-Source: APXvYqydGQ8QmBF8bQXC1fWB9VKUlQL5NiQCwNMkAVUQ2cHe1Ocf30WnEs2/LJdXgTkrhRaTar6elZXPSfIFRpZW+qQ=
+X-Received: by 2002:a19:ccc6:: with SMTP id c189mr35078913lfg.160.1561089262697;
+ Thu, 20 Jun 2019 20:54:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190620174336.357373754@linuxfoundation.org>
-In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 21 Jun 2019 09:22:59 +0530
-Message-ID: <CA+G9fYstNR0bDrPiZHiXdX0bU6AnALU1inYm4JN0047zDKpoEQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/61] 4.19.54-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <20190620103524.GF17204@e110455-lin.cambridge.arm.com>
+In-Reply-To: <20190620103524.GF17204@e110455-lin.cambridge.arm.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 21 Jun 2019 13:54:11 +1000
+Message-ID: <CAPM=9tx9n7eAiHakdp+A8twco1GbKs5sy3=kJL6tH_SoYsLG1g@mail.gmail.com>
+Subject: Re: [GIT PULL] mali-dp and komeda patches for drm-next
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        MaliDP Maintainers <malidp@foss.arm.com>,
+        DRI devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,103 +74,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 at 23:40, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Thu, 20 Jun 2019 at 20:35, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
 >
-> This is the start of the stable review cycle for the 4.19.54 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Hi DRM maintainers,
 >
-> Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
-> Anything received after that time might be too late.
+> Picking up pace on the upstreaming of Komeda driver, with quite a lot
+> of new features added this time. On top of that we have the small
+> cleanups and improved usage of the debugfs functions. Please pull!
+
+It looks like you rebased this at the last moment, please don't do
+that, don't rebase just because you can.
+
+The reason I noticed is because
+dim: 344f00e4d7d6 ("drm/komeda: Make Komeda interrupts shareable"):
+author Signed-off-by missing.
+dim: 1885a6d946f5 ("drm/komeda: fix 32-bit
+komeda_crtc_update_clock_ratio"): SHA1 in fixes line not found:
+dim:     a962091227ed ("drm/komeda: Add engine clock requirement check
+for the downscaling")
+dim: ERROR: issues in commits detected, aborting
+
+so clearly rebasing the fixed commit broke stuff, you should probably
+squash fixes if you are rebasing.
+
+Please resend with above fixed, and refrain from misc rebases in future.
+
+Dave.
+
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.54-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
+> Best regards,
+> Liviu
 >
-> thanks,
 >
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.54-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 8661e38ef458269230688e503c5a1c50232e5fa2
-git describe: v4.19.53-62-g8661e38ef458
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.53-62-g8661e38ef458
-
-
-No regressions (compared to build v4.19.53)
-
-No fixes (compared to build v4.19.53)
-
-Ran 23617 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> The following changes since commit 52d2d44eee8091e740d0d275df1311fb8373c9=
+a9:
+>
+>   Merge v5.2-rc5 into drm-next (2019-06-19 12:07:29 +0200)
+>
+> are available in the Git repository at:
+>
+>   git://linux-arm.org/linux-ld.git for-upstream/mali-dp
+>
+> for you to fetch changes up to 344f00e4d7d6538c1862505b25b662b47c9e0bb0:
+>
+>   drm/komeda: Make Komeda interrupts shareable (2019-06-19 17:04:21 +0100=
+)
+>
+> ----------------------------------------------------------------
+> Arnd Bergmann (1):
+>       drm/komeda: fix 32-bit komeda_crtc_update_clock_ratio
+>
+> Ayan Halder (1):
+>       drm/komeda: Make Komeda interrupts shareable
+>
+> Greg Kroah-Hartman (2):
+>       komeda: no need to check return value of debugfs_create functions
+>       malidp: no need to check return value of debugfs_create functions
+>
+> Liviu Dudau (1):
+>       arm/komeda: Convert dp_wait_cond() to return an error code.
+>
+> Lowry Li (Arm Technology China) (10):
+>       drm/komeda: Creates plane alpha and blend mode properties
+>       drm/komeda: Clear enable bit in CU_INPUTx_CONTROL
+>       drm/komeda: Add rotation support on Komeda driver
+>       drm/komeda: Adds limitation check for AFBC wide block not support R=
+ot90
+>       drm/komeda: Update HW up-sampling on D71
+>       drm/komeda: Enable color-encoding (YUV format) support
+>       drm/komeda: Adds SMMU support
+>       dt/bindings: drm/komeda: Adds SMMU support for D71 devicetree
+>       drm/komeda: Adds zorder support
+>       drm/komeda: Add slave pipeline support
+>
+> james qian wang (Arm Technology China) (21):
+>       drm/komeda: Add writeback support
+>       drm/komeda: Added AFBC support for komeda driver
+>       drm/komeda: Attach scaler to drm as private object
+>       drm/komeda: Add the initial scaler support for CORE
+>       drm/komeda: Implement D71 scaler support
+>       drm/komeda: Add writeback scaling support
+>       drm/komeda: Add engine clock requirement check for the downscaling
+>       drm/komeda: Add image enhancement support
+>       drm/komeda: Add komeda_fb_check_src_coords
+>       drm/komeda: Add format support for Y0L2, P010, YUV420_8/10BIT
+>       drm/komeda: Unify mclk/pclk/pipeline->aclk to one MCLK
+>       drm/komeda: Rename main engine clk name "mclk" to "aclk"
+>       dt/bindings: drm/komeda: Unify mclk/pclk/pipeline->aclk to one ACLK
+>       drm/komeda: Add component komeda_merger
+>       drm/komeda: Add split support for scaler
+>       drm/komeda: Add layer split support
+>       drm/komeda: Refine function to_d71_input_id
+>       drm/komeda: Accept null writeback configurations for writeback
+>       drm/komeda: Add new component komeda_splitter
+>       drm/komeda: Enable writeback split support
+>       drm/komeda: Correct printk format specifier for "size_t"
+>
+>  .../devicetree/bindings/display/arm,komeda.txt     |  23 +-
+>  drivers/gpu/drm/arm/display/include/malidp_io.h    |   7 +
+>  drivers/gpu/drm/arm/display/include/malidp_utils.h |   5 +-
+>  drivers/gpu/drm/arm/display/komeda/Makefile        |   2 +
+>  .../gpu/drm/arm/display/komeda/d71/d71_component.c | 582 +++++++++++++++=
+++-
+>  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   | 142 +++--
+>  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h   |   2 +
+>  .../gpu/drm/arm/display/komeda/komeda_color_mgmt.c |  67 ++
+>  .../gpu/drm/arm/display/komeda/komeda_color_mgmt.h |  17 +
+>  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   | 154 ++++-
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.c    |  59 +-
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.h    |  13 +-
+>  .../drm/arm/display/komeda/komeda_format_caps.c    |  58 ++
+>  .../drm/arm/display/komeda/komeda_format_caps.h    |  24 +-
+>  .../drm/arm/display/komeda/komeda_framebuffer.c    | 175 +++++-
+>  .../drm/arm/display/komeda/komeda_framebuffer.h    |  13 +-
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c    | 130 +++-
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.h    |  71 ++-
+>  .../gpu/drm/arm/display/komeda/komeda_pipeline.c   |  66 +-
+>  .../gpu/drm/arm/display/komeda/komeda_pipeline.h   | 111 +++-
+>  .../drm/arm/display/komeda/komeda_pipeline_state.c | 679 +++++++++++++++=
++++++-
+>  drivers/gpu/drm/arm/display/komeda/komeda_plane.c  | 191 +++++-
+>  .../drm/arm/display/komeda/komeda_private_obj.c    | 154 +++++
+>  .../drm/arm/display/komeda/komeda_wb_connector.c   | 199 ++++++
+>  drivers/gpu/drm/arm/malidp_drv.c                   |  11 +-
+>  25 files changed, 2728 insertions(+), 227 deletions(-)
+>  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.=
+c
+>  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.=
+h
+>  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_wb_connecto=
+r.c
+>
+>
+> --
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     =C2=AF\_(=E3=83=84)_/=C2=AF
