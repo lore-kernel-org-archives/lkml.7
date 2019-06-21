@@ -2,160 +2,138 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97132C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0820EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60310208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FC72084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="A0sR4TbA"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="tto/SWz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfFULSq (ORCPT
+        id S1726617AbfFULVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:18:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53729 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfFULSq (ORCPT
+        Fri, 21 Jun 2019 07:21:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40175 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfFULVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:18:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so5969140wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 04:18:44 -0700 (PDT)
+        Fri, 21 Jun 2019 07:21:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so6183429wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 04:21:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NabQZDyF6ofZk8run8ReROPDDNPPhXEMVOy6Fc5LD2A=;
-        b=A0sR4TbA5sn9q6BPXeU1kL9L2rZYmfUq90m2Sf0mR6201SQWimJDCuq975mx4xdPMX
-         NIoPXdOUBPw4EZ7mzDrd3p6sFLm6s9pSSW0e9mgtMc6rXQQeYIR2dgyZkoRof3qM35LP
-         5eRLvNwhvTbC4pcagAYYGBlOnLcU2RDd7TiNKmhSHyHAkTsmrA1crtabpPFcBBqxhzvV
-         X/tnH8Qcgl8EZ6/5uaWL4eJKnqQ5xekFKeIMDSPucn3iqtUXmJC8cwg5FfZultGJuxFJ
-         3svqrNjQJA7RZodeSacxMWBKE99m5lY+xX5GPKzuGK4aii45lI+GSO4URvxn0IXqiwZm
-         mw5A==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XAz5+1ZugVE5GkUQUctoaFL1CCKytfPvugsjxndG7cg=;
+        b=tto/SWz336iwBga4qSfNB9bs/TG22rJdxD0IgYr48cvF+K3ateyntpV/dUlyNZDL61
+         ZLmokGp2bumZ7ODNLi9hYawLy0ew4Tk4C8HYpY1KSFzvlUZ0JQy8pe5muHT9SrWzTdQB
+         yS9mlZ5DdniDCQDobAj8u4NHQNZWlHRXhQOTnjF6h9uk3/UQGqKgWVLKuVyeh4FolkiB
+         XsndbKlT3d5S3p5Tuq6uyLwJrbLlRk6APCom3X6vj3bR+ZP6fvBER+KgTzvkADIwJFj1
+         NDW4ZTD04S0vvZS9mhTv5HU6C8OzFt/MmxYbz6ppjN/DcMTLKCClTY084IXbfdw9Vlke
+         n89A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NabQZDyF6ofZk8run8ReROPDDNPPhXEMVOy6Fc5LD2A=;
-        b=L/j+u2rKz+ux3COr+X6vCypO45iyq/kqc5pZNiUPohd44cPq3UzKSObtT47IKXP3T6
-         U4GIMOYetMAV3GxYbT+wJnJqqb+2B1sIr9sc9ztHtNRAEHLkNx78CAW1k5h6Vx4NeEB5
-         6LjHs7HdNoa0tZFq0DdFJt6bPVhq84YeG/WZUqyxVncgFT/tuFb7/hBpLp75gh2A0wHq
-         3dQrbn8lVS868aO8JD7xKxZE+iU0VHWFNGIqDXBQUtFm6IaP+WV7P4qYUE5quziH0Pxo
-         WkujG+EwG3F+tk6x09W8MN0Ck3Wh+UKzkWbeCHoYjdEPCqhgQDwJNW4jGgStD1dhXROn
-         x+xA==
-X-Gm-Message-State: APjAAAUTRoWxjuORyAhPyA8vAFzoHfj6ZSXvYrxbbvDMJPSca8BwENde
-        dgprxipXkT+IczBQNy5J8vReSQ==
-X-Google-Smtp-Source: APXvYqzLoKsLczgYAoe7ayG3xoBLZkEIoT8eLSCvDDxUbIs9XKe0M+GRht7p9R+HZi2Sd7kHDL7H8w==
-X-Received: by 2002:a1c:a7ca:: with SMTP id q193mr4122227wme.150.1561115923826;
-        Fri, 21 Jun 2019 04:18:43 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id a84sm2327897wmf.29.2019.06.21.04.18.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 04:18:43 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 13:18:41 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
-Message-ID: <20190621111839.v5yqlws6iw7mx4aa@brauner.io>
-References: <20190604160944.4058-1-christian@brauner.io>
- <20190604160944.4058-2-christian@brauner.io>
- <20190620184451.GA28543@roeck-us.net>
- <20190620221003.ciuov5fzqxrcaykp@brauner.io>
- <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XAz5+1ZugVE5GkUQUctoaFL1CCKytfPvugsjxndG7cg=;
+        b=MCoiIrzlO0URNnX8oOcmS//Zo5Jr6MsCu7CKUORcAkDywS36/yMxu1iABkug5FZaKl
+         Nz+WBIhyMDIIQfQOzsgBtwLtgwMbe10LNPCH54QoQXc3VZPBf7X3XTbGgq5AELvaSUTH
+         o0Zu8tU+hLfAU/l38+ANkBtM7DECSkSofsIVAx1uRkbiJMmNLIOZQ3x/I2EqawkZIXL+
+         601Oiq+LRpd/tKOWl4BpkRJtX3bF29Tl7SBlC8+TTXPU+0AQGrdSTiozURS6YYhis1x6
+         qmWq9zGtCncsFBAQRnPgsYxVWpLidUAPtKCo8Sl/SiYGBC12sGv+FY+6Mx4nraQDZKHf
+         Y/9Q==
+X-Gm-Message-State: APjAAAULgzYD64zqMbwh1Aq+EIQDDhri2hqlGG5dtBt5EBVdfy2fzMIi
+        yqEHBRR2RIT7+k8bJ620lojiUzz/OVM3sx4FS5xMAQ==
+X-Google-Smtp-Source: APXvYqwCkNmbGI1oEoF6P2VDTiGVGuWQkJhUYyk74HPQNXJGI2qWaNAhuxz1OHfnUA9Lp5z2MnK0iWTp48u7p/OPB3E=
+X-Received: by 2002:a1c:2dc2:: with SMTP id t185mr3889348wmt.52.1561116068934;
+ Fri, 21 Jun 2019 04:21:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com> <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 21 Jun 2019 16:50:58 +0530
+Message-ID: <CAAhSdy2uuUDkB5wa1FJzBFqDtNi2HBWs-s7G3BhCpwGs=LRohg@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, sachin.ghadi@sifive.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:37:50AM +0200, Arnd Bergmann wrote:
-> On Fri, Jun 21, 2019 at 12:10 AM Christian Brauner <christian@brauner.io> wrote:
-> > On Thu, Jun 20, 2019 at 11:44:51AM -0700, Guenter Roeck wrote:
-> > > On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
-> >
-> > clone3() was placed under __ARCH_WANT_SYS_CLONE. Most architectures
-> > simply define __ARCH_WANT_SYS_CLONE and are done with it.
-> > Some however, such as nios2 and h8300 don't define it but instead
-> > provide a sys_clone stub of their own because of architectural
-> > requirements (or tweaks) and they are mostly written in assembly. (That
-> > should be left to arch maintainers for sys_clone3.)
-> >
-> > The build failures were on my radar already. I hadn't yet replied
-> > since I haven't pushed the fixup below.
-> > The solution is to define __ARCH_WANT_SYS_CLONE3 and add a
-> > cond_syscall(clone3) so we catch all architectures that do not yet
-> > provide clone3 with a ENOSYS until maintainers have added it.
-> >
-> > diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
-> > index 7a39e77984ef..aa35aa5d68dc 100644
-> > --- a/arch/arm/include/asm/unistd.h
-> > +++ b/arch/arm/include/asm/unistd.h
-> > @@ -40,6 +40,7 @@
-> >  #define __ARCH_WANT_SYS_FORK
-> >  #define __ARCH_WANT_SYS_VFORK
-> >  #define __ARCH_WANT_SYS_CLONE
-> > +#define __ARCH_WANT_SYS_CLONE3
-> 
-> I never really liked having __ARCH_WANT_SYS_CLONE here
-> because it was the only one that a new architecture needed to
-> set: all the other __ARCH_WANT_* are for system calls that
-> are already superseded by newer ones, so a new architecture
-> would start out with an empty list.
-> 
-> Since __ARCH_WANT_SYS_CLONE3 replaces
-> __ARCH_WANT_SYS_CLONE for new architectures, how about
-> leaving __ARCH_WANT_SYS_CLONE untouched but instead
+On Fri, Jun 21, 2019 at 4:27 PM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 16 ++++++++++++++++
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
+>  2 files changed, 25 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index 4e8fbde..c53b4ea 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -225,5 +225,21 @@
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>                 };
+> +               eth0: ethernet@10090000 {
+> +                       compatible = "sifive,fu540-macb";
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <53>;
+> +                       reg = <0x0 0x10090000 0x0 0x2000
+> +                              0x0 0x100a0000 0x0 0x1000>;
+> +                       reg-names = "control";
+> +                       status = "disabled";
+> +                       local-mac-address = [00 00 00 00 00 00];
+> +                       clock-names = "pclk", "hclk";
+> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+> +                                <&prci PRCI_CLK_GEMGXLPLL>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +               };
+> +
+>         };
+>  };
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 4da8870..d783bf2 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -63,3 +63,12 @@
+>                 disable-wp;
+>         };
+>  };
+> +
+> +&eth0 {
+> +       status = "okay";
+> +       phy-mode = "gmii";
+> +       phy-handle = <&phy1>;
+> +       phy1: ethernet-phy@0 {
+> +               reg = <0>;
+> +       };
+> +};
+> --
+> 1.9.1
+>
 
-__ARCH_WANT_SYS_CLONE is left untouched. :)
+LGTM.
 
-> coming up with the reverse for clone3 and mark the architectures
-> that specifically don't want it (if any)?
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-Afaict, your suggestion is more or less the same thing what is done
-here. So I'm not sure it buys us anything apart from future
-architectures not needing to set __ARCH_WANT_SYS_CLONE3.
-
-I expect the macro above to be only here temporarily until all arches
-have caught up and we're sure that they don't require assembly stubs
-(cf. [1]). A decision I'd leave to the maintainers (since even for
-nios2 we were kind of on the fence what exactly the sys_clone stub was
-supposed to do).
-
-But I'm happy to take a patch from you if it's equally or more simple
-than this one right here.
-
-In any case, linux-next should be fine on all arches with this fixup
-now.
-
-Christian
-
-
-[1]: Architectures such as nios2 or h8300 simply take the asm-generic
-     syscall definitions and generate their syscall table from it. But
-     since they don't define __ARCH_WANT_SYS_CLONE the build would fail
-     complaining about sys_clone3 missing. The reason this doesn't
-     happen for legacy clone is that nios2 and h8300 provide assembly
-     stubs for sys_clone but they don't for sys_clone3.
-
+Regards,
+Anup
