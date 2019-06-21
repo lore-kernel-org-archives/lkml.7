@@ -2,219 +2,136 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101ABC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E6DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C362070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B865E2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 00:33:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="fhB2iXQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfFUAWk (ORCPT
+        id S1726106AbfFUAdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 20:22:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13948 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbfFUAWk (ORCPT
+        Thu, 20 Jun 2019 20:33:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35371 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfFUAdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 20:22:40 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L0MUCW069951
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:22:38 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t8hsynb2s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:22:38 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Fri, 21 Jun 2019 01:22:36 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Jun 2019 01:22:32 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5L0MVOF48169088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 00:22:31 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 452AC5204F;
-        Fri, 21 Jun 2019 00:22:31 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9F0195204E;
-        Fri, 21 Jun 2019 00:22:30 +0000 (GMT)
-Received: from [9.81.215.199] (unknown [9.81.215.199])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A89F5A004E;
-        Fri, 21 Jun 2019 10:22:26 +1000 (AEST)
-Subject: Re: [PATCH v2] ocxl: Allow contexts to be attached with a NULL mm
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190620041203.12274-1-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Fri, 21 Jun 2019 10:22:26 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 20:33:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so2459887pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 17:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VWCFU1NtUy1SLx0P04uvsBj+Xrz/jdAYg/mA6p5ibZI=;
+        b=fhB2iXQOxt0Df3GjN40VkZ9tXjPjZNZoZO3igKZZxEYyR3nven7fpjRelb3jUm2Sfo
+         Il/TUTEZNtgolHPyvbLRktFPs9V48tjRCgAURSb1mOTme54GZzjN1z9o5+P9M6Ovwp+F
+         6BzRKexLuOi/kSJoVCOlSmEcUTMa85wsRN5xqor+cYmRRyOMUiitJU538yqxO2NQFBdx
+         Jo6Xob8iNHVZrayIJgmpDsGGgNNSsI7S1wtAk2GrfbuyJm0wANKfNKdDpU/GUsEDM0sy
+         KmT4DFvnifcmiuIxfIn1/expYZchYkOd9AfNfJlP0hjk/tID7iw0V+yAR6lrH1R+3MO+
+         fsbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VWCFU1NtUy1SLx0P04uvsBj+Xrz/jdAYg/mA6p5ibZI=;
+        b=ldCrLSLL82EPzZGpiPfafiB0jnwMyGXDdzq7HoxDNDfIiQ+sETkckWOP+obiaYGwJB
+         3twqF+gbdkfgV9EcMyh2dKzxBplr88y3903q5Ot8LbtMEN+RWiHk/aJ6E1zwMd8YvxkK
+         jc3uQAwDwmPfSG2IH3koWiVLMoVqW32OSZQFzezI+4E+A04zgj5FJF/G34ra4fMjkTwy
+         uUo2Ll0wRMIbp2NsY/ldHPtu0u+qjhoJAb2GkF6G1vwwaVO2IwylJ+LwGcgMSON/cvz5
+         ZqlQN4EY+IzcWh6N8UCtyUFGZ5BG0pqx4PtPuLMxKtE5/f1H/kzXnNqHHLAc9g72joFL
+         OXlw==
+X-Gm-Message-State: APjAAAVsZeCY9J4CZOXCvgQnyDZ9Jm/1cz/BDSlRIFIZc5FOuGTjDK0y
+        ypDvxI3xaJ7c/E5WLs5hbINieg==
+X-Google-Smtp-Source: APXvYqx8XHF2lzyJRvlD0WQnCu3FXRxUp23oyFjChE34lsemufCBaNkdLqKB5bQVDLc8iKIqu0qW7Q==
+X-Received: by 2002:a63:e001:: with SMTP id e1mr15482674pgh.306.1561077199414;
+        Thu, 20 Jun 2019 17:33:19 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id q198sm625125pfq.155.2019.06.20.17.33.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 17:33:18 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 17:33:17 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, sdf@google.com, jianbol@mellanox.com,
+        jiri@mellanox.com, mirq-linux@rere.qmqm.pl, willemb@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] flow_dissector: Fix vlan header offset in
+ __skb_flow_dissect
+Message-ID: <20190621003317.GE1383@mini-arch>
+References: <20190619160132.38416-1-yuehaibing@huawei.com>
+ <20190619183938.GA19111@mini-arch>
+ <00a5d09f-a23e-661f-60c0-75fba6227451@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620041203.12274-1-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062100-4275-0000-0000-00000344378D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062100-4276-0000-0000-0000385468AA
-Message-Id: <a4e6b156-0dce-53e3-786f-cc954ebe08fa@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=825 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00a5d09f-a23e-661f-60c0-75fba6227451@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/6/19 2:12 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 06/20, Yuehaibing wrote:
+> On 2019/6/20 2:39, Stanislav Fomichev wrote:
+> > On 06/20, YueHaibing wrote:
+> >> We build vlan on top of bonding interface, which vlan offload
+> >> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+> >> BOND_XMIT_POLICY_ENCAP34.
+> >>
+> >> __skb_flow_dissect() fails to get information from protocol headers
+> >> encapsulated within vlan, because 'nhoff' is points to IP header,
+> >> so bond hashing is based on layer 2 info, which fails to distribute
+> >> packets across slaves.
+> >>
+> >> Fixes: d5709f7ab776 ("flow_dissector: For stripped vlan, get vlan info from skb->vlan_tci")
+> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >> ---
+> >>  net/core/flow_dissector.c | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+> >> index 415b95f..2a52abb 100644
+> >> --- a/net/core/flow_dissector.c
+> >> +++ b/net/core/flow_dissector.c
+> >> @@ -785,6 +785,9 @@ bool __skb_flow_dissect(const struct sk_buff *skb,
+> >>  		    skb && skb_vlan_tag_present(skb)) {
+> >>  			proto = skb->protocol;
+> >>  		} else {
+> >> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
+> >> +				nhoff -=  sizeof(*vlan);
+> >> +
+> > Should we instead fix the place where the skb is allocated to properly
+> > pull vlan (skb_vlan_untag)? I'm not sure this particular place is
+> > supposed to work with an skb. Having an skb with nhoff pointing to
+> > IP header but missing skb_vlan_tag_present() when with
+> > proto==ETH_P_8021xx seems weird.
 > 
-> If an OpenCAPI context is to be used directly by a kernel driver, there
-> may not be a suitable mm to use.
+> The skb is a forwarded vxlan packet, it send through vlan interface like this:
 > 
-> The patch makes the mm parameter to ocxl_context_attach optional.
+>    vlan_dev_hard_start_xmit
+>     --> __vlan_hwaccel_put_tag //vlan_tci and VLAN_TAG_PRESENT is set
+>     --> dev_queue_xmit
+>         --> validate_xmit_skb
+>           --> validate_xmit_vlan // vlan_hw_offload_capable is false
+>              --> __vlan_hwaccel_push_inside //here skb_push vlan_hlen, then clear skb->tci
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-
-> ---
->   arch/powerpc/mm/book3s64/radix_tlb.c |  5 +++++
->   drivers/misc/ocxl/context.c          |  9 ++++++---
->   drivers/misc/ocxl/link.c             | 28 ++++++++++++++++++++++++----
->   3 files changed, 35 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-> index bb9835681315..ce8a77fae6a7 100644
-> --- a/arch/powerpc/mm/book3s64/radix_tlb.c
-> +++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-> @@ -666,6 +666,11 @@ EXPORT_SYMBOL(radix__flush_tlb_page);
->   #define radix__flush_all_mm radix__local_flush_all_mm
->   #endif /* CONFIG_SMP */
->   
-> +/*
-> + * If kernel TLBIs ever become local rather than global, then
-> + * drivers/misc/ocxl/link.c:ocxl_link_add_pe will need some work, as it
-> + * assumes kernel TLBIs are global.
-> + */
->   void radix__flush_tlb_kernel_range(unsigned long start, unsigned long end)
->   {
->   	_tlbie_pid(0, RIC_FLUSH_ALL);
-> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-> index bab9c9364184..994563a078eb 100644
-> --- a/drivers/misc/ocxl/context.c
-> +++ b/drivers/misc/ocxl/context.c
-> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
->   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
->   {
->   	int rc;
-> +	unsigned long pidr = 0;
->   
->   	// Locks both status & tidr
->   	mutex_lock(&ctx->status_mutex);
-> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
->   		goto out;
->   	}
->   
-> -	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
-> -			mm->context.id, ctx->tidr, amr, mm,
-> -			xsl_fault_error, ctx);
-> +	if (mm)
-> +		pidr = mm->context.id;
-> +
-> +	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
-> +			      amr, mm, xsl_fault_error, ctx);
->   	if (rc)
->   		goto out;
->   
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index cce5b0d64505..58d111afd9f6 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -224,6 +224,17 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
->   		ack_irq(spa, ADDRESS_ERROR);
->   		return IRQ_HANDLED;
->   	}
-> +
-> +	if (!pe_data->mm) {
-> +		/*
-> +		 * translation fault from a kernel context - an OpenCAPI
-> +		 * device tried to access a bad kernel address
-> +		 */
-> +		rcu_read_unlock();
-> +		pr_warn("Unresolved OpenCAPI xsl fault in kernel context\n");
-> +		ack_irq(spa, ADDRESS_ERROR);
-> +		return IRQ_HANDLED;
-> +	}
->   	WARN_ON(pe_data->mm->context.id != pid);
->   
->   	if (mmget_not_zero(pe_data->mm)) {
-> @@ -523,7 +534,13 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   	pe->amr = cpu_to_be64(amr);
->   	pe->software_state = cpu_to_be32(SPA_PE_VALID);
->   
-> -	mm_context_add_copro(mm);
-> +	/*
-> +	 * For user contexts, register a copro so that TLBIs are seen
-> +	 * by the nest MMU. If we have a kernel context, TLBIs are
-> +	 * already global.
-> +	 */
-> +	if (mm)
-> +		mm_context_add_copro(mm);
->   	/*
->   	 * Barrier is to make sure PE is visible in the SPA before it
->   	 * is used by the device. It also helps with the global TLBI
-> @@ -546,7 +563,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   	 * have a reference on mm_users. Incrementing mm_count solves
->   	 * the problem.
->   	 */
-> -	mmgrab(mm);
-> +	if (mm)
-> +		mmgrab(mm);
->   	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
->   unlock:
->   	mutex_unlock(&spa->spa_lock);
-> @@ -652,8 +670,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
->   	if (!pe_data) {
->   		WARN(1, "Couldn't find pe data when removing PE\n");
->   	} else {
-> -		mm_context_remove_copro(pe_data->mm);
-> -		mmdrop(pe_data->mm);
-> +		if (pe_data->mm) {
-> +			mm_context_remove_copro(pe_data->mm);
-> +			mmdrop(pe_data->mm);
-> +		}
->   		kfree_rcu(pe_data, rcu);
->   	}
->   unlock:
-> 
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+>     --> bond_start_xmit
+>        --> bond_xmit_hash
+>          --> __skb_flow_dissect // nhoff point to IP header
+>             -->  case htons(ETH_P_8021Q)
+>             // skb_vlan_tag_present is false, so
+>               vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan), //vlan point to ip header wrongly
+I see, so bonding device propagates hw VLAN support from the slaves.
+If one of the slaves doesn't have it, its disabled for the bond device.
+Any idea why we do that? Why not pass skbs to the slave devices
+instead and let them handle the hw/sw vlan implementation?
+I see the propagation was added in 278339a42a1b 10 years ago and
+I don't see any rationale in the commit description.
+Somebody with more context should probably chime in :-)
