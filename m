@@ -2,109 +2,256 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F059C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158DC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4702920673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlLciLFG"
+	by mail.kernel.org (Postfix) with ESMTP id 06E5220673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561110079;
+	bh=20/iIKIB56lPSUWL64JrypPp4jifzbjpDRQYgfqkFag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=17cXCG2QqGGlCWekCrlYiBEIZ+af/7mErQdj6/kaPOEsqKfvzoRI5qyTGc4IuX5aK
+	 gQXrZwta4O2m24wF9IwU2hl+hLwWC1f0tPqITaSiZD4x4au6lRsZyQ5bGNkso8x74Y
+	 BSyxxAR1cflgvVgrKE967jLvQV/UZepBVlk7rl9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfFUJke (ORCPT
+        id S1726928AbfFUJlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:40:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40654 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfFUJkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:40:19 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so3306145pfp.7;
-        Fri, 21 Jun 2019 02:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ssaxVBt+HOJY4o+CcZ+fgzEAeEFqlrU5oDky1MfeR1M=;
-        b=JlLciLFGVNmSPEBs57P33zbvteXJEkeu+WrbmyatPqD8Mg9AN+UqZA2g5FWmLR4Dyb
-         Houb6v583jQlKk45alE6qTKaVl4Tb3r7W5uerz0PnvRmwrflTCK8uytJ0poonhntA1rO
-         Dn1Nayq356GS2lCYztCe2aiMn/5GijTJNYNrVomSScfPR/w45f+S4tYpPbXHnVVUf0M3
-         ctlu/muNpdWYFRHNC7zx6ScKlDiaA2ahZ73E7N0EogB0R5hBciRXNsPMt9e8JFhPUMSY
-         dwid76yUq4Urec+KE3apkBjdIAbDB3kzxDvYM0kC85jyB+M5Tq9+Hk1u445QL9NkLA3r
-         sObw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ssaxVBt+HOJY4o+CcZ+fgzEAeEFqlrU5oDky1MfeR1M=;
-        b=AfaLg9S3MQkEVmIJyD88f97qyyjjs97j9ZKXdAc0CyRBK2RGEoJYqpSDqNZSqkhJqM
-         WHnQmSgEzPce8m4vEXIjUgFqhY7aXrFn2MLSc5SoW2IMXGq2qMcxP69vfj0XQe2+s1oe
-         W7L2u5dQvf0Q/mmQcyZRsGLTEkMc5YCuCCkNigdTNs4T3YSO6lN9AT8KuYhla0T0IS9E
-         oyjJfhuC0Kgyad2JcEXX3QkD50IMIoCvJ6jO2EFwHO72NZH6T/0TcwhIkxDYPJwenpdx
-         EW3AtV5ttx8DibJcimN1311SfLk68kttrMoG7kd7DiydEHNYmCPd/57WUu1mL/QvGozh
-         me1A==
-X-Gm-Message-State: APjAAAUZ+j8RlP/uq+U/8Q4oCIquDu7Lqq8hKg0XLJPeODyeydfqlzlD
-        XN3C93mTS9MnQ16+YxdZOfagF3/H
-X-Google-Smtp-Source: APXvYqwmZ13S/4DNBKZTJLsbvlfecUprbxubEC/r1spqJpjqv0ZEQyKq22ydotn+96NRSpJr9pd9Jw==
-X-Received: by 2002:a17:90a:214e:: with SMTP id a72mr5610906pje.0.1561110018979;
-        Fri, 21 Jun 2019 02:40:18 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id y14sm1999506pjr.13.2019.06.21.02.40.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 21 Jun 2019 02:40:18 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [PATCH v5 3/4] KVM: LAPIC: Ignore timer migration when lapic timer is injected by pi
-Date:   Fri, 21 Jun 2019 17:40:01 +0800
-Message-Id: <1561110002-4438-4-git-send-email-wanpengli@tencent.com>
+        Fri, 21 Jun 2019 05:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbfFUJk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:40:29 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6734521744;
+        Fri, 21 Jun 2019 09:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561110028;
+        bh=20/iIKIB56lPSUWL64JrypPp4jifzbjpDRQYgfqkFag=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ls5I/bER4u6d/FxRz/VAE+k3BBEBRTG+fTWgxusWjHI2yhCk6+aXDTZIbi3dAWLEu
+         cnMmI/3MhjrNiYCj0WuQdkV3c4Ss6lHEzxJHBDs+0Np45/lbJ/epS8vZIkSllGeLeC
+         6RydrK2pClU3NxalX8nDO1rZD+jf/zW+/SLrJeDM=
+From:   guoren@kernel.org
+To:     julien.grall@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org
+Cc:     linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V2 4/4] csky: Improve tlb operation with help of asid
+Date:   Fri, 21 Jun 2019 17:39:59 +0800
+Message-Id: <1561109999-4322-5-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561109999-4322-1-git-send-email-guoren@kernel.org>
+References: <1561109999-4322-1-git-send-email-guoren@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Guo Ren <ren_guo@c-sky.com>
 
-When lapic timer is injected by posted-interrupt, the emulated timer is
-offload to the housekeeping cpu. The timer interrupt will be delivered
-properly, no need to migrate timer.
+There are two generations of tlb operation instruction for C-SKY.
+First generation is use mcr register and it need software do more
+things, second generation is use specific instructions, eg:
+ tlbi.va, tlbi.vas, tlbi.alls
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+We implemented the following functions:
+
+ - flush_tlb_range (a range of entries)
+ - flush_tlb_page (one entry)
+
+ Above functions use asid from vma->mm to invalid tlb entries and
+ we could use tlbi.vas instruction for newest generation csky cpu.
+
+ - flush_tlb_kernel_range
+ - flush_tlb_one
+
+ Above functions don't care asid and it invalid the tlb entries only
+ with vpn and we could use tlbi.vaas instruction for newest generat-
+ ion csky cpu.
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kvm/lapic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/csky/mm/tlb.c | 136 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 132 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 8869d30..ae575c0 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2522,7 +2522,8 @@ void __kvm_migrate_apic_timer(struct kvm_vcpu *vcpu)
+diff --git a/arch/csky/mm/tlb.c b/arch/csky/mm/tlb.c
+index efae81c..eb3ba6c 100644
+--- a/arch/csky/mm/tlb.c
++++ b/arch/csky/mm/tlb.c
+@@ -10,6 +10,13 @@
+ #include <asm/pgtable.h>
+ #include <asm/setup.h>
+ 
++/*
++ * One C-SKY MMU TLB entry contain two PFN/page entry, ie:
++ * 1VPN -> 2PFN
++ */
++#define TLB_ENTRY_SIZE		(PAGE_SIZE * 2)
++#define TLB_ENTRY_SIZE_MASK	(PAGE_MASK << 1)
++
+ void flush_tlb_all(void)
  {
- 	struct hrtimer *timer;
+ 	tlb_invalid_all();
+@@ -17,27 +24,148 @@ void flush_tlb_all(void)
  
--	if (!lapic_in_kernel(vcpu))
-+	if (!lapic_in_kernel(vcpu) ||
-+		posted_interrupt_inject_timer(vcpu))
- 		return;
+ void flush_tlb_mm(struct mm_struct *mm)
+ {
++#ifdef CONFIG_CPU_HAS_TLBI
++	asm volatile("tlbi.asids %0"::"r"(cpu_asid(mm)));
++#else
+ 	tlb_invalid_all();
++#endif
+ }
  
- 	timer = &vcpu->arch.apic->lapic_timer.timer;
++/*
++ * MMU operation regs only could invalid tlb entry in jtlb and we
++ * need change asid field to invalid I-utlb & D-utlb.
++ */
++#ifndef CONFIG_CPU_HAS_TLBI
++#define restore_asid_inv_utlb(oldpid, newpid) \
++do { \
++	if (oldpid == newpid) \
++		write_mmu_entryhi(oldpid + 1); \
++	write_mmu_entryhi(oldpid); \
++} while (0)
++#endif
++
+ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 			unsigned long end)
+ {
+-	tlb_invalid_all();
++	unsigned long newpid = cpu_asid(vma->vm_mm);
++
++	start &= TLB_ENTRY_SIZE_MASK;
++	end   += TLB_ENTRY_SIZE - 1;
++	end   &= TLB_ENTRY_SIZE_MASK;
++
++#ifdef CONFIG_CPU_HAS_TLBI
++	while (start < end) {
++		asm volatile("tlbi.vas %0"::"r"(start | newpid));
++		start += 2*PAGE_SIZE;
++	}
++	sync_is();
++#else
++	{
++	unsigned long flags, oldpid;
++
++	local_irq_save(flags);
++	oldpid = read_mmu_entryhi() & ASID_MASK;
++	while (start < end) {
++		int idx;
++
++		write_mmu_entryhi(start | newpid);
++		start += 2*PAGE_SIZE;
++		tlb_probe();
++		idx = read_mmu_index();
++		if (idx >= 0)
++			tlb_invalid_indexed();
++	}
++	restore_asid_inv_utlb(oldpid, newpid);
++	local_irq_restore(flags);
++	}
++#endif
+ }
+ 
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+-	tlb_invalid_all();
++	start &= TLB_ENTRY_SIZE_MASK;
++	end   += TLB_ENTRY_SIZE - 1;
++	end   &= TLB_ENTRY_SIZE_MASK;
++
++#ifdef CONFIG_CPU_HAS_TLBI
++	while (start < end) {
++		asm volatile("tlbi.vaas %0"::"r"(start));
++		start += 2*PAGE_SIZE;
++	}
++	sync_is();
++#else
++	{
++	unsigned long flags, oldpid;
++
++	local_irq_save(flags);
++	oldpid = read_mmu_entryhi() & ASID_MASK;
++	while (start < end) {
++		int idx;
++
++		write_mmu_entryhi(start | oldpid);
++		start += 2*PAGE_SIZE;
++		tlb_probe();
++		idx = read_mmu_index();
++		if (idx >= 0)
++			tlb_invalid_indexed();
++	}
++	restore_asid_inv_utlb(oldpid, oldpid);
++	local_irq_restore(flags);
++	}
++#endif
+ }
+ 
+ void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
+ {
+-	tlb_invalid_all();
++	int newpid = cpu_asid(vma->vm_mm);
++
++	addr &= TLB_ENTRY_SIZE_MASK;
++
++#ifdef CONFIG_CPU_HAS_TLBI
++	asm volatile("tlbi.vas %0"::"r"(addr | newpid));
++	sync_is();
++#else
++	{
++	int oldpid, idx;
++	unsigned long flags;
++
++	local_irq_save(flags);
++	oldpid = read_mmu_entryhi() & ASID_MASK;
++	write_mmu_entryhi(addr | newpid);
++	tlb_probe();
++	idx = read_mmu_index();
++	if (idx >= 0)
++		tlb_invalid_indexed();
++
++	restore_asid_inv_utlb(oldpid, newpid);
++	local_irq_restore(flags);
++	}
++#endif
+ }
+ 
+ void flush_tlb_one(unsigned long addr)
+ {
+-	tlb_invalid_all();
++	addr &= TLB_ENTRY_SIZE_MASK;
++
++#ifdef CONFIG_CPU_HAS_TLBI
++	asm volatile("tlbi.vaas %0"::"r"(addr));
++	sync_is();
++#else
++	{
++	int oldpid, idx;
++	unsigned long flags;
++
++	local_irq_save(flags);
++	oldpid = read_mmu_entryhi() & ASID_MASK;
++	write_mmu_entryhi(addr | oldpid);
++	tlb_probe();
++	idx = read_mmu_index();
++	if (idx >= 0)
++		tlb_invalid_indexed();
++
++	restore_asid_inv_utlb(oldpid, oldpid);
++	local_irq_restore(flags);
++	}
++#endif
+ }
+ EXPORT_SYMBOL(flush_tlb_one);
 -- 
 2.7.4
 
