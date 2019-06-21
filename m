@@ -2,144 +2,158 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D11C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A23C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CFB208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8FE21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="pm2I3JO7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JrgRZGiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfFUMll (ORCPT
+        id S1726884AbfFUMlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:41:41 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39554 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbfFUMll (ORCPT
+        Fri, 21 Jun 2019 08:41:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44500 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfFUMlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:41:41 -0400
-X-Greylist: delayed 1629 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jun 2019 08:41:40 EDT
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LCBv8Q030677;
-        Fri, 21 Jun 2019 08:14:08 -0400
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2059.outbound.protection.outlook.com [104.47.40.59])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2t8sds0xmu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jun 2019 08:14:08 -0400
+        Fri, 21 Jun 2019 08:41:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r16so6415047wrl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X91dMQEGH5GLZk0n/ybG6EnOO6L0apGOYu0vVuRHnGc=;
- b=pm2I3JO7gF97WHlmpsngIjXN0lIiRP8AdOXrhMw9T9Tpv4lz9whS3d8qwQBQ98LDBBM1oPUee5jl5iGRvuSOVXdq8mdVsf/G048uBE0skLhJ7bSrjPPAFRfrsnxrWTF1sBlK1Nw1uqdraE4feRre0myKZIdUDLPPUfSukOIUGDo=
-Received: from DM3PR03CA0023.namprd03.prod.outlook.com (2603:10b6:0:50::33) by
- CY1PR03MB2268.namprd03.prod.outlook.com (2a01:111:e400:c614::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Fri, 21 Jun
- 2019 12:14:06 +0000
-Received: from CY1NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::201) by DM3PR03CA0023.outlook.office365.com
- (2603:10b6:0:50::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.15 via Frontend
- Transport; Fri, 21 Jun 2019 12:14:06 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT022.mail.protection.outlook.com (10.152.75.185) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Fri, 21 Jun 2019 12:14:05 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5LCE4of023484
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 21 Jun 2019 05:14:04 -0700
-Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 21 Jun 2019 08:14:03 -0400
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V2 1/4] iio: adc: ad7124: Remove input number limitation
-Date:   Fri, 21 Jun 2019 15:13:41 +0300
-Message-ID: <20190621121344.24917-1-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UyII8E/E3mshPHrIMsqTxjJtV2uC2oH9mjOQblUJ9/o=;
+        b=JrgRZGiBTmjujp1DAceFMwZAzGMDtr8E0Ek2p5PEfVsS473YGQb4eZz/hSfRCUa4PT
+         PCL/0VmmsvC3bwMDGBcwLtoEV3CsVenV3I9cy9JAgXOfRedFJHPzAJH14pTHhhmRhJuH
+         zSIgviNgNjnQ3q+QyY+x7yM/+irnqrLXG54A9xvJR793m0llXVeuC9hc/QtscAlcp2uC
+         qjQ2GkqaHziMVeJ3Ci94+48IV1FaLhgc0tWBdIIHeAoHYeSifPU45Fuu/dX1MKphi8Jp
+         jHCcbZrHc4m9hYCz01MRC6bnnKjkjoypabgBcEunqnOnVoFRUlq3mS6ZA+911H28wTVE
+         WBAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UyII8E/E3mshPHrIMsqTxjJtV2uC2oH9mjOQblUJ9/o=;
+        b=JbwPzqTtiXPMy4jEa05N9C2nlJl/Zxo/D/WTUZ9ZDSzvwUHsoGqTBg9tVlJBihHEJ/
+         Ci5qnmGh3GAANv36scSgJ3bMhLSwM4T7dU1Z6opV3JCXDOQBnz8FyblBm97e9cWh4wSH
+         lR3QV0ylCNC1qsqIN3ejn0QEZiAxZElITfQr8bBUFgU10ItSzUdXkgKTT2Pt614pm5bb
+         XPFQjrCSO13/a1w+SsNg8L39CQOe5ROwz96bNyEvsNtEBuZPrC9076JmYJk3taqdxGIO
+         CHn+/6U8p854JBJWrsBIKVEm1g7yNqQIt+iDgus1RQWSCPaMyEL+1JjrvHp0fOMfDRu8
+         X46w==
+X-Gm-Message-State: APjAAAU0dKF1E0skGpUkQivCkW85blQcwOTVTlv/FSKIEmJwDduOTSyU
+        McTaZhQO2ri0t3npBfgGLfMAadI4rc6hkw==
+X-Google-Smtp-Source: APXvYqx7sEWjAoCocqkTEAccH5DTaTuYTnicvzBiGr/LTPl3+FpUS7jIbDEbXYD+xr2QoDp98s9PmQ==
+X-Received: by 2002:a5d:4708:: with SMTP id y8mr1982160wrq.85.1561120907035;
+        Fri, 21 Jun 2019 05:41:47 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.googlemail.com with ESMTPSA id o20sm6964907wrh.8.2019.06.21.05.41.45
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 05:41:46 -0700 (PDT)
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190522163428.7078-1-paul@crapouillou.net>
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+Message-ID: <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+Date:   Fri, 21 Jun 2019 13:41:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(346002)(39860400002)(2980300002)(37524003)(189003)(199004)(54534003)(16586007)(2906002)(1076003)(356004)(6666004)(7636002)(106002)(36756003)(305945005)(107886003)(246002)(2351001)(8936002)(50226002)(4326008)(54906003)(8676002)(316002)(48376002)(6916009)(47776003)(426003)(486006)(44832011)(476003)(2616005)(126002)(336012)(7696005)(51416003)(478600001)(50466002)(186003)(5660300002)(26005)(77096007)(72206003)(86362001)(70586007)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR03MB2268;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: eba68a76-0a9d-4fc2-c9ad-08d6f641f4f7
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY1PR03MB2268;
-X-MS-TrafficTypeDiagnostic: CY1PR03MB2268:
-X-Microsoft-Antispam-PRVS: <CY1PR03MB2268BA7DD3DDDDB74E3FB07F81E70@CY1PR03MB2268.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0075CB064E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 11ChL5nLvaEUu50LeXnkOwBcyeTDceCJ7/B7Xu7IZJNqKkK/tKmMzfZVYZyaoSoWlKJJ9MlmKJIp0Ja+ZCglBaMrgOaX9oyLlTgS4qW04jsIYYyYBxJr+jrrW+jbFW8MAYRJG5RYDBZXuErriZ8pkCXTpHXAcmc38etTYMsqyBOxF0PYLuG68Gx9YXIy7hixFidC1r2Venjfmz5UAv7+D0E9NkpOmwQ4tuwrXbPpjMY7JuSneKhz3W7wlG1eStiaR3PKGzNNWW9flh2dYWHMY449KgDOlJSmXfJ0blsWmTcaJ317TrW/iLGwY3dpJ8PDpQNEHA8mRddzugpm2AAeXwCc9FxWZE7oJfNnUyLXSCMroa3zeeY8VRbjPgES8pm8D+YpKdVG1oGjiYshu2fgPieceyE63Iapum6SBZr4+6s=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 12:14:05.7366
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eba68a76-0a9d-4fc2-c9ad-08d6f641f4f7
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR03MB2268
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=822 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210104
+In-Reply-To: <20190522163428.7078-1-paul@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver limits the user to use only 4/8 differential inputs, but this
-device has the option to use pseudo-differential channels. This will
-increase the number of channels to be equal with the number of inputs so 8
-channels for ad7124-4 and 16 for ad7124-8.
+On 22/05/2019 17:34, Paul Cercueil wrote:
+> When the driver probes, the PWM pin is automatically configured to its
+> default state, which should be the "pwm" function.
 
-This patch removes the check between channel nodes and num_inputs value.
+At which point in the probe... and by who?
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
+> However, at this
+> point we don't know the actual level of the pin, which may be active or
+> inactive. As a result, if the driver probes without enabling the
+> backlight, the PWM pin might be active, and the backlight would be
+> lit way before being officially enabled.
+> 
+> To work around this, if the probe function doesn't enable the backlight,
+> the pin is set to its sleep state instead of the default one, until the
+> backlight is enabled. Whenk the backlight is disabled, the pin is reset
+> to its sleep state.
+Doesn't this workaround result in a backlight flash between whatever 
+enables it and the new code turning it off again?
 
-Changelog v2:
-- nothing changed here
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net> > ---
+>   drivers/video/backlight/pwm_bl.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index fb45f866b923..422f7903b382 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/module.h>
+>   #include <linux/kernel.h>
+>   #include <linux/init.h>
+> +#include <linux/pinctrl/consumer.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/fb.h>
+>   #include <linux/backlight.h>
+> @@ -50,6 +51,8 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+>   	struct pwm_state state;
+>   	int err;
+>   
+> +	pinctrl_pm_select_default_state(pb->dev);
+> +
+>   	pwm_get_state(pb->pwm, &state);
+>   	if (pb->enabled)
+>   		return;
+> @@ -90,6 +93,8 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+>   
+>   	regulator_disable(pb->power_supply);
+>   	pb->enabled = false;
+> +
+> +	pinctrl_pm_select_sleep_state(pb->dev);
+>   }
+>   
+>   static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
+> @@ -626,6 +631,10 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>   	backlight_update_status(bl);
+>   
+>   	platform_set_drvdata(pdev, bl);
+> +
+> +	if (bl->props.power == FB_BLANK_POWERDOWN)
+> +		pinctrl_pm_select_sleep_state(&pdev->dev);
 
- drivers/iio/adc/ad7124.c | 7 -------
- 1 file changed, 7 deletions(-)
+Didn't backlight_update_status(bl) already do this?
 
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index 659ef37d5fe8..810234db9c0d 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 		if (ret)
- 			goto err;
- 
--		if (ain[0] >= st->chip_info->num_inputs ||
--		    ain[1] >= st->chip_info->num_inputs) {
--			dev_err(indio_dev->dev.parent,
--				"Input pin number out of range.\n");
--			ret = -EINVAL;
--			goto err;
--		}
- 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
- 						  AD7124_CHANNEL_AINM(ain[1]);
- 		st->channel_config[channel].bipolar =
--- 
-2.17.1
+
+Daniel.
+
+
+> +
+>   	return 0;
+>   
+>   err_alloc:
+> 
 
