@@ -2,204 +2,145 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D31C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE83C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490222089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DC62083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561092358;
-	bh=Mhw2ACRYptcCFbtFmoBv2yAE619tqf6iPtrxajbwUZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VeB03YjGi2G3SM7aaMeRLkvMF1WZt/Tjv9iLPauyVoPaSTKGNyG0sAfwkH3r+NcoL
-	 GHxTzC/6QWJqNge9UjARydbCUimHwEFu1A7m+ygBDiC7pik0IOoFMZrMWLtL/5nwbM
-	 D1VWOaLX4PL6F4xgQAd2pLDTstwLQD9wswiEFBXA=
+	s=default; t=1561092452;
+	bh=2e8ga/L8SEdmf7Lt7noZ+sWu8LCAOrQ1GgcWN6Trw2Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FvcvssM2oqSmcI6ZlxuEtdN0Nuu3HFkYvL/V+DvZTwkataoVQjv7MyWRb9Qr8isVh
+	 hiliPMi7w6AiE51QdFT6eMGHK3L5GJA+51Ell9vZkDzHyWdleYgcKOlvYxhUFWwJEC
+	 EO4Jm0REVlBF7YaUxER+cwMYU9RPelXo9GnIkbso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfFUEpy (ORCPT
+        id S1726196AbfFUErb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 00:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37344 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 00:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfFUEpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 00:45:54 -0400
-Received: from localhost (unknown [106.201.116.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725832AbfFUEra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 00:47:30 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3365F2083B;
-        Fri, 21 Jun 2019 04:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A95208C3;
+        Fri, 21 Jun 2019 04:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561092352;
-        bh=Mhw2ACRYptcCFbtFmoBv2yAE619tqf6iPtrxajbwUZ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q0IPszvkSKTbvzSTsC/RZHyy+SqY6C+g5XHtTFfT1RrgVZK/gSs3/gyq20TSOOmSL
-         M39OaieIlhYsty+eRXMDjvwZDfmwrbUkd22+YWil+mSd+xdy/eE48VbQkF2fmx4Z0c
-         DEYyshSCPE4kqhNpWQD0LuECpywKZ/evzLtPUXR4=
-Date:   Fri, 21 Jun 2019 10:12:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 1/5] usb: xhci: add firmware loader for uPD720201 and
- uPD720202 w/o ROM
-Message-ID: <20190621044242.GQ2962@vkoul-mobl>
-References: <20190620102154.20805-1-vkoul@kernel.org>
- <20190620121902.GD19295@kroah.com>
- <20190620170358.GO2962@vkoul-mobl>
- <2465888.R7Jb3LzrEU@debian64>
+        s=default; t=1561092449;
+        bh=2e8ga/L8SEdmf7Lt7noZ+sWu8LCAOrQ1GgcWN6Trw2Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qYxeNh9SgFH2otygFAopDpn5bSOOXzOOQZC4JsuMuf4GuzcJyQV0reiVbvvkiY5HI
+         F4dd+WuPxJse1K8QLSqfnYlWqbMZlKcri2Ld9bg465c79KSydP0mhl2Mmd8k7REWC1
+         Sr9oaTAuAAolnFN+SfpW3LxDZRzCpBFyt4tMe68o=
+Received: by mail-wm1-f52.google.com with SMTP id c6so5160535wml.0;
+        Thu, 20 Jun 2019 21:47:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAWTt1GloL18XJNHbPIylraSQGUm/+mxYlegcKy/AsLFFtsSAGQF
+        o1tUVq4oT+6W6AP+pC6qWowHetdwEkNiaP1A1Cs=
+X-Google-Smtp-Source: APXvYqzfssEVgigV9IyaopMmsOAvPClq7Yi3q82LMxYgtG/hvzSp2webHvdicOT4RPzD/wIoTvtKET482lzGX4xkvaI=
+X-Received: by 2002:a1c:1bc9:: with SMTP id b192mr2131534wmb.152.1561092447753;
+ Thu, 20 Jun 2019 21:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2465888.R7Jb3LzrEU@debian64>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-2-drinkcat@chromium.org>
+In-Reply-To: <20190429035515.73611-2-drinkcat@chromium.org>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 20 Jun 2019 21:47:16 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzouA3vKf6Hb=Jdy2FLG_Hkzartaksav-JpbRiVkxAACiQ@mail.gmail.com>
+Message-ID: <CAGp9LzouA3vKf6Hb=Jdy2FLG_Hkzartaksav-JpbRiVkxAACiQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: mediatek: Ignore interrupts that are wake
+ only during resume
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-06-19, 21:12, Christian Lamparter wrote:
-> On Thursday, June 20, 2019 7:03:58 PM CEST Vinod Koul wrote:
-> > On 20-06-19, 14:19, Greg Kroah-Hartman wrote:
-> > > On Thu, Jun 20, 2019 at 03:51:50PM +0530, Vinod Koul wrote:
-> > > > From: Christian Lamparter <chunkeey@googlemail.com>
-> > > > 
-> > > > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
-> > > > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> > > > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> > > > devices which need the firmware loader on page 2 in order to
-> > > > work as they "do not support the External ROM".
-> > > > 
-> > > > The "Firmware Download Sequence" is describe in chapter
-> > > > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
-> > > > 
-> > > > The firmware "K2013080.mem" is available from a USB3.0 Host to
-> > > > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
-> > > > alternative version can be sourced from Netgear's WNDR4700 GPL
-> > > > archives.
-> > > > 
-> > > > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
-> > > > (2012-06-15) state that the firmware is for the following devices:
-> > > >  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> > > >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> > > >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-> > > > 
-> > > > If someone from Renesas is listening: It would be great, if these
-> > > > firmwares could be added to linux-firmware.git.
-> > > 
-> > > That paragraph does not need to be in the changelog :)
-> > 
-> > Sure will drop :)
-> 
-> ... those this mean that there is a firmware now? Do you have a link to it?
+Hi Nicolas,
 
-Unfortunately it is not public yet!
+On Sun, Apr 28, 2019 at 8:55 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> Before suspending, mtk-eint would set the interrupt mask to the
+> one in wake_mask. However, some of these interrupts may not have a
+> corresponding interrupt handler, or the interrupt may be disabled.
+>
+> On resume, the eint irq handler would trigger nevertheless,
+> and irq/pm.c:irq_pm_check_wakeup would be called, which would
+> try to call irq_disable. However, if the interrupt is not enabled
+> (irqd_irq_disabled(&desc->irq_data) is true), the call does nothing,
+> and the interrupt is left enabled in the eint driver.
+>
+> Especially for level-sensitive interrupts, this will lead to an
+> interrupt storm on resume.
+>
+> If we detect that an interrupt is only in wake_mask, but not in
+> cur_mask, we can just mask it out immediately (as mtk_eint_resume
+> would do anyway at a later stage in the resume sequence, when
+> restoring cur_mask).
+>
+> Fixes: bf22ff45bed ("genirq: Avoid unnecessary low level irq function calls")
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-> > > >  #include <linux/slab.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/acpi.h>
-> > > > +#include <linux/firmware.h>
-> > > > +#include <asm/unaligned.h>
-> > > 
-> > > asm/ in a driver?  Are you sure???
-> > 
-> > Not sure :D, will check and remove
-> 
-> I think, as long as there is a "get_unaligned_le16" defined somewhere
-> it should be fine.
-> 
-> This was a loong ago, the loader was developped on a PowerPC 464, but
-> from what I remember it was checkpatch that didn't like the "unaligned"
-> poking around in the firmware below.
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-It seems we have this in include/linux/unaligned/access_ok.h, so I will
-add that instead
-
-> > > > +static int renesas_fw_download_image(struct pci_dev *dev,
-> > > > +				     const u32 *fw,
-> > > > +				     size_t step)
-> > > > +{
-> > > > +	size_t i;
-> > > > +	int err;
-> > > > +	u8 fw_status;
-> > > > +	bool data0_or_data1;
-> > > > +
-> > > > +	/*
-> > > > +	 * The hardware does alternate between two 32-bit pages.
-> > > > +	 * (This is because each row of the firmware is 8 bytes).
-> > > > +	 *
-> > > > +	 * for even steps we use DATA0, for odd steps DATA1.
-> > > > +	 */
-> > > > +	data0_or_data1 = (step & 1) == 1;
-> > > > +
-> > > > +	/* step+1. Read "Set DATAX" and confirm it is cleared. */
-> > > > +	for (i = 0; i < 10000; i++) {
-> > > > +		err = pci_read_config_byte(dev, 0xF5, &fw_status);
-> > > > +		if (err)
-> > > > +			return pcibios_err_to_errno(err);
-> > > > +		if (!(fw_status & BIT(data0_or_data1)))
-> > > > +			break;
-> > > > +
-> > > > +		udelay(1);
-> > > > +	}
-> > > > +	if (i == 10000)
-> > > > +		return -ETIMEDOUT;
-> > > > +
-> > > > +	/*
-> > > > +	 * step+2. Write FW data to "DATAX".
-> > > > +	 * "LSB is left" => force little endian
-> > > > +	 */
-> > > > +	err = pci_write_config_dword(dev, data0_or_data1 ? 0xFC : 0xF8,
-> > > > +				     (__force u32) cpu_to_le32(fw[step]));
-> > > > +	if (err)
-> > > > +		return pcibios_err_to_errno(err);
-> > > > +
-> > > > +	udelay(100);
-> > > > +
-> > > > +	/* step+3. Set "Set DATAX". */
-> > > > +	err = pci_write_config_byte(dev, 0xF5, BIT(data0_or_data1));
-> > > > +	if (err)
-> > > > +		return pcibios_err_to_errno(err);
-> > > > +
-> > > 
-> > > Shouldn't you just do a read after the write to be sure the write
-> > > actually went out on the wire?  Then you shouldn't have to do the
-> > > udelay, right?
-> > 
-> > Well I am not sure that is how it works. The register is a DATA register
-> > on the controller. We are writing to the memory of the controller here
-> > and after writing DATA0 and DATA1 we check the Set DATA0 & Set DATA1
-> > bits and write subsequenly only when controller is ready to accept more
-> > data.
-> > 
-> > I do recall at least for ROM load (writing to NOR flash attached to
-> > controller), we need to wait considerably more before the SetData0/1 was
-> > set and ready for subsequent write
-> 
-> OffTopic: There's some leeway here. From what I remember you could just push
-> the data through DATA0 and cut down on the logic. But this was slower than
-> using both DATA0 and DATA1.
-> 
-> The udelay was placed because I vaguely remember that polling SET DATA0
-> over and over slowed down the firmware download.
-> So the intention was to have the 100µs as a baseline and then we don't
-> slow down and waste more cycles in "step+1".
-
-Yes I have seen that as well, lesser polling helps. I will reduce cycles
-and add delay.
-
-Btw would it be possible for you to test the series?
-
-Thanks for quick reply, will post v2 shortly
-
--- 
-~Vinod
+> ---
+>  drivers/pinctrl/mediatek/mtk-eint.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index f464f8cd274b75c..737385e86beb807 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -318,7 +318,7 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+>         struct irq_chip *chip = irq_desc_get_chip(desc);
+>         struct mtk_eint *eint = irq_desc_get_handler_data(desc);
+>         unsigned int status, eint_num;
+> -       int offset, index, virq;
+> +       int offset, mask_offset, index, virq;
+>         void __iomem *reg =  mtk_eint_get_offset(eint, 0, eint->regs->stat);
+>         int dual_edge, start_level, curr_level;
+>
+> @@ -328,10 +328,24 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+>                 status = readl(reg);
+>                 while (status) {
+>                         offset = __ffs(status);
+> +                       mask_offset = eint_num >> 5;
+>                         index = eint_num + offset;
+>                         virq = irq_find_mapping(eint->domain, index);
+>                         status &= ~BIT(offset);
+>
+> +                       /*
+> +                        * If we get an interrupt on pin that was only required
+> +                        * for wake (but no real interrupt requested), mask the
+> +                        * interrupt (as would mtk_eint_resume do anyway later
+> +                        * in the resume sequence).
+> +                        */
+> +                       if (eint->wake_mask[mask_offset] & BIT(offset) &&
+> +                           !(eint->cur_mask[mask_offset] & BIT(offset))) {
+> +                               writel_relaxed(BIT(offset), reg -
+> +                                       eint->regs->stat +
+> +                                       eint->regs->mask_set);
+> +                       }
+> +
+>                         dual_edge = eint->dual_edge[index];
+>                         if (dual_edge) {
+>                                 /*
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
