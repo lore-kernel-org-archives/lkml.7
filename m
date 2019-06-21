@@ -2,136 +2,245 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BB5C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF4DC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CCB2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:41:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lktPUZjl"
+	by mail.kernel.org (Postfix) with ESMTP id 6379C214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfFUIlj (ORCPT
+        id S1726378AbfFUImg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:41:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34231 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfFUIlj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:41:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k11so5740382wrl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yKNFfzwEYl5/zmQazFDSNcBME8+4rbQsszyA7NJfvIc=;
-        b=lktPUZjlhyjev2c/H8gl+b491BD8xfz0ChaGXpiJhMKTBq72aRixQo8wDTp4pOWWB5
-         SrzZv/cyUMJhMaJJcrtby/qw1GMuNyZtBN5w0eP/n/K0b1yyFPG9cfKRTqO1ku69fYuX
-         vPsO4HZ2wS6H0/JDSUs16OwS4k40YMBYeG+vk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yKNFfzwEYl5/zmQazFDSNcBME8+4rbQsszyA7NJfvIc=;
-        b=nXeZ0aF0nGl7N2d1LhcWT0G9qSf2pxa7IPb5X1s3Jz+Mpu7Ys2/ge+34rYJlI0slWK
-         7kFww5oth5DDprWbbiuNH3Lxwg5rZE84YHyKx3UWHxsSxUTsIEUUhal1wc/Xaq2M3jcC
-         SyUtHjukRj0yWxq2rhuIe2zkMr1PbFTGy6nmr9o+gl/PnbVe6aN8FlKMFwtReAtB3Mkt
-         ZzHJpgpMVQtGQxjQ7UA9R26L1bqH6oS+QZYLYfa2w01R4CNY1WT9yzkOTZm54PipL6kt
-         BtCLhKCEUg6FqatRuEayXFODwTpz+KZqcgfaiU/aZXoQf9dpC234fT8c8b3WPw75c1p/
-         Kscw==
-X-Gm-Message-State: APjAAAW6TaJDKEdMyMtRc0SgMtDO9Ik65kPsXUd7AZkX3Ye6+AxbEHFn
-        JKVX9frAjmse7tQ0rjLPBYZxGg==
-X-Google-Smtp-Source: APXvYqz3OqhXLRIgQgn7kziOC0JYPYQY419sagNtgzwSQ1M6Cj0jD4+bPUFJRkselh6xL3YqtDYsJw==
-X-Received: by 2002:a5d:4e50:: with SMTP id r16mr9487976wrt.227.1561106497090;
-        Fri, 21 Jun 2019 01:41:37 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id g11sm1753970wru.24.2019.06.21.01.41.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 01:41:36 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 10:41:29 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Fri, 21 Jun 2019 04:42:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:50846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfFUImg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:42:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDB8F360;
+        Fri, 21 Jun 2019 01:42:34 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 95FD73F246;
+        Fri, 21 Jun 2019 01:42:32 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
-Message-ID: <20190621084129.GA6827@andrea>
-References: <Pine.LNX.4.44L0.1906201153470.1512-100000@iolanthe.rowland.org>
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH v10 00/16] Add utilization clamping support
+Date:   Fri, 21 Jun 2019 09:42:01 +0100
+Message-Id: <20190621084217.8167-1-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906201153470.1512-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
-> Herbert Xu recently reported a problem concerning RCU and compiler
-> barriers.  In the course of discussing the problem, he put forth a
-> litmus test which illustrated a serious defect in the Linux Kernel
-> Memory Model's data-race-detection code.
-> 
-> The defect was that the LKMM assumed visibility and executes-before
-> ordering of plain accesses had to be mediated by marked accesses.  In
-> Herbert's litmus test this wasn't so, and the LKMM claimed the litmus
-> test was allowed and contained a data race although neither is true.
-> 
-> In fact, plain accesses can be ordered by fences even in the absence
-> of marked accesses.  In most cases this doesn't matter, because most
-> fences only order accesses within a single thread.  But the rcu-fence
-> relation is different; it can order (and induce visibility between)
-> accesses in different threads -- events which otherwise might be
-> concurrent.  This makes it relevant to data-race detection.
-> 
-> This patch makes two changes to the memory model to incorporate the
-> new insight:
-> 
-> 	If a store is separated by a fence from another access,
-> 	the store is necessarily visible to the other access (as
-> 	reflected in the ww-vis and wr-vis relations).  Similarly,
-> 	if a load is separated by a fence from another access then
-> 	the load necessarily executes before the other access (as
-> 	reflected in the rw-xbstar relation).
-> 
-> 	If a store is separated by a strong fence from a marked access
-> 	then it is necessarily visible to any access that executes
-> 	after the marked access (as reflected in the ww-vis and wr-vis
-> 	relations).
-> 
-> With these changes, the LKMM gives the desired result for Herbert's
-> litmus test and other related ones.
-> 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Hi all, this is a respin of:
 
-For the entire series:
+  https://lore.kernel.org/lkml/20190515094459.10317-1-patrick.bellasi@arm.com/
 
-Acked-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+which addresses all Tejun's concerns:
 
-Two nits, but up to Paul AFAIAC:
+ - rename cgroup attributes to be cpu.uclamp.{min,max}
+ - update initialization of subgroups clamps to be "no clamps" by default
+ - use percentage rational numbers for clamp attributes, e.g. "12.34" for 12.34%.
 
- - This is a first time for "tools: memory-model:" in Subject; we were
-   kind of converging to "tools/memory-model:"...
+by introducing modifications impacting only patches:
 
- - The report preceded the patch; we might as well reflect this in the
-   order of the tags.
+ [PATCH v10 12/16] sched/core: uclamp: Extend CPU's cgroup controller
+ [PATCH v10 13/16] sched/core: uclamp: Propagate parent clamps
 
-Thanks,
+The rest of the patches are the same as per in v9, they have been just rebased
+on top of:
 
-  Andrea
+   tj/cgroup.git	for-5.3
+   tip/tip.git		sched/core
+
+AFAIU, all the first 11 patches have been code reviewed and should be at a
+"ready to merge" quality level. Please let me know if I'm wrong and there
+is something else I need/can to do on those patches.
+
+Otherwise, now that we should have settled all the behavioral aspects, I'm
+looking forward for a code review on the last set of patches of this series.
+
+Cheers,
+Patrick
+
+
+Series Organization
+===================
+
+The series is organized into these main sections:
+
+ - Patches [01-07]: Per task (primary) API
+ - Patches [08-09]: Schedutil integration for FAIR and RT tasks
+ - Patches [10-11]: Integration with EAS's energy_compute()
+ - Patches [12-16]: Per task group (secondary) API
+
+It is based on today's tj/cgroup/for-5.3 and tip/sched/core and the full tree
+is available here:
+
+   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v10
+   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v10
+
+
+Newcomer's Short Abstract
+=========================
+
+The Linux scheduler tracks a "utilization" signal for each scheduling entity
+(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
+scheduler to know how "big" a task is and, in principle, it can support
+advanced task placement strategies by selecting the best CPU to run a task.
+Some of these strategies are represented by the Energy Aware Scheduler [3].
+
+When the schedutil cpufreq governor is in use, the utilization signal allows
+the Linux scheduler to also drive frequency selection. The CPU utilization
+signal, which represents the aggregated utilization of tasks scheduled on that
+CPU, is used to select the frequency which best fits the workload generated by
+the tasks.
+
+The current translation of utilization values into a frequency selection is
+simple: we go to max for RT tasks or to the minimum frequency which can
+accommodate the utilization of DL+FAIR tasks.
+However, utilization values by themselves cannot convey the desired
+power/performance behaviors of each task as intended by user-space.
+As such they are not ideally suited for task placement decisions.
+
+Task placement and frequency selection policies in the kernel can be improved
+by taking into consideration hints coming from authorized user-space elements,
+like for example the Android middleware or more generally any "System
+Management Software" (SMS) framework.
+
+Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
+utilization generated by RT and FAIR tasks within a range defined by user-space.
+The clamped utilization value can then be used, for example, to enforce a
+minimum and/or maximum frequency depending on which tasks are active on a CPU.
+
+The main use-cases for utilization clamping are:
+
+ - boosting: better interactive response for small tasks which
+   are affecting the user experience.
+
+   Consider for example the case of a small control thread for an external
+   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
+   the scheduler does not have a complete view of what the task's requirements
+   are and, if it's a small utilization task, it keeps selecting a more energy
+   efficient CPU, with smaller capacity and lower frequency, thus negatively
+   impacting the overall time required to complete task activations.
+
+ - capping: increase energy efficiency for background tasks not affecting the
+   user experience.
+
+   Since running on a lower capacity CPU at a lower frequency is more energy
+   efficient, when the completion time is not a main goal, then capping the
+   utilization considered for certain (maybe big) tasks can have positive
+   effects, both on energy consumption and thermal headroom.
+   This feature allows also to make RT tasks more energy friendly on mobile
+   systems where running them on high capacity CPUs and at the maximum
+   frequency is not required.
+
+From these two use-cases, it's worth noticing that frequency selection
+biasing, introduced by patches 9 and 10 of this series, is just one possible
+usage of utilization clamping. Another compelling extension of utilization
+clamping is in helping the scheduler in making tasks placement decisions.
+
+Utilization is (also) a task specific property the scheduler uses to know
+how much CPU bandwidth a task requires, at least as long as there is idle time.
+Thus, the utilization clamp values, defined either per-task or per-task_group,
+can represent tasks to the scheduler as being bigger (or smaller) than what
+they actually are.
+
+Utilization clamping thus enables interesting additional optimizations, for
+example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
+where:
+
+ - boosting: try to run small/foreground tasks on higher-capacity CPUs to
+   complete them faster despite being less energy efficient.
+
+ - capping: try to run big/background tasks on low-capacity CPUs to save power
+   and thermal headroom for more important tasks
+
+This series does not present this additional usage of utilization clamping but
+it's an integral part of the EAS feature set, where [4] is one of its main
+components.
+
+Android kernels use SchedTune, a solution similar to utilization clamping, to
+bias both 'frequency selection' and 'task placement'. This series provides the
+foundation to add similar features to mainline while focusing, for the
+time being, just on schedutil integration.
+
+
+References
+==========
+
+[1] Message-ID: <20190509130215.GV2623@hirez.programming.kicks-ass.net>
+    https://lore.kernel.org/lkml/20190509130215.GV2623@hirez.programming.kicks-ass.net/
+
+[2] Message-ID: <20180911162827.GJ1100574@devbig004.ftw2.facebook.com>
+    https://lore.kernel.org/lkml/20180911162827.GJ1100574@devbig004.ftw2.facebook.com/
+
+[3] Energy Aware Scheduling
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/scheduler/sched-energy.txt?h=v5.1
+
+[4] Expressing per-task/per-cgroup performance hints
+    Linux Plumbers Conference 2018
+    https://linuxplumbersconf.org/event/2/contributions/128/
+
+
+Patrick Bellasi (16):
+  sched/core: uclamp: Add CPU's clamp buckets refcounting
+  sched/core: uclamp: Add bucket local max tracking
+  sched/core: uclamp: Enforce last task's UCLAMP_MAX
+  sched/core: uclamp: Add system default clamps
+  sched/core: Allow sched_setattr() to use the current policy
+  sched/core: uclamp: Extend sched_setattr() to support utilization
+    clamping
+  sched/core: uclamp: Reset uclamp values on RESET_ON_FORK
+  sched/core: uclamp: Set default clamps for RT tasks
+  sched/cpufreq: uclamp: Add clamps for FAIR and RT tasks
+  sched/core: uclamp: Add uclamp_util_with()
+  sched/fair: uclamp: Add uclamp support to energy_compute()
+  sched/core: uclamp: Extend CPU's cgroup controller
+  sched/core: uclamp: Propagate parent clamps
+  sched/core: uclamp: Propagate system defaults to root group
+  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+
+ Documentation/admin-guide/cgroup-v2.rst |  50 ++
+ include/linux/log2.h                    |  34 +
+ include/linux/sched.h                   |  58 ++
+ include/linux/sched/sysctl.h            |  11 +
+ include/linux/sched/topology.h          |   6 -
+ include/uapi/linux/sched.h              |  14 +-
+ include/uapi/linux/sched/types.h        |  66 +-
+ init/Kconfig                            |  75 +++
+ kernel/sched/core.c                     | 797 +++++++++++++++++++++++-
+ kernel/sched/cpufreq_schedutil.c        |  22 +-
+ kernel/sched/fair.c                     |  44 +-
+ kernel/sched/rt.c                       |   4 +
+ kernel/sched/sched.h                    | 123 +++-
+ kernel/sysctl.c                         |  16 +
+ 14 files changed, 1276 insertions(+), 44 deletions(-)
+
+-- 
+2.21.0
+
