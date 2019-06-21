@@ -2,207 +2,260 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34458C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B23C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B11208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cVvcQJ3u"
+	by mail.kernel.org (Postfix) with ESMTP id 49CF6208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfFUJNy (ORCPT
+        id S1726438AbfFUJP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:13:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40936 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfFUJNy (ORCPT
+        Fri, 21 Jun 2019 05:15:26 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:23441 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726232AbfFUJPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:13:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so9075382eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 02:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=2bGIaORqqfh7NthvfPKeSWzPcbNzBBYxFsaIjbRgqzI=;
-        b=cVvcQJ3ufJ+1Qqgqq4fWCNNUQ+RUopn+7hW8VyzYhB/jgWEmSBwXkOA93mdNxl3+4x
-         zec6W4/WvUs2j9kiT0afQFuRDsf2jTsrbeZ/NhVF42PG33pIHNkX5BLj1IoYDgn31T0W
-         iD8ZlugNc30sg2bDloI5XgFiyGiO1MB3lbZrE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=2bGIaORqqfh7NthvfPKeSWzPcbNzBBYxFsaIjbRgqzI=;
-        b=F12iNRaIup+BcYFSSLPyqdBc01K+DUhfNhdix6Jvgeh9NlfD0NWpL/sBo+b8E6mKgr
-         FjDvQGWJe3AldF6gEL5ar+kXDKvxOdzMfp6UWhJWCKWwI2DqJP/13QPgcWStzakfDend
-         ZOoCGiVfpAr623wdOEYcSuCckPfBWxJGuDwC475ZHRMH/lqxgaUbSNRsSnY/mH4TVzkb
-         Vft2yCRoQoczGSQ+9SY+WCgrY2SIsXu165W2IzO7XQqMI9x6csKbKfHz5aynSYY7NroJ
-         3sUBEMlliXWx6Dt9wbZzEVNcbHVkB/8d6/HoHsdyNJEWCV6J7HDySz3G/A2cAwcV/Inj
-         UrbQ==
-X-Gm-Message-State: APjAAAXGIjaduuh73wpTj5SK3p3u47vI3lqU/bh4LyLKpJnIDZCnLS0o
-        Sl+t+/26UTZ+NOUyL871C6IxYw==
-X-Google-Smtp-Source: APXvYqw14PDnEzjHiPPTDgNf/p3y3XKQE24CKUmI/tC7fQOPfvWanfqpuXk6IlS1WmRPiRcr2v9GQA==
-X-Received: by 2002:aa7:c619:: with SMTP id h25mr82941231edq.295.1561108431657;
-        Fri, 21 Jun 2019 02:13:51 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id p18sm327962ejr.61.2019.06.21.02.13.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 02:13:50 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 11:13:43 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Message-ID: <20190621091343.GA12905@phenom.ffwll.local>
-Mail-Followup-To: Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-References: <20190603152331.23160-1-paul@crapouillou.net>
- <20190603152331.23160-2-paul@crapouillou.net>
- <20190619122622.GB29084@ravnborg.org>
- <1561040159.1978.0@crapouillou.net>
- <20190621090411.GY12905@phenom.ffwll.local>
- <1561108050.1777.0@crapouillou.net>
+        Fri, 21 Jun 2019 05:15:25 -0400
+X-UUID: 47d82411630344caad74ecd6875a2838-20190621
+X-UUID: 47d82411630344caad74ecd6875a2838-20190621
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1568269254; Fri, 21 Jun 2019 17:15:14 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 21 Jun
+ 2019 17:15:12 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 21 Jun 2019 17:15:11 +0800
+Message-ID: <1561108511.7458.0.camel@mhfsdcap03>
+Subject: Re: [v7, PATCH] net: stmmac: add support for hash table size
+ 128/256 in dwmac4
+From:   biao huang <biao.huang@mediatek.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        Jose Abreu <joabreu@synopsys.com>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
+        <Yt.Shen@mediatek.com>,
+        Jianguo Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=BB=BA=E5=9B=BD=29?= 
+        <Jianguo.Zhang@mediatek.com>,
+        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Date:   Fri, 21 Jun 2019 17:15:11 +0800
+In-Reply-To: <1559208626-3218-2-git-send-email-biao.huang@mediatek.com>
+References: <1559208626-3218-1-git-send-email-biao.huang@mediatek.com>
+         <1559208626-3218-2-git-send-email-biao.huang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561108050.1777.0@crapouillou.net>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:07:30AM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le ven. 21 juin 2019 à 11:04, Daniel Vetter <daniel@ffwll.ch> a écrit :
-> > On Thu, Jun 20, 2019 at 04:15:59PM +0200, Paul Cercueil wrote:
-> > > 
-> > > 
-> > >  Le mer. 19 juin 2019 à 14:26, Sam Ravnborg <sam@ravnborg.org> a
-> > > écrit :
-> > >  > Hi Paul.
-> > >  >
-> > >  > On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
-> > >  > >  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
-> > >  > >  This driver is meant to replace the aging jz4740-fb driver.
-> > >  > >
-> > >  > >  This driver does not make use of the simple pipe helper, for
-> > > the
-> > >  > > reason
-> > >  > >  that it will soon be updated to support more advanced features
-> > > like
-> > >  > >  multiple planes, IPU integration for colorspace conversion and
-> > >  > > up/down
-> > >  > >  scaling, support for DSI displays, and TV-out and HDMI outputs.
-> > >  > >
-> > >  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> > >  > >  ---
-> > >  > >
-> > >  > >  Notes:
-> > >  > >      v2: - Remove custom handling of panel. The panel is now
-> > >  > > discovered using
-> > >  > >      	  the standard API.
-> > >  > >      	- Lots of small tweaks suggested by upstream
-> > >  > >
-> > >  > >      v3: - Use devm_drm_dev_init()
-> > >  > >      	- Update compatible strings to -lcd instead of -drm
-> > >  > >      	- Add destroy() callbacks to plane and crtc
-> > >  > >      	- The ingenic,lcd-mode is now read from the bridge's DT
-> > > node
-> > >  > >
-> > >  > >      v4: Remove ingenic,lcd-mode property completely. The
-> > > various
-> > >  > > modes are now
-> > >  > >      	deduced from the connector type, the pixel format or the
-> > > bus
-> > >  > > flags.
-> > >  > >
-> > >  > >      v5: - Fix framebuffer size incorrectly calculated for 24bpp
-> > >  > > framebuffers
-> > >  > >      	- Use 32bpp framebuffer instead of 16bpp, as it'll work
-> > > with
-> > >  > > both
-> > >  > >      	  16-bit and 24-bit panel
-> > >  > >      	- Get rid of drm_format_plane_cpp() which has been dropped
-> > >  > > upstream
-> > >  > >      	- Avoid using drm_format_info->depth, which is deprecated.
-> > >  > In the drm world we include the revision notes in the changelog.
-> > >  > So I did this when I applied it to drm-misc-next.
-> > >  >
-> > >  > Fixed a few trivial checkpatch warnings about indent too.
-> > >  > There was a few too-long-lines warnings that I ignored. Fixing
-> > > them
-> > >  > would have hurt readability.
-> > > 
-> > >  Thanks.
-> > > 
-> > >  > I assume you will maintain this driver onwards from now.
-> > >  > Please request drm-misc commit rights (see
-> > >  > https://www.freedesktop.org/wiki/AccountRequests/)
-> > >  > You will need a legacy SSH account.
-> > > 
-> > >  I requested an account here:
-> > >  https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/162
-> > 
-> > This 404s for me. Did you set the issue to private by any chance? Or
-> > deleted already again?
-> > -Daniel
-> 
-> Sorry, yes, I set it to private. I thought I had to :(
+Dear David, Jose,
 
-Well I can't ack it if its private, so please change that. Also,
-everything is public around here, or almost everything ...
--Daniel
+	any comments about this patch?
 
-> 
-> -Paul
-> 
-> 
-> > > 
-> > >  > And you should familiarize yourself with the maintainer-tools:
-> > >  > https://drm.pages.freedesktop.org/maintainer-tools/index.html
-> > >  >
-> > >  > For my use I use "dim update-branches; dim apply; dim push
-> > >  > So only a small subset i needed for simple use.
-> > >  >
-> > >  > 	Sam
-> > > 
-> > > 
-> > 
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> 
-> 
+Thanks
+Biao
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+On Thu, 2019-05-30 at 17:30 +0800, Biao Huang wrote:
+> 1. get hash table size in hw feature reigster, and add support
+> for taller hash table(128/256) in dwmac4.
+> 2. only clear GMAC_PACKET_FILTER bits used in this function,
+> to avoid side effect to functions of other bits.
+> 
+> stmmac selftests output log with flow control on:
+> 	ethtool -t eth0
+> 	The test result is PASS
+> 	The test extra info:
+> 	 1. MAC Loopback                 0
+> 	 2. PHY Loopback                 -95
+> 	 3. MMC Counters                 0
+> 	 4. EEE                          -95
+> 	 5. Hash Filter MC               0
+> 	 6. Perfect Filter UC            0
+> 	 7. MC Filter                    0
+> 	 8. UC Filter                    0
+> 	 9. Flow Control                 0
+> 
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/common.h      |    7 +--
+>  drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |    4 +-
+>  drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |   49 ++++++++++++---------
+>  drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |    1 +
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    6 +++
+>  5 files changed, 42 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+> index 1961fe9..26bbcd8 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+> @@ -335,6 +335,7 @@ struct dma_features {
+>  	/* 802.3az - Energy-Efficient Ethernet (EEE) */
+>  	unsigned int eee;
+>  	unsigned int av;
+> +	unsigned int hash_tb_sz;
+>  	unsigned int tsoen;
+>  	/* TX and RX csum */
+>  	unsigned int tx_coe;
+> @@ -428,9 +429,9 @@ struct mac_device_info {
+>  	struct mii_regs mii;	/* MII register Addresses */
+>  	struct mac_link link;
+>  	void __iomem *pcsr;     /* vpointer to device CSRs */
+> -	int multicast_filter_bins;
+> -	int unicast_filter_entries;
+> -	int mcast_bits_log2;
+> +	unsigned int multicast_filter_bins;
+> +	unsigned int unicast_filter_entries;
+> +	unsigned int mcast_bits_log2;
+>  	unsigned int rx_csum;
+>  	unsigned int pcs;
+>  	unsigned int pmt;
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+> index 01c1089..b68785f7 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+> @@ -18,8 +18,7 @@
+>  /*  MAC registers */
+>  #define GMAC_CONFIG			0x00000000
+>  #define GMAC_PACKET_FILTER		0x00000008
+> -#define GMAC_HASH_TAB_0_31		0x00000010
+> -#define GMAC_HASH_TAB_32_63		0x00000014
+> +#define GMAC_HASH_TAB(x)		(0x10 + (x) * 4)
+>  #define GMAC_RX_FLOW_CTRL		0x00000090
+>  #define GMAC_QX_TX_FLOW_CTRL(x)		(0x70 + x * 4)
+>  #define GMAC_TXQ_PRTY_MAP0		0x98
+> @@ -184,6 +183,7 @@ enum power_event {
+>  #define GMAC_HW_FEAT_MIISEL		BIT(0)
+>  
+>  /* MAC HW features1 bitmap */
+> +#define GMAC_HW_HASH_TB_SZ		GENMASK(25, 24)
+>  #define GMAC_HW_FEAT_AVSEL		BIT(20)
+>  #define GMAC_HW_TSOEN			BIT(18)
+>  #define GMAC_HW_TXFIFOSIZE		GENMASK(10, 6)
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> index 5e98da4..4183607 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> @@ -403,41 +403,50 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+>  			      struct net_device *dev)
+>  {
+>  	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
+> -	unsigned int value = 0;
+> +	int numhashregs = (hw->multicast_filter_bins >> 5);
+> +	int mcbitslog2 = hw->mcast_bits_log2;
+> +	unsigned int value;
+> +	int i;
+>  
+> +	value = readl(ioaddr + GMAC_PACKET_FILTER);
+> +	value &= ~GMAC_PACKET_FILTER_HMC;
+> +	value &= ~GMAC_PACKET_FILTER_HPF;
+> +	value &= ~GMAC_PACKET_FILTER_PCF;
+> +	value &= ~GMAC_PACKET_FILTER_PM;
+> +	value &= ~GMAC_PACKET_FILTER_PR;
+>  	if (dev->flags & IFF_PROMISC) {
+>  		value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
+>  	} else if ((dev->flags & IFF_ALLMULTI) ||
+> -			(netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
+> +		   (netdev_mc_count(dev) > hw->multicast_filter_bins)) {
+>  		/* Pass all multi */
+> -		value = GMAC_PACKET_FILTER_PM;
+> -		/* Set the 64 bits of the HASH tab. To be updated if taller
+> -		 * hash table is used
+> -		 */
+> -		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_0_31);
+> -		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_32_63);
+> +		value |= GMAC_PACKET_FILTER_PM;
+> +		/* Set all the bits of the HASH tab */
+> +		for (i = 0; i < numhashregs; i++)
+> +			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
+>  	} else if (!netdev_mc_empty(dev)) {
+> -		u32 mc_filter[2];
+>  		struct netdev_hw_addr *ha;
+> +		u32 mc_filter[8];
+>  
+>  		/* Hash filter for multicast */
+> -		value = GMAC_PACKET_FILTER_HMC;
+> +		value |= GMAC_PACKET_FILTER_HMC;
+>  
+>  		memset(mc_filter, 0, sizeof(mc_filter));
+>  		netdev_for_each_mc_addr(ha, dev) {
+> -			/* The upper 6 bits of the calculated CRC are used to
+> -			 * index the content of the Hash Table Reg 0 and 1.
+> +			/* The upper n bits of the calculated CRC are used to
+> +			 * index the contents of the hash table. The number of
+> +			 * bits used depends on the hardware configuration
+> +			 * selected at core configuration time.
+>  			 */
+> -			int bit_nr =
+> -				(bitrev32(~crc32_le(~0, ha->addr, 6)) >> 26);
+> -			/* The most significant bit determines the register
+> -			 * to use while the other 5 bits determines the bit
+> -			 * within the selected register
+> +			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
+> +					ETH_ALEN)) >> (32 - mcbitslog2);
+> +			/* The most significant bit determines the register to
+> +			 * use (H/L) while the other 5 bits determine the bit
+> +			 * within the register.
+>  			 */
+> -			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1F));
+> +			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
+>  		}
+> -		writel(mc_filter[0], ioaddr + GMAC_HASH_TAB_0_31);
+> -		writel(mc_filter[1], ioaddr + GMAC_HASH_TAB_32_63);
+> +		for (i = 0; i < numhashregs; i++)
+> +			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
+>  	}
+>  
+>  	value |= GMAC_PACKET_FILTER_HPF;
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+> index edb6053..59afb53 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+> @@ -354,6 +354,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
+>  
+>  	/* MAC HW feature1 */
+>  	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
+> +	dma_cap->hash_tb_sz = (hw_cap & GMAC_HW_HASH_TB_SZ) >> 24;
+>  	dma_cap->av = (hw_cap & GMAC_HW_FEAT_AVSEL) >> 20;
+>  	dma_cap->tsoen = (hw_cap & GMAC_HW_TSOEN) >> 18;
+>  	/* RX and TX FIFO sizes are encoded as log2(n / 128). Undo that by
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 8fcbf22..f7aac15 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -4166,6 +4166,12 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
+>  		priv->plat->enh_desc = priv->dma_cap.enh_desc;
+>  		priv->plat->pmt = priv->dma_cap.pmt_remote_wake_up;
+>  		priv->hw->pmt = priv->plat->pmt;
+> +		if (priv->dma_cap.hash_tb_sz) {
+> +			priv->hw->multicast_filter_bins =
+> +					(BIT(priv->dma_cap.hash_tb_sz) << 5);
+> +			priv->hw->mcast_bits_log2 =
+> +					ilog2(priv->hw->multicast_filter_bins);
+> +		}
+>  
+>  		/* TXCOE doesn't work in thresh DMA mode */
+>  		if (priv->plat->force_thresh_dma_mode)
+
+
