@@ -2,192 +2,112 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7815C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBB2C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0A321655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561133977;
-	bh=/kwntWQW3LP0jIYi0ujmhqQBYlYdyIflNjwJ6hVtcyk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bo9wEM8H07DRsdQx/1yHPlLvNLZyvgdF436Vjz28TsxbovN9PelgTCUC5jWAqBWqF
-	 aVENSu3gkPhjzUz0c1m2vQ6M05UTk9VKtSOfxs1cq+D2RlgiKEB+jDF57bsCA98JyH
-	 zRL5pxFORHFXBB0Tx/EobfFJ8sTGq20kvc/XiiHA=
+	by mail.kernel.org (Postfix) with ESMTP id 3D1FA2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbfFUQTg (ORCPT
+        id S1726505AbfFUQTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfFUQTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:19:35 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F63208CA;
-        Fri, 21 Jun 2019 16:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561133974;
-        bh=/kwntWQW3LP0jIYi0ujmhqQBYlYdyIflNjwJ6hVtcyk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DeVZG3oHwcAJHg/sjbWMBLJuxrr2U8BBKSwHdXkkxtf531RZUR33wKuWqtOg0AmDZ
-         EgkIklMGEDcSGoS4PmsCKhkilU6HppGV9EpIurkBdhEv2JLsm9rFdd+NPJg/HdZWk8
-         srhKN2eMvErjIa3kjyKkG7oDbkrEHCC9YFY9Movo=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH 09/11] tracing: of: Add trace event settings
-Date:   Sat, 22 Jun 2019 01:19:30 +0900
-Message-Id: <156113396992.28344.5633907708861645713.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 21 Jun 2019 12:19:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6408 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbfFUQTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:19:45 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LGCti1030581
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:19:44 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t92bxgw3q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:19:44 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Fri, 21 Jun 2019 17:19:41 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Jun 2019 17:19:39 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LGJbw738601180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 16:19:37 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD98011C05C;
+        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3894811C054;
+        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
+Received: from sig-9-145-18-245.uk.ibm.com (unknown [9.145.18.245])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
+Date:   Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Cornelia Huck <cohuck@redhat.com>
+cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+In-Reply-To: <20190613110815.17251-1-cohuck@redhat.com>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19062116-0020-0000-0000-0000034C3EC4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062116-0021-0000-0000-0000219FA048
+Message-Id: <alpine.LFD.2.21.1906211817010.2388@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=871 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add per-event settings, which includes filter and actions.
+On Thu, 13 Jun 2019, Cornelia Huck wrote:
+> Sometimes, we want to control which of the matching drivers
+> binds to a subchannel device (e.g. for subchannels we want to
+> handle via vfio-ccw).
+> 
+> For pci devices, a mechanism to do so has been introduced in
+> 782a985d7af2 ("PCI: Introduce new device binding path using
+> pci_dev.driver_override"). It makes sense to introduce the
+> driver_override attribute for subchannel devices as well, so
+> that we can easily extend the 'driverctl' tool (which makes
+> use of the driver_override attribute for pci).
+> 
+> Note that unlike pci we still require a driver override to
+> match the subchannel type; matching more than one subchannel
+> type is probably not useful anyway.
+> 
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_events_trigger.c |    2 -
- kernel/trace/trace_of.c             |   81 +++++++++++++++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 1 deletion(-)
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 2a2912cb4533..74a19c18219f 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -208,7 +208,7 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 	return ret;
- }
- 
--static int trigger_process_regex(struct trace_event_file *file, char *buff)
-+int trigger_process_regex(struct trace_event_file *file, char *buff)
- {
- 	char *command, *next = buff;
- 	struct event_command *p;
-diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 5e34e2475d42..696f59234e62 100644
---- a/kernel/trace/trace_of.c
-+++ b/kernel/trace/trace_of.c
-@@ -22,6 +22,7 @@ extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
- extern void __init trace_init_tracepoint_printk(void);
- extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 					  unsigned long size, int cpu_id);
-+extern int trigger_process_regex(struct trace_event_file *file, char *buff);
- 
- static void __init
- trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-@@ -98,6 +99,85 @@ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
- 	}
- }
- 
-+static void __init
-+trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
-+{
-+	struct trace_event_file *file;
-+	struct property *prop;
-+	char buf[MAX_BUF_LEN];
-+	char *bufp;
-+	const char *p;
-+	int err;
-+
-+	if (!of_node_name_prefix(node, "event"))
-+		return;
-+
-+	err = of_property_read_string(node, "event", &p);
-+	if (err) {
-+		pr_err("Failed to find event on %s\n", of_node_full_name(node));
-+		return;
-+	}
-+
-+	err = strlcpy(buf, p, ARRAY_SIZE(buf));
-+	if (err >= ARRAY_SIZE(buf)) {
-+		pr_err("Event name is too long: %s\n", p);
-+		return;
-+	}
-+	bufp = buf;
-+
-+	p = strsep(&bufp, ":");
-+	if (!bufp) {
-+		pr_err("%s has no group name\n", buf);
-+		return;
-+	}
-+
-+	mutex_lock(&event_mutex);
-+	file = find_event_file(tr, buf, bufp);
-+	if (!file) {
-+		pr_err("Failed to find event: %s\n", buf);
-+		return;
-+	}
-+
-+	err = of_property_read_string(node, "filter", &p);
-+	if (!err) {
-+		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+			pr_err("filter string is too long: %s\n", p);
-+			return;
-+		}
-+
-+		if (apply_event_filter(file, buf) < 0) {
-+			pr_err("Failed to apply filter: %s\n", buf);
-+			return;
-+		}
-+	}
-+
-+	of_property_for_each_string(node, "actions", prop, p) {
-+		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+			pr_err("action string is too long: %s\n", p);
-+			continue;
-+		}
-+
-+		if (trigger_process_regex(file, buf) < 0)
-+			pr_err("Failed to apply an action: %s\n", buf);
-+	}
-+
-+	if (of_property_read_bool(node, "enable")) {
-+		if (trace_event_enable_disable(file, 1, 0) < 0)
-+			pr_err("Failed to enable event node: %s\n",
-+				of_node_full_name(node));
-+	}
-+	mutex_unlock(&event_mutex);
-+}
-+
-+static void __init
-+trace_of_init_events(struct trace_array *tr, struct device_node *node)
-+{
-+	struct device_node *enode;
-+
-+	for_each_child_of_node(node, enode)
-+		trace_of_init_one_event(tr, enode);
-+}
-+
- static void __init
- trace_of_enable_tracer(struct trace_array *tr, struct device_node *trace_node)
- {
-@@ -126,6 +206,7 @@ static int __init trace_of_init(void)
- 		goto end;
- 
- 	trace_of_set_ftrace_options(tr, trace_node);
-+	trace_of_init_events(tr, trace_node);
- 	trace_of_enable_events(tr, trace_node);
- 	trace_of_enable_tracer(tr, trace_node);
- 
+Should I take that via our git tree or do you have other patches depending 
+on this one?
 
