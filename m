@@ -2,195 +2,117 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED904C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86529C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA0F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D51A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jPFLSyAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfFUOJR (ORCPT
+        id S1726307AbfFUOJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:09:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:09:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E2717EBBD;
-        Fri, 21 Jun 2019 14:09:16 +0000 (UTC)
-Received: from redhat.com (ovpn-121-168.rdu2.redhat.com [10.10.121.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E30560572;
-        Fri, 21 Jun 2019 14:09:14 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 10:09:11 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/5] livepatch: Allow to distinguish different version of
- system state changes
-Message-ID: <20190621140911.GC20356@redhat.com>
-References: <20190611135627.15556-1-pmladek@suse.com>
- <20190611135627.15556-4-pmladek@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611135627.15556-4-pmladek@suse.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 21 Jun 2019 14:09:16 +0000 (UTC)
+        Fri, 21 Jun 2019 10:09:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38374 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUOJp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:09:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LE4EhB119871;
+        Fri, 21 Jun 2019 14:09:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=QDLZN1HgJ+/BQ+FyQff3Jo34xNZRRZDqv9MXgPbWNrI=;
+ b=jPFLSyADEMtahQwESDqTZ0nwlF7Fd6xUsP4ziR2gAHIYUG4qtdnOwGRJoNOMz+phfRUw
+ R5fILir7lic56V/N2vMtg+x26494+nfK8LjCULlbn1feYyGZ5obqWb+0BxoIlSKZDsc6
+ CN+SpDTcbOvP0C2qG+MygUfqUs4rnV18cQce38IO6YIXEjiAR6tOCXOIlWVHqDTSmor2
+ 6wz65p78bUUrtof60Fqpbb48238IG64oEf5YNURN5VpmPv3PBj6aDv1Hfz8tHc2C6ja8
+ sap9ggtkSl3/EmoafiT7xR2jU5wP2VdDWTiq1kOSkRovKsbtbhY1YUSa1suERvLw7NC5 9Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t7809pp7d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 14:09:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LE7g94137107;
+        Fri, 21 Jun 2019 14:09:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2t77yp7k0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 14:09:22 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LE9LXJ025111;
+        Fri, 21 Jun 2019 14:09:21 GMT
+Received: from dm-oel.no.oracle.com (/10.172.157.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Jun 2019 07:09:21 -0700
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+To:     dag.moxnes@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/core: Fix race when resolving IP address
+Date:   Fri, 21 Jun 2019 16:09:16 +0200
+Message-Id: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
+X-Mailer: git-send-email 1.7.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906210118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:56:25PM +0200, Petr Mladek wrote:
-> The atomic replace runs pre/post (un)install callbacks only from the new
-> livepatch. There are several reasons for this:
-> 
->   + Simplicity: clear ordering of operations, no interactions between
-> 	old and new callbacks.
-> 
->   + Reliability: only new livepatch knows what changes can already be made
-> 	by older livepatches and how to take over the state.
-> 
->   + Testing: the atomic replace can be properly tested only when a newer
-> 	livepatch is available. It might be too late to fix unwanted effect
-> 	of callbacks from older	livepatches.
-> 
-> It might happen that an older change is not enough and the same system
-> state has to be modified another way. Different changes need to get
-> distinguished by a version number added to struct klp_state.
-> 
-> The version can also be used to prevent loading incompatible livepatches.
-> The check is done when the livepatch is enabled. The rules are:
-> 
->   + Any completely new system state modification is allowed.
-> 
->   + System state modifications with the same or higher version are allowed
->     for already modified system states.
-> 
+Use neighbour lock when copying MAC address from neighbour data struct
+in dst_fetch_ha.
 
-More word play: would it be any clearer to drop the use of
-"modification" when talking about klp_states?  Sometimes I read
-modification to mean a change to a klp_state itself rather than the
-system at large.
+When not using the lock, it is possible for the function to race with
+neigh_update, causing it to copy an invalid MAC address.
 
-In my mind, "modification" is implied, but I already know where this
-patchset is going, so perhaps I'm just trying to be lazy and not type
-the whole thing out :)  I wish I could come up with a nice, succinct
-alternative, but "state" or "klp_state" would work for me.  /two cents
+It is possible to provoke this error by calling rdma_resolve_addr in a
+tight loop, while deleting the corresponding ARP entry in another tight
+loop.
 
->   + Cumulative livepatches must handle all system state modifications from
->     already installed livepatches.
-> 
->   + Non-cumulative livepatches are allowed to touch already modified
->     system states.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  include/linux/livepatch.h |  2 ++
->  kernel/livepatch/core.c   |  8 ++++++++
->  kernel/livepatch/state.c  | 40 +++++++++++++++++++++++++++++++++++++++-
->  kernel/livepatch/state.h  |  9 +++++++++
->  4 files changed, 58 insertions(+), 1 deletion(-)
->  create mode 100644 kernel/livepatch/state.h
-> 
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index 591abdee30d7..8bc4c6cc3f3f 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -135,10 +135,12 @@ struct klp_object {
->  /**
->   * struct klp_state - state of the system modified by the livepatch
->   * @id:		system state identifier (non zero)
-> + * @version:	version of the change (non-zero)
->   * @data:	custom data
->   */
->  struct klp_state {
->  	int id;
-> +	int version;
->  	void *data;
->  };
->  
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 24c4a13bd26c..614642719825 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -21,6 +21,7 @@
->  #include <asm/cacheflush.h>
->  #include "core.h"
->  #include "patch.h"
-> +#include "state.h"
->  #include "transition.h"
->  
->  /*
-> @@ -1003,6 +1004,13 @@ int klp_enable_patch(struct klp_patch *patch)
->  
->  	mutex_lock(&klp_mutex);
->  
-> +	if(!klp_is_patch_compatible(patch)) {
-> +		pr_err("Livepatch patch (%s) is not compatible with the already installed livepatches.\n",
-> +			patch->mod->name);
-> +		mutex_unlock(&klp_mutex);
-> +		return -EINVAL;
-> +	}
-> +
->  	ret = klp_init_patch_early(patch);
->  	if (ret) {
->  		mutex_unlock(&klp_mutex);
-> diff --git a/kernel/livepatch/state.c b/kernel/livepatch/state.c
-> index f8822b71f96e..b54a69b9e4b4 100644
-> --- a/kernel/livepatch/state.c
-> +++ b/kernel/livepatch/state.c
-> @@ -12,7 +12,9 @@
->  #include "transition.h"
->  
->  #define klp_for_each_state(patch, state)		\
-> -	for (state = patch->states; state && state->id; state++)
-> +	for (state = patch->states;			\
-> +	     state && state->id && state->version;	\
-> +	     state++)
+Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+Change-Id: I3c5f982b304457f0a83ea7def2fac70315ed38b4
+---
+ drivers/infiniband/core/addr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Minor git bookkeeping here, but this could be moved to the patch that
-introduced the macro.
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index 2f7d141598..e4945fd1bb 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -333,12 +333,16 @@ static int dst_fetch_ha(const struct dst_entry *dst,
+ 	if (!n)
+ 		return -ENODATA;
+ 
++	read_lock_bh(&n->lock)
+ 	if (!(n->nud_state & NUD_VALID)) {
+-		neigh_event_send(n, NULL);
+ 		ret = -ENODATA;
+ 	} else {
+ 		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+ 	}
++	read_unlock_bh(&n->lock);
++
++	if (ret)
++		neigh_event_send(n, NULL);
+ 
+ 	neigh_release(n);
+ 
+-- 
+2.20.1
 
->  
->  /**
->   * klp_get_state() - get information about system state modified by
-> @@ -81,3 +83,39 @@ struct klp_state *klp_get_prev_state(int id)
->  	return last_state;
->  }
->  EXPORT_SYMBOL_GPL(klp_get_prev_state);
-> +
-> +/* Check if the patch is able to deal with the given system state. */
-> +static bool klp_is_state_compatible(struct klp_patch *patch,
-> +				    struct klp_state *state)
-> +{
-> +	struct klp_state *new_state;
-> +
-> +	new_state = klp_get_state(patch, state->id);
-> +
-> +	if (new_state)
-> +		return new_state->version < state->version ? false : true;
-> +
-> +	/* Cumulative livepatch must handle all already modified states. */
-> +	return patch->replace ? false : true;
-> +}
-> +
-> +/*
-> + * Check if the new livepatch will not break the existing system states.
-
-suggestion: "Check that the new livepatch will not break" or
-            "Check if the new livepatch will break"
-
--- Joe
