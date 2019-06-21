@@ -2,89 +2,81 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE474C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA756C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924B42083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DA12083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561126554;
+	bh=cKl1ATkQpP+oDNaHNi2VIa2C13hcw38+hSlhNpnDBWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kHBlSEYerIN/19doLOtheAo2xlw23xvrRAmf5YVltWW030BGgUjqyHcLAJIRREOqT
+	 lkfymvujPm6orZWWcH/Lf1DDxNG2XJV40r7FXWlmfrMQAsMoDExtsjsjHst4St/6eB
+	 1GReNomAXI3NftUU8S9BXkoUeFCOfTi2rOmI1sQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfFUOPN (ORCPT
+        id S1726018AbfFUOPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:15:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36868 "EHLO mx1.redhat.com"
+        Fri, 21 Jun 2019 10:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:15:12 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725975AbfFUOPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:15:53 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5A9BD30089B5;
-        Fri, 21 Jun 2019 14:15:12 +0000 (UTC)
-Received: from redhat.com (ovpn-121-168.rdu2.redhat.com [10.10.121.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36F3060CA3;
-        Fri, 21 Jun 2019 14:15:11 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 10:15:08 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 4/5] livepatch: Documentation of the new API for tracking
- system state changes
-Message-ID: <20190621141508.GD20356@redhat.com>
-References: <20190611135627.15556-1-pmladek@suse.com>
- <20190611135627.15556-5-pmladek@suse.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id C822F20679;
+        Fri, 21 Jun 2019 14:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561126552;
+        bh=cKl1ATkQpP+oDNaHNi2VIa2C13hcw38+hSlhNpnDBWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SsgU3AMSfzeUXecKcYbTcI4sG8aRDVGY+ybbHMeTH0cdpQEpHre2neo26baNKeXcj
+         YxBd+09SqWak0kpjG4tgMwUmSfVfRQvGEzhucM1m6LY+olmtxYTLMbt0IVZup5NT34
+         BBEbhR+ZNvO7BxfdS7VUJgWyaMN2BPji7kKs6b2Q=
+Date:   Fri, 21 Jun 2019 09:15:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
+Message-ID: <20190621141550.GG82584@google.com>
+References: <20190621072911.GA21600@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611135627.15556-5-pmladek@suse.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 21 Jun 2019 14:15:12 +0000 (UTC)
+In-Reply-To: <20190621072911.GA21600@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:56:26PM +0200, Petr Mladek wrote:
-> Documentation explaining the motivation, capabilities, and usage
-> of the new API for tracking system state changes.
+On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
+> Hi,
 > 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  Documentation/livepatch/index.rst        |  1 +
->  Documentation/livepatch/system-state.rst | 80 ++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/livepatch/system-state.rst
+> When working on some documentation scripts to show the
+> Documentation/ABI/ files in an automated way, I ran across this "gem" of
+> a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
 > 
-> diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
-> index edd291d51847..94bbbc2c8993 100644
-> --- a/Documentation/livepatch/index.rst
-> +++ b/Documentation/livepatch/index.rst
-> @@ -9,6 +9,7 @@ Kernel Livepatching
->  
->      livepatch
->      callbacks
-> +    system-state
->      cumulative-patches
->      module-elf-format
->      shadow-vars
-> diff --git a/Documentation/livepatch/system-state.rst b/Documentation/livepatch/system-state.rst
-> new file mode 100644
-> index 000000000000..3a35073a0b80
-> --- /dev/null
-> +++ b/Documentation/livepatch/system-state.rst
-> @@ -0,0 +1,80 @@
-> [ ... snip ... ]
-> +1. Livepatch compatibility
+> In it you describe how the files
+> /sys/bus/pci/devices/<dev>/aer_dev_correctable and
+> /sys/bus/pci/devices/<dev>/aer_dev_fatal and
+> /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> all display a bunch of text on multiple lines.
+> 
+> This violates the "one value per sysfs file" rule, and should never have
+> been merged as-is :(
+> 
+> Please fix it up to be a lot of individual files if your really need all
+> of those different values.
 
-nit: 2. Livepatch compatibility
+Sorry about that.  Do you think we're safe in changing the sysfs ABI
+by removing the original files and replacing them with new, better
+ones?  This is pretty new and hopefully not widely used yet.
 
--- Joe
+Bjorn
