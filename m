@@ -2,154 +2,89 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2BEC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED3CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92F5208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C/Jpiahv"
+	by mail.kernel.org (Postfix) with ESMTP id A426F21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfFUK6d (ORCPT
+        id S1726652AbfFULAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:58:33 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:36872 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfFUK6c (ORCPT
+        Fri, 21 Jun 2019 07:00:34 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51975 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfFULAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:58:32 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190621105831euoutp01d805b71d92c8ef0afe170d1fa1848037~qMY8UoydT1898918989euoutp01F
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 10:58:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190621105831euoutp01d805b71d92c8ef0afe170d1fa1848037~qMY8UoydT1898918989euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561114711;
-        bh=A9pBNbBVOLmjuiX6NSWUHx7tGtewDcJ1QzxPHg8R51k=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=C/Jpiahv2U6o5Wrt1Ua/p5e9gjNJnZzQomYUaRC/We685GifcxkEU/VyDrg7920Dd
-         Nl/ULYxT/Rb0whvAPPvLzRMejb63t6Otv0a24ecSfWj2tpwn+3apBwwRVDCsZsomJB
-         iDDXXD85Fhl10e79lf4bWACiHD+mO86vri9SuOak=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190621105830eucas1p1fc2359f1ccacd3cdc649c6885c9da491~qMY7v731h0680206802eucas1p1u;
-        Fri, 21 Jun 2019 10:58:30 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 66.B9.04325.658BC0D5; Fri, 21
-        Jun 2019 11:58:30 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190621105829eucas1p2b19a886df01e57f5b5a04f9eb5ab7d4f~qMY64VMzZ1768217682eucas1p2Q;
-        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190621105829eusmtrp2b12321237892dcf14b1d5b0265247ec6~qMY6qPm6E2690226902eusmtrp2i;
-        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-59-5d0cb856927d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 00.73.04140.558BC0D5; Fri, 21
-        Jun 2019 11:58:29 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190621105829eusmtip222e6d4a5e5d1c4975e0c08077666f869~qMY6U14r62320223202eusmtip2W;
-        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: pvr2fb: fix link error for
- pvr2fb_pci_exit
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
-Date:   Fri, 21 Jun 2019 12:58:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 21 Jun 2019 07:00:34 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 11FC68057B; Fri, 21 Jun 2019 13:00:19 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 12:59:42 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-leds@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 20/29] docs: leds: convert to ReST
+Message-ID: <20190621105942.GA24145@amd>
+References: <cover.1560890800.git.mchehab+samsung@kernel.org>
+ <b8185b2d816810281a2b712c70518159516785b6.1560890801.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190617131624.2382303-1-arnd@arndb.de>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djP87phO3hiDdp+ylvMWb+GzeLvpGPs
-        Fle+vmez2P/0OYvFib4PrBaXd81hs7jz9TmLA7vH71+TGD1ajrxl9Vi85yWTx4kZv1k87ncf
-        Z/L4vEkugC2KyyYlNSezLLVI3y6BK+PDk5fsBfc4Kzbf62BrYJzE0cXIySEhYCLx/dQk5i5G
-        Lg4hgRWMEmeP/WOBcL4wSqzq/g7lfGaU+PdyCxNMy4fpO6ASyxklrs78CuW8ZZQ4Nu0hI0iV
-        sIC/RNvva2wgtoiAosTUF8/AljALXGKUuLliCjtIgk3ASmJi+yqgBg4OXgE7ib3T60DCLAKq
-        Eo8nvQfbJioQIXH/2AZWEJtXQFDi5MwnLCA2p4CpxNVVJ5lBbGYBcYlbT+YzQdjyEtvfzgHb
-        JSFwiF3ia99/FoizXSRWXPjBCmELS7w6voUdwpaR+L8TpBmkYR2jxN+OF1Dd2xkllk/+xwZR
-        ZS1x+PhFVpBLmQU0Jdbv0ocIO0qs2r6VCSQsIcAnceOtIMQRfBKTtk1nhgjzSnS0CUFUq0ls
-        WLaBDWZt186VzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS
-        83M3MQIT0ul/x7/uYNz3J+kQowAHoxIP74FZ3LFCrIllxZW5hxglOJiVRHh5cnhihXhTEiur
-        Uovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTBWZ8gvE73bnv3si/O1
-        eF+njgPfC+OURZ7PD83K6gm/3DHpv/Sqk7e+nw9y4O96vcZY9WaLTYC+3N2r+ndSVnMdK3q7
-        Q2rv1/SwXXI+i4/KGW3kNal7EfX+S3iFgscLw+9l4une+hf9hd/qz66Z/vOi25MNzOu9V8dI
-        Wi0S3lu4z/y86rRJ65KUWIozEg21mIuKEwHBo/otRAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7qhO3hiDVqmq1rMWb+GzeLvpGPs
-        Fle+vmez2P/0OYvFib4PrBaXd81hs7jz9TmLA7vH71+TGD1ajrxl9Vi85yWTx4kZv1k87ncf
-        Z/L4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI
-        3y5BL+PDk5fsBfc4Kzbf62BrYJzE0cXIySEhYCLxYfoOli5GLg4hgaWMEvdvNjN2MXIAJWQk
-        jq8vg6gRlvhzrYsNouY1o0TrxQ/sIAlhAV+JGW9+g9kiAooSU188YwYpYha4xChxsHsxK0RH
-        B6NE28J7zCBVbAJWEhPbV4Ft4BWwk9g7vQ4kzCKgKvF40nsmEFtUIELizPsVLCA2r4CgxMmZ
-        T8BsTgFTiaurToKNYRZQl/gz7xKULS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYw
-        sqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjL9tx35u2cHY9S74EKMAB6MSD++BWdyxQqyJ
-        ZcWVuYcYJTiYlUR4eXJ4YoV4UxIrq1KL8uOLSnNSiw8xmgI9N5FZSjQ5H5ga8kriDU0NzS0s
-        Dc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MB6/8knxZpf3xjsemeekO54+fi1x
-        wfb8G+Nr03NnKBqVtQjHinQ/Onj2Wk9R1+PYaZd1Yz58fnJLIKO97ptWtqHa9NDe6xdP3pqx
-        vmPJKfMY98cv/iotmbv9V5PWj0vvRVnvrTm/Qk7u9ZbN06TnTVsaf+LoPmuGCd12Uw7P4mPZ
-        GGyUvbr//iRVJZbijERDLeai4kQA9VpxwdUCAAA=
-X-CMS-MailID: 20190621105829eucas1p2b19a886df01e57f5b5a04f9eb5ab7d4f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44
-References: <CGME20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44@epcas1p3.samsung.com>
-        <20190617131624.2382303-1-arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <b8185b2d816810281a2b712c70518159516785b6.1560890801.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi,
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/17/19 3:16 PM, Arnd Bergmann wrote:
-> When the driver is built-in for PCI, we reference the exit function
-> after discarding it:
-> 
-> `pvr2fb_pci_exit' referenced in section `.ref.data' of drivers/video/fbdev/pvr2fb.o: defined in discarded section `.exit.text' of drivers/video/fbdev/pvr2fb.o
-> 
-> Just remove the __exit annotation as the easiest workaround.
+On Tue 2019-06-18 17:53:38, Mauro Carvalho Chehab wrote:
+> Rename the leds documentation files to ReST, add an
+> index for them and adjust in order to produce a nice html
+> output via the Sphinx build system.
+>=20
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Don't we also need to fix pvr2fb_dc_exit() for CONFIG_SH_DREAMCAST=y case? 
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> Fixes: 0f5a5712ad1e ("video: fbdev: pvr2fb: add COMPILE_TEST support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/video/fbdev/pvr2fb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
-> index 299ea7db9220..cf9cfdc5e685 100644
-> --- a/drivers/video/fbdev/pvr2fb.c
-> +++ b/drivers/video/fbdev/pvr2fb.c
-> @@ -990,7 +990,7 @@ static int __init pvr2fb_pci_init(void)
->  	return pci_register_driver(&pvr2fb_pci_driver);
->  }
->  
-> -static void __exit pvr2fb_pci_exit(void)
-> +static void pvr2fb_pci_exit(void)
->  {
->  	pci_unregister_driver(&pvr2fb_pci_driver);
->  }
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0MuJ4ACgkQMOfwapXb+vLr4wCgr/sTE2xCAfouKtIL4+mRDlDH
+r3gAniPvzpOgYRlsEHIkVK0sPOYobZVO
+=AOCV
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
