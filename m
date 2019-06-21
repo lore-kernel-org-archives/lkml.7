@@ -2,145 +2,72 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE83C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6882C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DC62083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561092452;
-	bh=2e8ga/L8SEdmf7Lt7noZ+sWu8LCAOrQ1GgcWN6Trw2Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FvcvssM2oqSmcI6ZlxuEtdN0Nuu3HFkYvL/V+DvZTwkataoVQjv7MyWRb9Qr8isVh
-	 hiliPMi7w6AiE51QdFT6eMGHK3L5GJA+51Ell9vZkDzHyWdleYgcKOlvYxhUFWwJEC
-	 EO4Jm0REVlBF7YaUxER+cwMYU9RPelXo9GnIkbso=
+	by mail.kernel.org (Postfix) with ESMTP id B6272208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfFUErb (ORCPT
+        id S1726073AbfFUFEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 00:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 01:04:14 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52748 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfFUEra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 00:47:30 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A95208C3;
-        Fri, 21 Jun 2019 04:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561092449;
-        bh=2e8ga/L8SEdmf7Lt7noZ+sWu8LCAOrQ1GgcWN6Trw2Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qYxeNh9SgFH2otygFAopDpn5bSOOXzOOQZC4JsuMuf4GuzcJyQV0reiVbvvkiY5HI
-         F4dd+WuPxJse1K8QLSqfnYlWqbMZlKcri2Ld9bg465c79KSydP0mhl2Mmd8k7REWC1
-         Sr9oaTAuAAolnFN+SfpW3LxDZRzCpBFyt4tMe68o=
-Received: by mail-wm1-f52.google.com with SMTP id c6so5160535wml.0;
-        Thu, 20 Jun 2019 21:47:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAWTt1GloL18XJNHbPIylraSQGUm/+mxYlegcKy/AsLFFtsSAGQF
-        o1tUVq4oT+6W6AP+pC6qWowHetdwEkNiaP1A1Cs=
-X-Google-Smtp-Source: APXvYqzfssEVgigV9IyaopMmsOAvPClq7Yi3q82LMxYgtG/hvzSp2webHvdicOT4RPzD/wIoTvtKET482lzGX4xkvaI=
-X-Received: by 2002:a1c:1bc9:: with SMTP id b192mr2131534wmb.152.1561092447753;
- Thu, 20 Jun 2019 21:47:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-2-drinkcat@chromium.org>
-In-Reply-To: <20190429035515.73611-2-drinkcat@chromium.org>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Thu, 20 Jun 2019 21:47:16 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzouA3vKf6Hb=Jdy2FLG_Hkzartaksav-JpbRiVkxAACiQ@mail.gmail.com>
-Message-ID: <CAGp9LzouA3vKf6Hb=Jdy2FLG_Hkzartaksav-JpbRiVkxAACiQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: Ignore interrupts that are wake
- only during resume
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725856AbfFUFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 01:04:14 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CC001A0990;
+        Fri, 21 Jun 2019 07:04:12 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CD6761A0152;
+        Fri, 21 Jun 2019 07:04:05 +0200 (CEST)
+Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8BE04402CF;
+        Fri, 21 Jun 2019 13:03:57 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        maxime.ripard@bootlin.com, olof@lixom.net,
+        jagan@amarulasolutions.com, bjorn.andersson@linaro.org,
+        leonard.crestez@nxp.com, dinguyen@kernel.org,
+        enric.balletbo@collabora.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] arm64: defconfig: Enable CONFIG_KEYBOARD_SNVS_PWRKEY as module
+Date:   Fri, 21 Jun 2019 13:06:03 +0800
+Message-Id: <20190621050603.20392-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On Sun, Apr 28, 2019 at 8:55 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> Before suspending, mtk-eint would set the interrupt mask to the
-> one in wake_mask. However, some of these interrupts may not have a
-> corresponding interrupt handler, or the interrupt may be disabled.
->
-> On resume, the eint irq handler would trigger nevertheless,
-> and irq/pm.c:irq_pm_check_wakeup would be called, which would
-> try to call irq_disable. However, if the interrupt is not enabled
-> (irqd_irq_disabled(&desc->irq_data) is true), the call does nothing,
-> and the interrupt is left enabled in the eint driver.
->
-> Especially for level-sensitive interrupts, this will lead to an
-> interrupt storm on resume.
->
-> If we detect that an interrupt is only in wake_mask, but not in
-> cur_mask, we can just mask it out immediately (as mtk_eint_resume
-> would do anyway at a later stage in the resume sequence, when
-> restoring cur_mask).
->
-> Fixes: bf22ff45bed ("genirq: Avoid unnecessary low level irq function calls")
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Enable CONFIG_KEYBOARD_SNVS_PWRKEY as module to support i.MX8M
+series SoCs' power key.
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/pinctrl/mediatek/mtk-eint.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index f464f8cd274b75c..737385e86beb807 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -318,7 +318,7 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
->         struct irq_chip *chip = irq_desc_get_chip(desc);
->         struct mtk_eint *eint = irq_desc_get_handler_data(desc);
->         unsigned int status, eint_num;
-> -       int offset, index, virq;
-> +       int offset, mask_offset, index, virq;
->         void __iomem *reg =  mtk_eint_get_offset(eint, 0, eint->regs->stat);
->         int dual_edge, start_level, curr_level;
->
-> @@ -328,10 +328,24 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
->                 status = readl(reg);
->                 while (status) {
->                         offset = __ffs(status);
-> +                       mask_offset = eint_num >> 5;
->                         index = eint_num + offset;
->                         virq = irq_find_mapping(eint->domain, index);
->                         status &= ~BIT(offset);
->
-> +                       /*
-> +                        * If we get an interrupt on pin that was only required
-> +                        * for wake (but no real interrupt requested), mask the
-> +                        * interrupt (as would mtk_eint_resume do anyway later
-> +                        * in the resume sequence).
-> +                        */
-> +                       if (eint->wake_mask[mask_offset] & BIT(offset) &&
-> +                           !(eint->cur_mask[mask_offset] & BIT(offset))) {
-> +                               writel_relaxed(BIT(offset), reg -
-> +                                       eint->regs->stat +
-> +                                       eint->regs->mask_set);
-> +                       }
-> +
->                         dual_edge = eint->dual_edge[index];
->                         if (dual_edge) {
->                                 /*
-> --
-> 2.21.0.593.g511ec345e18-goog
->
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 29f7768..3c17f6e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -291,6 +291,7 @@ CONFIG_WLCORE_SDIO=m
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_ADC=m
+ CONFIG_KEYBOARD_GPIO=y
++CONFIG_KEYBOARD_SNVS_PWRKEY=m
+ CONFIG_KEYBOARD_CROS_EC=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_TOUCHSCREEN_ATMEL_MXT=m
+-- 
+2.7.4
+
