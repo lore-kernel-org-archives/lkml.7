@@ -2,170 +2,134 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA20C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073A9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3673A21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561124618;
-	bh=j7CrSlfQAmRQGesg3mqy/vLQAoSNzS1OohkNwYrKLXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CBvdMqYnb/mgmcO8mMI0MPMQSDRuLPu7+GroZwHrVHgd/vy2krE5TPYx4WDcH9WSi
-	 E1eZkZZOJCZ+Gi/4ki7bBBH5d3w1OC7zKHZnCLD4uh25qkbzWNgH54aYJrlcO+QP6K
-	 g+4f0QKMHb9jgCka9Lf5oLpok5Ov/0TKeqExUCOM=
+	by mail.kernel.org (Postfix) with ESMTP id CEBAE215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vgd8q/pO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfFUNnh (ORCPT
+        id S1726277AbfFUNoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:43:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUNng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:43:36 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31387206B7;
-        Fri, 21 Jun 2019 13:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561124615;
-        bh=j7CrSlfQAmRQGesg3mqy/vLQAoSNzS1OohkNwYrKLXM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fZcpYdKLbdodX/fGQwJ3O5sT84JfuexstDzFvbQ1a9rlx6xwFxEA7EACKzuwY+iu8
-         NUjmeZgGcTiSn3xNRjqMNiXG/jbF96btkM5PTzeUKhXS+H/veJaA47U6ETYYTus0mA
-         sdnKlp14BpLpis+dOlOnATjrl4PpN9Et6X1S8MeU=
-Date:   Fri, 21 Jun 2019 08:43:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        joe@perches.com
-Subject: Re: [PATCH 1/5] lib: logic_pio: Fix RCU usage
-Message-ID: <20190621134332.GC82584@google.com>
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
- <1561026716-140537-2-git-send-email-john.garry@huawei.com>
+        Fri, 21 Jun 2019 09:44:06 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:63354 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUNoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:44:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1561124644; x=1592660644;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=yfXI9UxtyIv8G/MPell59xXge03VdkSIiUnf5zgJv64=;
+  b=Vgd8q/pO/mZTvk5T3W+n/gzcNpToR4D2ulrvpclc/YNF4AxgIJ6WJazf
+   W4S5hUKKPb64cHMrsZ3XYcfTzzObDCR5qI+5jQfiGYFyZ3Ys1VG0GfqYc
+   VR9Ga8anW2BrGKHDgDXuJWMA6wqsTPI49RZABcBC3+YK2Yoeldf1wbvvy
+   U=;
+X-IronPort-AV: E=Sophos;i="5.62,400,1554768000"; 
+   d="scan'208";a="401783048"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 21 Jun 2019 13:44:03 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 8959FA22A3;
+        Fri, 21 Jun 2019 13:43:58 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 21 Jun 2019 13:43:57 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.225) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 21 Jun 2019 13:43:53 +0000
+Subject: Re: [v2, 3/4] Demonstrating unit testing via simple-harness
+To:     Sam Caccavale <samcacc@amazon.de>
+CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
+        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
+        <karahmed@amazon.de>, <andrew.cooper3@citrix.com>,
+        <JBeulich@suse.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <paullangton4@gmail.com>,
+        <anirudhkaushik@google.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190612153600.13073-1-samcacc@amazon.de>
+ <20190612153600.13073-4-samcacc@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <54e7eb69-3700-2e54-77b9-79b61ca69a1b@amazon.com>
+Date:   Fri, 21 Jun 2019 15:43:51 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561026716-140537-2-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612153600.13073-4-samcacc@amazon.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.162.225]
+X-ClientProxiedBy: EX13D23UWC001.ant.amazon.com (10.43.162.196) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 06:31:52PM +0800, John Garry wrote:
-> The traversing of io_range_list with list_for_each_entry_rcu()
-> is not properly protected by rcu_read_lock(), so add it.
+
+
+On 12.06.19 17:35, Sam Caccavale wrote:
+> Simple-harness.c uses inline asm support to generate asm and then has the
+> emulator emulate this code.  This may be useful as a form of testing for
+> the emulator.
 > 
-> In addition, the list traversing used in logic_pio_register_range()
-> does not need to use the rcu variant.
-
-Not being an RCU expert myself, a few words here about why one path
-needs protection but the other doesn't would be helpful.  This
-basically restates what the patch *does*, which is obvious from the
-diff, but not *why*.
-
-> Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> CR: https://code.amazon.com/reviews/CR-8591638
 > ---
->  lib/logic_pio.c | 49 +++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 35 insertions(+), 14 deletions(-)
+>   tools/fuzz/x86ie/Makefile         |  7 ++++--
+>   tools/fuzz/x86ie/simple-harness.c | 42 +++++++++++++++++++++++++++++++
+>   2 files changed, 47 insertions(+), 2 deletions(-)
+>   create mode 100644 tools/fuzz/x86ie/simple-harness.c
 > 
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index feea48fd1a0d..761296376fbc 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -46,7 +46,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->  	end = new_range->hw_start + new_range->size;
->  
->  	mutex_lock(&io_range_mutex);
-> -	list_for_each_entry_rcu(range, &io_range_list, list) {
-> +	list_for_each_entry(range, &io_range_list, list) {
->  		if (range->fwnode == new_range->fwnode) {
->  			/* range already there */
->  			goto end_register;
-> @@ -108,26 +108,38 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->   */
->  struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
->  {
-> -	struct logic_pio_hwaddr *range;
-> +	struct logic_pio_hwaddr *range, *found_range = NULL;
->  
-> +	rcu_read_lock();
->  	list_for_each_entry_rcu(range, &io_range_list, list) {
-> -		if (range->fwnode == fwnode)
-> -			return range;
-> +		if (range->fwnode == fwnode) {
-> +			found_range = range;
-> +			break;
-> +		}
->  	}
-> -	return NULL;
-> +	rcu_read_unlock();
-> +
-> +	return found_range;
->  }
->  
->  /* Return a registered range given an input PIO token */
->  static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
->  {
-> -	struct logic_pio_hwaddr *range;
-> +	struct logic_pio_hwaddr *range, *found_range = NULL;
->  
-> +	rcu_read_lock();
->  	list_for_each_entry_rcu(range, &io_range_list, list) {
-> -		if (in_range(pio, range->io_start, range->size))
-> -			return range;
-> +		if (in_range(pio, range->io_start, range->size)) {
-> +			found_range = range;
-> +			break;
-> +		}
->  	}
-> -	pr_err("PIO entry token %lx invalid\n", pio);
-> -	return NULL;
-> +	rcu_read_unlock();
-> +
-> +	if (!found_range)
-> +		pr_err("PIO entry token 0x%lx invalid\n", pio);
-> +
-> +	return found_range;
->  }
->  
->  /**
-> @@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
->  {
->  	struct logic_pio_hwaddr *range;
->  
-> +	rcu_read_lock();
->  	list_for_each_entry_rcu(range, &io_range_list, list) {
->  		if (range->flags != LOGIC_PIO_CPU_MMIO)
->  			continue;
-> -		if (in_range(addr, range->hw_start, range->size))
-> -			return addr - range->hw_start + range->io_start;
-> +		if (in_range(addr, range->hw_start, range->size)) {
-> +			unsigned long cpuaddr;
-> +
-> +			cpuaddr = addr - range->hw_start + range->io_start;
-> +
-> +			rcu_read_unlock();
-> +			return cpuaddr;
-> +		}
->  	}
-> -	pr_err("addr %llx not registered in io_range_list\n",
-> -	       (unsigned long long) addr);
-> +	rcu_read_unlock();
-> +
-> +	pr_err("addr %pa not registered in io_range_list\n", &addr);
-> +
->  	return ~0UL;
->  }
->  
-> -- 
-> 2.17.1
+> diff --git a/tools/fuzz/x86ie/Makefile b/tools/fuzz/x86ie/Makefile
+> index d45fe6d266b9..e79d275e1040 100644
+> --- a/tools/fuzz/x86ie/Makefile
+> +++ b/tools/fuzz/x86ie/Makefile
+> @@ -44,8 +44,11 @@ LOCAL_OBJS := emulator_ops.o stubs.o
+>   afl-harness: afl-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
+>   	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
 > 
+> -all: afl-harness
+> +simple-harness: simple-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
+> +	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
+> +
+> +all: afl-harness simple-harness
+> 
+>   .PHONY: clean
+>   clean:
+> -	$(RM) -r *.o afl-harness
+> +	$(RM) -r *.o afl-harness simple-harness
+> diff --git a/tools/fuzz/x86ie/simple-harness.c b/tools/fuzz/x86ie/simple-harness.c
+> new file mode 100644
+> index 000000000000..f21fdafe1dd1
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/simple-harness.c
+> @@ -0,0 +1,42 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <assert.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include "emulator_ops.h"
+> +#include <asm/kvm_emulate.h>
+> +
+> +extern void foo(void)
+> +{
+> +	asm volatile("__start:"
+> +		     ".byte 0x32, 0x05, 0x00, 0x00, 0x00, 0x00;" // xor eax,DWORD PTR [rip+0x0]
+> +		     ".byte 0x90;"
+> +		     //".byte 0x0f, 0x7f, 0xde;" // movq mm6,mm3
+
+Why?
+
+Alex
