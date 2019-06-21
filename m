@@ -2,145 +2,144 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4334CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552BDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5282084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2001D2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gYr0XtF0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaiG/My2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfFUKgW (ORCPT
+        id S1726425AbfFUKjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:36:22 -0400
-Received: from mout.gmx.net ([212.227.15.19]:42117 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbfFUKgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:36:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1561113373;
-        bh=FZ3nDCFIqN8mN8VuNfZpLg/uHuIVZrVV40D1UObVCuU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=gYr0XtF0rerojtRGK8y/dL+tkZbUSPRjbMslTtDKogey4krDMF5xZFRZJmBNxegfD
-         s21QimIAafXavDd8y4AJWZxpSp4Hw5iPvnwI6aLRPjbbcAu9YKCPtF6/wJbCOr21rH
-         8aIKi3VjdjyomNJFSsEj3TdZi9ckSBM+lzf0OymQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.129.11] ([95.91.214.138]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MqJm5-1iRIlz3LEJ-00nOdZ; Fri, 21
- Jun 2019 12:36:12 +0200
-Subject: Re: [PATCH] hid: add another quirk for Chicony PixArt mouse
-To:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        "Herton R . Krzesinski" <herton@redhat.com>,
-        Oliver Neukum <oneukum@suse.de>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190621091736.14503-1-oleksandr@redhat.com>
- <20190621093920.qlnhbneoww7c6axw@butterfly.localdomain>
-From:   Sebastian Parschauer <s.parschauer@gmx.de>
-Message-ID: <b3cbee0c-07ef-5943-cc8f-f4fa0f854440@gmx.de>
-Date:   Fri, 21 Jun 2019 12:36:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Jun 2019 06:39:24 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38099 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfFUKjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 06:39:24 -0400
+Received: by mail-vs1-f66.google.com with SMTP id k9so3522249vso.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 03:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/GyhlxzDlZ/c+fwrm+Fm2Dc67r0DcAh+69Mb7gFlO3k=;
+        b=oaiG/My2zmbB65WJe4cbDgNEyrknHvYXILox7hiJ7FCYFHhGY5Ff2YL8ONaBwKx5pD
+         XqoJmqRKroXwJjHa9xBaqoaLTOCQGZV5FpjwkJxfn9y/UtvQwI7HwI35PuXIvHGQXQMW
+         PPy/o8z6jZB7YHc42y4AmyBoe8FUmw1cL/TdSrfZBegjqTUoN5uXmKFTTAqPmTYzO+Yh
+         iHRr5uouh3j4VajNERh78oQowHtY+GbXUfdYfPUkKjEO0pX1EDgHhSrJ7oaJP8XpWkV1
+         8eBFW06bEbggFrMHGcvfsQzuNt3ZJtb8vqeS7577k5UXarwpSnqZTtQi3CfG945NDDcZ
+         eMLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/GyhlxzDlZ/c+fwrm+Fm2Dc67r0DcAh+69Mb7gFlO3k=;
+        b=WuuHkA2qBYUV2LoxShNQJkROM2GGdlKCYhDQDhhLLrVynCfegw5DY3dT323sz6zB5Y
+         k9sx3ZCo8X5ry+rmHJ7uA3mQThXK0Lve8Lzax5lC2MDb4ne1Y+wD7zIrg5JqQNBHfJD5
+         rc+AaULYN7Z2/Hwk74Q9Np3pC1UQNLZ40oBmR/BMV5lP9O4Z7MpKhnxqO9paSs2Lajn6
+         mS5fWS2KwvquhVYcC0rGl9Mo5TNFA5mpSVYPku2SimwM+EUegN/OfhJPBGOuvrA7P6Va
+         ad8jLhhOQb/jryJKOpALtuZulj51+KNry6Z+1TI42tOUN777drcA5x59uZUMhcawXNO4
+         MSgw==
+X-Gm-Message-State: APjAAAX+aI1jy0KZe9EBV2jEz6KPtIYkq40hIpwGIOZ8XWNBTtM0Mclr
+        9r/rB5oB0/jdAISjPdoGdHQn9U/ipwBD4RqGUpYhag==
+X-Google-Smtp-Source: APXvYqyh48CTqAoGqpwVNMKP36hE0e9kEq/4FyzDdnT36MjTnjH0TKMAT7VqOvhq6sV6TIPCijvxp5d7rVv7RHf3YhM=
+X-Received: by 2002:a67:8d8a:: with SMTP id p132mr10336981vsd.103.1561113563011;
+ Fri, 21 Jun 2019 03:39:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190621093920.qlnhbneoww7c6axw@butterfly.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+References: <1561063566-16335-1-git-send-email-cai@lca.pw> <201906201801.9CFC9225@keescook>
+In-Reply-To: <201906201801.9CFC9225@keescook>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Fri, 21 Jun 2019 12:39:11 +0200
+Message-ID: <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
+Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:W6/wR0IEZxVWoFe2j3QAOvBtKC2Xi4gdB1zncHkFkRFdu1PvOnC
- LUlGvs/BfhzcPJ9q8EOz67FesZKKEVP3CQ6Le+RRDZXpLtFZ5h5Xv384Vy5ekSRFR0Y4wpl
- O/6LyJbQHfwOTKpPI8QwGoFJIxeWekMX79OEX0/GTp4yfhMy0qpBB78yPcRigLnMcOpd0ow
- UVZ72vpmXGy/eXXG68Yrg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:msNBR1fBoEY=:qpSyOprnk90y65UWlATTK6
- rFfO7TF0dwDTJNSlKZAuuLb2wceeqVnbEkCwLjMpTsj3RhTQFZGJa9OAAlQfClTazSonRPne5
- n67Hgapw6T254h76q43hrRBlh+7K3KNaQYKFH8OB7aFWRCqnq2ASatNHviuhtWMMsbs4kwPQV
- zGOD2TD94cu9/zDPdJJYka3CvLB9IrTgKuiUuKeSTJfAEIc2vqPbwzbkfVT8PPosRhUB8SqkW
- FcyNTH6cA02RV51SjPSHGe+fCx4TB/dA/C0A1HqHyrF1n62kEdgQ0a5mqULqz2K2hgxcQCPL/
- E9Gu36ou8xRHQB4ccSpXKlFm4ZY7++mI2YUiv4CKVgLFo+9Y6NOmmrDIPwyWBKlVNKRqjYMC5
- G/T0OC0ruy6k3f4/efxmoL0LrST7c6i20U4JEhaYL6eBZWf4vQPvf3XXmRBOzIsd+2aOy0Xs/
- xnXoWkbPYOizvSeJa3gVCfcBSuacgHtgdMMJ2wDQUWqOU895tEvS3FPuncCgwGR8oDeu/aMAq
- ASpJCm3tPoQWDyHCYQKUSAbBRU6qf86V6GrhnshlwHrXSY2qp4vDIHoo8fNJCJP8dqwd4Gcca
- zbQzLgdmlxGklJ/5jEITSGAl54hCTqx3+hZlJk4ss8S+5lvEn3xIAiFaWclUq2TQ8BbLqTtsd
- fY4zVmkrzTxZX9XwuEW3ac297RGj7uEHgW7y6fiDJzZNSkVcJGMCCSk9j/Mh0ep0g2BZ6QSxo
- Yj1q7mOO+vQ4gychCo3XuBuyGHX+aD0VFAOrJ+r+Ft+JiQAFUvfG5TeKc6NBUd2lGGRwZDZ5T
- FIAn3fulwhrhtRqto3pV9HEBmzdtf/efRfObHwGko4aiyAoGf5/QkQdgKpo7CS5AGFBSoYUAU
- F6Ahf20BgQk1uInMbO9eR0MQcl/8v4Qet3rFWzBMlp+0IZzfu3YErc20e98Nu0g21ITZOkczU
- +TYxAUjds150CEibV7neYBCdb00uwXmobrqLSFlKsoVuhR/8CYsAo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, got it on my radar already since Feb 5:
-
-https://github.com/sriemer/fix-linux-mouse/issues/15#issuecomment-46071311=
-5
-
-If you see "Manufacturer: PixArt", then chances are high, that the
-device is affected. IMHO generic quirks like described in GitHub issue
-#20 would cover those easier.
-
-Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
-
-On 21.06.19 11:39, Oleksandr Natalenko wrote:
-> Erm. Cc: s.parschauer@gmx.de instead of inactive @suse address.
+On Fri, Jun 21, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Fri, Jun 21, 2019 at 11:17:36AM +0200, Oleksandr Natalenko wrote:
->> I've spotted another Chicony PixArt mouse in the wild, which requires
->> HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
->>
->> USB ID of this device is 0x04f2:0x0939.
->>
->> We've introduced quirks like this for other models before, so lets add
->> this mouse too.
->>
->> Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsr=
-econnects-every-minute-on-linux
->> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
->> ---
->>   drivers/hid/hid-ids.h    | 1 +
->>   drivers/hid/hid-quirks.c | 1 +
->>   2 files changed, 2 insertions(+)
->>
->> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
->> index eac0c54c5970..69f0553d9d95 100644
->> --- a/drivers/hid/hid-ids.h
->> +++ b/drivers/hid/hid-ids.h
->> @@ -269,6 +269,7 @@
->>   #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
->>   #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
->>   #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
->> +#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
->>   #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
->>   #define USB_DEVICE_ID_ASUS_AK1D		0x1125
->>   #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
->> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->> index e5ca6fe2ca57..671a285724f9 100644
->> --- a/drivers/hid/hid-quirks.c
->> +++ b/drivers/hid/hid-quirks.c
->> @@ -42,6 +42,7 @@ static const struct hid_device_id hid_quirks[] =3D {
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HI=
-D_QUIRK_NOGET },
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_=
-TOUCH), HID_QUIRK_MULTI_INPUT },
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART=
-_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
->> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_=
-USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELE=
-SS), HID_QUIRK_MULTI_INPUT },
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HI=
-D_QUIRK_BADPAD },
->>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_ST=
-ICK), HID_QUIRK_NOGET },
->> --
->> 2.22.0
->>
+> On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
+> > The linux-next commit "mm: security: introduce init_on_alloc=3D1 and
+> > init_on_free=3D1 boot options" [1] introduced a false positive when
+> > init_on_free=3D1 and page_poison=3Don, due to the page_poison expects t=
+he
+> > pattern 0xaa when allocating pages which were overwritten by
+> > init_on_free=3D1 with 0.
+> >
+> > Fix it by switching the order between kernel_init_free_pages() and
+> > kernel_poison_pages() in free_pages_prepare().
 >
+> Cool; this seems like the right approach. Alexander, what do you think?
+Can using init_on_free together with page_poison bring any value at all?
+Isn't it better to decide at boot time which of the two features we're
+going to enable?
+
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> -Kees
+>
+> >
+> > [1] https://patchwork.kernel.org/patch/10999465/
+> >
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >
+> > v2: After further debugging, the issue after switching order is likely =
+a
+> >     separate issue as clear_page() should not cause issues with future
+> >     accesses.
+> >
+> >  mm/page_alloc.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 54dacf35d200..32bbd30c5f85 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -1172,9 +1172,10 @@ static __always_inline bool free_pages_prepare(s=
+truct page *page,
+> >                                          PAGE_SIZE << order);
+> >       }
+> >       arch_free_page(page, order);
+> > -     kernel_poison_pages(page, 1 << order, 0);
+> >       if (want_init_on_free())
+> >               kernel_init_free_pages(page, 1 << order);
+> > +
+> > +     kernel_poison_pages(page, 1 << order, 0);
+> >       if (debug_pagealloc_enabled())
+> >               kernel_map_pages(page, 1 << order, 0);
+> >
+> > --
+> > 1.8.3.1
+> >
+>
+> --
+> Kees Cook
+
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
