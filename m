@@ -2,109 +2,242 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4CDC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC1DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C8A206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A01206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pYqG0Mi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfFUX5m (ORCPT
+        id S1726514AbfFUX5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Jun 2019 19:57:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37118 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfFUX5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Jun 2019 19:57:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48780 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfFUX5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:57:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 16:57:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,402,1557212400"; 
-   d="scan'208";a="359022898"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2019 16:57:21 -0700
-From:   Megha Dey <megha.dey@linux.intel.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, megha.dey@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>
-Subject: [RFC V1 RESEND 6/6] Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
-Date:   Fri, 21 Jun 2019 17:19:38 -0700
-Message-Id: <1561162778-12669-7-git-send-email-megha.dey@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNsLc4156287;
+        Fri, 21 Jun 2019 23:56:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=02MDI4bEY6Xudjs/bUFIsI++NZrIFrdhazUwB84LYEc=;
+ b=pYqG0Mi7o3FqP5WDQAGW1+bdZFCQN2IbA+LryAZ6t7wKAJdJHVZhpD+hmxhqaonvlre0
+ KO3He69PVMan5UcLnp7nkezjEY70YfaFljicxQMD2tQQD+L+AIa/+KAzQc1gOdDzpnoI
+ CSbineIK0yU0VrMQXTTv1LLQYtuunczezPkoW6r4PtfSy09IZ9XcXm4K1xJWoI2tH08M
+ X5TF+yoZOcX5ehnV7dmL+w/O7E7RWe3o3aNaMLKcYyJBIlFWAhsSsvcd39VqzE4sqczT
+ NZ6wVF6LWjDiyXRUPSH5G942o99v0L5/Xofy5nYTlE/Gr1tDc5AZ73MFUj+BmpPCOuuq YA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t7809rq5f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 23:56:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNtlab041938;
+        Fri, 21 Jun 2019 23:56:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 2t77ypesc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Jun 2019 23:56:51 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNupTW043915;
+        Fri, 21 Jun 2019 23:56:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t77ypesc3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 23:56:51 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5LNumKw020438;
+        Fri, 21 Jun 2019 23:56:48 GMT
+Received: from localhost (/10.159.131.214)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Jun 2019 16:56:48 -0700
+Subject: [PATCH 4/4] vfs: teach vfs_ioc_fssetxattr_check to check extent
+ size hints
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        darrick.wong@oracle.com, shaggy@kernel.org,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk
+Cc:     cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Date:   Fri, 21 Jun 2019 16:56:45 -0700
+Message-ID: <156116140570.1664814.4607468365269898575.stgit@magnolia>
+In-Reply-To: <156116136742.1664814.17093419199766834123.stgit@magnolia>
+References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=949 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Documentation for the newly introduced dynamic allocation
-and deallocation of MSI-X vectors.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+Move the extent size hint checks that aren't xfs-specific to the vfs.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- Documentation/PCI/MSI-HOWTO.txt | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ fs/inode.c         |   18 +++++++++++++
+ fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++------------------------------
+ 2 files changed, 47 insertions(+), 41 deletions(-)
 
-diff --git a/Documentation/PCI/MSI-HOWTO.txt b/Documentation/PCI/MSI-HOWTO.txt
-index 618e13d..5f6daf4 100644
---- a/Documentation/PCI/MSI-HOWTO.txt
-+++ b/Documentation/PCI/MSI-HOWTO.txt
-@@ -156,6 +156,44 @@ the driver can specify that only MSI or MSI-X is acceptable:
- 	if (nvec < 0)
- 		goto out_err;
+
+diff --git a/fs/inode.c b/fs/inode.c
+index f1ffa9605078..6374ad2ef25b 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -2234,6 +2234,24 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
+ 			return -EINVAL;
+ 	}
  
-+4.2.1 Dynamic MSI-X Allocation:
++	/* Check extent size hints. */
++	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(inode->i_mode))
++		return -EINVAL;
 +
-+The pci_alloc_irq_vectors() API is a one-shot method to allocate MSI resources
-+i.e. they cannot be called multiple times. In order to allocate MSI-X vectors
-+post probe phase, multiple times, use the following API:
++	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
++			!S_ISDIR(inode->i_mode))
++		return -EINVAL;
 +
-+  int pci_alloc_irq_vectors_dyn(struct pci_dev *dev, unsigned int min_vecs,
-+                unsigned int max_vecs, unsigned int flags, int *group_id);
++	if ((fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
++	    !S_ISREG(inode->i_mode) && !S_ISDIR(inode->i_mode))
++		return -EINVAL;
 +
-+This API allocates up to max_vecs interrupt vectors for a PCI device. It returns
-+the number of vectors allocated or a negative error. If the device has a
-+requirement for a minimum number of vectors the driver can pass a min_vecs
-+argument set to this limit, and the PCI core will return -ENOSPC if it can't
-+meet the minimum number of vectors. This API is only to be used for MSI-X vectors.
++	/* Extent size hints of zero turn off the flags. */
++	if (fa->fsx_extsize == 0)
++		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
++	if (fa->fsx_cowextsize == 0)
++		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
 +
-+A group ID pointer is passed which gets populated by this function. A unique
-+group_id will associated with all the MSI-X vectors allocated each time this
-+function is called:
-+
-+	int group_id;
-+	nvec = pci_alloc_irq_vectors_dyn(pdev, minvecs, maxvecs,
-+					flags | PCI_IRQ_MSIX, &group_id);
-+	if (nvec < 0)
-+		goto out_err;
-+
-+To get the Linux IRQ numbers to pass to request_irq() and free_irq(), use the
-+following function:
-+
-+  int pci_irq_vec_grp(struct pci_dev *dev, unsigned int nr, unsigned int group_id);
-+
-+In order to free the MSI-X resources associated with a particular group, use
-+the following function:
-+
-+  int pci_free_irq_vectors_grp(struct pci_dev *dev, int group_id);
-+
-+For example, to delete the group allocated with the pci_alloc_irq_vectors_dyn(),
-+	nvec = pci_free_irq_vectors_grp(pdev, group_id);
-+
- 4.3 Legacy APIs
+ 	return 0;
+ }
+ EXPORT_SYMBOL(vfs_ioc_fssetxattr_check);
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 82961de98900..b494e7e881e3 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1201,39 +1201,31 @@ xfs_ioctl_setattr_check_extsize(
+ 	struct fsxattr		*fa)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+-
+-	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(VFS_I(ip)->i_mode))
+-		return -EINVAL;
+-
+-	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
+-	    !S_ISDIR(VFS_I(ip)->i_mode))
+-		return -EINVAL;
++	xfs_extlen_t		size;
++	xfs_fsblock_t		extsize_fsb;
  
- The following old APIs to enable and disable MSI or MSI-X interrupts should
--- 
-2.7.4
+ 	if (S_ISREG(VFS_I(ip)->i_mode) && ip->i_d.di_nextents &&
+ 	    ((ip->i_d.di_extsize << mp->m_sb.sb_blocklog) != fa->fsx_extsize))
+ 		return -EINVAL;
+ 
+-	if (fa->fsx_extsize != 0) {
+-		xfs_extlen_t    size;
+-		xfs_fsblock_t   extsize_fsb;
+-
+-		extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
+-		if (extsize_fsb > MAXEXTLEN)
+-			return -EINVAL;
++	if (fa->fsx_extsize == 0)
++		return 0;
+ 
+-		if (XFS_IS_REALTIME_INODE(ip) ||
+-		    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
+-			size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
+-		} else {
+-			size = mp->m_sb.sb_blocksize;
+-			if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
+-				return -EINVAL;
+-		}
++	extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
++	if (extsize_fsb > MAXEXTLEN)
++		return -EINVAL;
+ 
+-		if (fa->fsx_extsize % size)
++	if (XFS_IS_REALTIME_INODE(ip) ||
++	    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
++		size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
++	} else {
++		size = mp->m_sb.sb_blocksize;
++		if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
+ 			return -EINVAL;
+-	} else
+-		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
++	}
++
++	if (fa->fsx_extsize % size)
++		return -EINVAL;
+ 
+ 	return 0;
+ }
+@@ -1259,6 +1251,8 @@ xfs_ioctl_setattr_check_cowextsize(
+ 	struct fsxattr		*fa)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
++	xfs_extlen_t		size;
++	xfs_fsblock_t		cowextsize_fsb;
+ 
+ 	if (!(fa->fsx_xflags & FS_XFLAG_COWEXTSIZE))
+ 		return 0;
+@@ -1267,25 +1261,19 @@ xfs_ioctl_setattr_check_cowextsize(
+ 	    ip->i_d.di_version != 3)
+ 		return -EINVAL;
+ 
+-	if (!S_ISREG(VFS_I(ip)->i_mode) && !S_ISDIR(VFS_I(ip)->i_mode))
+-		return -EINVAL;
+-
+-	if (fa->fsx_cowextsize != 0) {
+-		xfs_extlen_t    size;
+-		xfs_fsblock_t   cowextsize_fsb;
++	if (fa->fsx_cowextsize == 0)
++		return 0;
+ 
+-		cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
+-		if (cowextsize_fsb > MAXEXTLEN)
+-			return -EINVAL;
++	cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
++	if (cowextsize_fsb > MAXEXTLEN)
++		return -EINVAL;
+ 
+-		size = mp->m_sb.sb_blocksize;
+-		if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
+-			return -EINVAL;
++	size = mp->m_sb.sb_blocksize;
++	if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
++		return -EINVAL;
+ 
+-		if (fa->fsx_cowextsize % size)
+-			return -EINVAL;
+-	} else
+-		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
++	if (fa->fsx_cowextsize % size)
++		return -EINVAL;
+ 
+ 	return 0;
+ }
 
