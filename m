@@ -2,362 +2,120 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1C6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072DCC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F73B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D619721537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561138721;
-	bh=rc7HI8Z+95ky1caBbPwlhknc8sWW1qhad5xQShtABbo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=trdGxlerfp+4Rqf1i3Qoh3OBOzLtdzxDgPkwTf6EI7Z/+qJ9zEeA9i/ZnItp/3Qep
-	 mf5xygCUl1QxjFrCbMcW64m8IApRdq1AgVaCdptguGDxOlC6Hd+K/EwrRVvnFU70pS
-	 YduEoPmSiNc7iMVphIbLGwrGf0F6L4KM64wDh6os=
+	s=default; t=1561138754;
+	bh=7eMeE7dt+M7EOEz6Yd2aF+eYztz13iKanKtWGcn0EWI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vKbs1k1mP7iaxXjuC1Ksmg1ppZMY6eZ5t1rfxHDU0PPc6W8btjwDacu3qMM3E1Qlz
+	 8bBHwN1QtsCy8mGuF+fQI5brS57UMJgt7J1b9fSagPBMPr2f0jgCk035oFdR4m8cAI
+	 qHPxsEjJKANpjgDGUGm1V+speV7CaQJF4c0DgCNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfFURiK (ORCPT
+        id S1726190AbfFURjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 13:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfFURiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:38:09 -0400
-Received: from localhost (unknown [104.132.1.68])
+        id S1725992AbfFURjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:39:13 -0400
+Received: from quaco.ghostprotocols.net (187-26-104-93.3g.claro.net.br [187.26.104.93])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0D72083B;
-        Fri, 21 Jun 2019 17:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34FB62083B;
+        Fri, 21 Jun 2019 17:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561138688;
-        bh=rc7HI8Z+95ky1caBbPwlhknc8sWW1qhad5xQShtABbo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wv4DWWJWoNgKmfcNjV6ksfz0FMKBu6EDKX7weOis+MDeDqGlw8czZFRbTXFnfIuLM
-         GQjjLTN7QR5zXrUclaLrzRDEG51jotJZM8T2ouJ6oc23ktupZvO/m0QhiMuPYSbqRq
-         xiWsWvzhhF+c2lcVhl4+JJNXHSc/eHsterL9mpJw=
-Date:   Fri, 21 Jun 2019 10:38:07 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: add a rw_sem to cover quota flag
- changes
-Message-ID: <20190621173807.GB79502@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190530033115.16853-1-jaegeuk@kernel.org>
- <20190530175714.GB28719@jaegeuk-macbookpro.roam.corp.google.com>
- <20190604183619.GA8507@jaegeuk-macbookpro.roam.corp.google.com>
- <2afe0416-fe2d-8ba8-7625-0246aca9eba6@huawei.com>
- <20190614024655.GA18113@jaegeuk-macbookpro.roam.corp.google.com>
- <6f70ae56-45eb-666d-ae55-48eb0cc96f32@huawei.com>
- <20190619172651.GB57884@jaegeuk-macbookpro.roam.corp.google.com>
- <ba6555c9-b864-d0cc-1c65-4077e7f15175@huawei.com>
+        s=default; t=1561138752;
+        bh=7eMeE7dt+M7EOEz6Yd2aF+eYztz13iKanKtWGcn0EWI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Mjgnbhni5LDpqy51b8kC3P2uXPtEqZma/r1C4+yUJ4kEeMU5m6xF89vRAIfjwxwND
+         MuSPCDWOdndHPm39Dfzn7GWYnrLVt1tzGAAID467YjZyQBPQ6rV1CIBQurv9reJ37b
+         sZyhZn//nwnJ+DpId1L1x1aT5C1sGU/dd3yZ7eq8=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Raphael Gault <raphael.gault@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 01/25] perf tests arm64: Compile tests unconditionally
+Date:   Fri, 21 Jun 2019 14:38:07 -0300
+Message-Id: <20190621173831.13780-2-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190621173831.13780-1-acme@kernel.org>
+References: <20190621173831.13780-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba6555c9-b864-d0cc-1c65-4077e7f15175@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/20, Chao Yu wrote:
-> On 2019/6/20 1:26, Jaegeuk Kim wrote:
-> > On 06/18, Chao Yu wrote:
-> >> On 2019/6/14 10:46, Jaegeuk Kim wrote:
-> >>> On 06/11, Chao Yu wrote:
-> >>>> On 2019/6/5 2:36, Jaegeuk Kim wrote:
-> >>>>> Two paths to update quota and f2fs_lock_op:
-> >>>>>
-> >>>>> 1.
-> >>>>>  - lock_op
-> >>>>>  |  - quota_update
-> >>>>>  `- unlock_op
-> >>>>>
-> >>>>> 2.
-> >>>>>  - quota_update
-> >>>>>  - lock_op
-> >>>>>  `- unlock_op
-> >>>>>
-> >>>>> But, we need to make a transaction on quota_update + lock_op in #2 case.
-> >>>>> So, this patch introduces:
-> >>>>> 1. lock_op
-> >>>>> 2. down_write
-> >>>>> 3. check __need_flush
-> >>>>> 4. up_write
-> >>>>> 5. if there is dirty quota entries, flush them
-> >>>>> 6. otherwise, good to go
-> >>>>>
-> >>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>>>> ---
-> >>>>>
-> >>>>> v3 from v2:
-> >>>>>  - refactor to fix quota corruption issue
-> >>>>>   : it seems that the previous scenario is not real and no deadlock case was
-> >>>>>     encountered.
-> >>>>
-> >>>> - f2fs_dquot_commit
-> >>>>  - down_read(&sbi->quota_sem)
-> >>>> 					- block_operation
-> >>>> 					 - f2fs_lock_all
-> >>>> 					  - need_flush_quota
-> >>>> 					   - down_write(&sbi->quota_sem)
-> >>>>   - f2fs_quota_write
-> >>>>    - f2fs_lock_op
-> >>>>
-> >>>> Why can't this happen?
-> >>>>
-> >>>> Once more question, should we hold quota_sem during checkpoint to avoid further
-> >>>> quota update? f2fs_lock_op can do this job as well?
-> >>>
-> >>> I couldn't find write_dquot() call to make this happen, and f2fs_lock_op was not
-> >>
-> >> - f2fs_dquot_commit
-> >>  - dquot_commit
-> >>   ->commit_dqblk (v2_write_dquot)
-> >>    - qtree_write_dquot
-> >>     ->quota_write (f2fs_quota_write)
-> >>      - f2fs_lock_op
-> >>
-> >> Do you mean there is no such way that calling f2fs_lock_op() from
-> >> f2fs_quota_write()? So that deadlock condition is not existing?
-> > 
-> > I mean write_dquot->f2fs_dquot_commit and block_operation seems not racing
-> > together.
-> 
-> quota ioctl has the path calling write_dquot->f2fs_dquot_commit as below, which
-> can race with checkpoint().
-> 
-> - do_quotactl
->  - sb->s_qcop->quota_sync (f2fs_quota_sync)
->   - down_read(&sbi->quota_sem);      ----  First
->    - dquot_writeback_dquots
->     - sb->dq_op->write_dquot (f2fs_dquot_commit)
-> 							- block_operation can race here
->      - down_read(&sbi->quota_sem);   ----  Second
+From: Raphael Gault <raphael.gault@arm.com>
 
-Adding f2fs_lock_op() in f2fs_quota_sync() should be fine?
+In order to subsequently add more tests for the arm64 architecture we
+compile the tests target for arm64 systematically.
 
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>> enough to cover quota updates. Current stress & power-cut tests are running for
-> >>> several days without problem with this patch.
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>  fs/f2fs/checkpoint.c | 41 +++++++++++++++++++----------------------
-> >>>>>  fs/f2fs/f2fs.h       |  1 +
-> >>>>>  fs/f2fs/super.c      | 26 +++++++++++++++++++++-----
-> >>>>>  3 files changed, 41 insertions(+), 27 deletions(-)
-> >>>>>
-> >>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> >>>>> index 89825261d474..43f65f0962e5 100644
-> >>>>> --- a/fs/f2fs/checkpoint.c
-> >>>>> +++ b/fs/f2fs/checkpoint.c
-> >>>>> @@ -1131,17 +1131,24 @@ static void __prepare_cp_block(struct f2fs_sb_info *sbi)
-> >>>>>  
-> >>>>>  static bool __need_flush_quota(struct f2fs_sb_info *sbi)
-> >>>>>  {
-> >>>>> +	bool ret = false;
-> >>>>> +
-> >>>>>  	if (!is_journalled_quota(sbi))
-> >>>>>  		return false;
-> >>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
-> >>>>> -		return false;
-> >>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
-> >>>>> -		return false;
-> >>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
-> >>>>> -		return true;
-> >>>>> -	if (get_pages(sbi, F2FS_DIRTY_QDATA))
-> >>>>> -		return true;
-> >>>>> -	return false;
-> >>>>> +
-> >>>>> +	down_write(&sbi->quota_sem);
-> >>>>> +	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH)) {
-> >>>>> +		ret = false;
-> >>>>> +	} else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR)) {
-> >>>>> +		ret = false;
-> >>>>> +	} else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH)) {
-> >>>>> +		clear_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
-> >>>>> +		ret = true;
-> >>>>> +	} else if (get_pages(sbi, F2FS_DIRTY_QDATA)) {
-> >>>>> +		ret = true;
-> >>>>> +	}
-> >>>>> +	up_write(&sbi->quota_sem);
-> >>>>> +	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>>  /*
-> >>>>> @@ -1160,26 +1167,22 @@ static int block_operations(struct f2fs_sb_info *sbi)
-> >>>>>  	blk_start_plug(&plug);
-> >>>>>  
-> >>>>>  retry_flush_quotas:
-> >>>>> +	f2fs_lock_all(sbi);
-> >>>>>  	if (__need_flush_quota(sbi)) {
-> >>>>>  		int locked;
-> >>>>>  
-> >>>>>  		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
-> >>>>>  			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
-> >>>>> -			f2fs_lock_all(sbi);
-> >>>>> +			set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
-> >>>>>  			goto retry_flush_dents;
-> >>>>>  		}
-> >>>>> -		clear_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
-> >>>>> +		f2fs_unlock_all(sbi);
-> >>>>>  
-> >>>>>  		/* only failed during mount/umount/freeze/quotactl */
-> >>>>>  		locked = down_read_trylock(&sbi->sb->s_umount);
-> >>>>>  		f2fs_quota_sync(sbi->sb, -1);
-> >>>>>  		if (locked)
-> >>>>>  			up_read(&sbi->sb->s_umount);
-> >>>>> -	}
-> >>>>> -
-> >>>>> -	f2fs_lock_all(sbi);
-> >>>>> -	if (__need_flush_quota(sbi)) {
-> >>>>> -		f2fs_unlock_all(sbi);
-> >>>>>  		cond_resched();
-> >>>>>  		goto retry_flush_quotas;
-> >>>>>  	}
-> >>>>> @@ -1201,12 +1204,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
-> >>>>>  	 */
-> >>>>>  	down_write(&sbi->node_change);
-> >>>>>  
-> >>>>> -	if (__need_flush_quota(sbi)) {
-> >>>>> -		up_write(&sbi->node_change);
-> >>>>> -		f2fs_unlock_all(sbi);
-> >>>>> -		goto retry_flush_quotas;
-> >>>>> -	}
-> >>>>> -
-> >>>>>  	if (get_pages(sbi, F2FS_DIRTY_IMETA)) {
-> >>>>>  		up_write(&sbi->node_change);
-> >>>>>  		f2fs_unlock_all(sbi);
-> >>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>> index 9674a85154b2..9bd2bf0f559b 100644
-> >>>>> --- a/fs/f2fs/f2fs.h
-> >>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>> @@ -1253,6 +1253,7 @@ struct f2fs_sb_info {
-> >>>>>  	block_t unusable_block_count;		/* # of blocks saved by last cp */
-> >>>>>  
-> >>>>>  	unsigned int nquota_files;		/* # of quota sysfile */
-> >>>>> +	struct rw_semaphore quota_sem;		/* blocking cp for flags */
-> >>>>>  
-> >>>>>  	/* # of pages, see count_type */
-> >>>>>  	atomic_t nr_pages[NR_COUNT_TYPE];
-> >>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>>>> index 15d7e30bfc72..5a318399a2fa 100644
-> >>>>> --- a/fs/f2fs/super.c
-> >>>>> +++ b/fs/f2fs/super.c
-> >>>>> @@ -1964,6 +1964,7 @@ int f2fs_quota_sync(struct super_block *sb, int type)
-> >>>>>  	int cnt;
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_writeback_dquots(sb, type);
-> >>>>>  	if (ret)
-> >>>>>  		goto out;
-> >>>>> @@ -2001,6 +2002,7 @@ int f2fs_quota_sync(struct super_block *sb, int type)
-> >>>>>  out:
-> >>>>>  	if (ret)
-> >>>>>  		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>> @@ -2094,32 +2096,40 @@ static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
-> >>>>>  
-> >>>>>  static int f2fs_dquot_commit(struct dquot *dquot)
-> >>>>>  {
-> >>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_commit(dquot);
-> >>>>>  	if (ret < 0)
-> >>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-> >>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>>  static int f2fs_dquot_acquire(struct dquot *dquot)
-> >>>>>  {
-> >>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_acquire(dquot);
-> >>>>>  	if (ret < 0)
-> >>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-> >>>>> -
-> >>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>>  static int f2fs_dquot_release(struct dquot *dquot)
-> >>>>>  {
-> >>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_release(dquot);
-> >>>>>  	if (ret < 0)
-> >>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
-> >>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>> @@ -2129,22 +2139,27 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
-> >>>>>  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_mark_dquot_dirty(dquot);
-> >>>>>  
-> >>>>>  	/* if we are using journalled quota */
-> >>>>>  	if (is_journalled_quota(sbi))
-> >>>>>  		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
-> >>>>>  
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>>  static int f2fs_dquot_commit_info(struct super_block *sb, int type)
-> >>>>>  {
-> >>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-> >>>>>  	int ret;
-> >>>>>  
-> >>>>> +	down_read(&sbi->quota_sem);
-> >>>>>  	ret = dquot_commit_info(sb, type);
-> >>>>>  	if (ret < 0)
-> >>>>> -		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
-> >>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-> >>>>> +	up_read(&sbi->quota_sem);
-> >>>>>  	return ret;
-> >>>>>  }
-> >>>>>  
-> >>>>> @@ -3253,6 +3268,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
-> >>>>>  	}
-> >>>>>  
-> >>>>>  	init_rwsem(&sbi->cp_rwsem);
-> >>>>> +	init_rwsem(&sbi->quota_sem);
-> >>>>>  	init_waitqueue_head(&sbi->cp_wait);
-> >>>>>  	init_sb_info(sbi);
-> >>>>>  
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+Further explanation provided by Mark Rutland:
+
+Given prior questions regarding this commit, it's probably worth
+spelling things out more explicitly, e.g.
+
+  Currently we only build the arm64/tests directory if
+  CONFIG_DWARF_UNWIND is selected, which is fine as the only test we
+  have is arm64/tests/dwarf-unwind.o.
+
+  So that we can add more tests to the test directory, let's
+  unconditionally build the directory, but conditionally build
+  dwarf-unwind.o depending on CONFIG_DWARF_UNWIND.
+
+  There should be no functional change as a result of this patch.
+
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190611125315.18736-2-raphael.gault@arm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/arm64/Build       | 2 +-
+ tools/perf/arch/arm64/tests/Build | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
+index 36222e64bbf7..a7dd46a5b678 100644
+--- a/tools/perf/arch/arm64/Build
++++ b/tools/perf/arch/arm64/Build
+@@ -1,2 +1,2 @@
+ perf-y += util/
+-perf-$(CONFIG_DWARF_UNWIND) += tests/
++perf-y += tests/
+diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
+index 41707fea74b3..a61c06bdb757 100644
+--- a/tools/perf/arch/arm64/tests/Build
++++ b/tools/perf/arch/arm64/tests/Build
+@@ -1,4 +1,4 @@
+ perf-y += regs_load.o
+-perf-y += dwarf-unwind.o
++perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+ perf-y += arch-tests.o
+-- 
+2.20.1
+
