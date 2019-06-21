@@ -2,73 +2,152 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86292C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA6EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AAC21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B9F208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mXKem9+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFUKJI (ORCPT
+        id S1726614AbfFUKIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:09:08 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:56132 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfFUKJG (ORCPT
+        Fri, 21 Jun 2019 06:08:46 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:11732 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726498AbfFUKIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:09:06 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23994550AbfFUKJDD0AoN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Fri, 21 Jun 2019 12:09:03 +0200
-Date:   Fri, 21 Jun 2019 11:09:03 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Paul Burton <paul.burton@mips.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-In-Reply-To: <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org>
-References: <20190614063341.1672-1-fancer.lancer@gmail.com> <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org> <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 21 Jun 2019 06:08:43 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LA4Qou000349;
+        Fri, 21 Jun 2019 05:08:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=1NgFvVDhvCHqSR/CePJrSFYwI0WzzG6j+CKs/AV+u6Y=;
+ b=mXKem9+PZFl4SV/dnAvDtezRzEWZ8qgnlHG2Jai8vONemgHFzoK81SwdBdR/PgIYPWdf
+ FtvlNMt/tLysY6X/rUPTiFgmRAAPFr2VLiL/D9NKiNzJGkC3iB3WBwydjshMTwI+ToHc
+ 0V29oAD+uuHfCPuZl6qO+pQH/T6AIgT82YBsOgfCZUo9S0WvJCcWLLTg4pZnavUNO1i0
+ dmbfSgh8ykAxuceJHyXVe8w3QnDZzce+g7QZkeRr9N9nKIf/vQL/LkKPgG55X/H9X0l0
+ 37/ssyTrzyRosJEGDhX108I2OZdXymCst/Kp+6T0gPVgfeG42lur9F2iPV063rEKEeAz EQ== 
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t780cuxbr-1;
+        Fri, 21 Jun 2019 05:08:16 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail2.cirrus.com (Postfix) with ESMTP id 7BA9B605A6BF;
+        Fri, 21 Jun 2019 05:08:16 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 21 Jun
+ 2019 11:08:15 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Fri, 21 Jun 2019 11:08:15 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2C0DE2DB;
+        Fri, 21 Jun 2019 11:08:15 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH v6 2/7] i2c: acpi: Use available IRQ helper functions
+Date:   Fri, 21 Jun 2019 11:08:10 +0100
+Message-ID: <20190621100815.12417-3-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
+References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=993 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Arnd Bergmann wrote:
+Use the available IRQ helper functions, most of the functions have
+additional helpful side affects like configuring the trigger type of the
+IRQ.
 
-> >  The use of 64-bit operations to access option's packet memory, which is
-> > true SRAM, i.e. no side effects, is to improve throughput only and there's
-> > no need for atomicity here nor also any kind of barriers, except at the
-> > conclusion.  Splitting 64-bit accesses into 32-bit halves in software
-> > would not be a functional error here.
-> 
-> The other property of packet memory and similar things is that you
-> basically want memcpy()-behavior with no byteswaps. This is one
-> of the few cases in which __raw_readq() is actually the right accessor
-> in (mostly) portable code.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
- Correct, but we're missing an `__raw_readq_relaxed', etc. interface and 
-having additional barriers applied on every access would hit performance 
-very badly; in fact even the barriers `*_relaxed' accessors imply would 
-best be removed in this use (which is why defza.c uses `readw_o' vs 
-`readw_u', etc. internally), but after all the struggles over the years 
-for weakly ordered internal APIs x86 people are so averse to I'm not sure 
-if I want to start another one.  We can get away with `readq_relaxed' in 
-this use though as all the systems this device can be used with are 
-little-endian as is TURBOchannel, so no byte-swapping will ever actually 
-occur.
+Changes since v5:
+ - Pass info->irq to i2c_acpi_add_resource directly
+ - Remove call to acpi_dev_free_resource_list since we never add
+   anything to the list.
 
-  Maciej
+Thanks,
+Charles
+
+ drivers/i2c/i2c-core-acpi.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index f1d648962b223..3951e352317ff 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -133,13 +133,24 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
+ 	return 0;
+ }
+ 
++static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
++{
++	int *irq = data;
++	struct resource r;
++
++	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
++		*irq = i2c_dev_irq_from_resources(&r, 1);
++
++	/* No need to add resource to the list, free list if this changes */
++	return 1;
++}
++
+ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 			     struct i2c_board_info *info,
+ 			     struct i2c_adapter *adapter,
+ 			     acpi_handle *adapter_handle)
+ {
+ 	struct list_head resource_list;
+-	struct resource_entry *entry;
+ 	struct i2c_acpi_lookup lookup;
+ 	int ret;
+ 
+@@ -172,19 +183,11 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 
+ 	/* Then fill IRQ number if any */
+ 	INIT_LIST_HEAD(&resource_list);
+-	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
++	ret = acpi_dev_get_resources(adev, &resource_list,
++				     i2c_acpi_add_resource, &info->irq);
+ 	if (ret < 0)
+ 		return -EINVAL;
+ 
+-	resource_list_for_each_entry(entry, &resource_list) {
+-		if (resource_type(entry->res) == IORESOURCE_IRQ) {
+-			info->irq = entry->res->start;
+-			break;
+-		}
+-	}
+-
+-	acpi_dev_free_resource_list(&resource_list);
+-
+ 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+ 			  sizeof(info->type));
+ 
+-- 
+2.11.0
+
