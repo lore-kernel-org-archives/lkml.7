@@ -2,278 +2,218 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18C2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A729C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A888B206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE3620821
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iop0iBLc"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WZgxs52N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfFUX63 (ORCPT
+        id S1726633AbfFUX6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:58:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36844 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfFUX62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:58:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNsqBD059305;
-        Fri, 21 Jun 2019 23:57:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=bO+sN6Te54B7Gm32yC/95CPAosLiG+rfFvZuf1HgzMU=;
- b=iop0iBLcfymdJCKdAp5ye36YRtYmpLaZtzpeCNIekVvk8BHvE0TvsQwZPTRe3GvBvnHB
- POhg9g6OZky6l9+XmlonbM47GDVpeHCNptPw1f0SGTFD69qudz5qj2jFjltpAPUFyq13
- w3KNWu+wVs7ezxklCQg9TRG/odCOQBt/cLogJMrLkTERZiJDfOXSZr31CkR+QhJH0+68
- gjtvuKs3csVg+Tg8WtXM+Uv0cSBNM7/LjpN7quqI1LB93qlLu9XwdmKKwOJl6wy5h1U7
- wT8duhrMKfSo1Tj8wa37VlB+1nB222jRZXy16Cni/dLFHtFij5jp8ZgfZ5xzfhH5L5KN WQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2t7809rqv6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:57:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNu9VH042326;
-        Fri, 21 Jun 2019 23:57:19 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 2t77ypesfg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 23:57:19 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNvJbZ044395;
-        Fri, 21 Jun 2019 23:57:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t77ypesfc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:57:19 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5LNvIgI031562;
-        Fri, 21 Jun 2019 23:57:18 GMT
-Received: from localhost (/10.159.131.214)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 23:57:17 +0000
-Subject: [PATCH 3/7] vfs: flush and wait for io when setting the immutable
- flag via FSSETXATTR
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        darrick.wong@oracle.com, ard.biesheuvel@linaro.org,
-        josef@toxicpanda.com, clm@fb.com, adilger.kernel@dilger.ca,
-        viro@zeniv.linux.org.uk, jack@suse.com, dsterba@suse.com,
-        jaegeuk@kernel.org, jk@ozlabs.org
-Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Date:   Fri, 21 Jun 2019 16:57:15 -0700
-Message-ID: <156116143526.1664939.6767366095685084430.stgit@magnolia>
-In-Reply-To: <156116141046.1664939.11424021489724835645.stgit@magnolia>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 21 Jun 2019 19:58:33 -0400
+Received: from mail-eopbgr690102.outbound.protection.outlook.com ([40.107.69.102]:57830
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726054AbfFUX6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:58:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GVRurj1VE6bIlEYKh/9YUDDWUcO2xQO4XP13I1T0FXb4T/8f89xZpobD31PxZK9FeCsMGlNi0PMfE9Lgy0sOccXo0kvFxpxC18mY97HKnOItenEm7SBQScSJQywAR/aAk8rhizi6GCsZF9823n50FM7+wlGJYTTsrW67cAX/7spwRGNWVT+/Dty5XvQ+rMQ1K4bu0CvW/tixTn2ukfrl8xGHFTWL6g2CGrLmrtttIqalpDCeVX9Umn2S9xoOrsKtxkR37EBa6C2PndKq+jrcYTcnENrq8N7Ug6AxEp7hqMmntEWP5RDPt6Rd9KuNBuO/bxKbyU6PaFIO7jM4BXxwhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ixRMS1d82hbBKPn8wCLKDfizqvxiFmMGfWx1FYWcbzI=;
+ b=awXKCOKEHymMW46QqNnauLijq1vF++aoqwvoIRkYzbjhG8CKNcuSrJk//PFtf9tvnwOlTaShB8B6Elocd4HgPl3Z7sYON+n244pyiF/mJS45qDDypPpob+5OIogoHgXXWI3lJwxEPUuH62bLkzu1xH4ACObJl5YiuR/6ehMfRTLB5s4TzqudKVRWz3awT5Sj6folMK0r+zdP/JKQt6ITEGf5dO4eDTOTw7cOIif1sGc3bKnDj4KBhIz483S7H5yKgaorbZAtdfwoX29vxzrOCNr1BBxPUus4Gvyi50Viu/avrHVCPJostfWY8fHokA6i6TZ38LAaKBeupZxaDQOf6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ixRMS1d82hbBKPn8wCLKDfizqvxiFmMGfWx1FYWcbzI=;
+ b=WZgxs52NQtEVdmKbHBbvHSgHmdC1ccs+RU2g6owNxlj44VH87deg60ZZ4mQgKvIb7+DwSgH6jA7EftqqdWnds5WjxFq3LbivijZRvkwAO4ilg5uPOwsUf0wk2e9T8P4kH3cZysaPmUaRp0bv3LTKGgIpm0065DbZUT6RO5VKUdE=
+Received: from BYAPR21MB1352.namprd21.prod.outlook.com (20.179.60.214) by
+ BYAPR21MB1208.namprd21.prod.outlook.com (20.179.57.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.6; Fri, 21 Jun 2019 23:58:27 +0000
+Received: from BYAPR21MB1352.namprd21.prod.outlook.com
+ ([fe80::b52f:faf3:6bc6:32de]) by BYAPR21MB1352.namprd21.prod.outlook.com
+ ([fe80::b52f:faf3:6bc6:32de%5]) with mapi id 15.20.2032.005; Fri, 21 Jun 2019
+ 23:58:27 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+CC:     "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>
+Subject: RE: [PATCH v2] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Thread-Topic: [PATCH v2] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Thread-Index: AdUoio+jbgfPCntMRSGnwgYrj5f2wwAAnXww
+Date:   Fri, 21 Jun 2019 23:58:26 +0000
+Message-ID: <BYAPR21MB1352C5D60C33D9AAD204554FD7E70@BYAPR21MB1352.namprd21.prod.outlook.com>
+References: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-21T23:45:19.8774766Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=19ebd965-88c8-4bcc-b3cf-e659d74e2b95;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8ebb80ce-97d0-455c-c7e2-08d6f6a45a53
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1208;
+x-ms-traffictypediagnostic: BYAPR21MB1208:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB1208B0DE7E93D98FCC908AF6D7E70@BYAPR21MB1208.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:813;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(396003)(376002)(39860400002)(189003)(199004)(8936002)(6436002)(53936002)(74316002)(4326008)(229853002)(6506007)(14454004)(55016002)(22452003)(478600001)(71190400001)(186003)(7736002)(71200400001)(81166006)(33656002)(8676002)(110136005)(2201001)(316002)(5660300002)(81156014)(54906003)(9686003)(7696005)(68736007)(8990500004)(86362001)(10290500003)(10090500001)(99286004)(76176011)(64756008)(476003)(66476007)(25786009)(6246003)(66946007)(486006)(26005)(102836004)(6116002)(76116006)(305945005)(11346002)(2906002)(66446008)(3846002)(73956011)(66556008)(1511001)(14444005)(2501003)(446003)(256004)(7416002)(52536014)(66066001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1208;H:BYAPR21MB1352.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FQmnkOIYPTE1kj3T23KQoq8en1tYA1HPuWcshfzf1yOrXuFZuXSiNmLSeTUUesl2FhkPTKKn6GZifwYbSPmgWK05n5vaQigJgInih1lEv66DjyvQ/357PFRrvbCSWX8g5ODPibhb745c0SgYtEvttUGzJqb2SBaSnXTDtGNCYcVci+Ugc2Kr5DlzeC0cTCvbv4afgUfF0m8Cp3WHioh22lQ6vijrTfI9H48Y9swm9X9cZS7f3geFXMIUTkG7zvkBVJDno6trZJ0veheeXaQCgd8tGmlCoB9h/EK9pdJEjC26hPyLLCk1wGu3WiVl5GGAN1CoT9RMHhJ3g9y2gV/Ir1QTgtCWRvU25smR37cHVOjJDdXACE2I93CZX4tZvecagD05XwCh9W0qs4/35mBiUZumZ/vvdESQkwROfh+GmQo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210182
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ebb80ce-97d0-455c-c7e2-08d6f6a45a53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 23:58:26.8892
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Dexuan Cui <decui@microsoft.com> Sent: Friday, June 21, 2019 4:45 PM
+>=20
+> The commit 05f151a73ec2 itself is correct, but it exposes this
+> use-after-free bug, which is caught by some memory debug options.
+>=20
+> Add a Fixes tag to indicate the dependency.
+>=20
+> Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work(=
+)")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
+> ---
+>=20
+> In v2:
+> Replaced "hpdev->hbus" with "hbus", since we have the new "hbus" variable=
+. [Michael
+> Kelley]
+>=20
+>  drivers/pci/controller/pci-hyperv.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 808a182830e5..5dadc964ad3b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct hv_pcibus=
+_device
+> *hbus,
+>  static void hv_eject_device_work(struct work_struct *work)
+>  {
+>  	struct pci_eject_response *ejct_pkt;
+> +	struct hv_pcibus_device *hbus;
+>  	struct hv_pci_dev *hpdev;
+>  	struct pci_dev *pdev;
+>  	unsigned long flags;
+> @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct work_struct=
+ *work)
+>  	} ctxt;
+>=20
+>  	hpdev =3D container_of(work, struct hv_pci_dev, wrk);
+> +	hbus =3D hpdev->hbus;
+>=20
+>  	WARN_ON(hpdev->state !=3D hv_pcichild_ejecting);
+>=20
+> @@ -1900,8 +1902,7 @@ static void hv_eject_device_work(struct work_struct=
+ *work)
+>  	 * because hbus->pci_bus may not exist yet.
+>  	 */
+>  	wslot =3D wslot_to_devfn(hpdev->desc.win_slot.slot);
+> -	pdev =3D pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
+> -					   wslot);
+> +	pdev =3D pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
+>  	if (pdev) {
+>  		pci_lock_rescan_remove();
+>  		pci_stop_and_remove_bus_device(pdev);
+> @@ -1909,9 +1910,9 @@ static void hv_eject_device_work(struct work_struct=
+ *work)
+>  		pci_unlock_rescan_remove();
+>  	}
+>=20
+> -	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
+> +	spin_lock_irqsave(&hbus->device_list_lock, flags);
+>  	list_del(&hpdev->list_entry);
+> -	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
+> +	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+>=20
+>  	if (hpdev->pci_slot)
+>  		pci_destroy_slot(hpdev->pci_slot);
+> @@ -1920,7 +1921,7 @@ static void hv_eject_device_work(struct work_struct=
+ *work)
+>  	ejct_pkt =3D (struct pci_eject_response *)&ctxt.pkt.message;
+>  	ejct_pkt->message_type.type =3D PCI_EJECTION_COMPLETE;
+>  	ejct_pkt->wslot.slot =3D hpdev->desc.win_slot.slot;
+> -	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
+> +	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+>  			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+>  			 VM_PKT_DATA_INBAND, 0);
+>=20
+> @@ -1929,7 +1930,9 @@ static void hv_eject_device_work(struct work_struct=
+ *work)
+>  	/* For the two refs got in new_pcichild_device() */
+>  	put_pcichild(hpdev);
+>  	put_pcichild(hpdev);
+> -	put_hvpcibus(hpdev->hbus);
+> +	/* hpdev has been freed. Do not use it any more. */
+> +
+> +	put_hvpcibus(hbus);
+>  }
+>=20
+>  /**
+> --
+> 2.17.1
 
-When we're using FS_IOC_FSSETXATTR to set the immutable flag on a file,
-we need to ensure that userspace can't continue to write the file after
-the file becomes immutable.  To make that happen, we have to flush all
-the dirty pagecache pages to disk to ensure that we can fail a page
-fault on a mmap'd region, wait for pending directio to complete, and
-hope the caller locked out any new writes by holding the inode lock.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/btrfs/ioctl.c   |    3 +++
- fs/ext4/ioctl.c    |    3 +++
- fs/f2fs/file.c     |    3 +++
- fs/xfs/xfs_ioctl.c |   39 +++++++++++++++++++++++++++++++++------
- include/linux/fs.h |   37 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 79 insertions(+), 6 deletions(-)
-
-
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index f431813b2454..63a9281e6ce0 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -432,6 +432,9 @@ static int btrfs_ioctl_fssetxattr(struct file *file, void __user *arg)
- 
- 	__btrfs_ioctl_fsgetxattr(binode, &old_fa);
- 	ret = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
-+	if (ret)
-+		goto out_unlock;
-+	ret = vfs_ioc_fssetxattr_flush_data(inode, &fa);
- 	if (ret)
- 		goto out_unlock;
- 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index a05341b94d98..6037585c1520 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -1115,6 +1115,9 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		inode_lock(inode);
- 		ext4_fsgetxattr(inode, &old_fa);
- 		err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
-+		if (err)
-+			goto out;
-+		err = vfs_ioc_fssetxattr_flush_data(inode, &fa);
- 		if (err)
- 			goto out;
- 		flags = (ei->i_flags & ~EXT4_FL_XFLAG_VISIBLE) |
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index d3cf4bdb8738..97f4bb36540f 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2832,6 +2832,9 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
- 
- 	__f2fs_ioc_fsgetxattr(inode, &old_fa);
- 	err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
-+	if (err)
-+		goto out;
-+	err = vfs_ioc_fssetxattr_flush_data(inode, &fa);
- 	if (err)
- 		goto out;
- 	flags = (fi->i_flags & ~F2FS_FL_XFLAG_VISIBLE) |
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index b494e7e881e3..88583b3e1e76 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1014,6 +1014,28 @@ xfs_diflags_to_linux(
- #endif
- }
- 
-+/*
-+ * Lock the inode against file io and page faults, then flush all dirty pages
-+ * and wait for writeback and direct IO operations to finish.  Returns with
-+ * the relevant inode lock flags set in @join_flags.  Caller is responsible for
-+ * unlocking even on error return.
-+ */
-+static int
-+xfs_ioctl_setattr_flush(
-+	struct xfs_inode	*ip,
-+	int			*join_flags)
-+{
-+	/* Already locked the inode from IO?  Assume we're done. */
-+	if (((*join_flags) & (XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL)) ==
-+			     (XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL))
-+		return 0;
-+
-+	/* Lock and flush all mappings and IO in preparation for flag change */
-+	*join_flags = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
-+	xfs_ilock(ip, *join_flags);
-+	return inode_flush_data(VFS_I(ip));
-+}
-+
- static int
- xfs_ioctl_setattr_xflags(
- 	struct xfs_trans	*tp,
-@@ -1099,23 +1121,22 @@ xfs_ioctl_setattr_dax_invalidate(
- 	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
- 		return 0;
- 
--	if (S_ISDIR(inode->i_mode))
-+	if (!S_ISREG(inode->i_mode))
- 		return 0;
- 
--	/* lock, flush and invalidate mapping in preparation for flag change */
--	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
--	error = filemap_write_and_wait(inode->i_mapping);
-+	error = xfs_ioctl_setattr_flush(ip, join_flags);
- 	if (error)
- 		goto out_unlock;
- 	error = invalidate_inode_pages2(inode->i_mapping);
- 	if (error)
- 		goto out_unlock;
- 
--	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
- 	return 0;
- 
- out_unlock:
--	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-+	if (*join_flags)
-+		xfs_iunlock(ip, *join_flags);
-+	*join_flags = 0;
- 	return error;
- 
- }
-@@ -1337,6 +1358,12 @@ xfs_ioctl_setattr(
- 	if (code)
- 		goto error_free_dquots;
- 
-+	if (!join_flags && vfs_ioc_fssetxattr_need_flush(VFS_I(ip), fa)) {
-+		code = xfs_ioctl_setattr_flush(ip, &join_flags);
-+		if (code)
-+			goto error_free_dquots;
-+	}
-+
- 	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
- 	if (IS_ERR(tp)) {
- 		code = PTR_ERR(tp);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ed9a74cf5ef3..b4553d01e254 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3607,5 +3607,42 @@ static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
- int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
- 			     struct fsxattr *fa);
- 
-+/*
-+ * Do we need to flush the file data before changing attributes?  When we're
-+ * setting the immutable flag we must stop all directio writes and flush the
-+ * dirty pages so that we can fail the page fault on the next write attempt.
-+ */
-+static inline bool vfs_ioc_fssetxattr_need_flush(struct inode *inode,
-+						 struct fsxattr *fa)
-+{
-+	if (S_ISREG(inode->i_mode) && !IS_IMMUTABLE(inode) &&
-+	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE))
-+		return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * Flush all pending IO and dirty mappings before setting S_IMMUTABLE on an
-+ * inode via FS_IOC_SETXATTR.  If the flush fails we'll clear the flag before
-+ * returning error.
-+ *
-+ * Note: the caller should be holding i_mutex, or else be sure that
-+ * they have exclusive access to the inode structure.
-+ */
-+static inline int vfs_ioc_fssetxattr_flush_data(struct inode *inode,
-+						struct fsxattr *fa)
-+{
-+	int ret;
-+
-+	if (!vfs_ioc_fssetxattr_need_flush(inode, fa))
-+		return 0;
-+
-+	inode_set_flags(inode, S_IMMUTABLE, S_IMMUTABLE);
-+	ret = inode_flush_data(inode);
-+	if (ret)
-+		inode_set_flags(inode, 0, S_IMMUTABLE);
-+	return ret;
-+}
- 
- #endif /* _LINUX_FS_H */
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
