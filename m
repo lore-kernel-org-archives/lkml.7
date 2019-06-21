@@ -2,143 +2,207 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFBFC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD24EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA9020881
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36C920881
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EN0d442h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfFUX6H (ORCPT
+        id S1726558AbfFUX6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:58:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48779 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfFUX5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:57:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 16:57:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,402,1557212400"; 
-   d="scan'208";a="359022882"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2019 16:57:21 -0700
-From:   Megha Dey <megha.dey@linux.intel.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, megha.dey@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>
-Subject: [RFC V1 RESEND 1/6] PCI/MSI: New structures/macros for dynamic MSI-X allocation
-Date:   Fri, 21 Jun 2019 17:19:33 -0700
-Message-Id: <1561162778-12669-2-git-send-email-megha.dey@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+        Fri, 21 Jun 2019 19:58:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49558 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfFUX6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:58:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNtT3B053502;
+        Fri, 21 Jun 2019 23:57:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=twjcs7hmw0I/0y9CON1SwlujfVo0pxMu7JFwyONml5Y=;
+ b=EN0d442hHQvSNNdl/RDvWSv64qxAaUqBJ+XWzb9wmHNittQOUUWson32FwnA5XsOJ7B1
+ iGsLJuG230CgcItr8GkMiTTOOQPd++pT+F2FFKTrjIIUW23zuCjPo4q9zWJSRjhtqh4y
+ tHUs2KjIj99SfJcNC3WfbXVxr7c5JoLZ6M05US2Y9VlFyVrcg+sjXlOJohNfSt1B3GLs
+ aTA1JLQMueHt86DwwYNKh4l87ElhhVid89sOr4rk8MXfz9FIGnNxYLjrMalcbFp/7Ylc
+ 5dsT5NuF7PizftC8G7G17VjxcDrejTJ0B4mzo+6ilFAPLgyMkxYtyhCXIMImzP87l7n9 2g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t7809rswm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 23:57:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNtKFi168028;
+        Fri, 21 Jun 2019 23:57:04 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2t7rdy0612-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Jun 2019 23:57:04 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNuhUw170079;
+        Fri, 21 Jun 2019 23:57:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t7rdy060u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 23:57:04 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LNv2Il019145;
+        Fri, 21 Jun 2019 23:57:02 GMT
+Received: from localhost (/10.159.131.214)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Jun 2019 16:57:02 -0700
+Subject: [PATCH 1/7] mm/fs: don't allow writes to immutable files
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        darrick.wong@oracle.com, ard.biesheuvel@linaro.org,
+        josef@toxicpanda.com, clm@fb.com, adilger.kernel@dilger.ca,
+        viro@zeniv.linux.org.uk, jack@suse.com, dsterba@suse.com,
+        jaegeuk@kernel.org, jk@ozlabs.org
+Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Date:   Fri, 21 Jun 2019 16:56:58 -0700
+Message-ID: <156116141836.1664939.12249697737780481978.stgit@magnolia>
+In-Reply-To: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=315 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparatory patch to introduce the dynamic allocation of
-MSI-X vectors. In this patch, we add new structure members and macros
-which will be consumed by the API that will dynamically allocate
-MSI-X vectors.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+The chattr manpage has this to say about immutable files:
+
+"A file with the 'i' attribute cannot be modified: it cannot be deleted
+or renamed, no link can be created to this file, most of the file's
+metadata can not be modified, and the file can not be opened in write
+mode."
+
+Once the flag is set, it is enforced for quite a few file operations,
+such as fallocate, fpunch, fzero, rm, touch, open, etc.  However, we
+don't check for immutability when doing a write(), a PROT_WRITE mmap(),
+a truncate(), or a write to a previously established mmap.
+
+If a program has an open write fd to a file that the administrator
+subsequently marks immutable, the program still can change the file
+contents.  Weird!
+
+The ability to write to an immutable file does not follow the manpage
+promise that immutable files cannot be modified.  Worse yet it's
+inconsistent with the behavior of other syscalls which don't allow
+modifications of immutable files.
+
+Therefore, add the necessary checks to make the write, mmap, and
+truncate behavior consistent with what the manpage says and consistent
+with other syscalls on filesystems which support IMMUTABLE.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- include/linux/device.h | 3 +++
- include/linux/msi.h    | 9 +++++++++
- include/linux/pci.h    | 6 ++++++
- 3 files changed, 18 insertions(+)
+ fs/attr.c    |   13 ++++++-------
+ mm/filemap.c |    3 +++
+ mm/memory.c  |    3 +++
+ mm/mmap.c    |    8 ++++++--
+ 4 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 848fc71..99d4951 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -967,6 +967,7 @@ struct dev_links_info {
-  *              device.
-  * @dma_coherent: this particular device is dma coherent, even if the
-  *		architecture supports non-coherent devices.
-+ * @grp_first_desc: Pointer to the first msi_desc in every MSI-X group
-  *
-  * At the lowest level, every device in a Linux system is represented by an
-  * instance of struct device. The device structure contains the information
-@@ -1062,6 +1063,8 @@ struct device {
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
- 	bool			dma_coherent:1;
- #endif
-+	/* For dynamic MSI-X allocation */
-+	struct msi_desc		*grp_first_desc;
- };
+
+diff --git a/fs/attr.c b/fs/attr.c
+index d22e8187477f..1fcfdcc5b367 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -233,19 +233,18 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
  
- static inline struct device *kobj_to_dev(struct kobject *kobj)
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index d48e919..91273cd 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -74,6 +74,7 @@ struct ti_sci_inta_msi_desc {
-  * @default_irq:[PCI MSI/X] The default pre-assigned non-MSI irq
-  * @mask_pos:	[PCI MSI]   Mask register position
-  * @mask_base:	[PCI MSI-X] Mask register base address
-+ * @group_id:	[PCI MSI-X] group to which this descriptor belongs
-  * @platform:	[platform]  Platform device specific msi descriptor data
-  * @fsl_mc:	[fsl-mc]    FSL MC device specific msi descriptor data
-  * @inta:	[INTA]	    TISCI based INTA specific msi descriptor data
-@@ -107,6 +108,7 @@ struct msi_desc {
- 				u8	mask_pos;
- 				void __iomem *mask_base;
- 			};
-+			unsigned int	group_id;
- 		};
+ 	WARN_ON_ONCE(!inode_is_locked(inode));
  
- 		/*
-@@ -131,6 +133,10 @@ struct msi_desc {
- 	list_for_each_entry((desc), dev_to_msi_list((dev)), list)
- #define for_each_msi_entry_safe(desc, tmp, dev)	\
- 	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
-+/* Iterate through MSI entries of device dev starting from a given desc */
-+#define for_each_msi_entry_from(desc, dev)				\
-+	desc = (*dev).grp_first_desc;					\
-+	list_for_each_entry_from((desc), dev_to_msi_list((dev)), list)	\
+-	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) {
+-		if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+-			return -EPERM;
+-	}
++	if (IS_IMMUTABLE(inode))
++		return -EPERM;
++
++	if ((ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) &&
++	    IS_APPEND(inode))
++		return -EPERM;
  
- #ifdef CONFIG_IRQ_MSI_IOMMU
- static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
-@@ -159,6 +165,9 @@ static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
- #define first_pci_msi_entry(pdev)	first_msi_entry(&(pdev)->dev)
- #define for_each_pci_msi_entry(desc, pdev)	\
- 	for_each_msi_entry((desc), &(pdev)->dev)
-+/* Iterate through PCI-MSI entries of pdev starting from a given desc */
-+#define for_each_pci_msi_entry_from(desc, pdev)        \
-+	for_each_msi_entry_from((desc), &(pdev)->dev)
+ 	/*
+ 	 * If utimes(2) and friends are called with times == NULL (or both
+ 	 * times are UTIME_NOW), then we need to check for write permission
+ 	 */
+ 	if (ia_valid & ATTR_TOUCH) {
+-		if (IS_IMMUTABLE(inode))
+-			return -EPERM;
+-
+ 		if (!inode_owner_or_capable(inode)) {
+ 			error = inode_permission(inode, MAY_WRITE);
+ 			if (error)
+diff --git a/mm/filemap.c b/mm/filemap.c
+index aac71aef4c61..dad85e10f5f8 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2935,6 +2935,9 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
+ 	loff_t count;
+ 	int ret;
  
- struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc);
- void *msi_desc_to_pci_sysdata(struct msi_desc *desc);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd436da..b9a1d41 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -465,6 +465,12 @@ struct pci_dev {
- 	char		*driver_override; /* Driver name to force a match */
++	if (IS_IMMUTABLE(inode))
++		return -EPERM;
++
+ 	if (!iov_iter_count(from))
+ 		return 0;
  
- 	unsigned long	priv_flags;	/* Private flags for the PCI driver */
-+	/* For dynamic MSI-X allocation */
-+	unsigned int	num_msix;	/* Number of MSI-X vectors supported */
-+	void __iomem	*base;		/* Holds base address of MSI-X table */
-+	struct idr	*grp_idr;       /* IDR to assign group to MSI-X vecs */
-+	unsigned long	*entry;         /* Bitmap to represent MSI-X entries */
-+	bool		one_shot;	/* If true, oneshot MSI-X allocation */
- };
+diff --git a/mm/memory.c b/mm/memory.c
+index ddf20bd0c317..4311cfdade90 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2235,6 +2235,9 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
  
- static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
--- 
-2.7.4
+ 	vmf->flags = FAULT_FLAG_WRITE|FAULT_FLAG_MKWRITE;
+ 
++	if (vmf->vma->vm_file && IS_IMMUTABLE(file_inode(vmf->vma->vm_file)))
++		return VM_FAULT_SIGBUS;
++
+ 	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
+ 	/* Restore original flags so that caller is not surprised */
+ 	vmf->flags = old_flags;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 7e8c3e8ae75f..ac1e32205237 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1483,8 +1483,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 		case MAP_SHARED_VALIDATE:
+ 			if (flags & ~flags_mask)
+ 				return -EOPNOTSUPP;
+-			if ((prot&PROT_WRITE) && !(file->f_mode&FMODE_WRITE))
+-				return -EACCES;
++			if (prot & PROT_WRITE) {
++				if (!(file->f_mode & FMODE_WRITE))
++					return -EACCES;
++				if (IS_IMMUTABLE(file_inode(file)))
++					return -EPERM;
++			}
+ 
+ 			/*
+ 			 * Make sure we don't allow writing to an append-only
 
