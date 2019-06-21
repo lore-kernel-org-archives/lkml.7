@@ -2,247 +2,89 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C16C48BE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B512C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A8921537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcVIF/ZI"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE20208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfFUOus (ORCPT
+        id S1726397AbfFUOuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:50:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44354 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfFUOus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:50:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t7so3109135plr.11;
-        Fri, 21 Jun 2019 07:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GqVIjS+HeOIn32Cn3J+ZkUZUfYwZn/U216xOOvZPRAY=;
-        b=YcVIF/ZIL4QWtxORovWk3eQzAU8FqKBkLmosNWGgHX3k0tiBSD0Mg3gwYUIXc2GUaL
-         JXIpychTPbf+LATbUnu72bKxIqqyiSPlqFfrFFefP0GaZcTBWTfglRAni5UudTaBM8hj
-         ZIBsASsdwkBsTl6unIUVCkKdoik8dYka4HRxn8aXUYpW2jKgyQ71hl4s/7ofJe53/I5D
-         ci//OMczLs46F1c+K0E2dFJ2Pk1mJeDruIcHJ+VRUTCTRn95xFB4uKXM4h/ChQ9zIFYH
-         hL3lQhifZ3UzxZfVYGpENEB8srB6TwoVU+QrOPCG/14ElwDuVkpb+N6Yo0oajHXudbJ9
-         8HlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GqVIjS+HeOIn32Cn3J+ZkUZUfYwZn/U216xOOvZPRAY=;
-        b=Cef+7hczzJBbxTd6mANe1DBF5E5cUKpXNuNy+57SGYiEnIoT47sAY6sYiIrEenoTiv
-         fJd92F9qfShBWzgqYETonqc1ACLoKGXKjQt6YSXJf+63rnmMj3gQzbs70Wb2o3/xYcS0
-         KzJCFgAlVyLw5fKRX6KhUm/gWxa1P0AIzr/OQwy+bpiBv1hvM3s3FFn+py0Phvev2jba
-         p2c8SLvBENLMql6Arygo8++k6Lr/GAw+X2VYTjbJ9QpDeZ6Re8DdnAaDdmTu1grw++Un
-         8YetqvbgYXBLobQZKJUdpaKr8a04lRxLYpjVyPzPGWcxGK9LRk1jkllrm3l7cIAGaOph
-         9IIQ==
-X-Gm-Message-State: APjAAAUbx886wcR6BLxfegSW5LPVZvd7WphQRo9zoqoXx/xhl28HCECW
-        rS9J/5mCYUibxLfh44pL01s=
-X-Google-Smtp-Source: APXvYqwe9Y+U5AifT5+UIBArXXIDZrD+sNmTCKIR+qoKtbBQlWrwfXbqDtC/+y/QBtr+6awT/8Mu7w==
-X-Received: by 2002:a17:902:7894:: with SMTP id q20mr120889318pll.339.1561128647385;
-        Fri, 21 Jun 2019 07:50:47 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id y22sm3158782pfm.70.2019.06.21.07.50.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 07:50:46 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org, hdegoede@redhat.com
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v8 1/5] Input: elan_i2c: Export the device id whitelist
-Date:   Fri, 21 Jun 2019 07:50:42 -0700
-Message-Id: <20190621145042.38637-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+        Fri, 21 Jun 2019 10:50:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57150 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbfFUOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:50:54 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E8E6C057F2B;
+        Fri, 21 Jun 2019 14:50:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F1B75D9E2;
+        Fri, 21 Jun 2019 14:50:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190621132839.6ggsppexqfp5htpw@brauner.io>
+References: <20190621132839.6ggsppexqfp5htpw@brauner.io> <20190621094757.zijugn6cfulmchnf@brauner.io> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905627927.1662.13276277442207649583.stgit@warthog.procyon.org.uk> <21652.1561122763@warthog.procyon.org.uk> <E76F5188-CED8-4472-9136-BDCDFDAF57F0@brauner.io>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mszeredi@redhat.com
+Subject: Re: [PATCH 02/25] vfs: Allow fsinfo() to query what's in an fs_context [ver #13]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27767.1561128650.1@warthog.procyon.org.uk>
+Date:   Fri, 21 Jun 2019 15:50:50 +0100
+Message-ID: <27768.1561128650@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 21 Jun 2019 14:50:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Elan_i2c and hid-quirks work in conjunction to decide which devices each
-driver will handle.  Elan_i2c has a whitelist of devices that should be
-consumed by hid-quirks so that there is one master list of devices to
-handoff between the drivers.  Put the ids in a header file so that
-hid-quirks can consume it instead of duplicating the list.
+Christian Brauner <christian@brauner.io> wrote:
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/input/mouse/elan_i2c_core.c | 50 +------------------
- include/linux/input/elan-i2c-ids.h  | 76 +++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+), 49 deletions(-)
- create mode 100644 include/linux/input/elan-i2c-ids.h
+> > >If you tried to go through /proc/pid/fd with open(O_PATH), I think
+> > >you'd get
+> > >the symlink, not the target.
+> > 
+> > Then you should use fdget(), no? :)
+> 
+> That is unless you want fsinfo() to be useable on any fd and just fds
+> that are returned from the new mount-api syscalls. Maybe that wasn't
+> clear from my first mail.
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index 65cd325eabc3..e2c824abd19c 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -37,6 +37,7 @@
- #include <linux/completion.h>
- #include <linux/of.h>
- #include <linux/property.h>
-+#include <linux/input/elan-i2c-ids.h>
- #include <linux/regulator/consumer.h>
- #include <asm/unaligned.h>
- 
-@@ -1375,55 +1376,6 @@ static const struct i2c_device_id elan_id[] = {
- MODULE_DEVICE_TABLE(i2c, elan_id);
- 
- #ifdef CONFIG_ACPI
--static const struct acpi_device_id elan_acpi_id[] = {
--	{ "ELAN0000", 0 },
--	{ "ELAN0100", 0 },
--	{ "ELAN0600", 0 },
--	{ "ELAN0601", 0 },
--	{ "ELAN0602", 0 },
--	{ "ELAN0603", 0 },
--	{ "ELAN0604", 0 },
--	{ "ELAN0605", 0 },
--	{ "ELAN0606", 0 },
--	{ "ELAN0607", 0 },
--	{ "ELAN0608", 0 },
--	{ "ELAN0609", 0 },
--	{ "ELAN060B", 0 },
--	{ "ELAN060C", 0 },
--	{ "ELAN060F", 0 },
--	{ "ELAN0610", 0 },
--	{ "ELAN0611", 0 },
--	{ "ELAN0612", 0 },
--	{ "ELAN0615", 0 },
--	{ "ELAN0616", 0 },
--	{ "ELAN0617", 0 },
--	{ "ELAN0618", 0 },
--	{ "ELAN0619", 0 },
--	{ "ELAN061A", 0 },
--	{ "ELAN061B", 0 },
--	{ "ELAN061C", 0 },
--	{ "ELAN061D", 0 },
--	{ "ELAN061E", 0 },
--	{ "ELAN061F", 0 },
--	{ "ELAN0620", 0 },
--	{ "ELAN0621", 0 },
--	{ "ELAN0622", 0 },
--	{ "ELAN0623", 0 },
--	{ "ELAN0624", 0 },
--	{ "ELAN0625", 0 },
--	{ "ELAN0626", 0 },
--	{ "ELAN0627", 0 },
--	{ "ELAN0628", 0 },
--	{ "ELAN0629", 0 },
--	{ "ELAN062A", 0 },
--	{ "ELAN062B", 0 },
--	{ "ELAN062C", 0 },
--	{ "ELAN062D", 0 },
--	{ "ELAN0631", 0 },
--	{ "ELAN0632", 0 },
--	{ "ELAN1000", 0 },
--	{ }
--};
- MODULE_DEVICE_TABLE(acpi, elan_acpi_id);
- #endif
- 
-diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-new file mode 100644
-index 000000000000..ceabb01a6a7d
---- /dev/null
-+++ b/include/linux/input/elan-i2c-ids.h
-@@ -0,0 +1,76 @@
-+/*
-+ * Elan I2C/SMBus Touchpad device whitelist
-+ *
-+ * Copyright (c) 2013 ELAN Microelectronics Corp.
-+ *
-+ * Author: æ維 (Duson Lin) <dusonlin@emc.com.tw>
-+ * Author: KT Liao <kt.liao@emc.com.tw>
-+ * Version: 1.6.3
-+ *
-+ * Based on cyapa driver:
-+ * copyright (c) 2011-2012 Cypress Semiconductor, Inc.
-+ * copyright (c) 2011-2012 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation.
-+ *
-+ * Trademarks are the property of their respective owners.
-+ */
-+
-+#ifndef __ELAN_I2C_IDS_H
-+#define __ELAN_I2C_IDS_H
-+
-+#include <linux/mod_devicetable.h>
-+
-+static const struct acpi_device_id elan_acpi_id[] = {
-+	{ "ELAN0000", 0 },
-+	{ "ELAN0100", 0 },
-+	{ "ELAN0600", 0 },
-+	{ "ELAN0601", 0 },
-+	{ "ELAN0602", 0 },
-+	{ "ELAN0603", 0 },
-+	{ "ELAN0604", 0 },
-+	{ "ELAN0605", 0 },
-+	{ "ELAN0606", 0 },
-+	{ "ELAN0607", 0 },
-+	{ "ELAN0608", 0 },
-+	{ "ELAN0609", 0 },
-+	{ "ELAN060B", 0 },
-+	{ "ELAN060C", 0 },
-+	{ "ELAN060F", 0 },
-+	{ "ELAN0610", 0 },
-+	{ "ELAN0611", 0 },
-+	{ "ELAN0612", 0 },
-+	{ "ELAN0615", 0 },
-+	{ "ELAN0616", 0 },
-+	{ "ELAN0617", 0 },
-+	{ "ELAN0618", 0 },
-+	{ "ELAN0619", 0 },
-+	{ "ELAN061A", 0 },
-+	{ "ELAN061B", 0 },
-+	{ "ELAN061C", 0 },
-+	{ "ELAN061D", 0 },
-+	{ "ELAN061E", 0 },
-+	{ "ELAN061F", 0 },
-+	{ "ELAN0620", 0 },
-+	{ "ELAN0621", 0 },
-+	{ "ELAN0622", 0 },
-+	{ "ELAN0623", 0 },
-+	{ "ELAN0624", 0 },
-+	{ "ELAN0625", 0 },
-+	{ "ELAN0626", 0 },
-+	{ "ELAN0627", 0 },
-+	{ "ELAN0628", 0 },
-+	{ "ELAN0629", 0 },
-+	{ "ELAN062A", 0 },
-+	{ "ELAN062B", 0 },
-+	{ "ELAN062C", 0 },
-+	{ "ELAN062D", 0 },
-+	{ "ELAN0631", 0 },
-+	{ "ELAN0632", 0 },
-+	{ "ELAN1000", 0 },
-+	{ }
-+};
-+
-+#endif /* __ELAN_I2C_IDS_H */
--- 
-2.17.1
+fsinfo(), as coded, is usable on any fd, as for fstat(), statx() and
+fstatfs().
 
+I have made it such that if you do this on the fd returned by fsopen() or
+fspick(), the access is diverted to the filesystem that the fs_context refers
+to since querying anon_inodes is of little value.
+
+Now, it could be argued that it should require an AT_xxx flag to cause this
+diversion to happen.
+
+> Is the information returned for:
+> 
+> int fd = fsopen()/fspick();
+> fsinfo(fd);
+> 
+> int ofd = open("/", O_PATH);
+> fsinfo(ofd, ...);
+> 
+> the same if they refer to the same mount or would they differ?
+
+At the moment it differs.  In the former case, there may not even be a
+superblock attached to the fd to query, though invariants like filesystem
+parameter types and names can be queried.
+
+David
