@@ -2,95 +2,113 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E034C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF2C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47573208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MQFTorpz"
+	by mail.kernel.org (Postfix) with ESMTP id A6FF3208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfFUNd7 (ORCPT
+        id S1726138AbfFUNeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:33:59 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:29336 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFUNd6 (ORCPT
+        Fri, 21 Jun 2019 09:34:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27116 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbfFUNeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:33:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1561124037; x=1592660037;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0yQN3yHpskbW+/W2HU8P40dv9EAVdVGELkTZepiuCaQ=;
-  b=MQFTorpzmPiTIPj1+OlM7qWYxzVMc/8x41bukRpu+zp0+Y9cEjkFbYsu
-   mQC4NLFo8vZLzJpzrTXWcI+RlYS7fAz4GbvBxir64gqvstqjN8MMRwK94
-   xQVrEjawMpg1SXKzZKNl5G/MVzblKTJp8RU0kB2rI5HqjH4xzqUIhTsNc
-   8=;
-X-IronPort-AV: E=Sophos;i="5.62,400,1554768000"; 
-   d="scan'208";a="771423491"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 21 Jun 2019 13:33:55 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 44C67A2311;
-        Fri, 21 Jun 2019 13:33:51 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Jun 2019 13:33:50 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.225) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Jun 2019 13:33:46 +0000
-Subject: Re: [v2, 1/4] Build target for emulate.o as a userspace binary
-To:     Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <karahmed@amazon.de>, <andrew.cooper3@citrix.com>,
-        <JBeulich@suse.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <paullangton4@gmail.com>,
-        <anirudhkaushik@google.com>, <x86@kernel.org>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190612153600.13073-1-samcacc@amazon.de>
- <20190612153600.13073-2-samcacc@amazon.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <32e39f46-68ef-c27a-d81a-510ca7e61c89@amazon.com>
-Date:   Fri, 21 Jun 2019 15:33:44 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
+        Fri, 21 Jun 2019 09:34:23 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LDXqJS056726
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:34:21 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8x5wwdsd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:34:21 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 21 Jun 2019 14:34:18 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Jun 2019 14:34:14 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LDYD4M48496984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 13:34:13 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3A85B206B;
+        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4320B205F;
+        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.175.77])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4269E16C1D2F; Fri, 21 Jun 2019 06:34:14 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 06:34:14 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        frederic@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Reply-To: paulmck@linux.ibm.com
+References: <20190619181903.GA14233@linux.ibm.com>
+ <20190620121032.GU3436@hirez.programming.kicks-ass.net>
+ <20190620160118.GQ26519@linux.ibm.com>
+ <20190620211019.GA3436@hirez.programming.kicks-ass.net>
+ <20190620221336.GZ26519@linux.ibm.com>
+ <20190621105503.GI3436@hirez.programming.kicks-ass.net>
+ <20190621121630.GE26519@linux.ibm.com>
+ <20190621122927.GV3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190612153600.13073-2-samcacc@amazon.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.162.225]
-X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062113-2213-0000-0000-000003A2729B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011302; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01221194; UDB=6.00642471; IPR=6.01002333;
+ MB=3.00027407; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-21 13:34:16
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062113-2214-0000-0000-00005EF0A80C
+Message-Id: <20190621133414.GF26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=913 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 02:29:27PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 21, 2019 at 05:16:30AM -0700, Paul E. McKenney wrote:
+> > A pair of full hangs at boot (TASKS03 and TREE04), no console output
+> > whatsoever.  Not sure how these changes could cause that, but suspicion
+> > falls on sched_tick_offload_init().  Though even that is a bit strange
+> > because if so, why didn't TREE01 and TREE07 also hang?  Again, looking
+> > into it.
+> 
+> Pesky details ;-)
 
-On 12.06.19 17:35, Sam Caccavale wrote:
-> This commit contains the minimal set of functionality to build
-> afl-harness around arch/x86/emulate.c which allows exercising code
-> in that source file, like x86_emulate_insn.  Resolving the
-> dependencies was done via GCC's -H flag by get_headers.py.
->
-> CR: https://code.amazon.com/reviews/CR-8325546
+And backing out to the earlier patch removes the hangs, though statistical
+insignificance and all that.
 
+Ah, in answer to your earlier question, if you want it in v5.3, you
+will need to take it (but I do humbly request that you wait until it
+actually works).  If you don't take it, I won't be submitting it earlier
+than v5.4.  Either way, your choice!
 
-I'm fairly sure that nobody on the LKML can access this page or even 
-remotely cares about it ;).
-
-Also, your patches are missing an SoB line.
-
-
-Alex
+							Thanx, Paul
 
