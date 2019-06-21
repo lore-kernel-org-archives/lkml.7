@@ -2,126 +2,164 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A84C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D944DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44712208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12B3208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NAniB6lM";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="m7FhTSeH"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="i5ADZggL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfFUJPb (ORCPT
+        id S1726379AbfFUJQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:15:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60282 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbfFUJP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:15:29 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L959OU013692;
-        Fri, 21 Jun 2019 02:15:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=flqjpcj4fWLOyAG8SvHboxGOc+E72I/m8STWy4fDd2g=;
- b=NAniB6lMCdtP6q3N5NLBrmVNjQBlWSudza4J8q/W1xR98UxxlB6r8ZMqabmpZeQIK4Sd
- U3AMU8YuoXnm1aEweYh6Qzz15lU/rU4e5gX3se+HQLoaKh20qQXUdgJDQMsVMSUw/UJu
- 2n/TkuTrnl8rNkaSyT94ivtJPO4jORSoStU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t8tnk8aph-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jun 2019 02:15:27 -0700
-Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 21 Jun 2019 02:15:23 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 21 Jun 2019 02:15:22 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 21 Jun 2019 02:15:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=flqjpcj4fWLOyAG8SvHboxGOc+E72I/m8STWy4fDd2g=;
- b=m7FhTSeHXDSLp7Gn4LZSv/B3sKKXV/Xj7X+cJPxznNxBXUNkKNG0exf6Nhg1KqXvBJjGmACfZ4NTJGz3dF7DHPvkgrFRaXaYgAhFH0Yi6ayNpggG2DRfDOK9FZ39QTg9+X8euNw2QAGkkW9Lsz//YLPEMXdnEKGxUSqWU6iiGMc=
-Received: from CY4PR15MB1463.namprd15.prod.outlook.com (10.172.159.10) by
- CY4PR15MB1814.namprd15.prod.outlook.com (10.172.77.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 21 Jun 2019 09:15:21 +0000
-Received: from CY4PR15MB1463.namprd15.prod.outlook.com
- ([fe80::39f5:87bb:21d:2031]) by CY4PR15MB1463.namprd15.prod.outlook.com
- ([fe80::39f5:87bb:21d:2031%10]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 09:15:00 +0000
-From:   Jens Axboe <axboe@fb.com>
-To:     =?utf-8?B?TWF0aWFzIEJqw7hybGluZw==?= <mb@lightnvm.io>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL 0/2] lightnvm updates for 5.3
-Thread-Topic: [GIT PULL 0/2] lightnvm updates for 5.3
-Thread-Index: AQHVKBFxHHI1YIZeCES8RExyO+fe0Kal02qA
-Date:   Fri, 21 Jun 2019 09:14:59 +0000
-Message-ID: <a3ca86b4-42ad-006f-e2f2-6c63049ad5fb@fb.com>
-References: <20190621091200.23168-1-mb@lightnvm.io>
-In-Reply-To: <20190621091200.23168-1-mb@lightnvm.io>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0306.eurprd05.prod.outlook.com
- (2603:10a6:7:93::37) To CY4PR15MB1463.namprd15.prod.outlook.com
- (2603:10b6:903:fa::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [5.186.115.204]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ccc7b057-747b-44c2-0500-08d6f628ef4f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1814;
-x-ms-traffictypediagnostic: CY4PR15MB1814:
-x-microsoft-antispam-prvs: <CY4PR15MB18143FA7969D0EC25984A964C0E70@CY4PR15MB1814.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(316002)(99286004)(2616005)(26005)(102836004)(6916009)(5660300002)(52116002)(476003)(76176011)(66066001)(86362001)(31696002)(14454004)(71446004)(53546011)(68736007)(3846002)(11346002)(6116002)(25786009)(386003)(6506007)(36756003)(446003)(6246003)(4326008)(186003)(6512007)(6486002)(2906002)(486006)(6436002)(73956011)(66946007)(66476007)(64756008)(66446008)(66556008)(558084003)(54906003)(8936002)(81156014)(81166006)(8676002)(256004)(31686004)(53936002)(71200400001)(71190400001)(229853002)(7736002)(305945005)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1814;H:CY4PR15MB1463.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VmaITFq7xK09b4aHiUx5phubQGtdyoKRW2SMmWB5TdDMhEyi/9yi2hQxEhp1C1udoRgSUTpXlL70Agky7g8weQmJnoTenMQXzpcmnaYPUhRfU+8a7eCAepG24HRnzkgs8eogyz+OMRe8ZXuZJk23HSUXdUS0w/d9cYIS9F1nQ1aI4VcqO9LFxkW3Z76wDYl7TY8wDOpaXopWDn1A2ioExu3P+2r7+R40frqZjlPh/CEztweHw7krZJQ76Lx3snXLcLPZ3Z/mGaNubjHCxTEBrgtBy/DJQ2s+kLnuqItWWdeLbuQsd6+LgWxRFvTsOI/vIVRBGayElEasC47DJp7mQLrWzZcoiNCtAdW65oHQREbLyUQQkocacdhZgcQmpXouPqTjLRLNn+5OrBqPkw99V3tqtpexXfmI3Q4IoZe4jIE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BFC8252CF0F4B243AB2D07557DA31C5E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 21 Jun 2019 05:16:15 -0400
+Received: from mout.web.de ([217.72.192.78]:38775 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfFUJQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:16:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1561108541;
+        bh=ilUtmFA+0J+AjoNoXtJ0NP4uwPoKJNaN+ECoIPbIa5U=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=i5ADZggLXzAkg/KSD/IILIG+QGyCgEh8FIR98SGo6c2XuL0+Fvsh/i16IQdR/LdeR
+         6rdp9wkDeQPY4NlKC/p4xOj+hBZhGgiBvlj/owHc9PfEbhsBKuCcpLvCQ9qyUJE/8D
+         npfrSpKIdmAw2zNVSBNXLDWMq60xU9zkwwYeUmUg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.156.129]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LxfGh-1ignZu06KB-017IAX; Fri, 21
+ Jun 2019 11:15:41 +0200
+Subject: Re: Coccinelle: Add a SmPL script for the reconsideration of
+ redundant dev_err() calls
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        kernel-janitors@vger.kernel.org
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>
+References: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de>
+ <alpine.DEB.2.21.1906202046550.3087@hadrien>
+ <34d528db-5582-5fe2-caeb-89bcb07a1d30@web.de>
+ <alpine.DEB.2.21.1906202110310.3087@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <13890878-9e5f-f297-7f7c-bcc1212d83b7@web.de>
+Date:   Fri, 21 Jun 2019 11:15:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccc7b057-747b-44c2-0500-08d6f628ef4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 09:15:00.2999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: axboe@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1814
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=825 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210077
-X-FB-Internal: deliver
+In-Reply-To: <alpine.DEB.2.21.1906202110310.3087@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:NzVn5oeUAefREfJ9BsmN+lSXeoxZ0nYOXhCg4JUcHRq4kowfFaA
+ jnHYtVkJ41FaSBuZwMH+lKIXRVQJm6oFnlX2xlL78XjfjID0M7MpE3dv07DlJdKTahIE/LH
+ 2JEYx0lKG2JxLjmu3skpqBq1UYzy0PwtOkaz/3Vy6QNOQXA11j/EOm1UqFopIJ+R26IF4Ep
+ qVOUESC4DOa2yf446KuOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kJe6KNIX7IE=:G/XeKtPXJ1MfoJo0D/cAg1
+ 2rIRicGc1XcC8nXhB+CNDS42My7N1ObfdFkFYYR6s98UqYOXIEWS95c/FYsSFEVGz96eKyFr4
+ YATrc91fRDiDbcaTvRwr5mXv5+Gct8XnhDoxhIR5U0lOZP1QCX5HezL328UoSHXmHn1Y1zbOg
+ Mt/PhnvsciZQSR4Gn1xXMbFfjfheLSOzhLoakd9d4kU6x3IouJe9Y9rQqiHJwmWstTaVITASn
+ 87q0xpzMWRKZr6hrDv+USuNHAkIqupopu29p5x4GGrvZeDYlSDRqafT1chdUjUCZy6lGpmaJB
+ DVEAfJGkLdaoBrF7Fx0/GLOpU490azNYorIeo/XPl58R2yRBfnnmIWAuvATzqyetgGbsPJMAk
+ d6UbmmjielyCN5SpsAqWQ7AyuZzWbQxoQef/EDskocwPYOrbYNa0Ma+i5fAhLXEZ9fxqwZnr/
+ u81TsvEENrnkZU39eQD5af8XLJoETzrVzPeBiImJ5SvxnqrPki0XQxeAoz3GbgILHfz7ofooZ
+ gIb83ykQY+ZHuWr9BlA1DgOzB77krruavV5oT+it1+2fEU2odHAS2b+NpbVKKlqx53KD7uXmQ
+ mCf/TZdLZ80yuSBvutPH+g8CpUpLpj9gbocIv1rYhkupNSdsDJsMkcoIsfmY855RGA9iTdjcS
+ fS0rOETgftlPfdL6PUWfSbwiIL8Kg6D/TWugmzVeiHe4xFHubbuxPhEq33o1Ynhl0k0e4UxXf
+ ce7+7wTcn2UxMe0UxF28ab+NMMyNFocKrvr0xNWMtJZZvO4Z4ZjjB60Qc+VrjiGbusCMfnej2
+ 1Zcc4iF5hxN2I2BFa+vPlHAqY9YuLtjwL7W4NHUevNlw3UWiTv5yjlYXv56mTuPOQ4yE+P+Cm
+ Lul90xjT/nJey+ut8T9tPsEkGWF2iDEs3aGy9pmw5k14Fus5kbqcR77oGvitnXUi1GDOFdG+K
+ 2e/o4CDTv0110+BIOa3xfy/XxHjobDfCh5Sr9yZQ1RQUnrrR0XYCP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8yMS8xOSAzOjExIEFNLCBNYXRpYXMgQmrDuHJsaW5nIHdyb3RlOg0KPiBIaSBKZW5zLA0K
-PiANCj4gQSBjb3VwbGUgb2YgcGF0Y2hlcyBmb3IgdGhlIDUuMyB3aW5kb3cuIEdlZXJ0IGZpeGVk
-IGFuIHVuaW5pdGlhbGl6ZWQNCj4gcG9pbnRlciBidWcsIGFuZCBIZWluZXIgZml4ZWQgdXAgYSBi
-dWcgd2hlbiBtZXJnaW5nIGJpbyBwYWdlcyBpbiBwYmxrLg0KDQpBcHBsaWVkLCB0aGFua3MuDQoN
-Ci0tIA0KSmVucyBBeGJvZQ0KDQo=
+> I think that something like
+>
+> if (IS_ERR(e))
+> {
+> <+...
+> *dev_err(...)
+> ...+>
+> }
+>
+> would be more appropriate.  Whether there is a return or not doesn't
+> really matter.
+
+Do you find the following SmPL change specification useful and acceptable?
+
+
+@deletion depends on patch@
+expression e;
+@@
+ e =3D devm_ioremap_resource(...);
+ if (IS_ERR(e))
+(
+-{
+-   dev_err(...);
+    return (...);
+-}
+|{
+ <+...
+-   dev_err(...);
+ ...+>
+ }
+)
+
+
+Would this approach need a version check for the Coccinelle software?
+
+Regards,
+Markus
