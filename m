@@ -2,74 +2,134 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103D7C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB35C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D810721537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C490621537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561124926;
-	bh=rI3c1BOmsczqHXJN6hvv4bgjJQdjsSyfRhzndKaR1so=;
+	s=default; t=1561124999;
+	bh=TYSsT51Xz3GeDF4sZAlGlEM3XXEHsXXsXEk0JEKHfMY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RfAcEfrq/nT8ZUjjV9L3j49JQqL74Jb5Wc5A8Puj8v43ZFoXyLLMffBD+80zdsSu9
-	 2ucXnMgMV/AjvZ6JJ0LUxPSJL8cKZ59ys9POFBL8zNDv7aUTfEna76EDxyFgMRsV3e
-	 cezzNeCPosvK+VvG5TRN0OR3kjlOVv0lha4KqYf4=
+	b=jMJ0WBFmzYcs6Z3WiEnuhXHaghO8+17SMJ/bohaPShpywGChhKJ/Kv6Q2OLKyt5Ki
+	 vax7JP4qEhtbxvAu7MlFr5jZrzEop8umtXIwylOQGlaptYlHE5aj4BzcV2+OU2u3No
+	 pvJDGSW4LXCX0PIZSbDU4yUVmJNq63sdiFH/63jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfFUNsp (ORCPT
+        id S1726169AbfFUNt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53432 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 09:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUNsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:48:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725975AbfFUNt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:49:58 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED744206B7;
-        Fri, 21 Jun 2019 13:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84291206B7;
+        Fri, 21 Jun 2019 13:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561124924;
-        bh=rI3c1BOmsczqHXJN6hvv4bgjJQdjsSyfRhzndKaR1so=;
+        s=default; t=1561124996;
+        bh=TYSsT51Xz3GeDF4sZAlGlEM3XXEHsXXsXEk0JEKHfMY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1f2JM+sOwZwawmkvWu37ujbWtD2T1HlcBG9j72f0CLmpgLBRpmjvQteXZQPHxpgS5
-         CsqGEbTjAp8Kd3J/r34AAQw+XRAwXwaiOE3LR1IU9K+YEdJz5nln8wdejeqNARO8Pd
-         lZrvKScl8baWWKF4m7thzkL80KUkCtRjHfFFNgE0=
-Date:   Fri, 21 Jun 2019 15:48:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 06/29] docs: console.txt: convert docs to ReST and
- rename to *.rst
-Message-ID: <20190621134841.GA26766@kroah.com>
-References: <cover.1560890800.git.mchehab+samsung@kernel.org>
- <00ddb1bc19e07b7ce4d1e7cda457733a37cf1693.1560890800.git.mchehab+samsung@kernel.org>
+        b=0apCicMFLRhawaH+9AaFoZi+UlfNHqhejuMSpVDTL7PEBOwnCU/dvxoigoP5eCavq
+         bOoGxoMtBSwSiDL26czZdBo8TJBMSCHiB+u1Ye1n1z7TCX+Q+9cgiQgXIBNyPQs2+d
+         Gjjp0f07GCckoDTwbmR5b8o06nB5BGxB8K2uvSvA=
+Date:   Fri, 21 Jun 2019 08:49:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        joe@perches.com
+Subject: Re: [PATCH 2/5] lib: logic_pio: Add logic_pio_unregister_range()
+Message-ID: <20190621134955.GD82584@google.com>
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+ <1561026716-140537-3-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00ddb1bc19e07b7ce4d1e7cda457733a37cf1693.1560890800.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1561026716-140537-3-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 05:53:24PM -0300, Mauro Carvalho Chehab wrote:
-> Convert this small file to ReST in preparation for adding it to
-> the driver-api book.
+On Thu, Jun 20, 2019 at 06:31:53PM +0800, John Garry wrote:
+> Add a function to unregister a logical PIO range.
 > 
-> While this is not part of the driver-api book, mark it as
-> :orphan:, in order to avoid build warnings.
+> The method used to allocate LOGIC_PIO_CPU_MMIO regions during registration
+> is slightly modified to ensure that we get no overlap when regions are
+> unregistered. This is needed because the allocation scheme assumed that no
+> regions are ever unregistered.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Logical PIO space can still be leaked when unregistering certain
+> LOGIC_PIO_CPU_MMIO regions, but this acceptable for now since there are no
+> callers to unregister LOGIC_PIO_CPU_MMIO regions, and the logical PIO
+> region allocation scheme would need significant work to improve this.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  include/linux/logic_pio.h |  1 +
+>  lib/logic_pio.c           | 16 +++++++++++++++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
+> index cbd9d8495690..88e1e6304a71 100644
+> --- a/include/linux/logic_pio.h
+> +++ b/include/linux/logic_pio.h
+> @@ -117,6 +117,7 @@ struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode);
+>  unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
+>  			resource_size_t hw_addr, resource_size_t size);
+>  int logic_pio_register_range(struct logic_pio_hwaddr *newrange);
+> +void logic_pio_unregister_range(struct logic_pio_hwaddr *range);
+>  resource_size_t logic_pio_to_hwaddr(unsigned long pio);
+>  unsigned long logic_pio_trans_cpuaddr(resource_size_t hw_addr);
+>  
+> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+> index 761296376fbc..45eb57af2574 100644
+> --- a/lib/logic_pio.c
+> +++ b/lib/logic_pio.c
+> @@ -56,7 +56,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>  			/* for MMIO ranges we need to check for overlap */
+>  			if (start >= range->hw_start + range->size ||
+>  			    end < range->hw_start) {
+> -				mmio_sz += range->size;
+> +				mmio_sz = range->io_start + range->size;
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Should this be renamed to something like "mmio_end"?  Computing a
+"size" as "start + size" looks wrong at first glance.  The code overall
+probably makes sense, but maybe breaking this out as a separate "avoid
+overlaps" patch that renames "mmio_sz" might make it clearer.
+
+>  			} else {
+>  				ret = -EFAULT;
+>  				goto end_register;
+> @@ -98,6 +98,20 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>  	return ret;
+>  }
+>  
+> +/**
+> + * logic_pio_unregister_range - unregister logical PIO range for a host
+> + * @range: pointer to the IO range which has been already registered.
+> + *
+> + * Unregister a previously-registered IO range node.
+> + */
+> +void logic_pio_unregister_range(struct logic_pio_hwaddr *range)
+> +{
+> +	mutex_lock(&io_range_mutex);
+> +	list_del_rcu(&range->list);
+> +	mutex_unlock(&io_range_mutex);
+> +	synchronize_rcu();
+> +}
+> +
+>  /**
+>   * find_io_range_by_fwnode - find logical PIO range for given FW node
+>   * @fwnode: FW node handle associated with logical PIO range
+> -- 
+> 2.17.1
+> 
