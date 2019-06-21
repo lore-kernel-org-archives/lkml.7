@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49E6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C87C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7E721530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4B221530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pj7cZGNx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsv5gJl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfFULQW (ORCPT
+        id S1726372AbfFULQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:16:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41072 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfFULQV (ORCPT
+        Fri, 21 Jun 2019 07:16:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46844 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbfFULQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:16:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so3432543pff.8;
-        Fri, 21 Jun 2019 04:16:21 -0700 (PDT)
+        Fri, 21 Jun 2019 07:16:29 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 81so3420570pfy.13;
+        Fri, 21 Jun 2019 04:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ks+wgx/4HM/gUpKQKhvFzIwQsEuEY3r2Qt0MyQ+nHZs=;
-        b=pj7cZGNxXfRtnwmfrCkITH3hZW2lPhrJn3adSPIX70yPFItqoE8Cwe9r5T6J0cKGZr
-         LqMLpLf7NxOPGAP6hq+JEBXwrlMEZoa4x6p4YSAP2Yc8v1fEZz4mCwpHLeb8MH1vZ76p
-         9NtyN+fI5VqPSWS/T/5XOZe1QAsp+F4eM77QffnQXR8Us6hMLCLyadn3lI123FOm818m
-         RYprRcx7brgcSI4vK1K5PUEX4YDL2Cfwn0rJhsrUxqO+6Fno2m5Tfmd430PUvQ9eZb1E
-         3jpsx1cshwZq3yMh4O88D2J9HEhVCkA4AWyv1jVY4HMMqFJXXZsn8Gu3xYWLX3Qx91Rc
-         4zSw==
+        bh=KMyXv5aakUqqkMZrvi++eRfv70/KfjHLYwh+rLZXzWg=;
+        b=qsv5gJl+MMjFjLl6q60KT5vpch2f6ZLYb+7BzlP50HQ/8+LY1SZoelxfS45G4prSXP
+         M0BH3/HsELaYFRN0Utwi/uINzNXSRExFaBnR3RBr6b8MK+1DaYjMLMOsSsrHZMug8rIS
+         Zj5F1mf1roU56bjCSihvM5gOtX/x4SAYU85qjBD5eUmL+O0Nx6qJhAdTlbCNWqG2SXRI
+         50Ij1AOsMsM5sgYY9aY8aLPr0pG0zcYHY7X1CAzL30TOv9RDGOM8DpYeCmKnAC75hVj8
+         1lvMMZPSv/ViO0Z/6aDEgik+fu2FPqXsDTnzXVlBMY0UneMwanA6l78dTVotju8tFhbn
+         giHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ks+wgx/4HM/gUpKQKhvFzIwQsEuEY3r2Qt0MyQ+nHZs=;
-        b=ebN7w4zotEa4eXmXsMPWMVIWFb3oQ9n8r//+xeLZuYsjZmr2S7fRUask+bvoTfRMTh
-         W6JDAey/DYLHnu3AXhyFgyjKYAs+XId1wEQX9Noc4sF9mxfnDqRJJImBao4RqZrX0MNV
-         Ja5bMcDpgAcrEli6b+9EeHwleBfrGB1v+0YpH96WURbbQh17urp2dqbMHClYUXVnfwyv
-         ltXbOiSIzFZZVq+N4ioEy4692uAN/gs5bYkwYKc086o4qMShvWNwDpdYMlqwoX8NnR+O
-         WQk9gnGgebk73S+imNrD1qa3YJxgew9RllWBjsjjBbMnD+FlgTZM88KKUYf9RdVWdUXR
-         6MpA==
-X-Gm-Message-State: APjAAAUKoKohtBmTVJbgxexq+86QXtkKy64tEi+FXvWpj26NXdNtVgOm
-        1UgPgGM54DCpoFGY1rVu1E8=
-X-Google-Smtp-Source: APXvYqzCufeGfxRq1tfK229KQkh0+mNnU9qPRl2p/RMjJ2iDTt35Mcn/vG1OOl9rh/Tn+liYek6hFQ==
-X-Received: by 2002:a63:7749:: with SMTP id s70mr5409461pgc.242.1561115780790;
-        Fri, 21 Jun 2019 04:16:20 -0700 (PDT)
+        bh=KMyXv5aakUqqkMZrvi++eRfv70/KfjHLYwh+rLZXzWg=;
+        b=QTt56C6uswQqmI7YLn0f8w5uI2UA7Oxpnok1hJffA54iyxVc6kqwJw/CDwxuA/xqqj
+         glYTKk2ZIk1SyYRqQaKS3VUaLwrYx3yQNHm3oG9MWRyjlQJqGwgopFyO7uJP8xK2VHyO
+         cxTovIkxhG8vfzrwxpNweZNrMAr78ALObWjLQlJi2w2JOZHahrJhIbcFd9IOseSWoEli
+         WeV4B+s8O0nlcfO5PTG1pALrAJQMbVSkTGf+QBqUehfQPnkym7pcO5lj+js+2pahK7iY
+         9i5GHBi1PVO9u8QEg7Obsm+QRT5PpkFiUuHjcnjY/9AkdG7kcG3OpQ4eHEAEsbz0XGZI
+         IKPg==
+X-Gm-Message-State: APjAAAVeXjUbTonl7Z1FWKnoin3P7vRiPFDtuiC5U1xDfgAaAfj8oeRD
+        935GfqUajajSYgF3c7YrkdM=
+X-Google-Smtp-Source: APXvYqzYNtXxb4tzWuDYvtdWaeALgnRgqk7i5JnGPvjR757T4G/qDe0ZN4RVho1fH/Ibw4XCUdjIDg==
+X-Received: by 2002:a17:90a:9291:: with SMTP id n17mr5871711pjo.66.1561115788928;
+        Fri, 21 Jun 2019 04:16:28 -0700 (PDT)
 Received: from Pilot130.192.168.0.22 (211-20-114-70.HINET-IP.hinet.net. [211.20.114.70])
-        by smtp.googlemail.com with ESMTPSA id w4sm2405737pfw.97.2019.06.21.04.16.17
+        by smtp.googlemail.com with ESMTPSA id w4sm2405737pfw.97.2019.06.21.04.16.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 21 Jun 2019 04:16:20 -0700 (PDT)
+        Fri, 21 Jun 2019 04:16:28 -0700 (PDT)
 From:   "sudheer.v" <open.sudheer@gmail.com>
 To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
         andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org,
@@ -65,9 +65,9 @@ To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
 Cc:     sudheer veliseti <sudheer.open@gmail.com>,
         linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
         devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
-Subject: [patch 4/5] defconfig and MAINTAINERS updated for AST2500 DMA UART driver
-Date:   Fri, 21 Jun 2019 16:47:34 +0530
-Message-Id: <1561115855-4186-5-git-send-email-open.sudheer@gmail.com>
+Subject: [patch 5/5] Documentation: DT bindings AST2500 DMA UART driver
+Date:   Fri, 21 Jun 2019 16:47:35 +0530
+Message-Id: <1561115855-4186-6-git-send-email-open.sudheer@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
 References: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
@@ -80,46 +80,56 @@ From: sudheer veliseti <sudheer.open@gmail.com>
 
 Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
 ---
- MAINTAINERS                          | 13 +++++++++++++
- arch/arm/configs/aspeed_g5_defconfig |  1 +
- 2 files changed, 14 insertions(+)
+ .../bindings/serial/ast2500-dma-uart.txt      | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 997e27ab492f..c9a9790b97f6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1347,6 +1347,19 @@ F:	drivers/crypto/axis
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
-+ARM/ASPEED DMA UART DRIVER
-+M:	sudheer v <sudheer.open@gmail.com>
-+M:	ShivahShankar <shivahshankar.shankarnarayanrao@aspeedtech.com>
-+R:	Joel Stanley <joel@jms.id.au>
-+R:	Andrew Jeffery <andrew@aj.id.au>
-+R:	Vinod Koul <vkoul@kernel.org>
-+L:	dmaengine@vger.kernel.org
-+L:	openbmc@lists.ozlabs.org
-+L:	linux-aspeed@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-+F:	Documentation/devicetree/bindings/serial/ast-sdma-uart.txt
+diff --git a/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+new file mode 100644
+index 000000000000..6f01ddecba56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+@@ -0,0 +1,40 @@
 +
- ARM/ASPEED I2C DRIVER
- M:	Brendan Higgins <brendanhiggins@google.com>
- R:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index 1849cbc161b4..25bf26630939 100644
---- a/arch/arm/configs/aspeed_g5_defconfig
-+++ b/arch/arm/configs/aspeed_g5_defconfig
-@@ -144,6 +144,7 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=6
- CONFIG_SERIAL_8250_RUNTIME_UARTS=6
-+CONFIG_AST_SERIAL_DMA_UART=y
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_ASPEED_VUART=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
++node for DMA controller:
++                       ast_uart_sdma: uart_sdma@1e79e000 {
++                               compatible = "aspeed,ast-uart-sdma";
++                               reg = <0x1e79e000 0x400>;
++                               interrupts = <50>;
++                               status = "disabled";
++                       };
++this node  doesn't binds with any driver.
++DMA controller is handled as a separate SW layer,and is included in the same driver.
++This DMA controller node is included in DT just for Register base and interrupt details
++
++
++
++node for DMA-UART :
++
++
++Required properties:
++
++- compatible: "aspeed,ast-sdma-uart"
++- reg: The base address of the UART register bank
++- interrupts: should contain interrupt specifier.
++- clocks: Clock driving the hardware;
++- pinctrl-0 : list of pinconfigurations
++- dma-channel: channel of DMA-controller which is used
++
++Example:
++
++                 dma_uart1: dma_uart1@1e783000{
++                          compatible = "aspeed,ast-sdma-uart";
++                          reg = <0x1e783000 0x1000>;
++                          reg-shift = <2>;
++                          interrupts = <9>;
++                          clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
++                          dma-channel = <0>;
++                          no-loopback-test;
++                          pinctrl-names = "default";
++                          pinctrl-0 = <&pinctrl_txd1_default &pinctrl_rxd1_default>;
++                          status = "disabled";
++                       };
 -- 
 2.17.1
 
