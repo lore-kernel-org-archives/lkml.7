@@ -2,183 +2,100 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B777C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16275C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F13D21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E461C208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WkzbJ6z4"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MZT72ONa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VlyXDNvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfFUN2t (ORCPT
+        id S1726204AbfFUN3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:28:49 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:62574 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFUN2s (ORCPT
+        Fri, 21 Jun 2019 09:29:23 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54261 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbfFUN3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:28:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1561123726; x=1592659726;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=7p0CjH+ZVru6bj34yR86Ng2z5nNSqzdfa/nZKcTY20k=;
-  b=WkzbJ6z4e0I/AX634JLA/LB65zDdxIwUQ790+0zY3iG1+7ZW4CPp8x80
-   3OFW+v9q1o5IpCUb+6U8+pxn6GG1yPTCe6XDLqKmXdsIvy+dDqpyfDnJ3
-   D3aicmakjkiPK5nbbBQ+oLHAqfaQXsp7EtkKn3czXPuvpxc4DUm0DVpKf
-   4=;
-X-IronPort-AV: E=Sophos;i="5.62,400,1554768000"; 
-   d="scan'208";a="407495297"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 21 Jun 2019 13:28:42 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id CB00DA2947;
-        Fri, 21 Jun 2019 13:28:41 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Jun 2019 13:28:41 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.128) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Jun 2019 13:28:36 +0000
-Subject: Re: [PATCH 2/3] Emulate simple x86 instructions in userspace
-To:     <samcacc@amazon.com>, Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190521153924.15110-1-samcacc@amazon.de>
- <20190521153924.15110-3-samcacc@amazon.de>
- <6a18a464-a621-da22-dd48-fd5d8a2fc859@amazon.com>
- <7e0188fa-351f-157b-2815-ab19222f44b4@amazon.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <c5fbed80-5933-eca3-001e-0e2aaccfcd1d@amazon.com>
-Date:   Fri, 21 Jun 2019 15:28:34 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
+        Fri, 21 Jun 2019 09:29:22 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id C66D922274;
+        Fri, 21 Jun 2019 09:29:21 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 21 Jun 2019 09:29:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=X4jgCsPTpY0MEyCO3acdNzjmRnr
+        VZZybxhhzrkSRkpg=; b=MZT72ONacup78AyY+/OaPqJTP8rVj6568fzz264cyE+
+        zL7w8UjHip/us4TT8XrOQKcHVKh/G62D+xAdVwrQKu15BUAeIg48c2KujO0eGkLi
+        Ln/fqc9hebl69ljogWKZCIfhNZSoBuRbR1Fp/vayWkCjgfqtsxFqLy+vlxC6devk
+        GJ9h9DoAxP9yGR9TQz9Ku1b0dDsU7aRQu2nvBzE1OTp3Tg9DSLu0N24KkmI4XYc7
+        7Q6lF5SPppHFbc8CivoQb2sM0K/FTl1Rr5yZFhXoBQugZri4HVV+nSANM7ORvaFx
+        vvsU3S+9d/niB+jqDWKbdHupA8U/MnCRKj4Gn9O5I9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=X4jgCs
+        PTpY0MEyCO3acdNzjmRnrVZZybxhhzrkSRkpg=; b=VlyXDNvPlC0caYrX34HuKQ
+        6ueNkeMsGPuxUHtFlE9XeABex7787SRxDGPeKsay7zvRV6OdVTHndHV3qHmIRf0h
+        FnJ8ilZXDALymYa9ItSIQolP6YYpiO1XVI8ySUD/gue+3yjvy9RHAYCut80wOfkZ
+        0mF6f7U1LkmqP9bwE6nxuR4VrgUkLowjcD9qNxs/W3aExyzJ9NTaEiouXPsB0Tl2
+        LrpFLd+H2uSrstGcyTokddaU61FblEHWGNxsGy+gJinek8S9oRouxZdMZ7hkG+m8
+        OaAsvbs7CotNKvv59sxHzn/EZOn+nvZpBfja07m37vEE6LDMuzOFCgUzp2kTmEPQ
+        ==
+X-ME-Sender: <xms:sdsMXQdS8sp-Fop-zkwMXZynm5yMa7xerpDlqAUG-_zvntB4SF-Z4w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdeigdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:sdsMXdVczzU5XQo_4uMPNGo54aOeYYG6kjN3SNMd95yuq8syqySCVQ>
+    <xmx:sdsMXW7_l6vHrUwGEx91PhsCZLlxHgbTiaGDpHlj-rRM-JB9VXrGbQ>
+    <xmx:sdsMXVxV4nx-WM6v_K8uaxnccIu7fukqOKznHi5tSrnTPrUnPLNqyg>
+    <xmx:sdsMXRICYGDyj15hbhbtIbxg4Or3tBvPuRhFllb71Jrfy8_C7XylRg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F3263380074;
+        Fri, 21 Jun 2019 09:29:20 -0400 (EDT)
+Date:   Fri, 21 Jun 2019 15:29:10 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: linux-next: unexpected file in the usb tree
+Message-ID: <20190621132910.GA11875@kroah.com>
+References: <20190621212423.2b264411@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <7e0188fa-351f-157b-2815-ab19222f44b4@amazon.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.43.162.128]
-X-ClientProxiedBy: EX13D18UWA001.ant.amazon.com (10.43.160.11) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621212423.2b264411@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 09:24:23PM +1000, Stephen Rothwell wrote:
+> Hi Greg,
+> 
+> Commit
+> 
+>   ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-api")
+> 
+> added this unexpected file:
+> 
+>   Documentation/index.rst.rej
 
-On 12.06.19 17:19, samcacc@amazon.com wrote:
-> On 5/31/19 10:38 AM, Alexander Graf wrote:
->> On 21.05.19 17:39, Sam Caccavale wrote:
->>
->>> +static void dump_state_after(const char *desc, struct state *state)
->>> +{
->>> +    debug(" -- State after %s --\n", desc);
->>> +    debug("mode: %s\n", x86emul_mode_string[state->ctxt.mode]);
->>> +    debug(" cr0: %lx\n", state->vcpu.cr[0]);
->>> +    debug(" cr3: %lx\n", state->vcpu.cr[3]);
->>> +    debug(" cr4: %lx\n", state->vcpu.cr[4]);
->>> +
->>> +    debug("Decode _eip: %lu\n", state->ctxt._eip);
->>> +    debug("Emulate eip: %lu\n", state->ctxt.eip);
->>> +
->>> +    debug("\n");
->>>    }
->>>      int step_emulator(struct state *state)
->>>    {
->>> -    return 0;
->>> +    int rc, prev_eip = state->ctxt.eip;
->>> +    int decode_size = state->data_available - decode_offset;
->>> +
->>> +    if (decode_size < 15) {
->>> +        rc = x86_decode_insn(&state->ctxt, &state->data[decode_offset],
->>> +                     decode_size);
->>> +    } else {
->>> +        rc = x86_decode_insn(&state->ctxt, NULL, 0);
->>
->> Isn't this going to fetch instructions from data as well? Why do we need
->> the < 15 special case at all?
->>
-> I've changed the method of acquiring data in v2, but the 15 limit is
-> still relevant.  If x86_decode_insn is called with a NULL pointer and
-> instruction size 0, the bytes are fetched via the emulator_ops.fetch
-> function.  This would be nice, but there is no way of limiting how many
-> bytes it will try and fetch-- and it usually grabs 15 since that is the
-> longest x86 instruction (as of yet?).  When there are less than 15 bytes
-> left, limiting the fetch size to the remaining bytes is important.
+Ugh, that's what I get for having to manually apply a patch :(
 
+I'll go remove it now, thanks for noticing.
 
-You want to at least add a comment here, detailing the fact that where 
-the magic 15 comes from and that you want to exercise the normal 
-prefetch path while still allowing the buffer to shrink < 15 bytes :). 
-Maybe move MAX_INST_SIZE from svm.c into a .h file and reuse that while 
-at it.
-
-
-[...]
-
-
->>> diff --git a/tools/fuzz/x86_instruction_emulation/scripts/bin_fuzz
->>> b/tools/fuzz/x86_instruction_emulation/scripts/bin_fuzz
->>> new file mode 100755
->>> index 000000000000..e570b17f9404
->>> --- /dev/null
->>> +++ b/tools/fuzz/x86_instruction_emulation/scripts/bin_fuzz
->>> @@ -0,0 +1,23 @@
->>> +#!/bin/bash
->>> +# SPDX-License-Identifier: GPL-2.0+
->>> +# This runs the afl-harness at $1, $2 times (or 100)
->>> +# It runs uniq and sorts the output to give an idea of what is
->>> causing the
->>> +# most crashes.  Useful for deciding what to implement next.
->>> +
->>> +if [ "$#" -lt 1 ]; then
->>> +  echo "Usage: './bin_fuzz path_to_afl-harness [number of times to run]"
->>> +  exit
->>> +fi
->>> +
->>> +mkdir -p fuzz
->>> +rm -f fuzz/*.in fuzz/*.out
->>> +
->>> +for i in $(seq 1 1 ${2:-100})
->>> +do
->>> +  {
->>> +  head -c 500 /dev/urandom | tee fuzz/$i.in | ./$1
->>> +  } > fuzz/$i.out 2>&1
->>> +
->>> +done
->>> +
->>> +find ./fuzz -name '*.out' -exec tail -1 {} \; | sed 's/.*
->>> Segmen/Segman/' | sed -r 's/^(\s[0-9a-f]{2})+$/misc instruction
->>> output/' | sort | uniq -c | sort -rn
->>
->> What is that Segman thing about?
->>
-> This was for binning crashes-- check `tools/fuzz/x86ie/scripts/bin.sh`
-> in v2 for the updated version.  Basically, it checks whether a
-> segmentation fault has happened, and if so, launches a gdb session to
-> see whether it was caused by an unimplemented x86_emulator_op.  This is
-> useful in development for prioritizing the unimplemented features which
-> are causing the most fake crashes.
-
-
-I can see why you want to combine them, but I don't understand where 
-"Segman" comes from. Where is there a man here?
-
-
-
-Alex
-
+greg k-h
