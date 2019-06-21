@@ -2,489 +2,175 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFD3C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C1AC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE2421530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561107779;
-	bh=pphLpYEfEVlyNuqWtUX8Ont2QDuBs7uGJhwR5NOhnLQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUr25w59TZe7sC/N/JY7eRE/Kc3IpJoRM3eZdGP7rDXOS2XSLut5jB+6aHNzjEByd
-	 6eW/44UGZVA03rgYYtIgiCt5W4UdHsbWegErIicEK11rHDbdvP9obqbFLHAVRwPKIs
-	 9adTzHmixatUGKIzBrrnnkFt5ekgtkqIb7aE8WVo=
+	by mail.kernel.org (Postfix) with ESMTP id 90C7021530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfFUJCt (ORCPT
+        id S1726638AbfFUJDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39410 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 05:03:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57872 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfFUJCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:02:47 -0400
-Received: from localhost.localdomain (unknown [106.201.116.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726270AbfFUJDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:03:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC97921530;
-        Fri, 21 Jun 2019 09:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561107766;
-        bh=pphLpYEfEVlyNuqWtUX8Ont2QDuBs7uGJhwR5NOhnLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edLp6MNc85x8UFG4rOQQHLza1skHJOnv2RCEwnTlf0ZKPQT3iUB5tLNUqHT9+HFSk
-         S4N6Q4t0+BJuOVzP8RlJNxb4jwprZ2Pu0jSB1c8332ja4UumQyABjzI6SPoZjVzznc
-         yL7lTOQShPLyJeOrM3oONCcWcF/NWPbHrfyzaK3E=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] usb: xhci: Add ROM loader for uPD720201
-Date:   Fri, 21 Jun 2019 14:29:12 +0530
-Message-Id: <20190621085913.8722-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190621085913.8722-1-vkoul@kernel.org>
-References: <20190621085913.8722-1-vkoul@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id BEE7F88305;
+        Fri, 21 Jun 2019 09:02:55 +0000 (UTC)
+Received: from localhost (ovpn-12-28.pek2.redhat.com [10.72.12.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C0F360FAB;
+        Fri, 21 Jun 2019 09:02:52 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 17:02:49 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kyle Pelton <kyle.d.pelton@intel.com>
+Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
+ phys_p4d_init()
+Message-ID: <20190621090249.GL24419@MiWiFi-R3L-srv>
+References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 21 Jun 2019 09:03:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uPD720201 supports ROM and allows software to program the ROM and boot
-from it. Add support for detecting if ROM is present, if so load the ROM
-if not programmed earlier.
+Hi Kirill,
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>
----
- drivers/usb/host/xhci-pci.c | 357 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 357 insertions(+)
+On 06/20/19 at 02:22pm, Kirill A. Shutemov wrote:
+> Kyle has reported that kernel crashes sometimes when it boots in
+> 5-level paging mode with KASLR enabled:
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index d9081fe7ed6c..771948ce3d38 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -78,6 +78,20 @@
- #define RENESAS_FW_STATUS_SET_DATA0			BIT(8)
- #define RENESAS_FW_STATUS_SET_DATA1			BIT(9)
- 
-+#define RENESAS_ROM_STATUS_ACCESS			BIT(0)
-+#define RENESAS_ROM_STATUS_ERASE			BIT(1)
-+#define RENESAS_ROM_STATUS_RELOAD			BIT(2)
-+#define RENESAS_ROM_STATUS_RESULT			GENMASK(6, 4)
-+  #define RENESAS_ROM_STATUS_INVALID			0
-+  #define RENESAS_ROM_STATUS_SUCCESS			BIT(4)
-+  #define RENESAS_ROM_STATUS_ERROR			BIT(5)
-+#define RENESAS_ROM_STATUS_SET_DATA0			BIT(8)
-+#define RENESAS_ROM_STATUS_SET_DATA1			BIT(9)
-+#define RENESAS_ROM_STATUS_ROM_EXISTS			BIT(15)
-+
-+#define RENESAS_ROM_ERASE_MAGIC				0x5A65726F
-+#define RENESAS_ROM_WRITE_MAGIC				0x53524F4D
-+
- #define RENESAS_RETRY	1000
- #define RENESAS_DELAY	10
- 
-@@ -458,11 +472,79 @@ static int renesas_fw_verify(struct pci_dev *dev,
- 	return 0;
- }
- 
-+static int renesas_check_rom_state(struct pci_dev *pdev)
-+{
-+	const struct renesas_fw_entry *entry;
-+	u16 rom_state;
-+	u32 version;
-+	bool valid_version = false;
-+	int err, i;
-+
-+	/* check FW version */
-+	err = pci_read_config_dword(pdev, RENESAS_FW_VERSION, &version);
-+	if (err)
-+		return pcibios_err_to_errno(err);
-+
-+	version &= RENESAS_FW_VERSION_FIELD;
-+	version = version >> RENESAS_FW_VERSION_OFFSET;
-+	dev_dbg(&pdev->dev, "Found FW version loaded is %x\n", version);
-+
-+	/* treat version in renesas_fw_table as correct ones */
-+	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
-+		entry = &renesas_fw_table[i];
-+		if (version == entry->expected_version) {
-+			dev_dbg(&pdev->dev, "Detected valid ROM version..\n");
-+			valid_version = true;
-+		}
-+	}
-+
-+	/*
-+	 * Test if ROM is present and loaded, if so we can skip everything
-+	 */
-+	err = pci_read_config_word(pdev, RENESAS_ROM_STATUS, &rom_state);
-+	if (err)
-+		return pcibios_err_to_errno(err);
-+
-+	if (rom_state & BIT(15)) {
-+		/* ROM exists */
-+		dev_dbg(&pdev->dev, "ROM exists\n");
-+
-+		/* Check the "Result Code" Bits (6:4) and act accordingly */
-+		switch (rom_state & RENESAS_ROM_STATUS_RESULT) {
-+		case RENESAS_ROM_STATUS_SUCCESS:
-+			dev_dbg(&pdev->dev, "Success ROM load...");
-+			/* we have valid version and status so success */
-+			if (valid_version)
-+				return 0;
-+			break;
-+
-+		case RENESAS_ROM_STATUS_INVALID: /* No result yet */
-+			dev_dbg(&pdev->dev, "No result as it is ROM...");
-+			/* we have valid version and status so success */
-+			if (valid_version)
-+				return 0;
-+			break;
-+
-+		case RENESAS_ROM_STATUS_ERROR: /* Error State */
-+		default: /* All other states are marked as "Reserved states" */
-+			dev_err(&pdev->dev, "Invalid ROM..");
-+			break;
-+		}
-+	}
-+
-+	return -EIO;
-+}
-+
- static int renesas_fw_check_running(struct pci_dev *pdev)
- {
- 	int err;
- 	u8 fw_state;
- 
-+	/* Check if device has ROM and loaded, if so skip everything */
-+	err = renesas_check_rom_state(pdev);
-+	if (!err)
-+		return err;
-+
- 	/*
- 	 * Test if the device is actually needing the firmware. As most
- 	 * BIOSes will initialize the device for us. If the device is
-@@ -632,12 +714,261 @@ struct renesas_fw_ctx {
- static int xhci_pci_probe(struct pci_dev *pdev,
- 			  const struct pci_device_id *id);
- 
-+static bool renesas_check_rom(struct pci_dev *pdev)
-+{
-+	u16 rom_status;
-+	int retval;
-+
-+	/* 1. Check if external ROM exists */
-+	retval = pci_read_config_word(pdev, RENESAS_ROM_STATUS, &rom_status);
-+	if (retval)
-+		return false;
-+
-+	rom_status &= RENESAS_ROM_STATUS_ROM_EXISTS;
-+	if (rom_status) {
-+		dev_dbg(&pdev->dev, "External ROM exists\n");
-+		return true; /* External ROM exists */
-+	}
-+
-+	return false;
-+}
-+
-+static void renesas_rom_erase(struct pci_dev *pdev)
-+{
-+	int retval, i;
-+	u8 status;
-+
-+	dev_dbg(&pdev->dev, "Performing ROM Erase...\n");
-+	retval = pci_write_config_dword(pdev, RENESAS_DATA0,
-+					RENESAS_ROM_ERASE_MAGIC);
-+	if (retval) {
-+		dev_err(&pdev->dev, "ROM erase, magic word write failed: %d\n",
-+			pcibios_err_to_errno(retval));
-+		return;
-+	}
-+
-+	retval = pci_read_config_byte(pdev, RENESAS_ROM_STATUS, &status);
-+	if (retval) {
-+		dev_err(&pdev->dev, "ROM status read failed: %d\n",
-+			pcibios_err_to_errno(retval));
-+		return;
-+	}
-+	status |= RENESAS_ROM_STATUS_ERASE;
-+	retval = pci_write_config_byte(pdev, RENESAS_ROM_STATUS, status);
-+	if (retval) {
-+		dev_err(&pdev->dev, "ROM erase set word write failed\n");
-+		return;
-+	}
-+
-+	/* sleep a bit while ROM is erased */
-+	msleep(20);
-+
-+	for (i = 0; i < RENESAS_RETRY; i++) {
-+		retval = pci_read_config_byte(pdev, RENESAS_ROM_STATUS,
-+					      &status);
-+		status &= RENESAS_ROM_STATUS_ERASE;
-+		if (!status)
-+			break;
-+
-+		mdelay(RENESAS_DELAY);
-+	}
-+
-+	if (i == RENESAS_RETRY)
-+		dev_dbg(&pdev->dev, "Chip erase timedout: %x\n", status);
-+
-+	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
-+}
-+
-+static bool renesas_download_rom(struct pci_dev *pdev,
-+				 const u32 *fw, size_t step)
-+{
-+	bool data0_or_data1;
-+	u8 fw_status;
-+	size_t i;
-+	int err;
-+
-+	/*
-+	 * The hardware does alternate between two 32-bit pages.
-+	 * (This is because each row of the firmware is 8 bytes).
-+	 *
-+	 * for even steps we use DATA0, for odd steps DATA1.
-+	 */
-+	data0_or_data1 = (step & 1) == 1;
-+
-+	/* Read "Set DATAX" and confirm it is cleared. */
-+	for (i = 0; i < RENESAS_RETRY; i++) {
-+		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-+					   &fw_status);
-+		if (err) {
-+			dev_err(&pdev->dev, "Read ROM Status failed: %d\n",
-+				pcibios_err_to_errno(err));
-+			return false;
-+		}
-+		if (!(fw_status & BIT(data0_or_data1)))
-+			break;
-+
-+		udelay(RENESAS_DELAY);
-+	}
-+	if (i == RENESAS_RETRY) {
-+		dev_err(&pdev->dev, "Timeout for Set DATAX step: %zd\n", step);
-+		return false;
-+	}
-+
-+	/*
-+	 * Write FW data to "DATAX".
-+	 * "LSB is left" => force little endian
-+	 */
-+	err = pci_write_config_dword(pdev, data0_or_data1 ?
-+				     RENESAS_DATA1 : RENESAS_DATA0,
-+				     (__force u32)cpu_to_le32(fw[step]));
-+	if (err) {
-+		dev_err(&pdev->dev, "Write to DATAX failed: %d\n",
-+			pcibios_err_to_errno(err));
-+		return false;
-+	}
-+
-+	udelay(100);
-+
-+	/* Set "Set DATAX". */
-+	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-+				    BIT(data0_or_data1));
-+	if (err) {
-+		dev_err(&pdev->dev, "Write config for DATAX failed: %d\n",
-+			pcibios_err_to_errno(err));
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool renesas_setup_rom(struct pci_dev *pdev, const struct firmware *fw)
-+{
-+	const u32 *fw_data = (const u32 *)fw->data;
-+	int err, i;
-+	u8 status;
-+
-+	/* 2. Write magic word to Data0 */
-+	err = pci_write_config_dword(pdev, RENESAS_DATA0,
-+				     RENESAS_ROM_WRITE_MAGIC);
-+	if (err)
-+		return false;
-+
-+	/* 3. Set External ROM access */
-+	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS,
-+				    RENESAS_ROM_STATUS_ACCESS);
-+	if (err)
-+		goto remove_bypass;
-+
-+	/* 4. Check the result */
-+	err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS, &status);
-+	if (err)
-+		goto remove_bypass;
-+	status &= GENMASK(6, 4);
-+	if (status) {
-+		dev_err(&pdev->dev,
-+			"setting external rom failed: %x\n", status);
-+		goto remove_bypass;
-+	}
-+
-+	/* 5 to 16 Write FW to DATA0/1 while checking SetData0/1 */
-+	for (i = 0; i < fw->size / 4; i++) {
-+		err = renesas_download_rom(pdev, fw_data, i);
-+		if (!err) {
-+			dev_err(&pdev->dev,
-+				"ROM Download Step %d failed at position %d bytes\n",
-+				 i, i * 4);
-+			goto remove_bypass;
-+		}
-+	}
-+
-+	/*
-+	 * wait till DATA0/1 is cleared
-+	 */
-+	for (i = 0; i < RENESAS_RETRY; i++) {
-+		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-+					   &status);
-+		if (err)
-+			goto remove_bypass;
-+		if (!(status & (BIT(0) | BIT(1))))
-+			break;
-+
-+		udelay(RENESAS_DELAY);
-+	}
-+	if (i == RENESAS_RETRY) {
-+		dev_err(&pdev->dev, "Final Firmware ROM Download step timed out\n");
-+		goto remove_bypass;
-+	}
-+
-+	/* 17. Remove bypass */
-+	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS, 0);
-+	if (err)
-+		return false;
-+
-+	udelay(10);
-+
-+	/* 18. check result */
-+	for (i = 0; i < RENESAS_RETRY; i++) {
-+		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS, &status);
-+		if (err) {
-+			dev_err(&pdev->dev, "Read ROM status failed:%d\n",
-+				pcibios_err_to_errno(err));
-+			return false;
-+		}
-+		status &= RENESAS_ROM_STATUS_RESULT;
-+		if (status ==  RENESAS_ROM_STATUS_SUCCESS) {
-+			dev_dbg(&pdev->dev, "Download ROM success\n");
-+			break;
-+		}
-+		udelay(RENESAS_DELAY);
-+	}
-+	if (i == RENESAS_RETRY) { /* Timed out */
-+		dev_err(&pdev->dev,
-+			"Download to external ROM TO: %x\n", status);
-+		return false;
-+	}
-+
-+	dev_dbg(&pdev->dev, "Download to external ROM scuceeded\n");
-+
-+	/* Last step set Reload */
-+	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS,
-+				    RENESAS_ROM_STATUS_RELOAD);
-+	if (err) {
-+		dev_err(&pdev->dev, "Set ROM execute failed: %d\n",
-+			pcibios_err_to_errno(err));
-+		return false;
-+	}
-+
-+	/*
-+	 * wait till Reload is cleared
-+	 */
-+	for (i = 0; i < RENESAS_RETRY; i++) {
-+		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS, &status);
-+		if (err)
-+			return false;
-+		if (!(status & RENESAS_ROM_STATUS_RELOAD))
-+			break;
-+
-+		udelay(RENESAS_DELAY);
-+	}
-+	if (i == RENESAS_RETRY) {
-+		dev_err(&pdev->dev, "ROM Exec timed out: %x\n", status);
-+		return false;
-+	}
-+
-+	return true;
-+
-+remove_bypass:
-+	pci_write_config_byte(pdev, RENESAS_ROM_STATUS, 0);
-+	return false;
-+}
-+
- static void renesas_fw_callback(const struct firmware *fw,
- 				void *context)
- {
- 	struct renesas_fw_ctx *ctx = context;
- 	struct pci_dev *pdev = ctx->pdev;
- 	struct device *parent = pdev->dev.parent;
-+	bool rom;
- 	int err;
- 
- 	if (!fw) {
-@@ -650,12 +981,33 @@ static void renesas_fw_callback(const struct firmware *fw,
- 	if (err)
- 		goto cleanup;
- 
-+	/* Check if the device has external ROM */
-+	rom = renesas_check_rom(pdev);
-+	if (rom) {
-+		/* perfrom chip erase first */
-+		renesas_rom_erase(pdev);
-+
-+		/* lets try loading fw on ROM first */
-+		rom = renesas_setup_rom(pdev, fw);
-+		if (!rom) {
-+			dev_err(&pdev->dev,
-+				"ROM load failed, falling back on FW load\n");
-+		} else {
-+			dev_dbg(&pdev->dev, "ROM load done..\n");
-+
-+			release_firmware(fw);
-+			goto do_probe;
-+		}
-+	}
-+
- 	err = renesas_fw_download(pdev, fw);
- 	release_firmware(fw);
- 	if (err) {
- 		dev_err(&pdev->dev, "firmware failed to download (%d).", err);
- 		goto cleanup;
- 	}
-+
-+do_probe:
- 	if (ctx->resume)
- 		return;
- 
-@@ -757,6 +1109,11 @@ static int renesas_check_if_fw_dl_is_needed(struct pci_dev *pdev)
- 	    (pdev->revision == 0x02 || pdev->revision == 0x03)))))
- 		return 0;
- 
-+	/* Check if device has ROM and loaded, if so skip everything */
-+	err = renesas_check_rom_state(pdev);
-+	if (!err)
-+		return err;
-+
- 	/*
- 	 * Test if the firmware was uploaded and is running.
- 	 * As most BIOSes will initialize the device for us.
--- 
-2.20.1
+This is a great finding, thanks for the fix. I ever have modified codes
+to make them accommodate PMD level of randomization, this
+phys_p4d_init() part is included. Not sure why I missed it when later
+took PUD level randomization for 5-level.
 
+https://github.com/baoquan-he/linux/commit/dc91f5292bf1f55666c9139b6621d830b5b38aa5
+
+Have some concerns, please check.
+
+> [    0.000000] WARNING: CPU: 0 PID: 0 at arch/x86/mm/init_64.c:87 phys_p4d_init+0x1d4/0x1ea
+...... 
+> Kyle bisected the issue to commmit b569c1843498 ("x86/mm/KASLR: Reduce
+> randomization granularity for 5-level paging to 1GB")
+> 
+> The commit relaxes KASLR alignment requirements and it can lead to
+> mismatch bentween 'i' and 'p4d_index(vaddr)' inside the loop in
+           ^ between
+> phys_p4d_init(). The mismatch in its turn leads to clearing wrong p4d
+> entry and eventually to the oops.
+> 
+> The fix is to make phys_p4d_init() walk virtual address space, not
+> physical one.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-and-tested-by: Kyle Pelton <kyle.d.pelton@intel.com>
+> Fixes: b569c1843498 ("x86/mm/KASLR: Reduce randomization granularity for 5-level paging to 1GB")
+> Cc: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/x86/mm/init_64.c | 39 ++++++++++++++++-----------------------
+>  1 file changed, 16 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index 693aaf28d5fe..4628ac9105a2 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -671,41 +671,34 @@ static unsigned long __meminit
+>  phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+>  	      unsigned long page_size_mask, bool init)
+>  {
+> -	unsigned long paddr_next, paddr_last = paddr_end;
+> -	unsigned long vaddr = (unsigned long)__va(paddr);
+> -	int i = p4d_index(vaddr);
+> +	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;
+> +
+> +	paddr_last = paddr_end;
+> +	vaddr = (unsigned long)__va(paddr);
+> +	vaddr_end = (unsigned long)__va(paddr_end);
+> +	vaddr_start = vaddr;
+
+Variable vaddr_start is not used in this patch, redundent?
+
+>  
+>  	if (!pgtable_l5_enabled())
+>  		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
+>  				     page_size_mask, init);
+>  
+> -	for (; i < PTRS_PER_P4D; i++, paddr = paddr_next) {
+> -		p4d_t *p4d;
+> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
+> +		p4d_t *p4d = p4d_page + p4d_index(vaddr);
+>  		pud_t *pud;
+>  
+> -		vaddr = (unsigned long)__va(paddr);
+> -		p4d = p4d_page + p4d_index(vaddr);
+> -		paddr_next = (paddr & P4D_MASK) + P4D_SIZE;
+> +		vaddr_next = (vaddr & P4D_MASK) + P4D_SIZE;
+>  
+
+The code block as below is to zero p4d entries which are not coverred by
+the current memory range, and if haven't been mapped already. It's
+clearred away in this patch, could you also mention it in log, and tell
+why it doesn't matter now?
+
+If it doesn't matter, should we clear away the simillar code in
+phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
+clean up?
+
+Thanks
+Baoquan
+
+> -		if (paddr >= paddr_end) {
+> -			if (!after_bootmem &&
+> -			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
+> -					     E820_TYPE_RAM) &&
+> -			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
+> -					     E820_TYPE_RESERVED_KERN))
+> -				set_p4d_init(p4d, __p4d(0), init);
+> -			continue;
+> -		}
+> -
+> -		if (!p4d_none(*p4d)) {
+> -			pud = pud_offset(p4d, 0);
+> -			paddr_last = phys_pud_init(pud, paddr, paddr_end,
+> -						   page_size_mask, init);
+> +		if (p4d_val(*p4d)) {
+> +			pud = (pud_t *)p4d_page_vaddr(*p4d);
+> +			paddr_last = phys_pud_init(pud, __pa(vaddr),
+> +						   __pa(vaddr_end),
+> +						   page_size_mask,
+> +						   init);
+>  			continue;
+>  		}
+>  
+>  		pud = alloc_low_page();
+> -		paddr_last = phys_pud_init(pud, paddr, paddr_end,
+> +		paddr_last = phys_pud_init(pud, __pa(vaddr), __pa(vaddr_end),
+>  					   page_size_mask, init);
+>  
+>  		spin_lock(&init_mm.page_table_lock);
+> -- 
+> 2.21.0
+> 
