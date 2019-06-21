@@ -2,171 +2,145 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8FBC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1E0208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DF7208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="etN7QHE7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XK3OmDbi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="axloNVl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfFUK3D (ORCPT
+        id S1726587AbfFUKbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:29:03 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36765 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUK3D (ORCPT
+        Fri, 21 Jun 2019 06:31:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52876 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFUKbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:29:03 -0400
-Received: by mail-vs1-f67.google.com with SMTP id l20so3510107vsp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 03:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ENYQKCQSfeszZWYCN2yKfX/JBpyCK1CYVFLjD6oifQ0=;
-        b=etN7QHE7JyTa4lpmcwrjRdg6TnTrZT71qn5QpWXhPeGHVs5LbKB7on5lmX86ologtL
-         7XbiDc7JUkNc4+BQeGqzuFBGbVVr8ocD+vYfvpGft4Mc7w356kUy3V65LZHBdflyDdks
-         pBnwhTO5D9DEj5J/u+iqjckNNj7Rc97GntY5i1S4zc6On50LZARTYCXQk/LRR36V2BlE
-         SMgPRFHAm5TPfEKUQGV8T+s/54ZNmcHw0scr7/QgnsXjtHxX88yXLRu4TMT87r/wBFOJ
-         mvAG7S8pio6EeqFl3vC68qkeAUBhNY/8eY1lWfcVTJ2jGeTtOnlK9TON7Lasld8xB/6K
-         HjEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ENYQKCQSfeszZWYCN2yKfX/JBpyCK1CYVFLjD6oifQ0=;
-        b=MTo0jWd0K2so135Zs30KarEVFex3/wGvrqew0zlJC6ORSBLUfr7SU6673GrKcvKnzk
-         1RcSmBekRFOLseZLtKWeoKFdKShyEqboDDv2mWC3Sqzq3yNPlhb/s6crX1ogXeahrUYp
-         e//rUGmkKUjsB7iL8iDR25JcXfMFy0C8wyOyeZTfEYYbAS7wSdf4uZGlNf62ABuSXrrd
-         opqaIUb48I384UhtsAGqJqjws00YdR5lOX6X5OFtD3+xnWSoGaKWC2QD1x5Bley86g1w
-         +K3tgQF64kKyeFORn0SygqGywD5goxVyialJS5IuLG0K1KfcwI7QWHRl+M9dnFtncYFE
-         iLWw==
-X-Gm-Message-State: APjAAAVXzfn/WlaJPot5NWD14J3xzZQ1D6z9HdPxPY2NPUWOqQqtcUS1
-        Mwbw9LZQOIeUr2/MCVXe+9NJr3fPIQNCAC5TWnAyoQ==
-X-Google-Smtp-Source: APXvYqyXXbRJwvoUm1/ZU9MgYql7iUjK+l3n4H+mOYUP5gGfjYQ9PO1P5xFbBOShDCcwOuvRyoqJmEPbMxH/uNId6ZQ=
-X-Received: by 2002:a67:7346:: with SMTP id o67mr50970360vsc.92.1561112942493;
- Fri, 21 Jun 2019 03:29:02 -0700 (PDT)
+        Fri, 21 Jun 2019 06:31:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6E9C161706; Fri, 21 Jun 2019 10:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561113093;
+        bh=83saP5agyCLRXJFITOAnGb07C5NHBmkBg6UjpUVttgY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XK3OmDbiGqcrSHWfrgYDgdZeDeTuKusvrdvOqek9PdlK9A+QPGfIW/dfyqG1zeWol
+         6+/dwqOnMXgnLcJUwInGC4TOKQI1qUS/kUvbq0q7YHinqrBkWphjckGyXJPzPs3J1Q
+         GsE6SQzsXDJFTq0cQWyfYE0wBBAnDgGaF5hmQT0c=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17BFC60A97;
+        Fri, 21 Jun 2019 10:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561113091;
+        bh=83saP5agyCLRXJFITOAnGb07C5NHBmkBg6UjpUVttgY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=axloNVl89+yy34mWOOy+ow2feDwzdwCo3bq5O8XkPeD0V00sUYEE7FdmvD27I7bKy
+         GrWorYJktFH3kn4yPv4yaKpZPt4GJ/pqGJu8ZKIiqbJQ3t8Hsc7Tm6Y2ZLR2vUGyxR
+         1GJ+wioETU4/lFl9rSksdTUGen1YpAYl49oBLyto=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17BFC60A97
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv2 2/2] coresight: Abort probe if cpus are not available
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+ <65050e4cb2b0433f3cb9b1ca0bf6ec49d0751086.1561054498.git.saiprakash.ranjan@codeaurora.org>
+ <d6e6a32e-4e15-5bc8-42f9-6cfe72fc0910@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <01e1758f-7574-7735-f129-f072f93aeca6@codeaurora.org>
+Date:   Fri, 21 Jun 2019 16:01:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
- <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com>
- <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com> <CAARK3H=O=h1VDgOMxs_0ThcisrH=2tzpW5pQqt0O9oYs=MFFVw@mail.gmail.com>
- <93b9c5fd-8f59-96d7-5e40-2b9d540965dd@ti.com>
-In-Reply-To: <93b9c5fd-8f59-96d7-5e40-2b9d540965dd@ti.com>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Fri, 21 Jun 2019 15:58:50 +0530
-Message-ID: <CAARK3H=CmxSG2srUaoxN1HF6W7CVKtpATrf89n6kuht2Paqp8A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] mtd: spi-nor: add support for is25wp256
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d6e6a32e-4e15-5bc8-42f9-6cfe72fc0910@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vignesh,
+Hi Suzuki,
 
-On Fri, Jun 21, 2019 at 11:33 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
->
-> Hi,
->
-> On 17/06/19 8:48 PM, Sagar Kadam wrote:
-> > Hello Vignesh,
-> >
-> > Thanks for your review comments.
-> >
-> > On Sun, Jun 16, 2019 at 6:14 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
-> >> [...]
-> >>
-> >>> @@ -4129,7 +4137,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
-> >>>       if (ret)
-> >>>               return ret;
-> >>>
-> >>> -     if (nor->addr_width) {
-> >>> +     if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
-> >>>               /* already configured from SFDP */
-> >>
-> >> Hmm, why would you want to ignore addr_width that's read from SFDP table?
-> >
-> > The SFDP table for ISSI device considered here, has addr_width set to
-> > 3 byte, and the flash considered
-> > here is 32MB. With 3 byte address width we won't be able to access
-> > flash memories higher address range.
->
-> Is it specific to a particular ISSI part as indicated here[1]? If so,
-> please submit solution agreed there i.e. use spi_nor_fixups callback
->
-> [1]https://patchwork.ozlabs.org/patch/1056049/
->
-
-Thanks for sharing the link.
-From what I understand here, it seems that "Address Bytes" of SFDP
-table for the device under
-consideration (is25lp256) supports 3 byte only Addressing mode
-(DWORD1[18:17] = 0b00.
-where as that of ISSI device (is25LP/WP 256Mb/512/Mb/1Gb) support 3 or
-4 byte Addressing mode DWORD1[18:17] = 0b01.
-
-> > Hence I have ignored the addr width from SFDP.  I have verified that
-> > with 3 byte address width, the
-> > flascp util fails while verifying the written data.  Please let me
-> > know your views on this?
-> >
-> If this affects multiple ISSI parts then:
-> Instead of checking for mfr code, look for SNOR_F_4B_OPCODES flag in
-> flash_info struct of the device and let it take precedence over SFDP in
-> case size is over 16MB
+On 6/21/2019 3:10 PM, Suzuki K Poulose wrote:
+> On 06/20/2019 07:31 PM, Sai Prakash Ranjan wrote:
+>> Currently coresight etm and cpu-debug will go ahead with
+>> the probe even when corresponding cpus are not available
+>> and error out later in the probe path. In such cases, it
+>> is better to abort the probe earlier.
+>>
+>> Without this, setting *nosmp* will throw below errors:
+>>
+>>   [    5.910622] coresight-cpu-debug 850000.debug: Coresight 
+>> debug-CPU0 initialized
+>>   [    5.914266] coresight-cpu-debug 852000.debug: CPU1 debug arch 
+>> init failed
+>>   [    5.921474] coresight-cpu-debug 854000.debug: CPU2 debug arch 
+>> init failed
+>>   [    5.928328] coresight-cpu-debug 856000.debug: CPU3 debug arch 
+>> init failed
+>>   [    5.935330] coresight etm0: CPU0: ETM v4.0 initialized
+>>   [    5.941875] coresight-etm4x 85d000.etm: ETM arch init failed
+>>   [    5.946794] coresight-etm4x: probe of 85d000.etm failed with 
+>> error -22
+>>   [    5.952707] coresight-etm4x 85e000.etm: ETM arch init failed
+>>   [    5.958945] coresight-etm4x: probe of 85e000.etm failed with 
+>> error -22
+>>   [    5.964853] coresight-etm4x 85f000.etm: ETM arch init failed
+>>   [    5.971096] coresight-etm4x: probe of 85f000.etm failed with 
+>> error -22
+> 
+> That is expected. What else do you expect ?
+> 
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-platform.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
+>> b/drivers/hwtracing/coresight/coresight-platform.c
+>> index 8b03fa573684..3f4559596c6b 100644
+>> --- a/drivers/hwtracing/coresight/coresight-platform.c
+>> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+>> @@ -168,6 +168,9 @@ static int of_coresight_get_cpu(struct device *dev)
+>>       cpu = of_cpu_node_to_id(dn);
+>>       of_node_put(dn);
+>> +    if (num_online_cpus() <= cpu)
+>> +        return -ENODEV;
+> 
+> That is a pointless and terribly wrong check. What if you have only 2
+> online CPUs (CPU0 and CPU4) and you were processing the ETM for CPU4 ?
 >
 
-So as per your suggestion I think second approach is a better one.
-I will send this in V6.
+Sorry, I did not consider such cases.
 
-Thanks & Regards,
-Sagar
+> More over you should simply let the driver handle a case where the CPU
+> is not online. May be the driver could register a hotplug notifier and
+> bring itself up when the CPU comes online.
+> 
+> So, please drop this patch.
+> 
 
-> Regards
-> Vignesh
->
-> > BR,
-> > Sagar Kadam
-> >
-> >> Regards
-> >> Vignesh
-> >>
-> >>
-> >>>       } else if (info->addr_width) {
-> >>>               nor->addr_width = info->addr_width;
-> >>> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> >>> index b3d360b..ff13297 100644
-> >>> --- a/include/linux/mtd/spi-nor.h
-> >>> +++ b/include/linux/mtd/spi-nor.h
-> >>> @@ -19,6 +19,7 @@
-> >>>  #define SNOR_MFR_ATMEL               CFI_MFR_ATMEL
-> >>>  #define SNOR_MFR_GIGADEVICE  0xc8
-> >>>  #define SNOR_MFR_INTEL               CFI_MFR_INTEL
-> >>> +#define SNOR_MFR_ISSI                0x9d            /* ISSI */
-> >>>  #define SNOR_MFR_ST          CFI_MFR_ST      /* ST Micro */
-> >>>  #define SNOR_MFR_MICRON              CFI_MFR_MICRON  /* Micron */
-> >>>  #define SNOR_MFR_MACRONIX    CFI_MFR_MACRONIX
-> >>>
->
-> --
-> Regards
-> Vignesh
+Sure I will drop this patch.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
