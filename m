@@ -2,70 +2,117 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F64C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8568BC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F68821670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561137925;
-	bh=s+pFhknUCfoRccMKXYWMYBVOti38vfdBqntEia1U7gE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bP2Y+et0H/phx7nVtOiDIxzyG2X4vF7dDm8ua6vt0JKahRSobjFqGoq1jmRG2Pohi
-	 g6cvkLH5l5fl3Zk8uPK52+m1cnktdQvIuxG9/VwYQX0hrw7HqBBoU5AKYqIOzl06T8
-	 qrUmbIE5F7zjdslmOw+48fsmPf+crPRITQBWcwoI=
+	by mail.kernel.org (Postfix) with ESMTP id 5ED1C20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfFURZX (ORCPT
+        id S1726130AbfFUR1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfFURZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:25:08 -0400
-Subject: Re: [GIT PULL] Staging/IIO driver fixes for 5.2-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561137907;
-        bh=s+pFhknUCfoRccMKXYWMYBVOti38vfdBqntEia1U7gE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KAdXqD1lNQwPI50WWj0X1tnBTXb+ET7eJsoxyuoX6zJYF0yTTA+YvxFaulJurevbw
-         L1Ry1N6FzI/AeBMKWWG98YMaegghv81Q8k/sJbxdXghEfPbeFTZK7zBb/xmOHuQ2H6
-         +1KiE4l5ve/9NT0pRZw3B/4w7rppDOA02AH7fvF0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190621081102.GA28012@kroah.com>
-References: <20190621081102.GA28012@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190621081102.GA28012@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
- tags/staging-5.2-rc6
-X-PR-Tracked-Commit-Id: 9b9410766f5422d1e736783dc0c3a053eefedac4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: db54615e21419c3cb4d699a0b0aa16cc44d0e9da
-Message-Id: <156113790757.2072.6597337081141849182.pr-tracker-bot@kernel.org>
-Date:   Fri, 21 Jun 2019 17:25:07 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+        Fri, 21 Jun 2019 13:27:47 -0400
+Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:50306 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726032AbfFUR1q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:27:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 3F510100E806B;
+        Fri, 21 Jun 2019 17:27:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cream64_93b04b7d1048
+X-Filterd-Recvd-Size: 3436
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Jun 2019 17:27:43 +0000 (UTC)
+Message-ID: <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
+Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
+ definitions instead of private duplicates
+From:   Joe Perches <joe@perches.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux PCI <linux-pci@vger.kernel.org>
+Date:   Fri, 21 Jun 2019 10:27:41 -0700
+In-Reply-To: <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
+References: <20190621163921.26188-1-puranjay12@gmail.com>
+         <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 21 Jun 2019 10:11:02 +0200:
+(adding the atlx maintainers to cc)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.2-rc6
+On Fri, 2019-06-21 at 12:11 -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 21, 2019 at 11:39 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
+> > This patch series removes the private duplicates of PCI definitions in
+> > favour of generic definitions defined in pci_regs.h.
+> > 
+> > Puranjay Mohan (3):
+> >   net: ethernet: atheros: atlx: Rename local PCI defines to generic
+> >     names
+> >   net: ethernet: atheros: atlx: Include generic PCI definitions
+> >   net: ethernet: atheros: atlx: Remove unused and private PCI
+> >     definitions
+> > 
+> >  drivers/net/ethernet/atheros/atlx/atl2.c | 5 +++--
+> >  drivers/net/ethernet/atheros/atlx/atl2.h | 2 --
+> >  drivers/net/ethernet/atheros/atlx/atlx.h | 1 -
+> >  3 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> Let's slow this down a little bit; I'm afraid we're going to overwhelm folks.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/db54615e21419c3cb4d699a0b0aa16cc44d0e9da
+I generally disagree.
 
-Thank you!
+Consolidation of these sorts of changes are generally
+better done treewide all at once, posted as a series to
+a list and maintainers allowing time (weeks to months)
+for the specific maintainers to accept them and then
+whatever remainder exists reposted and possibly applied
+by an overall maintainer (e.g.: Dave M)
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> Before posting more to LKML/netdev, how about we first complete a
+> sweep of all the drivers to see what we're getting into.  It could be
+> that this will end up being more churn than it's worth.
+
+Also doubtful.
+
+Subsystem specific local PCI #defines without generic
+naming is poor style and makes treewide grep and
+refactoring much more difficult.
+
+The atlx maintainers should definitely have been cc'd
+on these patches.
+
+Jay Cliburn <jcliburn@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
+Chris Snook <chris.snook@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
+
+Puranjay, can you please do a few things more here:
+
+1: Make sure you use scripts/get_maintainer.pl to cc the
+   appropriate people.
+
+2: Show that you compiled the object files and verified
+   where possible that there are no object file changes.
+
+3: State that there are no object changes in the proposed
+   commit log.
+
+thanks.
+
