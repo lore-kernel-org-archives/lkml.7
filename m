@@ -2,151 +2,126 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F0C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C8AC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563A120679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D2720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PC43vDQr"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gYgr6uvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfFUO4G (ORCPT
+        id S1726409AbfFUO4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:56:06 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38292 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfFUO4F (ORCPT
+        Fri, 21 Jun 2019 10:56:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36217 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFUO4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:56:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n11so7201905qtl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:56:05 -0700 (PDT)
+        Fri, 21 Jun 2019 10:56:10 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g18so4642845qkl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:56:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R6wGdifeYAUiKIP0GGBLBBUmTIFn7pweCX0GnLETICU=;
-        b=PC43vDQr0y9Pg1xdmHWeVytAX0ixGDJ2KVFtpgNjVmhFcr7lbZ/t7arGdgSs8On4Ak
-         ohXY78wNEgZSyIcjb+KONvqeB3pqoKuDYW70mISNbDqa7lpE5pU4K3quOAsgO49Qywyv
-         /Y+V1Au4AV7aqfEcLunnS5+kC4RjT1K+J/HNYLYNNNJ8knZASPBiDA5dSKl8/ubBkWfK
-         CFCv6jpPDFaO7GdHIugMNa56NIMAf3wAjJhG3o9RBtaIwCLOxPpbHEQdK38zIy8t5lJt
-         FK2vkXbIVTeXWMsQRMZB8VpadI3wrbanvwNdt65Chd6QoQlwOxyYaeUkJPH+6sSYCqmP
-         KZxA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y2jSEi8sxGbtd9XqToa9O5z6ODlBTruzPgaOmq/wTns=;
+        b=gYgr6uvq3e99g5z1DITZTTDDikIDoeGMeREh38wawLs+nFJeAz5Xqj77bM3E910xFY
+         +ZAljwkmUjsGIH1/zKjIY5Kt5vwDNvzTLF+OcYMgBOPGNGMmofaJuh9npl22zdMgU63z
+         3VlBAKlSAzMm5bCEcaus7JH8AgTRPo9UiWQCTdh/hVUITLZsbCXOTUiA+KSsvcKnLeyw
+         XWPY1KH2xf6Q/jSvqhmfHPlR+HqqngalxnndIi1832DfEBUWObiL0psTtreV3quiOdlH
+         ds245fuvJ0nzAOKfIhEQfnP9gyLRKZbx2fRQhzQ61g+3/XorYHntg8sYaq9p6YCu+GZx
+         oO9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R6wGdifeYAUiKIP0GGBLBBUmTIFn7pweCX0GnLETICU=;
-        b=aI47+SsvyvVODTcIQOV/J8PwF+J5i6E/JSJIPT82WeKwJz58lN5GLyVex+4ULCvCQX
-         b3fZXuyQeCmJL2NnjUQUnmIYZmAvbbl0FCpdS3rZLCXHSnO+TPIKtuRAn+S46d0pCFNr
-         Om95uklMVa9s4TYJoajO3rEUkjFsI2YFhQdZQipOAJYpHUwbUMtXBn8KpZxYuqlLq/8v
-         ZT2br5wuiGPMTUYSTTbvSjZOTncwlQ4z0eWf+m3uHue85IttBSyywXqKZx4ow1LgzoPt
-         ynC9qeViHZ0kO4lFhN5wCkVsWT9WO+fwjrnbrak8kgaklyaJ899T/KzXheBc+hDQkuwb
-         nZ/A==
-X-Gm-Message-State: APjAAAXDBBqqN0Vq62KxbLZqy6650CFd24ILQtAlYhj7Tja6kxvkyZ+A
-        B/kEfJfR0qfKJikgujfk0OBWRA==
-X-Google-Smtp-Source: APXvYqyAbsm7eaRgX9kud1TQA1Yyk/iFLRylWhqYxFe6R8hA4ojV40v1zXQ0PAw31WmaCEsLhCsTyg==
-X-Received: by 2002:ac8:7349:: with SMTP id q9mr113636418qtp.151.1561128964914;
-        Fri, 21 Jun 2019 07:56:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id y29sm1546916qkj.8.2019.06.21.07.56.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 07:56:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1heKxQ-00014G-1d; Fri, 21 Jun 2019 11:56:04 -0300
-Date:   Fri, 21 Jun 2019 11:56:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dag Moxnes <dag.moxnes@oracle.com>
-Cc:     dledford@redhat.com, leon@kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Parav Pandit <parav@mellanox.com>
-Subject: Re: [PATCH] RDMA/core: Fix race when resolving IP address
-Message-ID: <20190621145604.GS19891@ziepe.ca>
-References: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y2jSEi8sxGbtd9XqToa9O5z6ODlBTruzPgaOmq/wTns=;
+        b=QmHzN8bozqIkuVISpN2tDuyiaCsmix5rbDMTVDlvTiR/2a8ygrIwU3j+xF0YacDiwz
+         7NrqPjw+EtrjU/kJ/u7oH+RNK/KeUvR4rP2ns69majW1MrLrPnk/IphS8s0vIyP2SnJv
+         GOnt7gIBU2PDKNgm7/Q0TVJvj/4EigD4MX8UiJGLvokQIvwIwYm+TwNGKRfgRyqYQceG
+         vT6+lE8Y/ha67MsBonp5/wYeueLCIyuSTNZfA2gfh5glfZihS4H6aucvM+Vmp2hlfkkD
+         sQUxcn2SOVRsIzQIm8w08w4A+svJXOAR60VDJZrJcCaKK+7MSCo8w1B6kGaGPAPuDXUn
+         lukw==
+X-Gm-Message-State: APjAAAXYO8MDjf1tfHdIX57xaiGDdbZvv5L9KMEKYs4VDVmCXwrY4hEd
+        HdX3On3ufyQQ0Ucvr39zjKQtRQ==
+X-Google-Smtp-Source: APXvYqwdtqGL7/0XnZ/6BRHrf7rNtb/EZiHjW12ga0UDVJnzJXCNm+v/P4zmsKvDmcfrhdhHGLYA1Q==
+X-Received: by 2002:a37:680e:: with SMTP id d14mr15417323qkc.287.1561128969542;
+        Fri, 21 Jun 2019 07:56:09 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g54sm2143489qtc.61.2019.06.21.07.56.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 07:56:08 -0700 (PDT)
+Message-ID: <1561128967.5154.45.camel@lca.pw>
+Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
+From:   Qian Cai <cai@lca.pw>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 21 Jun 2019 10:56:07 -0400
+In-Reply-To: <CAG_fn=WGdFZNrUCeMtbx4wbHhxWqM2s7Vq_GvnMC-9WJZ_mioQ@mail.gmail.com>
+References: <1561063566-16335-1-git-send-email-cai@lca.pw>
+         <201906201801.9CFC9225@keescook>
+         <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
+         <1561119983.5154.33.camel@lca.pw>
+         <CAG_fn=WGdFZNrUCeMtbx4wbHhxWqM2s7Vq_GvnMC-9WJZ_mioQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 04:09:16PM +0200, Dag Moxnes wrote:
-> Use neighbour lock when copying MAC address from neighbour data struct
-> in dst_fetch_ha.
+On Fri, 2019-06-21 at 16:37 +0200, Alexander Potapenko wrote:
+> On Fri, Jun 21, 2019 at 2:26 PM Qian Cai <cai@lca.pw> wrote:
+> > 
+> > On Fri, 2019-06-21 at 12:39 +0200, Alexander Potapenko wrote:
+> > > On Fri, Jun 21, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote:
+> > > > 
+> > > > On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
+> > > > > The linux-next commit "mm: security: introduce init_on_alloc=1 and
+> > > > > init_on_free=1 boot options" [1] introduced a false positive when
+> > > > > init_on_free=1 and page_poison=on, due to the page_poison expects the
+> > > > > pattern 0xaa when allocating pages which were overwritten by
+> > > > > init_on_free=1 with 0.
+> > > > > 
+> > > > > Fix it by switching the order between kernel_init_free_pages() and
+> > > > > kernel_poison_pages() in free_pages_prepare().
+> > > > 
+> > > > Cool; this seems like the right approach. Alexander, what do you think?
+> > > 
+> > > Can using init_on_free together with page_poison bring any value at all?
+> > > Isn't it better to decide at boot time which of the two features we're
+> > > going to enable?
+> > 
+> > I think the typical use case is people are using init_on_free=1, and then
+> > decide
+> > to debug something by enabling page_poison=on. Definitely, don't want
+> > init_on_free=1 to disable page_poison as the later has additional checking
+> > in
+> > the allocation time to make sure that poison pattern set in the free time is
+> > still there.
 > 
-> When not using the lock, it is possible for the function to race with
-> neigh_update, causing it to copy an invalid MAC address.
+> In addition to information lifetime reduction the idea of init_on_free
+> is to ensure the newly allocated objects have predictable contents.
+> Therefore it's handy (although not strictly necessary) to keep them
+> zero-initialized regardless of other boot-time flags.
+> Right now free_pages_prezeroed() relies on that, though this can be changed.
 > 
-> It is possible to provoke this error by calling rdma_resolve_addr in a
-> tight loop, while deleting the corresponding ARP entry in another tight
-> loop.
+> On the other hand, since page_poison already initializes freed memory,
+> we can probably make want_init_on_free() return false in that case to
+> avoid extra initialization.
 > 
-> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-> Change-Id: I3c5f982b304457f0a83ea7def2fac70315ed38b4
->  drivers/infiniband/core/addr.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-> index 2f7d141598..e4945fd1bb 100644
-> +++ b/drivers/infiniband/core/addr.c
-> @@ -333,12 +333,16 @@ static int dst_fetch_ha(const struct dst_entry *dst,
->  	if (!n)
->  		return -ENODATA;
->  
-> +	read_lock_bh(&n->lock)
->  	if (!(n->nud_state & NUD_VALID)) {
-> -		neigh_event_send(n, NULL);
->  		ret = -ENODATA;
->  	} else {
->  		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
->  	}
-> +	read_unlock_bh(&n->lock);
-> +
-> +	if (ret)
-> +		neigh_event_send(n, NULL);
->  
->  	neigh_release(n);
+> Side note: if we make it possible to switch betwen 0x00 and 0xAA in
+> init_on_free mode, we can merge it with page_poison, performing the
+> initialization depending on a boot-time flag and doing heavyweight
+> checks under a separate config.
 
-Can we write this with less spaghetti please, maybe:
-
-static int dst_fetch_ha(const struct dst_entry *dst,
-			struct rdma_dev_addr *dev_addr,
-			const void *daddr)
-{
-	struct neighbour *n;
-	int ret = 0;
-
-	n = dst_neigh_lookup(dst, daddr);
-	if (!n)
-		return -ENODATA;
-
-	read_lock_bh(&n->lock);
-	if (!(n->nud_state & NUD_VALID)) {
-		read_unlock_bh(&n->lock);
-		goto out_send;
-	}
-	memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-	read_unlock_bh(&n->lock);
-
-	goto out_release;
-
-out_send:
-	neigh_event_send(n, NULL);
-	ret = -ENODATA;
-out_release:
-	neigh_release(n);
-
-	return ret;
-}
-
-Also, Parav should look at it.
-
-Thanks,
-Jason
+Yes, that would be great which will reduce code duplication.
