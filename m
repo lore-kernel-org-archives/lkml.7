@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860B9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B78C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A162084A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6885F2084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwxX56tG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pg7CAs8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfFUBUr (ORCPT
+        id S1725921AbfFUBUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:20:47 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:38080 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfFUBUg (ORCPT
+        Thu, 20 Jun 2019 21:20:51 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:51257 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfFUBUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:20:36 -0400
-Received: by mail-vs1-f73.google.com with SMTP id k10so1582805vso.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:35 -0700 (PDT)
+        Thu, 20 Jun 2019 21:20:41 -0400
+Received: by mail-pg1-f201.google.com with SMTP id i35so1795118pgi.18
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=U3fhGq6r/NgiqaQQyES6rVTVBeVN4SZv/SOjn2ijb/0=;
-        b=mwxX56tGc5bdcrdp7LPWQyAEQAkbcg1Xa55uNakzWLnArZGhBBM8/YfLo+cMRh8DtX
-         vrRS8xRv6wDsAXxkkRDUDDVNLABwTIvD4/R8eu1g/4B6DSNeabRlbKD5wdkCofA6OqW5
-         o7rwM1e2Ldf/n4PStpf+Oap3yTX6pey52rRx0bREIBZQlH0Ww2HvIWgFDLUON8aYKoFf
-         cammmjj5lURN9Kg8tm6kUiGfHzhJos5AkiV7C8gf92EvHRMDyBjJSyrQ5ou0+kiCOfIx
-         k2fZHvDVdKvEIx5adFMh/J1O/CMWdgiKHgmxhucHEyq/Iu4snxTqdhosWJ74AdacIcvV
-         TaTQ==
+        bh=C2HEat8ChWdY0hmQrNdX6y9AIaltC2qHKe9IgXVBgg0=;
+        b=Pg7CAs8Y51TZZLF1Lrf1EzgZZxAIfmpAgkg435aK19YQWb2C1HEcQS/IA5NONe5F1y
+         Ob+ZzvlKygwjW5U9HoeoPUvj+ZQTVz4KTWE9brl/hTU7bpg2WRFHbtsL3RFZHXcCCD44
+         Umo5dJEwJPaaGUejehg1qSwqxZx6iu83RfpN/QMRxgiIpStb3VimfRc3/SsvvajRR8lK
+         dWBlC/n58vr22GR9zDV7ockIGy/PDlXgyh+QAD4lrJlM6xPfisbmyM/PzywgA6/w2EGW
+         mQCqo4qAZHk6V9TOc/zjjk76CPbO5M0+OPZ046QVHhSKHw8iNbWNlA3MGsO8M+7TgyDU
+         Xmog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=U3fhGq6r/NgiqaQQyES6rVTVBeVN4SZv/SOjn2ijb/0=;
-        b=Eo3qCweSVBxi1hdutP2o+8f6b5hJ9L6JvpIqEBF05I6yN7YzJx+SFvYjtZL/GF4h4l
-         v61Rw8j9PAV0uJXMWmIO+rqLVHiWR1Qf7XSe+YDEAURGUdiHXia4t4A7cWI0K9fMncdh
-         /MXgUjhSLGEiD0WD4nC1cbJB1HCwYoe675jSg520F9pLggKdMFHItc/ZLbfuyyM3Xt3G
-         AdnLF+4SftQrlEsaNDRkeA2ZgbIw3PUOieM94crmdplo08jlNQCl+vVAKDiCxv+cBEmA
-         kkH7pPFXrKNJmtZM5GzU7l+r6iCzO/F1/OmlCmYwPzqEJs4Ub2QC/tUeToenKAE4rsGR
-         K5mg==
-X-Gm-Message-State: APjAAAVLhnmJqvuyNSzN2D+dxcxbVHKxYWeNqOXJCkLu1Vj48LVDEbhr
-        w07F7XlQ/XROeb7lgXjPgKlKNVoKGaeAF70Jovd3fA==
-X-Google-Smtp-Source: APXvYqzWE4EamSp5rpUPDi/0xpqKPoKydoH9Fwzwh6qKoNDL8d4i9gk8ozCNMFrubgA0TD2wFtuqZJkJZxR32Trr6G5AHw==
-X-Received: by 2002:ab0:2994:: with SMTP id u20mr5795117uap.114.1561080035406;
- Thu, 20 Jun 2019 18:20:35 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:19:30 -0700
+        bh=C2HEat8ChWdY0hmQrNdX6y9AIaltC2qHKe9IgXVBgg0=;
+        b=OwIAt9liho/lw7uf9l8Zogo8m5p50/Jlc1FemiDSAX3TNCVqiZbkwJ/RsCwACD2yx3
+         rrD9sHJCuLQzvCk1rwEET1eyJLWPy6o4zOU0Zk/OBbhR+t5ZyiDNXgQAoh8C0jGjP53J
+         7VZSQrXgs7BuyRjfVtPPzzJOCMNdiMKWgHgjklJG9s/Iv8vYa/Ux/tkMIVhM6yoLhcBp
+         zhHetmrU12d3EvSzM038AczBgcT94UGwIb8oIXfh4HiYIp4x9NZUGCnBl2+ExAiYUIsG
+         MwAtUZrg+g7W5OcvJiGgrs8D6yzCQZZ1J60Rl5rfPLXXQgLpfrs/AIGDKwXyg49iqWYm
+         NbbQ==
+X-Gm-Message-State: APjAAAXY1t36ZH0J8duzRLNAFwoh95OGuij+RQSu+OTfLclPkWjBQZ2g
+        pSXFhykmOq6F6yoxgVrTEu8eIe7PJS8gYvuAplMiNQ==
+X-Google-Smtp-Source: APXvYqxyataIkh+ap8K2JvEB/ca0/aiWCzaTig0BuKoGz7gKugC7XCne7U3GNnARDTq/vXeaug9TpJl6DuP0wXxCYU2v3Q==
+X-Received: by 2002:a63:5a02:: with SMTP id o2mr14951958pgb.93.1561080040579;
+ Thu, 20 Jun 2019 18:20:40 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:19:32 -0700
 In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
-Message-Id: <20190621011941.186255-20-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-22-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190621011941.186255-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V33 19/30] Lock down TIOCSSERIAL
+Subject: [PATCH V33 21/30] x86/mmiotrace: Lock down the testmmiotrace module
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Matthew Garrett <mjg59@google.com>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -74,68 +76,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Lock down TIOCSSERIAL as that can be used to change the ioport and irq
-settings on a serial port.  This only appears to be an issue for the serial
-drivers that use the core serial code.  All other drivers seem to either
-ignore attempts to change port/irq or give an error.
+The testmmiotrace module shouldn't be permitted when the kernel is locked
+down as it can be used to arbitrarily read and write MMIO space. This is
+a runtime check rather than buildtime in order to allow configurations
+where the same kernel may be run in both locked down or permissive modes
+depending on local policy.
 
-Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: David Howells <dhowells@redhat.com
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
+cc: Thomas Gleixner <tglx@linutronix.de>
+cc: Steven Rostedt <rostedt@goodmis.org>
+cc: Ingo Molnar <mingo@kernel.org>
+cc: "H. Peter Anvin" <hpa@zytor.com>
+cc: x86@kernel.org
 ---
- drivers/tty/serial/serial_core.c | 7 +++++++
- include/linux/security.h         | 1 +
- security/lockdown/lockdown.c     | 1 +
- 3 files changed, 9 insertions(+)
+ arch/x86/mm/testmmiotrace.c  | 3 +++
+ include/linux/security.h     | 1 +
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 351843f847c0..2dbef7dc23f6 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -22,6 +22,7 @@
- #include <linux/serial_core.h>
- #include <linux/delay.h>
- #include <linux/mutex.h>
-+#include <linux/security.h>
+diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
+index f6ae6830b341..a6b204f9f505 100644
+--- a/arch/x86/mm/testmmiotrace.c
++++ b/arch/x86/mm/testmmiotrace.c
+@@ -115,6 +115,9 @@ static int __init init(void)
+ {
+ 	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
  
- #include <linux/irq.h>
- #include <linux/uaccess.h>
-@@ -852,6 +853,12 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
- 	new_flags = (__force upf_t)new_info->flags;
- 	old_custom_divisor = uport->custom_divisor;
- 
-+	if ((change_port || change_irq) &&
-+	    security_is_locked_down(LOCKDOWN_TIOCSSERIAL)) {
-+		retval = -EPERM;
-+		goto exit;
-+	}
++	if (security_is_locked_down(LOCKDOWN_MMIOTRACE))
++		return -EPERM;
 +
- 	if (!capable(CAP_SYS_ADMIN)) {
- 		retval = -EPERM;
- 		if (change_irq || change_port ||
+ 	if (mmio_address == 0) {
+ 		pr_err("you have to use the module argument mmio_address.\n");
+ 		pr_err("DO NOT LOAD THIS MODULE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!\n");
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 87c433f1e7db..cb5d74f9b9ff 100644
+index 47ca04ac00f6..89b7adfae525 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -91,6 +91,7 @@ enum lockdown_reason {
- 	LOCKDOWN_MSR,
- 	LOCKDOWN_ACPI_TABLES,
+@@ -93,6 +93,7 @@ enum lockdown_reason {
  	LOCKDOWN_PCMCIA_CIS,
-+	LOCKDOWN_TIOCSSERIAL,
+ 	LOCKDOWN_TIOCSSERIAL,
+ 	LOCKDOWN_MODULE_PARAMETERS,
++	LOCKDOWN_MMIOTRACE,
  	LOCKDOWN_INTEGRITY_MAX,
  	LOCKDOWN_CONFIDENTIALITY_MAX,
  };
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index ced4ddbb36b4..c6456f300220 100644
+index 0788d4805449..215615e67237 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -27,6 +27,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_MSR] = "raw MSR access",
- 	[LOCKDOWN_ACPI_TABLES] = "modified ACPI tables",
+@@ -29,6 +29,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
  	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
-+	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+ 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+ 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
++	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
  };
