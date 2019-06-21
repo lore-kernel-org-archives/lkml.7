@@ -2,592 +2,291 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5F4C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A935DC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A015D206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782E7215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FxxUhfdM"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NEhtyANm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfFUPPO (ORCPT
+        id S1726448AbfFUPPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:15:14 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43700 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfFUPPN (ORCPT
+        Fri, 21 Jun 2019 11:15:25 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37815 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUPPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:15:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xxRtkouLQOkjbSb2xQ/D7ZWITwU59jLSNRvzRcqT9bk=; b=FxxUhfdM/DtOAZTabH4qWJ6mQ
-        EReqHrL+GxlNTIgZD4JEhmWW0iH/QXpqI+Up//zh9QZyLrgmjnP6mu2AfJqOGRNynOebpF+M4dRTC
-        +w3WB3LsinjSw7tW9/Mj4yMQVG854K+CPcTrSqgQp5lalygjKEQ5qKVUObwEtTlk5WKMbZR93fB01
-        O3zE+lLduJk5VjVdUJKbArQAbB3DEWe8l0XlsjPFQ3FGTC2HvPFQ09F4N0JCV3q6zATHFm3VxHghh
-        3lEbLhMbYoVWEFxHb7EypNss1MGiw9jqNW4q8BN7QJT9JQRslr45dF85Tdpw31N/0EnmOLTSShbum
-        3ZdwrPYWA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58962)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1heLFp-0006B6-NZ; Fri, 21 Jun 2019 16:15:06 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1heLFk-0003Mj-NF; Fri, 21 Jun 2019 16:15:00 +0100
-Date:   Fri, 21 Jun 2019 16:15:00 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v1 1/2] drm/i2c: tda998x: access chip registers via a
- regmap
-Message-ID: <20190621151500.cv57g3al5sadpcum@shell.armlinux.org.uk>
-References: <20190527191552.10413-1-TheSven73@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527191552.10413-1-TheSven73@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 21 Jun 2019 11:15:25 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d15so4673850qkl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 08:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hBWkkvTjA4NAMQD8w89qn0J+6pBWayI0jcKtNCrGeT4=;
+        b=NEhtyANmlRKWDHlJKIxH8QqlCHDx1RSXiBGr5CoZpxN0m16tqlflQ5IbZ4RUcd+DHb
+         Leiy8KnZvZpnj9bIxzOGqauRgivsXHURsIDK3rb1cyMd1bWK+/lgZYSN4Ttkp9pVfU3h
+         efmTlhptjCPsGZDjJI5G4bubHOijP542gMQaI4kB/+dny8MxiVSsDzMiSOSFu+3E7v89
+         ec7Eep7L6SYTww2X5LbRKYpOHwsGvP5FwOVf005/1XRiYEcG8MPu6RrbMVItXcqoxusd
+         f/ip59VgMOkbyHyn2RNTamUWsMuS0qy5pMkkrBPXbK6kI3eHM7Gb5M1UKcwhMsgNtsXM
+         lRfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hBWkkvTjA4NAMQD8w89qn0J+6pBWayI0jcKtNCrGeT4=;
+        b=YZg3DtMcqxZ6bEBRHNWQsb0kd/M6YxWFjk6cLhdc6w12pCmh8lCjHmUHzfMVp+cCF7
+         lbUG3h2WbeKiUbFAvdnn5wW/G6EkRUgAM1kvUeAJsF+WpGwELefqSOzSeH7UALa31ZC5
+         RTBUOX6Wkj3ZX39ZfFbiWC9b3xjWvirl28LpVPx4wPPEmNVwrAoqUBOPKgr284yFtA3D
+         AE6Lut8TGRGo0JPxBTK7KFDmIadYPJycihVmZGI1hAd2lRGAq4udTMarJZUXowTqHwer
+         CPQ558ClcotlEoubLHN0q0rwMGdsEoL91xEgKbt4IAA4xeS5eCLNBnyFZpIDI0/fS8lf
+         f0qw==
+X-Gm-Message-State: APjAAAUioeDpytS4F2QH0MbIV9nRlxDMCfgmlinmJyZY1vtXl5tIy7vT
+        jvToVyTAwyYKajfgkavnbrlJUA==
+X-Google-Smtp-Source: APXvYqwTcU88yLwYdQPc9U1A6X6iWq97QwUjmkeq0aJSNvyRPi6JcVFwDbicOmgpNY9J5fQhnLJNlg==
+X-Received: by 2002:a37:5d41:: with SMTP id r62mr20894972qkb.315.1561130123705;
+        Fri, 21 Jun 2019 08:15:23 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t2sm1907683qth.33.2019.06.21.08.15.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 08:15:22 -0700 (PDT)
+Message-ID: <1561130120.5154.47.camel@lca.pw>
+Subject: Re: [PATCH v3 0/6] mm: Further memory block device cleanups
+From:   Qian Cai <cai@lca.pw>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Banman <andrew.banman@hpe.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arun KS <arunks@codeaurora.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+Date:   Fri, 21 Jun 2019 11:15:20 -0400
+In-Reply-To: <20190620183139.4352-1-david@redhat.com>
+References: <20190620183139.4352-1-david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 03:15:51PM -0400, Sven Van Asbroeck wrote:
-> The tda988x i2c chip registers are accessed through a
-> paged register scheme. The kernel regmap abstraction
-> supports paged accesses. Replace this driver's
-> dedicated i2c access functions with a standard i2c
-> regmap.
+On Thu, 2019-06-20 at 20:31 +0200, David Hildenbrand wrote:
+> @Andrew: Only patch 1, 4 and 6 changed compared to v1.
 > 
-> Pros:
-> - dedicated i2c access code disappears: accesses now
->   go through well-maintained regmap code
-> - page atomicity requirements now handled by regmap
-> - ro/wo/rw access modes are now explicitly defined:
->   any inappropriate register accesses (e.g. write to a
->   read-only register) will now be explicitly rejected
->   by the regmap core
-> - all tda988x registers are now visible via debugfs
+> Some further cleanups around memory block devices. Especially, clean up
+> and simplify walk_memory_range(). Including some other minor cleanups.
 > 
-> Cons:
-> - this will probably require extensive testing
-
-Another con is the need to keep the functions that detail the register
-properties up to date, which if they're wrong may result in unexpected
-behaviour.
-
-I subscribe to the "keep it simple" approach, and regmap, although
-useful, seems like a giant sledgehammer for this.
-
+> Compiled + tested on x86 with DIMMs under QEMU. Compile-tested on ppc64.
 > 
-> Tested on a TDA19988 using a Freescale/NXP imx6q.
+> v2 -> v3:
+> - "mm/memory_hotplug: Rename walk_memory_range() and pass start+size .."
+> -- Avoid warning on ppc.
+> - "drivers/base/memory.c: Get rid of find_memory_block_hinted()"
+> -- Fixup a comment regarding hinted devices.
 > 
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
+> v1 -> v2:
+> - "mm: Section numbers use the type "unsigned long""
+> -- "unsigned long i" -> "unsigned long nr", in one case -> "int i"
+> - "drivers/base/memory.c: Get rid of find_memory_block_hinted("
+> -- Fix compilation error
+> -- Get rid of the "hint" parameter completely
 > 
-> I originally hacked this together while debugging an incompatibility between
-> the tda988x's audio input and the audio codec I was driving it with.
-> That required me to have debug access to the chip's register values.
-> A regmap did the trick, it has good debugfs support.
+> David Hildenbrand (6):
+>   mm: Section numbers use the type "unsigned long"
+>   drivers/base/memory: Use "unsigned long" for block ids
+>   mm: Make register_mem_sect_under_node() static
+>   mm/memory_hotplug: Rename walk_memory_range() and pass start+size
+>     instead of pfns
+>   mm/memory_hotplug: Move and simplify walk_memory_blocks()
+>   drivers/base/memory.c: Get rid of find_memory_block_hinted()
 > 
->  drivers/gpu/drm/i2c/tda998x_drv.c | 350 ++++++++++++++++++++----------
->  1 file changed, 234 insertions(+), 116 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index 7f34601bb515..8153e2e19e18 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -21,6 +21,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_data/tda9950.h>
->  #include <linux/irq.h>
-> +#include <linux/regmap.h>
->  #include <sound/asoundef.h>
->  #include <sound/hdmi-codec.h>
->  
-> @@ -43,10 +44,9 @@ struct tda998x_audio_port {
->  struct tda998x_priv {
->  	struct i2c_client *cec;
->  	struct i2c_client *hdmi;
-> -	struct mutex mutex;
-> +	struct regmap *regmap;
->  	u16 rev;
->  	u8 cec_addr;
-> -	u8 current_page;
->  	bool is_on;
->  	bool supports_infoframes;
->  	bool sink_has_audio;
-> @@ -88,12 +88,10 @@ struct tda998x_priv {
->  /* The TDA9988 series of devices use a paged register scheme.. to simplify
->   * things we encode the page # in upper bits of the register #.  To read/
->   * write a given register, we need to make sure CURPAGE register is set
-> - * appropriately.  Which implies reads/writes are not atomic.  Fun!
-> + * appropriately.
->   */
->  
->  #define REG(page, addr) (((page) << 8) | (addr))
-> -#define REG2ADDR(reg)   ((reg) & 0xff)
-> -#define REG2PAGE(reg)   (((reg) >> 8) & 0xff)
->  
->  #define REG_CURPAGE               0xff                /* write */
->  
-> @@ -285,8 +283,9 @@ struct tda998x_priv {
->  
->  
->  /* Page 09h: EDID Control */
-> +/*	EDID_DATA consists of 128 successive registers   read */
->  #define REG_EDID_DATA_0           REG(0x09, 0x00)     /* read */
-> -/* next 127 successive registers are the EDID block */
-> +#define REG_EDID_DATA_127         REG(0x09, 0x7f)     /* read */
->  #define REG_EDID_CTRL             REG(0x09, 0xfa)     /* read/write */
->  #define REG_DDC_ADDR              REG(0x09, 0xfb)     /* read/write */
->  #define REG_DDC_OFFS              REG(0x09, 0xfc)     /* read/write */
-> @@ -295,11 +294,17 @@ struct tda998x_priv {
->  
->  
->  /* Page 10h: information frames and packets */
-> +/*	REG_IF1_HB consists of 32 successive registers	 read/write */
->  #define REG_IF1_HB0               REG(0x10, 0x20)     /* read/write */
-> +/*	REG_IF2_HB consists of 32 successive registers	 read/write */
->  #define REG_IF2_HB0               REG(0x10, 0x40)     /* read/write */
-> +/*	REG_IF3_HB consists of 32 successive registers	 read/write */
->  #define REG_IF3_HB0               REG(0x10, 0x60)     /* read/write */
-> +/*	REG_IF4_HB consists of 32 successive registers	 read/write */
->  #define REG_IF4_HB0               REG(0x10, 0x80)     /* read/write */
-> +/*	REG_IF5_HB consists of 32 successive registers	 read/write */
->  #define REG_IF5_HB0               REG(0x10, 0xa0)     /* read/write */
-> +#define REG_IF5_HB31              REG(0x10, 0xbf)     /* read/write */
->  
->  
->  /* Page 11h: audio settings and content info packets */
-> @@ -542,93 +547,29 @@ static void tda998x_cec_hook_release(void *data)
->  	cec_enamods(priv, CEC_ENAMODS_EN_CEC_CLK | CEC_ENAMODS_EN_CEC, false);
->  }
->  
-> -static int
-> -set_page(struct tda998x_priv *priv, u16 reg)
-> -{
-> -	if (REG2PAGE(reg) != priv->current_page) {
-> -		struct i2c_client *client = priv->hdmi;
-> -		u8 buf[] = {
-> -				REG_CURPAGE, REG2PAGE(reg)
-> -		};
-> -		int ret = i2c_master_send(client, buf, sizeof(buf));
-> -		if (ret < 0) {
-> -			dev_err(&client->dev, "%s %04x err %d\n", __func__,
-> -					reg, ret);
-> -			return ret;
-> -		}
-> -
-> -		priv->current_page = REG2PAGE(reg);
-> -	}
-> -	return 0;
-> -}
-> -
->  static int
->  reg_read_range(struct tda998x_priv *priv, u16 reg, char *buf, int cnt)
->  {
-> -	struct i2c_client *client = priv->hdmi;
-> -	u8 addr = REG2ADDR(reg);
->  	int ret;
->  
-> -	mutex_lock(&priv->mutex);
-> -	ret = set_page(priv, reg);
-> -	if (ret < 0)
-> -		goto out;
-> -
-> -	ret = i2c_master_send(client, &addr, sizeof(addr));
-> +	ret = regmap_bulk_read(priv->regmap, reg, buf, cnt);
->  	if (ret < 0)
-> -		goto fail;
-> -
-> -	ret = i2c_master_recv(client, buf, cnt);
-> -	if (ret < 0)
-> -		goto fail;
-> -
-> -	goto out;
-> -
-> -fail:
-> -	dev_err(&client->dev, "Error %d reading from 0x%x\n", ret, reg);
-> -out:
-> -	mutex_unlock(&priv->mutex);
-> -	return ret;
-> +		return ret;
-> +	return cnt;
->  }
->  
-> -#define MAX_WRITE_RANGE_BUF 32
-> -
->  static void
->  reg_write_range(struct tda998x_priv *priv, u16 reg, u8 *p, int cnt)
->  {
-> -	struct i2c_client *client = priv->hdmi;
-> -	/* This is the maximum size of the buffer passed in */
-> -	u8 buf[MAX_WRITE_RANGE_BUF + 1];
-> -	int ret;
-> -
-> -	if (cnt > MAX_WRITE_RANGE_BUF) {
-> -		dev_err(&client->dev, "Fixed write buffer too small (%d)\n",
-> -				MAX_WRITE_RANGE_BUF);
-> -		return;
-> -	}
-> -
-> -	buf[0] = REG2ADDR(reg);
-> -	memcpy(&buf[1], p, cnt);
-> -
-> -	mutex_lock(&priv->mutex);
-> -	ret = set_page(priv, reg);
-> -	if (ret < 0)
-> -		goto out;
-> -
-> -	ret = i2c_master_send(client, buf, cnt + 1);
-> -	if (ret < 0)
-> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
-> -out:
-> -	mutex_unlock(&priv->mutex);
-> +	regmap_bulk_write(priv->regmap, reg, p, cnt);
->  }
->  
->  static int
->  reg_read(struct tda998x_priv *priv, u16 reg)
->  {
-> -	u8 val = 0;
-> -	int ret;
-> +	int ret, val;
->  
-> -	ret = reg_read_range(priv, reg, &val, sizeof(val));
-> +	ret = regmap_read(priv->regmap, reg, &val);
->  	if (ret < 0)
->  		return ret;
->  	return val;
-> @@ -637,59 +578,27 @@ reg_read(struct tda998x_priv *priv, u16 reg)
->  static void
->  reg_write(struct tda998x_priv *priv, u16 reg, u8 val)
->  {
-> -	struct i2c_client *client = priv->hdmi;
-> -	u8 buf[] = {REG2ADDR(reg), val};
-> -	int ret;
-> -
-> -	mutex_lock(&priv->mutex);
-> -	ret = set_page(priv, reg);
-> -	if (ret < 0)
-> -		goto out;
-> -
-> -	ret = i2c_master_send(client, buf, sizeof(buf));
-> -	if (ret < 0)
-> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
-> -out:
-> -	mutex_unlock(&priv->mutex);
-> +	regmap_write(priv->regmap, reg, val);
->  }
->  
->  static void
->  reg_write16(struct tda998x_priv *priv, u16 reg, u16 val)
->  {
-> -	struct i2c_client *client = priv->hdmi;
-> -	u8 buf[] = {REG2ADDR(reg), val >> 8, val};
-> -	int ret;
-> -
-> -	mutex_lock(&priv->mutex);
-> -	ret = set_page(priv, reg);
-> -	if (ret < 0)
-> -		goto out;
-> +	u8 buf[] = {val >> 8, val};
->  
-> -	ret = i2c_master_send(client, buf, sizeof(buf));
-> -	if (ret < 0)
-> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
-> -out:
-> -	mutex_unlock(&priv->mutex);
-> +	regmap_bulk_write(priv->regmap, reg, buf, ARRAY_SIZE(buf));
->  }
->  
->  static void
->  reg_set(struct tda998x_priv *priv, u16 reg, u8 val)
->  {
-> -	int old_val;
-> -
-> -	old_val = reg_read(priv, reg);
-> -	if (old_val >= 0)
-> -		reg_write(priv, reg, old_val | val);
-> +	regmap_update_bits(priv->regmap, reg, val, val);
->  }
->  
->  static void
->  reg_clear(struct tda998x_priv *priv, u16 reg, u8 val)
->  {
-> -	int old_val;
-> -
-> -	old_val = reg_read(priv, reg);
-> -	if (old_val >= 0)
-> -		reg_write(priv, reg, old_val & ~val);
-> +	regmap_update_bits(priv->regmap, reg, val, 0);
->  }
->  
->  static void
-> @@ -816,7 +725,7 @@ static void
->  tda998x_write_if(struct tda998x_priv *priv, u8 bit, u16 addr,
->  		 union hdmi_infoframe *frame)
->  {
-> -	u8 buf[MAX_WRITE_RANGE_BUF];
-> +	u8 buf[32];
->  	ssize_t len;
->  
->  	len = hdmi_infoframe_pack(frame, buf, sizeof(buf));
-> @@ -1654,6 +1563,211 @@ static void tda998x_destroy(struct device *dev)
->  		cec_notifier_put(priv->cec_notify);
->  }
->  
-> +static bool tda_is_edid_data_reg(unsigned int reg)
-> +{
-> +	return (reg >= REG_EDID_DATA_0) &&
-> +		(reg <= REG_EDID_DATA_127);
-> +}
-> +
-> +static bool tda_is_precious_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	if (tda_is_edid_data_reg(reg))
-> +		return true;
-> +	switch (reg) {
-> +	case REG_INT_FLAGS_0:
-> +	case REG_INT_FLAGS_1:
-> +	case REG_INT_FLAGS_2:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool tda_is_rw_reg(unsigned int reg)
-> +{
-> +	if ((reg >= REG_IF1_HB0) && (reg <= REG_IF5_HB31))
-> +		return true;
-> +	switch (reg) {
-> +	case REG_MAIN_CNTRL0:
-> +	case REG_DDC_DISABLE:
-> +	case REG_CCLK_ON:
-> +	case REG_I2C_MASTER:
-> +	case REG_FEAT_POWERDOWN:
-> +	case REG_INT_FLAGS_0:
-> +	case REG_INT_FLAGS_1:
-> +	case REG_INT_FLAGS_2:
-> +	case REG_ENA_ACLK:
-> +	case REG_ENA_VP_0:
-> +	case REG_ENA_VP_1:
-> +	case REG_ENA_VP_2:
-> +	case REG_ENA_AP:
-> +	case REG_MUX_AP:
-> +	case REG_MUX_VP_VIP_OUT:
-> +	case REG_I2S_FORMAT:
-> +	case REG_PLL_SERIAL_1:
-> +	case REG_PLL_SERIAL_2:
-> +	case REG_PLL_SERIAL_3:
-> +	case REG_SERIALIZER:
-> +	case REG_BUFFER_OUT:
-> +	case REG_PLL_SCG1:
-> +	case REG_PLL_SCG2:
-> +	case REG_PLL_SCGN1:
-> +	case REG_PLL_SCGN2:
-> +	case REG_PLL_SCGR1:
-> +	case REG_PLL_SCGR2:
-> +	case REG_AUDIO_DIV:
-> +	case REG_SEL_CLK:
-> +	case REG_ANA_GENERAL:
-> +	case REG_EDID_CTRL:
-> +	case REG_DDC_ADDR:
-> +	case REG_DDC_OFFS:
-> +	case REG_DDC_SEGM_ADDR:
-> +	case REG_DDC_SEGM:
-> +	case REG_AIP_CNTRL_0:
-> +	case REG_CA_I2S:
-> +	case REG_LATENCY_RD:
-> +	case REG_ACR_CTS_0:
-> +	case REG_ACR_CTS_1:
-> +	case REG_ACR_CTS_2:
-> +	case REG_ACR_N_0:
-> +	case REG_ACR_N_1:
-> +	case REG_ACR_N_2:
-> +	case REG_CTS_N:
-> +	case REG_ENC_CNTRL:
-> +	case REG_DIP_FLAGS:
-> +	case REG_DIP_IF_FLAGS:
-> +	case REG_TX3:
-> +	case REG_TX4:
-> +	case REG_TX33:
-> +	case REG_CH_STAT_B(0):
-> +	case REG_CH_STAT_B(1):
-> +	case REG_CH_STAT_B(2):
-> +	case REG_CH_STAT_B(3):
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool tda_is_readable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	if (tda_is_rw_reg(reg) || tda_is_edid_data_reg(reg))
-> +		return true;
-> +	switch (reg) {
-> +	case REG_VERSION_LSB:
-> +	case REG_VERSION_MSB:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool tda_is_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	if (tda_is_rw_reg(reg))
-> +		return true;
-> +	switch (reg) {
-> +	case REG_CURPAGE:
-> +	case REG_SOFTRESET:
-> +	case REG_VIP_CNTRL_0:
-> +	case REG_VIP_CNTRL_1:
-> +	case REG_VIP_CNTRL_2:
-> +	case REG_VIP_CNTRL_3:
-> +	case REG_VIP_CNTRL_4:
-> +	case REG_VIP_CNTRL_5:
-> +	case REG_MAT_CONTRL:
-> +	case REG_VIDFORMAT:
-> +	case REG_REFPIX_MSB:
-> +	case REG_REFPIX_LSB:
-> +	case REG_REFLINE_MSB:
-> +	case REG_REFLINE_LSB:
-> +	case REG_NPIX_MSB:
-> +	case REG_NPIX_LSB:
-> +	case REG_NLINE_MSB:
-> +	case REG_NLINE_LSB:
-> +	case REG_VS_LINE_STRT_1_MSB:
-> +	case REG_VS_LINE_STRT_1_LSB:
-> +	case REG_VS_PIX_STRT_1_MSB:
-> +	case REG_VS_PIX_STRT_1_LSB:
-> +	case REG_VS_LINE_END_1_MSB:
-> +	case REG_VS_LINE_END_1_LSB:
-> +	case REG_VS_PIX_END_1_MSB:
-> +	case REG_VS_PIX_END_1_LSB:
-> +	case REG_VS_LINE_STRT_2_MSB:
-> +	case REG_VS_LINE_STRT_2_LSB:
-> +	case REG_VS_PIX_STRT_2_MSB:
-> +	case REG_VS_PIX_STRT_2_LSB:
-> +	case REG_VS_LINE_END_2_MSB:
-> +	case REG_VS_LINE_END_2_LSB:
-> +	case REG_VS_PIX_END_2_MSB:
-> +	case REG_VS_PIX_END_2_LSB:
-> +	case REG_HS_PIX_START_MSB:
-> +	case REG_HS_PIX_START_LSB:
-> +	case REG_HS_PIX_STOP_MSB:
-> +	case REG_HS_PIX_STOP_LSB:
-> +	case REG_VWIN_START_1_MSB:
-> +	case REG_VWIN_START_1_LSB:
-> +	case REG_VWIN_END_1_MSB:
-> +	case REG_VWIN_END_1_LSB:
-> +	case REG_VWIN_START_2_MSB:
-> +	case REG_VWIN_START_2_LSB:
-> +	case REG_VWIN_END_2_MSB:
-> +	case REG_VWIN_END_2_LSB:
-> +	case REG_DE_START_MSB:
-> +	case REG_DE_START_LSB:
-> +	case REG_DE_STOP_MSB:
-> +	case REG_DE_STOP_LSB:
-> +	case REG_TBG_CNTRL_0:
-> +	case REG_TBG_CNTRL_1:
-> +	case REG_ENABLE_SPACE:
-> +	case REG_HVF_CNTRL_0:
-> +	case REG_HVF_CNTRL_1:
-> +	case REG_RPT_CNTRL:
-> +	case REG_AIP_CLKSEL:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static const struct reg_default tda_reg_default[] = {
-> +	{ REG_CURPAGE, 0xff },
-> +};
-> +
-> +static const struct regmap_range_cfg hdmi_range_cfg[] = {
-> +	{
-> +		.range_min = 0x00,
-> +		.range_max = REG_TX33,
-> +		.selector_reg = REG_CURPAGE,
-> +		.selector_mask = 0xff,
-> +		.selector_shift = 0,
-> +		.window_start = 0,
-> +		.window_len = 0x100,
-> +	},
-> +};
-> +
-> +/* Paged register scheme, with a write-only page register (CURPAGE).
-> + * Make this work by marking CURPAGE write-only and cacheable. Give it
-> + * an invalid page default value, which guarantees that it will get written to
-> + * the first time we read/write the registers.
-> + */
-> +
-> +static const struct regmap_config hdmi_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.ranges = hdmi_range_cfg,
-> +	.num_ranges = ARRAY_SIZE(hdmi_range_cfg),
-> +	.max_register = REG_TX33,
-> +
-> +	.cache_type = REGCACHE_RBTREE,
-> +	.volatile_reg = tda_is_precious_volatile_reg,
-> +	.precious_reg = tda_is_precious_volatile_reg,
-> +	.readable_reg = tda_is_readable_reg,
-> +	.writeable_reg = tda_is_writeable_reg,
-> +	.reg_defaults = tda_reg_default,
-> +	.num_reg_defaults = ARRAY_SIZE(tda_reg_default),
-> +};
-> +
->  static int tda998x_create(struct device *dev)
->  {
->  	struct i2c_client *client = to_i2c_client(dev);
-> @@ -1666,10 +1780,15 @@ static int tda998x_create(struct device *dev)
->  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
-> +	priv->regmap = devm_regmap_init_i2c(client, &hdmi_regmap_config);
-> +	if (IS_ERR(priv->regmap)) {
-> +		ret = PTR_ERR(priv->regmap);
-> +		dev_err(dev, "Failed to allocate register map: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	dev_set_drvdata(dev, priv);
->  
-> -	mutex_init(&priv->mutex);	/* protect the page access */
->  	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
->  	mutex_init(&priv->edid_mutex);
->  	INIT_LIST_HEAD(&priv->bridge.list);
-> @@ -1683,7 +1802,6 @@ static int tda998x_create(struct device *dev)
->  
->  	/* CEC I2C address bound to TDA998x I2C addr by configuration pins */
->  	priv->cec_addr = 0x34 + (client->addr & 0x03);
-> -	priv->current_page = 0xff;
->  	priv->hdmi = client;
->  
->  	/* wake up the device: */
-> -- 
-> 2.17.1
-> 
+>  arch/powerpc/platforms/powernv/memtrace.c |  23 ++---
+>  drivers/acpi/acpi_memhotplug.c            |  19 +---
+>  drivers/base/memory.c                     | 120 +++++++++++++---------
+>  drivers/base/node.c                       |   8 +-
+>  include/linux/memory.h                    |   5 +-
+>  include/linux/memory_hotplug.h            |   2 -
+>  include/linux/mmzone.h                    |   4 +-
+>  include/linux/node.h                      |   7 --
+>  mm/memory_hotplug.c                       |  57 +---------
+>  mm/sparse.c                               |  12 +--
+>  10 files changed, 106 insertions(+), 151 deletions(-)
 > 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+This series causes a few machines are unable to boot triggering endless soft
+lockups. Reverted those commits fixed the issue.
+
+97f4217d1da0 Revert "mm/memory_hotplug: rename walk_memory_range() and pass
+start+size instead of pfns"
+c608eebf33c6 Revert "mm-memory_hotplug-rename-walk_memory_range-and-pass-
+startsize-instead-of-pfns-fix"
+34b5e4ab7558 Revert "mm/memory_hotplug: move and simplify walk_memory_blocks()"
+59a9f3eec5d1 Revert "drivers/base/memory.c: Get rid of
+find_memory_block_hinted()"
+5cfcd52288b6 Revert "drivers-base-memoryc-get-rid-of-find_memory_block_hinted-
+v3"
+
+[    4.582081][    T1] ACPI FADT declares the system doesn't support PCIe ASPM,
+so disable it
+[    4.590405][    T1] ACPI: bus type PCI registered
+[    4.592908][    T1] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem
+0x80000000-0x8fffffff] (base 0x80000000)
+[    4.601860][    T1] PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved in
+E820
+[    4.601860][    T1] PCI: Using configuration type 1 for base access
+[   28.661336][   C16] watchdog: BUG: soft lockup - CPU#16 stuck for 22s!
+[swapper/0:1]
+[   28.671351][   C16] Modules linked in:
+[   28.671354][   C16] CPU: 16 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc5-
+next-20190621+ #1
+[   28.681366][   C16] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
+Gen10, BIOS A40 03/09/2018
+[   28.691334][   C16] RIP: 0010:_raw_spin_unlock_irqrestore+0x2f/0x40
+[   28.701334][   C16] Code: 55 48 89 e5 41 54 49 89 f4 be 01 00 00 00 53 48 8b
+55 08 48 89 fb 48 8d 7f 18 e8 4c 89 7d ff 48 89 df e8 94 f9 7d ff 41 54 9d <65>
+ff 0d c2 44 8d 48 5b 41 5c 5d c3 0f 1f 44 00 00 0f 1f 44 00 00
+[   28.711354][   C16] RSP: 0018:ffff888205b27bf8 EFLAGS: 00000246 ORIG_RAX:
+ffffffffffffff13
+[   28.721372][   C16] RAX: 0000000000000000 RBX: ffff8882053d6138 RCX:
+ffffffffb6f2a3b8
+[   28.731371][   C16] RDX: 1ffff11040a7ac27 RSI: dffffc0000000000 RDI:
+ffff8882053d6138
+[   28.741371][   C16] RBP: ffff888205b27c08 R08: ffffed1040a7ac28 R09:
+ffffed1040a7ac27
+[   28.751334][   C16] R10: ffffed1040a7ac27 R11: ffff8882053d613b R12:
+0000000000000246
+[   28.751370][   C16] R13: ffff888205b27c98 R14: ffff8884504d0a20 R15:
+0000000000000000
+[   28.761368][   C16] FS:  0000000000000000(0000) GS:ffff888454500000(0000)
+knlGS:0000000000000000
+[   28.771373][   C16] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   28.781334][   C16] CR2: 0000000000000000 CR3: 00000007c9012000 CR4:
+00000000001406a0
+[   28.791333][   C16] Call Trace:
+[   28.791374][   C16]  klist_next+0xd8/0x1c0
+[   28.791374][   C16]  subsys_find_device_by_id+0x13b/0x1f0
+[   28.801334][   C16]  ? bus_find_device_by_name+0x20/0x20
+[   28.801370][   C16]  ? kobject_put+0x23/0x250
+[   28.811333][   C16]  walk_memory_blocks+0x6c/0xb8
+[   28.811353][   C16]  ? write_policy_show+0x40/0x40
+[   28.821334][   C16]  link_mem_sections+0x7e/0xa0
+[   28.821369][   C16]  ? unregister_memory_block_under_nodes+0x210/0x210
+[   28.831353][   C16]  ? __register_one_node+0x3bd/0x600
+[   28.831353][   C16]  topology_init+0xbf/0x126
+[   28.841364][   C16]  ? enable_cpu0_hotplug+0x1a/0x1a
+[   28.841368][   C16]  do_one_initcall+0xfe/0x45a
+[   28.851334][   C16]  ? initcall_blacklisted+0x150/0x150
+[   28.851353][   C16]  ? kasan_check_write+0x14/0x20
+[   28.861333][   C16]  ? up_write+0x75/0x140
+[   28.861369][   C16]  kernel_init_freeable+0x619/0x6ac
+[   28.871333][   C16]  ? rest_init+0x188/0x188
+[   28.871353][   C16]  kernel_init+0x11/0x138
+[   28.881363][   C16]  ? rest_init+0x188/0x188
+[   28.881363][   C16]  ret_from_fork+0x22/0x40
+[   56.661336][   C16] watchdog: BUG: soft lockup - CPU#16 stuck for 22s!
+[swapper/0:1]
+[   56.671352][   C16] Modules linked in:
+[   56.671354][   C16] CPU: 16 PID: 1 Comm: swapper/0 Tainted:
+G             L    5.2.0-rc5-next-20190621+ #1
+[   56.681357][   C16] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
+Gen10, BIOS A40 03/09/2018
+[   56.691356][   C16] RIP: 0010:subsys_find_device_by_id+0x168/0x1f0
+[   56.701334][   C16] Code: 48 85 c0 74 3e 48 8d 78 58 e8 14 77 ca ff 4d 8b 7e
+58 4d 85 ff 74 2c 49 8d bf a0 03 00 00 e8 bf 75 ca ff 45 39 a7 a0 03 00 00 <75>
+c9 4c 89 ff e8 0e 89 ff ff 48 85 c0 74 bc 48 89 df e8 21 3b 24
+[   56.721333][   C16] RSP: 0018:ffff888205b27c68 EFLAGS: 00000287 ORIG_RAX:
+ffffffffffffff13
+[   56.721370][   C16] RAX: 0000000000000000 RBX: ffff888205b27c90 RCX:
+ffffffffb74c9dc1
+[   56.731370][   C16] RDX: 0000000000000003 RSI: dffffc0000000000 RDI:
+ffff8888774ec3e0
+[   56.741371][   C16] RBP: ffff888205b27cf8 R08: ffffed1040a7ac28 R09:
+ffffed1040a7ac27
+[   56.751335][   C16] R10: ffffed1040a7ac27 R11: ffff8882053d613b R12:
+0000000000085c1b
+[   56.761334][   C16] R13: 1ffff11040b64f8e R14: ffff888450de4a20 R15:
+ffff8888774ec040
+[   56.761372][   C16] FS:  0000000000000000(0000) GS:ffff888454500000(0000)
+knlGS:0000000000000000
+[   56.771374][   C16] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   56.781370][   C16] CR2: 0000000000000000 CR3: 00000007c9012000 CR4:
+00000000001406a0
+[   56.791373][   C16] Call Trace:
+[   56.791373][   C16]  ? bus_find_device_by_name+0x20/0x20
+[   56.801334][   C16]  ? kobject_put+0x23/0x250
+[   56.801334][   C16]  walk_memory_blocks+0x6c/0xb8
+[   56.811333][   C16]  ? write_policy_show+0x40/0x40
+[   56.811353][   C16]  link_mem_sections+0x7e/0xa0
+[   56.811353][   C16]  ? unregister_memory_block_under_nodes+0x210/0x210
+[   56.821333][   C16]  ? __register_one_node+0x3bd/0x600
+[   56.831333][   C16]  topology_init+0xbf/0x126
+[   56.831355][   C16]  ? enable_cpu0_hotplug+0x1a/0x1a
+[   56.841334][   C16]  do_one_initcall+0xfe/0x45a
+[   56.841334][   C16]  ? initcall_blacklisted+0x150/0x150
+[   56.851333][   C16]  ? kasan_check_write+0x14/0x20
+[   56.851354][   C16]  ? up_write+0x75/0x140
+[   56.861333][   C16]  kernel_init_freeable+0x619/0x6ac
+[   56.861333][   C16]  ? rest_init+0x188/0x188
+[   56.861369][   C16]  kernel_init+0x11/0x138
+[   56.871333][   C16]  ? rest_init+0x188/0x188
+[   56.871354][   C16]  ret_from_fork+0x22/0x40
+[   64.601362][   C16] rcu: INFO: rcu_sched self-detected stall on CPU
+[   64.611335][   C16] rcu: 	16-....: (5958 ticks this GP)
+idle=37e/1/0x4000000000000002 softirq=27/27 fqs=3000 
+[   64.621334][   C16] 	(t=6002 jiffies g=-1079 q=25)
+[   64.621334][   C16] NMI backtrace for cpu 16
+[   64.621374][   C16] CPU: 16 PID: 1 Comm: swapper/0 Tainted:
+G             L    5.2.0-rc5-next-20190621+ #1
+[   64.631372][   C16] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
+Gen10, BIOS A40 03/09/2018
+[   64.641371][   C16] Call Trace:
+[   64.651337][   C16]  <IRQ>
+[   64.651376][   C16]  dump_stack+0x62/0x9a
+[   64.651376][   C16]  nmi_cpu_backtrace.cold.0+0x2e/0x33
+[   64.661337][   C16]  ? nmi_cpu_backtrace_handler+0x20/0x20
+[   64.661337][   C16]  nmi_trigger_cpumask_backtrace+0x1a6/0x1b9
+[   64.671353][   C16]  arch_trigger_cpumask_backtrace+0x19/0x20
+[   64.681366][   C16]  rcu_dump_cpu_stacks+0x18b/0x1d6
+[   64.681366][   C16]  rcu_sched_clock_irq.cold.64+0x368/0x791
+[   64.691336][   C16]  ? kasan_check_read+0x11/0x20
+[   64.691354][   C16]  ? __raise_softirq_irqoff+0x66/0x150
+[   64.701336][   C16]  update_process_times+0x2f/0x60
+[   64.701362][   C16]  tick_periodic+0x38/0xe0
+[   64.711334][   C16]  tick_handle_periodic+0x2e/0x80
+[   64.711353][   C16]  smp_apic_timer_interrupt+0xfb/0x370
+[   64.721367][   C16]  apic_timer_interrupt+0xf/0x20
+[   64.721367][   C16]  </IRQ>
+[   64.721367][   C16] RIP: 0010:_raw_spin_unlock_irqrestore+0x2f/0x40
+[   64.731370][   C16] Code: 55 48 89 e5 41 54 49 89 f4 be 01 00 00 00 53 
