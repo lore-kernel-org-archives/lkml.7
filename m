@@ -2,427 +2,135 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B40EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528B5C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17632083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25DB21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="d3qDl7gt"
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="B/x9jBWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfFUNHe (ORCPT
+        id S1726877AbfFUNJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:07:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43490 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfFUNHc (ORCPT
+        Fri, 21 Jun 2019 09:09:54 -0400
+Received: from mx-rz-2.rrze.uni-erlangen.de ([131.188.11.21]:60433 "EHLO
+        mx-rz-2.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726285AbfFUNJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:07:32 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 16so5878590ljv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2vhySjd6HyAQGz86wftxAId7gw5oA1TV6yT5lbqXCs8=;
-        b=d3qDl7gtl1j+Hk3gb4K9KzB8LgwmlfJO9/Yo2ozFsDzcLkQTT7WxQR8Xj2jQC6naSF
-         1d5MH4Hg/i/lDsXxqSx1YKJCpvMaAYROYH+kzVZGWYebgZj+2M7XyZwqiyv6R8pMQijt
-         QekloHa3XLx2rYBXWeh0hYlfYHO5RtIHnNrPiaHKmAeHsIJgszBNpLpg2c9pc3h0pucO
-         jKelgmr4Hzo2RjY35WGuQwDh5TCTVbTZdWWx5PdBA+O2x8WkagZji9/C2bRtzvl4yKRK
-         mUI21721hUJvD7/oFR2F/14ymv0qkzuNyn7SsvGbT8OqoY6IitKrsaFZRSQMDusYuH2Q
-         /XPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2vhySjd6HyAQGz86wftxAId7gw5oA1TV6yT5lbqXCs8=;
-        b=i8BzLlCOPuFb+4HWisc1sOSIFonXvWTULUycQer6mJcfTcbp54k75NXCwZcr3Va6Fs
-         +G0ykVRC3JAxVGbmL26DMzqEEeAGRbBqFIxLHfH9gK0E8jlwjoetianIbMydNP4tL2Lm
-         SQdQEcNBdXDUvMGMSt5rftKxXt4wGCrRNbntzngD9FrdZ3VN/hIBFjMm7ejfWU3Zvmn+
-         lA39PQ7/BTLYhXQpimEPVa4szgJXWD+FKXP6aE4AIyA66b0KPmskxStCgCI3T0ZdWlOO
-         l7GYDVs2CFZ38WjnY4kEN5ioJTz9Z3wEGdLgTU8kMAI2r1srwEGdhERvyBaW7tz7H/tv
-         d1/A==
-X-Gm-Message-State: APjAAAWvuID2Jb5zUbCrKa47H4Y+2AtUEHHFEfm09o8twNkjeajwIWdN
-        1+UCIOKmCE389ieTfDENv+3/hQ==
-X-Google-Smtp-Source: APXvYqyaj5zE2Q4iZD1SSrYtvHM9/oy8VgGciJ2+N1JfUErT2t/do01rXTFk51qdeIQwjDJN9L3VMA==
-X-Received: by 2002:a2e:650a:: with SMTP id z10mr32642486ljb.28.1561122449940;
-        Fri, 21 Jun 2019 06:07:29 -0700 (PDT)
-Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id r2sm387100lfi.51.2019.06.21.06.07.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 06:07:29 -0700 (PDT)
-From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-To:     axboe@fb.com, hch@lst.de, damien.lemoal@wdc.com,
-        chaitanya.kulkarni@wdc.com, dmitry.fomichev@wdc.com,
-        ajay.joshi@wdc.com, aravind.ramesh@wdc.com,
-        martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
-        agk@redhat.com, snitzer@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, dm-devel@redhat.com,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
-Subject: [PATCH 1/4] block: add zone open, close and finish support
-Date:   Fri, 21 Jun 2019 15:07:08 +0200
-Message-Id: <20190621130711.21986-2-mb@lightnvm.io>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190621130711.21986-1-mb@lightnvm.io>
-References: <20190621130711.21986-1-mb@lightnvm.io>
+        Fri, 21 Jun 2019 09:09:54 -0400
+X-Greylist: delayed 473 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jun 2019 09:09:52 EDT
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 45Vf3B4LpFzPkKs;
+        Fri, 21 Jun 2019 15:01:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1561122118; bh=EG7lcFvB9T+O8vsdLpuJUEMt1JSbCZEPsjwogrh6WHo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From:To:CC:
+         Subject;
+        b=B/x9jBWwEqhqn9sQNqIeXhuRPL/5F4qDqijp4jtBV0dRJVUMUrd4wRRpcBcMhW2JL
+         6WUwVeu+tkoe1cy1mdiYFVwhzkSgcu29YzBr3qVKTCGRWXCrnYuX1z8sbqPMavxJdd
+         P43GVEPotpl0IRqq2wwxePez975yDvFAHGNfeZ+iE/FV7Y9Gto3A0bUcsH9u0QEwtF
+         XRuwOYQRkDhPW+gs882c3Hik8hyhZJSIOHXQ1i/kqstq0UYTdViV0n/Jk2B296UVi3
+         95HxWa7+gZsMvXcSlyAkJN9mf7Bt42boDd5EIiuOKDE3F/YlvoSjCiVJSdwd3kc0da
+         Xsez3QG1/uDuA==
+X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2003:ea:371a:4600:e106:19f8:34a7:eaec
+Received: from [IPv6:2003:ea:371a:4600:e106:19f8:34a7:eaec] (p200300EA371A4600E10619F834A7EAEC.dip0.t-ipconnect.de [IPv6:2003:ea:371a:4600:e106:19f8:34a7:eaec])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX19ZePNdXmNy1kvc6Mw6MaNW3XSCvzEfcTA=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 45Vf3272gLzPkfT;
+        Fri, 21 Jun 2019 15:01:50 +0200 (CEST)
+Subject: Re: [PATCH 4/4] rts5208: Fix usleep range is preferred over udelay
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kim.jamie.bradley@gmail.com, pakki001@umn.edu,
+        colin.king@canonical.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Jannik Moritz <jannik.moritz@fau.de>,
+        linux-kernel@i4.cs.fau.de
+References: <20190619154648.13840-1-lukas.s.schneider@fau.de>
+ <20190619154648.13840-4-lukas.s.schneider@fau.de>
+ <20190621110405.GG24145@amd>
+From:   Lukas Schneider <lukas.s.schneider@fau.de>
+Message-ID: <1e397063-9cf2-69d3-84fe-53c5776f2c5b@fau.de>
+Date:   Fri, 21 Jun 2019 15:01:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190621110405.GG24145@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Joshi <ajay.joshi@wdc.com>
 
-Zoned block devices allows one to control zone transitions by using
-explicit commands. The available transitions are:
+Am 21.06.2019 um 13:04 schrieb Pavel Machek:
+> On Wed 2019-06-19 17:46:48, Lukas Schneider wrote:
+>> This patch fixes the issue reported by checkpatch:
+>>
+>> CHECK: usleep_range is preferred over udelay;
+>> see Doucmentation/timers/timers-howto.txt
+>>
+>> It's save to sleep here instead of using busy waiting,
+>> because we are not in an atomic context.
+> Is it good idea? How can the system really sleep for 50 usec?
+>
+>        	   	     	     	    	   	     Pavel
 
-  * Open zone: Transition a zone to open state.
-  * Close zone: Transition a zone to closed state.
-  * Finish zone: Transition a zone to full state.
+According to Doucmentation/timers/timers-howto.txt, usleep_range should 
+be used for sleep times between 10us and 20ms, so it is the correct 
+function for 50us.
 
-Allow kernel to issue these transitions by introducing
-blkdev_zones_mgmt_op() and add three new request opcodes:
+Lukas
 
-  * REQ_IO_ZONE_OPEN, REQ_IO_ZONE_CLOSE, and REQ_OP_ZONE_FINISH
-
-Allow user-space to issue the transitions through the following ioctls:
-
-  * BLKOPENZONE, BLKCLOSEZONE, and BLKFINISHZONE.
-
-Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>
-Signed-off-by: Aravind Ramesh <aravind.ramesh@wdc.com>
-Signed-off-by: Matias Bjørling <matias.bjorling@wdc.com>
----
- block/blk-core.c              |  3 ++
- block/blk-zoned.c             | 51 ++++++++++++++++++++++---------
- block/ioctl.c                 |  5 ++-
- include/linux/blk_types.h     | 27 +++++++++++++++--
- include/linux/blkdev.h        | 57 ++++++++++++++++++++++++++++++-----
- include/uapi/linux/blkzoned.h | 17 +++++++++--
- 6 files changed, 133 insertions(+), 27 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 8340f69670d8..c0f0dbad548d 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -897,6 +897,9 @@ generic_make_request_checks(struct bio *bio)
- 			goto not_supported;
- 		break;
- 	case REQ_OP_ZONE_RESET:
-+	case REQ_OP_ZONE_OPEN:
-+	case REQ_OP_ZONE_CLOSE:
-+	case REQ_OP_ZONE_FINISH:
- 		if (!blk_queue_is_zoned(q))
- 			goto not_supported;
- 		break;
-diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index ae7e91bd0618..d0c933593b93 100644
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -201,20 +201,22 @@ int blkdev_report_zones(struct block_device *bdev, sector_t sector,
- EXPORT_SYMBOL_GPL(blkdev_report_zones);
- 
- /**
-- * blkdev_reset_zones - Reset zones write pointer
-+ * blkdev_zones_mgmt_op - Perform the specified operation on the zone(s)
-  * @bdev:	Target block device
-- * @sector:	Start sector of the first zone to reset
-- * @nr_sectors:	Number of sectors, at least the length of one zone
-+ * @op:		Operation to be performed on the zone(s)
-+ * @sector:	Start sector of the first zone to operate on
-+ * @nr_sectors:	Number of sectors, at least the length of one zone and
-+ *              must be zone size aligned.
-  * @gfp_mask:	Memory allocation flags (for bio_alloc)
-  *
-  * Description:
-- *    Reset the write pointer of the zones contained in the range
-+ *    Perform the specified operation contained in the range
-  *    @sector..@sector+@nr_sectors. Specifying the entire disk sector range
-  *    is valid, but the specified range should not contain conventional zones.
-  */
--int blkdev_reset_zones(struct block_device *bdev,
--		       sector_t sector, sector_t nr_sectors,
--		       gfp_t gfp_mask)
-+int blkdev_zones_mgmt_op(struct block_device *bdev, enum req_opf op,
-+			 sector_t sector, sector_t nr_sectors,
-+			 gfp_t gfp_mask)
- {
- 	struct request_queue *q = bdev_get_queue(bdev);
- 	sector_t zone_sectors;
-@@ -226,6 +228,9 @@ int blkdev_reset_zones(struct block_device *bdev,
- 	if (!blk_queue_is_zoned(q))
- 		return -EOPNOTSUPP;
- 
-+	if (!op_is_zone_mgmt_op(op))
-+		return -EOPNOTSUPP;
-+
- 	if (bdev_read_only(bdev))
- 		return -EPERM;
- 
-@@ -248,7 +253,7 @@ int blkdev_reset_zones(struct block_device *bdev,
- 		bio = blk_next_bio(bio, 0, gfp_mask);
- 		bio->bi_iter.bi_sector = sector;
- 		bio_set_dev(bio, bdev);
--		bio_set_op_attrs(bio, REQ_OP_ZONE_RESET, 0);
-+		bio_set_op_attrs(bio, op, 0);
- 
- 		sector += zone_sectors;
- 
-@@ -264,7 +269,7 @@ int blkdev_reset_zones(struct block_device *bdev,
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(blkdev_reset_zones);
-+EXPORT_SYMBOL_GPL(blkdev_zones_mgmt_op);
- 
- /*
-  * BLKREPORTZONE ioctl processing.
-@@ -329,15 +334,16 @@ int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
- }
- 
- /*
-- * BLKRESETZONE ioctl processing.
-+ * Zone operation (open, close, finish or reset) ioctl processing.
-  * Called from blkdev_ioctl.
-  */
--int blkdev_reset_zones_ioctl(struct block_device *bdev, fmode_t mode,
--			     unsigned int cmd, unsigned long arg)
-+int blkdev_zones_mgmt_op_ioctl(struct block_device *bdev, fmode_t mode,
-+				unsigned int cmd, unsigned long arg)
- {
- 	void __user *argp = (void __user *)arg;
- 	struct request_queue *q;
- 	struct blk_zone_range zrange;
-+	enum req_opf op;
- 
- 	if (!argp)
- 		return -EINVAL;
-@@ -358,8 +364,25 @@ int blkdev_reset_zones_ioctl(struct block_device *bdev, fmode_t mode,
- 	if (copy_from_user(&zrange, argp, sizeof(struct blk_zone_range)))
- 		return -EFAULT;
- 
--	return blkdev_reset_zones(bdev, zrange.sector, zrange.nr_sectors,
--				  GFP_KERNEL);
-+	switch (cmd) {
-+	case BLKRESETZONE:
-+		op = REQ_OP_ZONE_RESET;
-+		break;
-+	case BLKOPENZONE:
-+		op = REQ_OP_ZONE_OPEN;
-+		break;
-+	case BLKCLOSEZONE:
-+		op = REQ_OP_ZONE_CLOSE;
-+		break;
-+	case BLKFINISHZONE:
-+		op = REQ_OP_ZONE_FINISH;
-+		break;
-+	default:
-+		return -ENOTTY;
-+	}
-+
-+	return blkdev_zones_mgmt_op(bdev, op, zrange.sector, zrange.nr_sectors,
-+				    GFP_KERNEL);
- }
- 
- static inline unsigned long *blk_alloc_zone_bitmap(int node,
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 15a0eb80ada9..df7fe54db158 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -532,7 +532,10 @@ int blkdev_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
- 	case BLKREPORTZONE:
- 		return blkdev_report_zones_ioctl(bdev, mode, cmd, arg);
- 	case BLKRESETZONE:
--		return blkdev_reset_zones_ioctl(bdev, mode, cmd, arg);
-+	case BLKOPENZONE:
-+	case BLKCLOSEZONE:
-+	case BLKFINISHZONE:
-+		return blkdev_zones_mgmt_op_ioctl(bdev, mode, cmd, arg);
- 	case BLKGETZONESZ:
- 		return put_uint(arg, bdev_zone_sectors(bdev));
- 	case BLKGETNRZONES:
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 95202f80676c..067ef9242275 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -284,13 +284,20 @@ enum req_opf {
- 	REQ_OP_DISCARD		= 3,
- 	/* securely erase sectors */
- 	REQ_OP_SECURE_ERASE	= 5,
--	/* reset a zone write pointer */
--	REQ_OP_ZONE_RESET	= 6,
- 	/* write the same sector many times */
- 	REQ_OP_WRITE_SAME	= 7,
- 	/* write the zero filled sector many times */
- 	REQ_OP_WRITE_ZEROES	= 9,
- 
-+	/* reset a zone write pointer */
-+	REQ_OP_ZONE_RESET	= 16,
-+	/* Open zone(s) */
-+	REQ_OP_ZONE_OPEN	= 17,
-+	/* Close zone(s) */
-+	REQ_OP_ZONE_CLOSE	= 18,
-+	/* Finish zone(s) */
-+	REQ_OP_ZONE_FINISH	= 19,
-+
- 	/* SCSI passthrough using struct scsi_request */
- 	REQ_OP_SCSI_IN		= 32,
- 	REQ_OP_SCSI_OUT		= 33,
-@@ -375,6 +382,22 @@ static inline void bio_set_op_attrs(struct bio *bio, unsigned op,
- 	bio->bi_opf = op | op_flags;
- }
- 
-+/*
-+ * Check if the op is zoned operation.
-+ */
-+static inline bool op_is_zone_mgmt_op(enum req_opf op)
-+{
-+	switch (op) {
-+	case REQ_OP_ZONE_RESET:
-+	case REQ_OP_ZONE_OPEN:
-+	case REQ_OP_ZONE_CLOSE:
-+	case REQ_OP_ZONE_FINISH:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- static inline bool op_is_write(unsigned int op)
- {
- 	return (op & 1);
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 592669bcc536..943084f9dc9c 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -348,14 +348,15 @@ extern unsigned int blkdev_nr_zones(struct block_device *bdev);
- extern int blkdev_report_zones(struct block_device *bdev,
- 			       sector_t sector, struct blk_zone *zones,
- 			       unsigned int *nr_zones, gfp_t gfp_mask);
--extern int blkdev_reset_zones(struct block_device *bdev, sector_t sectors,
--			      sector_t nr_sectors, gfp_t gfp_mask);
- extern int blk_revalidate_disk_zones(struct gendisk *disk);
- 
- extern int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
- 				     unsigned int cmd, unsigned long arg);
--extern int blkdev_reset_zones_ioctl(struct block_device *bdev, fmode_t mode,
--				    unsigned int cmd, unsigned long arg);
-+extern int blkdev_zones_mgmt_op_ioctl(struct block_device *bdev, fmode_t mode,
-+					unsigned int cmd, unsigned long arg);
-+extern int blkdev_zones_mgmt_op(struct block_device *bdev, enum req_opf op,
-+				sector_t sector, sector_t nr_sectors,
-+				gfp_t gfp_mask);
- 
- #else /* CONFIG_BLK_DEV_ZONED */
- 
-@@ -376,15 +377,57 @@ static inline int blkdev_report_zones_ioctl(struct block_device *bdev,
- 	return -ENOTTY;
- }
- 
--static inline int blkdev_reset_zones_ioctl(struct block_device *bdev,
--					   fmode_t mode, unsigned int cmd,
--					   unsigned long arg)
-+static inline int blkdev_zones_mgmt_op_ioctl(struct block_device *bdev,
-+					     fmode_t mode, unsigned int cmd,
-+					     unsigned long arg)
-+{
-+	return -ENOTTY;
-+}
-+
-+static inline int blkdev_zones_mgmt_op(struct block_device *bdev,
-+				       enum req_opf op,
-+				       sector_t sector, sector_t nr_sectors,
-+				       gfp_t gfp_mask)
- {
- 	return -ENOTTY;
- }
- 
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
-+static inline int blkdev_reset_zones(struct block_device *bdev,
-+				     sector_t sector, sector_t nr_sectors,
-+				     gfp_t gfp_mask)
-+{
-+	return blkdev_zones_mgmt_op(bdev, REQ_OP_ZONE_RESET,
-+				    sector, nr_sectors, gfp_mask);
-+}
-+
-+static inline int blkdev_open_zones(struct block_device *bdev,
-+				    sector_t sector, sector_t nr_sectors,
-+				    gfp_t gfp_mask)
-+{
-+	return blkdev_zones_mgmt_op(bdev, REQ_OP_ZONE_OPEN,
-+				    sector, nr_sectors, gfp_mask);
-+}
-+
-+static inline int blkdev_close_zones(struct block_device *bdev,
-+				     sector_t sector, sector_t nr_sectors,
-+				     gfp_t gfp_mask)
-+{
-+	return blkdev_zones_mgmt_op(bdev, REQ_OP_ZONE_CLOSE,
-+				    sector, nr_sectors,
-+				    gfp_mask);
-+}
-+
-+static inline int blkdev_finish_zones(struct block_device *bdev,
-+				      sector_t sector, sector_t nr_sectors,
-+				      gfp_t gfp_mask)
-+{
-+	return blkdev_zones_mgmt_op(bdev, REQ_OP_ZONE_FINISH,
-+				    sector, nr_sectors,
-+				    gfp_mask);
-+}
-+
- struct request_queue {
- 	/*
- 	 * Together with queue_head for cacheline sharing
-diff --git a/include/uapi/linux/blkzoned.h b/include/uapi/linux/blkzoned.h
-index 498eec813494..701e0692b8d3 100644
---- a/include/uapi/linux/blkzoned.h
-+++ b/include/uapi/linux/blkzoned.h
-@@ -120,9 +120,11 @@ struct blk_zone_report {
- };
- 
- /**
-- * struct blk_zone_range - BLKRESETZONE ioctl request
-- * @sector: starting sector of the first zone to issue reset write pointer
-- * @nr_sectors: Total number of sectors of 1 or more zones to reset
-+ * struct blk_zone_range - BLKRESETZONE/BLKOPENZONE/
-+ *			   BLKCLOSEZONE/BLKFINISHZONE ioctl
-+ *			   request
-+ * @sector: starting sector of the first zone to operate on
-+ * @nr_sectors: Total number of sectors of all zones to operate on
-  */
- struct blk_zone_range {
- 	__u64		sector;
-@@ -139,10 +141,19 @@ struct blk_zone_range {
-  *                sector range. The sector range must be zone aligned.
-  * @BLKGETZONESZ: Get the device zone size in number of 512 B sectors.
-  * @BLKGETNRZONES: Get the total number of zones of the device.
-+ * @BLKOPENZONE: Open the zones in the specified sector range. The
-+ *               sector range must be zone aligned.
-+ * @BLKCLOSEZONE: Close the zones in the specified sector range. The
-+ *                sector range must be zone aligned.
-+ * @BLKFINISHZONE: Finish the zones in the specified sector range. The
-+ *                 sector range must be zone aligned.
-  */
- #define BLKREPORTZONE	_IOWR(0x12, 130, struct blk_zone_report)
- #define BLKRESETZONE	_IOW(0x12, 131, struct blk_zone_range)
- #define BLKGETZONESZ	_IOR(0x12, 132, __u32)
- #define BLKGETNRZONES	_IOR(0x12, 133, __u32)
-+#define BLKOPENZONE	_IOW(0x12, 134, struct blk_zone_range)
-+#define BLKCLOSEZONE	_IOW(0x12, 135, struct blk_zone_range)
-+#define BLKFINISHZONE	_IOW(0x12, 136, struct blk_zone_range)
- 
- #endif /* _UAPI_BLKZONED_H */
--- 
-2.19.1
-
+>> @@ -865,7 +865,7 @@ static int sd_change_phase(struct rtsx_chip *chip, u8 sample_point, u8 tune_dir)
+>>   						     PHASE_CHANGE);
+>>   			if (retval)
+>>   				return retval;
+>> -			udelay(50);
+>> +			usleep_range(50, 60);
+>>   			retval = rtsx_write_register(chip, SD_VP_CTL, 0xFF,
+>>   						     PHASE_CHANGE |
+>>   						     PHASE_NOT_RESET |
+>> @@ -877,14 +877,14 @@ static int sd_change_phase(struct rtsx_chip *chip, u8 sample_point, u8 tune_dir)
+>>   						     CHANGE_CLK, CHANGE_CLK);
+>>   			if (retval)
+>>   				return retval;
+>> -			udelay(50);
+>> +			usleep_range(50, 60);
+>>   			retval = rtsx_write_register(chip, SD_VP_CTL, 0xFF,
+>>   						     PHASE_NOT_RESET |
+>>   						     sample_point);
+>>   			if (retval)
+>>   				return retval;
+>>   		}
+>> -		udelay(100);
+>> +		usleep_range(100, 110);
+>>   
+>>   		rtsx_init_cmd(chip);
+>>   		rtsx_add_cmd(chip, WRITE_REG_CMD, SD_DCMPS_CTL, DCMPS_CHANGE,
+>> @@ -918,7 +918,7 @@ static int sd_change_phase(struct rtsx_chip *chip, u8 sample_point, u8 tune_dir)
+>>   				return retval;
+>>   		}
+>>   
+>> -		udelay(50);
+>> +		usleep_range(50, 60);
+>>   	}
+>>   
+>>   	retval = rtsx_write_register(chip, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);
+>> @@ -1416,7 +1416,7 @@ static int sd_wait_data_idle(struct rtsx_chip *chip)
+>>   			retval = STATUS_SUCCESS;
+>>   			break;
+>>   		}
+>> -		udelay(100);
+>> +		usleep_range(100, 110);
+>>   	}
+>>   	dev_dbg(rtsx_dev(chip), "SD_DATA_STATE: 0x%02x\n", val);
+>>   
