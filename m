@@ -2,145 +2,81 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D672FC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F2CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE788208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:29:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbj3ryUA"
+	by mail.kernel.org (Postfix) with ESMTP id 88DE5208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfFUI3j (ORCPT
+        id S1726353AbfFUIdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:29:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41868 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUI3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:29:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id m30so3204761pff.8;
-        Fri, 21 Jun 2019 01:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=yxfaAKL36iRBk7i3lJUt2q8lAl7GH2S2sjM2Bw2uPJs=;
-        b=fbj3ryUASSI5WTeqBy+Hc5OEHWiPYdV7sIZyNqgV+qzFiANsZYBHP3eTFrdbgDPMqz
-         +NZAYlBR+Dfy7yY9SJaByfth0oz38I9M0oFx0/PjpOVh4PwNfZ6TM2OYoTtOR9SENi8J
-         c4JwUKiwqGhPWDDJTo19f+iyU8hDWG4ED1a79bBPnMbmzbrs+wX6NcAW3qliBAqn2Cz9
-         cNxxEV7yL4Cgwr2k23ZRaqddTXmW7jlpNEyLek6w+pt1gX1BPnCgoRUSFo9HYLeo65pM
-         jcwVL8KYaA8GxmgazJGRjU9ifPR/K7V+tvyC4gxu12oOVP2g9/tx3yANOSmbk/9lW3n7
-         hoKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=yxfaAKL36iRBk7i3lJUt2q8lAl7GH2S2sjM2Bw2uPJs=;
-        b=Uo5FWFl6d27L/KKJjFoSEGyYN9YEHSsXrrHIqtIjPRFShcujK9ZxGISRMK70fetFV+
-         2EICV2rp8ce7UHnd5OGFDoR5x3H38oa6txrDiuU8eJRX0kJ2fBLOUrMO0cMgGEyzgaLa
-         koRjBdWYo2cIion2cUXd4V0WoohJbahmrHRiyqyHMUgs9LH2x+trzLlpvetgRZaV7FJD
-         LS4R2l3CCRx9hIMxKU2/n6rtW8myrmgHsG142CxfiwX9fL54AmG0z2L6XSS7sBwp5fme
-         EMaAdCikfAE6via71atFS9Kg3BtpvWmknrxKqVQAFyyfkzRzBDzZs16CVJs2qLn8Ptth
-         v97w==
-X-Gm-Message-State: APjAAAWcVG1KAc5XJv4nWrF4ndq1DdZZGujF01VtChFPU/14zfCXX8Qq
-        LDVQCcvc914/MuUdcBWwsag=
-X-Google-Smtp-Source: APXvYqw0+FZM5x3iJhEGb07mnJPrmGs4w362V6gxLaKrkfdj/o0PM7u+3QQXzswzUEdHsggmQOj3Bw==
-X-Received: by 2002:a17:90a:cb15:: with SMTP id z21mr5012050pjt.87.1561105777693;
-        Fri, 21 Jun 2019 01:29:37 -0700 (PDT)
-Received: from localhost ([1.144.138.41])
-        by smtp.gmail.com with ESMTPSA id v185sm2443015pfb.14.2019.06.21.01.29.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 01:29:36 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 18:29:27 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
- a structure
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        James Hogan <jhogan@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-References: <20190611144102.8848-1-hch@lst.de>
-        <20190611144102.8848-17-hch@lst.de>
-        <1560300464.nijubslu3h.astroid@bobo.none>
-        <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
-        <1561032202.0qfct43s2c.astroid@bobo.none>
-        <CAHk-=wh46y3x5O0HkR=R4ETh6e5pDCrEsJ94CtC0fyQiYYAf6A@mail.gmail.com>
-In-Reply-To: <CAHk-=wh46y3x5O0HkR=R4ETh6e5pDCrEsJ94CtC0fyQiYYAf6A@mail.gmail.com>
+        Fri, 21 Jun 2019 04:33:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726057AbfFUIdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:33:04 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C084FA8D8536B19F0AEB;
+        Fri, 21 Jun 2019 16:33:01 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
+ 2019 16:32:52 +0800
+Subject: Re: [PATCH v2 3/8] staging: erofs: move per-CPU buffers
+ implementation to utils.c
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>
+References: <20190620160719.240682-1-gaoxiang25@huawei.com>
+ <20190620160719.240682-4-gaoxiang25@huawei.com>
+ <1d296b86-69e2-4888-2ac9-1d77f38ac3e3@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <abe96e3d-cda7-e71e-68b1-9669fe2f2241@huawei.com>
+Date:   Fri, 21 Jun 2019 16:32:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1561104674.cxm7sn77rx.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1d296b86-69e2-4888-2ac9-1d77f38ac3e3@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds's on June 21, 2019 3:21 am:
-> On Thu, Jun 20, 2019 at 5:19 AM Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->>
->> The processor aliasing problem happens because the struct will
->> be initialised with stores using one base register (e.g., stack
->> register), and then same memory is loaded using a different
->> register (e.g., parameter register).
->=20
-> Hmm. Honestly, I've never seen anything like that in any kernel profiles.
->=20
-> Compared to the problems I _do_ see (which is usually the obvious
-> cache misses, and locking), it must either be in the noise or it's
-> some problem specific to whatever CPU you are doing performance work
-> on?
+Hi Chao,
 
-No you're right, the performance hit from these flushes is not a
-big hit that stands out in cycle counts. I just look at kernel code
-for various flushes. Branches not surprisingly are usually the main
-culprit, but they're normally not so interesting.
+On 2019/6/21 15:57, Chao Yu wrote:
+> On 2019/6/21 0:07, Gao Xiang wrote:
+>> +static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+>> +{
+>> +	return ERR_PTR(-ENOTSUPP);
+>> +}
+> 
+> [snip]
+> 
+>> +	percpu_data = erofs_get_pcpubuf(0);
+> 
+> If erofs_get_pcpubuf may return error once EROFS_PCPUBUF_NR_PAGES equals to
+> zero, we'd better to check the error number here.
 
-Static alias prediction seems to work well outside this case. It's
-interesting, you need both a store ; load sequence that does not
-predict well (e.g., using a different base register), and you also
-need that load to be executed ahead of the store.
+decompressor.c will be built-in only when decompression is enabled
+and if decompression is enabled EROFS_PCPUBUF_NR_PAGES is not zero.
 
-The small stack structure for arguments is the perfect case. Bad
-pattern, and load executed right after store. Even then you also need
-a reason to delay the store (e.g., source not ready or store queue
-full), but those hazards do show up.
-
-Now, even when all that goes wrong, there are dynamic heuristics that
-can take over. So if you run a repetitive microbenchmark you won't
-see it.
-
-Some CPUs seem to be quite aggressive about giving up and turning off
-the alias prediction globally if you take misses (Intel x86 used to do
-that IIRC, not sure if they still do). So in that case you wouldn't
-even see it show up in one place, everything will just run slightly
-slower.
-
-What I worry about is high rate direct IO workloads that see single
-flushes in these paths as significant. Or if this thing creeps in to
-the kernel too much and just slightly raises global misses enough,
-then it will cause disambiguation to be significantly shut down.
+But I think introducing some error handling logic is not bad as well.
+Will fix in the next version.
 
 Thanks,
-Nick
+Gao Xiang
 
-=
+> 
+> Thanks,
+> 
