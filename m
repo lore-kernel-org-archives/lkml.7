@@ -2,110 +2,82 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A1CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11604C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C838208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E471D206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfFUNo2 (ORCPT
+        id S1726343AbfFUNpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:44:28 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34402 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUNo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:44:27 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m29so6965209qtu.1;
-        Fri, 21 Jun 2019 06:44:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1VRloZAnkBM20C0VMUxA/xb315UbiGomahozxwvH1Z8=;
-        b=lJMEoVrtp3544DX1I4a5sA0Sh6wlsis37MrKFTDnfx3UaW/XOb0MwRzhlK0qsYp2lG
-         az/Vostqoi9m7pFrtRvsqg8w5Tp0qmu1Hvk0Sq0TI0r426w42ZB+RTJHSDHNBFsD1APm
-         LBMywE5iZUtI8YkNHGYvHCky4uWCEcZwXX6tOOdW6zar/Za4jVbJ8rRGhIO9FEcEU19M
-         HviF3qySrkR0iGHSwQZGqPAYf0cieok6OAlB5gCLuWLjA04IR3MB+yeRAJtRxEw19sfH
-         VCiRj0mpsZf2KVNYooN+nZeP6uzumU0DRgxTRB+iOlhSSoQhn8l0mgmfMKcVwAHrvICt
-         ynug==
-X-Gm-Message-State: APjAAAWqrknmsROP0u0bjQdKuOt2RBO3bBLLS3pVSFMtZ7UtGxhrmZcg
-        yzubvvckNqvZL90zk+el++ZI/opXhhKyRTY8U1U=
-X-Google-Smtp-Source: APXvYqx9NB1qq4sDlov2UHcJxN+0a0rXwnpPmDPhIrvdFCKv81905QoRFNrlrNFvlCAE1/C6IOoX27NwUsfLu0J+GcU=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr96965363qtd.7.1561124666614;
- Fri, 21 Jun 2019 06:44:26 -0700 (PDT)
+        Fri, 21 Jun 2019 09:45:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41240 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725985AbfFUNpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:45:07 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8463D206E3EF2D9D4832;
+        Fri, 21 Jun 2019 21:45:01 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Jun 2019
+ 21:44:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] net/sched: cbs: Fix error path of cbs_module_init
+Date:   Fri, 21 Jun 2019 21:44:37 +0800
+Message-ID: <20190621134437.4252-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190618094731.3677294-1-arnd@arndb.de> <201906201034.9E44D8A2A8@keescook>
- <CAK8P3a2uFcaGMSHRdg4NECHJwgAyhtMuYDv3U=z2UdBSL5U0Lw@mail.gmail.com> <CAKv+Gu-A_OWUQ_neUAprmQOotPA=LoUGQHvFkZ2tqQAg=us1jA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-A_OWUQ_neUAprmQOotPA=LoUGQHvFkZ2tqQAg=us1jA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 15:44:08 +0200
-Message-ID: <CAK8P3a2d3H-pdiLX_8aA4LNLOVTSyPW_jvwZQkv0Ey3SJS87Bg@mail.gmail.com>
-Subject: Re: [PATCH] structleak: disable BYREF_ALL in combination with KASAN_STACK
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 3:32 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On Fri, 21 Jun 2019 at 11:44, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Jun 20, 2019 at 7:36 PM Kees Cook <keescook@chromium.org> wrote:
-> > > On Tue, Jun 18, 2019 at 11:47:13AM +0200, Arnd Bergmann wrote:
-> > > > The combination of KASAN_STACK and GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
-> > > > leads to much larger kernel stack usage, as seen from the warnings
-> > > > about functions that now exceed the 2048 byte limit:
-> > >
-> > > Is the preference that this go into v5.2 (there's not much time left),
-> > > or should this be v5.3? (You didn't mark it as Cc: stable?)
-> >
-> > Having it in 5.2 would be great. I had not done much build testing in the last
-> > months, so I didn't actually realize that your patch was merged a while ago
-> > rather than only in linux-next.
-> >
-> > BTW, I have now run into a small number of files that are still affected
-> > by a stack overflow warning from STRUCTLEAK_BYREF_ALL. I'm trying
-> > to come up with patches for those as well, we can probably do it in a way
-> > that also improves the affected drivers. I'll put you on Cc when I
-> > find another one.
-> >
->
-> There is something fundamentally wrong here, though. BYREF_ALL only
-> initializes variables that have their address taken, which does not
-> explain why the size of the stack frame should increase (since in
-> order to have an address in the first place, the variable must already
-> have a stack slot assigned)
->
-> So I suspect that BYREF_ALL is defeating some optimizations where.
-> e.g., the call involving the address of the variable is optimized
-> away, but the the initialization remains, thus forcing the variable to
-> be allocated in the stack frame even though the initializer is the
-> only thing that references it.
+If register_qdisc fails, we should unregister
+netdevice notifier.
 
-One pattern I have seen here is temporary variables from macros or
-inline functions whose lifetime now extends over the entire function
-rather than just the basic block in which they are defined, see e.g.
-lpfc_debug_dump_qe() being inlined multiple times into
-lpfc_debug_dump_all_queues(). Each instance of the local
-"char line_buf[LPFC_LBUF_SZ];" seems to add on to the previous
-one now, where the behavior without the structleak plugin is that
-they don't.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/sched/sch_cbs.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-      Arnd
+diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
+index e16a3d3..4e1a878 100644
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -549,12 +549,17 @@ static struct notifier_block cbs_device_notifier = {
+ 
+ static int __init cbs_module_init(void)
+ {
+-	int err = register_netdevice_notifier(&cbs_device_notifier);
++	int err;
+ 
++	err = register_netdevice_notifier(&cbs_device_notifier);
+ 	if (err)
+ 		return err;
+ 
+-	return register_qdisc(&cbs_qdisc_ops);
++	err = register_qdisc(&cbs_qdisc_ops);
++	if (err)
++		unregister_netdevice_notifier(&cbs_device_notifier);
++
++	return err;
+ }
+ 
+ static void __exit cbs_module_exit(void)
+-- 
+2.7.4
+
+
