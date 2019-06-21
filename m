@@ -2,197 +2,170 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB6EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC630C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896112070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EE52070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="RblRDrzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfFUWLk (ORCPT
+        id S1726290AbfFUWNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 18:11:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbfFUWLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 18:11:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D004A882F2;
-        Fri, 21 Jun 2019 22:11:39 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B30F60BFB;
-        Fri, 21 Jun 2019 22:11:39 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id F3863105169;
-        Fri, 21 Jun 2019 18:42:11 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x5LLg7R6005552;
-        Fri, 21 Jun 2019 18:42:07 -0300
-Date:   Fri, 21 Jun 2019 18:42:06 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by
- posted interrupt
-Message-ID: <20190621214205.GA4751@amt.cnet>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
- <20190618133541.GA3932@amt.cnet>
- <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
- <20190619210346.GA13033@amt.cnet>
- <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+        Fri, 21 Jun 2019 18:13:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34717 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfFUWNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 18:13:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so7956056wrl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 15:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/hHk0S9u9UZeTnfOgA1tURrEwbtjqCVR5Jur9CvSRDU=;
+        b=RblRDrzJgYetJYhfs1+s8zGLEDsuGMJYIGjWEzlVg6iUUawJSAWh1cWw4zJFIa+FF9
+         4LeBDtgHlqAbB+vNESZVHx4UWv8R/KrQ+it0E6eaErmnu0qwSsYrYdCN+gfY4JaQaZ6P
+         AEfu5UpaZ7fkNmoFypcWAstAxxW2RwUA9GM5+pZRNuKDG4cyfxxyolNquz5LWXzCjdWv
+         WZGQx+GJF9rXXbWtY2VnEdqRlmCm37wHCE+rHRRw1gRhZYoKIVHVsHwEnjpfYBeEOzcJ
+         4Yyv7NWj8vqz102/YbR8CkCBI9EAp7NTZQQPoSiN3TbrXncG2CYCat7fRf4pFOmd8u8P
+         OWMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/hHk0S9u9UZeTnfOgA1tURrEwbtjqCVR5Jur9CvSRDU=;
+        b=jng4+D1MCyDQNoxK2az08onQ/hXVy2wePQcJet+8IcFXMHJX9JiGNelWraLiUtVwqJ
+         mrJIKy63PAfT3O0ph4cj91BHVF5uQp6s4Xv2xweb01jAVf9MowPiqJx+QNWwr7ooYWAk
+         vRAUkcz9eLYj4rZyjWP/U/QQedHdAevbB/Tk6jgVFj9+w9R7Pg+TR/zW2VI+xD0O5h0r
+         U7eFR3hnHQmsDKn3tptL5sJsEhX0kd+hg+M7FfcK43eWJ/0xLdo0jjEyF6Gg+EIiyHFz
+         bxzK+J/8LXz21RnT4JORk8RmsyXIW0dqHwLS+yIAsKY19HXgzyaXQOkxEfX7F2ua6pQO
+         sO9A==
+X-Gm-Message-State: APjAAAVgl3NOPUVcm6SbzO74ha4r+fJM54QdJx6xXKH8A9z8p+3vsKu2
+        ABp1za6uwWieEFj3FPodefM9Zw==
+X-Google-Smtp-Source: APXvYqxvE86aR9hrpK/S0FbF+03Y/CoTNB7MxqN5zN4cMwFYbx/g7u97U/NtzcSGMXaqmgw1nkiDFQ==
+X-Received: by 2002:a5d:4fc8:: with SMTP id h8mr9986421wrw.124.1561155220929;
+        Fri, 21 Jun 2019 15:13:40 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id b6sm2547103wrx.85.2019.06.21.15.13.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 15:13:40 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 00:13:39 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] samples: make pidfd-metadata fail gracefully on older
+ kernels
+Message-ID: <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
+ <20190620110037.GA4998@altlinux.org>
+ <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
+ <20190621170613.GA26182@altlinux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 21 Jun 2019 22:11:39 +0000 (UTC)
+In-Reply-To: <20190621170613.GA26182@altlinux.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
-> On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >
-> > Hi Li,
-> >
-> > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
-> > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > >
-> > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
-> > > > > From: Wanpeng Li <wanpengli@tencent.com>
-> > > > >
-> > > > > Dedicated instances are currently disturbed by unnecessary jitter due
-> > > > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> > > > > There is no hardware virtual timer on Intel for guest like ARM. Both
-> > > > > programming timer in guest and the emulated timer fires incur vmexits.
-> > > > > This patch tries to avoid vmexit which is incurred by the emulated
-> > > > > timer fires in dedicated instance scenario.
-> > > > >
-> > > > > When nohz_full is enabled in dedicated instances scenario, the emulated
-> > > > > timers can be offload to the nearest busy housekeeping cpus since APICv
-> > > > > is really common in recent years. The guest timer interrupt is injected
-> > > > > by posted-interrupt which is delivered by housekeeping cpu once the emulated
-> > > > > timer fires.
-> > > > >
-> > > > > The host admin should fine tuned, e.g. dedicated instances scenario w/
-> > > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
-> > > > > mode, ~3% redis performance benefit can be observed on Skylake server.
-> > > > >
-> > > > > w/o patch:
-> > > > >
-> > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
-> > > > >
-> > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
-> > > > >
-> > > > > w/ patch:
-> > > > >
-> > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
-> > > > >
-> > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
-> > > > >
-> > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > > > Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+On Fri, Jun 21, 2019 at 08:06:14PM +0300, Dmitry V. Levin wrote:
+> On Thu, Jun 20, 2019 at 01:10:37PM +0200, Christian Brauner wrote:
+> > On Thu, Jun 20, 2019 at 02:00:37PM +0300, Dmitry V. Levin wrote:
+> > > Cc'ed more people as the issue is not just with the example but
+> > > with the interface itself.
+> > > 
+> > > On Thu, Jun 20, 2019 at 12:31:06PM +0200, Christian Brauner wrote:
+> > > > On Thu, Jun 20, 2019 at 06:11:44AM +0300, Dmitry V. Levin wrote:
+> > > > > Initialize pidfd to an invalid descriptor, to fail gracefully on
+> > > > > those kernels that do not implement CLONE_PIDFD and leave pidfd
+> > > > > unchanged.
+> > > > > 
+> > > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 > > > > > ---
-> > > > >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
-> > > > >  arch/x86/kvm/lapic.h            |  1 +
-> > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
-> > > > >  arch/x86/kvm/x86.c              |  5 +++++
-> > > > >  arch/x86/kvm/x86.h              |  2 ++
-> > > > >  include/linux/sched/isolation.h |  2 ++
-> > > > >  kernel/sched/isolation.c        |  6 ++++++
-> > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > > > index 87ecb56..9ceeee5 100644
-> > > > > --- a/arch/x86/kvm/lapic.c
-> > > > > +++ b/arch/x86/kvm/lapic.c
-> > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
-> > > > >       return apic->vcpu->vcpu_id;
-> > > > >  }
-> > > > >
-> > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> > > > > +{
-> > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> > > > > +             kvm_hlt_in_guest(vcpu->kvm);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
-> > > >
-> > > > Paolo, can you explain the reasoning behind this?
-> > > >
-> > > > Should not be necessary...
+> > > > >  samples/pidfd/pidfd-metadata.c | 8 ++++++--
+> > > > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
+> > > > > index 14b454448429..ff109fdac3a5 100644
+> > > > > --- a/samples/pidfd/pidfd-metadata.c
+> > > > > +++ b/samples/pidfd/pidfd-metadata.c
+> > > > > @@ -83,7 +83,7 @@ static int pidfd_metadata_fd(pid_t pid, int pidfd)
+> > > > >  
+> > > > >  int main(int argc, char *argv[])
+> > > > >  {
+> > > > > -	int pidfd = 0, ret = EXIT_FAILURE;
+> > > > > +	int pidfd = -1, ret = EXIT_FAILURE;
+> > > > 
+> > > > Hm, that currently won't work since we added a check in fork.c for
+> > > > pidfd == 0. If it isn't you'll get EINVAL.
+> > > 
+> > > Sorry, I must've missed that check.  But this makes things even worse.
+> > > 
+> > > > This was done to ensure that
+> > > > we can potentially extend CLONE_PIDFD by passing in flags through the
+> > > > return argument.
+> > > > However, I find this increasingly unlikely. Especially since the
+> > > > interface would be horrendous and an absolute last resort.
+> > > > If clone3() gets merged for 5.3 (currently in linux-next) we also have
+> > > > no real need anymore to extend legacy clone() this way. So either wait
+> > > > until (if) we merge clone3() where the check I mentioned is gone anyway,
+> > > > or remove the pidfd == 0 check from fork.c in a preliminary patch.
+> > > > Thoughts?
+> > > 
+> > > Userspace needs a reliable way to tell whether CLONE_PIDFD is supported
+> > > by the kernel or not.
+> > 
+> > Right, that's the general problem with legacy clone(): it ignores
+> > unknown flags... clone3() will EINVAL you if you pass any flag it
+> > doesn't know about.
+> > 
+> > For legacy clone you can pass
+> > 
+> > (CLONE_PIDFD | CLONE_DETACHED)
+> > 
+> > on all relevant kernels >= 2.6.2. CLONE_DETACHED will be silently
+> > ignored by the kernel if specified in flags. But if you specify both
+> > CLONE_PIDFD and CLONE_DETACHED on a kernel that does support CLONE_PIDFD
+> > you'll get EINVALed. (We did this because we wanted to have the ability
+> > to make CLONE_DETACHED reuseable with CLONE_PIDFD.)
+> > Does that help?
 > 
-> https://lkml.org/lkml/2019/6/5/436  "Here you need to check
-> kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
-> through kvm_apic_expired if the guest needs to be woken up from
-> kvm_vcpu_block."
+> Yes, this is feasible, but the cost is extra syscall for new kernels
+> and more complicated userspace code, so...
 
-Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
-be woken up, if it receives a timer interrupt.
+Out of curiosity: what makes the new flag different than say
+CLONE_NEWCGROUP or any new clone flag that got introduced?
+CLONE_NEWCGROUP too would not be detectable apart from the method I gave
+you above; same for other clone flags. Why are you so keen on being able
+to detect this flag when other flags didn't seem to matter that much.
+(Again, mere curiosity.)
 
-But your patch will go through:
+> 
+> > > If CLONE_PIDFD is not supported, then pidfd remains unchanged.
+> > > 
+> > > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
+> > > also remains unchanged, which effectively means that userspace must ensure
+> > > that fd 0 is not closed when invoking CLONE_PIDFD.  This is ugly.
+> > > 
+> > > If we can assume that clone(CLONE_PIDFD) is not going to be extended,
+> > > then I'm for removing the pidfd == 0 check along with recommending
+> > > userspace to initialize pidfd with -1.
+> > 
+> > Right, I'm ok with that too.
+> 
+> ... I'd prefer this variant.
 
-kvm_apic_inject_pending_timer_irqs
-__apic_accept_irq -> 
-vmx_deliver_posted_interrupt ->
-kvm_vcpu_trigger_posted_interrupt returns false
-(because vcpu->mode != IN_GUEST_MODE) ->
-kvm_vcpu_kick
+Please send a patch for review.
 
-Which will wakeup the vcpu.
-
-Apart from this oops, which triggers when running:
-taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b 40
-
-Timer interruption from housekeeping vcpus is normal to me 
-(without requiring kvm_hlt_in_guest).
-
-[ 1145.849646] BUG: kernel NULL pointer dereference, address:
-0000000000000000
-[ 1145.850481] #PF: supervisor instruction fetch in kernel mode
-[ 1145.851161] #PF: error_code(0x0010) - not-present page
-[ 1145.851772] PGD 80000002a9fa5067 P4D 80000002a9fa5067 PUD 2abcbb067
-PMD 0 
-[ 1145.852578] Oops: 0010 [#1] PREEMPT SMP PTI
-[ 1145.853066] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.2.0-rc1+ #11
-[ 1145.853809] Hardware name: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
-[ 1145.854554] RIP: 0010:0x0
-[ 1145.854879] Code: Bad RIP value.
-[ 1145.855270] RSP: 0018:ffffc90001903e68 EFLAGS: 00010013
-[ 1145.855902] RAX: 0000010ac9f60043 RBX: ffff8882b58a8320 RCX:
-00000000c526b7c4              
-[ 1145.856726] RDX: 0000000000000000 RSI: ffffffff820d9640 RDI:
-ffff8882b58a8320              
-[ 1145.857560] RBP: ffffffff820d9640 R08: 00000000c526b7c4 R09:
-0000000000000832              
-[ 1145.858390] R10: 0000000000000000 R11: 0000000000000000 R12:
-0000000000000000              
-[ 1145.859222] R13: ffffffff820d9658 R14: ffff8881063b2880 R15:
-0000000000000002              
-[ 1145.860047] FS:  0000000000000000(0000) GS:ffff8882b5880000(0000)
-knlGS:0000000000000000   
-[ 1145.860994] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033                              
-[ 1145.861692] CR2: ffffffffffffffd6 CR3: 00000002ab1de001 CR4:
-0000000000160ee0              
-[ 1145.862570] Call Trace:                                                                    
-[ 1145.862877]  cpuidle_enter_state+0x7c/0x3e0                                                
-[ 1145.863392]  cpuidle_enter+0x29/0x40                                                       
-
-
-> I think we can still be woken up from kvm_vcpu_block() if pir is set.
-
-Exactly.
-
+Christian
