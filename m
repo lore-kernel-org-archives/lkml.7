@@ -2,127 +2,154 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2BEC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8596320673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92F5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EkbAXsmi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C/Jpiahv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfFUK5q (ORCPT
+        id S1726649AbfFUK6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:57:46 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:35410 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfFUK5q (ORCPT
+        Fri, 21 Jun 2019 06:58:33 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:36872 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfFUK6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:57:46 -0400
-Received: by mail-pg1-f173.google.com with SMTP id s27so3211073pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 03:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LfS7OaPkDmyWohtCv6+omHOKQ0iNU10OGK6bYTnhcSo=;
-        b=EkbAXsmiKWaXo7lR4QUiVCL3Qlcv5VjgIRJ0aK6NFuKAuTyEiZcnI5vTp9lBKiydzN
-         xC6cvtuwUV1tyZvDArgTgmcBgirg3MR79RamUeHI3xMVLq3/7R4M+MpAfyvVGEYeJgbB
-         PgwRRsU2ZoNIary8F1SjsWrxcWSY9vgdB9LcSLnOPck0160+E3v24EbE6LFUfKbFe29l
-         R4CRTdtb5UzyEfPhQsBfPQ+9AIlDmOJAaZh1qXb9rJbiVMWQEQijVf75CF4IUZ7OnKvH
-         HyLmU0RoHIVMnqj5BScwaEgx/hRKR1sUx6u8RRqdgnfJLVulA4vv4axkwpc17aFOdJzk
-         YJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LfS7OaPkDmyWohtCv6+omHOKQ0iNU10OGK6bYTnhcSo=;
-        b=LxaW+jvJQu8ScqOUsh3Rkqp1WhWWI3YmjXGVKekyhsg4HYaN0bCs1GR38RMYC6aPnz
-         2YxpKGBdjaTbkolsK3PgOxZSZIpNHVcJjlh31ut3rXRVGbnWNGQfJIX2UozQAvBKnpvI
-         XIbMHn62Ao0sjcX8KHbw4MpnZyODghuvnkcaSO3zEf78DPvgpDSm84+Bj2Cu7ic+tZVQ
-         7dfccexZAArgxWXFE2FSCWE7yxajFZFQMwBPr1r1m5WK1L3PfBN+xULVsPyNLTeQzkUk
-         4cKMj2doctCsmF0kfwx0qX/LnuZT4KHkurziloDBmRAU80Ur/maWCUohLe1gXcqiFyfN
-         G2nw==
-X-Gm-Message-State: APjAAAUg/6s5mol3bFy6NsMwmp/xPAMcf3iY+lul0ynxKGQyY/0fRtRO
-        CVm72ROR4bJL2M7Mt6WNgnpokg==
-X-Google-Smtp-Source: APXvYqzyg4P7NwGYnubvr8F2/xiaWS2z04jXSX8kI2HlZUYsAEErfBxzBhb5mkAaVXVwDLS01pWL+Q==
-X-Received: by 2002:a63:f817:: with SMTP id n23mr17900412pgh.35.1561114665299;
-        Fri, 21 Jun 2019 03:57:45 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id q63sm3889442pfb.81.2019.06.21.03.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 21 Jun 2019 03:57:44 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, paul.walmsley@sifive.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Fri, 21 Jun 2019 06:58:32 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190621105831euoutp01d805b71d92c8ef0afe170d1fa1848037~qMY8UoydT1898918989euoutp01F
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 10:58:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190621105831euoutp01d805b71d92c8ef0afe170d1fa1848037~qMY8UoydT1898918989euoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561114711;
+        bh=A9pBNbBVOLmjuiX6NSWUHx7tGtewDcJ1QzxPHg8R51k=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=C/Jpiahv2U6o5Wrt1Ua/p5e9gjNJnZzQomYUaRC/We685GifcxkEU/VyDrg7920Dd
+         Nl/ULYxT/Rb0whvAPPvLzRMejb63t6Otv0a24ecSfWj2tpwn+3apBwwRVDCsZsomJB
+         iDDXXD85Fhl10e79lf4bWACiHD+mO86vri9SuOak=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190621105830eucas1p1fc2359f1ccacd3cdc649c6885c9da491~qMY7v731h0680206802eucas1p1u;
+        Fri, 21 Jun 2019 10:58:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 66.B9.04325.658BC0D5; Fri, 21
+        Jun 2019 11:58:30 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190621105829eucas1p2b19a886df01e57f5b5a04f9eb5ab7d4f~qMY64VMzZ1768217682eucas1p2Q;
+        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190621105829eusmtrp2b12321237892dcf14b1d5b0265247ec6~qMY6qPm6E2690226902eusmtrp2i;
+        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-59-5d0cb856927d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 00.73.04140.558BC0D5; Fri, 21
+        Jun 2019 11:58:29 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190621105829eusmtip222e6d4a5e5d1c4975e0c08077666f869~qMY6U14r62320223202eusmtip2W;
+        Fri, 21 Jun 2019 10:58:29 +0000 (GMT)
+Subject: Re: [PATCH] video: fbdev: pvr2fb: fix link error for
+ pvr2fb_pci_exit
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet controller driver
-Date:   Fri, 21 Jun 2019 16:23:49 +0530
-Message-Id: <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
-References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
+Date:   Fri, 21 Jun 2019 12:58:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190617131624.2382303-1-arnd@arndb.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djP87phO3hiDdp+ylvMWb+GzeLvpGPs
+        Fle+vmez2P/0OYvFib4PrBaXd81hs7jz9TmLA7vH71+TGD1ajrxl9Vi85yWTx4kZv1k87ncf
+        Z/L4vEkugC2KyyYlNSezLLVI3y6BK+PDk5fsBfc4Kzbf62BrYJzE0cXIySEhYCLx/dQk5i5G
+        Lg4hgRWMEmeP/WOBcL4wSqzq/g7lfGaU+PdyCxNMy4fpO6ASyxklrs78CuW8ZZQ4Nu0hI0iV
+        sIC/RNvva2wgtoiAosTUF8/AljALXGKUuLliCjtIgk3ASmJi+yqgBg4OXgE7ib3T60DCLAKq
+        Eo8nvQfbJioQIXH/2AZWEJtXQFDi5MwnLCA2p4CpxNVVJ5lBbGYBcYlbT+YzQdjyEtvfzgHb
+        JSFwiF3ia99/FoizXSRWXPjBCmELS7w6voUdwpaR+L8TpBmkYR2jxN+OF1Dd2xkllk/+xwZR
+        ZS1x+PhFVpBLmQU0Jdbv0ocIO0qs2r6VCSQsIcAnceOtIMQRfBKTtk1nhgjzSnS0CUFUq0ls
+        WLaBDWZt186VzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS
+        83M3MQIT0ul/x7/uYNz3J+kQowAHoxIP74FZ3LFCrIllxZW5hxglOJiVRHh5cnhihXhTEiur
+        Uovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTBWZ8gvE73bnv3si/O1
+        eF+njgPfC+OURZ7PD83K6gm/3DHpv/Sqk7e+nw9y4O96vcZY9WaLTYC+3N2r+ndSVnMdK3q7
+        Q2rv1/SwXXI+i4/KGW3kNal7EfX+S3iFgscLw+9l4une+hf9hd/qz66Z/vOi25MNzOu9V8dI
+        Wi0S3lu4z/y86rRJ65KUWIozEg21mIuKEwHBo/otRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7qhO3hiDVqmq1rMWb+GzeLvpGPs
+        Fle+vmez2P/0OYvFib4PrBaXd81hs7jz9TmLA7vH71+TGD1ajrxl9Vi85yWTx4kZv1k87ncf
+        Z/L4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI
+        3y5BL+PDk5fsBfc4Kzbf62BrYJzE0cXIySEhYCLxYfoOli5GLg4hgaWMEvdvNjN2MXIAJWQk
+        jq8vg6gRlvhzrYsNouY1o0TrxQ/sIAlhAV+JGW9+g9kiAooSU188YwYpYha4xChxsHsxK0RH
+        B6NE28J7zCBVbAJWEhPbV4Ft4BWwk9g7vQ4kzCKgKvF40nsmEFtUIELizPsVLCA2r4CgxMmZ
+        T8BsTgFTiaurToKNYRZQl/gz7xKULS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYw
+        sqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjL9tx35u2cHY9S74EKMAB6MSD++BWdyxQqyJ
+        ZcWVuYcYJTiYlUR4eXJ4YoV4UxIrq1KL8uOLSnNSiw8xmgI9N5FZSjQ5H5ga8kriDU0NzS0s
+        Dc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MB6/8knxZpf3xjsemeekO54+fi1x
+        wfb8G+Nr03NnKBqVtQjHinQ/Onj2Wk9R1+PYaZd1Yz58fnJLIKO97ptWtqHa9NDe6xdP3pqx
+        vmPJKfMY98cv/iotmbv9V5PWj0vvRVnvrTm/Qk7u9ZbN06TnTVsaf+LoPmuGCd12Uw7P4mPZ
+        GGyUvbr//iRVJZbijERDLeai4kQA9VpxwdUCAAA=
+X-CMS-MailID: 20190621105829eucas1p2b19a886df01e57f5b5a04f9eb5ab7d4f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44
+References: <CGME20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44@epcas1p3.samsung.com>
+        <20190617131624.2382303-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 16 ++++++++++++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
- 2 files changed, 25 insertions(+)
+Hi,
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 4e8fbde..c53b4ea 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -225,5 +225,21 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-+		eth0: ethernet@10090000 {
-+			compatible = "sifive,fu540-macb";
-+			interrupt-parent = <&plic0>;
-+			interrupts = <53>;
-+			reg = <0x0 0x10090000 0x0 0x2000
-+			       0x0 0x100a0000 0x0 0x1000>;
-+			reg-names = "control";
-+			status = "disabled";
-+			local-mac-address = [00 00 00 00 00 00];
-+			clock-names = "pclk", "hclk";
-+			clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-+				 <&prci PRCI_CLK_GEMGXLPLL>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 4da8870..d783bf2 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -63,3 +63,12 @@
- 		disable-wp;
- 	};
- };
-+
-+&eth0 {
-+	status = "okay";
-+	phy-mode = "gmii";
-+	phy-handle = <&phy1>;
-+	phy1: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
--- 
-1.9.1
+On 6/17/19 3:16 PM, Arnd Bergmann wrote:
+> When the driver is built-in for PCI, we reference the exit function
+> after discarding it:
+> 
+> `pvr2fb_pci_exit' referenced in section `.ref.data' of drivers/video/fbdev/pvr2fb.o: defined in discarded section `.exit.text' of drivers/video/fbdev/pvr2fb.o
+> 
+> Just remove the __exit annotation as the easiest workaround.
 
+Don't we also need to fix pvr2fb_dc_exit() for CONFIG_SH_DREAMCAST=y case? 
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> Fixes: 0f5a5712ad1e ("video: fbdev: pvr2fb: add COMPILE_TEST support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/video/fbdev/pvr2fb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
+> index 299ea7db9220..cf9cfdc5e685 100644
+> --- a/drivers/video/fbdev/pvr2fb.c
+> +++ b/drivers/video/fbdev/pvr2fb.c
+> @@ -990,7 +990,7 @@ static int __init pvr2fb_pci_init(void)
+>  	return pci_register_driver(&pvr2fb_pci_driver);
+>  }
+>  
+> -static void __exit pvr2fb_pci_exit(void)
+> +static void pvr2fb_pci_exit(void)
+>  {
+>  	pci_unregister_driver(&pvr2fb_pci_driver);
+>  }
