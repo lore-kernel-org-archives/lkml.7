@@ -2,173 +2,247 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0DCC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C16C48BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA50208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561128641;
-	bh=S09RYkUMMxHYoHx76cTWh53Cqr6Fibp+qLvkSIpPItQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MPDIxRtWG6eluoYt0P1VQfaIXvMEG5z4I2E1RL8D7WVr8IRGpYzX/3hsw3oaU41Fh
-	 CEBO7awlD3nR8DiElYFnC3oYdLTr1zqSUyBfWkiY8UsXBXPdJCUeFrSq2ImPKMUJ/R
-	 k0n7LnHc54rT8W/NSPZkCkfpnj2JqK53Oz4j596U=
+	by mail.kernel.org (Postfix) with ESMTP id 88A8921537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcVIF/ZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfFUOuj (ORCPT
+        id S1726333AbfFUOus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbfFUOuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:50:39 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8CC92089E;
-        Fri, 21 Jun 2019 14:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561128638;
-        bh=S09RYkUMMxHYoHx76cTWh53Cqr6Fibp+qLvkSIpPItQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VTUHdnMaOZ0iDcqeySu7ks48hk5JDg+Vls1nObiTqE94DrxyTAcElQrmmD0FfzeE9
-         AwmbDFds/aoQsDKuurx+IyjCDHZpJZduH7+ddd7CTjxtE1jKJw5wlP3K/vPLj2FMDx
-         wx5gT00rQzju9oABrDET2XzyIALVVE/Zxk+5tSlI=
-Date:   Fri, 21 Jun 2019 23:50:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 7/7] powerpc/kprobes: Allow probing on any ftrace
- address
-Message-Id: <20190621235034.acc00fc3e2b2c7e89caa1fd5@kernel.org>
-In-Reply-To: <d26f5467577ff0aeecea55e7035ea64e303bdf17.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <d26f5467577ff0aeecea55e7035ea64e303bdf17.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 21 Jun 2019 10:50:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44354 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfFUOus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:50:48 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t7so3109135plr.11;
+        Fri, 21 Jun 2019 07:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GqVIjS+HeOIn32Cn3J+ZkUZUfYwZn/U216xOOvZPRAY=;
+        b=YcVIF/ZIL4QWtxORovWk3eQzAU8FqKBkLmosNWGgHX3k0tiBSD0Mg3gwYUIXc2GUaL
+         JXIpychTPbf+LATbUnu72bKxIqqyiSPlqFfrFFefP0GaZcTBWTfglRAni5UudTaBM8hj
+         ZIBsASsdwkBsTl6unIUVCkKdoik8dYka4HRxn8aXUYpW2jKgyQ71hl4s/7ofJe53/I5D
+         ci//OMczLs46F1c+K0E2dFJ2Pk1mJeDruIcHJ+VRUTCTRn95xFB4uKXM4h/ChQ9zIFYH
+         hL3lQhifZ3UzxZfVYGpENEB8srB6TwoVU+QrOPCG/14ElwDuVkpb+N6Yo0oajHXudbJ9
+         8HlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GqVIjS+HeOIn32Cn3J+ZkUZUfYwZn/U216xOOvZPRAY=;
+        b=Cef+7hczzJBbxTd6mANe1DBF5E5cUKpXNuNy+57SGYiEnIoT47sAY6sYiIrEenoTiv
+         fJd92F9qfShBWzgqYETonqc1ACLoKGXKjQt6YSXJf+63rnmMj3gQzbs70Wb2o3/xYcS0
+         KzJCFgAlVyLw5fKRX6KhUm/gWxa1P0AIzr/OQwy+bpiBv1hvM3s3FFn+py0Phvev2jba
+         p2c8SLvBENLMql6Arygo8++k6Lr/GAw+X2VYTjbJ9QpDeZ6Re8DdnAaDdmTu1grw++Un
+         8YetqvbgYXBLobQZKJUdpaKr8a04lRxLYpjVyPzPGWcxGK9LRk1jkllrm3l7cIAGaOph
+         9IIQ==
+X-Gm-Message-State: APjAAAUbx886wcR6BLxfegSW5LPVZvd7WphQRo9zoqoXx/xhl28HCECW
+        rS9J/5mCYUibxLfh44pL01s=
+X-Google-Smtp-Source: APXvYqwe9Y+U5AifT5+UIBArXXIDZrD+sNmTCKIR+qoKtbBQlWrwfXbqDtC/+y/QBtr+6awT/8Mu7w==
+X-Received: by 2002:a17:902:7894:: with SMTP id q20mr120889318pll.339.1561128647385;
+        Fri, 21 Jun 2019 07:50:47 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id y22sm3158782pfm.70.2019.06.21.07.50.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 07:50:46 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        jikos@kernel.org, hdegoede@redhat.com
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v8 1/5] Input: elan_i2c: Export the device id whitelist
+Date:   Fri, 21 Jun 2019 07:50:42 -0700
+Message-Id: <20190621145042.38637-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 20:17:06 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+Elan_i2c and hid-quirks work in conjunction to decide which devices each
+driver will handle.  Elan_i2c has a whitelist of devices that should be
+consumed by hid-quirks so that there is one master list of devices to
+handoff between the drivers.  Put the ids in a header file so that
+hid-quirks can consume it instead of duplicating the list.
 
-> With KPROBES_ON_FTRACE, kprobe is allowed to be inserted on instructions
-> that branch to _mcount (referred to as ftrace location). With
-> -mprofile-kernel, we now include the preceding 'mflr r0' as being part
-> of the ftrace location.
-> 
-> However, by default, probing on an instruction that is not actually the
-> branch to _mcount() is prohibited, as that is considered to not be at an
-> instruction boundary. This is not the case on powerpc, so allow the same
-> by overriding arch_check_ftrace_location()
-> 
-> In addition, we update kprobe_ftrace_handler() to detect this scenarios
-> and to pass the proper nip to the pre and post probe handlers.
-> 
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/kernel/kprobes-ftrace.c | 30 ++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
-> index 972cb28174b2..6a0bd3c16cb6 100644
-> --- a/arch/powerpc/kernel/kprobes-ftrace.c
-> +++ b/arch/powerpc/kernel/kprobes-ftrace.c
-> @@ -12,14 +12,34 @@
->  #include <linux/preempt.h>
->  #include <linux/ftrace.h>
->  
-> +/*
-> + * With -mprofile-kernel, we patch two instructions -- the branch to _mcount
-> + * as well as the preceding 'mflr r0'. Both these instructions are claimed
-> + * by ftrace and we should allow probing on either instruction.
-> + */
-> +int arch_check_ftrace_location(struct kprobe *p)
-> +{
-> +	if (ftrace_location((unsigned long)p->addr))
-> +		p->flags |= KPROBE_FLAG_FTRACE;
-> +	return 0;
-> +}
-> +
->  /* Ftrace callback handler for kprobes */
->  void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
->  			   struct ftrace_ops *ops, struct pt_regs *regs)
->  {
->  	struct kprobe *p;
-> +	int mflr_kprobe = 0;
->  	struct kprobe_ctlblk *kcb;
->  
->  	p = get_kprobe((kprobe_opcode_t *)nip);
-> +	if (unlikely(!p)) {
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/input/mouse/elan_i2c_core.c | 50 +------------------
+ include/linux/input/elan-i2c-ids.h  | 76 +++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+), 49 deletions(-)
+ create mode 100644 include/linux/input/elan-i2c-ids.h
 
-Hmm, is this really unlikely? If we put a kprobe on the second instruction address,
-we will see p == NULL always.
-
-> +		p = get_kprobe((kprobe_opcode_t *)(nip - MCOUNT_INSN_SIZE));
-> +		if (!p)
-
-Here will be unlikely, because we can not find kprobe at both of nip and
-nip - MCOUNT_INSN_SIZE.
-
-> +			return;
-> +		mflr_kprobe = 1;
-> +	}
-> +
->  	if (unlikely(!p) || kprobe_disabled(p))
-
-"unlikely(!p)" is not needed here.
-
-Thank you,
-
->  		return;
->  
-> @@ -33,6 +53,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
->  		 */
->  		regs->nip -= MCOUNT_INSN_SIZE;
->  
-> +		if (mflr_kprobe)
-> +			regs->nip -= MCOUNT_INSN_SIZE;
-> +
->  		__this_cpu_write(current_kprobe, p);
->  		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
->  		if (!p->pre_handler || !p->pre_handler(p, regs)) {
-> @@ -45,6 +68,8 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
->  				kcb->kprobe_status = KPROBE_HIT_SSDONE;
->  				p->post_handler(p, regs, 0);
->  			}
-> +			if (mflr_kprobe)
-> +				regs->nip += MCOUNT_INSN_SIZE;
->  		}
->  		/*
->  		 * If pre_handler returns !0, it changes regs->nip. We have to
-> @@ -57,6 +82,11 @@ NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
->  int arch_prepare_kprobe_ftrace(struct kprobe *p)
->  {
-> +	if ((unsigned long)p->addr & 0x03) {
-> +		printk("Attempt to register kprobe at an unaligned address\n");
-> +		return -EILSEQ;
-> +	}
-> +
->  	p->ainsn.insn = NULL;
->  	p->ainsn.boostable = -1;
->  	return 0;
-> -- 
-> 2.22.0
-> 
-
-
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 65cd325eabc3..e2c824abd19c 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -37,6 +37,7 @@
+ #include <linux/completion.h>
+ #include <linux/of.h>
+ #include <linux/property.h>
++#include <linux/input/elan-i2c-ids.h>
+ #include <linux/regulator/consumer.h>
+ #include <asm/unaligned.h>
+ 
+@@ -1375,55 +1376,6 @@ static const struct i2c_device_id elan_id[] = {
+ MODULE_DEVICE_TABLE(i2c, elan_id);
+ 
+ #ifdef CONFIG_ACPI
+-static const struct acpi_device_id elan_acpi_id[] = {
+-	{ "ELAN0000", 0 },
+-	{ "ELAN0100", 0 },
+-	{ "ELAN0600", 0 },
+-	{ "ELAN0601", 0 },
+-	{ "ELAN0602", 0 },
+-	{ "ELAN0603", 0 },
+-	{ "ELAN0604", 0 },
+-	{ "ELAN0605", 0 },
+-	{ "ELAN0606", 0 },
+-	{ "ELAN0607", 0 },
+-	{ "ELAN0608", 0 },
+-	{ "ELAN0609", 0 },
+-	{ "ELAN060B", 0 },
+-	{ "ELAN060C", 0 },
+-	{ "ELAN060F", 0 },
+-	{ "ELAN0610", 0 },
+-	{ "ELAN0611", 0 },
+-	{ "ELAN0612", 0 },
+-	{ "ELAN0615", 0 },
+-	{ "ELAN0616", 0 },
+-	{ "ELAN0617", 0 },
+-	{ "ELAN0618", 0 },
+-	{ "ELAN0619", 0 },
+-	{ "ELAN061A", 0 },
+-	{ "ELAN061B", 0 },
+-	{ "ELAN061C", 0 },
+-	{ "ELAN061D", 0 },
+-	{ "ELAN061E", 0 },
+-	{ "ELAN061F", 0 },
+-	{ "ELAN0620", 0 },
+-	{ "ELAN0621", 0 },
+-	{ "ELAN0622", 0 },
+-	{ "ELAN0623", 0 },
+-	{ "ELAN0624", 0 },
+-	{ "ELAN0625", 0 },
+-	{ "ELAN0626", 0 },
+-	{ "ELAN0627", 0 },
+-	{ "ELAN0628", 0 },
+-	{ "ELAN0629", 0 },
+-	{ "ELAN062A", 0 },
+-	{ "ELAN062B", 0 },
+-	{ "ELAN062C", 0 },
+-	{ "ELAN062D", 0 },
+-	{ "ELAN0631", 0 },
+-	{ "ELAN0632", 0 },
+-	{ "ELAN1000", 0 },
+-	{ }
+-};
+ MODULE_DEVICE_TABLE(acpi, elan_acpi_id);
+ #endif
+ 
+diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+new file mode 100644
+index 000000000000..ceabb01a6a7d
+--- /dev/null
++++ b/include/linux/input/elan-i2c-ids.h
+@@ -0,0 +1,76 @@
++/*
++ * Elan I2C/SMBus Touchpad device whitelist
++ *
++ * Copyright (c) 2013 ELAN Microelectronics Corp.
++ *
++ * Author: æ維 (Duson Lin) <dusonlin@emc.com.tw>
++ * Author: KT Liao <kt.liao@emc.com.tw>
++ * Version: 1.6.3
++ *
++ * Based on cyapa driver:
++ * copyright (c) 2011-2012 Cypress Semiconductor, Inc.
++ * copyright (c) 2011-2012 Google, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published
++ * by the Free Software Foundation.
++ *
++ * Trademarks are the property of their respective owners.
++ */
++
++#ifndef __ELAN_I2C_IDS_H
++#define __ELAN_I2C_IDS_H
++
++#include <linux/mod_devicetable.h>
++
++static const struct acpi_device_id elan_acpi_id[] = {
++	{ "ELAN0000", 0 },
++	{ "ELAN0100", 0 },
++	{ "ELAN0600", 0 },
++	{ "ELAN0601", 0 },
++	{ "ELAN0602", 0 },
++	{ "ELAN0603", 0 },
++	{ "ELAN0604", 0 },
++	{ "ELAN0605", 0 },
++	{ "ELAN0606", 0 },
++	{ "ELAN0607", 0 },
++	{ "ELAN0608", 0 },
++	{ "ELAN0609", 0 },
++	{ "ELAN060B", 0 },
++	{ "ELAN060C", 0 },
++	{ "ELAN060F", 0 },
++	{ "ELAN0610", 0 },
++	{ "ELAN0611", 0 },
++	{ "ELAN0612", 0 },
++	{ "ELAN0615", 0 },
++	{ "ELAN0616", 0 },
++	{ "ELAN0617", 0 },
++	{ "ELAN0618", 0 },
++	{ "ELAN0619", 0 },
++	{ "ELAN061A", 0 },
++	{ "ELAN061B", 0 },
++	{ "ELAN061C", 0 },
++	{ "ELAN061D", 0 },
++	{ "ELAN061E", 0 },
++	{ "ELAN061F", 0 },
++	{ "ELAN0620", 0 },
++	{ "ELAN0621", 0 },
++	{ "ELAN0622", 0 },
++	{ "ELAN0623", 0 },
++	{ "ELAN0624", 0 },
++	{ "ELAN0625", 0 },
++	{ "ELAN0626", 0 },
++	{ "ELAN0627", 0 },
++	{ "ELAN0628", 0 },
++	{ "ELAN0629", 0 },
++	{ "ELAN062A", 0 },
++	{ "ELAN062B", 0 },
++	{ "ELAN062C", 0 },
++	{ "ELAN062D", 0 },
++	{ "ELAN0631", 0 },
++	{ "ELAN0632", 0 },
++	{ "ELAN1000", 0 },
++	{ }
++};
++
++#endif /* __ELAN_I2C_IDS_H */
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
