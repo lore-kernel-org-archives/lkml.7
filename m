@@ -2,186 +2,145 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD58C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4334CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6B821530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5282084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:36:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gYr0XtF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfFUKfD (ORCPT
+        id S1726533AbfFUKgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:35:03 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:54120 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFUKfD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:35:03 -0400
-Received: from tony.xie?rock-chips.com (unknown [192.168.167.234])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 0CD9538753;
-        Fri, 21 Jun 2019 18:34:59 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P8407T139759443769088S1561113296058606_;
-        Fri, 21 Jun 2019 18:34:57 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <68853aa28a350f80205b3cfab4ccfa75>
-X-RL-SENDER: tony.xie@rock-chips.com
-X-SENDER: xxx@rock-chips.com
-X-LOGIN-NAME: tony.xie@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Tony Xie <tony.xie@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
-        xsf@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com, tony.xie@rock-chips.com
-Subject: [PATCH v10 6/6] clk: RK808: add RK809 and RK817 support.
-Date:   Fri, 21 Jun 2019 06:34:55 -0400
-Message-Id: <20190621103455.8294-1-tony.xie@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621103258.8154-1-tony.xie@rock-chips.com>
-References: <20190621103258.8154-1-tony.xie@rock-chips.com>
+        Fri, 21 Jun 2019 06:36:22 -0400
+Received: from mout.gmx.net ([212.227.15.19]:42117 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbfFUKgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 06:36:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1561113373;
+        bh=FZ3nDCFIqN8mN8VuNfZpLg/uHuIVZrVV40D1UObVCuU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=gYr0XtF0rerojtRGK8y/dL+tkZbUSPRjbMslTtDKogey4krDMF5xZFRZJmBNxegfD
+         s21QimIAafXavDd8y4AJWZxpSp4Hw5iPvnwI6aLRPjbbcAu9YKCPtF6/wJbCOr21rH
+         8aIKi3VjdjyomNJFSsEj3TdZi9ckSBM+lzf0OymQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.129.11] ([95.91.214.138]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MqJm5-1iRIlz3LEJ-00nOdZ; Fri, 21
+ Jun 2019 12:36:12 +0200
+Subject: Re: [PATCH] hid: add another quirk for Chicony PixArt mouse
+To:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        "Herton R . Krzesinski" <herton@redhat.com>,
+        Oliver Neukum <oneukum@suse.de>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190621091736.14503-1-oleksandr@redhat.com>
+ <20190621093920.qlnhbneoww7c6axw@butterfly.localdomain>
+From:   Sebastian Parschauer <s.parschauer@gmx.de>
+Message-ID: <b3cbee0c-07ef-5943-cc8f-f4fa0f854440@gmx.de>
+Date:   Fri, 21 Jun 2019 12:36:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190621093920.qlnhbneoww7c6axw@butterfly.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:W6/wR0IEZxVWoFe2j3QAOvBtKC2Xi4gdB1zncHkFkRFdu1PvOnC
+ LUlGvs/BfhzcPJ9q8EOz67FesZKKEVP3CQ6Le+RRDZXpLtFZ5h5Xv384Vy5ekSRFR0Y4wpl
+ O/6LyJbQHfwOTKpPI8QwGoFJIxeWekMX79OEX0/GTp4yfhMy0qpBB78yPcRigLnMcOpd0ow
+ UVZ72vpmXGy/eXXG68Yrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:msNBR1fBoEY=:qpSyOprnk90y65UWlATTK6
+ rFfO7TF0dwDTJNSlKZAuuLb2wceeqVnbEkCwLjMpTsj3RhTQFZGJa9OAAlQfClTazSonRPne5
+ n67Hgapw6T254h76q43hrRBlh+7K3KNaQYKFH8OB7aFWRCqnq2ASatNHviuhtWMMsbs4kwPQV
+ zGOD2TD94cu9/zDPdJJYka3CvLB9IrTgKuiUuKeSTJfAEIc2vqPbwzbkfVT8PPosRhUB8SqkW
+ FcyNTH6cA02RV51SjPSHGe+fCx4TB/dA/C0A1HqHyrF1n62kEdgQ0a5mqULqz2K2hgxcQCPL/
+ E9Gu36ou8xRHQB4ccSpXKlFm4ZY7++mI2YUiv4CKVgLFo+9Y6NOmmrDIPwyWBKlVNKRqjYMC5
+ G/T0OC0ruy6k3f4/efxmoL0LrST7c6i20U4JEhaYL6eBZWf4vQPvf3XXmRBOzIsd+2aOy0Xs/
+ xnXoWkbPYOizvSeJa3gVCfcBSuacgHtgdMMJ2wDQUWqOU895tEvS3FPuncCgwGR8oDeu/aMAq
+ ASpJCm3tPoQWDyHCYQKUSAbBRU6qf86V6GrhnshlwHrXSY2qp4vDIHoo8fNJCJP8dqwd4Gcca
+ zbQzLgdmlxGklJ/5jEITSGAl54hCTqx3+hZlJk4ss8S+5lvEn3xIAiFaWclUq2TQ8BbLqTtsd
+ fY4zVmkrzTxZX9XwuEW3ac297RGj7uEHgW7y6fiDJzZNSkVcJGMCCSk9j/Mh0ep0g2BZ6QSxo
+ Yj1q7mOO+vQ4gychCo3XuBuyGHX+aD0VFAOrJ+r+Ft+JiQAFUvfG5TeKc6NBUd2lGGRwZDZ5T
+ FIAn3fulwhrhtRqto3pV9HEBmzdtf/efRfObHwGko4aiyAoGf5/QkQdgKpo7CS5AGFBSoYUAU
+ F6Ahf20BgQk1uInMbO9eR0MQcl/8v4Qet3rFWzBMlp+0IZzfu3YErc20e98Nu0g21ITZOkczU
+ +TYxAUjds150CEibV7neYBCdb00uwXmobrqLSFlKsoVuhR/8CYsAo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK809 and RK817 are power management IC chips for multimedia products.
-most of their functions and registers are same, including the clkout
-funciton.
+Thanks, got it on my radar already since Feb 5:
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/clk/Kconfig     |  9 +++---
- drivers/clk/clk-rk808.c | 64 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 67 insertions(+), 6 deletions(-)
+https://github.com/sriemer/fix-linux-mouse/issues/15#issuecomment-46071311=
+5
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index e5b2fe80eab4..532ab112fa8a 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -52,13 +52,12 @@ config COMMON_CLK_MAX9485
- 	  This driver supports Maxim 9485 Programmable Audio Clock Generator
- 
- config COMMON_CLK_RK808
--	tristate "Clock driver for RK805/RK808/RK818"
-+	tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
- 	depends on MFD_RK808
- 	---help---
--	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
--	  multi-function devices have two fixed-rate oscillators,
--	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
--	  by control register.
-+	  This driver supports RK805, RK809 and RK817, RK808 and RK818 crystal oscillator clock.
-+	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-+	  Clkout1 is always on, Clkout2 can off by control register.
- 
- config COMMON_CLK_HI655X
- 	tristate "Clock driver for Hi655x" if EXPERT
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-index 8d90bdf5b946..75f2cf0dfc9f 100644
---- a/drivers/clk/clk-rk808.c
-+++ b/drivers/clk/clk-rk808.c
-@@ -96,6 +96,68 @@ of_clk_rk808_get(struct of_phandle_args *clkspec, void *data)
- 	return idx ? &rk808_clkout->clkout2_hw : &rk808_clkout->clkout1_hw;
- }
- 
-+static int rk817_clkout2_enable(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK817_SYS_CFG(1),
-+				  RK817_CLK32KOUT2_EN,
-+				  enable ? RK817_CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk817_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk817_clkout2_enable(hw, true);
-+}
-+
-+static void rk817_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk817_clkout2_enable(hw, false);
-+}
-+
-+static int rk817_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	unsigned int val;
-+
-+	int ret = regmap_read(rk808->regmap, RK817_SYS_CFG(1), &val);
-+
-+	if (ret < 0)
-+		return 0;
-+
-+	return (val & RK817_CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk817_clkout2_ops = {
-+	.prepare = rk817_clkout2_prepare,
-+	.unprepare = rk817_clkout2_unprepare,
-+	.is_prepared = rk817_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops *rkpmic_get_ops(long variant)
-+{
-+	switch (variant) {
-+	case RK809_ID:
-+	case RK817_ID:
-+		return &rk817_clkout2_ops;
-+	/*
-+	 * For the default case, it match the following PMIC type.
-+	 * RK805_ID
-+	 * RK808_ID
-+	 * RK818_ID
-+	 */
-+	default:
-+		return &rk808_clkout2_ops;
-+	}
-+}
-+
- static int rk808_clkout_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-@@ -127,7 +189,7 @@ static int rk808_clkout_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	init.name = "rk808-clkout2";
--	init.ops = &rk808_clkout2_ops;
-+	init.ops = rkpmic_get_ops(rk808->variant);
- 	rk808_clkout->clkout2_hw.init = &init;
- 
- 	/* optional override of the clockname */
--- 
-2.17.1
+If you see "Manufacturer: PixArt", then chances are high, that the
+device is affected. IMHO generic quirks like described in GitHub issue
+#20 would cover those easier.
 
+Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
 
-
+On 21.06.19 11:39, Oleksandr Natalenko wrote:
+> Erm. Cc: s.parschauer@gmx.de instead of inactive @suse address.
+>
+> On Fri, Jun 21, 2019 at 11:17:36AM +0200, Oleksandr Natalenko wrote:
+>> I've spotted another Chicony PixArt mouse in the wild, which requires
+>> HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
+>>
+>> USB ID of this device is 0x04f2:0x0939.
+>>
+>> We've introduced quirks like this for other models before, so lets add
+>> this mouse too.
+>>
+>> Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsr=
+econnects-every-minute-on-linux
+>> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+>> ---
+>>   drivers/hid/hid-ids.h    | 1 +
+>>   drivers/hid/hid-quirks.c | 1 +
+>>   2 files changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+>> index eac0c54c5970..69f0553d9d95 100644
+>> --- a/drivers/hid/hid-ids.h
+>> +++ b/drivers/hid/hid-ids.h
+>> @@ -269,6 +269,7 @@
+>>   #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
+>>   #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
+>>   #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
+>> +#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
+>>   #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
+>>   #define USB_DEVICE_ID_ASUS_AK1D		0x1125
+>>   #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
+>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>> index e5ca6fe2ca57..671a285724f9 100644
+>> --- a/drivers/hid/hid-quirks.c
+>> +++ b/drivers/hid/hid-quirks.c
+>> @@ -42,6 +42,7 @@ static const struct hid_device_id hid_quirks[] =3D {
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HI=
+D_QUIRK_NOGET },
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_=
+TOUCH), HID_QUIRK_MULTI_INPUT },
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART=
+_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+>> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_=
+USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELE=
+SS), HID_QUIRK_MULTI_INPUT },
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HI=
+D_QUIRK_BADPAD },
+>>   	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_ST=
+ICK), HID_QUIRK_NOGET },
+>> --
+>> 2.22.0
+>>
+>
