@@ -2,100 +2,154 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16275C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA8C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E461C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACA0208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MZT72ONa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VlyXDNvP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eoSdTfz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfFUN3X (ORCPT
+        id S1726233AbfFUN3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 21 Jun 2019 09:29:23 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54261 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfFUN3W (ORCPT
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42320 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfFUN3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:29:22 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id C66D922274;
-        Fri, 21 Jun 2019 09:29:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 21 Jun 2019 09:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=X4jgCsPTpY0MEyCO3acdNzjmRnr
-        VZZybxhhzrkSRkpg=; b=MZT72ONacup78AyY+/OaPqJTP8rVj6568fzz264cyE+
-        zL7w8UjHip/us4TT8XrOQKcHVKh/G62D+xAdVwrQKu15BUAeIg48c2KujO0eGkLi
-        Ln/fqc9hebl69ljogWKZCIfhNZSoBuRbR1Fp/vayWkCjgfqtsxFqLy+vlxC6devk
-        GJ9h9DoAxP9yGR9TQz9Ku1b0dDsU7aRQu2nvBzE1OTp3Tg9DSLu0N24KkmI4XYc7
-        7Q6lF5SPppHFbc8CivoQb2sM0K/FTl1Rr5yZFhXoBQugZri4HVV+nSANM7ORvaFx
-        vvsU3S+9d/niB+jqDWKbdHupA8U/MnCRKj4Gn9O5I9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=X4jgCs
-        PTpY0MEyCO3acdNzjmRnrVZZybxhhzrkSRkpg=; b=VlyXDNvPlC0caYrX34HuKQ
-        6ueNkeMsGPuxUHtFlE9XeABex7787SRxDGPeKsay7zvRV6OdVTHndHV3qHmIRf0h
-        FnJ8ilZXDALymYa9ItSIQolP6YYpiO1XVI8ySUD/gue+3yjvy9RHAYCut80wOfkZ
-        0mF6f7U1LkmqP9bwE6nxuR4VrgUkLowjcD9qNxs/W3aExyzJ9NTaEiouXPsB0Tl2
-        LrpFLd+H2uSrstGcyTokddaU61FblEHWGNxsGy+gJinek8S9oRouxZdMZ7hkG+m8
-        OaAsvbs7CotNKvv59sxHzn/EZOn+nvZpBfja07m37vEE6LDMuzOFCgUzp2kTmEPQ
-        ==
-X-ME-Sender: <xms:sdsMXQdS8sp-Fop-zkwMXZynm5yMa7xerpDlqAUG-_zvntB4SF-Z4w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdeigdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:sdsMXdVczzU5XQo_4uMPNGo54aOeYYG6kjN3SNMd95yuq8syqySCVQ>
-    <xmx:sdsMXW7_l6vHrUwGEx91PhsCZLlxHgbTiaGDpHlj-rRM-JB9VXrGbQ>
-    <xmx:sdsMXVxV4nx-WM6v_K8uaxnccIu7fukqOKznHi5tSrnTPrUnPLNqyg>
-    <xmx:sdsMXRICYGDyj15hbhbtIbxg4Or3tBvPuRhFllb71Jrfy8_C7XylRg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F3263380074;
-        Fri, 21 Jun 2019 09:29:20 -0400 (EDT)
-Date:   Fri, 21 Jun 2019 15:29:10 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: linux-next: unexpected file in the usb tree
-Message-ID: <20190621132910.GA11875@kroah.com>
-References: <20190621212423.2b264411@canb.auug.org.au>
+        Fri, 21 Jun 2019 09:29:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ktktx7WWcR89AvzTAqOgzzcNH2dYkqhvf9ZrJwb2fiA=; b=eoSdTfz1Y+hQKVIUHciDRjJwQ
+        Y6iEmcdMNaZs1NthSOikK4uB2t5UFwT6xLqXXgdiXDduKyy8Sv+JqyHIV2KWuEZuHjZ86xTVfCDx2
+        nJhGcQFb51Xnoj9B9Bb1/8yvenT2Q6Sk9Cx+7fhReJxPrYPrh8cYzc0VLfM/7lYYw/4FYDILuCD5j
+        6Bs52SprI4an9IXEsMImJH8hHroEVKjH77CTMcz+PW1SKDxn/b6IZR3IoYjvrh6Qc5y7aeZU0rcY+
+        HpN8MWHgyivYXikvUieglP7P2P3kp3mFeCRIb5rFdyMMjR+k3vnrgeepnLawra3bbUUdoiT06dLNc
+        EopYGpyhg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59864)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1heJbN-0005eu-Rh; Fri, 21 Jun 2019 14:29:13 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1heJbK-0003IY-DH; Fri, 21 Jun 2019 14:29:10 +0100
+Date:   Fri, 21 Jun 2019 14:29:10 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com
+Subject: Re: [PATCH v3 1/5] net: macb: add phylink support
+Message-ID: <20190621132910.kd6y2i3vk6ogcher@shell.armlinux.org.uk>
+References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+ <1561106084-8241-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190621212423.2b264411@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1561106084-8241-1-git-send-email-pthombar@cadence.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:24:23PM +1000, Stephen Rothwell wrote:
-> Hi Greg,
-> 
-> Commit
-> 
->   ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-api")
-> 
-> added this unexpected file:
-> 
->   Documentation/index.rst.rej
+On Fri, Jun 21, 2019 at 09:34:44AM +0100, Parshuram Thombare wrote:
+> @@ -438,115 +439,145 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
+>  		netdev_err(dev, "adjusting tx_clk failed.\n");
+>  }
+>  
+> -static void macb_handle_link_change(struct net_device *dev)
+> +static void gem_phylink_validate(struct phylink_config *pl_config,
+> +				 unsigned long *supported,
+> +				 struct phylink_link_state *state)
+>  {
+> -	struct macb *bp = netdev_priv(dev);
+> -	struct phy_device *phydev = dev->phydev;
+> -	unsigned long flags;
+> -	int status_change = 0;
+> +	struct net_device *netdev = to_net_dev(pl_config->dev);
+> +	struct macb *bp = netdev_priv(netdev);
+> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+> +
+> +	switch (state->interface) {
+> +	case PHY_INTERFACE_MODE_GMII:
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
+> +			phylink_set(mask, 1000baseT_Full);
+> +			phylink_set(mask, 1000baseX_Full);
+> +			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
+> +				phylink_set(mask, 1000baseT_Half);
+> +				phylink_set(mask, 1000baseT_Half);
+> +			}
+> +		}
+> +	/* fallthrough */
+> +	case PHY_INTERFACE_MODE_MII:
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		phylink_set(mask, 10baseT_Half);
+> +		phylink_set(mask, 10baseT_Full);
+> +		phylink_set(mask, 100baseT_Half);
+> +		phylink_set(mask, 100baseT_Full);
+> +		break;
+> +	default:
+> +		break;
 
-Ugh, that's what I get for having to manually apply a patch :(
+PHY_INTERFACE_MODE_NA is used to ascertain the _full_ set of support
+from the MAC irrespective of interface mode, so that (eg) SFPs can
+select an appropriate interface mode from the subset of capabililties
+supported by the SFP and MAC.
 
-I'll go remove it now, thanks for noticing.
+Also note this behaviour for MACs that support switching between
+2500BASE-X and 1000BASE-X (which are fixed speed BASE-X):
 
-greg k-h
+static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+                            struct phylink_link_state *state)
+{
+...
+        /* Half-duplex at speeds higher than 100Mbit is unsupported */
+        if (pp->comphy || state->interface != PHY_INTERFACE_MODE_2500BASEX) {
+                phylink_set(mask, 1000baseT_Full);
+                phylink_set(mask, 1000baseX_Full);
+        }
+        if (pp->comphy || state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+                phylink_set(mask, 2500baseT_Full);
+                phylink_set(mask, 2500baseX_Full);
+        }
+
+The idea here is that _if_ we have a comphy, we can reprogram the comphy
+to select between 1G and 2.5G speeds.  So we offer both 1G and 2.5G
+capabilities irrespective of interface mode.
+
+When the interface type is set in mvneta_mac_config(), the comphy is
+configured for the link mode, including setting the link speed to either
+1.25Gbaud or 3.125Gbaud.
+
+So, the speed of the serdes lane is determined by the selected
+PHY_INTERFACE_MODE.
+
+There is additional logic in the mvneta_validate() method to deal with
+the selection of 1G and 2.5G modes for BASE-X:
+
+        /* We can only operate at 2500BaseX or 1000BaseX.  If requested
+         * to advertise both, only report advertising at 2500BaseX.
+         */
+        phylink_helper_basex_speed(state);
+
+What this does is clear state->advertising, ensuring that only one of
+2500BASE_X or 1000BASE_X is shown, and also sets state->interface in
+the validate callback accordingly to select the interface mode.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
