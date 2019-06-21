@@ -2,85 +2,183 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26261C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD4BC4646B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1942206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B2B2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="krUEz3jU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfFUOgw (ORCPT
+        id S1726538AbfFUOhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:36:52 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:55106 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfFUOgu (ORCPT
+        Fri, 21 Jun 2019 10:37:24 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43160 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUOhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:36:50 -0400
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1heKem-0004et-16; Fri, 21 Jun 2019 16:36:48 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 2/2] posix-timers: Use spin_lock_irq() in itimer_delete()
-Date:   Fri, 21 Jun 2019 16:36:43 +0200
-Message-Id: <20190621143643.25649-3-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190621143643.25649-1-bigeasy@linutronix.de>
-References: <20190621143643.25649-1-bigeasy@linutronix.de>
+        Fri, 21 Jun 2019 10:37:24 -0400
+Received: by mail-vk1-f196.google.com with SMTP id m193so1329235vke.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CRsZKa850d7hy2Fg7kcjRq2q649+iIRBsH7xdd7VMHk=;
+        b=krUEz3jU5PDEs/c+y0vBtzgq6AFBae0v8SSlcMMS/hmJNHLzMQL83zvltWuywWMrmp
+         il/scSnj+2Ivb9k/0MUKDwG5H8G94payV/kNpVWZGUwF9HI0qsHAoTTCtNgPSjT1amoW
+         t/xIUvgHCrBLBdHz2IcXtQQkX/ioF7maLpTQHiJYn6nhdefKPoApx1v464zVabU1GZJ1
+         aImXO+fQ1VTBBSq2STNMAC5PLpwVD39s9jZYcZoEF0CrHSrTXQBU3JsAm7J6CO9KyyrJ
+         O+cq0pdgRfdAvOH7q4sn0X6D7qxonOPLIOAtlI2cQlnDKMtjM8V4LLd65XTNAnaOqus0
+         Q7JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CRsZKa850d7hy2Fg7kcjRq2q649+iIRBsH7xdd7VMHk=;
+        b=j9GCvvFZgnBD1CmNfgYpq7g5SPjV8ynjwABTVtKy0U76PPyXWsqHpjMmGDP60Zds+T
+         05yem7FKiIQdJsjcJeelYFNlctETOE8Mejy6cd+T9Vlfj4vJ8YgwWr/7ChFQ1lX8hOgi
+         fcY+91Db7zRo0LVVQYF/QXJAARZVHBvqIci5sqqHzMV+NzHVK3qQ/cp/1XFJiYGkbiGE
+         Fcpu/4V3IaKKKUJcwBfrQD7UfIuHDtc1kvAZe+OZRWOIE3Vj4b/NuclSx4vkvNGqlsk6
+         5m4ijlzDDXFJDZNo48bT4kB/bk0I7pwxHayIz6TcwnOEqJ8nNnDACOSyPZChjCKLe4Wc
+         orOQ==
+X-Gm-Message-State: APjAAAW/cRs/tRD54BUeesWEVlmgFDHOSPNR0YnUtRSowmYUo41kNPCl
+        h+FzSSq2OK3b+73LYrnQNNfI28+pnLaYvkNdK02RNg==
+X-Google-Smtp-Source: APXvYqxtIeR8nA5JywTAnCOPtXDwpBCuWFRhO7ubkHThaKB+JU1b6TEzqRXDk+CV9/2hiiiDVvk6BOQmArl1wouIcyQ=
+X-Received: by 2002:a1f:dcc5:: with SMTP id t188mr9877753vkg.29.1561127842845;
+ Fri, 21 Jun 2019 07:37:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1561063566-16335-1-git-send-email-cai@lca.pw> <201906201801.9CFC9225@keescook>
+ <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com> <1561119983.5154.33.camel@lca.pw>
+In-Reply-To: <1561119983.5154.33.camel@lca.pw>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Fri, 21 Jun 2019 16:37:10 +0200
+Message-ID: <CAG_fn=WGdFZNrUCeMtbx4wbHhxWqM2s7Vq_GvnMC-9WJZ_mioQ@mail.gmail.com>
+Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
+To:     Qian Cai <cai@lca.pw>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-itimer_delete() uses spin_lock_irqsave() to obtain a `flags' variable
-which can then be passed to unlock_timer(). It uses already spin_lock
-locking for the structure instead of lock_timer() because it has a timer
-which can not be removed by others at this point. The cleanup is always
-performed with enabled interrupts.
+On Fri, Jun 21, 2019 at 2:26 PM Qian Cai <cai@lca.pw> wrote:
+>
+> On Fri, 2019-06-21 at 12:39 +0200, Alexander Potapenko wrote:
+> > On Fri, Jun 21, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote=
+:
+> > >
+> > > On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
+> > > > The linux-next commit "mm: security: introduce init_on_alloc=3D1 an=
+d
+> > > > init_on_free=3D1 boot options" [1] introduced a false positive when
+> > > > init_on_free=3D1 and page_poison=3Don, due to the page_poison expec=
+ts the
+> > > > pattern 0xaa when allocating pages which were overwritten by
+> > > > init_on_free=3D1 with 0.
+> > > >
+> > > > Fix it by switching the order between kernel_init_free_pages() and
+> > > > kernel_poison_pages() in free_pages_prepare().
+> > >
+> > > Cool; this seems like the right approach. Alexander, what do you thin=
+k?
+> >
+> > Can using init_on_free together with page_poison bring any value at all=
+?
+> > Isn't it better to decide at boot time which of the two features we're
+> > going to enable?
+>
+> I think the typical use case is people are using init_on_free=3D1, and th=
+en decide
+> to debug something by enabling page_poison=3Don. Definitely, don't want
+> init_on_free=3D1 to disable page_poison as the later has additional check=
+ing in
+> the allocation time to make sure that poison pattern set in the free time=
+ is
+> still there.
+In addition to information lifetime reduction the idea of init_on_free
+is to ensure the newly allocated objects have predictable contents.
+Therefore it's handy (although not strictly necessary) to keep them
+zero-initialized regardless of other boot-time flags.
+Right now free_pages_prezeroed() relies on that, though this can be changed=
+.
 
-Use spin_lock_irq() / spin_unlock_irq() so the `flags' variable can be
-removed.
+On the other hand, since page_poison already initializes freed memory,
+we can probably make want_init_on_free() return false in that case to
+avoid extra initialization.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/time/posix-timers.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Side note: if we make it possible to switch betwen 0x00 and 0xAA in
+init_on_free mode, we can merge it with page_poison, performing the
+initialization depending on a boot-time flag and doing heavyweight
+checks under a separate config.
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index caa63e58e3d88..d7f2d91acdac1 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -980,18 +980,16 @@ SYSCALL_DEFINE1(timer_delete, timer_t, timer_id)
-  */
- static void itimer_delete(struct k_itimer *timer)
- {
--	unsigned long flags;
--
- retry_delete:
--	spin_lock_irqsave(&timer->it_lock, flags);
-+	spin_lock_irq(&timer->it_lock);
- 
- 	if (timer_delete_hook(timer) == TIMER_RETRY) {
--		unlock_timer(timer, flags);
-+		spin_unlock_irq(&timer->it_lock);
- 		goto retry_delete;
- 	}
- 	list_del(&timer->list);
- 
--	unlock_timer(timer, flags);
-+	spin_unlock_irq(&timer->it_lock);
- 	release_posix_timer(timer, IT_ID_SET);
- }
- 
--- 
-2.20.1
+> >
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > >
+> > > -Kees
+> > >
+> > > >
+> > > > [1] https://patchwork.kernel.org/patch/10999465/
+> > > >
+> > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > ---
+> > > >
+> > > > v2: After further debugging, the issue after switching order is lik=
+ely a
+> > > >     separate issue as clear_page() should not cause issues with fut=
+ure
+> > > >     accesses.
+> > > >
+> > > >  mm/page_alloc.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > > index 54dacf35d200..32bbd30c5f85 100644
+> > > > --- a/mm/page_alloc.c
+> > > > +++ b/mm/page_alloc.c
+> > > > @@ -1172,9 +1172,10 @@ static __always_inline bool
+> > > > free_pages_prepare(struct page *page,
+> > > >                                          PAGE_SIZE << order);
+> > > >       }
+> > > >       arch_free_page(page, order);
+> > > > -     kernel_poison_pages(page, 1 << order, 0);
+> > > >       if (want_init_on_free())
+> > > >               kernel_init_free_pages(page, 1 << order);
+> > > > +
+> > > > +     kernel_poison_pages(page, 1 << order, 0);
+> > > >       if (debug_pagealloc_enabled())
+> > > >               kernel_map_pages(page, 1 << order, 0);
+> > > >
+> > > > --
+> > > > 1.8.3.1
+> > > >
+> > >
+> > > --
+> > > Kees Cook
+> >
+> >
+> >
 
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
