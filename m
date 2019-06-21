@@ -2,196 +2,168 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37496C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF826C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C408208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561120761;
-	bh=6oTArFPKLoxWO6vGPNqq+VrhkTgfRm+IpHPTI9hIThs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OiIRlwvSRLkpSWCqfUtVYaKFpcF6aSIFuzbCL5JgRP1Fg9odlZNEhtJcNcslG7p/p
-	 GZcyFj+7tE5Fvb7YwCM5NatBHhzu9w186zL4D2MoR5QVN3W+An1SAd/7sMXcGQe3UC
-	 zlLHdtiIwiRxuLZmvI1a35iJU3iW6e6RybanLYCI=
+	by mail.kernel.org (Postfix) with ESMTP id 7FF5421530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="jW8tPV+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfFUMjU (ORCPT
+        id S1726789AbfFUMkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:39:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38382 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfFUMjT (ORCPT
+        Fri, 21 Jun 2019 08:40:36 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:57652 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726260AbfFUMkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:39:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IPY/WjpwDduN3Te1YABfv2FDARx5WUlMHv5/S8L1c5s=; b=Aew36X9orfe9DG8f1aYCJSYs4
-        5z3wAmYvJqQyL7pohcvPwIQQs+5vhmEgJaD8RJnjfTPjBoDGGF35xPEpSOENVDf9+0Ls3sOP6LkGr
-        hP2Dwt40epsYPA3J/WXbBj+QFwz1BwBObeNJD568RxUSQYtG64TijkM8i/wGg3SBo/8cduLhZkIX4
-        fV3DCG4BzrtDkTxZugi7ZLPKOU76OW2K9Iq1ypKDphDSXgHNXnCpvreq9HTEiFzNKesvdYtT68eJD
-        VMHBSu7kwaj5OFrBfqe1i9RxdpsQA+Xr1c1irEQADsZLIkEssG5fa4GM0Mz/+YSXPFlw/aUdYZN/3
-        gYOUfZvSQ==;
-Received: from [177.97.20.138] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1heIp4-00068L-Ug; Fri, 21 Jun 2019 12:39:19 +0000
-Date:   Fri, 21 Jun 2019 09:39:15 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH RFC 0/6] Produce ABI guide without escaping ReST source
- files
-Message-ID: <20190621093915.4a466f79@coco.lan>
-In-Reply-To: <cover.1561118631.git.mchehab+samsung@kernel.org>
-References: <cover.1561118631.git.mchehab+samsung@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 21 Jun 2019 08:40:36 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LCBHZC018678;
+        Fri, 21 Jun 2019 08:14:21 -0400
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2053.outbound.protection.outlook.com [104.47.42.53])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2t8vahrgnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 08:14:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m9ujq0FjNOpnARa0wtTiJpN2igZAh/C9uap/d0xAMGw=;
+ b=jW8tPV+L8C9e/0UCm/bBo/joKkCv67W6M9/r8NtApBw9oMlv/sSIgqi1JJrfWWpypK1DAEyOSyPQHFCF0e2KHlhBfoiiTt8Yp1LmC+ZCeNQsveoNmsJTQUB/zqDDI+c2YClRcJ2pt7dhhECRyb6cXX89d0xje2GOgtS4wU91cMc=
+Received: from BN6PR03CA0116.namprd03.prod.outlook.com (2603:10b6:404:10::30)
+ by BL2PR03MB547.namprd03.prod.outlook.com (2a01:111:e400:c23::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13; Fri, 21 Jun
+ 2019 12:14:19 +0000
+Received: from BL2NAM02FT012.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::207) by BN6PR03CA0116.outlook.office365.com
+ (2603:10b6:404:10::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13 via Frontend
+ Transport; Fri, 21 Jun 2019 12:14:19 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT012.mail.protection.outlook.com (10.152.77.27) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Fri, 21 Jun 2019 12:14:18 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5LCEIJ8023562
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 21 Jun 2019 05:14:18 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 21 Jun 2019 08:14:18 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V2 3/4] iio: adc: ad7124: Shift to dynamic allocation for channel configuration
+Date:   Fri, 21 Jun 2019 15:13:43 +0300
+Message-ID: <20190621121344.24917-3-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621121344.24917-1-mircea.caprioru@analog.com>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(2980300002)(54534003)(199004)(189003)(336012)(77096007)(2351001)(86362001)(186003)(246002)(106002)(70206006)(70586007)(47776003)(5660300002)(316002)(16586007)(1076003)(26005)(7636002)(305945005)(2906002)(4326008)(7696005)(76176011)(8676002)(356004)(50466002)(6666004)(6916009)(107886003)(51416003)(8936002)(14444005)(476003)(126002)(486006)(426003)(54906003)(2616005)(446003)(478600001)(50226002)(11346002)(36756003)(48376002)(44832011)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL2PR03MB547;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f0f4dad3-23e6-4724-a30c-08d6f641fc88
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL2PR03MB547;
+X-MS-TrafficTypeDiagnostic: BL2PR03MB547:
+X-Microsoft-Antispam-PRVS: <BL2PR03MB547E9222B4EE8AD70D6B5FC81E70@BL2PR03MB547.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0075CB064E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: xYqLZJp+zOOkdyQAsHgI31cpt+VQ6zFzUNSPNsgbH/IMkVrea5V0tqYxMh9hzdtCk3VZ/61OTv1Vn6piB2h+Mr49aOuicyxUNbPGZBwhLUIvbkydGP1yDpzZoQff8gZq2A4U2u6dCyoOu+BixmtOad/IQ2QFjaBQSmEYC41eaZwjrt83B5bdezKl8rMT9hHyeaGP3DZNfQ+Cgrm6/vg+XI83abZgfScAUQI+r/at1gju/wyu8SLUPDK/3X0t8IxP8VUpx6RkOyvGevxgfcmoyawrPMTWGy8IJnk3NJBO4t6gRzczxn8WK3AmVc70JI664hXN0B150Jvqo9dnj5XWVduEiKji7G+dc3+nivvt1IHtzviWswjcHznx65H90xKK+Xt0ZOy6jtoWI4kKLf+2b8BGLv+uDKZIpS9lVJzmiCk=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 12:14:18.8423
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0f4dad3-23e6-4724-a30c-08d6f641fc88
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2PR03MB547
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 21 Jun 2019 09:32:00 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+This patch changes the channel configuration member of the device
+structure from a fixed size array to a dynamic allocated one with a size
+equal to the number of channels specified in the device tree. This will
+ensure a more flexibility for compatible devices.
 
-> Hi Greg,
-> 
-> As you proposed to give it a try on removing the escape code from the
-> script which parses the ReST file, I changed a few things there,
-> adding the capability of selectively enabling to output an ABI sub-dir
-> without escaping things that would crash Sphinx.
-> 
-> PS.: As for now this is just a RFC, I'm not getting the ABI file
-> maintainers, copying just LKML, linux-doc ML, plus you and Jon.
-> 
-> I also manually fixed the contents of ABI/stable, in order for it to
-> pass without causing troubles.
-> 
-> I added all patches from ABI and features at this branch:
-> 
-> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=abi_patches_v4.1
-> 
-> The html output is at https://www.infradead.org/~mchehab/rst_features/,
-> and you can see the resulting ABI guide on:
-> 
-> 	https://www.infradead.org/~mchehab/rst_features/admin-guide/abi.html
-> 
-> No Sphinx crashes/warnings happen when building it.
-> 
-> That's my personal notes about such work:
-> 
-> 1) Documentation/ABI/stable/sysfs-class-infiniband
-> 
-> It had some title captions inside it, like:
-> 
-> 	Errors info:
->                 -----------
-> 
-> For one of the "What:"
-> 
-> Sphinx is really pick with title markups. As the entire Documentation/stable is
-> parsed as if it were a single document, there should be a coherency on what
-> character is used to markup a level-one title. I mean, if one document uses:
-> 
-> foo
-> ----
-> 
-> For the first level, all other documents should use "---...-" as well.
-> 
-> The alternative would be to have one entry for every single file at
-> Documentation/admin-guide/abi-*.rst, with, IMHO, it would be a lot
-> harder to maintain.
-> 
-> So, the best seems to let clear at ABI/README about how titles/subtitles
-> should be used inside files, if any.
-> 
-> 2) Some documents there use a "Values:" tag, with is not defined as a
-> valid one at ABI/README. The script handles it as part of the description,
-> so no harm done;
-> 
-> 3) Among the 47 files under ABI/stable, 14 of them names the file
-> contents, using a valid ReST markup for the document title. That is shown
-> at the index at:
-> 
-> 	https://www.infradead.org/~mchehab/rst_features/admin-guide/abi.html
-> 
-> 
-> - ABI stable symbols
-> 
->   -  sysfs interface for Mellanox ConnectX HCA IB driver (mlx4)
->   -  sysfs interface for Intel IB driver qib
->   -  sysfs interface for Intel(R) X722 iWARP i40iw driver
->   -  sysfs interface for QLogic qedr NIC Driver
->   -  sysfs interface for NetEffect RNIC Low-Level iWARP driver (nes)
->   -  sysfs interface for Cisco VIC (usNIC) Verbs Driver
->   -  sysfs interface for Chelsio T3 RDMA Driver (cxgb3)
->   -  sysfs interface for Chelsio T4/T5 RDMA driver (cxgb4)
->   -  sysfs interface for Intel Omni-Path driver (HFI1)
->   -  sysfs interface for VMware Paravirtual RDMA driver
->   -  sysfs interface for Mellanox Connect-IB HCA driver mlx5
->   -  sysfs interface for Emulex RoCE HCA Driver
->   -  sysfs interface for Broadcom NetXtreme-E RoCE driver
->   -  sysfs interface for Mellanox IB HCA low-level driver (mthca)
-> 
-> I liked that, but ideally all ABI files should either use it or not.
-> 
-> 4) I was expecting to have troubles with asterisk characters inside the
-> ABI files. That was not the case: I had to escape just one occurrence on
-> a single file of the 47 ones inside ABI/stable. 
-> 
-> -
-> 
-> My conclusion from this experiment is that it is worth cleaning the ABI
-> files for them to be parsed without needing to escape non-ReST compliant
-> parts of the ABI file.
-> 
-> Perhaps we could keep rst-compliant the stable, obsolete and removed
-> directories only, and gradually moving stuff from ABI/testing to ABI/stable,
-> while fixing them to be rst-compliant.
+Ex. ad7124-4 - can have 4 differential or 8 pseudo-differential channels
+ad7124-8 - can have 8 differential or 16 pseudo-differential channels
 
-Btw, adding :rst: to kernel-abi markup at abi-obsolete.rst and 
-abi-removed.rst produced just two warnings:
+Also the device can suspport any other combination of differential and
+pseudo-differential channels base on the physical number of inputs
+available.
 
-get_abi.pl rest --dir $srctree/Documentation/ABI/obsolete --rst-source:1689: ERROR: Unexpected indentation.
-get_abi.pl rest --dir $srctree/Documentation/ABI/obsolete --rst-source:1692: WARNING: Block quote ends without a blank line; unexpected unindent.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
 
-I'll fix those too at my repository.
+Changelog v2:
+- nothing changed here
 
-I suspect, however, that Documentation/ABI/testing with its 353 files will
-require a lot more care.
+ drivers/iio/adc/ad7124.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks,
-Mauro
-
-diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
-index cda9168445a5..d095867899c5 100644
---- a/Documentation/admin-guide/abi-obsolete.rst
-+++ b/Documentation/admin-guide/abi-obsolete.rst
-@@ -8,3 +8,4 @@ The description of the interface will document the reason why it is
- obsolete and when it can be expected to be removed.
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index ab52c5e9ecb1..edc6f1cc90b2 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -121,7 +121,7 @@ struct ad7124_channel_config {
+ struct ad7124_state {
+ 	const struct ad7124_chip_info *chip_info;
+ 	struct ad_sigma_delta sd;
+-	struct ad7124_channel_config channel_config[4];
++	struct ad7124_channel_config *channel_config;
+ 	struct regulator *vref[4];
+ 	struct clk *mclk;
+ 	unsigned int adc_control;
+@@ -439,6 +439,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 	struct ad7124_state *st = iio_priv(indio_dev);
+ 	struct device_node *child;
+ 	struct iio_chan_spec *chan;
++	struct ad7124_channel_config *chan_config;
+ 	unsigned int ain[2], channel = 0, tmp;
+ 	int ret;
  
- .. kernel-abi:: $srctree/Documentation/ABI/obsolete
-+   :rst:
-diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
-index 497978fc9632..f7e9e43023c1 100644
---- a/Documentation/admin-guide/abi-removed.rst
-+++ b/Documentation/admin-guide/abi-removed.rst
-@@ -2,3 +2,4 @@ ABI removed symbols
- ===================
+@@ -453,8 +454,14 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 	if (!chan)
+ 		return -ENOMEM;
  
- .. kernel-abi:: $srctree/Documentation/ABI/removed
-+   :rst:
-
++	chan_config = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
++				   sizeof(*chan_config), GFP_KERNEL);
++	if (!chan_config)
++		return -ENOMEM;
++
+ 	indio_dev->channels = chan;
+ 	indio_dev->num_channels = st->num_channels;
++	st->channel_config = chan_config;
+ 
+ 	for_each_available_child_of_node(np, child) {
+ 		ret = of_property_read_u32(child, "reg", &channel);
+-- 
+2.17.1
 
