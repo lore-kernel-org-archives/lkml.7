@@ -2,107 +2,79 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E387C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A82C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06F421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561138901;
-	bh=KV6UX53In4jwl+sZZBkp4ypbXQlUCCFyq9XRAOPKwR4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZAXMdqmuQovdQjpxMQUmxbdcnQiUoXqAYxtbD2f+J+zeX6NriI6NOySkZVM+Ja1L
-	 dCd5amUgJObNw6ZLunJ90rEf/kU6Pwi1hM12wHPlcfROUMo11qJDEos44Uw0BJL5rb
-	 oGBLNO/KHsiIZrTFC0x0WhvOCUXbGLk5B1xBlXiY=
+	by mail.kernel.org (Postfix) with ESMTP id CE69A20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfFURlk (ORCPT
+        id S1726375AbfFURm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfFURlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:41:39 -0400
-Received: from quaco.ghostprotocols.net (187-26-104-93.3g.claro.net.br [187.26.104.93])
+        Fri, 21 Jun 2019 13:42:26 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:33016 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfFURm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:42:26 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABBF321530;
-        Fri, 21 Jun 2019 17:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561138898;
-        bh=KV6UX53In4jwl+sZZBkp4ypbXQlUCCFyq9XRAOPKwR4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rF4ukSfGXdvkm6S/jW7nOUgpsldLSKo7GFolV2XO032rw1TvZXfgqb42242Ihwsuc
-         zr1pD1L9P0/cmgYYVUlzELA1Uk/E2XTTSRFmO3Onj7sSbomgplZVQO0PFg9OrdTOFK
-         tiJo3uHZ9jEQwNyqAwIfkS1lahKgn0G/1g095628=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 25/25] tools build: Fix the zstd test in the test-all.c common case feature test
-Date:   Fri, 21 Jun 2019 14:38:31 -0300
-Message-Id: <20190621173831.13780-26-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190621173831.13780-1-acme@kernel.org>
-References: <20190621173831.13780-1-acme@kernel.org>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4044F20020;
+        Fri, 21 Jun 2019 19:42:22 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 19:42:15 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, thierry.reding@gmail.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] MSM8998 MTP Display
+Message-ID: <20190621174215.GA16409@ravnborg.org>
+References: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
+ <CAOCk7NoaP=DkNLgdiUw5M0JYRGEGGCFQkn1sCO9dqtexMPC9dQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NoaP=DkNLgdiUw5M0JYRGEGGCFQkn1sCO9dqtexMPC9dQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=_aGGFSCzEicpxybLgu0A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Jeffrey.
 
-We were renanimg 'main' to 'main_zstd' but then using 'main_libzstd();'
-in the main() for test-all.c, causing this:
+On Fri, Jun 21, 2019 at 11:31:50AM -0600, Jeffrey Hugo wrote:
+> On Fri, Jun 14, 2019 at 12:55 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > Since we are trying to get the GPU and display hardware in the SoC
+> > supported, it would be nice to be able to put the output on the
+> > integrated panel for the reference platform.  To do so, we need support
+> > in the Truly driver to support the specific panel variant for the
+> > MSM8998 MTP.  This series adds taht support.
+> >
+> > Jeffrey Hugo (2):
+> >   dt-bindings: display: truly: Add MSM8998 MTP panel
+> >   drm/panel: truly: Add MSM8998 MTP support
+> 
+> Lets actually hold off on this series.  I thought I could solve an
+> issue in the DSI driver, but thats not working out like how I'd hoped.
+> I may need to rework this.
 
-  $ cat /tmp/build/perf/feature/test-all.make.output
-  test-all.c: In function ‘main’:
-  test-all.c:236:2: error: implicit declaration of function ‘main_test_libzstd’; did you mean ‘main_test_zstd’? [-Werror=implicit-function-declaration]
-    main_test_libzstd();
-    ^~~~~~~~~~~~~~~~~
-    main_test_zstd
-  cc1: all warnings being treated as errors
-  $
+Thanks for the heads up, and good luck with it.
+Despite the missing response on this patchset please do not hesitate
+to post an updated version or another patchset in the future.
 
-I.e. what was supposed to be the fast path feature test was _always_
-failing, duh, fix it.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Fixes: 3b1c5d965971 ("tools build: Implement libzstd feature check, LIBZSTD_DIR and NO_LIBZSTD defines")
-Link: https://lkml.kernel.org/n/tip-ma4abk0utroiw4mwpmvnjlru@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/feature/test-all.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 3b3d5d72124a..88145e8cde1a 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -186,7 +186,7 @@
- # include "test-disassembler-four-args.c"
- #undef main
- 
--#define main main_test_zstd
-+#define main main_test_libzstd
- # include "test-libzstd.c"
- #undef main
- 
--- 
-2.20.1
-
+	Sam
