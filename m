@@ -2,138 +2,99 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F013CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFF9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C227F20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C1D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="bLoA8Vtp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PHUKIT0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfFUPyR (ORCPT
+        id S1726275AbfFUPyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:54:17 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45249 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfFUPyR (ORCPT
+        Fri, 21 Jun 2019 11:54:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46127 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUPyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:54:17 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j19so7368957qtr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 08:54:16 -0700 (PDT)
+        Fri, 21 Jun 2019 11:54:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so303596iol.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 08:54:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mLgah8hWTBbEh5+bUoBbV4cO6mlCq84wOyEco/eLAZk=;
-        b=bLoA8VtprCwV9w7tPcg86jZ1rpAS3H8PKijh78PfsPQTzI+nU5oul0zgXMeLaRiXRt
-         0wFPKH9U615gCpHD+L5Yv8W5lvde3UkjewCNuhwBu5S0CsDeI4/UcCMqeCIrj/KG+8Zb
-         l3QD277Vy5HfhTuZfxzL2AOHsfaHAVgllOoulaRVcrlIq1FSXlq3gNYiB0wHGCzm7t/H
-         qWTA1oANgEuyafWGY7DXvPIkRaLh51XuTMrMh/wGGhVgrxJRSu7jTVC4lvw3CGowryz4
-         kFxWUuoYC16OKmvczWftpSNQDTxxycyKDXLzpSxXkmqILfG31DDx+kT4wcJhilA/snBo
-         PXUw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=67Zwr0+JR5ftAH9XUiVHCrJ8ZWllxG5OsGyxy9ZC38U=;
+        b=PHUKIT0ZA3D4YNl0n8jtu3bk/mrY4ytlRjGB3rTDb7+ENS6p5Mu5RTIT8BarLvMCTH
+         gUUt+fPaymQJQez1UZ6QAZesqWJrySt+p1i0cDLoupf8DZ9WMJDGtaYPk7IxlBWw7Z1Y
+         H7yJVROh7kaYVz1Ck9fATi7Avsz9ofKCoHfMDIBia5wwCTpMdxyk/N3SntRzXKNYQtfu
+         I5kn+SsO+J0fWxgqcmq78xHSJdtdY5WuvM2c81CqjGs3krBniLMpYVXI1EzD+qvFHUh6
+         PX2RqoVKiWVfbcoTmU5ZeGBFmhc9bJf7ehLbfEvtq5Lp1VuBJi7+ylPD2Tgle8PrztfY
+         U3ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mLgah8hWTBbEh5+bUoBbV4cO6mlCq84wOyEco/eLAZk=;
-        b=IKT/WXQsTe8j8UzUK0eeH3ibQ8BItWw4rxX3QG0h+eDyet0J+VRimIHbc0oGoovuLs
-         BmwoplxbONxHN5jaZXfawiZVvdaYmrgNTTwaznhGYMJy43vOHA2gDguRIjj0iwLJ+INL
-         cVIs1hfDv+vPv6O4BJkcrqFhtvbB5FHvUFJ1Q4QSb0NebA0Yga/XnkJpXHO6QLxM2s2J
-         XDQs7i3cKBc2N2ImAGRnJ1qbqt36DoHLGFsxRwKiDCOl0V3+AsMb5caR7XvaHmE0G2Qc
-         cd3ODyslLQKOXezbi5DqrSZvU1DgvCJG2wtAAESrh+tOmsi+f+DEU75gXT/UlR+7z42q
-         w0Rw==
-X-Gm-Message-State: APjAAAU4XmC0hWULmhwL9fGg1kPas6p6W0hRsKNHeSEwd0gaqOzBzRgP
-        9Vdxm7mljSP1PIxbyMGyYHBpFQ==
-X-Google-Smtp-Source: APXvYqzhkQgyWFPdC17pHjyc6apgZlhrLfru3XQYo7Lqsq6E89yDvd3j/NnDUqHTzZE/tzkJFdAVuQ==
-X-Received: by 2002:a0c:8885:: with SMTP id 5mr46203792qvn.137.1561132456162;
-        Fri, 21 Jun 2019 08:54:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 15sm1699745qtf.2.2019.06.21.08.54.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 08:54:15 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1heLrj-0001oa-5A; Fri, 21 Jun 2019 12:54:15 -0300
-Date:   Fri, 21 Jun 2019 12:54:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/16] mm: use untagged_addr() for get_user_pages_fast
- addresses
-Message-ID: <20190621155415.GU19891@ziepe.ca>
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-2-hch@lst.de>
- <20190621133911.GL19891@ziepe.ca>
- <9a4e1485-4683-92b0-3d26-73f26896d646@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=67Zwr0+JR5ftAH9XUiVHCrJ8ZWllxG5OsGyxy9ZC38U=;
+        b=Vx6thuziA+OtgbU8G82dJ3a6/QmCbzRIiGlmVI2AQ8U9Ic/0hVxiBhiui+9n2bgVQF
+         WFJlcmjFBTfJzxW5OOSTAnvo30E+iVjuvm3ZOG1faNTRl8OVyEfNAZ0U2Mem29whKr/W
+         JjD1hLSczXdAVprGsyANuc52DXKhNRCrHi1Eb1lMpBD/f5cdTiZPmBmAZUPha1qc6Npm
+         ja7UHjCCLi3e6DqJmLG82cCHunTlHwpADp3x6LFCG8qOBzSM0yT1qvr22OmrljU6Y8Q3
+         OFQSHW8UopBCZmas3ULgugie76sNHhDJYP/GiG9hJC5joyEsfrEbPRmMIU/CzTCnQ2+F
+         ZmKA==
+X-Gm-Message-State: APjAAAXdS0Nbvg53lI/SR5Uv1J+xKEfi8s8S99BmNZ8rPCnXe3744Um0
+        Vt11Q9s8IwlMpuWq25j0X/kYWZK5AHxc/13mveQMsQ==
+X-Google-Smtp-Source: APXvYqyi87dZ/gi5usy6mMIGsqoAR7PMShcYzW72U858qc3P99BF2m9iqkby4DNpe/dyc1JPF0bLnWX/rYQGsvwmFAE=
+X-Received: by 2002:a05:6602:98:: with SMTP id h24mr7359926iob.49.1561132478625;
+ Fri, 21 Jun 2019 08:54:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a4e1485-4683-92b0-3d26-73f26896d646@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1560966464-27644-1-git-send-email-cai@lca.pw> <FFF73D592F13FD46B8700F0A279B802F4F787D4B@ORSMSX114.amr.corp.intel.com>
+In-Reply-To: <FFF73D592F13FD46B8700F0A279B802F4F787D4B@ORSMSX114.amr.corp.intel.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 21 Jun 2019 17:54:27 +0200
+Message-ID: <CAKv+Gu8ynfn04eSNqJR__yFJMrp6=FptxTcN40YwomV4O5u=OA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/efi: fix a -Wtype-limits compilation warning
+To:     "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+Cc:     Qian Cai <cai@lca.pw>, "bp@alien8.de" <bp@alien8.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "andy@infradead.org" <andy@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:35:11AM -0600, Khalid Aziz wrote:
-> On 6/21/19 7:39 AM, Jason Gunthorpe wrote:
-> > On Tue, Jun 11, 2019 at 04:40:47PM +0200, Christoph Hellwig wrote:
-> >> This will allow sparc64 to override its ADI tags for
-> >> get_user_pages and get_user_pages_fast.
-> >>
-> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >>  mm/gup.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/mm/gup.c b/mm/gup.c
-> >> index ddde097cf9e4..6bb521db67ec 100644
-> >> +++ b/mm/gup.c
-> >> @@ -2146,7 +2146,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
-> >>  	unsigned long flags;
-> >>  	int nr = 0;
-> >>  
-> >> -	start &= PAGE_MASK;
-> >> +	start = untagged_addr(start) & PAGE_MASK;
-> >>  	len = (unsigned long) nr_pages << PAGE_SHIFT;
-> >>  	end = start + len;
-> > 
-> > Hmm, this function, and the other, goes on to do:
-> > 
-> >         if (unlikely(!access_ok((void __user *)start, len)))
-> >                 return 0;
-> > 
-> > and I thought that access_ok takes in the tagged pointer?
-> > 
-> > How about re-order it a bit?
-> 
-> access_ok() can handle tagged or untagged pointers. It just strips the
-> tag bits from the top bits. Current order doesn't really matter from
-> functionality point of view. There might be minor gain in delaying
-> untagging in __get_user_pages_fast() but I could go either way.
+On Wed, 19 Jun 2019 at 19:53, Prakhya, Sai Praneeth
+<sai.praneeth.prakhya@intel.com> wrote:
+>
+> > Compiling a kernel with W=1 generates this warning,
+> >
+> > arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+> > expression >= 0 is always true [-Wtype-limits]
+> >
+> > Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running EFI
+> > runtime services")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >
+> > v2: Add a "Fixes" tag.
+>
+> Makes sense.
+> Thanks for the fix Qian Cai.
+>
 
-I understand the current ARM and SPARC implementations don't do much
-with the tags, but it feels like a really big assumption for the core
-code that all future uses of tags will be fine to have them stripped
-out of 'void __user *' pointers. IMHO that is something we should not
-be doing in the core kernel..
+Queued as a fix with Sai's ack
 
-Jason
+Thanks,
