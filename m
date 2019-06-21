@@ -2,137 +2,64 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE6C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BD5C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A42C2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDEE2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDC6Hfcl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IciHtC1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfFUO51 (ORCPT
+        id S1726336AbfFUO6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:57:27 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45821 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfFUO50 (ORCPT
+        Fri, 21 Jun 2019 10:58:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUO6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:57:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id bi6so3118256plb.12;
-        Fri, 21 Jun 2019 07:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ERVoWxtrJMWr7j0HNJMfaRBRwVy095sC6GzF6uth9PI=;
-        b=WDC6HfclPw7d584KXs0ihkS/5uLEn00576sW2a+HQOBeJnsA9WY3CSnGTc3AU1ziyg
-         +ypEDEtZCtwXaXdXHrP3jAmgE9/lpkatOYmJNufqLMx0xhxgqk1LnoRqbiLjhbA+kiFq
-         lvTh3VmHVTu6J2pUodCBj9qXDgstuxO0wHaJIE2sc593yoyqGGFqw1gq5H0Ya1GYeEPD
-         MBIkUBZ7fTubmjQb93ZmQZ6/jbkANBLTQ9iryJj2skJAtLIZHDdCgkLgwfUOuxCzRut+
-         Rew7+Me/Hy8yKi5O6AFfpKS8uAaeHTewNUu/T4G/td81PZqqsidQPR6wvLetwR9XT7Ac
-         Ti5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ERVoWxtrJMWr7j0HNJMfaRBRwVy095sC6GzF6uth9PI=;
-        b=KXyl1zEqyeZV207CWa7u+o/c9LPLxgthnI+sQdHe9NnGtdfkFJNA3y5noPCHCtNQxJ
-         FoEh2fr5rlkg3tKLgrewesvJgLKa6UFWUzuJHqOeWApb5jtD4ovFUNY90GNkWS+PdYCt
-         Rjt9W4uC9E6C/5Mb9b0j7xJ6LLfB2Wm1WcrQGugjRNopL/bGYMi378SnMbp5/rCGjFRY
-         PeKgYT/i4NnbYEDQVtLE2olwMuYeKQB/oCkLJteY9XX2wslQLgQLRg3E64aEu3gUv8CG
-         /K+mP28L+lgrLeB+vr+tcH2+aBfK+0+P8xGwmRSSKa5joIqabpD+DLGsEKw0lVgpqmJ6
-         t+6w==
-X-Gm-Message-State: APjAAAW9M0mVzcixFiJqgJ+e7ADO3dlA4xLd1fGvo3A2QznGiJpCAnC9
-        2aol6mjMUP2fyapogKWiE8Q=
-X-Google-Smtp-Source: APXvYqwXJJlg8n0/DDtkomBFuJY852Dk14LPpTT6XIK9aqgc6Avi0Z4nL7ba0e0S1aCOFSs+Xwd58g==
-X-Received: by 2002:a17:902:8205:: with SMTP id x5mr33643117pln.279.1561129046241;
-        Fri, 21 Jun 2019 07:57:26 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id o14sm2693893pjp.29.2019.06.21.07.57.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 07:57:25 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org, hdegoede@redhat.com, lee.jones@linaro.org,
-        xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v8 4/5] arm64: dts: qcom: Add HP Envy x2
-Date:   Fri, 21 Jun 2019 07:57:21 -0700
-Message-Id: <20190621145721.38793-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+        Fri, 21 Jun 2019 10:58:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3dT8GgJ6+uQhH34e10+L7yEjvR1H493y6W8QxwGRYS0=; b=IciHtC1ApoWbUNoHP8hTutDrf
+        o6gvUQ24Xt0J/bDrghCwt4cTzS188eaW79VxqY0BfbMmSloZAPNz+SSJ7lJwC1At/wwBlNnZMzGvE
+        JI3kRdeSfQRJnLw93aYTxtNxEc88pjz1eFuKSrVFWWA9dYgBW3S2QHuF89ixFNoxdmCFa9evNZ71l
+        bLbOKkFnBVE60MYg64lKrVu1HfeUjrlQHjDW2nCQQY0aK/NepvOgeU05EzOnC3ZAMsFFqVOTx03B9
+        7rOmUhzubu7OkflA1YJR2Y2vXrp4aWmkmQskIwoNoAvTG4qZ/L9tz9pGkLltxg3c60n84ssoMa0Mi
+        yBJMlDyDA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1heKzO-0002EK-KP; Fri, 21 Jun 2019 14:58:06 +0000
+Date:   Fri, 21 Jun 2019 07:58:06 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/sparsemem: Cleanup 'section number' data types
+Message-ID: <20190621145805.GN32656@bombadil.infradead.org>
+References: <156107543656.1329419.11505835211949439815.stgit@dwillia2-desk3.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156107543656.1329419.11505835211949439815.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the initial DT for the HP Envy x2 laptop.  Supported
-functionality includes USB (host), microSD-card, keyboard, and trackpad.
+On Thu, Jun 20, 2019 at 05:06:46PM -0700, Dan Williams wrote:
+> David points out that there is a mixture of 'int' and 'unsigned long'
+> usage for section number data types. Update the memory hotplug path to
+> use 'unsigned long' consistently for section numbers.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../boot/dts/qcom/msm8998-hp-envy-x2.dts      | 30 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index c3e4307bcbd4..76436f33a013 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
-new file mode 100644
-index 000000000000..24073127091f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-+
-+/dts-v1/;
-+
-+#include "msm8998-clamshell.dtsi"
-+
-+/ {
-+	model = "HP Envy x2";
-+	compatible = "hp,envy-x2", "qcom,msm8998";
-+};
-+
-+&blsp1_i2c6 {
-+	status = "okay";
-+
-+	keyboard@3a {
-+		compatible = "hid-over-i2c";
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0x3a>;
-+		hid-descr-addr = <0x0001>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchpad>;
-+	};
-+};
-+
-+&sdhc2 {
-+	cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.17.1
-
+... because we're seriously considering the possibility that we'll need
+more than 4 billion sections?
