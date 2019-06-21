@@ -2,218 +2,130 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C518DC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB00C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BE220665
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99B221530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfFUJ4N (ORCPT
+        id S1726413AbfFUJ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:56:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48426 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfFUJ4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:56:12 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E3CE53084021;
-        Fri, 21 Jun 2019 09:56:11 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C98411001B27;
-        Fri, 21 Jun 2019 09:56:06 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 11:56:04 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-Message-ID: <20190621115604.0f3e3f69.cohuck@redhat.com>
-In-Reply-To: <20190613110815.17251-1-cohuck@redhat.com>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-Organization: Red Hat GmbH
+        Fri, 21 Jun 2019 05:58:37 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58030 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726210AbfFUJ6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:58:37 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 173B27541006DC4FEB6F;
+        Fri, 21 Jun 2019 17:58:35 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
+ 2019 17:58:31 +0800
+Subject: Re: [PATCH] fsf2: Use DIV_ROUND_UP() instead of open-coding
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <20190620144208.28151-1-geert@linux-m68k.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <39883399-6a4d-7b61-5b8a-d5e39790c769@huawei.com>
+Date:   Fri, 21 Jun 2019 17:58:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190620144208.28151-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 21 Jun 2019 09:56:12 +0000 (UTC)
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 13:08:15 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+fsf2: Use DIV_ROUND_UP() instead of open-coding
 
-> Sometimes, we want to control which of the matching drivers
-> binds to a subchannel device (e.g. for subchannels we want to
-> handle via vfio-ccw).
+fsf2 -> f2fs
+
+Otherwise, it looks good to me.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
+
+On 2019/6/20 22:42, Geert Uytterhoeven wrote:
+> Replace the open-coded divisions with round-up by calls to the
+> DIV_ROUND_UP() helper macro.
 > 
-> For pci devices, a mechanism to do so has been introduced in
-> 782a985d7af2 ("PCI: Introduce new device binding path using
-> pci_dev.driver_override"). It makes sense to introduce the
-> driver_override attribute for subchannel devices as well, so
-> that we can easily extend the 'driverctl' tool (which makes
-> use of the driver_override attribute for pci).
-> 
-> Note that unlike pci we still require a driver override to
-> match the subchannel type; matching more than one subchannel
-> type is probably not useful anyway.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > ---
+>  fs/f2fs/f2fs.h    | 4 ++--
+>  fs/f2fs/file.c    | 6 +++---
+>  fs/f2fs/segment.h | 2 +-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> Lightly tested; did not yet attempt to adapt driverctl to actually
-> make use of it.
-
-Friendly ping.
-
-In the meanwhile, I figured out that you do not need to adapt driverctl
-at all, but just need to pass it '-b css' to work on the css bus; this
-seems to work just fine with this patch applied.
-
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 9afe15675dbbd369..52f477eaaee93bc3 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -480,8 +480,8 @@ static inline int get_inline_xattr_addrs(struct inode *inode);
+>  #define NR_INLINE_DENTRY(inode)	(MAX_INLINE_DATA(inode) * BITS_PER_BYTE / \
+>  				((SIZE_OF_DIR_ENTRY + F2FS_SLOT_LEN) * \
+>  				BITS_PER_BYTE + 1))
+> -#define INLINE_DENTRY_BITMAP_SIZE(inode)	((NR_INLINE_DENTRY(inode) + \
+> -					BITS_PER_BYTE - 1) / BITS_PER_BYTE)
+> +#define INLINE_DENTRY_BITMAP_SIZE(inode) \
+> +	DIV_ROUND_UP(NR_INLINE_DENTRY(inode), BITS_PER_BYTE)
+>  #define INLINE_RESERVED_SIZE(inode)	(MAX_INLINE_DATA(inode) - \
+>  				((SIZE_OF_DIR_ENTRY + F2FS_SLOT_LEN) * \
+>  				NR_INLINE_DENTRY(inode) + \
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 1180eca879331eba..fc00d8bdc31c18b0 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1211,7 +1211,7 @@ static int __exchange_data_block(struct inode *src_inode,
+>  static int f2fs_do_collapse(struct inode *inode, loff_t offset, loff_t len)
+>  {
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> -	pgoff_t nrpages = (i_size_read(inode) + PAGE_SIZE - 1) / PAGE_SIZE;
+> +	pgoff_t nrpages = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>  	pgoff_t start = offset >> PAGE_SHIFT;
+>  	pgoff_t end = (offset + len) >> PAGE_SHIFT;
+>  	int ret;
+> @@ -1464,7 +1464,7 @@ static int f2fs_insert_range(struct inode *inode, loff_t offset, loff_t len)
+>  	pg_start = offset >> PAGE_SHIFT;
+>  	pg_end = (offset + len) >> PAGE_SHIFT;
+>  	delta = pg_end - pg_start;
+> -	idx = (i_size_read(inode) + PAGE_SIZE - 1) / PAGE_SIZE;
+> +	idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>  
+>  	/* avoid gc operation during block exchange */
+>  	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> @@ -2362,7 +2362,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
+>  	if (!fragmented)
+>  		goto out;
+>  
+> -	sec_num = (total + BLKS_PER_SEC(sbi) - 1) / BLKS_PER_SEC(sbi);
+> +	sec_num = DIV_ROUND_UP(total, BLKS_PER_SEC(sbi));
+>  
+>  	/*
+>  	 * make sure there are enough free section for LFS allocation, this can
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index 166ac0f07a4e472d..2ae6df03b9982d12 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -109,7 +109,7 @@
+>  #define	START_SEGNO(segno)		\
+>  	(SIT_BLOCK_OFFSET(segno) * SIT_ENTRY_PER_BLOCK)
+>  #define SIT_BLK_CNT(sbi)			\
+> -	((MAIN_SEGS(sbi) + SIT_ENTRY_PER_BLOCK - 1) / SIT_ENTRY_PER_BLOCK)
+> +	DIV_ROUND_UP(MAIN_SEGS(sbi), SIT_ENTRY_PER_BLOCK)
+>  #define f2fs_bitmap_size(nr)			\
+>  	(BITS_TO_LONGS(nr) * sizeof(unsigned long))
+>  
 > 
-> For some background, refer to the thread around
-> https://lore.kernel.org/kvm/20190612091439.3a33f17b.cohuck@redhat.com/
-> 
-> ---
->  Documentation/ABI/testing/sysfs-bus-css | 23 +++++++++++
->  drivers/s390/cio/cio.h                  |  1 +
->  drivers/s390/cio/css.c                  | 53 +++++++++++++++++++++++++
->  3 files changed, 77 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-css b/Documentation/ABI/testing/sysfs-bus-css
-> index 2979c40c10e9..966f8504bd7b 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-css
-> +++ b/Documentation/ABI/testing/sysfs-bus-css
-> @@ -33,3 +33,26 @@ Description:	Contains the PIM/PAM/POM values, as reported by the
->  		in sync with the values current in the channel subsystem).
->  		Note: This is an I/O-subchannel specific attribute.
->  Users:		s390-tools, HAL
-> +
-> +What:		/sys/bus/css/devices/.../driver_override
-> +Date:		June 2019
-> +Contact:	Cornelia Huck <cohuck@redhat.com>
-> +		linux-s390@vger.kernel.org
-> +Description:	This file allows the driver for a device to be specified. When
-> +		specified, only a driver with a name matching the value written
-> +		to driver_override will have an opportunity to bind to the
-> +		device. The override is specified by writing a string to the
-> +		driver_override file (echo vfio-ccw > driver_override) and
-> +		may be cleared with an empty string (echo > driver_override).
-> +		This returns the device to standard matching rules binding.
-> +		Writing to driver_override does not automatically unbind the
-> +		device from its current driver or make any attempt to
-> +		automatically load the specified driver.  If no driver with a
-> +		matching name is currently loaded in the kernel, the device
-> +		will not bind to any driver.  This also allows devices to
-> +		opt-out of driver binding using a driver_override name such as
-> +		"none".  Only a single driver may be specified in the override,
-> +		there is no support for parsing delimiters.
-> +		Note that unlike the mechanism of the same name for pci, this
-> +		file does not allow to override basic matching rules. I.e.,
-> +		the driver must still match the subchannel type of the device.
-> diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-> index 06a91743335a..8c4af88f1ac3 100644
-> --- a/drivers/s390/cio/cio.h
-> +++ b/drivers/s390/cio/cio.h
-> @@ -113,6 +113,7 @@ struct subchannel {
->  	enum sch_todo todo;
->  	struct work_struct todo_work;
->  	struct schib_config config;
-> +	char *driver_override; /* Driver name to force a match */
->  } __attribute__ ((aligned(8)));
->  
->  DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
-> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-> index aea502922646..f3436a17e3b5 100644
-> --- a/drivers/s390/cio/css.c
-> +++ b/drivers/s390/cio/css.c
-> @@ -165,6 +165,7 @@ static void css_subchannel_release(struct device *dev)
->  
->  	sch->config.intparm = 0;
->  	cio_commit_config(sch);
-> +	kfree(sch->driver_override);
->  	kfree(sch->lock);
->  	kfree(sch);
->  }
-> @@ -315,9 +316,57 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  
->  static DEVICE_ATTR_RO(modalias);
->  
-> +static ssize_t driver_override_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	struct subchannel *sch = to_subchannel(dev);
-> +	char *driver_override, *old, *cp;
-> +
-> +	/* We need to keep extra room for a newline */
-> +	if (count >= (PAGE_SIZE - 1))
-> +		return -EINVAL;
-> +
-> +	driver_override = kstrndup(buf, count, GFP_KERNEL);
-> +	if (!driver_override)
-> +		return -ENOMEM;
-> +
-> +	cp = strchr(driver_override, '\n');
-> +	if (cp)
-> +		*cp = '\0';
-> +
-> +	device_lock(dev);
-> +	old = sch->driver_override;
-> +	if (strlen(driver_override)) {
-> +		sch->driver_override = driver_override;
-> +	} else {
-> +		kfree(driver_override);
-> +		sch->driver_override = NULL;
-> +	}
-> +	device_unlock(dev);
-> +
-> +	kfree(old);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t driver_override_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct subchannel *sch = to_subchannel(dev);
-> +	ssize_t len;
-> +
-> +	device_lock(dev);
-> +	len = snprintf(buf, PAGE_SIZE, "%s\n", sch->driver_override);
-> +	device_unlock(dev);
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RW(driver_override);
-> +
->  static struct attribute *subch_attrs[] = {
->  	&dev_attr_type.attr,
->  	&dev_attr_modalias.attr,
-> +	&dev_attr_driver_override.attr,
->  	NULL,
->  };
->  
-> @@ -1222,6 +1271,10 @@ static int css_bus_match(struct device *dev, struct device_driver *drv)
->  	struct css_driver *driver = to_cssdriver(drv);
->  	struct css_device_id *id;
->  
-> +	/* When driver_override is set, only bind to the matching driver */
-> +	if (sch->driver_override && strcmp(sch->driver_override, drv->name))
-> +		return 0;
-> +
->  	for (id = driver->subchannel_type; id->match_flags; id++) {
->  		if (sch->st == id->type)
->  			return 1;
-
