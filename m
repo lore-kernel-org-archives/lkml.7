@@ -2,176 +2,119 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4E4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D04E2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5254A2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQpDOqAK"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="p0fbb/js"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbfFUDuN (ORCPT
+        id S1726108AbfFUDvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:50:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46031 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfFUDuM (ORCPT
+        Thu, 20 Jun 2019 23:51:25 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:42309 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfFUDvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:50:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so4619560lje.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h17P65wYqaQ1YLx9/xtvrVHKv+agP862+Ce4hJtzuQU=;
-        b=JQpDOqAKc0XWb3yDJHrQ0DnC/nK6fOYatWsinidQr7TYaGJoXXIgtga2p0SFn3r6Lt
-         XUuR4kQwrnjBSvBhAImhpeSbHFqO9yOfb/wCE7cMRRNz9/CYU8jfECXkJqCwKZg58o7A
-         9EcA82sM33Imh8nQ16CCKZ8+1M9wPvgi4O1k6GO3TS3vmUrgOlmim1K5iJ7Am+Dly81/
-         iUMLXBao4M9RvcPiJgpmnVbH715NXCewTudYztdZlP76I/ZLX5PUnuxDV9ERWVBDHfDV
-         zepsWR5vGPzLD9ZnP0BxgA3EK3mu7gbSyJoKBy/k2iSkE4MjYIQFKGJ6xDL+LhXoytF1
-         hxzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h17P65wYqaQ1YLx9/xtvrVHKv+agP862+Ce4hJtzuQU=;
-        b=rXsVIqMcQtQ7qBdsPxBhdRx++PAGwyjSOhavw6mKblPhC8/ZtoM3eaQHDMrpk5p17k
-         RaZ3GACYpROd6dNIy2ViCpwu9m+XL+WrySZzbsK/RbDCXFR7Hq8hRZyk2P7LpaqyaXQh
-         k63B98S5yAqYXRVqKPyLCOmuw4Wv9JhGsj4KJr1VaKixcihCQVA4MiBM3vRhUsc4bbff
-         gs5tJjKGj2JBidYNkjVcKyPVsEFqmp2mr437X+gfHh9yv6LfbM42QAmCXAoibe1rbNnu
-         aRsRHPQvJN/tqXvBrAbwbsWiCH9AXAVbKn23fylSi8Cn/4hzEufrRwBlOnRNxISHwfFV
-         sSSg==
-X-Gm-Message-State: APjAAAUCzZJxQ32pGMvf4uREkDM7Bv1NY6v5ViCH14WBa/LAVlwAOCfw
-        egudUXPR+Tf3EaGEPes43rWj6FfpBRpmDZJoWOQhVKlMhUQ=
-X-Google-Smtp-Source: APXvYqzipemEf5jIf3vP9EBRV/mWVluJxH2EUb6MW1+67X5oexY8lxJlqe8aHwUZ3CHgMAE5mFd0HpRmM+4K7O3Z0FE=
-X-Received: by 2002:a2e:8495:: with SMTP id b21mr7978898ljh.149.1561089010213;
- Thu, 20 Jun 2019 20:50:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620174328.608036501@linuxfoundation.org>
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 21 Jun 2019 09:19:58 +0530
-Message-ID: <CA+G9fYu0wezAm+8-YJxUyGo54b8Wv4Ky8sj+aTrGFhbTkBdf3A@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/45] 4.14.129-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 20 Jun 2019 23:51:25 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5L3oRjU014254;
+        Fri, 21 Jun 2019 12:50:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5L3oRjU014254
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561089028;
+        bh=Bg7yz3kGp5oc02/SzDEjzmVnjSSRFRG856VaDIqk91k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p0fbb/jsPohS5rptPzipnLIlvOWQM8tXMhDLb7YHN2+8Yor8zp2pNffgMTKrNuzg0
+         QysWHlt/6pjrwXVhsBAhyOVdhZvMg3OH4nrvyboQN1ZiHKr9gb2pCbqfnUGFzT92eE
+         FFz992l2m4GUK7HCud4x0sErnUpPaaTrP9b/dLpKz090TLQ/+lMlx1qz9fhelpRMIE
+         5DoOKUT90RO97+qkUUd3LBeen4gekxXCdOLu6GJNwkOwosDqCmhLaSA3LvGI/QnkGr
+         rdl90Lr0E8Dwt7NTzrz64W4QLWR07xIW1zT1dSAAjF/XFfHkldkyZCDClgUUn6Vlz8
+         Vjuh584X4d2Hw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] dt-binding: mmc: rename tmio_mmc.txt to renesas_sdhi.txt
+Date:   Fri, 21 Jun 2019 12:50:10 +0900
+Message-Id: <20190621035010.13884-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 at 23:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.129 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.129-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+MFD glue") said, these MMC controllers use the IP from Panasonic.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+The common driver code was split and expanded as 'tmio-mmc-core', then
+it become historical misnomer since 'tmio' is not the name of this IP
+in the first place.
 
-Summary
-------------------------------------------------------------------------
+In the discussion [1], we decide to keep calling these MMC variants
+'TMIO MMC' at least in Linux driver level because renaming all of them
+is a big churn.
 
-kernel: 4.14.129-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 7741fd984e5da7edc8b42719cac2db8d8f56b9a3
-git describe: v4.14.128-46-g7741fd984e5d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.128-46-g7741fd984e5d
+However, DT should not be oriented to a particular project even though
+it is developed in Linux communities.
+
+Let's stop exporting this unfortunate things to other projects, where
+there is no good reason to call this "TMIO". Rename the file to
+renesas_sdhi.txt. In fact, all the information in this file is specific
+to the Renesas platform.
+
+This commit also removes the first paragraph entirely. The DT-binding
+should describe the hardware. It is really strange to talk about Linux
+driver internals such as how the drivers are probed, how platform data
+are handed off, etc.
+
+[1] https://www.spinics.net/lists/linux-mmc/msg46952.html
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+I sent this before, but it was dismissed somehow.
+I am resending this.
 
 
-No regressions (compared to build v4.14.128)
+ .../bindings/mmc/{tmio_mmc.txt => renesas_sdhi.txt}   | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+ rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas_sdhi.txt} (87%)
 
-No fixes (compared to build v4.14.128)
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas_sdhi.txt
+similarity index 87%
+rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+rename to Documentation/devicetree/bindings/mmc/renesas_sdhi.txt
+index 2b4f17ca9087..dd08d038a65c 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/renesas_sdhi.txt
+@@ -1,13 +1,4 @@
+-* Toshiba Mobile IO SD/MMC controller
+-
+-The tmio-mmc driver doesn't probe its devices actively, instead its binding to
+-devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
+-driver. Those drivers supply the tmio-mmc driver with platform data, that either
+-describe hardware capabilities, known to them, or are obtained by them from
+-their own platform data or from their DT information. In the latter case all
+-compulsory and any optional properties, common to all SD/MMC drivers, as
+-described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
+-optional bindings can be used.
++* Renesas SDHI SD/MMC controller
+ 
+ Required properties:
+ - compatible: should contain one or more of the following:
+-- 
+2.17.1
 
-
-Ran 23866 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
