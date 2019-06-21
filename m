@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14E3C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBE4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7075821530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971662075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B5GkkyvW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="De1k8mvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfFUSOb (ORCPT
+        id S1726752AbfFUSOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:14:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37664 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfFUSOY (ORCPT
+        Fri, 21 Jun 2019 14:14:39 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45840 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFUSOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:14:24 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDn8S094000;
-        Fri, 21 Jun 2019 13:13:49 -0500
+        Fri, 21 Jun 2019 14:14:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5LIEKUe064094;
+        Fri, 21 Jun 2019 13:14:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561140829;
-        bh=PIDcKPbOh8VkBOzzNC+6yEWlI/kehcr9w1H0dRe83H4=;
+        s=ti-com-17Q1; t=1561140861;
+        bh=c567k59bl9GhUXD6MZLrFuS7siN1KwQDSBU2GK/glqk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=B5GkkyvWFjeUc1Xo0D5Otxma94wBGz9kNngx1kyiR9TQyQ5/st5bfZbgWosyd7dGy
-         TIglKRjM80uwlYb8qJpYGL7dNQHG6BIA/ew9zrqiuX/4AEdyFalSKGnYtsUR6s8tfA
-         IIvsyi03PrC3gNsP8kaOr24xjkFCivur/+xKyZrQ=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5LIDnZj118043
+        b=De1k8mvxYmhXLaUHCvxvXNCQHoWcAiRLGtowdkWPtsRTGuMOnxKVCIXg7J4f5KkeZ
+         i3lYTBiN/kVeZH8b7dfeVHU5yUHlT7q6gFVzH5sJBB6jmBGolBdp1EhcZCLRITRWU1
+         Gl8Nyrz6fRbaAe2sgd1r0klsJYAmR1+teAITBsqg=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5LIEK80003544
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 13:13:49 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 21 Jun 2019 13:14:20 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
- Jun 2019 13:13:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 13:14:20 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 21 Jun 2019 13:13:49 -0500
+ Frontend Transport; Fri, 21 Jun 2019 13:14:20 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDm4G029222;
-        Fri, 21 Jun 2019 13:13:48 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5LIEJd2114017;
+        Fri, 21 Jun 2019 13:14:20 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -62,9 +62,9 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         Ivan Vecera <ivecera@redhat.com>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH v4 net-next 05/11] dt-bindings: net: ti: add new cpsw switch driver bindings
-Date:   Fri, 21 Jun 2019 21:13:08 +0300
-Message-ID: <20190621181314.20778-6-grygorii.strashko@ti.com>
+Subject: [RFC PATCH v4 net-next 10/11] ARM: dts: am57xx-idk: add dt nodes for new cpsw switch dev driver
+Date:   Fri, 21 Jun 2019 21:13:13 +0300
+Message-ID: <20190621181314.20778-11-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190621181314.20778-1-grygorii.strashko@ti.com>
 References: <20190621181314.20778-1-grygorii.strashko@ti.com>
@@ -76,150 +76,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings for the new TI CPSW switch driver. Comparing to the legacy
-bindings (net/cpsw.txt):
-- ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
-marked as "disabled" if not physically wired.
-- ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
-marked as "disabled" if not physically wired.
-- all deprecated properties dropped;
-- all legacy propertiies dropped which represents constant HW cpapbilities
-(cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
-active_slave)
-- cpts properties grouped in "cpts" sub-node
+Add DT nodes for new cpsw switch dev driver.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../bindings/net/ti,cpsw-switch.txt           | 147 ++++++++++++++++++
- 1 file changed, 147 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
+ arch/arm/boot/dts/am571x-idk.dts         | 28 +++++++++++++
+ arch/arm/boot/dts/am572x-idk.dts         |  5 +++
+ arch/arm/boot/dts/am574x-idk.dts         |  5 +++
+ arch/arm/boot/dts/am57xx-idk-common.dtsi |  2 +-
+ arch/arm/boot/dts/dra7-l4.dtsi           | 53 ++++++++++++++++++++++++
+ 5 files changed, 92 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt b/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
-new file mode 100644
-index 000000000000..787219cddccd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
-@@ -0,0 +1,147 @@
-+TI SoC Ethernet Switch Controller Device Tree Bindings (new)
-+------------------------------------------------------
-+
-+The 3-port switch gigabit ethernet subsystem provides ethernet packet
-+communication and can be configured as an ethernet switch. It provides the
-+gigabit media independent interface (GMII),reduced gigabit media
-+independent interface (RGMII), reduced media independent interface (RMII),
-+the management data input output (MDIO) for physical layer device (PHY)
-+management.
-+
-+Required properties:
-+- compatible : be one of the below:
-+	  "ti,cpsw-switch" for backward compatible
-+	  "ti,am335x-cpsw-switch" for AM335x controllers
-+	  "ti,am4372-cpsw-switch" for AM437x controllers
-+	  "ti,dra7-cpsw-switch" for DRA7x controllers
-+- reg : physical base address and size of the CPSW module IO range
-+- ranges : shall contain the CPSW module IO range available for child devices
-+- clocks : should contain the CPSW functional clock
-+- clock-names : should be "fck"
-+	See bindings/clock/clock-bindings.txt
-+- interrupts : should contain CPSW RX, TX, MISC, RX_THRESH interrupts
-+- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
-+	See bindings/interrupt-controller/interrupts.txt
-+
-+Optional properties:
-+- syscon : phandle to the system control device node which provides access to
-+	efuse IO range with MAC addresses
-+
-+Required Sub-nodes:
-+- ports	: contains CPSW external ports descriptions
-+	Required properties:
-+	- #address-cells : Must be 1
-+	- #size-cells : Must be 0
-+	- reg : CPSW port number. Should be 1 or 2
-+	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
-+	- phy-mode : operation mode of the PHY interface [1]
-+	- phy-handle : phandle to a PHY on an MDIO bus [1]
-+
-+	Optional properties:
-+	- ti,label : Describes the label associated with this port
-+	- ti,dual_emac_pvid : Specifies default PORT VID to be used to segregate
-+		ports. Default value - CPSW port number.
-+	- mac-address : array of 6 bytes, specifies the MAC address. Always
-+		accounted first if present [1]
-+	- local-mac-address : See [1]
-+
-+- mdio : CPSW MDIO bus block description
-+	- bus_freq : MDIO Bus frequency
-+	See bindings/net/mdio.txt and davinci-mdio.txt
-+
-+- cpts : The Common Platform Time Sync (CPTS) module description
-+	- clocks : should contain the CPTS reference clock
-+	- clock-names : should be "cpts"
-+	See bindings/clock/clock-bindings.txt
-+
-+	Optional properties - all ports:
-+	- cpts_clock_mult : Numerator to convert input clock ticks into ns
-+	- cpts_clock_shift : Denominator to convert input clock ticks into ns
-+			  Mult and shift will be calculated basing on CPTS
-+			  rftclk frequency if both cpts_clock_shift and
-+			  cpts_clock_mult properties are not provided.
-+
-+[1] See Documentation/devicetree/bindings/net/ethernet.txt
-+
-+Examples - SOC:
-+mac_sw: ethernet_switch@0 {
-+	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
-+	reg = <0x0 0x4000>;
-+	ranges = <0 0 0x4000>;
-+	clocks = <&gmac_main_clk>;
-+	clock-names = "fck";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	syscon = <&scm_conf>;
-+	status = "disabled";
-+
-+	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "rx_thresh", "rx", "tx", "misc"
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpsw_port1: port@1 {
-+			reg = <1>;
-+			ti,label = "port1";
-+			/* Filled in by U-Boot */
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			phys = <&phy_gmii_sel 1>;
-+		};
-+
-+		cpsw_port2: port@2 {
-+			reg = <2>;
-+			ti,label = "port2";
-+			/* Filled in by U-Boot */
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			phys = <&phy_gmii_sel 2>;
-+		};
-+	};
-+
-+	davinci_mdio_sw: mdio@1000 {
-+		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ti,hwmods = "davinci_mdio";
-+		bus_freq = <1000000>;
-+		reg = <0x1000 0x100>;
-+	};
-+
-+	cpts {
-+		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
-+		clock-names = "cpts";
-+	};
-+};
-+
-+Examples - platform/board:
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index 66116ad3f9f4..9262e008c968 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -194,3 +194,31 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20 &mmc2_iodelay_ddr_conf>;
+ };
 +
 +&mac_sw {
 +	pinctrl-names = "default", "sleep";
@@ -247,6 +122,112 @@ index 000000000000..787219cddccd
 +		reg = <1>;
 +	};
 +};
++
+diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
+index 4f835222c266..1664866c46d5 100644
+--- a/arch/arm/boot/dts/am572x-idk.dts
++++ b/arch/arm/boot/dts/am572x-idk.dts
+@@ -35,3 +35,8 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
+ };
++
++&mac {
++	status = "okay";
++	dual_emac;
++};
+\ No newline at end of file
+diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
+index dc5141c35610..f4834296bd54 100644
+--- a/arch/arm/boot/dts/am574x-idk.dts
++++ b/arch/arm/boot/dts/am574x-idk.dts
+@@ -40,3 +40,8 @@
+ 	pinctrl-1 = <&mmc2_pins_default>;
+ 	pinctrl-2 = <&mmc2_pins_default>;
+ };
++
++&mac {
++	status = "okay";
++	dual_emac;
++};
+\ No newline at end of file
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index f7bd26458915..5c7663699efa 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -367,7 +367,7 @@
+ };
+ 
+ &mac {
+-	status = "okay";
++//	status = "okay";
+ 	dual_emac;
+ };
+ 
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index fe9f0bc29fec..2bd750c95328 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3122,6 +3122,59 @@
+ 					phys = <&phy_gmii_sel 2>;
+ 				};
+ 			};
++
++			mac_sw: ethernet_switch@0 {
++				compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
++				reg = <0x0 0x4000>;
++				ranges = <0 0 0x4000>;
++				clocks = <&gmac_main_clk>;
++				clock-names = "fck";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				syscon = <&scm_conf>;
++				status = "disabled";
++
++				interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "rx_thresh", "rx", "tx", "misc";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					cpsw_port1: port@1 {
++						reg = <1>;
++						ti,label = "port1";
++						/* Filled in by U-Boot */
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 1>;
++					};
++
++					cpsw_port2: port@2 {
++						reg = <2>;
++						ti,label = "port2";
++						/* Filled in by U-Boot */
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 2>;
++					};
++				};
++
++				davinci_mdio_sw: mdio@1000 {
++					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++					#address-cells = <1>;
++					#size-cells = <0>;
++					ti,hwmods = "davinci_mdio";
++					bus_freq = <1000000>;
++					reg = <0x1000 0x100>;
++				};
++
++				cpts {
++					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
++					clock-names = "cpts";
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.17.1
 
