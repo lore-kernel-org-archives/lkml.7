@@ -2,172 +2,405 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F13C4646C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776F1C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B1321537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3200B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sRxZksDq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a9yTj1x2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFULKm (ORCPT
+        id S1726462AbfFULNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:10:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15243 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFULKm (ORCPT
+        Fri, 21 Jun 2019 07:13:34 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:41673 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfFULNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:10:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0cbb2f0000>; Fri, 21 Jun 2019 04:10:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 21 Jun 2019 04:10:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 21 Jun 2019 04:10:40 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
- 2019 11:10:39 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 21 Jun 2019 11:10:39 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0cbb2c000d>; Fri, 21 Jun 2019 04:10:39 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
-        <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V6 3/3] PCI: dwc: Export APIs to support .remove() implementation
-Date:   Fri, 21 Jun 2019 16:40:00 +0530
-Message-ID: <20190621111000.23216-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621111000.23216-1-vidyas@nvidia.com>
-References: <20190621111000.23216-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 21 Jun 2019 07:13:34 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190621111332euoutp01b65a43539a2217667158abe38ccd9f64~qMmDQzOsd3208632086euoutp01C
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:13:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190621111332euoutp01b65a43539a2217667158abe38ccd9f64~qMmDQzOsd3208632086euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561115612;
+        bh=6YJ5/kKdrsFfr6ePqP4K2aX5RK675ibIPIClqnEDFTg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=a9yTj1x25LEtKQdweIiN+h2QxoPfzI89zPwg5lkGUubmka74/Fc1+mQ01+TT8dUdr
+         xNyq6owQ7EatBB5ac0JSIpUFQr9O1Xo09nEU8AKrk2z1MwE4wMpQhi5SIYuzdcf8DK
+         xYOX37UXxmVCC321aLCM1Zco0715/rwZW3XmKCDw=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190621111331eucas1p22263058629410ced3220f604ff8ac6cc~qMmCZClap0071500715eucas1p2D;
+        Fri, 21 Jun 2019 11:13:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F7.4C.04377.BDBBC0D5; Fri, 21
+        Jun 2019 12:13:31 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621111330eucas1p1de6ddd3651f42f621a5e88f0b834f850~qMmBo0P0P1225112251eucas1p1A;
+        Fri, 21 Jun 2019 11:13:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190621111330eusmtrp1da8482e721d281479c2526efc4819249~qMmBST1Yj0558805588eusmtrp1v;
+        Fri, 21 Jun 2019 11:13:30 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-9d-5d0cbbdb0cbc
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 27.CB.04146.ADBBC0D5; Fri, 21
+        Jun 2019 12:13:30 +0100 (BST)
+Received: from [106.120.50.25] (unknown [106.120.50.25]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621111329eusmtip17f30fdcc8f6f7feae71cee195c7f8f7f~qMmAruyuf0278702787eusmtip1R;
+        Fri, 21 Jun 2019 11:13:29 +0000 (GMT)
+Subject: Re: [PATCH 6/6] ARM: dts: exynos: Add regulator suspend
+ configuration to Odroid XU3/XU4/HC1 family
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     notify@kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <3e5320aa-ac26-3d69-7a8c-35c2c36b0f76@samsung.com>
+Date:   Fri, 21 Jun 2019 13:13:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561115439; bh=y7TEAspofRBMIokrjXATOwSmhawYFwJQqnvJ7ZYiDZQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=sRxZksDqmOS1GxoJ0tynXwEQEL3c2oh3vI3UnHitzsOFcc1sbR+Ps5L1cSFxUC/cO
-         wHezHGyBZ4rISu2YN/xcl5tDp8oFoXaffEMaW+kHKyAJL7id3WSJZPNccItjI0bfE2
-         4c3dZAwdHXxTbcJ2jcBhLJOmhGV5QtcV0KHxhQW014jrENt240XgeronZp8R/ayoyT
-         jGqwlzfrwWYb3ZMcDT92UemfsQdKkbd/hRuOuLLUJoo3AStTO2nhevq6jTlRT77LXT
-         lNk+Nt8K7/ziHdtDCfsvq1nnodfxXC8eEMdjRkRyFkFEwP5SNS+/WR1GcB+A72DM6Y
-         dE4wGb4rLwv7w==
+In-Reply-To: <20190620183530.5386-6-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHKsWRmVeSWpSXmKPExsWy7djP87q3d/PEGkxcx2yxccZ6VoupD5+w
+        Wcw/co7Vov/xa2aL8+c3sFvc/3qU0eLblQ4mi02Pr7FaXN41h81ixvl9TBZXHv9jtbi44guT
+        RfvTl8wOvB47Z91l99i0qpPN4861PWwem5fUe/RtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfG
+        5hPrmQqWW1Tc6vnN1sB4Ur2LkZNDQsBEYtO+LSxdjFwcQgIrGCXmvG2Acr4wSpzofscK4Xxm
+        lHjbd58VpqX53Et2iMRyRolTOz5AtbxllLjeuZoZpEpYIFfiR9tZsISIwHRmiQ/XlzCCJJgF
+        HCQeX+pjA7HZBAwlut52gdm8AnYS+9/1gzWzCKhK3N0yG8wWFYiReDj/DlSNoMTJmU9YQGxO
+        oDN+7bzIBDFTXmL72znMELa4xK0n85kgTn3ELnH4GT+E7SIx8+R3dghbWOLV8S1QtozE6ck9
+        YIdKCDQzSjw8t5YdwulhlLjcNIMRospa4vDxi8AA4ADaoCmxfpc+RNhRYmXHX0aQsIQAn8SN
+        t4IQN/BJTNo2nRkizCvR0SYEUa0mMev4Ori1By9cYp7AqDQLyWezkHwzC8k3sxD2LmBkWcUo
+        nlpanJueWmyUl1quV5yYW1yal66XnJ+7iRGYyk7/O/5lB+OuP0mHGAU4GJV4eA/M4o4VYk0s
+        K67MPcQowcGsJMLLk8MTK8SbklhZlVqUH19UmpNafIhRmoNFSZy3muFBtJBAemJJanZqakFq
+        EUyWiYNTqoGxSfrusd9RtqcNE+fdFylfqzfp9f9/Dv3/WWxW63tJ7lql/qiZ59vedv1Hsume
+        NocfP1SdX1g77c/kZ7Eib3ec0Nx9LtZ5c9223yqaHovnNO29GXvhYdlFZoGj17blbX4ioFe4
+        1mWd5fag+zNdGKZ/cCqXbVnq5+ugFyr3xlX9Puvli8Xf37fkK7EUZyQaajEXFScCAPcN51Zh
+        AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRmVeSWpSXmKPExsVy+t/xu7q3dvPEGqy5yGKxccZ6VoupD5+w
+        Wcw/co7Vov/xa2aL8+c3sFvc/3qU0eLblQ4mi02Pr7FaXN41h81ixvl9TBZXHv9jtbi44guT
+        RfvTl8wOvB47Z91l99i0qpPN4861PWwem5fUe/RtWcXo8XmTXABblJ5NUX5pSapCRn5xia1S
+        tKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G5hPrmQqWW1Tc6vnN1sB4Ur2L
+        kZNDQsBEovncS/YuRi4OIYGljBLnHy5nhUjISJyc1gBlC0v8udbFBlH0mlFi/qsjTCAJYYFc
+        if195xlBEiICM5klnjy6ywySYBZwkHh8qQ+qYyOjxOZJ6xlBEmwChhJdb0FGcXLwCthJ7H/X
+        D9bAIqAqcXfLbDBbVCBGomvqTxaIGkGJkzOfgNmcQLf+2nmRCWKBmcS8zQ+hlslLbH87B8oW
+        l7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECo3fb
+        sZ+bdzBe2hh8iFGAg1GJh/fALO5YIdbEsuLK3EOMEhzMSiK8PDk8sUK8KYmVValF+fFFpTmp
+        xYcYTYGem8gsJZqcD0wseSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4
+        OKUaGA0t7d1PeLcE2R9xeyVTznvb7uDCfU97NgTfXGHxSpNjuVG51oonhZueP99lclbQK7Zm
+        h8njEsY5ho//9Dsf+2wiaWwXtu7cqpK59w0FX/SdqH+r/CyMJbJrZ9jGjRutt1oWXrK+c6zu
+        rtlhNt+JYs4bf7XalOjdfa9useLaeqacq6JfZdZd3qjEUpyRaKjFXFScCABX2wNR9AIAAA==
+X-CMS-MailID: 20190621111330eucas1p1de6ddd3651f42f621a5e88f0b834f850
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190620183612epcas2p17aa8e12a10b92891ab2228abca402e0c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190620183612epcas2p17aa8e12a10b92891ab2228abca402e0c
+References: <20190620183530.5386-1-krzk@kernel.org>
+        <CGME20190620183612epcas2p17aa8e12a10b92891ab2228abca402e0c@epcas2p1.samsung.com>
+        <20190620183530.5386-6-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export all configuration space access APIs and also other APIs to
-support host controller drivers of DesignWare core based implementations
-while adding support for .remove() hook to build their respective drivers
-as modules
+Hi,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes from v5:
-* None
+On 2019-06-20 20:35, Krzysztof Kozlowski wrote:
+> Add the PMIC regulator suspend configuration to entire Odroid
+> XU3/XU4/HC1 family of boards to reduce power usage during suspend.  The
+> configuration is based on vendor (Hardkernel) reference kernel.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Changes from v4:
-* Removed __ (underscore) from dw_pcie_{write/read}_dbi API names
+On XU4 (booted either from eMMC or SD) this reduces power consumption in 
+suspend-to-ram from 120mA to about 87mA (@5V). Suspend-to-RAM also works 
+fine on XU3, XU3lite and HC1.
 
-Changes from v3:
-* Exported only __dw_pcie_{read/write}_dbi() APIs instead of
-  dw_pcie_read{l/w/b}_dbi & dw_pcie_write{l/w/b}_dbi APIs.
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Changes from v2:
-* Rebased on top of linux-next top of the tree branch
+> ---
+>
+> Tested on XU3 and HC1 with SD card.
+> ---
+>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 92 +++++++++++++++++++
+>   1 file changed, 92 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 0f967259ad29..5a4f7dd2568b 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -177,6 +177,10 @@
+>   				regulator-name = "vdd_adc";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo5_reg: LDO5 {
+> @@ -184,6 +188,10 @@
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo6_reg: LDO6 {
+> @@ -191,6 +199,10 @@
+>   				regulator-min-microvolt = <1000000>;
+>   				regulator-max-microvolt = <1000000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo7_reg: LDO7 {
+> @@ -198,6 +210,10 @@
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo8_reg: LDO8 {
+> @@ -205,6 +221,10 @@
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo9_reg: LDO9 {
+> @@ -212,6 +232,10 @@
+>   				regulator-min-microvolt = <3000000>;
+>   				regulator-max-microvolt = <3000000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo10_reg: LDO10 {
+> @@ -219,6 +243,10 @@
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo11_reg: LDO11 {
+> @@ -226,6 +254,10 @@
+>   				regulator-min-microvolt = <1000000>;
+>   				regulator-max-microvolt = <1000000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo12_reg: LDO12 {
+> @@ -239,6 +271,10 @@
+>   				regulator-name = "vddq_mmc2";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <2800000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo14_reg: LDO14 {
+> @@ -253,6 +289,10 @@
+>   				regulator-min-microvolt = <3300000>;
+>   				regulator-max-microvolt = <3300000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo16_reg: LDO16 {
+> @@ -267,18 +307,30 @@
+>   				regulator-min-microvolt = <3300000>;
+>   				regulator-max-microvolt = <3300000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo18_reg: LDO18 {
+>   				regulator-name = "vdd_emmc_1V8";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo19_reg: LDO19 {
+>   				regulator-name = "vdd_sd";
+>   				regulator-min-microvolt = <2800000>;
+>   				regulator-max-microvolt = <2800000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo20_reg: LDO20 {
+> @@ -307,6 +359,10 @@
+>   				regulator-min-microvolt = <1100000>;
+>   				regulator-max-microvolt = <1100000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo24_reg: LDO24 {
+> @@ -328,6 +384,10 @@
+>   				regulator-name = "vdd_ldo26";
+>   				regulator-min-microvolt = <800000>;
+>   				regulator-max-microvolt = <3950000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo27_reg: LDO27 {
+> @@ -335,6 +395,10 @@
+>   				regulator-min-microvolt = <1000000>;
+>   				regulator-max-microvolt = <1000000>;
+>   				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo28_reg: LDO28 {
+> @@ -342,6 +406,10 @@
+>   				regulator-name = "vdd_ldo28";
+>   				regulator-min-microvolt = <800000>;
+>   				regulator-max-microvolt = <3950000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			ldo29_reg: LDO29 {
+> @@ -420,6 +488,10 @@
+>   				regulator-max-microvolt = <1300000>;
+>   				regulator-always-on;
+>   				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			buck2_reg: BUCK2 {
+> @@ -428,6 +500,10 @@
+>   				regulator-max-microvolt = <1500000>;
+>   				regulator-always-on;
+>   				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			buck3_reg: BUCK3 {
+> @@ -436,6 +512,10 @@
+>   				regulator-max-microvolt = <1400000>;
+>   				regulator-always-on;
+>   				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			buck4_reg: BUCK4 {
+> @@ -444,6 +524,10 @@
+>   				regulator-max-microvolt = <1400000>;
+>   				regulator-always-on;
+>   				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			buck5_reg: BUCK5 {
+> @@ -460,6 +544,10 @@
+>   				regulator-max-microvolt = <1500000>;
+>   				regulator-always-on;
+>   				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   
+>   			buck7_reg: BUCK7 {
+> @@ -490,6 +578,10 @@
+>   				regulator-name = "vdd_vmem";
+>   				regulator-min-microvolt = <2850000>;
+>   				regulator-max-microvolt = <2850000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>   			};
+>   		};
+>   	};
 
-Changes from v1:
-* s/Designware/DesignWare
-
- drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
- drivers/pci/controller/dwc/pcie-designware.c      | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d069e4290180..f93252d0da5b 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -311,6 +311,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
- 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
- 			    upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
- int dw_pcie_host_init(struct pcie_port *pp)
- {
-@@ -495,6 +496,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dw_pcie_free_msi(pp);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_init);
- 
- void dw_pcie_host_deinit(struct pcie_port *pp)
- {
-@@ -503,6 +505,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
- 	if (pci_msi_enabled() && !pp->ops->msi_host_init)
- 		dw_pcie_free_msi(pp);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
- 
- static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				     u32 devfn, int where, int size, u32 *val,
-@@ -695,3 +698,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 0b383feb13de..dc9cdcd72ffc 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -34,6 +34,7 @@ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read);
- 
- int dw_pcie_write(void __iomem *addr, int size, u32 val)
- {
-@@ -51,6 +52,7 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write);
- 
- u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- {
-@@ -66,6 +68,7 @@ u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- 
- 	return val;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read_dbi);
- 
- void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- {
-@@ -80,6 +83,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- 	if (ret)
- 		dev_err(pci->dev, "Write DBI address failed\n");
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write_dbi);
- 
- u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size)
- {
+Best regards
 -- 
-2.17.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
