@@ -2,163 +2,250 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43714C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EA8C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB532075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D5520673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n7PC265D"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kZZ9z+Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfFUPgP (ORCPT
+        id S1726148AbfFUPhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:36:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45212 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUPgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:36:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LFOCdN084301;
-        Fri, 21 Jun 2019 15:35:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=6t/T0oCX3FYtWnSX59C7RPueclXGYaVh3ih9FejJyy8=;
- b=n7PC265Dn1bw/BeVQsMjARhjLsH2Q5nXXw5HrQQxZRruJV3Pk3wuDJoJppdU8WjTwsE5
- IFOO4VQ1ALO3Tkqca1A1aKFr2myITmN65QxfOid1gg19CyyUUp5tW5p0gcveHhrEOhRp
- bccPzjsBjxJ37TIq0DEoxTFJ3GSerzNRpyQgmcNIrgRZcWIJi6frNAUKxJQrh1B7Domg
- h+0kFLkrc++e4VL6uWl+SqEVobF25+Aly2yk1RoVooheayqd01ChzxdKKr3O9if86pf1
- 0CuQzsjTBC6fhX2gfPmrldWHTXgV8F98JdJPt1DFwiWomTWPOxESNbF+r+mTo403B7Bo dw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t7809q6yq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 15:35:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LFZJQK100494;
-        Fri, 21 Jun 2019 15:35:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t7rdxtbm7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 15:35:19 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LFZDpA005218;
-        Fri, 21 Jun 2019 15:35:13 GMT
-Received: from [10.154.105.108] (/10.154.105.108)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 08:35:13 -0700
-Subject: Re: [PATCH 01/16] mm: use untagged_addr() for get_user_pages_fast
- addresses
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-2-hch@lst.de> <20190621133911.GL19891@ziepe.ca>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <9a4e1485-4683-92b0-3d26-73f26896d646@oracle.com>
-Date:   Fri, 21 Jun 2019 09:35:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Jun 2019 11:37:53 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:55159 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfFUPhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 11:37:52 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e7e3aca9;
+        Fri, 21 Jun 2019 15:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=f+1ZpDMIWGAfcOagOZkUXYhHHpM=; b=kZZ9z+SyoD07ZJHEyX6H
+        KPfHA369D2mvdHlyM8O1e+/ObJSx9HJ3WwtovDJGNtMH6jcejU92lobePsLPOciE
+        1aO2K40i4yCa1Y5ZIMRUMqSgCsT00yVUuRsJxSoGgErq16zDiDYXLoDpS2q/ajLb
+        mRL1LDG8OzeOTvY3h/M8j4VPpwsQ5ztAAevBX+iRPFUxqh5iVgE3+6l+yWVHyzB7
+        pQn5EpAswe+HKC4w2WqtJaRsp8DcFBFkkYL2JIq0IJ9bfX7zn/IDgtCgNTX0C2vu
+        Mb0HWNoDtphYw4Ox3YTA+I0qfaIvUxKIo8UgbDypns23o0JncfIKdsywJgKzCK8r
+        dA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c323c7cb (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Fri, 21 Jun 2019 15:04:25 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 1/4] timekeeping: add missing non-_ns functions for fast accessors
+Date:   Fri, 21 Jun 2019 17:37:38 +0200
+Message-Id: <20190621153741.20159-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621133911.GL19891@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=857
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906210125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=897 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210125
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/21/19 7:39 AM, Jason Gunthorpe wrote:
-> On Tue, Jun 11, 2019 at 04:40:47PM +0200, Christoph Hellwig wrote:
->> This will allow sparc64 to override its ADI tags for
->> get_user_pages and get_user_pages_fast.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->>  mm/gup.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/gup.c b/mm/gup.c
->> index ddde097cf9e4..6bb521db67ec 100644
->> +++ b/mm/gup.c
->> @@ -2146,7 +2146,7 @@ int __get_user_pages_fast(unsigned long start, i=
-nt nr_pages, int write,
->>  	unsigned long flags;
->>  	int nr =3D 0;
->> =20
->> -	start &=3D PAGE_MASK;
->> +	start =3D untagged_addr(start) & PAGE_MASK;
->>  	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
->>  	end =3D start + len;
->=20
-> Hmm, this function, and the other, goes on to do:
->=20
->         if (unlikely(!access_ok((void __user *)start, len)))
->                 return 0;
->=20
-> and I thought that access_ok takes in the tagged pointer?
->=20
-> How about re-order it a bit?
+Previously there was no analogue to get proper ktime_t versions of the
+fast variety of ktime invocations. This commit makes the interface
+uniform with the other accessors.
 
-access_ok() can handle tagged or untagged pointers. It just strips the
-tag bits from the top bits. Current order doesn't really matter from
-functionality point of view. There might be minor gain in delaying
-untagging in __get_user_pages_fast() but I could go either way.
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+ Documentation/core-api/timekeeping.rst |  7 +++-
+ include/linux/timekeeping.h            | 28 ++++++++++++--
+ kernel/time/timekeeping.c              | 52 +++++++++++++-------------
+ 3 files changed, 55 insertions(+), 32 deletions(-)
 
---
-Khalid
-
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097cf9e410..f48747ced4723b 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2148,11 +2148,12 @@ int __get_user_pages_fast(unsigned long start, =
-int nr_pages, int write,
-> =20
->  	start &=3D PAGE_MASK;
->  	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
-> -	end =3D start + len;
-> -
->  	if (unlikely(!access_ok((void __user *)start, len)))
->  		return 0;
-> =20
-> +	start =3D untagged_ptr(start);
-> +	end =3D start + len;
-> +
->  	/*
->  	 * Disable interrupts.  We use the nested form as we can already have=
-
->  	 * interrupts disabled by get_futex_key.
->=20
-
+diff --git a/Documentation/core-api/timekeeping.rst b/Documentation/core-api/timekeeping.rst
+index 93cbeb9daec0..47b41e948459 100644
+--- a/Documentation/core-api/timekeeping.rst
++++ b/Documentation/core-api/timekeeping.rst
+@@ -94,7 +94,7 @@ different format depending on what is required by the user:
+ 	down the seconds to the full seconds of the last timer tick
+ 	using the respective reference.
+ 
+-Coarse and fast_ns access
++Coarse and fast access
+ -------------------------
+ 
+ Some additional variants exist for more specialized cases:
+@@ -125,6 +125,11 @@ Some additional variants exist for more specialized cases:
+ 	up to several microseconds on older hardware with an external
+ 	clocksource.
+ 
++.. c:function:: ktime_t ktime_get_mono_fast( void )
++		ktime_t ktime_get_raw_fast( void )
++		ktime_t ktime_get_boottime_fast( void )
++		ktime_t ktime_get_real_fast( void )
++
+ .. c:function:: u64 ktime_get_mono_fast_ns( void )
+ 		u64 ktime_get_raw_fast_ns( void )
+ 		u64 ktime_get_boot_fast_ns( void )
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index a8ab0f143ac4..c5d360779fab 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -146,10 +146,30 @@ static inline u64 ktime_get_raw_ns(void)
+ 	return ktime_to_ns(ktime_get_raw());
+ }
+ 
+-extern u64 ktime_get_mono_fast_ns(void);
+-extern u64 ktime_get_raw_fast_ns(void);
+-extern u64 ktime_get_boot_fast_ns(void);
+-extern u64 ktime_get_real_fast_ns(void);
++extern ktime_t ktime_get_mono_fast(void);
++extern ktime_t ktime_get_raw_fast(void);
++extern ktime_t ktime_get_boottime_fast(void);
++extern ktime_t ktime_get_real_fast(void);
++
++static inline u64 ktime_get_mono_fast_ns(void)
++{
++	return ktime_to_ns(ktime_get_mono_fast());
++}
++
++static inline u64 ktime_get_raw_fast_ns(void)
++{
++	return ktime_to_ns(ktime_get_raw_fast());
++}
++
++static inline u64 ktime_get_boot_fast_ns(void)
++{
++	return ktime_to_ns(ktime_get_boottime_fast());
++}
++
++static inline u64 ktime_get_real_fast_ns(void)
++{
++	return ktime_to_ns(ktime_get_real_fast());
++}
+ 
+ /*
+  * timespec64/time64_t interfaces utilizing the ktime based ones
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 44b726bab4bd..4c97c9c8c217 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -443,41 +443,40 @@ static void update_fast_timekeeper(const struct tk_read_base *tkr,
+  * of the following timestamps. Callers need to be aware of that and
+  * deal with it.
+  */
+-static __always_inline u64 __ktime_get_fast_ns(struct tk_fast *tkf)
++static __always_inline ktime_t __ktime_get_fast(struct tk_fast *tkf)
+ {
+ 	struct tk_read_base *tkr;
+ 	unsigned int seq;
+-	u64 now;
++	ktime_t now;
+ 
+ 	do {
+ 		seq = raw_read_seqcount_latch(&tkf->seq);
+ 		tkr = tkf->base + (seq & 0x01);
+-		now = ktime_to_ns(tkr->base);
+-
+-		now += timekeeping_delta_to_ns(tkr,
++		now = ktime_add_ns(tkr->base,
++			timekeeping_delta_to_ns(tkr,
+ 				clocksource_delta(
+ 					tk_clock_read(tkr),
+ 					tkr->cycle_last,
+-					tkr->mask));
++					tkr->mask)));
+ 	} while (read_seqcount_retry(&tkf->seq, seq));
+ 
+ 	return now;
+ }
+ 
+-u64 ktime_get_mono_fast_ns(void)
++ktime_t ktime_get_mono_fast(void)
+ {
+-	return __ktime_get_fast_ns(&tk_fast_mono);
++	return __ktime_get_fast(&tk_fast_mono);
+ }
+-EXPORT_SYMBOL_GPL(ktime_get_mono_fast_ns);
++EXPORT_SYMBOL_GPL(ktime_get_mono_fast);
+ 
+-u64 ktime_get_raw_fast_ns(void)
++ktime_t ktime_get_raw_fast(void)
+ {
+-	return __ktime_get_fast_ns(&tk_fast_raw);
++	return __ktime_get_fast(&tk_fast_raw);
+ }
+-EXPORT_SYMBOL_GPL(ktime_get_raw_fast_ns);
++EXPORT_SYMBOL_GPL(ktime_get_raw_fast);
+ 
+ /**
+- * ktime_get_boot_fast_ns - NMI safe and fast access to boot clock.
++ * ktime_get_boottime_fast - NMI safe and fast access to boot clock.
+  *
+  * To keep it NMI safe since we're accessing from tracing, we're not using a
+  * separate timekeeper with updates to monotonic clock and boot offset
+@@ -497,47 +496,46 @@ EXPORT_SYMBOL_GPL(ktime_get_raw_fast_ns);
+  * partially updated.  Since the tk->offs_boot update is a rare event, this
+  * should be a rare occurrence which postprocessing should be able to handle.
+  */
+-u64 notrace ktime_get_boot_fast_ns(void)
++ktime_t notrace ktime_get_boottime_fast(void)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
+ 
+-	return (ktime_get_mono_fast_ns() + ktime_to_ns(tk->offs_boot));
++	return ktime_add(ktime_get_mono_fast(), tk->offs_boot);
+ }
+-EXPORT_SYMBOL_GPL(ktime_get_boot_fast_ns);
++EXPORT_SYMBOL_GPL(ktime_get_boottime_fast);
+ 
+ 
+ /*
+- * See comment for __ktime_get_fast_ns() vs. timestamp ordering
++ * See comment for __ktime_get_fast() vs. timestamp ordering
+  */
+-static __always_inline u64 __ktime_get_real_fast_ns(struct tk_fast *tkf)
++static __always_inline ktime_t __ktime_get_real_fast(struct tk_fast *tkf)
+ {
+ 	struct tk_read_base *tkr;
+ 	unsigned int seq;
+-	u64 now;
++	ktime_t now;
+ 
+ 	do {
+ 		seq = raw_read_seqcount_latch(&tkf->seq);
+ 		tkr = tkf->base + (seq & 0x01);
+-		now = ktime_to_ns(tkr->base_real);
+-
+-		now += timekeeping_delta_to_ns(tkr,
++		now = ktime_add_ns(tkr->base_real,
++			timekeeping_delta_to_ns(tkr,
+ 				clocksource_delta(
+ 					tk_clock_read(tkr),
+ 					tkr->cycle_last,
+-					tkr->mask));
++					tkr->mask)));
+ 	} while (read_seqcount_retry(&tkf->seq, seq));
+ 
+ 	return now;
+ }
+ 
+ /**
+- * ktime_get_real_fast_ns: - NMI safe and fast access to clock realtime.
++ * ktime_get_real_fast: - NMI safe and fast access to clock realtime.
+  */
+-u64 ktime_get_real_fast_ns(void)
++ktime_t ktime_get_real_fast(void)
+ {
+-	return __ktime_get_real_fast_ns(&tk_fast_mono);
++	return __ktime_get_real_fast(&tk_fast_mono);
+ }
+-EXPORT_SYMBOL_GPL(ktime_get_real_fast_ns);
++EXPORT_SYMBOL_GPL(ktime_get_real_fast);
+ 
+ /**
+  * halt_fast_timekeeper - Prevent fast timekeeper from accessing clocksource.
+-- 
+2.21.0
 
