@@ -2,153 +2,134 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8445AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF76215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEB320673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cMQ/vDuR"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="O+sP4P2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfFUJBg (ORCPT
+        id S1726426AbfFUJBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 21 Jun 2019 05:01:36 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40172 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfFUJBf (ORCPT
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46089 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfFUJBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Jun 2019 05:01:35 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so9024012eds.7
+Received: by mail-wr1-f68.google.com with SMTP id n4so5721188wrw.13
         for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 02:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xgdrm/+uDzgv3SzhRxL0tfed3iEPzeIqwWeZ4LUbXGY=;
-        b=cMQ/vDuRGUEoyum98yMdueDd2jydiu/6afc0tmWAZBeP10inFyVjuZChKUqT4PiHp4
-         ZaSOaO0GrmX6Pzrpoc89zr4LDXG1Rs6RAUq+EHe/URL5DxcN/rxWzl7evg9hSMa3R+ai
-         uAt/AmC9AhH4m47gSgcwZtfZUKFOEVgKQDP5k=
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PhJ5lM9SlnKYa02k5MazR2be+0vjCQ5zI7j0EPBUS+8=;
+        b=O+sP4P2dWSo99F+WM+aneeiKuNCkGrHe0jBV/hU1Wk+iZFjbunHTPxPqH5idH8e8EJ
+         HDbIrEdt+maab64kQ+MXFytkNwk0t7QJxiXrpMXe4YyDS5+FOUeiH2NFPqHKTd4ZI/X+
+         KhkJHMUD4JBbhLUNqpjzSOR+6iEjHZAbgkOg/NxfBaBC6GbGYVcFTz2FFHlEXeqkZtKh
+         WGCwa30qut6W2U0M5dhJzttoIJQcKNRwHn5UMpGxA/fQ1Kp2Eqiuz8HyKnj08ZIUM+HF
+         dJKz/LliHBOw4iz8Y13dCH1V2yMgHecTVxviU0bPYTLgKb/T5AuXb9ZGQ6jYQN5n/DRs
+         4phw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Xgdrm/+uDzgv3SzhRxL0tfed3iEPzeIqwWeZ4LUbXGY=;
-        b=Fcxn0ApXXBL5YjSfOX6Gb4KdSSRHlV5kKCE7W7JlNzNgZmt5JNonT+WDD8htRjLQtd
-         qDE6XyWTFkkcehHyvDCsZysqk6QCg/oiBSO1eQKO2cEdewSUpc0SZCvBnP0R7WSTvk+t
-         3LfpKySZA6fySFoijNyfUn3OdnukoIO3ozSi3whBLxQAV6Rgt16ThKbrJRizYULEaKVl
-         jhl5f/B4/ksW6NuW1YKoa6T+uw/QJTanOIsvTpUL/x/5lG77zmiSu9iq3z9Xd5yck9Rb
-         msYooQqIcy76lTRFkg+CRR1M7vNkZz4st+IXGA9Bdd+WkjB0RSi2qPMHbj7zOsGoNBBU
-         e94Q==
-X-Gm-Message-State: APjAAAU7OIeIub/U/T4tPZPIamU92U18ElkDOZ+JXeluuL6QFHoBda+p
-        khupKjlNbpr9sX4AJm8AzLlrZg==
-X-Google-Smtp-Source: APXvYqznrdn8j6NIihoYPfy33vPTVa+X0ZBuzxvWDrMGfyNYMVq6ZP0YVj6cK3KfmQdSrvV8TaEBdA==
-X-Received: by 2002:a17:906:ce21:: with SMTP id sd1mr98973416ejb.189.1561107693780;
-        Fri, 21 Jun 2019 02:01:33 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id w35sm658424edd.32.2019.06.21.02.01.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 02:01:32 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 11:01:25 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>
-Subject: Re: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
-Message-ID: <20190621090125.GX12905@phenom.ffwll.local>
-Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "Laurent.pinchart@ideasonboard.com" <Laurent.pinchart@ideasonboard.com>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>
-References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
- <085dc3be-20e5-b2fe-4c02-bf4a4d1473da@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PhJ5lM9SlnKYa02k5MazR2be+0vjCQ5zI7j0EPBUS+8=;
+        b=GSpx2lEHfPesEHX8rDM+TXI9L0Q3hb+OeEKhwSKqDW0lV6rsFAKoUVB+tnSR6+LUmQ
+         8TlVU4nU0DSL6yVeowxXzDz0Qz6a4dsMXlqVxjze2NIRjmJrWah7tIOJ43h+h6LtcHdE
+         TEcTSm6RrklttRKUC50F8Hb0iUy+QGuQEf0I305xqoM5p1oHdJvc/zkg2wBn/xW9uk8G
+         lYp9q/F9vjNBTr0cWG4wloVOjq/T8uSqO40DI+VBsbHryRmsmiqFtQWl8NxgMS8eWPBe
+         K+850hbFIfgbcQ8J10e7OuV5uRo9DIf2l/Stkvp1hSbemHtqcAgQvR94XRd9Tws9umC1
+         mK6w==
+X-Gm-Message-State: APjAAAXQxPHrkSz6zePad+/tbm4cY6dliS6jRbzGpAA96zsbgBbpkmeW
+        J7+c5GqxwWpzpCMbq4PMFB0jMR9STPsd/Q4wceqwmA==
+X-Google-Smtp-Source: APXvYqxOi1lX0UaV5+3I6iUfGLV2BrlPD7WGGLosyqcwBAr5aiHi9gL+td/S/5IwQmge5WwTR7sXISD2kIFnl5hxOX0=
+X-Received: by 2002:a5d:5448:: with SMTP id w8mr62546020wrv.180.1561107693128;
+ Fri, 21 Jun 2019 02:01:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <085dc3be-20e5-b2fe-4c02-bf4a4d1473da@baylibre.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1561097422-25130-1-git-send-email-yash.shah@sifive.com> <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 21 Jun 2019 14:31:22 +0530
+Message-ID: <CAAhSdy2zHozRnwAU6-+U+BE-5h5uNE67D_0TXHJnrHMi53gMog@mail.gmail.com>
+Subject: Re: [PATCH] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, sachin.ghadi@sifive.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:40:12PM +0200, Neil Armstrong wrote:
-> Hi Andrzej,
-> 
-> Gentle ping, could you review the dw-hdmi changes here ?
+On Fri, Jun 21, 2019 at 11:40 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index 4e8fbde..584e737 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -225,5 +225,25 @@
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>                 };
+> +               eth0: ethernet@10090000 {
+> +                       compatible = "sifive,fu540-macb";
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <53>;
+> +                       reg = <0x0 0x10090000 0x0 0x2000
+> +                              0x0 0x100a0000 0x0 0x1000>;
+> +                       reg-names = "control";
+> +                       local-mac-address = [00 00 00 00 00 00];
+> +                       phy-mode = "gmii";
+> +                       phy-handle = <&phy1>;
+> +                       clock-names = "pclk", "hclk";
+> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+> +                                <&prci PRCI_CLK_GEMGXLPLL>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
 
-btw not sure you absolutely need review from Andrzej, we're currently a
-bit undersupplied with bridge reviewers I think ... Better to ramp up
-more.
--Daniel
+Have status = "disabled"; here and have
+status = "okay" in board DTS file.
 
-> 
-> Thanks,
-> Neil
-> 
-> On 26/05/2019 23:18, Jonas Karlman wrote:
-> > Add support for HDR metadata using the hdr_output_metadata connector property,
-> > configure Dynamic Range and Mastering InfoFrame accordingly.
-> > 
-> > A drm_infoframe flag is added to dw_hdmi_plat_data that platform drivers
-> > can use to signal when Dynamic Range and Mastering infoframes is supported.
-> > This flag is needed because Amlogic GXBB and GXL report same DW-HDMI version,
-> > and only GXL support DRM InfoFrame.
-> > 
-> > The first patch add functionality to configure DRM InfoFrame based on the
-> > hdr_output_metadata connector property.
-> > 
-> > The remaining patches sets the drm_infoframe flag on some SoCs supporting
-> > Dynamic Range and Mastering InfoFrame.
-> > 
-> > Note that this was based on top of drm-misc-next and Neil Armstrong's
-> > "drm/meson: Add support for HDMI2.0 YUV420 4k60" series at [1]
-> > 
-> > [1] https://patchwork.freedesktop.org/series/58725/#rev2
-> > 
-> > Jonas Karlman (4):
-> >   drm/bridge: dw-hdmi: Add Dynamic Range and Mastering InfoFrame support
-> >   drm/rockchip: Enable DRM InfoFrame support on RK3328 and RK3399
-> >   drm/meson: Enable DRM InfoFrame support on GXL, GXM and G12A
-> >   drm/sun4i: Enable DRM InfoFrame support on H6
-> > 
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 109 ++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h   |  37 +++++++
-> >  drivers/gpu/drm/meson/meson_dw_hdmi.c       |   5 +
-> >  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |   2 +
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c       |   2 +
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h       |   1 +
-> >  include/drm/bridge/dw_hdmi.h                |   1 +
-> >  7 files changed, 157 insertions(+)
-> > 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+General convention for any SOC device with external
+connection (e.g. ethernet, SPI, SDHC, SATA, PCI, etc)
+is:
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1. Define only device DT node in SOC DTSi file with
+status = "disabled"
+2. Enable device in Board DTS file with
+status = "okay"
+3. Define PHY or external PIN connection details
+in Board DTS file
+
+> +                       phy1: ethernet-phy@0 {
+> +                               reg = <0>;
+> +                       };
+
+The PHY DT node should be in Board DTS file.
+
+Of course, same comments apply to SPI DT nodes as well
+but I missed reviewing those DT nodes. You can send separate
+DT patch to re-organize SPI DT nodes.
+
+Regards,
+Anup
