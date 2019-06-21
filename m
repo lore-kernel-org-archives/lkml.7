@@ -2,138 +2,378 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C280C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B165C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626DC206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4B8206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KXjBo31V"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XSA2oUZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfFUNuQ (ORCPT
+        id S1726244AbfFUNvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:50:16 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34182 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfFUNuO (ORCPT
+        Fri, 21 Jun 2019 09:51:10 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:10953 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFUNvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:50:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id k8so370499iot.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:50:14 -0700 (PDT)
+        Fri, 21 Jun 2019 09:51:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cw2DVVVaW1JthaIStHyVWKFyGjZO7Go63aSJmpzaddY=;
-        b=KXjBo31VfnltBbJdA5yKC1ZR851xWsYsQgB+hBrxuGNZF3t1WXwfr646wzU1J12QeP
-         YU9wetmkhiV57BQHqaQCIK8Y1dUt7Qv+MtezwXD1DK6KqYN0QHLLhXdji7ajcIAZBN7r
-         VpBJ+Z29U5Fj4elewwoSwcbQF8RR1L8BtDFPd4rdBhOHjHJzNTF/0hEvtO2WJpVm42Bc
-         y8EL4SkeNVD0sHOcuRaVkyz09ZUUwefEOQ/98C1fZaV18ENeM0LGC2Pe8jpjBgQ7iVk9
-         4jJVMv5EURSo2Ln0lcUjyy0RNEfNrU71m7G+57EraqJ+xYAVjhgOtnIHGtz2UUqz51p/
-         umog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cw2DVVVaW1JthaIStHyVWKFyGjZO7Go63aSJmpzaddY=;
-        b=kukQmW0Yw6N2E1MY8Qqs5/gYHDAj4FWn1JVyQHFrALPw1m0YmxRnlTgDjVqE8twVO9
-         hsJjZN2KdrOETx5fOuxcnG2srEViQrx7eMOTUdEntRqs6nJRQQS1SzyIOEEYAReXC089
-         8GTKv4q3njXXXSSdqGf4otioo9dbTj7JlXL7v69qMTGm8ycpt5Du88xC3lm2rqd3GiwB
-         BCn3qKTyS2oXgCdVVFtEfLZzoHLrEsYhFM9sMohohLtDTxi8bwn80PO/snd5dw8h9dW4
-         kl2qAXig3+itN0LxmTtNnieJTFSfbNnCvmsszvm6OrzvQgMnpVdv3Sps9j6mVUlwAtGq
-         mKAA==
-X-Gm-Message-State: APjAAAWlsudluDTIbiw/yyXrTVJLxvUffHaknnUEDMaoJ3rjfmv+l/qc
-        vifGIBvqQXx4CDSRO6uLN2uoxECaZzmBTn0uNZUjRA==
-X-Google-Smtp-Source: APXvYqyGp3A4I8cB/c8HVPYxMthN9MCOBsCawaPJbxoVjiIyOYTqSWoU2129z/WePboVbfhUhWGmvkGBEqsMhABn2+c=
-X-Received: by 2002:a5e:820a:: with SMTP id l10mr23290864iom.283.1561125013996;
- Fri, 21 Jun 2019 06:50:13 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1561125068; x=1592661068;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=C+sXxE5wltRCqQPtfL6EgnUHxc+zHyOsxU31yV7v5MQ=;
+  b=XSA2oUZFPJvS98aAfBdqdQzHe+5F/yVrl/5SOM9UreVnPzYrPt50ljK9
+   /AgQqBzPhjBC/0qCpBCKZjGcSzAPkVS1HvnVYFxFMpOWjquw5PNxrwCo5
+   JndRY7X4SDoQ8B1PE14gbZOchezKNE6t8xgzJNPvE2o+K0ZosGo8flSGQ
+   I=;
+X-IronPort-AV: E=Sophos;i="5.62,400,1554768000"; 
+   d="scan'208";a="738550787"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 21 Jun 2019 13:51:07 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 48FA0A298F;
+        Fri, 21 Jun 2019 13:51:02 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 21 Jun 2019 13:51:01 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.8) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 21 Jun 2019 13:50:57 +0000
+Subject: Re: [v2, 4/4] Added scripts for filtering, building, deploying
+To:     Sam Caccavale <samcacc@amazon.de>
+CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
+        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
+        <karahmed@amazon.de>, <andrew.cooper3@citrix.com>,
+        <JBeulich@suse.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <paullangton4@gmail.com>,
+        <anirudhkaushik@google.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190612153600.13073-1-samcacc@amazon.de>
+ <20190612153600.13073-5-samcacc@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <74357ba4-c0d9-4b31-ec93-b8ec8c332c8d@amazon.com>
+Date:   Fri, 21 Jun 2019 15:50:54 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190618094731.3677294-1-arnd@arndb.de> <201906201034.9E44D8A2A8@keescook>
- <CAK8P3a2uFcaGMSHRdg4NECHJwgAyhtMuYDv3U=z2UdBSL5U0Lw@mail.gmail.com>
- <CAKv+Gu-A_OWUQ_neUAprmQOotPA=LoUGQHvFkZ2tqQAg=us1jA@mail.gmail.com> <CAK8P3a2d3H-pdiLX_8aA4LNLOVTSyPW_jvwZQkv0Ey3SJS87Bg@mail.gmail.com>
-In-Reply-To: <CAK8P3a2d3H-pdiLX_8aA4LNLOVTSyPW_jvwZQkv0Ey3SJS87Bg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 21 Jun 2019 15:50:02 +0200
-Message-ID: <CAKv+Gu9p017iPva85dPMdnKW_MSOUcthqcy7KDhGEYCN7=C_SA@mail.gmail.com>
-Subject: Re: [PATCH] structleak: disable BYREF_ALL in combination with KASAN_STACK
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612153600.13073-5-samcacc@amazon.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.8]
+X-ClientProxiedBy: EX13P01UWA001.ant.amazon.com (10.43.160.213) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 at 15:44, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Jun 21, 2019 at 3:32 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> > On Fri, 21 Jun 2019 at 11:44, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Thu, Jun 20, 2019 at 7:36 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > On Tue, Jun 18, 2019 at 11:47:13AM +0200, Arnd Bergmann wrote:
-> > > > > The combination of KASAN_STACK and GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
-> > > > > leads to much larger kernel stack usage, as seen from the warnings
-> > > > > about functions that now exceed the 2048 byte limit:
-> > > >
-> > > > Is the preference that this go into v5.2 (there's not much time left),
-> > > > or should this be v5.3? (You didn't mark it as Cc: stable?)
-> > >
-> > > Having it in 5.2 would be great. I had not done much build testing in the last
-> > > months, so I didn't actually realize that your patch was merged a while ago
-> > > rather than only in linux-next.
-> > >
-> > > BTW, I have now run into a small number of files that are still affected
-> > > by a stack overflow warning from STRUCTLEAK_BYREF_ALL. I'm trying
-> > > to come up with patches for those as well, we can probably do it in a way
-> > > that also improves the affected drivers. I'll put you on Cc when I
-> > > find another one.
-> > >
-> >
-> > There is something fundamentally wrong here, though. BYREF_ALL only
-> > initializes variables that have their address taken, which does not
-> > explain why the size of the stack frame should increase (since in
-> > order to have an address in the first place, the variable must already
-> > have a stack slot assigned)
-> >
-> > So I suspect that BYREF_ALL is defeating some optimizations where.
-> > e.g., the call involving the address of the variable is optimized
-> > away, but the the initialization remains, thus forcing the variable to
-> > be allocated in the stack frame even though the initializer is the
-> > only thing that references it.
->
-> One pattern I have seen here is temporary variables from macros or
-> inline functions whose lifetime now extends over the entire function
-> rather than just the basic block in which they are defined, see e.g.
-> lpfc_debug_dump_qe() being inlined multiple times into
-> lpfc_debug_dump_all_queues(). Each instance of the local
-> "char line_buf[LPFC_LBUF_SZ];" seems to add on to the previous
-> one now, where the behavior without the structleak plugin is that
-> they don't.
->
 
-Right, that seems to be due to the fact that this code
 
-/* split the first bb where we can put the forced initializers */
-gcc_assert(single_succ_p(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
-bb = single_succ(ENTRY_BLOCK_PTR_FOR_FN(cfun));
-if (!single_pred_p(bb)) {
-    split_edge(single_succ_edge(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
-    gcc_assert(single_succ_p(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
-}
+On 12.06.19 17:36, Sam Caccavale wrote:
+> bin.sh produces output which diagnoses whether the crash was expected.
+> coalesce.sh, gen_output.sh, and summarize.sh are useful for parsing
+> the large crash directories that afl produces.
+> deploy_remote.sh does all of the setup to launch a fuzz run via
+> install_deps_ubuntu.sh, install_afl.sh, build.sh, and run.sh.
+> rebuild.sh cleans the directories and executes build.sh
+> ---
+>   tools/fuzz/x86ie/scripts/afl-many             |  6 +--
+>   tools/fuzz/x86ie/scripts/bin.sh               | 49 +++++++++++++++++++
+>   tools/fuzz/x86ie/scripts/build.sh             | 32 ++++++++++++
+>   tools/fuzz/x86ie/scripts/coalesce.sh          |  6 +++
+>   tools/fuzz/x86ie/scripts/deploy.sh            |  9 ++++
+>   tools/fuzz/x86ie/scripts/deploy_remote.sh     |  9 ++++
+>   tools/fuzz/x86ie/scripts/gen_output.sh        | 11 +++++
+>   tools/fuzz/x86ie/scripts/install_afl.sh       | 14 ++++++
+>   .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |  5 ++
+>   tools/fuzz/x86ie/scripts/rebuild.sh           |  6 +++
+>   tools/fuzz/x86ie/scripts/run.sh               | 10 ++++
+>   tools/fuzz/x86ie/scripts/summarize.sh         |  9 ++++
+>   12 files changed, 163 insertions(+), 3 deletions(-)
+>   create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/build.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
+>   create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/run.sh
+>   create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
+> 
+> diff --git a/tools/fuzz/x86ie/scripts/afl-many b/tools/fuzz/x86ie/scripts/afl-many
+> index ab15258573a2..3fe6423309a6 100755
+> --- a/tools/fuzz/x86ie/scripts/afl-many
+> +++ b/tools/fuzz/x86ie/scripts/afl-many
+> @@ -19,10 +19,10 @@ while [ -z "$sync_dir" ]; do
+>   done
+> 
+>   for i in $(seq 1 $(( ${NPROC:-$(nproc)} - 1)) ); do
+> -    taskset -c "$i" ./afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
+> +    taskset -c "$i" $AFLPATH/afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
+>   done
+> -taskset -c 0 ./afl-fuzz -M master $@ >/dev/null 2>&1 &
+> +taskset -c 0 $AFLPATH/afl-fuzz -M master $@ >/dev/null 2>&1 &
+> 
+>   sleep 5
+> -watch -n1 "echo \"Executing './afl-fuzz $@' on ${NPROC:-$(nproc)} cores.\" && ./afl-whatsup -s ${sync_dir}"
+> +watch -n1 "echo \"Executing 'AFLPATH/afl-fuzz $@' on ${NPROC:-$(nproc)} cores.\" && $AFLPATH/afl-whatsup -s 
 
-puts all the initializers at the beginning of the function rather than
-inside the scope of the definition.
+This is missing a $ sign.
+
+${sync_dir}"
+>   pkill afl-fuzz
+> diff --git a/tools/fuzz/x86ie/scripts/bin.sh b/tools/fuzz/x86ie/scripts/bin.sh
+> new file mode 100755
+> index 000000000000..6383a883ff33
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/bin.sh
+> @@ -0,0 +1,49 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +if [ "$#" -lt 3 ]; then
+> +  echo "Usage: './bin path/to/afl-harness path/to/afl_crash [path/to/linux/src/root]'"
+> +  exit
+> +fi
+> +
+> +export AFL_HARNESS="$1"
+> +export LINUX_SRC="$3"
+> +
+> +diagnose_segfault() {
+> +  SOURCE=$(gdb -batch -ex r -ex 'bt 2' --args $@ 2>&1 | grep -Po '#1.* \K([^ ]+:[0-9]+)');
+> +  IFS=: read FILE LINE <<< "$SOURCE"
+> +
+> +  OP="$(sed -n "${LINE}p" "$LINUX_SRC/$FILE" 2>/dev/null)"
+> +  if [ $? -ne 0 ]; then
+> +    OP="$(sed -n "${LINE}p" "$LINUX_SRC/tools/fuzz/x86_instruction_emulation/$FILE" 2>/dev/null)"
+> +  fi
+> +
+> +  OP="$(echo $OP | grep -Po 'ops->\K([^(]+)')"
+> +  if [ -z "$OP" ]; then
+> +    echo "SEGV: unknown, in $FILE:$LINE"
+> +  else
+> +    echo "Expected: segfaulting on emulator->$OP"
+> +  fi
+> +}
+> +export -f diagnose_segfault
+> +
+> +bin() {
+> +  OUTPUT=$(bash -c "timeout 1s $AFL_HARNESS $1 2>&1" 2>&1)
+> +  RETVAL=$?
+> +
+> +  echo "$OUTPUT"
+> +  if [ $RETVAL -eq 0 ]; then
+> +    echo "Terminated successfully"
+> +  elif [ $RETVAL -eq 124 ]; then
+> +    echo "Unknown: killed due to timeout.  Loop likely."
+> +  elif echo "$OUTPUT" | grep -q "SEGV"; then
+> +    echo "$(diagnose_segfault $AFL_HARNESS $1)"
+> +  elif echo "$OUTPUT" | grep -q "FPE"; then
+> +    echo "Expected: floating point exception."
+> +  else
+> +    echo "Unknown cause of crash."
+> +  fi
+> +}
+> +export -f bin
+> +
+> +echo "$(bin $2 2>&1)"
+> diff --git a/tools/fuzz/x86ie/scripts/build.sh b/tools/fuzz/x86ie/scripts/build.sh
+> new file mode 100755
+> index 000000000000..74b893f222c1
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/build.sh
+> @@ -0,0 +1,32 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +kernel_objects="arch/x86/kvm/emulate.o arch/x86/lib/retpoline.o lib/find_bit.o"
+> +
+> +disable() { sed -i -r "/\b$1\b/c\# $1" .config; }
+> +enable() { sed -i -r "/\b$1\b/c\\$1=y" .config; }
+> +
+> +make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} defconfig
+> +
+> +enable "CONFIG_DEBUG_INFO"
+> +enable "CONFIG_STACKPROTECTOR"
+> +
+> +yes ' ' | make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} $kernel_objects
+> +
+> +omit_arg () { args=$(echo "$args" | sed "s/ $1//g"); }
+> +add_arg () { args+=" $1"; }
+> +
+> +rebuild () {
+> +  args="$(head -1 $(dirname $1)/.$(basename $1).cmd | sed -e 's/.*:= //g')"
+> +  omit_arg "-mcmodel=kernel"
+> +  omit_arg "-mpreferred-stack-boundary=3"
+> +  add_arg "-fsanitize=address"
+> +  echo -e "Rebuilding $1 with \n$args"
+> +  eval "$args"
+> +}
+> +
+> +for object in $kernel_objects; do
+> +  rebuild $object
+> +done
+> +
+> +make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} tools/fuzz
+> diff --git a/tools/fuzz/x86ie/scripts/coalesce.sh b/tools/fuzz/x86ie/scripts/coalesce.sh
+> new file mode 100755
+> index 000000000000..18c2ca7f2767
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/coalesce.sh
+> @@ -0,0 +1,6 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +mkdir -p all
+> +rm -rf all/*
+> +find . -type f -wholename '*crashes/id*' | parallel cp {} ./all/$(basename $(dirname {//})):{/}
+> diff --git a/tools/fuzz/x86ie/scripts/deploy.sh b/tools/fuzz/x86ie/scripts/deploy.sh
+> new file mode 100644
+> index 000000000000..f95c3aa2b5b5
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/deploy.sh
+> @@ -0,0 +1,9 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +REMOTE=$1
+> +DSTDIR=/dev/shm
+> +
+> +rsync -av $(pwd) $REMOTE:$DSTDIR
+> +
+> +ssh $REMOTE "cd $DSTDIR/$(basename $(pwd)); bash -s tools/fuzz/x86_instruction_emulation/scripts/deploy_remote.sh"
+
+Does this really belong in here?
+
+> diff --git a/tools/fuzz/x86ie/scripts/deploy_remote.sh b/tools/fuzz/x86ie/scripts/deploy_remote.sh
+> new file mode 100755
+> index 000000000000..e002c5a932f5
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/deploy_remote.sh
+> @@ -0,0 +1,9 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +SCRIPTDIR=$(pwd)/tools/fuzz/x86_instruction_emulation/scripts
+> +
+> +$SCRIPTDIR/install_deps_ubuntu.sh
+> +source $SCRIPTDIR/install_afl.sh
+> +CC=$AFLPATH/afl-gcc $SCRIPTDIR/build.sh
+> +FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}" $SCRIPTDIR/run.sh
+> diff --git a/tools/fuzz/x86ie/scripts/gen_output.sh b/tools/fuzz/x86ie/scripts/gen_output.sh
+> new file mode 100755
+> index 000000000000..6c0707eb6d08
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/gen_output.sh
+> @@ -0,0 +1,11 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +if [ "$#" -lt 3 ]; then
+> +  echo "Usage: '$0 path/to/afl-harness path/to/afl_crash_dir path/to/linux/src/root'"
+> +  exit
+> +fi
+> +
+> +mkdir -p output
+> +rm -rf output/*
+> +find $2 -type f | parallel ./bin.sh $1 {} $3 '>' ./output/{/}.out
+> diff --git a/tools/fuzz/x86ie/scripts/install_afl.sh b/tools/fuzz/x86ie/scripts/install_afl.sh
+> new file mode 100755
+> index 000000000000..b1c5612eca1c
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/install_afl.sh
+> @@ -0,0 +1,14 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
+> +mkdir -p afl
+> +tar xzf afl-latest.tgz -C afl --strip-components 1
+> +
+> +pushd afl
+> +set AFL_USE_ASAN
+> +make clean all
+> +export AFLPATH="$(pwd)"
+> +popd
+> +
+> +sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
+> diff --git a/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+> new file mode 100755
+> index 000000000000..5525bc8b659c
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+> @@ -0,0 +1,5 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +sudo apt update
+> +sudo apt install -y make gcc wget screen build-essential libssh-dev flex bison libelf-dev bc
+
+Same as this. This file could bitrot really quick. And it doesn't help 
+any non-Ubuntu users.
+
+
+I think most files in here are not strictly needed. Maybe split this 
+patch into one that actually contains all changes necessary to easily 
+start a test run and a separate one with all your convencience scripts?
+
+
+Alex
+
+> diff --git a/tools/fuzz/x86ie/scripts/rebuild.sh b/tools/fuzz/x86ie/scripts/rebuild.sh
+> new file mode 100755
+> index 000000000000..ecdc5aa52653
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/rebuild.sh
+> @@ -0,0 +1,6 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +make clean
+> +make tools/fuzz_clean
+> +FUZZDIR="./fuzz" ./tools/fuzz/x86_instruction_emulation/scripts/build.sh
+> diff --git a/tools/fuzz/x86ie/scripts/run.sh b/tools/fuzz/x86ie/scripts/run.sh
+> new file mode 100755
+> index 000000000000..9b7d69e0f0f6
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/run.sh
+> @@ -0,0 +1,10 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}"
+> +
+> +mkdir -p $FUZZDIR/in
+> +cp tools/fuzz/x86_instruction_emulation/rand_sample.bin $FUZZDIR/in
+> +mkdir -p $FUZZDIR/out
+> +
+> +screen bash -c "ulimit -Sv $[21999999999 << 10]; ./tools/fuzz/x86_instruction_emulation/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/x86_instruction_emulation/afl-harness @@"
+> diff --git a/tools/fuzz/x86ie/scripts/summarize.sh b/tools/fuzz/x86ie/scripts/summarize.sh
+> new file mode 100755
+> index 000000000000..27761f283ee3
+> --- /dev/null
+> +++ b/tools/fuzz/x86ie/scripts/summarize.sh
+> @@ -0,0 +1,9 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +if [ "$#" -lt 1 ]; then
+> +  echo "Usage: '$0 path/to/output/dir'"
+> +  exit
+> +fi
+> +
+> +time bash -c "find $1 -type f -exec tail -n 1 {} \; | sort | uniq -c | sort -rn"
+> --
+> 2.17.1
+> 
