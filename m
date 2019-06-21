@@ -2,184 +2,175 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1174C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D0DC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0A2215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59B821537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhLyYMgG"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="GV35dJjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfFUJrE (ORCPT
+        id S1726843AbfFUJsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:47:04 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45080 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfFUJrA (ORCPT
+        Fri, 21 Jun 2019 05:48:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42487 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfFUJsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:47:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so3303934pfq.12;
-        Fri, 21 Jun 2019 02:47:00 -0700 (PDT)
+        Fri, 21 Jun 2019 05:48:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so5894774wrl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 02:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ByCrE5Wwplze5qQLQuGQsAvZ7evnoshkc/mqeB9IlMg=;
-        b=KhLyYMgGuB+5I2l/1RZ9819Vy0Z7D5gSSRjEFfi7MUuvkHLiE/8VXrgPoLq36zJaxt
-         44mNBiKwR/nnfEmryCTYIA5WjtHgG6si/Cbm08vQ77BsT8JRU6eKnIhTG8v0YnFWHWIK
-         p8UYyvoMQ9nv02QDZlgJVQ54WtDOZqrgDI6CdPGDHGwKQILBY0+CkU8wKgqSi2Gknhtm
-         /MHXy+Dqba0qrYHRIM36v/S7icazzO9LP8atCDxi5vBSnMGTYhiJFIZLuoF4pyp/cD6R
-         keEOx6qN29dmReY/Ag15KsAToxInDFoyaHt7UyS3mtmKmOcapdiBvvmI3XOzXx3tWAOk
-         0W1Q==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3sR1fsmOSmMKPt8ApFzplMSFtr7yaH3nHZVGcmffx0Q=;
+        b=GV35dJjszA2zyHawIt2qliimXzvnUf0QFh4LXG6Qrac1iPxZRxa0EV3PU1oiQ3rqgI
+         w2dWQImPU9+JzAZD4UHzer/YglnG9xfKpla/T1B1o3XfW6P++B4wKJzaBkKBpyDIpaxp
+         fOzqNdhAXv1JUkvFNBoXaEIcNVqoz9UGPppTawtHbf+ElY2DsjcTpUutsbyyv5HjJiDs
+         sa023duB/cjPXzrkXUROEYjvu0yhO6SRf6I3fDpLNculp9vqjPgQ/yWWGFW4LU9gYOjK
+         X0c6PHgiC1AOvAcu8hn5SrY2wHe3+MnG3/DQ1W6owW76RuaKyWXi8d0RJHNHYpnylfJN
+         cJBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ByCrE5Wwplze5qQLQuGQsAvZ7evnoshkc/mqeB9IlMg=;
-        b=U4MC00DL85a/ytH1koCJ+QFNw3EkaX6xVPy7cyOZienqZyb/G9ahJbLU6LEi9ipex3
-         1eKo1FEaLdUTrs4x0kLzwddvFyAYP9sbqkS4QKb/89JO9BNWRTR32JDdimpgyHFzpEw6
-         jYe79rBpmuUsS2f8VTGUU6gDaqWrPSMuMBmE/uHVCMsMODS1AYSR+XL1UuaRA19IvJC0
-         Fy3wKQ/IfbBuvy7zFOmsHcXqXChtsic7pZZzfUmnOe5+tUxZ3ABvQL+KPExl2PZNcqF1
-         5sl3se4pqxvLy5izB9lMI0PodY/X2Pwc6Gf4juk5wfja9YBs9ELzamS/YDXBDTu+QZoo
-         cyew==
-X-Gm-Message-State: APjAAAXNaSZTnkD1UWt7aO/i5haVhmFLHNVylRwMbFGhz/+x7FgqwVne
-        lsTL1qpLNzAJN5xADSL6XtvgJN+VecRiTg==
-X-Google-Smtp-Source: APXvYqzICenPifdS5/ensmLasaIdHVf0Gf5mUz+hKKAON+Wv9OHKbrLlhjXwTzh1ks3hAvUAuJNHrg==
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr5480918pjb.115.1561110419681;
-        Fri, 21 Jun 2019 02:46:59 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:913:88b1:ac7e:774f:a03c:dcac])
-        by smtp.googlemail.com with ESMTPSA id u2sm2147746pjv.9.2019.06.21.02.46.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3sR1fsmOSmMKPt8ApFzplMSFtr7yaH3nHZVGcmffx0Q=;
+        b=YMJ5/l3YupQPzA8vcP8cJYnGXdbj4FhjUmfwn4M2nRwycKnK3kk27ZWOIhiLPT+YTB
+         jHCt0LqJxBlMicj4QDH93MeeuLIh7SnnsEMbNi3Rb/fD4HRb6jCUyA+yvmHuYaMsXhkP
+         QkX9RC00XgsloV0O8fuv1R5tI52oB7sM01Amm1Sl2+3T99zNEk3wfN7hJPKVBvoHyqtP
+         p4BJ3867fAqWAxjcLIQ+gkSbKZ73oD6GW7ohG04/Hp6E/6fTgPT+UVEEfDYRfSEu5SwV
+         /ywua2POh4HXy3YH/fvmnAaE8MT258MC3SSivoYFWhbofkVG1ELS7s3lVGnfeYqZwCkv
+         FUdQ==
+X-Gm-Message-State: APjAAAUESEX3IVelF/Y4EPnSpVr2UXlihuMOgl6DXf8tO62aAUJNiQjz
+        GG7Q4Tai6jozL8rqEkHMssGx5Q==
+X-Google-Smtp-Source: APXvYqwCnu1hdf21Y7luHVjdpSkHECqDwwuknTo9xsscjgheBeySu0sil9T4YyQsIlO/8EnrX+BBiw==
+X-Received: by 2002:a5d:62c9:: with SMTP id o9mr60848301wrv.186.1561110480029;
+        Fri, 21 Jun 2019 02:48:00 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id 66sm1941602wma.11.2019.06.21.02.47.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 02:46:59 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/3] net: fddi: skfp: Remove unused private PCI definitions
-Date:   Fri, 21 Jun 2019 15:16:07 +0530
-Message-Id: <20190621094607.15011-4-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190621094607.15011-1-puranjay12@gmail.com>
-References: <20190621094607.15011-1-puranjay12@gmail.com>
+        Fri, 21 Jun 2019 02:47:59 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 11:47:58 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mszeredi@redhat.com
+Subject: Re: [PATCH 02/25] vfs: Allow fsinfo() to query what's in an
+ fs_context [ver #13]
+Message-ID: <20190621094757.zijugn6cfulmchnf@brauner.io>
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+ <155905627927.1662.13276277442207649583.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <155905627927.1662.13276277442207649583.stgit@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused private PCI definitions from skfbi.h because generic PCI
-symbols are already included from pci_regs.h.
+On Tue, May 28, 2019 at 04:11:19PM +0100, David Howells wrote:
+> Allow fsinfo() to be used to query the filesystem attached to an fs_context
+> once a superblock has been created or if it comes from fspick().
+> 
+> This is done with something like:
+> 
+> 	fd = fsopen("ext4", 0);
+> 	...
+> 	fsconfig(fd, fsconfig_cmd_create, ...);
+> 	fsinfo(fd, NULL, ...);
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  fs/fsinfo.c |   30 +++++++++++++++++++++++++++++-
+>  fs/statfs.c |    2 +-
+>  2 files changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+> index f9a63410e9a2..14db881dd02d 100644
+> --- a/fs/fsinfo.c
+> +++ b/fs/fsinfo.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/security.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/fsinfo.h>
+> +#include <linux/fs_context.h>
+>  #include <uapi/linux/mount.h>
+>  #include "internal.h"
+>  
+> @@ -315,13 +316,40 @@ static int vfs_fsinfo_path(int dfd, const char __user *filename,
+>  	return ret;
+>  }
+>  
+> +static int vfs_fsinfo_fscontext(struct fs_context *fc,
+> +				struct fsinfo_kparams *params)
+> +{
+> +	int ret;
+> +
+> +	if (fc->ops == &legacy_fs_context_ops)
+> +		return -EOPNOTSUPP;
+> +
+> +	ret = mutex_lock_interruptible(&fc->uapi_mutex);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = -EIO;
+> +	if (fc->root) {
+> +		struct path path = { .dentry = fc->root };
+> +
+> +		ret = vfs_fsinfo(&path, params);
+> +	}
+> +
+> +	mutex_unlock(&fc->uapi_mutex);
+> +	return ret;
+> +}
+> +
+>  static int vfs_fsinfo_fd(unsigned int fd, struct fsinfo_kparams *params)
+>  {
+>  	struct fd f = fdget_raw(fd);
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- drivers/net/fddi/skfp/h/skfbi.h | 76 ---------------------------------
- 1 file changed, 76 deletions(-)
+You're using fdget_raw() which means you want to allow O_PATH fds but
+below you're checking whether the f_ops correspond to
+fscontext_fops. If it's an O_PATH f_ops will be set to empty_fops so
+you'll always end up in the vfs_fsinfo branch. Is that your intention?
 
-diff --git a/drivers/net/fddi/skfp/h/skfbi.h b/drivers/net/fddi/skfp/h/skfbi.h
-index 5f9b631e7515..0b5bd2e170a7 100644
---- a/drivers/net/fddi/skfp/h/skfbi.h
-+++ b/drivers/net/fddi/skfp/h/skfbi.h
-@@ -24,49 +24,6 @@
-  *	(ML)	= only defined for Monalisa
-  */
- 
--/*
-- * Configuration Space header
-- */
--#define	PCI_VENDOR_ID	0x00	/* 16 bit	Vendor ID */
--#define	PCI_DEVICE_ID	0x02	/* 16 bit	Device ID */
--#define	PCI_COMMAND	0x04	/* 16 bit	Command */
--#define	PCI_STATUS	0x06	/* 16 bit	Status */
--#define	PCI_REVISION_ID	0x08	/*  8 bit	Revision ID */
--#define	PCI_CLASS_CODE	0x09	/* 24 bit	Class Code */
--#define	PCI_CACHE_LSZ	0x0c	/*  8 bit	Cache Line Size */
--#define	PCI_LAT_TIM	0x0d	/*  8 bit	Latency Timer */
--#define	PCI_HEADER_T	0x0e	/*  8 bit	Header Type */
--#define	PCI_BIST	0x0f	/*  8 bit	Built-in selftest */
--#define	PCI_BASE_1ST	0x10	/* 32 bit	1st Base address */
--#define	PCI_BASE_2ND	0x14	/* 32 bit	2nd Base address */
--/* Byte 18..2b:	Reserved */
--#define	PCI_SUB_VID	0x2c	/* 16 bit	Subsystem Vendor ID */
--#define	PCI_SUB_ID	0x2e	/* 16 bit	Subsystem ID */
--#define	PCI_BASE_ROM	0x30	/* 32 bit	Expansion ROM Base Address */
--/* Byte 34..33:	Reserved */
--#define PCI_CAP_PTR	0x34	/*  8 bit (ML)	Capabilities Ptr */
--/* Byte 35..3b:	Reserved */
--#define	PCI_IRQ_LINE	0x3c	/*  8 bit	Interrupt Line */
--#define	PCI_IRQ_PIN	0x3d	/*  8 bit	Interrupt Pin */
--#define	PCI_MIN_GNT	0x3e	/*  8 bit	Min_Gnt */
--#define	PCI_MAX_LAT	0x3f	/*  8 bit	Max_Lat */
--/* Device Dependent Region */
--#define	PCI_OUR_REG	0x40	/* 32 bit (DV)	Our Register */
--#define	PCI_OUR_REG_1	0x40	/* 32 bit (ML)	Our Register 1 */
--#define	PCI_OUR_REG_2	0x44	/* 32 bit (ML)	Our Register 2 */
--/* Power Management Region */
--#define PCI_PM_CAP_ID	0x48	/*  8 bit (ML)	Power Management Cap. ID */
--#define PCI_PM_NITEM	0x49	/*  8 bit (ML)	Next Item Ptr */
--#define PCI_PM_CAP_REG	0x4a	/* 16 bit (ML)	Power Management Capabilities */
--#define PCI_PM_CTL_STS	0x4c	/* 16 bit (ML)	Power Manag. Control/Status */
--/* Byte 0x4e:	Reserved */
--#define PCI_PM_DAT_REG	0x4f	/*  8 bit (ML)	Power Manag. Data Register */
--/* VPD Region */
--#define	PCI_VPD_CAP_ID	0x50	/*  8 bit (ML)	VPD Cap. ID */
--#define PCI_VPD_NITEM	0x51	/*  8 bit (ML)	Next Item Ptr */
--#define PCI_VPD_ADR_REG	0x52	/* 16 bit (ML)	VPD Address Register */
--#define PCI_VPD_DAT_REG	0x54	/* 32 bit (ML)	VPD Data Register */
--/* Byte 58..ff:	Reserved */
- 
- /*
-  * I2C Address (PCI Config)
-@@ -76,39 +33,6 @@
-  */
- #define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */ 
- 
--/*
-- * Define Bits and Values of the registers
-- */
--/*	PCI_VENDOR_ID	16 bit	Vendor ID */
--/*	PCI_DEVICE_ID	16 bit	Device ID */
--/* Values for Vendor ID and Device ID shall be patched into the code */
--/*	PCI_COMMAND	16 bit	Command */
--#define	PCI_FBTEN	0x0200	/* Bit 9:	Fast Back-To-Back enable */
--#define	PCI_SERREN	0x0100	/* Bit 8:	SERR enable */
--#define	PCI_ADSTEP	0x0080	/* Bit 7:	Address Stepping */
--#define	PCI_PERREN	0x0040	/* Bit 6:	Parity Report Response enable */
--#define	PCI_VGA_SNOOP	0x0020	/* Bit 5:	VGA palette snoop */
--#define	PCI_MWIEN	0x0010	/* Bit 4:	Memory write an inv cycl ena */
--#define	PCI_SCYCEN	0x0008	/* Bit 3:	Special Cycle enable */
--#define	PCI_BMEN	0x0004	/* Bit 2:	Bus Master enable */
--#define	PCI_MEMEN	0x0002	/* Bit 1:	Memory Space Access enable */
--#define	PCI_IOEN	0x0001	/* Bit 0:	IO Space Access enable */
--
--/*	PCI_STATUS	16 bit	Status */
--#define	PCI_PERR	0x8000	/* Bit 15:	Parity Error */
--#define	PCI_SERR	0x4000	/* Bit 14:	Signaled SERR */
--#define	PCI_RMABORT	0x2000	/* Bit 13:	Received Master Abort */
--#define	PCI_RTABORT	0x1000	/* Bit 12:	Received Target Abort */
--#define	PCI_STABORT	0x0800	/* Bit 11:	Sent Target Abort */
--#define	PCI_DEVSEL	0x0600	/* Bit 10..9:	DEVSEL Timing */
--#define	PCI_DEV_FAST	(0<<9)	/*		fast */
--#define	PCI_DEV_MEDIUM	(1<<9)	/*		medium */
--#define	PCI_DEV_SLOW	(2<<9)	/*		slow */
--#define	PCI_DATAPERR	0x0100	/* Bit 8:	DATA Parity error detected */
--#define	PCI_FB2BCAP	0x0080	/* Bit 7:	Fast Back-to-Back Capability */
--#define	PCI_UDF		0x0040	/* Bit 6:	User Defined Features */
--#define PCI_66MHZCAP	0x0020	/* Bit 5:	66 MHz PCI bus clock capable */
--#define PCI_NEWCAP	0x0010	/* Bit 4:	New cap. list implemented */
- 
- #define PCI_ERRBITS	(PCI_STATUS_DETECTED_PARITY | PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT | PCI_STATUS_SIG_TARGET_ABORT | PCI_STATUS_PARITY)
- 
--- 
-2.21.0
+That means the new mount api doesn't support fsinfo() without using a
+non-O_PATH fd, right? Why the fallback then?
 
+Christian
+
+>  	int ret = -EBADF;
+>  
+>  	if (f.file) {
+> -		ret = vfs_fsinfo(&f.file->f_path, params);
+> +		if (f.file->f_op == &fscontext_fops)
+> +			ret = vfs_fsinfo_fscontext(f.file->private_data,
+> +						   params);
+> +		else
+> +			ret = vfs_fsinfo(&f.file->f_path, params);
+>  		fdput(f);
+>  	}
+>  	return ret;
+> diff --git a/fs/statfs.c b/fs/statfs.c
+> index eea7af6f2f22..b9b63d9f4f24 100644
+> --- a/fs/statfs.c
+> +++ b/fs/statfs.c
+> @@ -86,7 +86,7 @@ int vfs_statfs(const struct path *path, struct kstatfs *buf)
+>  	int error;
+>  
+>  	error = statfs_by_dentry(path->dentry, buf);
+> -	if (!error)
+> +	if (!error && path->mnt)
+>  		buf->f_flags = calculate_f_flags(path->mnt);
+>  	return error;
+>  }
+> 
