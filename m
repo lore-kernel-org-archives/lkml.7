@@ -2,75 +2,109 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE791C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64620C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B73208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D612089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="dZXpZN2F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIBlrj6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfFUOqs (ORCPT
+        id S1726419AbfFUOqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:46:48 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:34057 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfFUOqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:46:47 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id be52ef50
-        for <linux-kernel@vger.kernel.org>;
-        Fri, 21 Jun 2019 14:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=JPjauernHso6uAK9ikz8SKW4XZM=; b=dZXpZN
-        2FbnOThfcWqSZTt/3LEJC6PDLD/M7HHi7q8I+IKmCSiD4MX+eEx4gkZjP9dMCHVw
-        INhDVZQK50wn8q319bIdzQVvHRJmxnpjRXpHVkf7Kcoy+q/GtNruh74acfOv0lFP
-        6vkMBZ9WytUwlSHXhkAhk4g1yJdNDpYpQJZUreMlJMzXCloWeq2yuD2ABAzuYa3l
-        tynH/5wCpvHTvZgnXKI9TDLyqEsq9WzQK0Tx2WWfJHq67QIdBh1YUxXbaBZgDWqi
-        +Aj9BsFTmaVDioxlS1lPeeRpky+fajMkUiUdwR3ngeF/gEHzM3O2aIl70mSL5mHK
-        ezQDkL4TqLvile2Q==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9730adec (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Fri, 21 Jun 2019 14:13:21 +0000 (UTC)
-Received: by mail-ot1-f46.google.com with SMTP id r21so6554081otq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:46:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAW1fpuRktOuxe/BTAjCbReWAHdZRVMz/62ICcRpgL2q9fAn2Oek
-        mAwYs3sTrD9sI4fhEcyTaQrHj7Uh9MaZXoS1IAg=
-X-Google-Smtp-Source: APXvYqzZGdtSyfVmV68atPrv4JHfMT0AEdbpO6M87y0EIbTH4vUTWTAy3LfyaawIX7ryVabajxYkAYQgjBa9G826oMw=
-X-Received: by 2002:a9d:4f0f:: with SMTP id d15mr19770032otl.52.1561128404638;
- Fri, 21 Jun 2019 07:46:44 -0700 (PDT)
+        Fri, 21 Jun 2019 10:46:54 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41796 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbfFUOqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:46:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so3715277pff.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YeYJiWJp9MsHiUEX6h5i5KyJQ1uqyv+cgtbzLuwMxJA=;
+        b=bIBlrj6SJvGm27coMv8gvcGVis7CVdPkpuGVWbd8tlzMmKHY/tO8nInPNLafJhE5zb
+         NNTk/M8pLR1NaEP0jv5VRvPjJOwUjCWesHq6avVC8bl6N/M2GDS95mp/+BWk1xPGAmF/
+         NyBzQLRjOZotg5Rev6aQzro/uz0QLbZesbEttO4M5rTeurreTDsNJrzSnTV+ByHXzZAQ
+         kqZG+VhRgW6fPciH2z6iiRuW1psLqQsn+ExazE0MxgWcSlfd69CSvadPlAhD/+0aHQQP
+         3Qn4zZ+TDRmAvwpnOZdV1lJFxv6UXa150iubOAQdlj0wLlJACW4/q6Ki3X5Ysj0K0quk
+         Fykw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YeYJiWJp9MsHiUEX6h5i5KyJQ1uqyv+cgtbzLuwMxJA=;
+        b=RIYVxuAdFUhsOYuLDGQU3xtx6ZmxbV81oqn3BR0+tWfrYBO2DpdEUq306+U0/XjLIQ
+         GStCd+QQ25sJ7GKn5DvE6jXFocm8CO9yx1aPjhUGUxWdzgiSRah5DBBHpVqCm+5pCnib
+         /trcZC2u0RTSYfix7V5GE3lWvpY4GjG9fLqC6ntAtMVQnuTO0cPwzIaTV9JfxRmq7nLm
+         1bQceqxvdxvyXXa6Bi9qdq7MtdG2GwR6VsL/B6w5d+GbTTrMh1+HrR4vDPnRj0oXZUwh
+         Lqj9WgrEMZ6E0idqGCny7GneX+k+UqMJ1btB57CJYOzVJl0PhDr5bmnmujQdXWsUBEAe
+         TGZw==
+X-Gm-Message-State: APjAAAXzh33n7G5pd9ZJODaQ3ohe2uzN3joouvnDNQhjv4mCBAasf8GR
+        0uV3qnZV4HUocL/C2HiYK/0=
+X-Google-Smtp-Source: APXvYqxHIVzUGzZFjBCxC6IFlvlwe0JS6Fyaw3V10ffP0u+kmWXjt4WMcU7mQ2dUL9OvC9PRWh/cpQ==
+X-Received: by 2002:a65:41c7:: with SMTP id b7mr18737069pgq.165.1561128412761;
+        Fri, 21 Jun 2019 07:46:52 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id q144sm5187006pfc.103.2019.06.21.07.46.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 07:46:52 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] ARM: smp: Moved cpu_logical_map[] to smp.h
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+References: <20190603231830.24129-1-f.fainelli@gmail.com>
+ <20190603231830.24129-3-f.fainelli@gmail.com>
+ <20190621075730.nubg7657nwlkmmmk@shell.armlinux.org.uk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <4e6e7f40-ab4e-f41b-94a7-176cbbbb30f2@gmail.com>
+Date:   Fri, 21 Jun 2019 07:46:51 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <CAHmME9pyf1AmjWOFFdJFXV9-OBv-ChpKZ130733+x=BtjF62mA@mail.gmail.com>
- <20190620141159.15965-1-Jason@zx2c4.com> <20190620141159.15965-3-Jason@zx2c4.com>
- <CAK8P3a1Dfx0MayHFP46KL0RDta9cZYBy3pVRTaVTbEsbMOy5xg@mail.gmail.com>
-In-Reply-To: <CAK8P3a1Dfx0MayHFP46KL0RDta9cZYBy3pVRTaVTbEsbMOy5xg@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Fri, 21 Jun 2019 16:46:32 +0200
-X-Gmail-Original-Message-ID: <CAHmME9qDAEzZKBDowLmdaxtc8fJqp-w_cvOWsvubh5Yr=Kgm-g@mail.gmail.com>
-Message-ID: <CAHmME9qDAEzZKBDowLmdaxtc8fJqp-w_cvOWsvubh5Yr=Kgm-g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] timekeeping: add missing _ns functions for coarse accessors
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190621075730.nubg7657nwlkmmmk@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 4:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> I would prefer the 'coarse' on the other side, i.e.
-> ktime_get_coarse_real_ns instead of ktime_get_real_coarse_ns,
-> as this is what we already have with ktime_get_coarse_real_ts64.
->
-> I originally went with that order to avoid the function sounding
-> "real coarse", although I have to admit that it was before Thomas
-> fixed it in e3ff9c3678b4 ("timekeeping: Repair ktime_get_coarse*()
-> granularity"). ;-)
 
-I can do this, but that means also I'll change get_real_fast to
-get_fast_real, too, in order to be consistent. Is that okay?
+
+On 6/21/2019 12:57 AM, Russell King - ARM Linux admin wrote:
+> On Mon, Jun 03, 2019 at 04:18:30PM -0700, Florian Fainelli wrote:
+>> asm/smp.h is included by linux/smp.h and some drivers, in particular
+>> irqchip drivers can access cpu_logical_map[] in order to perform SMP
+>> affinity tasks. Make arm64 consistent with other architectures here.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> I merged this last night, and it causes ojn's builder to fail 98
+> defconfigs with errors like:
+> 
+> arch/arm/include/asm/smp_plat.h:79:7: error: implicit declaration of function 'cpu_logical_map' [-Werror=implicit-function-declaration]
+> arch/arm/kernel/setup.c:594:21: error: lvalue required as left operand of assignment
+> arch/arm/kernel/setup.c:596:22: error: lvalue required as left operand of assignment
+> 
+> Dropping this patch.
+> 
+> Also, you may wish to make the patch description refer to the correct
+> architecture.
+
+Sorry about that, I will go back and revisit this patch.
+-- 
+Florian
