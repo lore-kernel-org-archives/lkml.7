@@ -2,177 +2,155 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27862C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49009C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6E8208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1515D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="JgcR0ufG";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="FDdjqAq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfFUIfa (ORCPT
+        id S1726544AbfFUIfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:35:30 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38809 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfFUIf2 (ORCPT
+        Fri, 21 Jun 2019 04:35:34 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:37864 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726055AbfFUIfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:35:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so8920142edo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:35:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mmt0kiyLRw+HeqUtPae5wb8eOqt4c0M39SkXRh/JHCk=;
-        b=TvudfNZefnjNTT4KG9Plq5BqFXTflJOYcA0n32/VPlEZ8A4fHqS1TISHInUf10VFLB
-         cItyClSbPURa8gCJHGPJNi8QntKT47PSrSPxZXcbsvjEG2R+1BhLrIoZz3OnkCxxmzQB
-         Jtts4SYgFfQ3Mrx7GhGKcOwncNjEk0s1MsGAkVp+d1oWmOSqODXAUgiNBvJuavVcLBqY
-         fTbCkuy8EBwatYm4aCgddttKRt9ivxzDjsmXZ0TBOmVH8WMuCVbQJI0n8t1oQxMl+C7G
-         wGA4Ekt2vvS1eWQtVGBKlveMkz8heRcj5EXfrLG2BWg8hPQkenXUvGiJokmzEJA2vg17
-         z0eA==
-X-Gm-Message-State: APjAAAUpA40W6zTf7Vsae/7Tak9agQb85szD1ELzjO7k6+g9ZRtghQlD
-        dgaBxXwelAyFumx/Q6Atr1gXe35NErs=
-X-Google-Smtp-Source: APXvYqwI6LagF9gG99nUgbdl/iv/EnLcdekW46tfOQEiIJernJ2D0mBQBxW6cCwnO/770Xv6q6Uu5g==
-X-Received: by 2002:a50:f7c1:: with SMTP id i1mr15861292edn.268.1561106125627;
-        Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id g16sm625392edc.76.2019.06.21.01.35.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id n9so5737737wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
-X-Received: by 2002:a05:6000:114b:: with SMTP id d11mr28630201wrx.167.1561106124764;
- Fri, 21 Jun 2019 01:35:24 -0700 (PDT)
+        Fri, 21 Jun 2019 04:35:33 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L8YARY005046;
+        Fri, 21 Jun 2019 01:35:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=bTZct3WyNTs8t7ljibZ5PG06Ui+Yj9uekmABLoOpIrI=;
+ b=JgcR0ufGnevNMWVIUuslxI/4jhscmKopIITnh6rf3DUHiHJWwNE83oGGV6LZyOsYjSut
+ ZalKDrfRJuolSqjqkX9OrHE4QkLDtHOFN9qDS8g/zXapC0L1zFht39Tl10i3OGhH1331
+ SAP1QBOV3QBnmirFv7VrfMH19Wti4HQd+PgV/r5/cZEe+yiuPyvpyja1WaHukkF+2zxh
+ 492udt7eFajYARlrbnN4VVC4/nH7MnUzDM/3v9VHCKx1C6bepXaKOFi2j+LY1zkKcd4v
+ H4I9ySLH1Rtli2y2Al+YT6/L7v7qCZ990m/0zXGgAJjQxSIJcXd2Phdd7mtSS9h0Dmto 9w== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2053.outbound.protection.outlook.com [104.47.37.53])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t8cht4h9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 01:35:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bTZct3WyNTs8t7ljibZ5PG06Ui+Yj9uekmABLoOpIrI=;
+ b=FDdjqAq+N3hMBJx/2r+g9IFsz4TuH01UhDCQB3oZQOagYGgPS/9NTvHnBDQknrKCK0KzOQP6UiKS/7o5sGIe9KMXs5EzUCzybAl/fVXmQT3G8Qh3ftqy+5fDnBQsaU+upJpMaJhH0lqKJQ3jKWQgp/91AKgxfngcYT16EyW4s6Y=
+Received: from DM6PR07CA0001.namprd07.prod.outlook.com (2603:10b6:5:94::14) by
+ MN2PR07MB6831.namprd07.prod.outlook.com (2603:10b6:208:11e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12; Fri, 21 Jun
+ 2019 08:35:22 +0000
+Received: from DM3NAM05FT008.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e51::208) by DM6PR07CA0001.outlook.office365.com
+ (2603:10b6:5:94::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.16 via Frontend
+ Transport; Fri, 21 Jun 2019 08:35:22 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ DM3NAM05FT008.mail.protection.outlook.com (10.152.98.114) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.6 via Frontend Transport; Fri, 21 Jun 2019 08:35:21 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8ZIRQ002547
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 21 Jun 2019 04:35:20 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Fri, 21 Jun 2019 10:35:18 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 21 Jun 2019 10:35:18 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8ZHCs009522;
+        Fri, 21 Jun 2019 09:35:17 +0100
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
+        <davem@davemloft.net>, <f.fainelli@gmail.com>
+CC:     <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
+        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <rafalc@cadence.com>, <aniljoy@cadence.com>, <piotrs@cadence.com>,
+        <pthombar@cadence.com>
+Subject: [PATCH v3 5/5] net: macb: parameter added to cadence ethernet controller DT binding
+Date:   Fri, 21 Jun 2019 09:35:16 +0100
+Message-ID: <1561106116-9361-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
+In-Reply-To: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-4-jagan@amarulasolutions.com> <20190523203836.xy7nmte3ubyxwg27@flea>
- <CAMty3ZA2mZugso_rMy+anp1i1bSL5FtB2mAyN1v_gE3rds0LgA@mail.gmail.com>
-In-Reply-To: <CAMty3ZA2mZugso_rMy+anp1i1bSL5FtB2mAyN1v_gE3rds0LgA@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 21 Jun 2019 16:35:09 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
-Message-ID: <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v10 03/11] drm/sun4i: dsi: Fix video
- start delay computation
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(2980300002)(199004)(189003)(36092001)(7696005)(53416004)(51416003)(70586007)(8936002)(48376002)(81156014)(107886003)(76176011)(47776003)(486006)(68736007)(478600001)(81166006)(50466002)(76130400001)(8676002)(69596002)(36756003)(4326008)(305945005)(77096007)(53936002)(356004)(126002)(110136005)(336012)(426003)(186003)(476003)(86362001)(2906002)(50226002)(4744005)(26005)(316002)(70206006)(2616005)(2201001)(446003)(54906003)(11346002)(5660300002)(26826003)(16586007)(7126003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6831;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1e195dec-79e1-49c4-77ae-08d6f6236685
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:MN2PR07MB6831;
+X-MS-TrafficTypeDiagnostic: MN2PR07MB6831:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB6831E7A40DC69F445279CDE4C1E70@MN2PR07MB6831.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0075CB064E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: yUUiw0ffaakQQQpC44hsLuZjmVZuCp5m0+N3zXB+8j/N19yj4d2CJPHPEYBe6V09Q8LYzfo4jeRcbadMZKm+cMe88V/RFeNVQpgzsJn2SqTcMGVDHbCdBWoN3gkO998iGlb7DxNBjEbtYp7QnUR98PA5DsAE6VqWWuPpqCdCxAqlgjQhCJJk/Dl9xpmAnqwJF9YL5UWFurZhVSoQ8zK6yQc7DxsPPIDXPW511SA4j+LoR0/VcFKoO41V0eVukbS6gnPIRMdQKRrS3uJQPsDnyp68ZFST5AjSzYIjNp0X/YfIGXeWZSg4AGda31hueHMIaARs6dTTUWyeaQQu4qdCWircdVIGkTCTHALAuE/Cm4LCh8Tqk1+7cmHk8EJR3dUr3IxxB7SP8HXXuX4n9XMVR+bPChpybh/Wm9crQpL9ggE=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 08:35:21.8265
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e195dec-79e1-49c4-77ae-08d6f6236685
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6831
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 6:27 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, May 20, 2019 at 02:33:10PM +0530, Jagan Teki wrote:
-> > > The current code is computing vertical video start delay as
-> > >
-> > > delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
-> > >
-> > > On which the second parameter
-> > >
-> > > mode->vsync_end - mode->vdisplay = front porch + sync timings
-> > >
-> > > according to "DRM kernel-internal display mode structure" in
-> > > include/drm/drm_modes.h
-> > >
-> > > With adding additional sync timings, the desired video start delay
-> > > value as 510 for "bananapi,s070wv20-ct16" panel timings which indeed
-> > > trigger panel flip_done timed out as:
-> > >
-> > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > >  [CRTC:46:crtc-0] vblank wait timed out
-> > >  Modules linked in:
-> > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
-> > >  Hardware name: Allwinner sun8i Family
-> > >  Workqueue: events deferred_probe_work_func
-> > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
-> > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
-> > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
-> > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
-> > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
-> > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
-> > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
-> > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
-> > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
-> > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > >  ---[ end trace 495200a78b24980e ]---
-> > >  random: fast init done
-> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > >
-> > > But the expected video start delay value is 513 which states that
-> > > the second parameter on the computation is "front porch" value
-> > > (no sync timings included).
-> > >
-> > > This is clearly confirmed from the legacy [1] and new [2] bsp codes
-> > > that the second parameter on the video start delay is "front porch"
-> > >
-> > > Here is the detailed evidence for calculating front porch as per
-> > > bsp code.
-> > >
-> > > vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp
-> > > => (panel->lcd_vt) - panel->lcd_y - panel->lcd_vbp
-> > > => (tt->ver_front_porch + lcdp->panel_info.lcd_vbp
-> > >     + lcdp->panel_info.lcd_y) -  panel->lcd_y - panel->lcd_vbp
-> > > => tt->ver_front_porch
-> >
-> > The comment on patch 1 still applies on this patch
->
-> Thanks, I have responded on that. Same applies here.
+New parameters added to Cadence ethernet controller DT binding
+for USXGMII interface.
 
-So this patch fixes the misinterpretation of Allwinner's back porch value,
-much like patch 1, but this one is for the vertical back porch. So I think
-you should follow the same advice I gave you for patch 1.
+Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+---
+ Documentation/devicetree/bindings/net/macb.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-ChenYu
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 63c73fafe26d..dabdf9d3b574 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -28,6 +28,9 @@ Required properties:
+ 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
+ 	Optional elements: 'tsu_clk'
+ - clocks: Phandles to input clocks.
++- serdes-rate-gbps External serdes rate.Mandatory for USXGMII mode.
++	5 - 5G
++	10 - 10G
+ 
+ The MAC address will be determined using the optional properties
+ defined in ethernet.txt.
+-- 
+2.17.1
+
