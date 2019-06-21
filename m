@@ -2,97 +2,130 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D8C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0708AC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885EF208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FFA206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIhTAt82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfFUOdu (ORCPT
+        id S1726584AbfFUOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:33:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51086 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:33:50 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 56FAA15A5690BFCC3BED;
-        Fri, 21 Jun 2019 22:33:46 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Jun 2019
- 22:33:36 +0800
-Subject: Re: [PATCH 4/5] bus: hisi_lpc: Add .remove method to avoid driver
- unbind crash
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
- <1561026716-140537-5-git-send-email-john.garry@huawei.com>
- <20190621135619.GE82584@google.com>
-CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <joe@perches.com>, <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <919b0b6f-1c37-47d5-1853-cb297d68aae7@huawei.com>
-Date:   Fri, 21 Jun 2019 15:33:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 21 Jun 2019 10:34:40 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35734 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfFUOej (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:34:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so1708514ioo.2;
+        Fri, 21 Jun 2019 07:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AECDYLxDxs7t3GCnNHcYsgiH9u/iWrvr6DiFBtVCaR0=;
+        b=mIhTAt82nLco82ZUCJu8f/BQnr1sKyonZ/h33w52rRQFbAOYmW2zAdH0eWvaTJf7Em
+         DkojVv9wiWl1xGazjMm7vANa5MqniYm2SNgbHhRHcbjhcsxUmhC+xSPMsvNvZl077ZXU
+         HvOFr05BCX8m5Js9aFlBaBOrX0OIeWz6z+1GNXjAk6tqk6GIa2BxsvSAdwXldf2GA5SX
+         GrmcZ69IVV7SMeiIzA3rEo/dniNGU7dAwPwGwUgSr+lBdmB8QN4xJqB4dvqBdBK5F9jo
+         SgdLf2McEtqSD1SHw+fYhZvNpfzZMGQ0E5fk5VA6hnPxroPzz6JqGFTVyUT/LsT1MRZy
+         FJFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AECDYLxDxs7t3GCnNHcYsgiH9u/iWrvr6DiFBtVCaR0=;
+        b=lMh5Xeg4FpEu+DQZYNgcmwN9wY00YtoOT5YOJqixJbbNGOC2C8LU8P8yii5hpI3/8r
+         PV3bR74Zm/P9eHIZ9G7W2yAOYNIPahz/2WOx9itIsWnhZdn6ogC/FtDKbKQo7YCoJp23
+         9s9U1S2x1RmE8TGUJmw/4Z91FsDmmM2Jc3KTM8fqvYxKpcweykMRdFQ9vvpFWj/91b22
+         H1KUgSGRbwQsisoGgwtLwZ47lkzx6owjCiyVWxDbvku7GwVz5n5wehtL4njHmQiZDuyH
+         BY0KuEKapKbJWNmGYYJXhzIt8OKLU6sEO8hepQsDubRpO7IkwYAKmlGlAJ43Fjpg+JFT
+         Nxsw==
+X-Gm-Message-State: APjAAAU5nydtAVBFDVq+dt5yCXwWj+csmGtwd5gPMtnm1IFlJr6Og2OF
+        3TDhKjb9E72U8APQzfRkLhzcnMbqRmgtWWvHqX0=
+X-Google-Smtp-Source: APXvYqz0iwFlA6JkJ14KUgH9IUB7/KVGlNFIqw6N33AuxBl5sBzGUS41/e3kXim7cgQDGO9nrhRXSXrQ9eLv923pxlw=
+X-Received: by 2002:a5d:8049:: with SMTP id b9mr2356470ior.199.1561127678260;
+ Fri, 21 Jun 2019 07:34:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190621135619.GE82584@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
+ <20190620143318.11880-1-jeffrey.l.hugo@gmail.com> <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
+In-Reply-To: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 21 Jun 2019 08:34:26 -0600
+Message-ID: <CAOCk7NoKB6UtA3g-0+Yxi4Y46PDqapnOH0dHH0CupvnQ=ZSKVQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2019 14:56, Bjorn Helgaas wrote:
->>
->> > +static void hisi_lpc_acpi_remove(struct device *hostdev)
->> > +{
->> > +	struct acpi_device *adev = ACPI_COMPANION(hostdev);
->> > +	struct acpi_device *child;
->> > +
->> > +	device_for_each_child(hostdev, NULL, hisi_lpc_acpi_remove_subdev);
->> > +
->> > +	list_for_each_entry(child, &adev->children, node)
+On Thu, Jun 20, 2019 at 10:34 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Jeffrey,
+>
+> On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >  #ifdef CONFIG_OF
+> > -static const struct of_device_id elan_of_match[] = {
+> > -       { .compatible = "elan,ekth3000" },
+> > -       { /* sentinel */ }
+> > -};
+>
+> I think OF IDs should stay in this file since we agreed HID will not
+> be checking them.
 
-Hi Bjorn,
-
->> > +		acpi_device_clear_enumerated(child);
-> There are only two other non-ACPI core callers of
-> acpi_device_clear_enumerated() (i2c and spi).  That always makes me
-> wonder if we're getting too deep in ACPI internals.
-
-It's no coincidence that i2c and spi are the only other two non-ACPI 
-core callers. For getting ACPI support for the hisi-lpc driver, we 
-modeled the driver to have the same ACPI enumeration method as i2c and 
-spi hosts. That is, allow the host driver to enumerate the child devices.
-
-You can check drivers/acpi/scan.c::acpi_device_enumeration_by_parent() 
-for where we make the check on the host and how it is used.
-
-Thanks,
-John
+I thought it would be convenient to keep all the IDs in one place, but
+I'll put these back.
 
 >
->> > +}
->> > +
->> >  /*
->> >   * hisi_lpc_acpi_probe - probe children for ACPI FW
->> >   * @hostdev: LPC host device pointer
->> > @@ -555,8 +566,7 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
->> >  	return 0;
->> >
->> >  fail:
->> > -	device_for_each_child(hostdev, NULL,
->> > -			      hisi_lpc_acpi_remove_subdev);
->> > +	hisi_lpc_acpi_remove(hostdev);
->> >  	return ret;
+> >  MODULE_DEVICE_TABLE(of, elan_of_match);
+> >  #endif
+> >
+> > diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+> > new file mode 100644
+> > index 000000000000..8130bbebbdda
+> > --- /dev/null
+> > +++ b/include/linux/input/elan-i2c-ids.h
+> > @@ -0,0 +1,68 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Elan I2C Touchpad devide whitelist
+>
+> s/devide/device/
 
+Doh.  Will fix.
 
+>
+> > + *
+> > + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
+>
+> This just moves the code around. If anything I'd say it should keep
+> the original Elan copyright.
+
+Ok.  No problem.
+
+>
+> Thanks.
+>
+> --
+> Dmitry
