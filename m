@@ -2,150 +2,131 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFDDC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DF6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164662085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6122084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YT9pP8mm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aK6rakns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfFUBDU (ORCPT
+        id S1726129AbfFUBIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:03:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34085 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfFUBDU (ORCPT
+        Thu, 20 Jun 2019 21:08:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33909 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUBIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:03:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c85so2656219pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:03:19 -0700 (PDT)
+        Thu, 20 Jun 2019 21:08:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so820983iot.1;
+        Thu, 20 Jun 2019 18:08:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:from:subject:cc:user-agent:date;
-        bh=/QNfQWig2oeC5POufHOkxnAuAVkUYpsqHyVQpvyXPFM=;
-        b=YT9pP8mmnoLSnibB3gevIC8O4iva3l7WbYe+TvJLiuO8Sl8rGyxguOWdu9Xkz3aMFK
-         0JcQpSOWMOO4Ipb2MWZdlgVt1gqKnEVbbl/k08kEf7rdSzKoGFDVsTEq54pldf9AvuOi
-         AEJ/VAYyprATMD4PR72B+IkMkBKhPYLYh7Sug=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=OQMetjZyUoUPsTFn8SOJEsiqJU03SCmw6h6Ex7ggGOM=;
+        b=aK6raknsrvrRPolS7lAcqPknBT9z1hipNuKzyvLgR3QnZ+e6JJzskUaz2NL64NxNPX
+         /E3oo8PJrp2AEByUrirS3wV/u8hFtoJA+WQm9LJWpA9muaKz6OFQhLwfeG9jRIRll5N6
+         C3ca7J9kFjfye3zcsxF/heZC/+7vdhMvrXxpq8U3D6QDDPF3ElF9uUKyXQLWwrhDpSEh
+         RVMBDCBtlihfE4gTshXd07ghhcSWAaHkyBhALm8iDmdijS6uu9UBKHmgkpWc1s2FlJ/m
+         9T9iE+C+JJ8/E1IfgaeQtF/RIJMJu0A9pyZbOT1NrYBoyAxSbAM2TZuiI+PlhBHGVEdo
+         ZrTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:from:subject:cc
-         :user-agent:date;
-        bh=/QNfQWig2oeC5POufHOkxnAuAVkUYpsqHyVQpvyXPFM=;
-        b=bQFWkMUP3D7sQeg+2h/eCdgQ8AWIOKbRCGIbM3WG7JE8ae4VxekkyuE7SAi048SRZi
-         yzvcrx7HU/zO3NROqaYq8vm7QatOcjbXZilW629jZoKI/2nuDZg3k+958enmHTKfphMT
-         ivtZhrYizEPcZEG60BPnKITSqcRvgKA1wUQPzBdkF8457HHG+LpItaL9DAezo9L2MeJG
-         ghh9d3Lw2yCMelQ7KbXyIdP+vUc4/aHH58O3MDBm/qVnpOlJviWAQcgx58EtF/k/xnSi
-         P1RLk+vfgR6iOdvHyF6qNXYkImQ07GViZ89whxZDPUE6kO+DDdBKIcc5vEvjW5iJxlgS
-         Xdzg==
-X-Gm-Message-State: APjAAAUNzqdNcVUVZ84g4c6VkpoaE7JfoiH8e5aYLR7YCBRBMO6Yaea9
-        d9GOOo1k6hSebHGZ2H8QUEdI3Q==
-X-Google-Smtp-Source: APXvYqw5MjR8b5QF1inGOhF3D0ddQ3KFCau26pbHfnEVTRxI5c2/WPbsRNarL55GkCl3Ecm1fJ+H/A==
-X-Received: by 2002:a63:3c14:: with SMTP id j20mr3859916pga.169.1561078999454;
-        Thu, 20 Jun 2019 18:03:19 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y185sm634195pfy.110.2019.06.20.18.03.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 18:03:18 -0700 (PDT)
-Message-ID: <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=OQMetjZyUoUPsTFn8SOJEsiqJU03SCmw6h6Ex7ggGOM=;
+        b=LJOzaxTTcr4u68F7SosvHO3QVzPn57n7Ma07Sq1UsZ1Qn9z5s2K5/n6+v56ersIE/W
+         SU6b/lNRbdd3g75+L6fJ456xwfRCT7xYmLfQybg8fu5qS1FDmlgm7wCc8H//hiUmTPge
+         EiDu9kbdZTlJHqOQRuckti5e8+m2vsb5QB0U4G3uFwfuucoBgdHiVJpr0XOlsPhX/8wH
+         OP5lmIweWV3sWgrIgEHup9DiLNj4kufISmm5wwrIfUq/7howTEBaigJlr9dYVtme9uWb
+         ow2ITsg7dVQ7s2aYA5aeUEoAlqCnSX7HXCrYXb1d0ukFKJAGyo/vAL6wAF4HmSeWuEWG
+         sl8Q==
+X-Gm-Message-State: APjAAAW1+MPG1QCChCWxlEoyWh+LOxUifJjq3iQOHv11HsIUBwcHt5Rz
+        f663i+SN8C70xMhICaarkD0=
+X-Google-Smtp-Source: APXvYqz5xJA4rHilmB13nL0BZpDwoS4B9iQghmci4gARVVr5cxYmXdZfoVZXl44hYYfeG7ksdtEfGg==
+X-Received: by 2002:a02:aa8f:: with SMTP id u15mr95274817jai.39.1561079325719;
+        Thu, 20 Jun 2019 18:08:45 -0700 (PDT)
+Received: from AlexPC (CPEac9e17937810-CM64777dd8e660.cpe.net.cable.rogers.com. [174.112.199.101])
+        by smtp.gmail.com with ESMTPSA id t133sm2863100iof.21.2019.06.20.18.08.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 18:08:44 -0700 (PDT)
+From:   <alex.bou9@gmail.com>
+To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>
+Cc:     "'Ira Weiny'" <ira.weiny@intel.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "'Matt Porter'" <mporter@kernel.crashing.org>
+References: <20190529110601.GB19119@mwanda>
+In-Reply-To: <20190529110601.GB19119@mwanda>
+Subject: RE: [PATCH] rapidio/mport_cdev: NUL terminate some strings
+Date:   Thu, 20 Jun 2019 21:08:43 -0400
+Message-ID: <001101d527cd$e03b0180$a0b10480$@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190617225134.GA30762@ziepe.ca>
-References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/8] tpm: block messages while suspended
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        <linux-crypto@vger.kernel.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 20 Jun 2019 18:03:17 -0700
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHqSTig6vd4VCxw0340JcsQqG4IG6Z7CPbw
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jason Gunthorpe (2019-06-17 15:51:34)
-> On Fri, Jun 14, 2019 at 11:12:36AM -0700, Stephen Boyd wrote:
-> > Quoting Jason Gunthorpe (2019-06-13 16:26:13)
-> > > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
-> > > > From: Andrey Pronin <apronin@chromium.org>
-> > > >=20
-> > > > Other drivers or userspace may initiate sending a message to the tpm
-> > > > while the device itself and the controller of the bus it is on are
-> > > > suspended. That may break the bus driver logic.
-> > > > Block sending messages while the device is suspended.
-> > > >=20
-> > > > Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > >=20
-> > > > I don't think this was ever posted before.
-> > >=20
-> > > Use a real lock.
-> > >=20
-> >=20
-> > To make sure the bit is tested under a lock so that suspend/resume can't
-> > update the bit in parallel?
->=20
-> No, just use a real lock, don't make locks out of test bit/set bit
->=20
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>  
 
-Ok. I looked back on the history of this change in our kernel (seems it
-wasn't attempted upstream for some time) and it looks like the problem
-may have been that the khwrng kthread (i.e. hwrng_fill()) isn't frozen
-across suspend/resume. This kthread runs concurrently with devices being
-resumed, the cr50 hardware is still suspended, and then a tpm command is
-sent and it hangs the I2C bus because the device hasn't been properly
-resumed yet.
+-----Original Message-----
+From: Dan Carpenter <dan.carpenter@oracle.com> 
+Sent: Wednesday, May 29, 2019 7:06 AM
+To: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alex.bou9@gmail.com>; Andrew Morton
+<akpm@linux-foundation.org>; Ira Weiny <ira.weiny@intel.com>;
+linux-kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
+Subject: [PATCH] rapidio/mport_cdev: NUL terminate some strings
 
-I suspect a better approach than trying to hold of all TPM commands
-across suspend/resume would be to fix the caller here to not even try to
-read the hwrng during this time. It's a general problem for other hwrngs
-that have some suspend/resume hooks too. This kthread is going to be
-running while suspend/resume is going on if the random entropy gets too
-low, and that probably shouldn't be the case.
+The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
+characters.  But the problem here is that we don't ensure that the user
+put a NUL terminator on the end of the string.  It could lead to an out
+of bounds read.
 
-What do you think of the attached patch? I haven't tested it, but it
-would make sure that the kthread is frozen so that the hardware can be
-resumed before the kthread is thawed and tries to go touch the hardware.
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-----8<-----
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index 95be7228f327..3b88af3149a7 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/freezer.h>
- #include <linux/fs.h>
- #include <linux/hw_random.h>
- #include <linux/kernel.h>
-@@ -421,7 +422,9 @@ static int hwrng_fillfn(void *unused)
- {
- 	long rc;
-=20
--	while (!kthread_should_stop()) {
-+	set_freezable();
-+
-+	while (!kthread_freezable_should_stop(NULL)) {
- 		struct hwrng *rng;
-=20
- 		rng =3D get_current_rng();
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c
+b/drivers/rapidio/devices/rio_mport_cdev.c
+index 4a4a75fa26d5..3440b3e8e578 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1690,6 +1690,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv
+*priv,
+ 
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
+ 
+ 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
+ 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
+@@ -1821,6 +1822,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv
+*priv, void __user *arg)
+ 
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
+ 
+ 	mport = priv->md->mport;
+ 
+-- 
+2.20.1
+
