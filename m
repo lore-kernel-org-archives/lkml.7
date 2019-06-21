@@ -2,397 +2,286 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFD2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3A9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92912085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561086899;
-	bh=xIh99WcTC0hVI6CXEimYwuAnqqCPU1DE5HA8KthNOyo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ip30IHfIjx68BY0NeTHBoUCQ1O4BlRZuUW+B/jtitoXy92uqYM5bNzXfMqty4Qpmf
-	 FICLnPAe0bWNL3GnxAekSnGQ/3re7DOOd6AS6Hm/6ISUz+JlntZS3edjCam8quXtwk
-	 OpZyhS76TRO0b/iZdtqqCH6QBDzED3xig0hILQRg=
+	by mail.kernel.org (Postfix) with ESMTP id 3A23C205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TyRK0SGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbfFUDOI (ORCPT
+        id S1726030AbfFUDWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFUDOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:14:08 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AECD2085A
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 03:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561086845;
-        bh=xIh99WcTC0hVI6CXEimYwuAnqqCPU1DE5HA8KthNOyo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r6jfmr9aB7aqulMrlsANZe2CGGxaio95PieVPl0xyP7xljl6HsNi0ZrsLndyj4zAP
-         Wzxt83OqUcJy0SwZbb/PKZbNHOaa4GOGOOFmDd8pHngatEel4TDgtyeSDCuVQcXrcD
-         CE/zJHnC8HoQPY5tQCDB6KaBQRnXALxJavWzx8Gc=
-Received: by mail-wr1-f54.google.com with SMTP id n9so5051500wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:14:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/up+XTFlWKuSBZpHuRDwsE8YruIgvVWSItJnUVNo52Dhr8fcj
-        GDr+nQtgiPypszLNglgNuFUUz+Br9iQIaKjsS9I=
-X-Google-Smtp-Source: APXvYqy853hCZFBjQMQoLlV7zgCSOxyk0nz8DcMFMhJBdXQoBaXvrLFM575cIgskO+P1tB2UKZ7tKD/GMsmXnLvqqlI=
-X-Received: by 2002:a5d:4311:: with SMTP id h17mr97510215wrq.9.1561086843666;
- Thu, 20 Jun 2019 20:14:03 -0700 (PDT)
+        Thu, 20 Jun 2019 23:22:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39600 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUDWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 23:22:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so2278962pls.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XgqQCjlp6+2QBmDqcbVi4QnHGPaF4Oeb1ed6x/spUgc=;
+        b=TyRK0SGkcI8RWa+mEkKtt8IE0pvJpD1cYzcIr4iNZmMTZMlDZkL0kb7sUh9/eyZiJk
+         Kn6p8vwmzyKy/M8flUqPVDS23YwYNmzB0udQDAxRCq5/KYAlwyP3M6bcXoF1w8t4LgTu
+         Wjvq8nBxv9nubBwSMfwZj6QiJIJ8Xt2jPz3hQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XgqQCjlp6+2QBmDqcbVi4QnHGPaF4Oeb1ed6x/spUgc=;
+        b=s6RDKg7L77tBTI5ZvFcGon2pt03mAMnZwZUyzprvw6w/oh2vE56YgXm8bqG2GSICxX
+         X8XqVKrbj6WwZ+Aa4DOdeVM/tVNYPjJ3Hyafo/yehMpItfJ4Z0zlJRyvSl74cIFbx0i5
+         CmzgVq8n94iIN2NNjcjwv6amXrRJEvtSVQBETHMtkq8zWQmkhS9QUiRLVCDcclNIWU7X
+         EbAZ1Hfwb1XdNHb4xadNCGlcGAC+5NFpNFVdFGCw0PDDBIS+ssCOHYIHcaRYNvyCMyM+
+         SRf1Y+kXa+hfhVdXTJtp2pAD0haiMkd1LI9j+4Mz0d0fVZyqcr7plpJpLXawskQsrpQF
+         AMWA==
+X-Gm-Message-State: APjAAAX+KQqSF2nQjNW43qPaTEIie9gVAIEtXjH7phbTEk4nGs94rYLQ
+        84eRSR1r7ke2284SGcYH12nPag==
+X-Google-Smtp-Source: APXvYqx/dheNVHWmM09UQ9EC2eP1Lt7RZ1CxQtCV6ga5L5OGljy8W2hLaBGZOjTfAZfJkPLogoJhtA==
+X-Received: by 2002:a17:902:3103:: with SMTP id w3mr19024424plb.84.1561087321332;
+        Thu, 20 Jun 2019 20:22:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k3sm917324pgo.81.2019.06.20.20.22.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 20:22:00 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 20:21:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V33 01/30] security: Support early LSMs
+Message-ID: <201906202010.49D16E03@keescook>
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-2-matthewgarrett@google.com>
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-2-jagan@amarulasolutions.com> <20190523203407.o5obg2wtj7wwau6a@flea>
- <CAMty3ZDDYEOvSbi7kmacjJZS6f3whpaGd4xsf4OUkXmBbTE3Qg@mail.gmail.com>
- <20190529145450.qnitxpmpr2a2xemk@flea> <CAMty3ZB89cPc8AycFPuNTfPC1dot4cNgN87v+rtQVW2zQh8uZg@mail.gmail.com>
- <20190604100011.cqkhpwmmmwh3vr3y@flea> <CAMty3ZAFdg1Ow8ececmqF2L0ckitkLdqUPmME3fGBoOaP32kzA@mail.gmail.com>
- <20190613125630.2b2fvvtvrcjlx4lv@flea> <CAMty3ZCNJK+Wcdw3AXKjUQZTD=PWijq9caNsTzpz+pSEqpUy_A@mail.gmail.com>
- <20190614144526.lorg3saj4wjopgne@flea> <CAMty3ZBuKWFKckPt+C=XeXgvSLtYL6uuyy29vw2C89TSiDs15w@mail.gmail.com>
- <CAGb2v679C2PRsEJFo_Q+PbKZXvW3B72T28mUJJDe1Sqarjy36A@mail.gmail.com>
- <CAMty3ZANkmf=ih4snh1xCLxJaFvPoBPvzpD=aZQCiuSM004UVw@mail.gmail.com>
- <CAGb2v64gBGcgxXDB0Xd1oxE_jX4kWp4dGE0uORFSYW=PAFAEvA@mail.gmail.com> <CAMty3ZC_CSNP_oJboExZPyzw7Z8MoCc3OfGLsXtLQf_Reyb8fw@mail.gmail.com>
-In-Reply-To: <CAMty3ZC_CSNP_oJboExZPyzw7Z8MoCc3OfGLsXtLQf_Reyb8fw@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Fri, 21 Jun 2019 11:13:51 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67RZXuKrzqVNMjZ2XODCY+Xn9ijs8bO-eFSg39HowCvEA@mail.gmail.com>
-Message-ID: <CAGb2v67RZXuKrzqVNMjZ2XODCY+Xn9ijs8bO-eFSg39HowCvEA@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v10 01/11] drm/sun4i: dsi: Fix TCON DRQ
- set bits
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621011941.186255-2-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 2:51 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Tue, Jun 18, 2019 at 8:15 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Tue, Jun 18, 2019 at 8:11 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > On Tue, Jun 18, 2019 at 5:13 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> > > >
-> > > > On Tue, Jun 18, 2019 at 6:51 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > >
-> > > > > On Fri, Jun 14, 2019 at 8:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Fri, Jun 14, 2019 at 12:03:13PM +0530, Jagan Teki wrote:
-> > > > > > > On Thu, Jun 13, 2019 at 6:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Jun 05, 2019 at 01:17:11PM +0530, Jagan Teki wrote:
-> > > > > > > > > On Tue, Jun 4, 2019 at 3:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Wed, May 29, 2019 at 11:44:56PM +0530, Jagan Teki wrote:
-> > > > > > > > > > > On Wed, May 29, 2019 at 8:24 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Fri, May 24, 2019 at 03:48:51PM +0530, Jagan Teki wrote:
-> > > > > > > > > > > > > On Fri, May 24, 2019 at 2:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > On Mon, May 20, 2019 at 02:33:08PM +0530, Jagan Teki wrote:
-> > > > > > > > > > > > > > > According to "DRM kernel-internal display mode structure" in
-> > > > > > > > > > > > > > > include/drm/drm_modes.h the current driver is trying to include
-> > > > > > > > > > > > > > > sync timings along with front porch value while checking and
-> > > > > > > > > > > > > > > computing drq set bits in non-burst mode.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > With adding additional sync timings, the dsi controller leads to
-> > > > > > > > > > > > > > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
-> > > > > > > > > > > > > > > trigger panel flip_done timed out as:
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > > > > > > > > > > > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > > > > > > > > > > > > >  Modules linked in:
-> > > > > > > > > > > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
-> > > > > > > > > > > > > > >  Hardware name: Allwinner sun8i Family
-> > > > > > > > > > > > > > >  Workqueue: events deferred_probe_work_func
-> > > > > > > > > > > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > > > > > > > > > > > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> > > > > > > > > > > > > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > > > > > > > > > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > > > > > > > > > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > > > > > > > > > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > > > > > > > > > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > > > > > > > > > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > > > > > > > > > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > > > > > > > > > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> > > > > > > > > > > > > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> > > > > > > > > > > > > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> > > > > > > > > > > > > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > > > > > > > > > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > > > > > > > > > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > > > > > > > > > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > > > > > > > > > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > > > > > > > > > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > > > > > > > > > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > > > > > > > > > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > > > > > > > > > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > > > > > > > > > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > > > > > > > > > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > > > > > > > > > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > > > > > > > > > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
-> > > > > > > > > > > > > > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
-> > > > > > > > > > > > > > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > > > > > > > > > > > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
-> > > > > > > > > > > > > > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
-> > > > > > > > > > > > > > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
-> > > > > > > > > > > > > > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
-> > > > > > > > > > > > > > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
-> > > > > > > > > > > > > > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
-> > > > > > > > > > > > > > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
-> > > > > > > > > > > > > > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > > > > > > > > > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > > > > > > > > > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > > > > > > > > > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > > > > > > > > > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > > > > > > > > > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > > > > > > > > > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > > > > > > > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > > > > > > > > > > > >  ---[ end trace b57eb1e5c64c6b8b ]---
-> > > > > > > > > > > > > > >  random: fast init done
-> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
-> > > > > > > > > > > > > > > non-burst DSI mode can be computed based on "horizontal front porch"
-> > > > > > > > > > > > > > > value only (no sync timings included).
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
-> > > > > > > > > > > > > > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
-> > > > > > > > > > > > > > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
-> > > > > > > > > > > > > > > => tt->hor_front_porch - 20
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > The thing is, while your explanation on the DRM side is sound,
-> > > > > > > > > > > > > > Allwinner has been using the hbp field of their panel description to
-> > > > > > > > > > > > > > store what DRM calls the backporch and the sync period.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Exactly, hbp = backporch + sync
-> > > > > > > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > And the above computation is rely on that as well. If you can see the
-> > > > > > > > > > > > > final out of the above computation you can get the front porch value
-> > > > > > > > > > > > > (w/o sync )
-> > > > > > > > > > > >
-> > > > > > > > > > > > As I was saying, you are explaining it well for DRM, but in order for
-> > > > > > > > > > > > your last formula (the one coming from the BSP) to make sense, you
-> > > > > > > > > > > > have to explain that the horizontal back porch for Allwinner contains
-> > > > > > > > > > > > the sync period, otherwise your expansion of lcd_ht doesn't make
-> > > > > > > > > > > > sense.
-> > > > > > > > > > >
-> > > > > > > > > > > I'm not sure why we need to take care of back porch since the formula
-> > > > > > > > > > > clearly evaluating a result as front porch, without sync timing (as
-> > > > > > > > > > > current code included this sync), I keep the hbp and trying to
-> > > > > > > > > > > substitute the lcd_ht value so the end result would cancel hbp.
-> > > > > > > > > >
-> > > > > > > > > > Because it changes how lcd_ht expands. In the DRM case, it will expand
-> > > > > > > > > > to the displayed area, the front porch, the sync period and the back
-> > > > > > > > > > porch.
-> > > > > > > > > >
-> > > > > > > > > > In your case, you expand it to the displayed area, the front porch and
-> > > > > > > > > > the back porch, precisely because in Allwinner's case, the back porch
-> > > > > > > > > > has the sync period.
-> > > > > > > > >
-> > > > > > > > > I understand the point, but technically it matter about the final
-> > > > > > > > > computation result.  May be we can even manage the same computation in
-> > > > > > > > > back porch, but I'm not sure. Since the final output doesn't involve
-> > > > > > > > > any sync length, why we can include that ie what I'm not sure.
-> > > > > > > >
-> > > > > > > > We have the following formula:
-> > > > > > > > lcd_ht - lcd_x - lcd_hbp - 20
-> > > > > > > >
-> > > > > > > > Using the concepts as they are defined in DRM, this expands to:
-> > > > > > > > x + hbp + hsync + hfp - x - hbp - 20
-> > > > > > >
-> > > > > > > Here is diff between allwinner hbp vs hbp in DRM.
-> > > > > > >
-> > > > > > > Say hbp in DRM can call it hbackporch, so
-> > > > > > >
-> > > > > > > => x + hbackporch + hsync + hfp - -x - hbp - 20
-> > > > > > >
-> > > > > > > (and here we need to substitute hbp formula from allwinner since the
-> > > > > > > actual equation would coming from there
-> > > > > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046)
-> > > > > >
-> > > > > > And this is precisely what needs to be said, with an explanation about
-> > > > > > where that hor_back_porch is being used later on, and what impact it
-> > > > > > could have.
-> > > > >
-> > > > > Yes, it an equation and the mathematical equations can be substitute
-> > > > > to variety kind I did agree with that, whether you can use hbackporch
-> > > > > or not or use another-way the final resulting value is equivalent to
-> > > > > the value of front porch. In that case we can solve based on what I
-> > > > > explained above. If you still dought me, please run BSP and check the
-> > > > > resulting value on this check, you can get the front porch value.
-> > > >
-> > > > Maxime is not doubting you. He is saying that you need to include the
-> > > > detailed explanation in your commit log, and not just reference pieces
-> > > > of code. This is separate from the requirement of having a correct patch.
-> > > >
-> > > > Providing just a mathematical formula isn't enough either, because it
-> > > > is not clear to the average reader which term expanded into what. A
-> > >
-> > > Not sure whether you see my commit log on this version or not. Each
-> > > one has it's own way of providing the details and explanation and at
-> > > the end people in ML should understand it. I'm not proving a simple
-> > > formula here (like I did it in initial version) instead I'm giving all
-> > > the respective information along with the bug log, and the bsp links
-> > > where it comes from etc. This is easier way for everyone to
-> > > understand.
-> >
-> > I did, and I'm telling you it's not easy to follow.
-> >
-> > > Just a bit to explain what I've mentioned in the log.
-> > >
-> > > Paragraph 1:
-> > >
-> > > "
-> > > According to "DRM kernel-internal display mode structure" in
-> > > include/drm/drm_modes.h the current driver is trying to include
-> > > sync timings along with front porch value while checking and
-> > > computing drq set bits in non-burst mode.
-> > >
-> > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
-> > > "
-> > >
-> > > This paragraph explains what the existing code is using according to
-> > > DRM, which indeed help new users to understand by providing
-> > > include/drm/drm_modes.h file.
-> >
-> > This at the beginning makes no sense. It would be better placed with
-> > the formula after
-> > the bug report
-> >
-> > > Paragraph 2:
-> > >
-> > > "
-> > > With adding additional sync timings, the dsi controller leads to
-> > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
-> > > trigger panel flip_done timed out as:
-> > > "
-> > >
-> > > This paragraph explains what is the relevant issue with existing change.
-> > >
-> > > Paragraph 3:
-> > >
-> > > BUG or WARNING log
-> >
-> > You should lead with these two. These explain "why".
-> >
-> > > Paragraph 4:
-> > >
-> > > "
-> > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
-> > > non-burst DSI mode can be computed based on "horizontal front porch"
-> > > value only (no sync timings included).
-> > > "
-> > >
-> > > This paragraph explains what is BSP is using compared with mainline.
-> > >
-> > > Paragraph 5:
-> > >
-> > > "
-> > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
-> > >
-> > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
-> > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
-> > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
-> > > => tt->hor_front_porch - 20
-> > > "
-> > >
-> > > This paragraph explains the detailed steps of equation evaluation by
-> > > providing BSP links.
-> >
-> > This actually makes it harder to read. For example it takes a couple passes
-> > to realize lcd_ht expands to the stuff in the parenthesis. All the while I
-> > still have no idea what all these variables mean or where they came from.
-> > As I said, please don't ask users to open links and dig through code.
->
-> The main reasons I have included this information and the BSP links
-> are for future reference, to know the real proofs if anyone would want
-> to. and even the timeout log. My idea of formula evaluation here just
-> like what you refer in the diagram in previous mail. I thought
-> mathematical equations are much easier to understand and provable.
+On Thu, Jun 20, 2019 at 06:19:12PM -0700, Matthew Garrett wrote:
+> The lockdown module is intended to allow for kernels to be locked down
+> early in boot - sufficiently early that we don't have the ability to
+> kmalloc() yet. Add support for early initialisation of some LSMs, and
+> then add them to the list of names when we do full initialisation later.
 
-Unfortunately the plain-text formatting sometimes doesn't help. Simple
-text descriptions work better in most cases, diffs in others. You can
-still include the formula as a reference, but it is better to explain
-it outright in simple sentences, rather than providing the formula and
-guiding the reader through it.
+So, if I'm reading correctly, these "early LSMs":
 
-ChenYu
+- start up before even boot parameter parsing has happened
+- have their position in the LSM ordering ignored
+- are initialized in boot order
+- cannot use kmalloc, as well as probably lots of other things
 
-> > You should provide a simple explanation about what went wrong. As I
-> > mentioned, you could have simply stated that when the driver was
-> > reimplemented, the DRQ formula (which you can provide in its original
-> > form) was incorrectly expanded because Allwinner's definition of "hbp"
-> > is actually "hbp + sync" in DRM terms. That is actually the root cause,
-> > which I believe is what Maxime wants detailed in the commit log.
-> > This immediately points out what went wrong and how it went wrong,
-> > without jumping through hoops.
-> >
-> > Again the diagram helps immensely. (Well, maybe not for screen readers.)
-> > It also directly shows why you replaced hsync_end with hsync_start.
->
-> True, this indeed has different and direct understanding of what went
-> wrong. thanks for this.
->
-> >
-> > > Paragraph 6:
-> > >
-> > > "
-> > > Which is mode->hsync_start - mode->hdisplay as per
-> > > "DRM kernel-internal display mode structure" in include/drm/drm_modes.h
-> > > "
-> > >
-> > > This paragraph give fix details in according to Linux DRM.
-> >
-> > Yes, and first you need to understand the formula you gave, which I
-> > already mentioned is a bit hard.
-> >
-> > On the side, going through the code and understanding it actually is quite
-> > hard as I already did it a couple times before and it was really taxing.
-> >
-> > > So, all the explanation which I'm trying to provide here will help to
-> > > understand, what is the issue with existing code and BUG log, how it
-> > > handle in BSP, with justification of equations and links where it
-> > > refers. Please note that I'm providing bug log and before that I've
-> > > mentioned this timeout because of additional sync. why is the timeout
-> > > with additional sync time, which I'm unaware since we don't have
-> > > associated datasheets for this but we have working BSP's to prove
-> > > that.
-> > >
-> > > Frankly, I still didn't understand what I missed here to explain the
-> > > issue. request for help if you see any issues on this format or
-> > > information.
-> >
-> > The one thing you missed, and that Maxime requested, was how hbp, and
-> > the misinterpretation of it plays into all of this. In fact the different
-> > definitions of terms between DRM and Allwinner code / FEX files is what
-> > led to all this. The rest is, well, somewhat hard to read. I already
-> > shared my way of explaining everything above.
->
-> Okay, will try to re-arrange the commit in next version. hope this
-> time will more cleaner. thanks.
+> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> ---
+>  include/asm-generic/vmlinux.lds.h |  8 +++++-
+>  include/linux/lsm_hooks.h         |  6 ++++
+>  include/linux/security.h          |  1 +
+>  init/main.c                       |  1 +
+>  security/security.c               | 48 +++++++++++++++++++++++++------
+>  5 files changed, 54 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index f8f6f04c4453..e1963352fdb6 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -208,8 +208,13 @@
+>  			__start_lsm_info = .;				\
+>  			KEEP(*(.lsm_info.init))				\
+>  			__end_lsm_info = .;
+> +#define EARLY_LSM_TABLE()	. = ALIGN(8);				\
+> +			__start_early_lsm_info = .;			\
+> +			KEEP(*(.early_lsm_info.init))			\
+> +			__end_early_lsm_info = .;
+>  #else
+>  #define LSM_TABLE()
+> +#define EARLY_LSM_TABLE()
+>  #endif
+>  
+>  #define ___OF_TABLE(cfg, name)	_OF_TABLE_##cfg(name)
+> @@ -610,7 +615,8 @@
+>  	ACPI_PROBE_TABLE(irqchip)					\
+>  	ACPI_PROBE_TABLE(timer)						\
+>  	EARLYCON_TABLE()						\
+> -	LSM_TABLE()
+> +	LSM_TABLE()							\
+> +	EARLY_LSM_TABLE()
+>  
+>  #define INIT_TEXT							\
+>  	*(.init.text .init.text.*)					\
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index a240a3fc5fc4..66fd1eac7a32 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -2085,12 +2085,18 @@ struct lsm_info {
+>  };
+>  
+>  extern struct lsm_info __start_lsm_info[], __end_lsm_info[];
+> +extern struct lsm_info __start_early_lsm_info[], __end_early_lsm_info[];
+>  
+>  #define DEFINE_LSM(lsm)							\
+>  	static struct lsm_info __lsm_##lsm				\
+>  		__used __section(.lsm_info.init)			\
+>  		__aligned(sizeof(unsigned long))
+>  
+> +#define DEFINE_EARLY_LSM(lsm)						\
+> +	static struct lsm_info __early_lsm_##lsm			\
+> +		__used __section(.early_lsm_info.init)			\
+> +		__aligned(sizeof(unsigned long))
+> +
+>  #ifdef CONFIG_SECURITY_SELINUX_DISABLE
+>  /*
+>   * Assuring the safety of deleting a security module is up to
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 49f2685324b0..1bb6fb2f1523 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -194,6 +194,7 @@ int unregister_lsm_notifier(struct notifier_block *nb);
+>  
+>  /* prototypes */
+>  extern int security_init(void);
+> +extern int early_security_init(void);
+>  
+>  /* Security operations */
+>  int security_binder_set_context_mgr(struct task_struct *mgr);
+> diff --git a/init/main.c b/init/main.c
+> index 598e278b46f7..f3faeb89c75f 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -563,6 +563,7 @@ asmlinkage __visible void __init start_kernel(void)
+>  	boot_cpu_init();
+>  	page_address_init();
+>  	pr_notice("%s", linux_banner);
+> +	early_security_init();
+>  	setup_arch(&command_line);
+>  	/*
+>  	 * Set up the the initial canary and entropy after arch
+> diff --git a/security/security.c b/security/security.c
+> index 23cbb1a295a3..2a6672c9e72f 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -37,6 +37,7 @@
+>  
+>  /* How many LSMs were built into the kernel? */
+>  #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
+> +#define EARLY_LSM_COUNT (__end_early_lsm_info - __start_early_lsm_info)
+>  
+>  struct security_hook_heads security_hook_heads __lsm_ro_after_init;
+>  static ATOMIC_NOTIFIER_HEAD(lsm_notifier_chain);
+> @@ -281,6 +282,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>  static void __init lsm_early_cred(struct cred *cred);
+>  static void __init lsm_early_task(struct task_struct *task);
+>  
+> +static int lsm_append(const char *new, char **result);
+> +
+>  static void __init ordered_lsm_init(void)
+>  {
+>  	struct lsm_info **lsm;
+> @@ -327,15 +330,11 @@ static void __init ordered_lsm_init(void)
+>  	kfree(ordered_lsms);
+>  }
+>  
+> -/**
+> - * security_init - initializes the security framework
+> - *
+> - * This should be called early in the kernel initialization sequence.
+> - */
+> -int __init security_init(void)
+> +int __init early_security_init(void)
+>  {
+>  	int i;
+>  	struct hlist_head *list = (struct hlist_head *) &security_hook_heads;
+> +	struct lsm_info *lsm;
+>  
+>  	pr_info("Security Framework initializing\n");
+
+I'd rather this was kept in security_init() since it's the string to
+search for when debugging normal LSM initialization.
+
+>  
+> @@ -343,6 +342,30 @@ int __init security_init(void)
+>  	     i++)
+>  		INIT_HLIST_HEAD(&list[i]);
+>  
+> +	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +		if (!lsm->enabled)
+> +			lsm->enabled = &lsm_enabled_true;
+> +		initialize_lsm(lsm);
+> +	}
+
+This should call prepare_lsm() before initialize_lsm(). While not needed
+for this specific LSM, it would be nice to at least do the blog size
+calculations and keep everything the same as other LSMs.
+
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * security_init - initializes the security framework
+> + *
+> + * This should be called early in the kernel initialization sequence.
+> + */
+> +int __init security_init(void)
+> +{
+> +	struct lsm_info *lsm;
+> +
+> +	/* Append the names of the early LSM modules now */
+
+I would clarify this comment more: "... that kmalloc() is available."
+
+> +	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +		if (lsm->enabled)
+> +			lsm_append(lsm->name, &lsm_names);
+> +	}
+> +
+>  	/* Load LSMs in specified order. */
+>  	ordered_lsm_init();
+>  
+> @@ -388,7 +411,7 @@ static bool match_last_lsm(const char *list, const char *lsm)
+>  	return !strcmp(last, lsm);
+>  }
+>  
+> -static int lsm_append(char *new, char **result)
+> +static int lsm_append(const char *new, char **result)
+>  {
+>  	char *cp;
+>  
+> @@ -426,8 +449,15 @@ void __init security_add_hooks(struct security_hook_list *hooks, int count,
+>  		hooks[i].lsm = lsm;
+>  		hlist_add_tail_rcu(&hooks[i].list, hooks[i].head);
+>  	}
+> -	if (lsm_append(lsm, &lsm_names) < 0)
+> -		panic("%s - Cannot get early memory.\n", __func__);
+> +
+> +	/*
+> +	 * Don't try to append during early_security_init(), we'll come back
+> +	 * and fix this up afterwards.
+> +	 */
+> +	if (slab_is_available()) {
+> +		if (lsm_append(lsm, &lsm_names) < 0)
+> +			panic("%s - Cannot get early memory.\n", __func__);
+> +	}
+>  }
+>  
+>  int call_lsm_notifier(enum lsm_event event, void *data)
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
+-- 
+Kees Cook
