@@ -2,323 +2,592 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B107C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5F4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E74A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A015D206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttwlwEkC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FxxUhfdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfFUPOs (ORCPT
+        id S1726438AbfFUPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:14:48 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:42831 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfFUPOr (ORCPT
+        Fri, 21 Jun 2019 11:15:14 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:43700 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFUPPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:14:47 -0400
-Received: by mail-pg1-f177.google.com with SMTP id l19so3519878pgh.9;
-        Fri, 21 Jun 2019 08:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jz+3fronUKu7RPQbVLmEz9ddIbExu11kF859JxxBx4M=;
-        b=ttwlwEkCEFfyyuFCnpeedvoMryw8b8IrKHm8RDFcp+qc0pEkzyj0nDpmDGgwyKOnJy
-         GnmdP1ArEHfX/XPmF7K1t9sYSUUKoiS5ZgLXImBMqNy4yRK6U+HrK+CMcRv83oZCCaCP
-         Nt0WYQ4IlF/cG2H+lJMGaHEV8etQ03mb8C6My3aCevsAz2b3us1qzsD6DSdMf8ezYO9x
-         xWOLt/1nEW3nfhFKQHq1rACAZoKUDNGw9uBcSFufoXtaBvyvjRA8KIU6hlJ9CmM5B6Yj
-         3Hl/AXi20nuuttXzonAr+zd8asfcn2/8P7KXOdRzKZUMw2rB4T7O1R669Lsf89ht1FUT
-         Xq0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jz+3fronUKu7RPQbVLmEz9ddIbExu11kF859JxxBx4M=;
-        b=PAh10NrozTPdbuDJrISiYLcYM1FnyNCyABPeaMCDtQYycXZQz32H54Mh7lUdujcSFg
-         BZwpBeG1Cv56LM4m0aUdLsMpBFkrprEDKvCX3YQTR2T9Mdhprkdj7h/FnJP2FHkUb1pC
-         4OM/Ig1O6nSmAGp1CTt6tmBvV4+Pblx6ZLzpBTJ/9JCEUC8PcjI7ke/VK2bODDY/hPS9
-         6DGsWg9PDQWtxbvRL5yVHihzVye8OMmBnhmzDzIiOOLihbQvtSA1Np6OOyVfyXmF3aSe
-         zQHKTm26bbBUSQ9APqozbr7w8IPVNLCyNGuihpV5axxa87QpTRmli2dLduiC5HG0cNwO
-         dEjA==
-X-Gm-Message-State: APjAAAXp6/WYRdq+/AhwQirBugyAUKjDphXzSUuM2QFafr11UJPjB5Ch
-        6c77m9ZIRGkpnr8pOuLW5z8=
-X-Google-Smtp-Source: APXvYqxNjgtBa4JMA1YcAcpUkXr6POgRJ8panNyh7tN1clzLzzRowJmGor4UE1jBR05fiVfps6UvMw==
-X-Received: by 2002:a65:6686:: with SMTP id b6mr19044917pgw.125.1561130085778;
-        Fri, 21 Jun 2019 08:14:45 -0700 (PDT)
-Received: from localhost.localdomain ([112.196.181.13])
-        by smtp.googlemail.com with ESMTPSA id 25sm3254465pfp.76.2019.06.21.08.14.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 08:14:45 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        Stephen Hemminger <stephen@networkplumber.org>
-Subject: [PATCH v4 3/3] net: fddi: skfp: Remove unused private PCI definitions
-Date:   Fri, 21 Jun 2019 20:44:15 +0530
-Message-Id: <20190621151415.10795-4-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190621151415.10795-1-puranjay12@gmail.com>
-References: <20190621151415.10795-1-puranjay12@gmail.com>
+        Fri, 21 Jun 2019 11:15:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xxRtkouLQOkjbSb2xQ/D7ZWITwU59jLSNRvzRcqT9bk=; b=FxxUhfdM/DtOAZTabH4qWJ6mQ
+        EReqHrL+GxlNTIgZD4JEhmWW0iH/QXpqI+Up//zh9QZyLrgmjnP6mu2AfJqOGRNynOebpF+M4dRTC
+        +w3WB3LsinjSw7tW9/Mj4yMQVG854K+CPcTrSqgQp5lalygjKEQ5qKVUObwEtTlk5WKMbZR93fB01
+        O3zE+lLduJk5VjVdUJKbArQAbB3DEWe8l0XlsjPFQ3FGTC2HvPFQ09F4N0JCV3q6zATHFm3VxHghh
+        3lEbLhMbYoVWEFxHb7EypNss1MGiw9jqNW4q8BN7QJT9JQRslr45dF85Tdpw31N/0EnmOLTSShbum
+        3ZdwrPYWA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58962)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1heLFp-0006B6-NZ; Fri, 21 Jun 2019 16:15:06 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1heLFk-0003Mj-NF; Fri, 21 Jun 2019 16:15:00 +0100
+Date:   Fri, 21 Jun 2019 16:15:00 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v1 1/2] drm/i2c: tda998x: access chip registers via a
+ regmap
+Message-ID: <20190621151500.cv57g3al5sadpcum@shell.armlinux.org.uk>
+References: <20190527191552.10413-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527191552.10413-1-TheSven73@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused private PCI definitions from skfbi.h because generic PCI
-symbols are already included from pci_regs.h.
+On Mon, May 27, 2019 at 03:15:51PM -0400, Sven Van Asbroeck wrote:
+> The tda988x i2c chip registers are accessed through a
+> paged register scheme. The kernel regmap abstraction
+> supports paged accesses. Replace this driver's
+> dedicated i2c access functions with a standard i2c
+> regmap.
+> 
+> Pros:
+> - dedicated i2c access code disappears: accesses now
+>   go through well-maintained regmap code
+> - page atomicity requirements now handled by regmap
+> - ro/wo/rw access modes are now explicitly defined:
+>   any inappropriate register accesses (e.g. write to a
+>   read-only register) will now be explicitly rejected
+>   by the regmap core
+> - all tda988x registers are now visible via debugfs
+> 
+> Cons:
+> - this will probably require extensive testing
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- drivers/net/fddi/skfp/h/skfbi.h | 211 +-------------------------------
- 1 file changed, 1 insertion(+), 210 deletions(-)
+Another con is the need to keep the functions that detail the register
+properties up to date, which if they're wrong may result in unexpected
+behaviour.
 
-diff --git a/drivers/net/fddi/skfp/h/skfbi.h b/drivers/net/fddi/skfp/h/skfbi.h
-index 5f9b631e7515..ef9dfd131d79 100644
---- a/drivers/net/fddi/skfp/h/skfbi.h
-+++ b/drivers/net/fddi/skfp/h/skfbi.h
-@@ -24,49 +24,6 @@
-  *	(ML)	= only defined for Monalisa
-  */
- 
--/*
-- * Configuration Space header
-- */
--#define	PCI_VENDOR_ID	0x00	/* 16 bit	Vendor ID */
--#define	PCI_DEVICE_ID	0x02	/* 16 bit	Device ID */
--#define	PCI_COMMAND	0x04	/* 16 bit	Command */
--#define	PCI_STATUS	0x06	/* 16 bit	Status */
--#define	PCI_REVISION_ID	0x08	/*  8 bit	Revision ID */
--#define	PCI_CLASS_CODE	0x09	/* 24 bit	Class Code */
--#define	PCI_CACHE_LSZ	0x0c	/*  8 bit	Cache Line Size */
--#define	PCI_LAT_TIM	0x0d	/*  8 bit	Latency Timer */
--#define	PCI_HEADER_T	0x0e	/*  8 bit	Header Type */
--#define	PCI_BIST	0x0f	/*  8 bit	Built-in selftest */
--#define	PCI_BASE_1ST	0x10	/* 32 bit	1st Base address */
--#define	PCI_BASE_2ND	0x14	/* 32 bit	2nd Base address */
--/* Byte 18..2b:	Reserved */
--#define	PCI_SUB_VID	0x2c	/* 16 bit	Subsystem Vendor ID */
--#define	PCI_SUB_ID	0x2e	/* 16 bit	Subsystem ID */
--#define	PCI_BASE_ROM	0x30	/* 32 bit	Expansion ROM Base Address */
--/* Byte 34..33:	Reserved */
--#define PCI_CAP_PTR	0x34	/*  8 bit (ML)	Capabilities Ptr */
--/* Byte 35..3b:	Reserved */
--#define	PCI_IRQ_LINE	0x3c	/*  8 bit	Interrupt Line */
--#define	PCI_IRQ_PIN	0x3d	/*  8 bit	Interrupt Pin */
--#define	PCI_MIN_GNT	0x3e	/*  8 bit	Min_Gnt */
--#define	PCI_MAX_LAT	0x3f	/*  8 bit	Max_Lat */
--/* Device Dependent Region */
--#define	PCI_OUR_REG	0x40	/* 32 bit (DV)	Our Register */
--#define	PCI_OUR_REG_1	0x40	/* 32 bit (ML)	Our Register 1 */
--#define	PCI_OUR_REG_2	0x44	/* 32 bit (ML)	Our Register 2 */
--/* Power Management Region */
--#define PCI_PM_CAP_ID	0x48	/*  8 bit (ML)	Power Management Cap. ID */
--#define PCI_PM_NITEM	0x49	/*  8 bit (ML)	Next Item Ptr */
--#define PCI_PM_CAP_REG	0x4a	/* 16 bit (ML)	Power Management Capabilities */
--#define PCI_PM_CTL_STS	0x4c	/* 16 bit (ML)	Power Manag. Control/Status */
--/* Byte 0x4e:	Reserved */
--#define PCI_PM_DAT_REG	0x4f	/*  8 bit (ML)	Power Manag. Data Register */
--/* VPD Region */
--#define	PCI_VPD_CAP_ID	0x50	/*  8 bit (ML)	VPD Cap. ID */
--#define PCI_VPD_NITEM	0x51	/*  8 bit (ML)	Next Item Ptr */
--#define PCI_VPD_ADR_REG	0x52	/* 16 bit (ML)	VPD Address Register */
--#define PCI_VPD_DAT_REG	0x54	/* 32 bit (ML)	VPD Data Register */
--/* Byte 58..ff:	Reserved */
- 
- /*
-  * I2C Address (PCI Config)
-@@ -76,176 +33,10 @@
-  */
- #define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */ 
- 
--/*
-- * Define Bits and Values of the registers
-- */
--/*	PCI_VENDOR_ID	16 bit	Vendor ID */
--/*	PCI_DEVICE_ID	16 bit	Device ID */
--/* Values for Vendor ID and Device ID shall be patched into the code */
--/*	PCI_COMMAND	16 bit	Command */
--#define	PCI_FBTEN	0x0200	/* Bit 9:	Fast Back-To-Back enable */
--#define	PCI_SERREN	0x0100	/* Bit 8:	SERR enable */
--#define	PCI_ADSTEP	0x0080	/* Bit 7:	Address Stepping */
--#define	PCI_PERREN	0x0040	/* Bit 6:	Parity Report Response enable */
--#define	PCI_VGA_SNOOP	0x0020	/* Bit 5:	VGA palette snoop */
--#define	PCI_MWIEN	0x0010	/* Bit 4:	Memory write an inv cycl ena */
--#define	PCI_SCYCEN	0x0008	/* Bit 3:	Special Cycle enable */
--#define	PCI_BMEN	0x0004	/* Bit 2:	Bus Master enable */
--#define	PCI_MEMEN	0x0002	/* Bit 1:	Memory Space Access enable */
--#define	PCI_IOEN	0x0001	/* Bit 0:	IO Space Access enable */
--
--/*	PCI_STATUS	16 bit	Status */
--#define	PCI_PERR	0x8000	/* Bit 15:	Parity Error */
--#define	PCI_SERR	0x4000	/* Bit 14:	Signaled SERR */
--#define	PCI_RMABORT	0x2000	/* Bit 13:	Received Master Abort */
--#define	PCI_RTABORT	0x1000	/* Bit 12:	Received Target Abort */
--#define	PCI_STABORT	0x0800	/* Bit 11:	Sent Target Abort */
--#define	PCI_DEVSEL	0x0600	/* Bit 10..9:	DEVSEL Timing */
--#define	PCI_DEV_FAST	(0<<9)	/*		fast */
--#define	PCI_DEV_MEDIUM	(1<<9)	/*		medium */
--#define	PCI_DEV_SLOW	(2<<9)	/*		slow */
--#define	PCI_DATAPERR	0x0100	/* Bit 8:	DATA Parity error detected */
--#define	PCI_FB2BCAP	0x0080	/* Bit 7:	Fast Back-to-Back Capability */
--#define	PCI_UDF		0x0040	/* Bit 6:	User Defined Features */
--#define PCI_66MHZCAP	0x0020	/* Bit 5:	66 MHz PCI bus clock capable */
--#define PCI_NEWCAP	0x0010	/* Bit 4:	New cap. list implemented */
- 
- #define PCI_ERRBITS	(PCI_STATUS_DETECTED_PARITY | PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT | PCI_STATUS_SIG_TARGET_ABORT | PCI_STATUS_PARITY)
- 
--/*	PCI_REV_ID	8 bit	Revision ID */
--/*	PCI_CLASS_CODE	24 bit	Class Code */
--/*	Byte 2:		Base Class		(02) */
--/*	Byte 1:		SubClass		(02) */
--/*	Byte 0:		Programming Interface	(00) */
--
--/*	PCI_CACHE_LSZ	8 bit	Cache Line Size */
--/*	Possible values: 0,2,4,8,16	*/
--
--/*	PCI_LAT_TIM	8 bit	Latency Timer */
--
--/*	PCI_HEADER_T	8 bit	Header Type */
--#define	PCI_HD_MF_DEV	0x80	/* Bit 7:	0= single, 1= multi-func dev */
--#define	PCI_HD_TYPE	0x7f	/* Bit 6..0:	Header Layout 0= normal */
--
--/*	PCI_BIST	8 bit	Built-in selftest */
--#define	PCI_BIST_CAP	0x80	/* Bit 7:	BIST Capable */
--#define	PCI_BIST_ST	0x40	/* Bit 6:	Start BIST */
--#define	PCI_BIST_RET	0x0f	/* Bit 3..0:	Completion Code */
--
--/*	PCI_BASE_1ST	32 bit	1st Base address */
--#define	PCI_MEMSIZE	0x800L       /* use 2 kB Memory Base */
--#define	PCI_MEMBASE_BITS 0xfffff800L /* Bit 31..11:	Memory Base Address */
--#define	PCI_MEMSIZE_BIIS 0x000007f0L /* Bit 10..4:	Memory Size Req. */
--#define	PCI_PREFEN	0x00000008L  /* Bit 3:		Prefetchable */
--#define	PCI_MEM_TYP	0x00000006L  /* Bit 2..1:	Memory Type */
--#define	PCI_MEM32BIT	(0<<1)	     /* Base addr anywhere in 32 Bit range */
--#define	PCI_MEM1M	(1<<1)	     /* Base addr below 1 MegaByte */
--#define	PCI_MEM64BIT	(2<<1)	     /* Base addr anywhere in 64 Bit range */
--#define	PCI_MEMSPACE	0x00000001L  /* Bit 0:	Memory Space Indic. */
--
--/*	PCI_SUB_VID	16 bit	Subsystem Vendor ID */
--/*	PCI_SUB_ID	16 bit	Subsystem ID */
--
--/*	PCI_BASE_ROM	32 bit	Expansion ROM Base Address */
--#define	PCI_ROMBASE	0xfffe0000L  /* Bit 31..17: ROM BASE address (1st) */
--#define	PCI_ROMBASZ	0x0001c000L  /* Bit 16..14: Treat as BASE or SIZE */
--#define	PCI_ROMSIZE	0x00003800L  /* Bit 13..11: ROM Size Requirements */
--#define	PCI_ROMEN	0x00000001L  /* Bit 0:	    Address Decode enable */
--
--/*	PCI_CAP_PTR	8 bit	New Capabilities Pointers */
--/*	PCI_IRQ_LINE	8 bit	Interrupt Line */
--/*	PCI_IRQ_PIN	8 bit	Interrupt Pin */
--/*	PCI_MIN_GNT	8 bit	Min_Gnt */
--/*	PCI_MAX_LAT	8 bit	Max_Lat */
--/* Device Dependent Region */
--/*	PCI_OUR_REG	(DV)	32 bit	Our Register */
--/*	PCI_OUR_REG_1	(ML)	32 bit	Our Register 1 */
--				  /*	 Bit 31..29:	reserved */
--#define	PCI_PATCH_DIR	(3L<<27)  /*(DV) Bit 28..27:	Ext Patchs direction */
--#define PCI_PATCH_DIR_0	(1L<<27)  /*(DV) Type of the pins EXT_PATCHS<1..0>   */
--#define PCI_PATCH_DIR_1 (1L<<28)  /*	   0 = input			     */
--				  /*	   1 = output			     */
--#define	PCI_EXT_PATCHS	(3L<<25)  /*(DV) Bit 26..25:	Extended Patches     */
--#define PCI_EXT_PATCH_0 (1L<<25)  /*(DV)				     */
--#define PCI_EXT_PATCH_1 (1L<<26)  /*	 CLK for MicroWire (ML)		     */
--#define PCI_VIO		(1L<<25)  /*(ML)				     */
--#define	PCI_EN_BOOT	(1L<<24)  /*	 Bit 24:	Enable BOOT via ROM  */
--				  /*	   1 = Don't boot with ROM	     */
--				  /*	   0 = Boot with ROM		     */
--#define	PCI_EN_IO	(1L<<23)  /*	 Bit 23:	Mapping to IO space  */
--#define	PCI_EN_FPROM	(1L<<22)  /*	 Bit 22:	FLASH mapped to mem? */
--				  /*	   1 = Map Flash to Memory	     */
--			  	  /*	   0 = Disable all addr. decoding    */
--#define	PCI_PAGESIZE	(3L<<20)  /*	 Bit 21..20:	FLASH Page Size	     */
--#define	PCI_PAGE_16	(0L<<20)  /*		16 k pages		     */
--#define	PCI_PAGE_32K	(1L<<20)  /*		32 k pages		     */
--#define	PCI_PAGE_64K	(2L<<20)  /*		64 k pages		     */
--#define	PCI_PAGE_128K	(3L<<20)  /*		128 k pages		     */
--				  /*	 Bit 19: reserved (ML) and (DV)	     */
--#define	PCI_PAGEREG	(7L<<16)  /*	 Bit 18..16:	Page Register	     */
--				  /*	 Bit 15:	reserved	     */
--#define	PCI_FORCE_BE	(1L<<14)  /*	 Bit 14:	Assert all BEs on MR */
--#define	PCI_DIS_MRL	(1L<<13)  /*	 Bit 13:	Disable Mem R Line   */
--#define	PCI_DIS_MRM	(1L<<12)  /*	 Bit 12:	Disable Mem R multip */
--#define	PCI_DIS_MWI	(1L<<11)  /*	 Bit 11:	Disable Mem W & inv  */
--#define	PCI_DISC_CLS	(1L<<10)  /*	 Bit 10:	Disc: cacheLsz bound */
--#define	PCI_BURST_DIS	(1L<<9)	  /*	 Bit  9:	Burst Disable	     */
--#define	PCI_BYTE_SWAP	(1L<<8)	  /*(DV) Bit  8:	Byte Swap in DATA    */
--#define	PCI_SKEW_DAS	(0xfL<<4) /*	 Bit 7..4:	Skew Ctrl, DAS Ext   */
--#define	PCI_SKEW_BASE	(0xfL<<0) /*	 Bit 3..0:	Skew Ctrl, Base	     */
--
--/*	PCI_OUR_REG_2	(ML)	32 bit	Our Register 2 (Monalisa only) */
--#define PCI_VPD_WR_TH	(0xffL<<24)	/* Bit 24..31	VPD Write Threshold  */
--#define	PCI_DEV_SEL	(0x7fL<<17)	/* Bit 17..23	EEPROM Device Select */
--#define	PCI_VPD_ROM_SZ	(7L<<14)	/* Bit 14..16	VPD ROM Size	     */
--					/* Bit 12..13	reserved	     */
--#define	PCI_PATCH_DIR2	(0xfL<<8)	/* Bit  8..11	Ext Patchs dir 2..5  */
--#define	PCI_PATCH_DIR_2	(1L<<8)		/* Bit  8	CS for MicroWire     */
--#define	PCI_PATCH_DIR_3	(1L<<9)
--#define	PCI_PATCH_DIR_4	(1L<<10)
--#define	PCI_PATCH_DIR_5	(1L<<11)
--#define PCI_EXT_PATCHS2 (0xfL<<4)	/* Bit  4..7	Extended Patches     */
--#define	PCI_EXT_PATCH_2	(1L<<4)		/* Bit  4	CS for MicroWire     */
--#define	PCI_EXT_PATCH_3	(1L<<5)
--#define	PCI_EXT_PATCH_4	(1L<<6)
--#define	PCI_EXT_PATCH_5	(1L<<7)
--#define	PCI_EN_DUMMY_RD	(1L<<3)		/* Bit  3	Enable Dummy Read    */
--#define PCI_REV_DESC	(1L<<2)		/* Bit  2	Reverse Desc. Bytes  */
--#define PCI_USEADDR64	(1L<<1)		/* Bit  1	Use 64 Bit Addresse  */
--#define PCI_USEDATA64	(1L<<0)		/* Bit  0	Use 64 Bit Data bus ext*/
--
--/* Power Management Region */
--/*	PCI_PM_CAP_ID		 8 bit (ML)	Power Management Cap. ID */
--/*	PCI_PM_NITEM		 8 bit (ML)	Next Item Ptr */
--/*	PCI_PM_CAP_REG		16 bit (ML)	Power Management Capabilities*/
--#define	PCI_PME_SUP	(0x1f<<11)	/* Bit 11..15	PM Manag. Event Support*/
--#define PCI_PM_D2_SUB	(1<<10)		/* Bit 10	D2 Support Bit	     */
--#define PCI_PM_D1_SUB	(1<<9)		/* Bit 9	D1 Support Bit       */
--					/* Bit 6..8 reserved		     */
--#define PCI_PM_DSI	(1<<5)		/* Bit 5	Device Specific Init.*/
--#define PCI_PM_APS	(1<<4)		/* Bit 4	Auxialiary Power Src */
--#define PCI_PME_CLOCK	(1<<3)		/* Bit 3	PM Event Clock       */
--#define PCI_PM_VER	(7<<0)		/* Bit 0..2	PM PCI Spec. version */
--
--/*	PCI_PM_CTL_STS		16 bit (ML)	Power Manag. Control/Status  */
--#define	PCI_PME_STATUS	(1<<15)		/* Bit 15 	PFA doesn't sup. PME#*/
--#define PCI_PM_DAT_SCL	(3<<13)		/* Bit 13..14	dat reg Scaling factor */
--#define PCI_PM_DAT_SEL	(0xf<<9)	/* Bit  9..12	PM data selector field */
--					/* Bit  7.. 2	reserved	     */
--#define PCI_PM_STATE	(3<<0)		/* Bit  0.. 1	Power Management State */
--#define PCI_PM_STATE_D0	(0<<0)		/* D0:	Operational (default) */
--#define	PCI_PM_STATE_D1	(1<<0)		/* D1:	not supported */
--#define PCI_PM_STATE_D2	(2<<0)		/* D2:	not supported */
--#define PCI_PM_STATE_D3 (3<<0)		/* D3:	HOT, Power Down and Reset */
--
--/*	PCI_PM_DAT_REG		 8 bit (ML)	Power Manag. Data Register */
--/* VPD Region */
--/*	PCI_VPD_CAP_ID		 8 bit (ML)	VPD Cap. ID */
--/*	PCI_VPD_NITEM		 8 bit (ML)	Next Item Ptr */
--/*	PCI_VPD_ADR_REG		16 bit (ML)	VPD Address Register */
--#define	PCI_VPD_FLAG	(1<<15)		/* Bit 15	starts VPD rd/wd cycle*/
--
--/*	PCI_VPD_DAT_REG		32 bit (ML)	VPD Data Register */
-+
- 
- /*
-  *	Control Register File:
+I subscribe to the "keep it simple" approach, and regmap, although
+useful, seems like a giant sledgehammer for this.
+
+> 
+> Tested on a TDA19988 using a Freescale/NXP imx6q.
+> 
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+> 
+> I originally hacked this together while debugging an incompatibility between
+> the tda988x's audio input and the audio codec I was driving it with.
+> That required me to have debug access to the chip's register values.
+> A regmap did the trick, it has good debugfs support.
+> 
+>  drivers/gpu/drm/i2c/tda998x_drv.c | 350 ++++++++++++++++++++----------
+>  1 file changed, 234 insertions(+), 116 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+> index 7f34601bb515..8153e2e19e18 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_data/tda9950.h>
+>  #include <linux/irq.h>
+> +#include <linux/regmap.h>
+>  #include <sound/asoundef.h>
+>  #include <sound/hdmi-codec.h>
+>  
+> @@ -43,10 +44,9 @@ struct tda998x_audio_port {
+>  struct tda998x_priv {
+>  	struct i2c_client *cec;
+>  	struct i2c_client *hdmi;
+> -	struct mutex mutex;
+> +	struct regmap *regmap;
+>  	u16 rev;
+>  	u8 cec_addr;
+> -	u8 current_page;
+>  	bool is_on;
+>  	bool supports_infoframes;
+>  	bool sink_has_audio;
+> @@ -88,12 +88,10 @@ struct tda998x_priv {
+>  /* The TDA9988 series of devices use a paged register scheme.. to simplify
+>   * things we encode the page # in upper bits of the register #.  To read/
+>   * write a given register, we need to make sure CURPAGE register is set
+> - * appropriately.  Which implies reads/writes are not atomic.  Fun!
+> + * appropriately.
+>   */
+>  
+>  #define REG(page, addr) (((page) << 8) | (addr))
+> -#define REG2ADDR(reg)   ((reg) & 0xff)
+> -#define REG2PAGE(reg)   (((reg) >> 8) & 0xff)
+>  
+>  #define REG_CURPAGE               0xff                /* write */
+>  
+> @@ -285,8 +283,9 @@ struct tda998x_priv {
+>  
+>  
+>  /* Page 09h: EDID Control */
+> +/*	EDID_DATA consists of 128 successive registers   read */
+>  #define REG_EDID_DATA_0           REG(0x09, 0x00)     /* read */
+> -/* next 127 successive registers are the EDID block */
+> +#define REG_EDID_DATA_127         REG(0x09, 0x7f)     /* read */
+>  #define REG_EDID_CTRL             REG(0x09, 0xfa)     /* read/write */
+>  #define REG_DDC_ADDR              REG(0x09, 0xfb)     /* read/write */
+>  #define REG_DDC_OFFS              REG(0x09, 0xfc)     /* read/write */
+> @@ -295,11 +294,17 @@ struct tda998x_priv {
+>  
+>  
+>  /* Page 10h: information frames and packets */
+> +/*	REG_IF1_HB consists of 32 successive registers	 read/write */
+>  #define REG_IF1_HB0               REG(0x10, 0x20)     /* read/write */
+> +/*	REG_IF2_HB consists of 32 successive registers	 read/write */
+>  #define REG_IF2_HB0               REG(0x10, 0x40)     /* read/write */
+> +/*	REG_IF3_HB consists of 32 successive registers	 read/write */
+>  #define REG_IF3_HB0               REG(0x10, 0x60)     /* read/write */
+> +/*	REG_IF4_HB consists of 32 successive registers	 read/write */
+>  #define REG_IF4_HB0               REG(0x10, 0x80)     /* read/write */
+> +/*	REG_IF5_HB consists of 32 successive registers	 read/write */
+>  #define REG_IF5_HB0               REG(0x10, 0xa0)     /* read/write */
+> +#define REG_IF5_HB31              REG(0x10, 0xbf)     /* read/write */
+>  
+>  
+>  /* Page 11h: audio settings and content info packets */
+> @@ -542,93 +547,29 @@ static void tda998x_cec_hook_release(void *data)
+>  	cec_enamods(priv, CEC_ENAMODS_EN_CEC_CLK | CEC_ENAMODS_EN_CEC, false);
+>  }
+>  
+> -static int
+> -set_page(struct tda998x_priv *priv, u16 reg)
+> -{
+> -	if (REG2PAGE(reg) != priv->current_page) {
+> -		struct i2c_client *client = priv->hdmi;
+> -		u8 buf[] = {
+> -				REG_CURPAGE, REG2PAGE(reg)
+> -		};
+> -		int ret = i2c_master_send(client, buf, sizeof(buf));
+> -		if (ret < 0) {
+> -			dev_err(&client->dev, "%s %04x err %d\n", __func__,
+> -					reg, ret);
+> -			return ret;
+> -		}
+> -
+> -		priv->current_page = REG2PAGE(reg);
+> -	}
+> -	return 0;
+> -}
+> -
+>  static int
+>  reg_read_range(struct tda998x_priv *priv, u16 reg, char *buf, int cnt)
+>  {
+> -	struct i2c_client *client = priv->hdmi;
+> -	u8 addr = REG2ADDR(reg);
+>  	int ret;
+>  
+> -	mutex_lock(&priv->mutex);
+> -	ret = set_page(priv, reg);
+> -	if (ret < 0)
+> -		goto out;
+> -
+> -	ret = i2c_master_send(client, &addr, sizeof(addr));
+> +	ret = regmap_bulk_read(priv->regmap, reg, buf, cnt);
+>  	if (ret < 0)
+> -		goto fail;
+> -
+> -	ret = i2c_master_recv(client, buf, cnt);
+> -	if (ret < 0)
+> -		goto fail;
+> -
+> -	goto out;
+> -
+> -fail:
+> -	dev_err(&client->dev, "Error %d reading from 0x%x\n", ret, reg);
+> -out:
+> -	mutex_unlock(&priv->mutex);
+> -	return ret;
+> +		return ret;
+> +	return cnt;
+>  }
+>  
+> -#define MAX_WRITE_RANGE_BUF 32
+> -
+>  static void
+>  reg_write_range(struct tda998x_priv *priv, u16 reg, u8 *p, int cnt)
+>  {
+> -	struct i2c_client *client = priv->hdmi;
+> -	/* This is the maximum size of the buffer passed in */
+> -	u8 buf[MAX_WRITE_RANGE_BUF + 1];
+> -	int ret;
+> -
+> -	if (cnt > MAX_WRITE_RANGE_BUF) {
+> -		dev_err(&client->dev, "Fixed write buffer too small (%d)\n",
+> -				MAX_WRITE_RANGE_BUF);
+> -		return;
+> -	}
+> -
+> -	buf[0] = REG2ADDR(reg);
+> -	memcpy(&buf[1], p, cnt);
+> -
+> -	mutex_lock(&priv->mutex);
+> -	ret = set_page(priv, reg);
+> -	if (ret < 0)
+> -		goto out;
+> -
+> -	ret = i2c_master_send(client, buf, cnt + 1);
+> -	if (ret < 0)
+> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
+> -out:
+> -	mutex_unlock(&priv->mutex);
+> +	regmap_bulk_write(priv->regmap, reg, p, cnt);
+>  }
+>  
+>  static int
+>  reg_read(struct tda998x_priv *priv, u16 reg)
+>  {
+> -	u8 val = 0;
+> -	int ret;
+> +	int ret, val;
+>  
+> -	ret = reg_read_range(priv, reg, &val, sizeof(val));
+> +	ret = regmap_read(priv->regmap, reg, &val);
+>  	if (ret < 0)
+>  		return ret;
+>  	return val;
+> @@ -637,59 +578,27 @@ reg_read(struct tda998x_priv *priv, u16 reg)
+>  static void
+>  reg_write(struct tda998x_priv *priv, u16 reg, u8 val)
+>  {
+> -	struct i2c_client *client = priv->hdmi;
+> -	u8 buf[] = {REG2ADDR(reg), val};
+> -	int ret;
+> -
+> -	mutex_lock(&priv->mutex);
+> -	ret = set_page(priv, reg);
+> -	if (ret < 0)
+> -		goto out;
+> -
+> -	ret = i2c_master_send(client, buf, sizeof(buf));
+> -	if (ret < 0)
+> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
+> -out:
+> -	mutex_unlock(&priv->mutex);
+> +	regmap_write(priv->regmap, reg, val);
+>  }
+>  
+>  static void
+>  reg_write16(struct tda998x_priv *priv, u16 reg, u16 val)
+>  {
+> -	struct i2c_client *client = priv->hdmi;
+> -	u8 buf[] = {REG2ADDR(reg), val >> 8, val};
+> -	int ret;
+> -
+> -	mutex_lock(&priv->mutex);
+> -	ret = set_page(priv, reg);
+> -	if (ret < 0)
+> -		goto out;
+> +	u8 buf[] = {val >> 8, val};
+>  
+> -	ret = i2c_master_send(client, buf, sizeof(buf));
+> -	if (ret < 0)
+> -		dev_err(&client->dev, "Error %d writing to 0x%x\n", ret, reg);
+> -out:
+> -	mutex_unlock(&priv->mutex);
+> +	regmap_bulk_write(priv->regmap, reg, buf, ARRAY_SIZE(buf));
+>  }
+>  
+>  static void
+>  reg_set(struct tda998x_priv *priv, u16 reg, u8 val)
+>  {
+> -	int old_val;
+> -
+> -	old_val = reg_read(priv, reg);
+> -	if (old_val >= 0)
+> -		reg_write(priv, reg, old_val | val);
+> +	regmap_update_bits(priv->regmap, reg, val, val);
+>  }
+>  
+>  static void
+>  reg_clear(struct tda998x_priv *priv, u16 reg, u8 val)
+>  {
+> -	int old_val;
+> -
+> -	old_val = reg_read(priv, reg);
+> -	if (old_val >= 0)
+> -		reg_write(priv, reg, old_val & ~val);
+> +	regmap_update_bits(priv->regmap, reg, val, 0);
+>  }
+>  
+>  static void
+> @@ -816,7 +725,7 @@ static void
+>  tda998x_write_if(struct tda998x_priv *priv, u8 bit, u16 addr,
+>  		 union hdmi_infoframe *frame)
+>  {
+> -	u8 buf[MAX_WRITE_RANGE_BUF];
+> +	u8 buf[32];
+>  	ssize_t len;
+>  
+>  	len = hdmi_infoframe_pack(frame, buf, sizeof(buf));
+> @@ -1654,6 +1563,211 @@ static void tda998x_destroy(struct device *dev)
+>  		cec_notifier_put(priv->cec_notify);
+>  }
+>  
+> +static bool tda_is_edid_data_reg(unsigned int reg)
+> +{
+> +	return (reg >= REG_EDID_DATA_0) &&
+> +		(reg <= REG_EDID_DATA_127);
+> +}
+> +
+> +static bool tda_is_precious_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	if (tda_is_edid_data_reg(reg))
+> +		return true;
+> +	switch (reg) {
+> +	case REG_INT_FLAGS_0:
+> +	case REG_INT_FLAGS_1:
+> +	case REG_INT_FLAGS_2:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool tda_is_rw_reg(unsigned int reg)
+> +{
+> +	if ((reg >= REG_IF1_HB0) && (reg <= REG_IF5_HB31))
+> +		return true;
+> +	switch (reg) {
+> +	case REG_MAIN_CNTRL0:
+> +	case REG_DDC_DISABLE:
+> +	case REG_CCLK_ON:
+> +	case REG_I2C_MASTER:
+> +	case REG_FEAT_POWERDOWN:
+> +	case REG_INT_FLAGS_0:
+> +	case REG_INT_FLAGS_1:
+> +	case REG_INT_FLAGS_2:
+> +	case REG_ENA_ACLK:
+> +	case REG_ENA_VP_0:
+> +	case REG_ENA_VP_1:
+> +	case REG_ENA_VP_2:
+> +	case REG_ENA_AP:
+> +	case REG_MUX_AP:
+> +	case REG_MUX_VP_VIP_OUT:
+> +	case REG_I2S_FORMAT:
+> +	case REG_PLL_SERIAL_1:
+> +	case REG_PLL_SERIAL_2:
+> +	case REG_PLL_SERIAL_3:
+> +	case REG_SERIALIZER:
+> +	case REG_BUFFER_OUT:
+> +	case REG_PLL_SCG1:
+> +	case REG_PLL_SCG2:
+> +	case REG_PLL_SCGN1:
+> +	case REG_PLL_SCGN2:
+> +	case REG_PLL_SCGR1:
+> +	case REG_PLL_SCGR2:
+> +	case REG_AUDIO_DIV:
+> +	case REG_SEL_CLK:
+> +	case REG_ANA_GENERAL:
+> +	case REG_EDID_CTRL:
+> +	case REG_DDC_ADDR:
+> +	case REG_DDC_OFFS:
+> +	case REG_DDC_SEGM_ADDR:
+> +	case REG_DDC_SEGM:
+> +	case REG_AIP_CNTRL_0:
+> +	case REG_CA_I2S:
+> +	case REG_LATENCY_RD:
+> +	case REG_ACR_CTS_0:
+> +	case REG_ACR_CTS_1:
+> +	case REG_ACR_CTS_2:
+> +	case REG_ACR_N_0:
+> +	case REG_ACR_N_1:
+> +	case REG_ACR_N_2:
+> +	case REG_CTS_N:
+> +	case REG_ENC_CNTRL:
+> +	case REG_DIP_FLAGS:
+> +	case REG_DIP_IF_FLAGS:
+> +	case REG_TX3:
+> +	case REG_TX4:
+> +	case REG_TX33:
+> +	case REG_CH_STAT_B(0):
+> +	case REG_CH_STAT_B(1):
+> +	case REG_CH_STAT_B(2):
+> +	case REG_CH_STAT_B(3):
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool tda_is_readable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	if (tda_is_rw_reg(reg) || tda_is_edid_data_reg(reg))
+> +		return true;
+> +	switch (reg) {
+> +	case REG_VERSION_LSB:
+> +	case REG_VERSION_MSB:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool tda_is_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	if (tda_is_rw_reg(reg))
+> +		return true;
+> +	switch (reg) {
+> +	case REG_CURPAGE:
+> +	case REG_SOFTRESET:
+> +	case REG_VIP_CNTRL_0:
+> +	case REG_VIP_CNTRL_1:
+> +	case REG_VIP_CNTRL_2:
+> +	case REG_VIP_CNTRL_3:
+> +	case REG_VIP_CNTRL_4:
+> +	case REG_VIP_CNTRL_5:
+> +	case REG_MAT_CONTRL:
+> +	case REG_VIDFORMAT:
+> +	case REG_REFPIX_MSB:
+> +	case REG_REFPIX_LSB:
+> +	case REG_REFLINE_MSB:
+> +	case REG_REFLINE_LSB:
+> +	case REG_NPIX_MSB:
+> +	case REG_NPIX_LSB:
+> +	case REG_NLINE_MSB:
+> +	case REG_NLINE_LSB:
+> +	case REG_VS_LINE_STRT_1_MSB:
+> +	case REG_VS_LINE_STRT_1_LSB:
+> +	case REG_VS_PIX_STRT_1_MSB:
+> +	case REG_VS_PIX_STRT_1_LSB:
+> +	case REG_VS_LINE_END_1_MSB:
+> +	case REG_VS_LINE_END_1_LSB:
+> +	case REG_VS_PIX_END_1_MSB:
+> +	case REG_VS_PIX_END_1_LSB:
+> +	case REG_VS_LINE_STRT_2_MSB:
+> +	case REG_VS_LINE_STRT_2_LSB:
+> +	case REG_VS_PIX_STRT_2_MSB:
+> +	case REG_VS_PIX_STRT_2_LSB:
+> +	case REG_VS_LINE_END_2_MSB:
+> +	case REG_VS_LINE_END_2_LSB:
+> +	case REG_VS_PIX_END_2_MSB:
+> +	case REG_VS_PIX_END_2_LSB:
+> +	case REG_HS_PIX_START_MSB:
+> +	case REG_HS_PIX_START_LSB:
+> +	case REG_HS_PIX_STOP_MSB:
+> +	case REG_HS_PIX_STOP_LSB:
+> +	case REG_VWIN_START_1_MSB:
+> +	case REG_VWIN_START_1_LSB:
+> +	case REG_VWIN_END_1_MSB:
+> +	case REG_VWIN_END_1_LSB:
+> +	case REG_VWIN_START_2_MSB:
+> +	case REG_VWIN_START_2_LSB:
+> +	case REG_VWIN_END_2_MSB:
+> +	case REG_VWIN_END_2_LSB:
+> +	case REG_DE_START_MSB:
+> +	case REG_DE_START_LSB:
+> +	case REG_DE_STOP_MSB:
+> +	case REG_DE_STOP_LSB:
+> +	case REG_TBG_CNTRL_0:
+> +	case REG_TBG_CNTRL_1:
+> +	case REG_ENABLE_SPACE:
+> +	case REG_HVF_CNTRL_0:
+> +	case REG_HVF_CNTRL_1:
+> +	case REG_RPT_CNTRL:
+> +	case REG_AIP_CLKSEL:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct reg_default tda_reg_default[] = {
+> +	{ REG_CURPAGE, 0xff },
+> +};
+> +
+> +static const struct regmap_range_cfg hdmi_range_cfg[] = {
+> +	{
+> +		.range_min = 0x00,
+> +		.range_max = REG_TX33,
+> +		.selector_reg = REG_CURPAGE,
+> +		.selector_mask = 0xff,
+> +		.selector_shift = 0,
+> +		.window_start = 0,
+> +		.window_len = 0x100,
+> +	},
+> +};
+> +
+> +/* Paged register scheme, with a write-only page register (CURPAGE).
+> + * Make this work by marking CURPAGE write-only and cacheable. Give it
+> + * an invalid page default value, which guarantees that it will get written to
+> + * the first time we read/write the registers.
+> + */
+> +
+> +static const struct regmap_config hdmi_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.ranges = hdmi_range_cfg,
+> +	.num_ranges = ARRAY_SIZE(hdmi_range_cfg),
+> +	.max_register = REG_TX33,
+> +
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.volatile_reg = tda_is_precious_volatile_reg,
+> +	.precious_reg = tda_is_precious_volatile_reg,
+> +	.readable_reg = tda_is_readable_reg,
+> +	.writeable_reg = tda_is_writeable_reg,
+> +	.reg_defaults = tda_reg_default,
+> +	.num_reg_defaults = ARRAY_SIZE(tda_reg_default),
+> +};
+> +
+>  static int tda998x_create(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -1666,10 +1780,15 @@ static int tda998x_create(struct device *dev)
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> +	priv->regmap = devm_regmap_init_i2c(client, &hdmi_regmap_config);
+> +	if (IS_ERR(priv->regmap)) {
+> +		ret = PTR_ERR(priv->regmap);
+> +		dev_err(dev, "Failed to allocate register map: %d\n", ret);
+> +		return ret;
+> +	}
+>  
+>  	dev_set_drvdata(dev, priv);
+>  
+> -	mutex_init(&priv->mutex);	/* protect the page access */
+>  	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
+>  	mutex_init(&priv->edid_mutex);
+>  	INIT_LIST_HEAD(&priv->bridge.list);
+> @@ -1683,7 +1802,6 @@ static int tda998x_create(struct device *dev)
+>  
+>  	/* CEC I2C address bound to TDA998x I2C addr by configuration pins */
+>  	priv->cec_addr = 0x34 + (client->addr & 0x03);
+> -	priv->current_page = 0xff;
+>  	priv->hdmi = client;
+>  
+>  	/* wake up the device: */
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-2.21.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
