@@ -2,99 +2,74 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8C4C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543DEC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD7F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561126725;
-	bh=O+JyAbE7gzuZFVR1B/RarBWiVxRT8VXQTKJYS6wMfCw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgIhc/0wC72dMcfKQTlUPVFgQkEbawiW13RviL/Sz14VNxfNZxkcEO5exe/8Tzyp1
-	 +vAxvXQTrhYNOKAaqh2IF4W/4Te3GcgWt/lRbLrYTTEaE4trN65RSvroQN7cNlHe8a
-	 OK+ABglQ3eQVYH9XjCPzfxFoeIFPOzMhSboqLCeg=
+	by mail.kernel.org (Postfix) with ESMTP id 345302083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfFUOSk (ORCPT
+        id S1726350AbfFUOTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 10:19:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43540 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfFUOSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:18:38 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725975AbfFUOTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:19:37 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523262089E;
-        Fri, 21 Jun 2019 14:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561126718;
-        bh=O+JyAbE7gzuZFVR1B/RarBWiVxRT8VXQTKJYS6wMfCw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjxiQvSWZhLqAuGD0i+m4OlOiB+HVbzoEeVWsoUgMilW9vrX3l+LpeldEYj8s0AtF
-         528kIHJ/cLIrtr7MqTHYYVTsLxudCFmRDmUGrlI8cTEE5DJWXgb69GC9zry7b7+Jea
-         yHcOY+vcUd8innAsaPnCo4S5qy3RB3bvbnYFnM68=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc:     idryomov@gmail.com, zyan@redhat.com, sage@redhat.com,
-        agruenba@redhat.com, joe@perches.com, geert+renesas@glider.be,
-        andriy.shevchenko@linux.intel.com
-Subject: [PATCH v3 2/2] ceph: fix return of ceph_vxattrcb_layout
-Date:   Fri, 21 Jun 2019 10:18:33 -0400
-Message-Id: <20190621141833.17551-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190621141833.17551-1-jlayton@kernel.org>
-References: <20190621141833.17551-1-jlayton@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 307E93003A4D;
+        Fri, 21 Jun 2019 14:19:34 +0000 (UTC)
+Received: from redhat.com (ovpn-121-168.rdu2.redhat.com [10.10.121.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44F5C60CA3;
+        Fri, 21 Jun 2019 14:19:33 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 10:19:26 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 5/5] livepatch: Selftests of the API for tracking system
+ state changes
+Message-ID: <20190621141926.GE20356@redhat.com>
+References: <20190611135627.15556-1-pmladek@suse.com>
+ <20190611135627.15556-6-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611135627.15556-6-pmladek@suse.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 21 Jun 2019 14:19:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently it returns -ERANGE if it thinks that the buffer won't fit, but
-the function returns size_t which is unsigned. Fix it to just return the
-length in this case like the other xattrs do, and rely on the caller to
-handle the case where it won't fit in the destination buffer.
+On Tue, Jun 11, 2019 at 03:56:27PM +0200, Petr Mladek wrote:
+> 
+> [ ... snip ... ]
+> 
+> diff --git a/lib/livepatch/test_klp_state.c b/lib/livepatch/test_klp_state.c
+> new file mode 100644
+> index 000000000000..c43dc2f2e01d
+> --- /dev/null
+> +++ b/lib/livepatch/test_klp_state.c
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2019 SUSE
+> 
+> [ ... snip ... ]
+> 
+> +MODULE_AUTHOR("Joe Lawrence <joe.lawrence@redhat.com>");
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/ceph/xattr.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Feel free to update the module author for these.
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 359d3cbbb37b..23687e3819f5 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -62,8 +62,7 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	const char *pool_name;
- 	const char *ns_field = " pool_namespace=";
- 	char buf[128];
--	size_t len, total_len = 0;
--	int ret;
-+	size_t ret, len, total_len = 0;
- 
- 	pool_ns = ceph_try_get_string(ci->i_layout.pool_ns);
- 
-@@ -87,11 +86,8 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	if (pool_ns)
- 		total_len += strlen(ns_field) + pool_ns->len;
- 
--	if (!size) {
--		ret = total_len;
--	} else if (total_len > size) {
--		ret = -ERANGE;
--	} else {
-+	ret = total_len;
-+	if (size >= total_len) {
- 		memcpy(val, buf, len);
- 		ret = len;
- 		if (pool_name) {
--- 
-2.21.0
-
+-- Joe
