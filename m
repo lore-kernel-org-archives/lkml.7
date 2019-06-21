@@ -2,76 +2,99 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7492DC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E43FC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EB2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D032166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561115156;
+	bh=ReCmP6mZfL1ydIGUwQ4K2uET7mhSIXqXsNY0Kqa1ySw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KPvp+Ko2SOoSRFG6nay1Kk7gAYsvnQ+cKhxnxD3CZMm4aM0tYpGec5twqUMe+qKhR
+	 cjDGPx2hz/n4cxUY9sE1c6J5cCghpSqw6UEG49i6D/k3M2+10PK8zJbXsjhqg0JVTB
+	 xSSwom2NfEdvfJVP01gWilTVGu2G69poKhrd6lpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfFULFh (ORCPT
+        id S1726700AbfFULFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:05:37 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33644 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFULFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:05:37 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x2so6490258qtr.0;
-        Fri, 21 Jun 2019 04:05:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uWrjRbv5sT8Ycn8FrgxcuobL7x+daQ4VNzNCCGx2zM4=;
-        b=gDeOrE0giz3FHfLZXaSk9EmPKJQw2RLL+gXvzpCsy9cajxIJEsjB6Xi+WGuFlTkCDM
-         qGSam0tW5i+a8PxQ6z77UKxJ+7rlatFUjm8rg/fvzV9AxaJSAopf2k6ohwA94H1lQhgY
-         GoK2bKpqxjlIbAKSCmRLYRh/cCo/bQ5JZVlSz45NGW/pRozmv+M5q/b18oEE3NZSwX9H
-         OdFMAblZXIA+baMDPTux4pEyEsvAiitdrtSCXk2qJHvpD4Y3FYQ9RSk+9E3DoY6XQOxU
-         9tfPyV0u7CzO66sEnSAaa2HU+yqCfZArMUiPSi22C4tFN1c6aZm8dr+Y6KqiFsJt7zWa
-         ifEw==
-X-Gm-Message-State: APjAAAWiNowFQ1UAPwy6s8ra5NHV+kj26Vb2N81ABIXv89Sg0GgT2XDV
-        8IvNEwVIfcTyiqWT/EHvHmUw3dJyZuXA0sJNg2g=
-X-Google-Smtp-Source: APXvYqw5uqxdf+phL6riSVug0c30oEd9Ob3YA4KXECDUZ7l4rUQff3J+CqHtXgfdMec/Uqfgyj4gqSkdxcvTzscBjxU=
-X-Received: by 2002:ac8:3485:: with SMTP id w5mr38463529qtb.142.1561115135877;
- Fri, 21 Jun 2019 04:05:35 -0700 (PDT)
+        Fri, 21 Jun 2019 07:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfFULFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:05:54 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 164A92166E;
+        Fri, 21 Jun 2019 11:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561115153;
+        bh=ReCmP6mZfL1ydIGUwQ4K2uET7mhSIXqXsNY0Kqa1ySw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NIC2KOGLU15vwFdrXsQ21f9HMYashjo+GAIUq6aifrxmM89h8cRes6df3JvCiA7eq
+         2DU/z/gk090aRiPnYt4ngLLocux78M7bA8oaGNvZXxPpV78wQjOzz8AxZKgp8xaFRk
+         xDli3JazZtxwjq8C6BEzFWnnz0XkygQ00Q2fhhMY=
+Received: by mail-wr1-f46.google.com with SMTP id n9so6208745wru.0;
+        Fri, 21 Jun 2019 04:05:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAVFUdqBp+EiemohGH3+QizgWYIoMp03p4ryAUSP3opqTnxStBSP
+        QrRxJ5eGdDFk98YNEAKf2FmCvQ3VadrcBgUNKDM=
+X-Google-Smtp-Source: APXvYqy3WEx+tbb1lSRS7oX70n7cxQ8/V6LHDFq6jUOe/chVbdAzS0mtEBdOyy3UK2+rxyQyjrTafv2Wkf8jsgV+2d8=
+X-Received: by 2002:adf:dd89:: with SMTP id x9mr18958136wrl.7.1561115151644;
+ Fri, 21 Jun 2019 04:05:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44@epcas1p3.samsung.com>
- <20190617131624.2382303-1-arnd@arndb.de> <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
-In-Reply-To: <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 13:05:19 +0200
-Message-ID: <CAK8P3a3qTCnJn7X1msg03Av71aZmmN8YB=WNs0JfzYoMH+uL-w@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: pvr2fb: fix link error for pvr2fb_pci_exit
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1561109999-4322-1-git-send-email-guoren@kernel.org>
+ <1561109999-4322-3-git-send-email-guoren@kernel.org> <2c6acec4-07b7-b214-9eeb-964dc3a0d632@arm.com>
+In-Reply-To: <2c6acec4-07b7-b214-9eeb-964dc3a0d632@arm.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Fri, 21 Jun 2019 19:05:40 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQ0xQtQY1t-g9FgWaxfDXppMkFooCQzTFy7+ouwUfyA6w@mail.gmail.com>
+Message-ID: <CAJF2gTQ0xQtQY1t-g9FgWaxfDXppMkFooCQzTFy7+ouwUfyA6w@mail.gmail.com>
+Subject: Re: [PATCH V2 2/4] csky: Add new asid lib code from arm
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>,
+        Arnd Bergmann <arnd@arnd.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:58 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
->
-> On 6/17/19 3:16 PM, Arnd Bergmann wrote:
-> > When the driver is built-in for PCI, we reference the exit function
-> > after discarding it:
-> >
-> > `pvr2fb_pci_exit' referenced in section `.ref.data' of drivers/video/fbdev/pvr2fb.o: defined in discarded section `.exit.text' of drivers/video/fbdev/pvr2fb.o
-> >
-> > Just remove the __exit annotation as the easiest workaround.
->
-> Don't we also need to fix pvr2fb_dc_exit() for CONFIG_SH_DREAMCAST=y case?
+Sorry, I forgot delete arm's. It's mistake, no change arm64 file.
 
-I think that's correct, yes. Can you fix that up when applying the patch?
+On Fri, Jun 21, 2019 at 6:10 PM Julien Grall <julien.grall@arm.com> wrote:
+>
+> Hi,
+>
+> On 21/06/2019 10:39, guoren@kernel.org wrote:
+> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> > Cc: Arnd Bergmann <arnd@arnd.de>
+> > Cc: Julien Grall <julien.grall@arm.com>
+> > ---
+> >   arch/arm64/lib/asid.c        |   9 ++-
+>
+> This change should be in a separate e-mail with the Arm64 maintainers in CC.
+>
+> But you seem to have a copy of the allocator in csky now. So why do you need to
+> modify arm64/lib/asid.c here?
+>
+> Cheers,
+>
+> --
+> Julien Grall
 
-     Arnd
+
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
