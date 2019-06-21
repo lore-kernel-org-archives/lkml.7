@@ -2,245 +2,87 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF4DC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81081C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6379C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A772089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfFUImg (ORCPT
+        id S1726442AbfFUImj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:42:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:50846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfFUImg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:42:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDB8F360;
-        Fri, 21 Jun 2019 01:42:34 -0700 (PDT)
-Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 95FD73F246;
-        Fri, 21 Jun 2019 01:42:32 -0700 (PDT)
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: [PATCH v10 00/16] Add utilization clamping support
-Date:   Fri, 21 Jun 2019 09:42:01 +0100
-Message-Id: <20190621084217.8167-1-patrick.bellasi@arm.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 21 Jun 2019 04:42:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39501 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfFUImi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 04:42:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so5708547wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:42:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NCZe/wzhmqVTkfL4kbg/RhaDPy78lQA1X7HEK+EaBNc=;
+        b=mU9C5f/cJg8IizAtcXgvrhMsbjnQZz1ifBtM09aCqcsa7vvraCoy8yAFPUvGyijUAg
+         UIY4A4KbK9SFHdAi7ed8AavdZDjGc9SlYLlMxtuadRwK/oeO9GifoW9donCpIzR0VtZb
+         pue1YeDZMrJWa9+Nccom2KIoAbIygOqql4iWYOc9V7jF4q3zZaKmXruamsXkff9LjlXa
+         qlpK6wh0juYZFmUDTXcHv3M/zyH2ApVdHxFOPio1SPI1MSNGXGqJYH32dj26LJ2oCL0b
+         7XaBRMHkuoVYD4xXWg8aW1hYDL+WjVPhjnTFVjgvpCB35e8ptVVh+03jrxolB2I6OrhI
+         IM4w==
+X-Gm-Message-State: APjAAAVg1fmanwGHsNvRN1Mg5STWNiDESc5RDg1OdeSrsSS7L7rRKO1D
+        9z3OwPILeMPfbIPVeGUThwnBog==
+X-Google-Smtp-Source: APXvYqxHByJaYhGLeLp7ST63EtIhJTeBSDbHrjOV2E/XCor6/o/FJQ21g0mLwcv3882Pfibb/UxTow==
+X-Received: by 2002:adf:e841:: with SMTP id d1mr32311861wrn.204.1561106556746;
+        Fri, 21 Jun 2019 01:42:36 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-127-31.net.upcbroadband.cz. [89.176.127.31])
+        by smtp.gmail.com with ESMTPSA id c4sm1707922wrt.86.2019.06.21.01.42.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 01:42:36 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH RFC 1/5] x86: KVM: svm: don't pretend to advance RIP in case wrmsr_interception() results in #GP
+In-Reply-To: <CALMp9eTZSWA-7SOHS=2xrMKaXv_imKpURHGcDpfgusF+JDXFMg@mail.gmail.com>
+References: <20190620110240.25799-1-vkuznets@redhat.com> <20190620110240.25799-2-vkuznets@redhat.com> <CALMp9eTZSWA-7SOHS=2xrMKaXv_imKpURHGcDpfgusF+JDXFMg@mail.gmail.com>
+Date:   Fri, 21 Jun 2019 10:42:35 +0200
+Message-ID: <87r27nfhxg.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all, this is a respin of:
+Jim Mattson <jmattson@google.com> writes:
 
-  https://lore.kernel.org/lkml/20190515094459.10317-1-patrick.bellasi@arm.com/
+> On Thu, Jun 20, 2019 at 4:02 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> svm->next_rip is only used by skip_emulated_instruction() and in case
+>> kvm_set_msr() fails we rightfully don't do that. Move svm->next_rip
+>> advancement to 'else' branch to avoid creating false impression that
+>> it's always advanced.
+>>
+>> By the way, rdmsr_interception() has it right already.
+>
+> I think I actually prefer the current placement, because this allows
+> the code that's common to both kvm-amd.ko and kvm-intel.ko to be
+> hoisted into the vendor-agnostic kvm module. Also, this hard-coded '2'
+> should be going away, right?
 
-which addresses all Tejun's concerns:
+This whole change goes away in PATCH5 (with hardcoded '+2'), I added
+this patch just to make it clear that RIP advancement we're doing here
+is only being used by kvm_skip_emulated_instruction() and
+kvm_inject_gp() branch is not affected.
 
- - rename cgroup attributes to be cpu.uclamp.{min,max}
- - update initialization of subgroups clamps to be "no clamps" by default
- - use percentage rational numbers for clamp attributes, e.g. "12.34" for 12.34%.
-
-by introducing modifications impacting only patches:
-
- [PATCH v10 12/16] sched/core: uclamp: Extend CPU's cgroup controller
- [PATCH v10 13/16] sched/core: uclamp: Propagate parent clamps
-
-The rest of the patches are the same as per in v9, they have been just rebased
-on top of:
-
-   tj/cgroup.git	for-5.3
-   tip/tip.git		sched/core
-
-AFAIU, all the first 11 patches have been code reviewed and should be at a
-"ready to merge" quality level. Please let me know if I'm wrong and there
-is something else I need/can to do on those patches.
-
-Otherwise, now that we should have settled all the behavioral aspects, I'm
-looking forward for a code review on the last set of patches of this series.
-
-Cheers,
-Patrick
-
-
-Series Organization
-===================
-
-The series is organized into these main sections:
-
- - Patches [01-07]: Per task (primary) API
- - Patches [08-09]: Schedutil integration for FAIR and RT tasks
- - Patches [10-11]: Integration with EAS's energy_compute()
- - Patches [12-16]: Per task group (secondary) API
-
-It is based on today's tj/cgroup/for-5.3 and tip/sched/core and the full tree
-is available here:
-
-   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v10
-   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v10
-
-
-Newcomer's Short Abstract
-=========================
-
-The Linux scheduler tracks a "utilization" signal for each scheduling entity
-(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
-scheduler to know how "big" a task is and, in principle, it can support
-advanced task placement strategies by selecting the best CPU to run a task.
-Some of these strategies are represented by the Energy Aware Scheduler [3].
-
-When the schedutil cpufreq governor is in use, the utilization signal allows
-the Linux scheduler to also drive frequency selection. The CPU utilization
-signal, which represents the aggregated utilization of tasks scheduled on that
-CPU, is used to select the frequency which best fits the workload generated by
-the tasks.
-
-The current translation of utilization values into a frequency selection is
-simple: we go to max for RT tasks or to the minimum frequency which can
-accommodate the utilization of DL+FAIR tasks.
-However, utilization values by themselves cannot convey the desired
-power/performance behaviors of each task as intended by user-space.
-As such they are not ideally suited for task placement decisions.
-
-Task placement and frequency selection policies in the kernel can be improved
-by taking into consideration hints coming from authorized user-space elements,
-like for example the Android middleware or more generally any "System
-Management Software" (SMS) framework.
-
-Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
-utilization generated by RT and FAIR tasks within a range defined by user-space.
-The clamped utilization value can then be used, for example, to enforce a
-minimum and/or maximum frequency depending on which tasks are active on a CPU.
-
-The main use-cases for utilization clamping are:
-
- - boosting: better interactive response for small tasks which
-   are affecting the user experience.
-
-   Consider for example the case of a small control thread for an external
-   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
-   the scheduler does not have a complete view of what the task's requirements
-   are and, if it's a small utilization task, it keeps selecting a more energy
-   efficient CPU, with smaller capacity and lower frequency, thus negatively
-   impacting the overall time required to complete task activations.
-
- - capping: increase energy efficiency for background tasks not affecting the
-   user experience.
-
-   Since running on a lower capacity CPU at a lower frequency is more energy
-   efficient, when the completion time is not a main goal, then capping the
-   utilization considered for certain (maybe big) tasks can have positive
-   effects, both on energy consumption and thermal headroom.
-   This feature allows also to make RT tasks more energy friendly on mobile
-   systems where running them on high capacity CPUs and at the maximum
-   frequency is not required.
-
-From these two use-cases, it's worth noticing that frequency selection
-biasing, introduced by patches 9 and 10 of this series, is just one possible
-usage of utilization clamping. Another compelling extension of utilization
-clamping is in helping the scheduler in making tasks placement decisions.
-
-Utilization is (also) a task specific property the scheduler uses to know
-how much CPU bandwidth a task requires, at least as long as there is idle time.
-Thus, the utilization clamp values, defined either per-task or per-task_group,
-can represent tasks to the scheduler as being bigger (or smaller) than what
-they actually are.
-
-Utilization clamping thus enables interesting additional optimizations, for
-example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
-where:
-
- - boosting: try to run small/foreground tasks on higher-capacity CPUs to
-   complete them faster despite being less energy efficient.
-
- - capping: try to run big/background tasks on low-capacity CPUs to save power
-   and thermal headroom for more important tasks
-
-This series does not present this additional usage of utilization clamping but
-it's an integral part of the EAS feature set, where [4] is one of its main
-components.
-
-Android kernels use SchedTune, a solution similar to utilization clamping, to
-bias both 'frequency selection' and 'task placement'. This series provides the
-foundation to add similar features to mainline while focusing, for the
-time being, just on schedutil integration.
-
-
-References
-==========
-
-[1] Message-ID: <20190509130215.GV2623@hirez.programming.kicks-ass.net>
-    https://lore.kernel.org/lkml/20190509130215.GV2623@hirez.programming.kicks-ass.net/
-
-[2] Message-ID: <20180911162827.GJ1100574@devbig004.ftw2.facebook.com>
-    https://lore.kernel.org/lkml/20180911162827.GJ1100574@devbig004.ftw2.facebook.com/
-
-[3] Energy Aware Scheduling
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/scheduler/sched-energy.txt?h=v5.1
-
-[4] Expressing per-task/per-cgroup performance hints
-    Linux Plumbers Conference 2018
-    https://linuxplumbersconf.org/event/2/contributions/128/
-
-
-Patrick Bellasi (16):
-  sched/core: uclamp: Add CPU's clamp buckets refcounting
-  sched/core: uclamp: Add bucket local max tracking
-  sched/core: uclamp: Enforce last task's UCLAMP_MAX
-  sched/core: uclamp: Add system default clamps
-  sched/core: Allow sched_setattr() to use the current policy
-  sched/core: uclamp: Extend sched_setattr() to support utilization
-    clamping
-  sched/core: uclamp: Reset uclamp values on RESET_ON_FORK
-  sched/core: uclamp: Set default clamps for RT tasks
-  sched/cpufreq: uclamp: Add clamps for FAIR and RT tasks
-  sched/core: uclamp: Add uclamp_util_with()
-  sched/fair: uclamp: Add uclamp support to energy_compute()
-  sched/core: uclamp: Extend CPU's cgroup controller
-  sched/core: uclamp: Propagate parent clamps
-  sched/core: uclamp: Propagate system defaults to root group
-  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
-  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
-
- Documentation/admin-guide/cgroup-v2.rst |  50 ++
- include/linux/log2.h                    |  34 +
- include/linux/sched.h                   |  58 ++
- include/linux/sched/sysctl.h            |  11 +
- include/linux/sched/topology.h          |   6 -
- include/uapi/linux/sched.h              |  14 +-
- include/uapi/linux/sched/types.h        |  66 +-
- init/Kconfig                            |  75 +++
- kernel/sched/core.c                     | 797 +++++++++++++++++++++++-
- kernel/sched/cpufreq_schedutil.c        |  22 +-
- kernel/sched/fair.c                     |  44 +-
- kernel/sched/rt.c                       |   4 +
- kernel/sched/sched.h                    | 123 +++-
- kernel/sysctl.c                         |  16 +
- 14 files changed, 1276 insertions(+), 44 deletions(-)
+We can throw this patch away from the series.
 
 -- 
-2.21.0
-
+Vitaly
