@@ -2,169 +2,144 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D38CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E584C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118FB2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="L/GFTKif"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC552083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfFURtt (ORCPT
+        id S1726272AbfFURuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:49:49 -0400
-Received: from mail-eopbgr720058.outbound.protection.outlook.com ([40.107.72.58]:10165
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbfFURtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPw6yeHMLDYvjXmsiCQ6cOs0ouwkU25bVG31upgwIic=;
- b=L/GFTKifEV0NYKeY7IAOpVqCqWBoWJz8nVJGgDGEhmzMl0WxmKNytgMXFvFnec+WZXbJaLU6w693Zzt2j5xczHrrQSXXAZ82CW57o6GuSYdImaQPSfJ076KB6T+YG5J1Jsw7ncGleO3DfPbayJYoUeEXZ9ZRPmKyql0ayUDarsE=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
- CH2PR02MB6344.namprd02.prod.outlook.com (52.132.231.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Fri, 21 Jun 2019 17:49:46 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::b9dd:11e0:7fca:ba55]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::b9dd:11e0:7fca:ba55%5]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 17:49:45 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Thread-Topic: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Thread-Index: AQHVIHtLLdGbOE767U2XbDHU36aibaamNrSAgAA5XPA=
-Date:   Fri, 21 Jun 2019 17:49:45 +0000
-Message-ID: <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
- <20190621141553.GA16650@kroah.com>
-In-Reply-To: <20190621141553.GA16650@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e3b7eb22-b9a7-4d72-d7c5-08d6f670d92c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6344;
-x-ms-traffictypediagnostic: CH2PR02MB6344:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CH2PR02MB6344DEA04135533B6CF9995BCBE70@CH2PR02MB6344.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(39860400002)(136003)(376002)(189003)(52314003)(199004)(51914003)(13464003)(53546011)(76116006)(6116002)(66066001)(25786009)(73956011)(53936002)(486006)(6246003)(52536014)(66946007)(478600001)(6506007)(71200400001)(5660300002)(9686003)(107886003)(8936002)(68736007)(14454004)(55016002)(99286004)(8676002)(81166006)(4326008)(71190400001)(7696005)(6916009)(7736002)(76176011)(33656002)(6306002)(81156014)(14444005)(11346002)(256004)(74316002)(64756008)(66446008)(66556008)(476003)(26005)(3846002)(66476007)(86362001)(316002)(966005)(305945005)(2906002)(54906003)(229853002)(102836004)(446003)(6436002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6344;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AfVR0KQFt3r0fVp8NnJVct55M/Nicu968ob9SKLi+zN6/UUZPXLpPdqKV5UeP5Am41NhjpTZnpYbSluYY5e8m0lKV7QMV3uJHncF9JHMeU5MZW0o+wvKobuk1R0T56ZKJp9tuh5vwRMoPMhJwZEK77ZuymoRh/3p14AxjTU/yUnCh8QErX00RQDsn5YxJD3ZrHHvbBZ/gsjG3J+aapDuAojALOglzTFVMfbcXw5J6QlUbfA0Zn4uGP6EHym80GmD8ZqgVowg/GIAKzPyTqrt1HNYlFfHh7SEe1JHFlUAlM4VxfZCdZL8r/q12W/aUw0FLGOOJr62pxUgbNyFEqUBc+7oNjmx4HXvr9uiCXa1DO6oWp90B6inhNST63McP6LpA+z6Wrc1RSZw+/Rq+oxaxAOJZn2y9HGh1CthQLwt2wI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Jun 2019 13:50:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35330 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbfFURut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:50:49 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LHlF5i040290;
+        Fri, 21 Jun 2019 13:50:28 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t9245vs7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 13:50:27 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5LHkeKD018149;
+        Fri, 21 Jun 2019 17:50:26 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04dal.us.ibm.com with ESMTP id 2t8hrp5v4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 17:50:26 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LHoQJ714877672
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 17:50:26 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14243B2065;
+        Fri, 21 Jun 2019 17:50:26 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB212B2067;
+        Fri, 21 Jun 2019 17:50:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jun 2019 17:50:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1118F16C1854; Fri, 21 Jun 2019 10:50:27 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 10:50:27 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        frederic@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Message-ID: <20190621175027.GA23260@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190619181903.GA14233@linux.ibm.com>
+ <20190620121032.GU3436@hirez.programming.kicks-ass.net>
+ <20190620160118.GQ26519@linux.ibm.com>
+ <20190620211019.GA3436@hirez.programming.kicks-ass.net>
+ <20190620221336.GZ26519@linux.ibm.com>
+ <20190621105503.GI3436@hirez.programming.kicks-ass.net>
+ <20190621121630.GE26519@linux.ibm.com>
+ <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+ <20190621133414.GF26519@linux.ibm.com>
+ <20190621174104.GA7519@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3b7eb22-b9a7-4d72-d7c5-08d6f670d92c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 17:49:45.8319
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: draganc@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6344
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621174104.GA7519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 10:41:04AM -0700, Paul E. McKenney wrote:
+> On Fri, Jun 21, 2019 at 06:34:14AM -0700, Paul E. McKenney wrote:
+> > On Fri, Jun 21, 2019 at 02:29:27PM +0200, Peter Zijlstra wrote:
+> > > On Fri, Jun 21, 2019 at 05:16:30AM -0700, Paul E. McKenney wrote:
+> > > > A pair of full hangs at boot (TASKS03 and TREE04), no console output
+> > > > whatsoever.  Not sure how these changes could cause that, but suspicion
+> > > > falls on sched_tick_offload_init().  Though even that is a bit strange
+> > > > because if so, why didn't TREE01 and TREE07 also hang?  Again, looking
+> > > > into it.
+> > > 
+> > > Pesky details ;-)
+> > 
+> > And backing out to the earlier patch removes the hangs, though statistical
+> > insignificance and all that.
+> 
+> And purists might argue that four failures out of four attempts does not
+> constitute true statistical significance, but too bad.  If I interpose
+> a twork pointer in sched_tick_offload_init()'s initialization, it seems
+> to work fine, give or take lack of statistical significance.  This is
+> surprising, so I am rerunning with added parentheses in the atomic_set()
+> expression.
 
+Huh.  This works, albeit only once:
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Friday 21 June 2019 15:16
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
->=20
-> On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
-> > This patchset is adding the full Soft Decision Forward Error
-> > Correction (SD-FEC) driver implementation, driver DT binding and
-> > driver documentation.
-> >
-> > Forward Error Correction (FEC) codes such as Low Density Parity
-> > Check (LDPC) and turbo codes provide a means to control errors in
-> > data transmissions over unreliable or noisy communication
-> > channels. The SD-FEC Integrated Block is an optimized block for
-> > soft-decision decoding of these codes. Fixed turbo codes are
-> > supported directly, whereas custom and standardized LDPC codes
-> > are supported through the ability to specify the parity check
-> > matrix through an AXI4-Lite bus or using the optional programmable
-> > (PL)-based support logic. For the further information see
-> > https://www.xilinx.com/support/documentation/ip_documentation/
-> > sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-> >
-> > This driver is a platform device driver which supports SDFEC16
-> > (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-> > Turbo code decoding. LDPC codes can be specified on
-> > a codeword-by-codeword basis, also a custom LDPC code can be used.
-> >
-> > The SD-FEC driver exposes a char device interface and supports
-> > file operations: open(), close(), poll() and ioctl(). The driver
-> > allows only one usage of the device, open() limits the number of
-> > driver instances. The driver also utilize Common Clock Framework
-> > (CCF).
-> >
-> > The control and monitoring is supported over ioctl system call.
-> > The features supported by ioctl():
-> > - enable or disable data pipes to/from device
-> > - configure the FEC algorithm parameters
-> > - set the order of data
-> > - provide a control of a SDFEC bypass option
-> > - activates/deactivates SD-FEC
-> > - collect and provide statistical data
-> > - enable/disable interrupt mode
->=20
-> Is there any userspace tool that talks to this device using these custom
-> ioctls yet?
->=20
-Tools no, but could be the customer who is using the driver.
+	int __init sched_tick_offload_init(void)
+	{
+		struct tick_work *twork;
+		int cpu;
 
+		tick_work_cpu = alloc_percpu(struct tick_work);
+		BUG_ON(!tick_work_cpu);
+		for_each_possible_cpu(cpu) {
+			twork = per_cpu_ptr(tick_work_cpu, cpu);
+			atomic_set(&twork->state, TICK_SCHED_REMOTE_OFFLINE);
+		}
 
-> Doing a one-off ioctl api is always a risky thing, you are pretty much
-> just creating brand new system calls for one piece of hardware.
->=20
+		return 0;
+	}
 
-Why is that wrong and what is the risk?
-What would you propose?
-Definitely, I have to read about this.
+This does not work:
 
-> Anyway, I took the first 3 patches here because they looked sane.  and
-> stopped when I ran into the ioctl problem...
->=20
+	int __init sched_tick_offload_init(void)
+	{
+		int cpu;
 
+		tick_work_cpu = alloc_percpu(struct tick_work);
+		BUG_ON(!tick_work_cpu);
+		for_each_possible_cpu(cpu)
+			atomic_set(&(per_cpu(tick_work_cpu, cpu)->state), TICK_SCHED_REMOTE_OFFLINE);
 
-Thanks for these 3
+		return 0;
+	}
 
-Dragan
+I will run more tests on the one that worked only once.  In the meantime,
+feel free to tell me what stupid thing I did with the parentheses.
 
-> thanks,
->=20
-> greg k-h
+								Thanx, Paul
