@@ -2,383 +2,241 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A85C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD69C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFB9214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC8A208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gxKjqDK2";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="m5PX7xTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfFUIVR (ORCPT
+        id S1726376AbfFUIVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:21:17 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57243 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfFUIVR (ORCPT
+        Fri, 21 Jun 2019 04:21:39 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:45792 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbfFUIVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:21:17 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 60E4A1C0006;
-        Fri, 21 Jun 2019 08:21:07 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 10:22:22 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
-Message-ID: <20190621082222.4j3oghm7oevgt32n@uno.localdomain>
-References: <20190618213406.7667-1-ezequiel@collabora.com>
- <20190618213406.7667-3-ezequiel@collabora.com>
+        Fri, 21 Jun 2019 04:21:39 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 94F83C1DA2;
+        Fri, 21 Jun 2019 08:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561105298; bh=+0mIyvJBLClGsxruSsPsfgTxslczmUvzJKQYi2tmbCQ=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=gxKjqDK2IWnfAl3ekNZ/sdQ3k6bfuRIfFlLqUxVo9nIdG3t9JgwhDW+CFfXWuZHMT
+         /obijMr8J1jVrD/3OQxLqv0pwZxPBekdCGFIotlZQXssRaQ4YI4YuNHctAS78uNYcL
+         5MxvoOJpBHW+k5EFCLpTtpT6YowzdV+69CHTr+j7LPmHah7Z62hW8d4PRCaAQ7xu6D
+         zKFJ73Wtbdr+mVaYgwWNk+5K0mv8UGKm4ax45norzAYR6kHiM7+ViAWuMwCWBennfC
+         BNPDnoEooPL0hyniXyRFnaCkMfrmywBV3Bbx0FnhbfaqYyJEwPNB4EEPCFtgOOCisv
+         eU7zc5ox5+mYg==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 334E1A006B;
+        Fri, 21 Jun 2019 08:21:35 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 21 Jun 2019 01:21:35 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 21 Jun 2019 01:21:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CUzOOBadhZ/0tia0A9we1vD6MQR52XgJAEgoBzq34uU=;
+ b=m5PX7xTgCAHnnElJqSC+q5nXWVXhThKx8vUMSPW1bVa/zJ38FUR2cO5oMw307oEnqY4j2qeDI8ue+949RyYj2MbgABDTpF2oGT1rRzT9P9toXsRHKl+kSwVjlyOmAtOH48a9i4/mtQ0abkNt74WscAO3LCaVjlQscx5qtMKloV8=
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
+ DM6PR12MB2651.namprd12.prod.outlook.com (20.176.116.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Fri, 21 Jun 2019 08:21:34 +0000
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::bdd6:53d6:a062:dc8c]) by DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::bdd6:53d6:a062:dc8c%6]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 08:21:34 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: dw-edma: fix unnecessary stack usage
+Thread-Topic: [PATCH] dmaengine: dw-edma: fix unnecessary stack usage
+Thread-Index: AQHVJQ8ei0TWXaDq2U2RvdidznC0v6alyWew
+Date:   Fri, 21 Jun 2019 08:21:33 +0000
+Message-ID: <DM6PR12MB401006CA0446C71E36786E75DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <20190617131733.2429469-1-arnd@arndb.de>
+In-Reply-To: <20190617131733.2429469-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTkyYWI3NWJlLTkzZmQtMTFlOS05ODg1LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw5MmFiNzViZi05M2ZkLTExZTktOTg4NS1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjE1MTciIHQ9IjEzMjA1NTc4ODkyMzA5?=
+ =?us-ascii?Q?NjE1MSIgaD0iRG80Q0hnT2d6MFJ3NDIwTktJRnhWL3djQkZvPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFC?=
+ =?us-ascii?Q?WGpFdFZDaWpWQVM0VFoveFhOTVFvTGhObi9GYzB4Q2dPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a978c7d4-b523-4ea6-ddef-08d6f62178ca
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB2651;
+x-ms-traffictypediagnostic: DM6PR12MB2651:
+x-microsoft-antispam-prvs: <DM6PR12MB26513B5556F91658A81CBAA5DAE70@DM6PR12MB2651.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(396003)(39860400002)(366004)(189003)(199004)(74316002)(7736002)(86362001)(71190400001)(6246003)(66476007)(66946007)(54906003)(486006)(14444005)(102836004)(7696005)(110136005)(6506007)(11346002)(446003)(53546011)(186003)(26005)(76176011)(66556008)(476003)(2906002)(53936002)(55016002)(6436002)(316002)(68736007)(9686003)(25786009)(71200400001)(3846002)(5660300002)(99286004)(8936002)(52536014)(229853002)(81166006)(256004)(73956011)(14454004)(66066001)(66446008)(76116006)(305945005)(33656002)(4326008)(6116002)(8676002)(81156014)(64756008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB2651;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: H2pCjIxfWmY69A9chP0DnUhAHTc1nJftEhVJeWOFKPuCMnbJhLiMmQg7LM+1AwZqIeu1lBZqJt4eYnivIQe7D416Xa/PniFhhwG1TwQz0U2M7yXIsaZijmUhiGhj07k9N5clYJ3X7QsagLRjzuIvshoJ+CWLUIfys2iFmSCn06qbbCyIymSqtqlRomDHI4I9JG+GLoRm0fh3nW465tVU8Gk3BJ2q4qOrXa9U3xlTnw5VLZu67wYwrtWP5sALJuf+ZzXvRgmT6DJRkgOR+A0GuyZ3w7WmTrpKBQeVdfjdWd1YnMfISnQmkWmmbVP2+93izZUBWLN3qY69S1PNgR3y41caVfZzqD/fBTYTDkXMMlqkEFgrrgQYRkJWhkgWoIGGAhqXYcWgM+NlNoHxBYsIluF9HTv9Y0Tfvx1YoPsMge8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="idwq5rt32qaze3qf"
-Content-Disposition: inline
-In-Reply-To: <20190618213406.7667-3-ezequiel@collabora.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: a978c7d4-b523-4ea6-ddef-08d6f62178ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 08:21:33.9219
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gustavo@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2651
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---idwq5rt32qaze3qf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Mon, Jun 17, 2019 at 14:16:45, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Hi Ezequiel,
-   just a few minor comments. Thanks for this new iteration.
+> Putting large constant data on the stack causes unnecessary overhead
+> and stack usage:
+>=20
+> drivers/dma/dw-edma/dw-edma-v0-debugfs.c:285:6: error: stack frame size o=
+f 1376 bytes in function 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-th=
+an=3D]
 
-On Tue, Jun 18, 2019 at 06:34:05PM -0300, Ezequiel Garcia wrote:
-> Add an optional CRTC gamma LUT support, and enable it on RK3288.
-> This is currently enabled via a separate address resource,
-> which needs to be specified in the devicetree.
->
-> The address resource is required because on some SoCs, such as
-> RK3288, the LUT address is after the MMU address, and the latter
-> is supported by a different driver. This prevents the DRM driver
-> from requesting an entire register space.
->
-> The current implementation works for RGB 10-bit tables, as that
-> is what seems to work on RK3288.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+I had that warning at the beginning of the development, that's why I=20
+divided the debugfs entries into several subfunctions. Perhaps my=20
+configuration has configured a bigger stack frame size than your=20
+configuration.
+
+>=20
+> Mark the variable 'static const' in order for the compiler to move it
+> into the .rodata section where it does no such harm.
+
+Ok, sounds good.
+Thanks.
+
+>=20
+> Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs s=
+upport")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Changes from RFC:
-> * Request (an optional) address resource for the LUT.
-> * Drop support for RK3399, which doesn't seem to work
->   out of the box and needs more research.
-> * Support pass-thru setting when GAMMA_LUT is NULL.
-> * Add a check for the gamma size, as suggested by Ilia.
-> * Move gamma setting to atomic_commit_tail, as pointed
->   out by Jacopo/Laurent, is the correct way.
-> ---
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 106 ++++++++++++++++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
->  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
->  4 files changed, 118 insertions(+)
->
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> index 1c69066b6894..bf9ad6240971 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> @@ -16,6 +16,7 @@
->  #include "rockchip_drm_fb.h"
->  #include "rockchip_drm_gem.h"
->  #include "rockchip_drm_psr.h"
-> +#include "rockchip_drm_vop.h"
->
->  static int rockchip_drm_fb_dirty(struct drm_framebuffer *fb,
->  				 struct drm_file *file,
-> @@ -128,6 +129,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
->
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->
-> +	rockchip_drm_vop_gamma_set(old_state);
-> +
->  	drm_atomic_helper_commit_modeset_enables(dev, old_state);
->
->  	drm_atomic_helper_commit_planes(dev, old_state,
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index 12ed5265a90b..5b6edbe2673f 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -137,6 +137,7 @@ struct vop {
->
->  	uint32_t *regsbak;
->  	void __iomem *regs;
-> +	void __iomem *lut_regs;
->
->  	/* physical map length of vop register */
->  	uint32_t len;
-> @@ -1153,6 +1154,94 @@ static void vop_wait_for_irq_handler(struct vop *vop)
->  	synchronize_irq(vop->irq);
->  }
->
-> +static bool vop_dsp_lut_is_enable(struct vop *vop)
-> +{
-> +	return vop_read_reg(vop, 0, &vop->data->common->dsp_lut_en);
-> +}
-> +
-> +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
-> +{
-> +	struct drm_color_lut *lut = crtc->state->gamma_lut->data;
-> +	int i;
-
-unsigned i
-
-> +
-> +	for (i = 0; i < crtc->gamma_size; i++) {
-> +		u32 word;
-
-here and below you could declare and initialize in one line. Matter of
-tastes, up to you.
-
-> +
-> +		word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
-> +		       (drm_color_lut_extract(lut[i].green, 10) << 10) |
-> +			drm_color_lut_extract(lut[i].blue, 10);
-> +		writel(word, vop->lut_regs + i * 4);
-> +	}
-> +}
-> +
-> +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
-> +			       struct drm_crtc_state *old_state)
-> +{
-> +	int idle, ret, i;
-
-idle and i could be unsigned
-
-> +
-> +	spin_lock(&vop->reg_lock);
-> +	VOP_REG_SET(vop, common, dsp_lut_en, 0);
-> +	vop_cfg_done(vop);
-> +	spin_unlock(&vop->reg_lock);
-> +
-> +	ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
-> +			   idle, !idle, 5, 30 * 1000);
-> +	if (ret)
-> +		return;
-> +
-> +	spin_lock(&vop->reg_lock);
-> +
-> +	if (crtc->state->gamma_lut) {
-> +		if (!old_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
-> +					      old_state->gamma_lut->base.id))
-> +			vop_crtc_write_gamma_lut(vop, crtc);
-> +	} else {
-
-i could also be declared here...
-
-> +		for (i = 0; i < crtc->gamma_size; i++) {
-> +			u32 word;
-> +
-> +			word = (i << 20) | (i << 10) | i;
-> +			writel(word, vop->lut_regs + i * 4);
-> +		}
-
-I might be confused, but are you here configuring a linear LUT table?
-Isn't this equivalent to have it disabled?
-
-> +	}
-> +
-> +	VOP_REG_SET(vop, common, dsp_lut_en, 1);
-> +	vop_cfg_done(vop);
-> +	spin_unlock(&vop->reg_lock);
-> +}
-> +
-> +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
-> +				   struct drm_crtc_state *crtc_state)
-> +{
-> +	struct vop *vop = to_vop(crtc);
-> +
-> +	if (vop->lut_regs && crtc_state->color_mgmt_changed &&
-> +	    crtc_state->gamma_lut) {
-> +		int len;
-> +
-> +		len = drm_color_lut_size(crtc_state->gamma_lut);
-> +		if (len != crtc->gamma_size) {
-
-Don't you accept LUT tables whose size is < that the maximum
-crtc->gamma_size ?
-
-> +			DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
-> +				      len, crtc->gamma_size);
-> +			return -EINVAL;
-> +		}
-> +	}
-
-Most (but not all) functions in this file have an empty line before the
-return closing the function.
-
-> +	return 0;
-> +}
-> +
-> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state)
-> +{
-> +	struct drm_crtc_state *old_crtc_state;
-> +	struct drm_crtc *crtc;
-> +	int i;
-
-unsigned i ?
-
-I'm glad you've been able to verify atomic_flush was not the right
-place where to update the LUT tables, as my testing is limited to
-run kms++ tests and I didn't notice any particular artifact. Thanks
-for checking!
-
-
-> +
-> +	for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
-> +		struct vop *vop = to_vop(crtc);
-> +
-> +		if (vop->lut_regs && crtc->state->color_mgmt_changed)
-> +			vop_crtc_gamma_set(vop, crtc, old_crtc_state);
-> +	}
-> +}
-> +
->  static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
->  				  struct drm_crtc_state *old_crtc_state)
->  {
-> @@ -1205,6 +1294,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
->
->  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
->  	.mode_fixup = vop_crtc_mode_fixup,
-> +	.atomic_check = vop_crtc_atomic_check,
->  	.atomic_flush = vop_crtc_atomic_flush,
->  	.atomic_enable = vop_crtc_atomic_enable,
->  	.atomic_disable = vop_crtc_atomic_disable,
-> @@ -1323,6 +1413,7 @@ static const struct drm_crtc_funcs vop_crtc_funcs = {
->  	.disable_vblank = vop_crtc_disable_vblank,
->  	.set_crc_source = vop_crtc_set_crc_source,
->  	.verify_crc_source = vop_crtc_verify_crc_source,
-> +	.gamma_set = drm_atomic_helper_legacy_gamma_set,
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-ed=
+ma/dw-edma-v0-debugfs.c
+> index affa1ccaf7a0..42739508c0d8 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> @@ -48,7 +48,7 @@ static struct {
+>  } lim[2][EDMA_V0_MAX_NR_CH];
+> =20
+>  struct debugfs_entries {
+> -	char					name[24];
+> +	const char				*name;
+>  	dma_addr_t				*reg;
 >  };
->
->  static void vop_fb_unref_worker(struct drm_flip_work *work, void *val)
-> @@ -1480,6 +1571,10 @@ static int vop_create_crtc(struct vop *vop)
->  		goto err_cleanup_planes;
->
->  	drm_crtc_helper_add(crtc, &vop_crtc_helper_funcs);
-> +	if (vop_data->lut_size) {
-> +		drm_mode_crtc_set_gamma_size(crtc, vop_data->lut_size);
-> +		drm_crtc_enable_color_mgmt(crtc, 0, false, vop_data->lut_size);
-> +	}
->
->  	/*
->  	 * Create drm_planes for overlay windows with possible_crtcs restricted
-> @@ -1776,6 +1871,17 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->  	if (IS_ERR(vop->regs))
->  		return PTR_ERR(vop->regs);
->
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut");
-> +	if (res) {
-> +		if (!vop_data->lut_size) {
-> +			DRM_DEV_ERROR(dev, "no gamma LUT size defined\n");
-> +			return -EINVAL;
-> +		}
-> +		vop->lut_regs = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(vop->lut_regs))
-> +			return PTR_ERR(vop->lut_regs);
-> +	}
-> +
->  	vop->regsbak = devm_kzalloc(dev, vop->len, GFP_KERNEL);
->  	if (!vop->regsbak)
->  		return -ENOMEM;
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> index 2149a889c29d..bd1bcd5a14e9 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> @@ -7,6 +7,8 @@
->  #ifndef _ROCKCHIP_DRM_VOP_H
->  #define _ROCKCHIP_DRM_VOP_H
->
-> +#include <drm/drm_atomic.h>
-> +
->  /*
->   * major: IP major version, used for IP structure
->   * minor: big feature change under same structure
-> @@ -67,6 +69,7 @@ struct vop_common {
->  	struct vop_reg dither_down_mode;
->  	struct vop_reg dither_down_en;
->  	struct vop_reg dither_up;
-> +	struct vop_reg dsp_lut_en;
->  	struct vop_reg gate_en;
->  	struct vop_reg mmu_en;
->  	struct vop_reg out_mode;
-> @@ -170,6 +173,7 @@ struct vop_data {
->  	const struct vop_win_yuv2yuv_data *win_yuv2yuv;
->  	const struct vop_win_data *win;
->  	unsigned int win_size;
-> +	unsigned int lut_size;
->
->  #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
->  #define VOP_FEATURE_INTERNAL_RGB	BIT(1)
-> @@ -373,4 +377,7 @@ static inline int scl_vop_cal_lb_mode(int width, bool is_yuv)
->  }
->
->  extern const struct component_ops vop_component_ops;
-> +
-> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state);
-> +
->  #endif /* _ROCKCHIP_DRM_VOP_H */
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> index 7b9c74750f6d..30d49eff3670 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> @@ -593,6 +593,7 @@ static const struct vop_common rk3288_common = {
->  	.dither_down_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 2),
->  	.pre_dither_down = VOP_REG(RK3288_DSP_CTRL1, 0x1, 1),
->  	.dither_up = VOP_REG(RK3288_DSP_CTRL1, 0x1, 6),
-> +	.dsp_lut_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 0),
->  	.data_blank = VOP_REG(RK3288_DSP_CTRL0, 0x1, 19),
->  	.dsp_blank = VOP_REG(RK3288_DSP_CTRL0, 0x3, 18),
->  	.out_mode = VOP_REG(RK3288_DSP_CTRL0, 0xf, 0),
-> @@ -641,6 +642,7 @@ static const struct vop_data rk3288_vop = {
->  	.output = &rk3288_output,
->  	.win = rk3288_vop_win_data,
->  	.win_size = ARRAY_SIZE(rk3288_vop_win_data),
-> +	.lut_size = 1024,
->  };
->
->  static const int rk3368_vop_intrs[] = {
-> --
-> 2.20.1
->
+> =20
+> --=20
+> 2.20.0
 
---idwq5rt32qaze3qf
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0Mk74ACgkQcjQGjxah
-VjwF7xAArrs95MgtbrsJ7VWb0XwM5Mpw42oM+y34c7di9P06kR89XHy+Q/hXAx2z
-UIa7Hv9rT+Uj4EMO9VWsNpaLSHYIbJwtx/L2z71yTyisev9qgUog3U/aUU8iHihp
-gnrgZGj7Q+kIGEs0Sq0OL5q7l39znI1+/72fJT4GkecASAkgoX0WPZWnr/+fK+qQ
-iOUFCdpK2w0V4PHpC3tux/9fw+NL7BoB6yT/jZeoNp06LKpuTyr/3up4lOPLiKpj
-tYXmrD891EjZUAiOqb3vsLD26UOoPuYmKPXuAlK74cf/9RRkgys2cCoFI8MA/7Et
-zv3Z0UaADiPSbAQmXmThdcIOqC97gmBCRVYHpga9sfkIdHPe4PAwsqHHb1GWtmv1
-uFPqzSoXE41aPGP3vPwiKFtJ5q+QfmgOhsj65fx6YcC58j87n6ZAxKto84S29out
-jAnxkzPNeK0WnjfcvE8FiunZmbC1NGYuoPK/IHdw++2Cra1x6/3p7FKlFR0kDB8/
-4C+mlnHPayxdk85ZEEGby8FyVP9qB3gRtvmlABXMUEguprOOPxAvBJ7j/xVM+NWH
-cAxlsEUF23NH8ypFH7hWCx+BDlaCIpgpDLjvriRdlQsKrbdf9vyCFqL5Rj8fVGuO
-CYbd5FHEp0nDFjfMEfbzlttYOGVcdKGxbnZ4ndzjsge2dQJq3cw=
-=9VG0
------END PGP SIGNATURE-----
-
---idwq5rt32qaze3qf--
