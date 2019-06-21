@@ -8,106 +8,202 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801D1C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545852085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50822085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICMNVRkN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c68jQJgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfFUBVL (ORCPT
+        id S1726960AbfFUBVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:21:11 -0400
-Received: from mail-yw1-f74.google.com ([209.85.161.74]:39034 "EHLO
-        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfFUBVE (ORCPT
+        Thu, 20 Jun 2019 21:21:17 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:45518 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfFUBVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:21:04 -0400
-Received: by mail-yw1-f74.google.com with SMTP id w127so4883146ywe.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:21:03 -0700 (PDT)
+        Thu, 20 Jun 2019 21:21:01 -0400
+Received: by mail-pf1-f201.google.com with SMTP id i27so3246912pfk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=knoEDxerDamiS2udwBAyDKB2ttd1lX+80CF4AC/SyM0=;
-        b=ICMNVRkNz9HnJz3EvoIc4iF32ARr2jxl8GgTxe7lk2BN+XJU+KaLeMD/xZw/RUgzBj
-         2IL4z04wtDp23HqSdMnyrxoaA16Rk6s7u8X92iR3qnSMgGiAALWsSPXk8Rbm5iZf1HFJ
-         AKcA2cV/jHmxmTRZu1LPNcYoeYkmR1BjKdhDUXgEAN2OyQgMW1krbjk+tbEoV/1+MYP5
-         /Uq42xpHhwGYRr2fefqC2TK7cE5w8u6XMt4GStffGhwP6FZ2bof1USBItw3kW7Kd7giP
-         GHViyL8q45sG3E0i5Do1T6WQHdYVQaRRGdkUud8BrJPUj45c8qJIwU9nXrpeons+BrZ/
-         k/PQ==
+        bh=9IKEhDS9kxNf+hGzBv54zcBuApEcoDpMeguZDjGavUE=;
+        b=c68jQJgieWay1PoGnvINsjlX2fEmfo+CsuOc1McNqW1CrQPHHwDdMjaDY3EF97grMG
+         YmbsornuvMNiMDs6Js/wPfcH6zVDjPG/y8tDkH8+uxhhHAPysNwQu1PeIYHo9Z32+fkH
+         ttitmJz2t+NQWK11NmEVIUQIILNfMgkllTUR31S/Haiqi1oBfCXgitGeUR9i2yZkU3Rx
+         4eChJiBsHPWtMa8hhYPFx7cpIXA9S3HBizrBUXvfAbnz/eCDu6c8QNdH9lPtVMsgHoHz
+         12WeuGMcmNswHHXm1JSXozii/S5x0Rt0/g4iktYOaujIvPQX2HbGkBgwaNZCFVegNplC
+         82IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=knoEDxerDamiS2udwBAyDKB2ttd1lX+80CF4AC/SyM0=;
-        b=g2O7RgEOhd49d/FPTH61wKIanZYGc0k7imZePrvkHnZJ9V6BztxkHmYhxQG74tiBOq
-         0CkW4Kx3Yf/eYEpIYRTL/0cB2PqhsFeCMb+0krm43g5EnVAYrClBOjUS8eEGhy+fFs98
-         I4juGXwqZEE81Ptbyw/RMgDZ0QBmzuvS82zGiLGYoN/+6Vbh5scnHthDAh9wyjzwr2Ot
-         PhZFu328Pvf20r4Za9lDvoFTejX+5m7Pml5GUDzS4jWTnUlnKj8JR6b+6791O8Vt4dCJ
-         awexLhHGuTJImrQ5damaYgpRokVnEUeHAD+5D6vsC18zh3HIVuHQoRbh0Gb21PApv1Hr
-         hfSg==
-X-Gm-Message-State: APjAAAWnsq2d0p4/EWoCEINOSLW60UVo8eSf4vuE8XyxV7xd48zEYyKd
-        uNrSdQYtYEWB8DPkgkHUhbIuQuWeEn1RC8sMG6A/Fw==
-X-Google-Smtp-Source: APXvYqzXtKc4q/eOrcelOahjOBOrBEBeNLXGOpYukdIfoX1WsAoG+47EYNVhHraiGgoP/Z3FQm4pLmztSWSJawWS+XNZAw==
-X-Received: by 2002:a81:590a:: with SMTP id n10mr7812986ywb.187.1561080063114;
- Thu, 20 Jun 2019 18:21:03 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:19:41 -0700
+        bh=9IKEhDS9kxNf+hGzBv54zcBuApEcoDpMeguZDjGavUE=;
+        b=jZ4gBQ4c59gF4O+WHIONZv9PBi1E6uIkkeJ07cuLPfAxZ3tRo6L9ytGxXXa1ceG+J1
+         gbuC7TvenXt9C8nyD0BsrB7Ir/M0StiDhOAO8fFhRorx4lRPJmttlAqOLlqMVQX2cYwK
+         lWBdI3rW/VbKPxjbiCezRLRmFi8rcd1YKXqwBz4zhvVZqZdRDSrBVmout5LiV48rIT26
+         XEJp8lYb30XXDuDonWEUZtnScVZEDpiH7jg93xa9zM049tDsAKCaz1L68MMwWtQQdkZU
+         G/ilz63RLI9+spsJpS1no3VFvBaMCsAXT8cU4DQUsfIZbKnK9JVCTZMw5fsg2RqgS8DH
+         Yg1w==
+X-Gm-Message-State: APjAAAUdKFXFYXRmqT8Zk6RJrlcF5ayjEGPASCnzjPHnbGj19Lx4HuuS
+        /YTQrTyH9yVloKtbOuYKnB/l5oc7orHd4nbB774Zyg==
+X-Google-Smtp-Source: APXvYqweMkq5FzjDhqfY2pVZOb8qoyyCsXZbG7ODesqMqRJ5WZaxARh+zG574/4sb9tU/XU9nGZtYyg3xVKgSFcZDonUzw==
+X-Received: by 2002:a63:374a:: with SMTP id g10mr15221482pgn.31.1561080060541;
+ Thu, 20 Jun 2019 18:21:00 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:19:40 -0700
 In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
-Message-Id: <20190621011941.186255-31-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-30-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190621011941.186255-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V33 30/30] efi: Restrict efivar_ssdt_load when the kernel is
- locked down
+Subject: [PATCH V33 29/30] tracefs: Restrict tracefs when the kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-api@vger.kernel.org,
         Matthew Garrett <matthewgarrett@google.com>,
         Matthew Garrett <mjg59@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org
+        Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-efivar_ssdt_load allows the kernel to import arbitrary ACPI code from an
-EFI variable, which gives arbitrary code execution in ring 0. Prevent
-that when the kernel is locked down.
+Tracefs may release more information about the kernel than desirable, so
+restrict it when the kernel is locked down in confidentiality mode by
+preventing open().
 
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-efi@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- drivers/firmware/efi/efi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/tracefs/inode.c           | 41 +++++++++++++++++++++++++++++++++++-
+ include/linux/security.h     |  1 +
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 42 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 55b77c576c42..a9ea649e0512 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -31,6 +31,7 @@
- #include <linux/acpi.h>
- #include <linux/ucs2_string.h>
- #include <linux/memblock.h>
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 7098c49f3693..f6c04fa8e415 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -24,6 +24,7 @@
+ #include <linux/parser.h>
+ #include <linux/magic.h>
+ #include <linux/slab.h>
 +#include <linux/security.h>
  
- #include <asm/early_ioremap.h>
+ #define TRACEFS_DEFAULT_MODE	0700
  
-@@ -242,6 +243,9 @@ static void generic_ops_unregister(void)
- static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
- static int __init efivar_ssdt_setup(char *str)
- {
-+	if (security_is_locked_down(LOCKDOWN_ACPI_TABLES))
+@@ -31,6 +32,21 @@ static struct vfsmount *tracefs_mount;
+ static int tracefs_mount_count;
+ static bool tracefs_registered;
+ 
++static int default_open_file(struct inode *inode, struct file *filp)
++{
++	struct dentry *dentry = filp->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return -EINVAL;
++
++	if (security_is_locked_down(LOCKDOWN_TRACEFS))
 +		return -EPERM;
 +
- 	if (strlen(str) < sizeof(efivar_ssdt))
- 		memcpy(efivar_ssdt, str, strlen(str));
- 	else
++	real_fops = dentry->d_fsdata;
++	return real_fops->open(inode, filp);
++}
++
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+ 				 size_t count, loff_t *ppos)
+ {
+@@ -50,6 +66,13 @@ static const struct file_operations tracefs_file_operations = {
+ 	.llseek =	noop_llseek,
+ };
+ 
++static const struct file_operations tracefs_proxy_file_operations = {
++	.read =		default_read_file,
++	.write =	default_write_file,
++	.open =		default_open_file,
++	.llseek =	noop_llseek,
++};
++
+ static struct tracefs_dir_ops {
+ 	int (*mkdir)(const char *name);
+ 	int (*rmdir)(const char *name);
+@@ -225,6 +248,12 @@ static int tracefs_apply_options(struct super_block *sb)
+ 	return 0;
+ }
+ 
++static void tracefs_destroy_inode(struct inode *inode)
++{
++	if (S_ISREG(inode->i_mode))
++		kfree(inode->i_fop);
++}
++
+ static int tracefs_remount(struct super_block *sb, int *flags, char *data)
+ {
+ 	int err;
+@@ -260,6 +289,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
+ 
+ static const struct super_operations tracefs_super_operations = {
+ 	.statfs		= simple_statfs,
++	.destroy_inode  = tracefs_destroy_inode,
+ 	.remount_fs	= tracefs_remount,
+ 	.show_options	= tracefs_show_options,
+ };
+@@ -393,6 +423,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ {
+ 	struct dentry *dentry;
+ 	struct inode *inode;
++	struct file_operations *proxy_fops;
+ 
+ 	if (!(mode & S_IFMT))
+ 		mode |= S_IFREG;
+@@ -406,8 +437,16 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
+ 		return failed_creating(dentry);
+ 
++	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
++	if (!proxy_fops)
++		return failed_creating(dentry);
++
++	dentry->d_fsdata = fops ? (void *)fops :
++		(void *)&tracefs_file_operations;
++	memcpy(proxy_fops, dentry->d_fsdata, sizeof(struct file_operations));
++	proxy_fops->open = default_open_file;
+ 	inode->i_mode = mode;
+-	inode->i_fop = fops ? fops : &tracefs_file_operations;
++	inode->i_fop = proxy_fops;
+ 	inode->i_private = data;
+ 	d_instantiate(dentry, inode);
+ 	fsnotify_create(dentry->d_parent->d_inode, dentry);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 2563a9e3b415..040e7fc33397 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -100,6 +100,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_KPROBES,
+ 	LOCKDOWN_BPF,
+ 	LOCKDOWN_PERF,
++	LOCKDOWN_TRACEFS,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+ 
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index a6f7b0770e78..7dc601f06cd3 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_KPROBES] = "use of kprobes",
+ 	[LOCKDOWN_BPF] = "use of bpf",
+ 	[LOCKDOWN_PERF] = "unsafe use of perf",
++	[LOCKDOWN_TRACEFS] = "use of tracefs",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+ 
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
