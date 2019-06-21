@@ -2,106 +2,150 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800D0C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0AAC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553AA2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561118786;
-	bh=6Xy5QXXBwxgPq6XWIndAOwXvjNxtgD83yFkqktAytVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1jmJiO571kFxkGkUE3w6Kuzc/TI0D6luK4lQmRHyychzPDzg3HovX9BIpFlfzYT+L
-	 XJqjrj86LrqHXxTnpII9CYse1H5PGfNjnf4gPTtLN9ZSqCyyoDPNyz7v1Gccqx07xK
-	 d5p44Aah0huGthdUMzONqn71JYh2w7QBp6DIrnWk=
+	by mail.kernel.org (Postfix) with ESMTP id 73F7A21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:06:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dZY/zS5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfFUMGZ (ORCPT
+        id S1726757AbfFUMGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:06:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46148 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFUMGY (ORCPT
+        Fri, 21 Jun 2019 08:06:35 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:50735 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfFUMGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6Xy5QXXBwxgPq6XWIndAOwXvjNxtgD83yFkqktAytVU=; b=sk+VLDjQ4XzED7IkqO695oVfl
-        bwg3tzlU1zAZDGoE4t1NXUU64XCbmYfAcTrjgXz4JiU8VdvyR6RV9cJ+jJeqTwh3fjk5M4CsKSpsJ
-        gDpUV1VVVPh21eb2ty1LnJhgKs8wU7C9PWClMZES13+IinHVnUuu53h4fA57Oun8/SUmQ=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1heIJ2-0002R1-5K; Fri, 21 Jun 2019 12:06:12 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 3689A440046; Fri, 21 Jun 2019 13:06:11 +0100 (BST)
-Date:   Fri, 21 Jun 2019 13:06:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Waibel Georg <Georg.Waibel@sensor-technik.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCH] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Message-ID: <20190621120610.GG5316@sirena.org.uk>
-References: <1560938081892.33415@sensor-technik.de>
+        Fri, 21 Jun 2019 08:06:35 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190621120633euoutp02b745dbb774b1f77130b98d517655dc77~qNUV7Tj_u1628716287euoutp02h
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:06:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190621120633euoutp02b745dbb774b1f77130b98d517655dc77~qNUV7Tj_u1628716287euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561118793;
+        bh=wGGB2gDtNWG7yizzChvNAFBQWnf3VqAELSTaAtE7vS4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dZY/zS5xyTSzY4Fw1J6fjICFzrSSXBGkvtiMgbYHPLeP5fQlv23R0afqRQ/cKP4Hc
+         DD0TpkZlMPM1qPNX8IGx1EzNR30d2lhnNdtZ551rQCgDDNxc51NlLKaQGGwxJ32Z0c
+         WN6+oriMBtb2EW+RuuKRB09vCjd/bMEGvWigavGg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190621120632eucas1p24898bee4b69c79fb4754857af9460303~qNUVWL4Gl1704417044eucas1p2D;
+        Fri, 21 Jun 2019 12:06:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 83.21.04325.848CC0D5; Fri, 21
+        Jun 2019 13:06:32 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621120631eucas1p1e60ddd1453700646cd5047ad827bc4d4~qNUUiC8Qq1150611506eucas1p1m;
+        Fri, 21 Jun 2019 12:06:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190621120631eusmtrp223f06cc93abf6e2f27356ccb6bf424ee~qNUUT_oGx0548605486eusmtrp2L;
+        Fri, 21 Jun 2019 12:06:31 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-48-5d0cc8480065
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.21.04146.748CC0D5; Fri, 21
+        Jun 2019 13:06:31 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190621120631eusmtip2f1b4a55176fe14258383b48918d52a15~qNUT6JzGS0297302973eusmtip2i;
+        Fri, 21 Jun 2019 12:06:31 +0000 (GMT)
+Subject: Re: [PATCH][next] video: fbdev: atmel_lcdfb: remove redundant
+ initialization to variable ret
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
+        Colin King <colin.king@canonical.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <fae5c288-cf9b-5b54-1aeb-06126f140b84@samsung.com>
+Date:   Fri, 21 Jun 2019 14:06:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3d1h++6StbrqEHAg"
-Content-Disposition: inline
-In-Reply-To: <1560938081892.33415@sensor-technik.de>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612141356.riiesqub4zvxafh3@M43218.corp.atmel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djPc7oeJ3hiDZ5OlbZof7eM3eL36l42
+        iytf37NZbL0lbbHp8TVWixN9H1gtLu+aw2bxYu11VovtmxcyO3B6zFtT7TGroZfN4373cSaP
+        zUvqPe78WMro8XmTXABbFJdNSmpOZllqkb5dAlfG77mzWAtOslX07L7A1sC4nbWLkYNDQsBE
+        4tguni5GLg4hgRWMEm2d65kgnC+MErs2v2CDcD4zSvw4upe9i5ETrGP/+mPMEInljBJX+p+x
+        QjhvGSW2v/kMViUskC7xet5PFpCEiEAv0Kw/U8AcZoFpzBLtMxewglSxCVhJTGxfxQhi8wrY
+        SeydtIENxGYRUJVYcvcXE4gtKhAhcf/YBlaIGkGJkzOfsIDYnAIuEh+n7wKrYRYQl7j1ZD6U
+        LS+x/e0csPskBE6xS1x9s4AN4nAXia9XF7JA2MISr45vgXpIRuL/zvlMEA3rGCX+dryA6t7O
+        KLF88j+obmuJw8cvggONWUBTYv0ufYiwo8SKU6uYIGHJJ3HjrSDEEXwSk7ZNZ4YI80p0tAlB
+        VKtJbFi2gQ1mbdfOlcwTGJVmIXltFpJ3ZiF5ZxbC3gWMLKsYxVNLi3PTU4uN81LL9YoTc4tL
+        89L1kvNzNzECE9Tpf8e/7mDc9yfpEKMAB6MSD++BWdyxQqyJZcWVuYcYJTiYlUR4eXJ4YoV4
+        UxIrq1KL8uOLSnNSiw8xSnOwKInzVjM8iBYSSE8sSc1OTS1ILYLJMnFwSjUwzo2zuFO8+thT
+        2Qurs459TI1a+Ga22BYFSw+GPJ9nOyst94XIVve/Mjq2fMkk175zNn2rwhZZPPqs3rZOtTrx
+        ZqDA6csMIsYT1k74JaS/3XTfc1G2TXGxoqrWn+PXH172SP/5jINlXDLS6eLK7kZOjftbV94X
+        dcsXSSl6/GK63ML17cyMvTc/KLEUZyQaajEXFScCAB1Prw9MAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xe7ruJ3hiDU7vVbFof7eM3eL36l42
+        iytf37NZbL0lbbHp8TVWixN9H1gtLu+aw2bxYu11VovtmxcyO3B6zFtT7TGroZfN4373cSaP
+        zUvqPe78WMro8XmTXABblJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1N
+        SmpOZllqkb5dgl7G77mzWAtOslX07L7A1sC4nbWLkZNDQsBEYv/6Y8xdjFwcQgJLGSVad39k
+        6mLkAErISBxfXwZRIyzx51oXG0TNa0aJ9utr2EASwgLpEq/n/WQBSYgI9DNKTF4yHaqqiUli
+        35QnYA6zwDRmiRnLf7CAtLAJWElMbF/FCGLzCthJ7J20AWwUi4CqxJK7v5hAbFGBCIkz71ew
+        QNQISpyc+QTM5hRwkfg4fRdYDbOAusSfeZeYIWxxiVtP5kPF5SW2v53DPIFRaBaS9llIWmYh
+        aZmFpGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwIjcduzn5h2MlzYGH2IU4GBU4uE9
+        MIs7Vog1say4MvcQowQHs5IIL08OT6wQb0piZVVqUX58UWlOavEhRlOg5yYyS4km5wOTRV5J
+        vKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsaOK8nPPCbG7DLUNrQ4
+        fvmG6XpRX4s1DoFnFqq3ZUxfs1nb0IqXY57V+7M/FhRvYUo/zGmo0RP1ODYpbaYUzyHBhgKp
+        OWuOr/1SElNXJMJ09ag/2xnOU+0uuyd5KFZt0ky5sPiK+sJvmy/XPD7hfHX/V8teByWG9/3b
+        /54UzGYqPHU5zTMs9ooSS3FGoqEWc1FxIgBPO8a23gIAAA==
+X-CMS-MailID: 20190621120631eucas1p1e60ddd1453700646cd5047ad827bc4d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190612141513epcas2p32873b9574f918732b4cf8a6838cdd54d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190612141513epcas2p32873b9574f918732b4cf8a6838cdd54d
+References: <20190611170913.20913-1-colin.king@canonical.com>
+        <37ac8530-6601-a1a0-37e0-8c6d5d1702cd@microchip.com>
+        <CGME20190612141513epcas2p32873b9574f918732b4cf8a6838cdd54d@epcas2p3.samsung.com>
+        <20190612141356.riiesqub4zvxafh3@M43218.corp.atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---3d1h++6StbrqEHAg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 6/12/19 4:13 PM, Ludovic Desroches wrote:
+> On Wed, Jun 12, 2019 at 09:55:30AM +0200, Nicolas Ferre - M43238 wrote:
+>> On 11/06/2019 at 19:09, Colin King wrote:
+>>> External E-Mail
+>>>
+>>>
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> Currently variable ret is being initialized with -ENOENT however that
+>>> value is never read and ret is being re-assigned later on. Hence this
+>>> assignment is redundant and can be removed.
+>>>
+>>> Addresses-Coverity: ("Unused value")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>
+>> Indeed:
+>> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> 
+> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com> 
 
-On Wed, Jun 19, 2019 at 09:54:48AM +0000, Waibel Georg wrote:
-> In case the requested gpio property is not found in the device tree, some
-> callers of gpiod_get_from_of_node() expect a return value of NULL, others
-> expect -ENOENT.
-> In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-> Currently it gets a NULL, which breaks the loop that tries all
-> gpio_suffixes. The result is that a gpio property is not found, even
-> though it is there.
+Patch queued for v5.3, thanks.
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---3d1h++6StbrqEHAg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0MyDIACgkQJNaLcl1U
-h9Ce/gf/YPxi8n+w5bYAPtpy4hSIHZ/x4vLS/FxaCkM3TdPBix4ZZyClGg1pQMb3
-/VzCXGrjhUGQ7SRmqEAPKnzhZZsPU7QwbMOWwdM6s0tNeTL3qR6s1ZupYXSo3M8P
-X62jCDKfmUFr7ilslBjtgljbsw95j5b5qKBt3rCnsvQP7zYR4go8NLxYD0hrPK2Z
-hnZherbhbmIZo1Dn5n0rpdK7Ci3mXR3E7Mt/qHVHgCR43xHk1QPIChvzzoC/G05Z
-Sz34TnSTJo2qukyYhzL7ThMpaVxgkUKSTGZJsT/p79oO8OHpRrW3QVvoRp9dj2cY
-bYGkcmlParaEOWVxkdXg2j3i4NNbLw==
-=cGhj
------END PGP SIGNATURE-----
-
---3d1h++6StbrqEHAg--
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
