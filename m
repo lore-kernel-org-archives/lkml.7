@@ -2,102 +2,141 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4FEC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E73C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A352089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC9B21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V3nO6VlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfFUJVP (ORCPT
+        id S1726553AbfFUJVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:21:15 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35903 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfFUJVP (ORCPT
+        Fri, 21 Jun 2019 05:21:40 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14710 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:21:15 -0400
-X-IronPort-AV: E=Sophos;i="5.63,399,1557180000"; 
-   d="scan'208";a="388479067"
-Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 11:21:13 +0200
-Date:   Fri, 21 Jun 2019 11:21:11 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     kernel-janitors@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>
-Subject: Re: Coccinelle: Add a SmPL script for the reconsideration of redundant
- dev_err() calls
-In-Reply-To: <13890878-9e5f-f297-7f7c-bcc1212d83b7@web.de>
-Message-ID: <alpine.DEB.2.20.1906211119430.3740@hadrien>
-References: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de> <alpine.DEB.2.21.1906202046550.3087@hadrien> <34d528db-5582-5fe2-caeb-89bcb07a1d30@web.de> <alpine.DEB.2.21.1906202110310.3087@hadrien> <13890878-9e5f-f297-7f7c-bcc1212d83b7@web.de>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Fri, 21 Jun 2019 05:21:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0ca1a10000>; Fri, 21 Jun 2019 02:21:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 21 Jun 2019 02:21:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 21 Jun 2019 02:21:38 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 09:21:38 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 09:21:38 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 21 Jun 2019 09:21:38 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0ca19f0000>; Fri, 21 Jun 2019 02:21:37 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
+        <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V5 1/3] PCI: dwc: Add API support to de-initialize host
+Date:   Fri, 21 Jun 2019 14:51:25 +0530
+Message-ID: <20190621092127.17930-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561108898; bh=fN2JTX+5AuNYUERGSOTuFE9qCq3O4/KmTsAayCd2QBQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=V3nO6VlQmL4cptg8jWGkYe8PQetrxgCipi0fEsJ6+84s+2fXT3Rl3a8V5UWkVxgLu
+         uE5GCy3Rd8thzJ1CJtz+XvvEhhrlHT7+HFKR3wU7WXoeMNgdajlxDc7rVZTtiwUJHF
+         iBCaIeiO2l8jPFBc1MAAoSclo+ny0a4Wszx4Jafbh5ur0Pr3jOx+MDJ2Xmiruf0Dw/
+         DXIn92PRuq0og8PeHzIITPkW4BLAI8CnxaJyxwAwbCqDQgufdA7KeUQZHw2E6YuLj1
+         FlT3AR4MMW21MQe9B2YDZoVqrnbxpWuDetwA9SdedhO6nRh3WkCBR1M3LZwBJWRuHv
+         6tnMCHD7A19+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add an API to group all the tasks to be done to de-initialize host which
+can then be called by any DesignWare core based driver implementations
+while adding .remove() support in their respective drivers.
 
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Changes from v4:
+* None
 
-On Fri, 21 Jun 2019, Markus Elfring wrote:
+Changes from v3:
+* Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+  dw_pcie_free_msi() API to mimic init path
 
-> > I think that something like
-> >
-> > if (IS_ERR(e))
-> > {
-> > <+...
-> > *dev_err(...)
-> > ...+>
-> > }
-> >
-> > would be more appropriate.  Whether there is a return or not doesn't
-> > really matter.
->
-> Do you find the following SmPL change specification useful and acceptable?
->
->
-> @deletion depends on patch@
-> expression e;
-> @@
->  e = devm_ioremap_resource(...);
->  if (IS_ERR(e))
-> (
-> -{
-> -   dev_err(...);
->     return (...);
+Changes from v2:
+* Rebased on top of linux-next top of the tree branch
 
-I still don't see the point of specifying return.  Why not just S, where S
-is a statement metavariable?
+Changes from v1:
+* s/Designware/DesignWare
 
-julia
+ drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+ 2 files changed, 13 insertions(+)
 
-> -}
-> |{
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 77db32529319..d069e4290180 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
+ 
++void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++	pci_stop_root_bus(pp->root_bus);
++	pci_remove_root_bus(pp->root_bus);
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
++}
++
+ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				     u32 devfn, int where, int size, u32 *val,
+ 				     bool write)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index b8993f2b78df..14762e262758 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+ void dw_pcie_free_msi(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
++void dw_pcie_host_deinit(struct pcie_port *pp);
+ int dw_pcie_allocate_domains(struct pcie_port *pp);
+ #else
+ static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+@@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static inline void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++}
++
+ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+ {
+ 	return 0;
+-- 
+2.17.1
 
-I realize that you confuse conciseness with readability, but it would
-really look better to have the | on a line by itself.
-
-julia
-
->  <+...
-> -   dev_err(...);
->  ...+>
->  }
-> )
->
->
-> Would this approach need a version check for the Coccinelle software?
-
-Why would that be necessary?
