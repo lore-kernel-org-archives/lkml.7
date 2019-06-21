@@ -2,108 +2,77 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75EDC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB027C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A18A20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="U/ePaK8t"
+	by mail.kernel.org (Postfix) with ESMTP id AE54D20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfFUI7B (ORCPT
+        id S1726360AbfFUJBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:59:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35144 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfFUI7A (ORCPT
+        Fri, 21 Jun 2019 05:01:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40784 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:59:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p1so2683499plo.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4bJVSAowx8t/cxxp9cv6smvKfxDPXT8u9MmQ6mO3sDU=;
-        b=U/ePaK8tXP07xOTAuQcgBMObbVfGYNIWLv5JXHrC5etbmv0PLidyI7dGDcGub6NzPk
-         OHv9lW6GFHNXgrfDj3m5lUrYq1hQlVS1+MI3Lz7lHy2yCepJdruSBdccuJLfeIADbSNu
-         Ccq1sF1hvqdVW1wrYIylCbqe7GPkJsxHr739eJ/wDxzC68wt98mFKeubQM0N68ieAJXb
-         j731IoJKsTNL8rtnpEK5uXS78IuzD3DLUChHI/tD53j9VR3p03GFKeTGEyHUTQtGiCkn
-         DnVqEDj9m6TEjx4X8Ie79gZWjBtRuh70od7VZ8woEvshnFl5tqGU0wNflNQ5Bq4olbzn
-         oWbg==
+        Fri, 21 Jun 2019 05:01:22 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a15so6150365qtn.7;
+        Fri, 21 Jun 2019 02:01:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4bJVSAowx8t/cxxp9cv6smvKfxDPXT8u9MmQ6mO3sDU=;
-        b=YBvE80BNpEHkX9ouSDy4IFsKJvN3ptdeQXT3iJPEHMPRjRxNOIae3dLSHXvv2wTIlQ
-         359Vh3hzmS5lK25jTJmVrPJ27vGpR/A8JFgIXpzuvuB4g0orCs++Nl5SV5KjXjc5IC62
-         icyiOumgLI77M5MStPocSRN/++WTkA1o0eI0bo0ySvDoR+cXVJZG+QTJAJ+oZzAVany2
-         HrPUwJO2MmK8QgOb6yY00+QLG9Z1bZfgHqM1FeYQ7126nD5cMUK/RuJ7ibxcBQW68jJR
-         ZfYUWoJqCBesqLxeKi3KrPPrwKC0aA81N7gOXXNcIuZh7ner4HhwA6V0V+MVuxz0KNC5
-         36eg==
-X-Gm-Message-State: APjAAAWCxLG7tm7xSKZ0Vjs/QsuNJ8Mb1+7aXTs7KiztoTpTdyoQioT/
-        +VUjq5PGW4GLJtRmk8L5UMS9Ag==
-X-Google-Smtp-Source: APXvYqx8jg2L3co0DYC0wN++64bpnfJeWPOTJom1WsTagX1aHyyqtbHPWcDS6G7HVNDTWBpYaIuMIA==
-X-Received: by 2002:a17:902:583:: with SMTP id f3mr66988266plf.137.1561107539850;
-        Fri, 21 Jun 2019 01:58:59 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id y19sm1796356pfe.150.2019.06.21.01.58.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 01:58:59 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Daniel Drake <drake@endlessm.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] Bluetooth: btrtl: HCI reset on close for RTL8822BE
-Date:   Fri, 21 Jun 2019 16:58:40 +0800
-Message-Id: <20190621085840.6341-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4HzRDcacmGtqmGfE244Fy6uOAK8PIsDaZn0yNCgG68w=;
+        b=WC4ldDEqh98+jAK2BHEm6qqEMG9dtnaGvDu3ntwspsgB00CmgLUBlCt7EDfZd2KOMy
+         ap8r+bTKn2gTmbE5DVHCYrIIZCAkxSvZz8wcj28ckx/Xj35J0u8KcqSmAPnCMnjX+EH4
+         6eDgOJZJ58IpRi8JKwcXX81iA1ZvLQKPmoqZBYo697zFqkHZmSOvi2yISRyz0f5iZDfT
+         ts1wzluzC77gTqvHrNNY80yLsaW+11DwID26tNFBOEcrFOFe1Rbu4udL/dxmgoCrAG56
+         1Uhv96QUXp15dlQG+7w78hS3LnSucMLMVznZSFKExvKF8mVxsO4G3XOIq/btiADuX6+Q
+         DfIg==
+X-Gm-Message-State: APjAAAUj8xhDtmMArrAMdIJKN82uVEBzoyfuVhhy3qo0RYPVDG0VWgM3
+        YdWty6fteiMjYnl3s/S/QtJvvsRZdLqCi6VAIb8=
+X-Google-Smtp-Source: APXvYqz2Q7BuEoztoQTk2y/k79111s2N2dTh7un3E/p/9yKUTVgU6nYSZUxZoOhohB0/YOF1w6kvgu0HzqpoPMsRoUY=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr81342975qtd.18.1561107681874;
+ Fri, 21 Jun 2019 02:01:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190617131918.2518727-1-arnd@arndb.de> <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 21 Jun 2019 11:01:01 +0200
+Message-ID: <CAK8P3a1qhj_YYTo8aKgbdufjMFXfa3WNdqY6m=222fFxOcQaZg@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
-after on-off several times.  Bluetooth daemon sets BT mode failed when
-this issue happens.
+On Fri, Jun 21, 2019 at 10:53 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
 
-bluetoothd[1576]: Failed to set mode: Failed (0x03)
+> >
+> >  static struct dentry                         *base_dir;
+> >  static struct dw_edma                                *dw;
+> > -static struct dw_edma_v0_regs                        *regs;
+> > +static struct dw_edma_v0_regs                        __iomem *regs;
+>
+> Shouldn't the __iomem be next to dw_edma_v0_regs instead of the variable
+> name? I saw other drivers putting the __iomem next to the variable type,
+> therefore I assume it's the typical coding style.
 
-If BT is tunred off, then turned on again, it works correctly again.
-This patch makes RTL8822BE BT reset on close to fix this issue.
+Yes, that seems more common indeed. Do you want to fix up
+both patches yourself when you apply them or should I send a new version?
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- drivers/bluetooth/btrtl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 208feef63de4..7e9930f0f231 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -608,10 +608,11 @@ int btrtl_download_firmware(struct hci_dev *hdev,
- 	case RTL_ROM_LMP_8723A:
- 	case RTL_ROM_LMP_3499:
- 		return btrtl_setup_rtl8723a(hdev, btrtl_dev);
-+	case RTL_ROM_LMP_8822B:
-+		set_bit(HCI_QUIRK_RESET_ON_CLOSE, &hdev->quirks);
- 	case RTL_ROM_LMP_8723B:
- 	case RTL_ROM_LMP_8821A:
- 	case RTL_ROM_LMP_8761A:
--	case RTL_ROM_LMP_8822B:
- 		return btrtl_setup_rtl8723b(hdev, btrtl_dev);
- 	default:
- 		rtl_dev_info(hdev, "rtl: assuming no firmware upload needed\n");
--- 
-2.20.1
-
+         Arnd
