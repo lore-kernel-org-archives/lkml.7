@@ -2,163 +2,206 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE791C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348CC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E59A2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A3F2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Ew+e7GQy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxdEPz5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfFUTwI (ORCPT
+        id S1726166AbfFUTxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 15:52:08 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42830 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfFUTwI (ORCPT
+        Fri, 21 Jun 2019 15:53:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53380 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFUTxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 15:52:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y13so5870939lfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:52:06 -0700 (PDT)
+        Fri, 21 Jun 2019 15:53:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x15so7308861wmj.3;
+        Fri, 21 Jun 2019 12:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wso9AT0PLE8YSVz4mFagGPGoqkgjnJ4hhl/knflL07M=;
-        b=Ew+e7GQyGGn3VMUMvlmlNk529darBgRUJ/dcJFSuTVhcptTW0Osp8jReJotYp3YmKA
-         f6eeGrLRGAbz3L8Of3mQVbcQDLORcn3KXYXhPmuLEmtkhvEZh+lMjKapiefa6/uiNl2W
-         sMOLt5EglU5sNbD9GTGtO5A5tcs2ho6YQ53d4IWO8ykmDYB7C1u0OYGN4kKeIMmQbB8t
-         sCsUfdPPmodLtBotaF1sfyp3QcvscC+eoN6kkXc3skMo0VaCzrVmg+NLHLSyIaA9tmok
-         kdq69iSb8NJ1pNNEYW3c7xUwEyznK+nW7o7MOGRmdKVvN+I8ayYLDei7JYMyJxs3C0XZ
-         O92A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eAnKudYoq6jZczgn9fG4XqCKdkFdaZnAytNFcfCmgvE=;
+        b=fxdEPz5FzKVKBa9ar1R4Ypm9ApuhJ5cxEDRojtGb8AOjecS6PQsIiiczljs19rTEbj
+         o34Ad8cn8nVibM9bxJ0nVL3BpbN8yONpH4/ylD6hxYI/deeLtuO9bm5O+IS68RQ6EiFF
+         Jp5QV5aIaF//3oviBF7c4u1sWZXx+qArjQGny/k8CpP9515YNv82E/AP4c/2Ok2BmpPD
+         HyLoyGEUkXLA0l7dcoYmSuGZkHN2kGWOV8lb4GLs8/vqKHToiqwuvUdAxU4i8KLWkg63
+         mXSQew6DLmEU26P/CuTv9bLDBcLo4oDUgZT1RgR9fgHI+icPPkHQfvknf/A4veSv3eA0
+         1p0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wso9AT0PLE8YSVz4mFagGPGoqkgjnJ4hhl/knflL07M=;
-        b=Jku6nR1XGndjCunXsTZCChv5lF9AA0TF9y41AM8ch7T9c/P9XNy1/+TiriuN8ENeEp
-         ie7bYnBwQlNI3ZLct2iP69omkwkAX2/dkA/HIOHLZB3fzze7t5KSZsJNWLuuWJ3+vrX2
-         Fg5wSdhV7k6pzrYZGU/tvV8Kaerp+fQlfeOkAVvCNZi0LjDGRgdD6rVCBaG6GJsTeQnq
-         Ba0MDNUGQjppvJkNvTIM0s+cZxOnCwpAF046Nn63Y8UKSvhnIlWuUusLskZDb8QmwSPm
-         RSOCOrz89ElwZ73YBrv1fhwYWX4rXBftx4C+8xH8Edt7iAU7MrR4y6TxkYIaiNLz7rcU
-         X7vQ==
-X-Gm-Message-State: APjAAAX1Rk4tL+NvBYO747g0AT5qkYwt3RLck0GLmo6fHuEibpVtq8Km
-        jQ6QCorj31C+kracTVFjq2MVF8d4SYg=
-X-Google-Smtp-Source: APXvYqx3uKDLsq5HSFMYR5JCV7tpvJVm6zODfloD79xoOac4SxateHkoi4zxVApNcx1Fez+sYLEylg==
-X-Received: by 2002:a19:ca1e:: with SMTP id a30mr3669450lfg.163.1561146725828;
-        Fri, 21 Jun 2019 12:52:05 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.87.14])
-        by smtp.gmail.com with ESMTPSA id n3sm513817lfh.3.2019.06.21.12.52.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 12:52:05 -0700 (PDT)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-4-vigneshr@ti.com>
-Organization: Cogent Embedded
-Message-ID: <4d17e914-cd1f-c6fe-b70a-6aae02e0cf4e@cogentembedded.com>
-Date:   Fri, 21 Jun 2019 22:52:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eAnKudYoq6jZczgn9fG4XqCKdkFdaZnAytNFcfCmgvE=;
+        b=fquXHic7ca0ZY210LsV3NLsk6yx5+siz6G7WJSvkV87GNT9pScSn/WzjJJ/nR4RBZn
+         JoSau2slxsoHQKw2rzG9lJKyCth6+NYTbwVUjiWwtNW+9DEFMifHrsLB/OlWKTmZbSxq
+         ZulF2SmWZdaQf0V8XqxGPDSd+k6VlpOiIW6lPWcSd1Knn4HSb/0/qquA2Pv8nX9+v5vZ
+         bej1v7pkvkzz+qAc0Pw6bGqGs1Pxtlje/4sbSPVP0ro4jxugXU5pEEh0SJMafc24Ph5G
+         XODj1bECkP7a05rsX5GxQ3kJvlnTnbGUyfen3gdj7OZwjYA7vOpqXfkV5xeiRB5X7Jxy
+         DFTA==
+X-Gm-Message-State: APjAAAXjThviEyVtz2RjqBiluK7UFEGYMSBkUf2CUHPJfaJdGh4rufLs
+        vlVRhhz6rio6J8FXnPN4b7U=
+X-Google-Smtp-Source: APXvYqzy1XXzS6iArof8LCwkLyMLZk7HtzDHlHevRk5ukuGMoQ+ynlgmqchqWhz4W52tTyJLLVDYHA==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr4863220wml.59.1561146812417;
+        Fri, 21 Jun 2019 12:53:32 -0700 (PDT)
+Received: from debian64.daheim (pD9E297F7.dip0.t-ipconnect.de. [217.226.151.247])
+        by smtp.gmail.com with ESMTPSA id m9sm364524wrn.92.2019.06.21.12.53.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 12:53:31 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hePbH-0006fn-6g; Fri, 21 Jun 2019 21:53:31 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] usb: xhci: handle uPD720201 and uPD720202 w/o ROM
+Date:   Fri, 21 Jun 2019 21:53:31 +0200
+Message-ID: <2243374.tJjtY2ZRGj@debian64>
+In-Reply-To: <20190621085913.8722-3-vkoul@kernel.org>
+References: <20190621085913.8722-1-vkoul@kernel.org> <20190621085913.8722-3-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190620172250.9102-4-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Friday, June 21, 2019 10:59:10 AM CEST Vinod Koul wrote:
+> From: Christian Lamparter <chunkeey@googlemail.com>
+> 
+> This patch adds a firmware check for the uPD720201K8-711-BAC-A
+> and uPD720202K8-711-BAA-A variant. Both of these chips are listed
+> in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
+> devices which need a firmware in order to work as they do not have
+> support to load the firmware from an external ROM.
+> 
+> Currently, the xhci-pci driver is unable to initialize the hcd in
+> this case. Instead it will wait for 30 seconds and cause a timeout
+> in xhci_handshake() and fails.
+> 
+> [    5.116990] xhci_hcd 0000:45:00.0: new USB bus registered ...
+> [   32.335215] xhci_hcd 0000:45:00.0: can't setup: -110
+> [   32.340179] xhci_hcd 0000:45:00.0: USB bus 2 deregistered
+> [   32.345587] xhci_hcd 0000:45:00.0: init 0000:45:00.0 fail, -110
+> [   32.351496] xhci_hcd: probe of 0000:45:00.0 failed with error -110
+> 
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-On 06/20/2019 08:22 PM, Vignesh Raghavendra wrote:
+From what I remember, this was the "backup" patch that just prevented
+a stuck device (since the xhci-pci would trigger the watchdog on the
+powerpc APM82181). I posted because it because I didn't get any reply
+from Greg or Felipe. This patch should be skipable since patch 1/5 adds
+the full loader.
 
-> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-> Bus interface between a host system master and one or more slave
-> interfaces. HyperBus is used to connect microprocessor, microcontroller,
-> or ASIC devices with random access NOR flash memory (called HyperFlash)
-> or self refresh DRAM (called HyperRAM).
+> ---
+>  drivers/usb/host/xhci-pci.c | 59 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
 > 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index 724d0f567d98..65de5e961892 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -711,6 +711,55 @@ static int renesas_fw_download_to_hw(struct pci_dev *pdev,
+>  	return 1;
+>  }
+>  
+> +static int renesas_check_if_fw_dl_is_needed(struct pci_dev *pdev)
+> +{
+> +	int err;
+> +	u8 fw_state;
+> +
+> +	/*
+> +	 * Only the uPD720201K8-711-BAC-A or uPD720202K8-711-BAA-A
+> +	 * are listed in R19UH0078EJ0500 Rev.5.00 as devices which
+> +	 * need a firmware in order to work.
+> +	 *
+> +	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> +	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
+> +	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> +	 */
+> +	if (!((pdev->vendor == PCI_VENDOR_ID_RENESAS) &&
+> +	    ((pdev->device == 0x0015 && pdev->revision == 0x02) ||
+> +	    (pdev->device == 0x0014 &&
+> +	    (pdev->revision == 0x02 || pdev->revision == 0x03)))))
+> +		return 0;
+> +
+> +	/*
+> +	 * Test if the firmware was uploaded and is running.
+> +	 * As most BIOSes will initialize the device for us.
+> +	 */
+> +	err = pci_read_config_byte(pdev, 0xf4, &fw_state);
+> +	if (err)
+> +		return pcibios_err_to_errno(err);
+> +
+> +	/* Check the "Result Code" Bits (6:4) and act accordingly */
+> +	switch (fw_state & 0x70) {
+> +	case 0: /* No result yet */
+> +		dev_err(&pdev->dev, "FW is not ready/loaded yet.");
+> +		return -ENODEV;
+> +
+> +	case BIT(4): /* Success, device should be working. */
+> +		dev_dbg(&pdev->dev, "FW is ready.");
+> +		return 0;
+> +
+> +	case BIT(5): /* Error State */
+> +		dev_err(&pdev->dev, "HW is in an error state.");
+> +		return -ENODEV;
+> +
+> +	default: /* All other states are marked as "Reserved states" */
+> +		dev_err(&pdev->dev, "HW is in an invalid state (%x).",
+> +			(fw_state & 0x70) >> 4);
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  /* called during probe() after chip reset completes */
+>  static int xhci_pci_setup(struct usb_hcd *hcd)
+>  {
+> @@ -765,6 +814,11 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  		return retval;
+>  	};
+>  
+> +	/* Check if this device is a RENESAS uPD720201/2 device. */
+> +	retval = renesas_check_if_fw_dl_is_needed(dev);
+> +	if (retval)
+> +		return retval;
+> +
+>  	driver = (struct hc_driver *)id->driver_data;
+>  
+>  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
+> @@ -966,6 +1020,11 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
+>  	if (pdev->vendor == PCI_VENDOR_ID_INTEL)
+>  		usb_enable_intel_xhci_ports(pdev);
+>  
+> +	/* Check if this device is a RENESAS uPD720201/2 device. */
+> +	retval = renesas_check_if_fw_dl_is_needed(pdev);
+> +	if (retval)
+> +		return retval;
+> +
+>  	if (xhci->quirks & XHCI_SSIC_PORT_UNUSED)
+>  		xhci_ssic_port_unused_quirk(hcd, false);
+>  
 > 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
-> HyperBus operates at >166MHz frequencies.
 
-   s/wrt/WRT/.
 
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> 
-> But, HyperBus memory controllers seem to abstract implementation details
-> and expose a simple MMIO interface to access connected flash.
-> 
-> Add support for registering HyperFlash devices with MTD framework. MTD
-> maps framework along with CFI chip support framework are used to support
-> communicating with flash.
-> 
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller (HBMC) drivers calls hyperbus_register_device() to
-> register a single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> Some HBMC masters need calibration/training sequence[3] to be carried
-> out, in order for DLL inside the controller to lock, by reading a known
-> string/pattern. This is done by repeatedly reading CFI Query
-> Identification String. Calibration needs to be done before trying to detect
-> flash as part of CFI flash probe.
-> 
-> HyperRAM is not supported at the moment.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[...]
-> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
-> new file mode 100644
-> index 000000000000..ead969aad35b
-> --- /dev/null
-> +++ b/include/linux/mtd/hyperbus.h
-> @@ -0,0 +1,86 @@
-[...]
-> +/**
-> + * struct hyperbus_ops - struct representing custom HyperBus operations
-> + * @read16: read 16 bit of data to flash in a single burst. Used to read
 
-   s/to flash/from flash/.
 
-[...]
-> +#endif /* __LINUX_MTD_HYPERBUS_H__ */
-
-   I thought you agreed to add the #defines for the HF commands. Well, I can add them
-as well...
-
-MBR, Sergei
