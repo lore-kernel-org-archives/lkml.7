@@ -2,181 +2,186 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912BC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B12C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463062083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561120340;
-	bh=YxTzR19num6Uu7rdZtU6p08r3wKQbzxjPWJxi0JiuPM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBdbq+AB9g9ohzgh5clGmgnwkXEkDSfWABs4Z65sY2WwgLcOPWpjX3JxGPWMQ/qgS
-	 hUTegmO7pjbW/4EnWMogFGnx780xaUqADC5daTbwfTNc5c41brQcfXOMkE/fM55CZW
-	 bcbiLeTntAwKEBce7/P8nuS0majJHa2T4qcVdYns=
+	by mail.kernel.org (Postfix) with ESMTP id 53D302083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="L6PFeSyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfFUMcT (ORCPT
+        id S1726913AbfFUMcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:32:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfFUMcK (ORCPT
+        Fri, 21 Jun 2019 08:32:21 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:35588 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726852AbfFUMcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:32:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wI0EAuMFs+aVQKSucBM2sTBK5ECXZZNvaUXFQdbT4O4=; b=Z/Hrjvb2vOrimlMt5mDPWKMSvI
-        wQb8866/aqQwkc32XHik2Yc0WpWyMwMUlCLRyg7L0KB4uyFlM4jwWvK9vEHuG4dX/wsLsL0NPUrPg
-        gjuNzpzbYj92/aoTKtILTblRlXMbJSgqFedfHrNFwkr342JgmEoFY4ghU2yhNELLp8325kEqbepp3
-        LtzrDRdylLk3oJSHFTK8m5f1BuBooT5nfheZJkASVjqe7jzZXTuwkWeeb82FCxHEDYvanKYpd32q6
-        31lGYOOH8vN27ZO0Rl9x8k1r5KXpNoeFwm1nm5PkUuu7gQ/uGA5lqQQ/TKDoBa8Uo0Pbh/WXOoUT/
-        jbipsuHA==;
-Received: from [177.97.20.138] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1heIiA-0003xP-G7; Fri, 21 Jun 2019 12:32:10 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1heIi7-0001Ez-RV; Fri, 21 Jun 2019 09:32:07 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH RFC 2/6] ABI: sysfs-driver-mlxreg-io: fix the what fields
-Date:   Fri, 21 Jun 2019 09:32:02 -0300
-Message-Id: <9893c06e102ebeba1d5110fec3fd4807f21c6181.1561118631.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561118631.git.mchehab+samsung@kernel.org>
-References: <cover.1561118631.git.mchehab+samsung@kernel.org>
+        Fri, 21 Jun 2019 08:32:17 -0400
+X-Greylist: delayed 1056 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jun 2019 08:32:15 EDT
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LCE90w017753;
+        Fri, 21 Jun 2019 08:14:20 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2058.outbound.protection.outlook.com [104.47.45.58])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2t89773a3c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 08:14:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FyYOHwacnFb0bb2EWuh1M1zyDXwWyxWNmbSJHKUuIBs=;
+ b=L6PFeSyQNGsqm3VB4vMwKAIfZhG8/5T5ZgKmQJd2ap9N1/z7+iSdKXpHuw/kNu+YJ9MDV4AbafXLJT0e1e1xRlSiuDToYfH6zY+JChbMeYpDkdTsvWQPvvXN5pSpPy4QGpxOxqo3OR+5hBoNqq26q+GLXPLv8SR90cg9KCWBHDI=
+Received: from BN6PR03CA0014.namprd03.prod.outlook.com (2603:10b6:404:23::24)
+ by BY2PR03MB554.namprd03.prod.outlook.com (2a01:111:e400:2c38::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.15; Fri, 21 Jun
+ 2019 12:14:16 +0000
+Received: from CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::205) by BN6PR03CA0014.outlook.office365.com
+ (2603:10b6:404:23::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13 via Frontend
+ Transport; Fri, 21 Jun 2019 12:14:15 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ CY1NAM02FT054.mail.protection.outlook.com (10.152.74.100) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Fri, 21 Jun 2019 12:14:14 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5LCED3H023536
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 21 Jun 2019 05:14:13 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 21 Jun 2019 08:14:13 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V2 2/4] iio: adc: ad7124: Add buffered input support
+Date:   Fri, 21 Jun 2019 15:13:42 +0300
+Message-ID: <20190621121344.24917-2-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621121344.24917-1-mircea.caprioru@analog.com>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(39860400002)(2980300002)(54534003)(199004)(189003)(126002)(54906003)(486006)(336012)(446003)(16586007)(476003)(48376002)(8676002)(426003)(11346002)(2616005)(316002)(50466002)(6916009)(8936002)(246002)(106002)(86362001)(107886003)(50226002)(26005)(76176011)(5660300002)(51416003)(44832011)(7696005)(36756003)(305945005)(2906002)(70206006)(70586007)(47776003)(77096007)(1076003)(478600001)(7636002)(4326008)(186003)(356004)(6666004)(72206003)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB554;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 72820f01-48ac-49f8-0c81-08d6f641fa34
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BY2PR03MB554;
+X-MS-TrafficTypeDiagnostic: BY2PR03MB554:
+X-Microsoft-Antispam-PRVS: <BY2PR03MB554F7EE4C61E203D267AF3981E70@BY2PR03MB554.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-Forefront-PRVS: 0075CB064E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: OuiIKIW9fk9juKBNCjvB1FCHulOE9qsEUusfy8CeqoNTYTt2t5Eu1o3EAdJubBEdRUgxkPkabaLpFMltomoenfXnlpMAu0SdM0WzzXIMhEfEpU7eRz5ixvRN7g6yfPOtXDRvyhC/UN7EYjAF/MLqi17i51aiJWB5KInu4rG0ZoTo4blLmleujXMsl3kmauIgiKozCOf37zkBfycP09++RPO8qNLunYg0F1SxacvLJSyKIbQPFLc51lsk7GYVFthTewdzUmCZueZTXA6A+SDbpsr5QIJTEHZbkb3Ock7TsyCVZ8Yu4PifcVVhcEwUfWtRHbYK6AxmNuQLkyz3F3bE3HrxJzImITggbzvYBBGff0+U826Ul0d+3Ct85cq18FyZ5hduScQkQ4TriLiTxqorE0XBgcRyXPAUeck71B8iJpE=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 12:14:14.4902
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72820f01-48ac-49f8-0c81-08d6f641fa34
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB554
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The author of this file should be given an award for creativity:
-the What: fields on this file technically fulfills the description
-at README. Yet, the way it is, it can't be parsed on a script,
-and if someone would try to do something like:
+This patch adds the option to enable the buffered mode for positive and
+negative inputs. Each option can be enabled independently.
 
-	grep hwmon*/jtag_enable
+In buffered mode, the input channel feeds into a high impedance input stage
+of the buffer amplifier. Therefore, the input can tolerate significant
+source impedances and is tailored for direct connection to external
+resistive type sensors such as strain gages or RTDs.
 
-It wouldn't find anything.
-
-Fix the What fields in a way that it can be parseable by a
-script and other search tools.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- .../ABI/stable/sysfs-driver-mlxreg-io         | 45 ++++++++-----------
- 1 file changed, 19 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 156319fc5b80..3544968f43cc 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -1,5 +1,4 @@
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							asic_health
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
+Changelog v2:
+- nothing changed here
+
+ drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 810234db9c0d..ab52c5e9ecb1 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -61,6 +61,8 @@
+ #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
+ #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
+ #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
++#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
++#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
  
- Date:		June 2018
- KernelVersion:	4.19
-@@ -9,9 +8,8 @@ Description:	This file shows ASIC health status. The possible values are:
+ /* AD7124_FILTER_X */
+ #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+@@ -108,6 +110,8 @@ struct ad7124_chip_info {
+ struct ad7124_channel_config {
+ 	enum ad7124_ref_sel refsel;
+ 	bool bipolar;
++	bool buf_positive;
++	bool buf_negative;
+ 	unsigned int ain;
+ 	unsigned int vref_mv;
+ 	unsigned int pga_bits;
+@@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		else
+ 			st->channel_config[channel].refsel = tmp;
  
- 		The files are read only.
++		st->channel_config[channel].buf_positive =
++			of_property_read_bool(child, "adi,buffered-positive");
++		st->channel_config[channel].buf_negative =
++			of_property_read_bool(child, "adi,buffered-negative");
++
+ 		*chan = ad7124_channel_template;
+ 		chan->address = channel;
+ 		chan->scan_index = channel;
+@@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ static int ad7124_setup(struct ad7124_state *st)
+ {
+ 	unsigned int val, fclk, power_mode;
+-	int i, ret;
++	int i, ret, tmp;
  
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							cpld1_version
--							cpld2_version
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld1_version
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld2_version
- Date:		June 2018
- KernelVersion:	4.19
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -20,8 +18,7 @@ Description:	These files show with which CPLD versions have been burned
+ 	fclk = clk_get_rate(st->mclk);
+ 	if (!fclk)
+@@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
+ 		if (ret < 0)
+ 			return ret;
  
- 		The files are read only.
- 
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							fan_dir
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
- 
- Date:		December 2018
- KernelVersion:	5.0
-@@ -32,8 +29,7 @@ Description:	This file shows the system fans direction:
- 
- 		The files are read only.
- 
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							jtag_enable
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
- 
- Date:		November 2018
- KernelVersion:	5.0
-@@ -43,8 +39,7 @@ Description:	These files show with which CPLD versions have been burned
- 
- 		The files are read only.
- 
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							jtag_enable
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
- 
- Date:		November 2018
- KernelVersion:	5.0
-@@ -87,16 +82,15 @@ Description:	These files allow asserting system power cycling, switching
- 
- 		The files are write only.
- 
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--							reset_aux_pwr_or_ref
--							reset_asic_thermal
--							reset_hotswap_or_halt
--							reset_hotswap_or_wd
--							reset_fw_reset
--							reset_long_pb
--							reset_main_pwr_fail
--							reset_short_pb
--							reset_sw_reset
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_aux_pwr_or_ref
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_asic_thermal
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_halt
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_wd
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_fw_reset
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_long_pb
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_main_pwr_fail
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_short_pb
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sw_reset
- Date:		June 2018
- KernelVersion:	4.19
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -110,11 +104,10 @@ Description:	These files show the system reset cause, as following: power
- 
- 		The files are read only.
- 
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
--						reset_comex_pwr_fail
--						reset_from_comex
--						reset_system
--						reset_voltmon_upgrade_fail
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_pwr_fail
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_comex
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
- 
- Date:		November 2018
- KernelVersion:	5.0
++		tmp = (st->channel_config[i].buf_positive << 1)  +
++			st->channel_config[i].buf_negative;
++
+ 		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
+-		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
++		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
++		      AD7124_CONFIG_IN_BUFF(tmp);
+ 		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
+ 		if (ret < 0)
+ 			return ret;
 -- 
-2.21.0
+2.17.1
 
