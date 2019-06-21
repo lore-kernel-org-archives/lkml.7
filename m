@@ -6,46 +6,36 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED3CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB4EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A426F21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE65A21743
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfFULAe (ORCPT
+        id S1726661AbfFULAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:00:34 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51975 "EHLO
+        Fri, 21 Jun 2019 07:00:49 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51985 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFULAe (ORCPT
+        with ESMTP id S1726260AbfFULAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:00:34 -0400
+        Fri, 21 Jun 2019 07:00:49 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 11FC68057B; Fri, 21 Jun 2019 13:00:19 +0200 (CEST)
-Date:   Fri, 21 Jun 2019 12:59:42 +0200
+        id BCFB98057B; Fri, 21 Jun 2019 13:00:36 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 13:00:36 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-leds@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 20/29] docs: leds: convert to ReST
-Message-ID: <20190621105942.GA24145@amd>
-References: <cover.1560890800.git.mchehab+samsung@kernel.org>
- <b8185b2d816810281a2b712c70518159516785b6.1560890801.git.mchehab+samsung@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 2/2] f2fs: set SBI_NEED_FSCK for xattr corruption case
+Message-ID: <20190621110036.GB24145@amd>
+References: <20190620033615.32284-1-yuchao0@huawei.com>
+ <20190620033615.32284-2-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
 Content-Disposition: inline
-In-Reply-To: <b8185b2d816810281a2b712c70518159516785b6.1560890801.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20190620033615.32284-2-yuchao0@huawei.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,20 +43,17 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---KsGdsel6WgEHnImy
+--ftEhullJWpWg/VHq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue 2019-06-18 17:53:38, Mauro Carvalho Chehab wrote:
-> Rename the leds documentation files to ReST, add an
-> index for them and adjust in order to produce a nice html
-> output via the Sphinx build system.
+On Thu 2019-06-20 11:36:15, Chao Yu wrote:
+> If xattr is corrupted, let's print kernel message and set SBI_NEED_FSCK
+> for further repair.
 >=20
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Reported-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
 
@@ -75,16 +62,16 @@ Acked-by: Pavel Machek <pavel@ucw.cz>
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---KsGdsel6WgEHnImy
+--ftEhullJWpWg/VHq
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl0MuJ4ACgkQMOfwapXb+vLr4wCgr/sTE2xCAfouKtIL4+mRDlDH
-r3gAniPvzpOgYRlsEHIkVK0sPOYobZVO
-=AOCV
+iEYEARECAAYFAl0MuNQACgkQMOfwapXb+vLoWACcCqLfYuyH4Mi2IWSNlk01yEZj
+rT0An11pJWjLh+asN4CZ0b6XALv+BN70
+=Rpu9
 -----END PGP SIGNATURE-----
 
---KsGdsel6WgEHnImy--
+--ftEhullJWpWg/VHq--
