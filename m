@@ -2,133 +2,108 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D41AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C87C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8085221530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207C42089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aVtcCmBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfFUJ0I (ORCPT
+        id S1726506AbfFUJ2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:26:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44234 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUJ0H (ORCPT
+        Fri, 21 Jun 2019 05:28:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51264 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJ2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:26:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x47so6174747qtk.11;
-        Fri, 21 Jun 2019 02:26:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bxv8AIAF+vbWnNHQODpa0e08ZKpZME4xVDCVWGsgOhw=;
-        b=OZ28ist+UGw9clfTiBYOtQoCwj9c4Iz5zgoDMKW/aubIwzEbuc1LWMfBNiHtmPkl37
-         iZOphOl1GVk2IE4eizcsbSbFcJPVgaYJI9+qmfecb1PSKbHp6uhX/jpavZPp4rTem42V
-         q2G/cmKfkrxZUTtkuiy9R7rt5+JZMtc4m4vfT4KwXSFrLoc7QGBCmSH4VNqmRNouptTV
-         vlDicTaNxbHmtbKFjB6i2WBeT7bQhKOKXnCwrom9JGX687xxhlZ8QEMqaNWAdY+8+Xep
-         7n7ksU5vItZnxzACmNq7hYLpvOqLVBtCj6GrTp1Sxmd6W1QJTFJD5MNjOyVqHEeq+ATv
-         F+oA==
-X-Gm-Message-State: APjAAAVHJn6ghLDwmUmZojYR+6erK3+9+fbPZ3K5D+hlCvDBtPvx0SBK
-        SrmlUPD61VK11VupbueZcr2FKy7raMiedDeIZg4=
-X-Google-Smtp-Source: APXvYqzDXDlgUhDVya1nIzv8V9AuOhrjhfu3JkZen+v8YNQ8eyMHK+jnLczU2c3DV20KVdDwtb2kF3rjc5UX+zfvprk=
-X-Received: by 2002:a0c:87bd:: with SMTP id 58mr43431993qvj.62.1561109166469;
- Fri, 21 Jun 2019 02:26:06 -0700 (PDT)
+        Fri, 21 Jun 2019 05:28:54 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5L9ShGD052119;
+        Fri, 21 Jun 2019 04:28:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561109323;
+        bh=hXYs9Tgh/MCqVjZYAsTAfOm1NcAJO5FtGUR6Y+0g89g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aVtcCmBwkEqjFApb0qhvUMPAQ1gOgOuAPCn5fDJL+c1VoPsS33HbE/3yF5altuUbA
+         9o5lPXnsGGp2jlw5E4oLV/PWIKxX+CuMzUpgYGXdei9H0gALDv7EmTwKux378TV3gu
+         0EQ1kmHe3z/YSJEppIqQ6p8Xuk3zNWfRMDLQ4qFU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5L9Shk1105743
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Jun 2019 04:28:43 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
+ Jun 2019 04:28:43 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 21 Jun 2019 04:28:43 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5L9SdDc130391;
+        Fri, 21 Jun 2019 04:28:40 -0500
+Subject: Re: [PATCH V5 2/3] PCI: dwc: Cleanup DBI read and write APIs
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190621092127.17930-1-vidyas@nvidia.com>
+ <20190621092127.17930-2-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <63b59d6b-f6d7-fe4f-f319-6459a146ef36@ti.com>
+Date:   Fri, 21 Jun 2019 14:57:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190614063341.1672-1-fancer.lancer@gmail.com>
- <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org>
-In-Reply-To: <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 11:25:47 +0200
-Message-ID: <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190621092127.17930-2-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 8:19 PM Maciej W. Rozycki <macro@linux-mips.org> wrote:
->
-> On Thu, 20 Jun 2019, Paul Burton wrote:
->
-> > So this seems pretty reasonable. Build testing all our defconfigs only
-> > showed up one issue for decstation_defconfig & decstation_r4k_defconfig:
-> >
-> >   drivers/net/fddi/defza.c: In function 'fza_reads':
-> >   drivers/net/fddi/defza.c:88:17: error: implicit declaration of
-> >     function 'readq_relaxed'; did you mean 'readw_relaxed'?
-> >     [-Werror=implicit-function-declaration]
-> >    #define readq_u readq_relaxed
-> >                    ^~~~~~~~~~~~~
-> >   drivers/net/fddi/defza.c:126:13: note: in expansion of macro 'readq_u'
-> >       *dst++ = readq_u(src++);
-> >                ^~~~~~~
-> >   drivers/net/fddi/defza.c: In function 'fza_writes':
-> >   drivers/net/fddi/defza.c:92:18: error: implicit declaration of
-> >     function 'writeq_relaxed'; did you mean 'writel_relaxed'?
-> >     [-Werror=implicit-function-declaration]
-> >    #define writeq_u writeq_relaxed
-> >                     ^~~~~~~~~~~~~~
-> >   drivers/net/fddi/defza.c:151:4: note: in expansion of macro 'writeq_u'
-> >       writeq_u(*src++, dst++);
-> >       ^~~~~~~~
-> >     CC      net/core/scm.o
-> >   cc1: some warnings being treated as errors
-> >   make[4]: *** [scripts/Makefile.build:279: drivers/net/fddi/defza.o] Error 1
-> >
-> > These uses of readq_relaxed & writeq_relaxed are both conditional upon
-> > sizeof(unsigned long) == 8, ie. upon CONFIG_64BIT=y so they're not going
-> > to present a runtime issue but we need to provide some implementation of
-> > the *q accessors to keep the compiler happy.
-> >
-> > I see a few options:
-> >
-> > 1) We could just have defza.c include <io-64-nonatomic-lo-hi.h> to get
-> >    the appropriate declarations, which should then get optimized away by
-> >    the compiler anyway & never actually be used.
->
->  This, definitely.
+Hi Vidya,
 
-The compiler should generally not be allowed to combine two adjacent
-readl_relaxed() back into a 64-bit load. Only __raw_readl() can be
-combined or split up. If the mips version of the *_relaxed() accessors
-allows the compiler to do this, I would consider that a bug.
+On 21/06/19 2:51 PM, Vidya Sagar wrote:
+> Cleanup DBI read and write APIs by removing "__" (underscore) from their
+> names as there are no no-underscore versions and the underscore versions
+> are already doing what no-underscore versions typically do.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from v4:
+> * This is a new patch in this series
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 16 ++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h | 36 ++++++++++----------
+>  2 files changed, 26 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 9d7c51c32b3b..5d22028d854e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -52,8 +52,8 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -		       size_t size)
+> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> +		     size_t size)
 
-> > 2) We could have defza.h #define its readq_u & writeq_u macros
-> >    differently for CONFIG_32BIT=y kernels, perhaps using
-> >    __compiletime_error to catch any bogus use of them.
-> >
-> > 3) We could do the same in a generic header, though if nobody else has
-> >    needed it so far & this is the only place we need it then maybe it's
-> >    not worth it.
-> >
-> > So I'm thinking option 2 might be best, as below. Having said that I
-> > don't mind option 1 either - it's simple. Maciej do you have any
-> > preference?
->
->  The use of 64-bit operations to access option's packet memory, which is
-> true SRAM, i.e. no side effects, is to improve throughput only and there's
-> no need for atomicity here nor also any kind of barriers, except at the
-> conclusion.  Splitting 64-bit accesses into 32-bit halves in software
-> would not be a functional error here.
+The "base" here was added when we used the same API for both dbi_base and
+dbi_base2. Now that we have separate APIs, we should be able to remove that.
 
-The other property of packet memory and similar things is that you
-basically want memcpy()-behavior with no byteswaps. This is one
-of the few cases in which __raw_readq() is actually the right accessor
-in (mostly) portable code.
-
-       Arnd
+Thanks
+Kishon
