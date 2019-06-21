@@ -2,114 +2,116 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0910EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C582C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D092620673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616B320673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="iSobbUTa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="bBHZ95mC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBeHdfsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFUPkl (ORCPT
+        id S1726553AbfFUPlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:40:41 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:62277 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfFUPkl (ORCPT
+        Fri, 21 Jun 2019 11:41:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44733 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfFUPlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:40:41 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id BB8AA1519F0;
-        Fri, 21 Jun 2019 11:40:39 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=eCa0cXPi9XBzBUPuF5chpLC+AgE=; b=iSobbU
-        TaPTnL33ve//0JDpgGuPB/VlUfriSDvRfPb6IEQLX6zPGtnjxrqeZMaQVDnC8WLf
-        jYwylsxFo4udYPeNEPJ2ZqDfHJkUqv+p6TKVmtft7jhofwhhdeayaJorc8ynz40R
-        2ylUq62Uw79cCBu4hnM8aHblv5O/0HmZX21pg=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id B189C1519ED;
-        Fri, 21 Jun 2019 11:40:39 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=ujoz+ORkKpXgxxOrhRvcnrsHog3Km5DX+cabVH6dv1E=; b=bBHZ95mC8tnpMvvlCHQ4nDFQMAFJtbL5X4Lo9cAu8SWAwx1mcI/5RR9tPG+qQ+zfgim4fq6bHegCcRhS3lFGwn0epu4yxNcHuRoMmB/bY1mK+z7uEwLUqGXFI9otS93wDASBWzb7AvS7MVOYcJ980GkETtu9lQZ95YBztlc5688=
-Received: from yoda.home (unknown [70.82.130.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 2D5FF1519EC;
-        Fri, 21 Jun 2019 11:40:39 -0400 (EDT)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 464DC2DA01C8;
-        Fri, 21 Jun 2019 11:40:38 -0400 (EDT)
-Date:   Fri, 21 Jun 2019 11:40:38 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Fri, 21 Jun 2019 11:41:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so3782782pfe.11;
+        Fri, 21 Jun 2019 08:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJDiq31OV+XOzMvfVzXl+2UwahEbMZev2ZHrV8WxK5E=;
+        b=CBeHdfsAjH/vhHFVhKYolBfVhpk7AU5PIFQxMEcrUxqMTagGV1z3K8iN5P+BDWMAiH
+         4YOSwc/2XYkLD5UudTQzEAWJ3H2/m6/wAK59VqASaWdrqmEA8cOYKjVLWERY97s23i6j
+         3uiVQ6e9SA0egeqbjRZK5yOSTQGsGq27ULHdW4RZvDGUEz3B0E7gwoRpwp8WH/6Bt+S/
+         VvRpPJICbg31ocSKcu5fXhN32BVPubS7QWV7q4e0dwg/kPrML5PY6wHyCfvuV71lw+cf
+         LT6qVxggJCaZ+/7hOxLH9eZyOGmb028d7oqILfgWAGpaJbkfbzGD35RBDwWDzPDElyoJ
+         qXhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJDiq31OV+XOzMvfVzXl+2UwahEbMZev2ZHrV8WxK5E=;
+        b=ug/glARO3tcMNSs+hpM4MK4VbhY3bTxSOnvpA9RvD9+w2PdZRAE/rrFXcWTbCUUi/G
+         Zn7BbFjCUlF5xBKMnIsiLUd5IB/ngjhCyFvQH16V2YaGehUxcpztcOHlrYF4HWJ+4g6Q
+         /2FCI3sn4azmCCj9RBoYxA6bZBRjos/YJcwmg8ZCF11m6jcgM2tNL2Dk9AxDbJ12fh8n
+         MhpXV4fENvak0qI9it1E3U/trE91wuJNfjFCUvcEJrVkYpZLuu+Qg+lRGTi2xPXVDM+z
+         O6ar6KAWuIPj7OvPUlRIb+3/c1Ujzz9YZ6TBt9QavlhWQoCmrZ7VjsFdpQgBZD3mWRvz
+         Lt9A==
+X-Gm-Message-State: APjAAAWFce/urcqEX6iHx2lZwryoiPBFkBvKRrsKTj4iLUh2CbxVtVPJ
+        NvmBlm/A4EsY/hGofBrn95evu7SAC4YB6w==
+X-Google-Smtp-Source: APXvYqwkpj2NQ/IdVQNi2ZOIXe+vJ+m5C2x0CHDk6mvsjFr0zVBFRoEF0zomjold+7YGGDZJZC2C6A==
+X-Received: by 2002:a63:6ec1:: with SMTP id j184mr19205606pgc.225.1561131660887;
+        Fri, 21 Jun 2019 08:41:00 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.13])
+        by smtp.googlemail.com with ESMTPSA id m8sm2556940pjs.22.2019.06.21.08.40.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 08:41:00 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, hch@infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 RESEND] fs: cramfs_fs.h: Fix shifting signed 32-bit
- value by 31 bits problem
-In-Reply-To: <20190618163352.4177-1-puranjay12@gmail.com>
-Message-ID: <nycvar.YSQ.7.76.1906211139330.1558@knanqh.ubzr>
-References: <20190618163352.4177-1-puranjay12@gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        linux-pci@vger.kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>
+Subject: [PATCH v5 0/3] net: fddi: skfp: Use PCI generic definitions instead of private duplicates
+Date:   Fri, 21 Jun 2019 21:10:34 +0530
+Message-Id: <20190621154037.25245-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: EB870A3C-943A-11E9-AB0B-46F8B7964D18-78420484!pb-smtp1.pobox.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019, Puranjay Mohan wrote:
+This patch series removes the private duplicates of PCI definitions in
+favour of generic definitions defined in pci_regs.h.
 
-> Fix CRAMFS_BLK_FLAG_UNCOMPRESSED to use "U" cast to avoid shifting signed
-> 32-bit value by 31 bits problem. This isn't a problem for kernel builds
-> with gcc.
-> 
-> This could be problem since this header is part of public API which
-> could be included for builds using compilers that don't handle this
-> condition safely resulting in undefined behavior.
-> 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+This driver only uses some of the generic PCI definitons,
+which are included from pci_regs.h and thier private versions
+are removed from skfbi.h with all other private defines.
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+The skfbi.h defines PCI_REV_ID and other private defines with different
+names, these are renamed to Generic PCI names to make them
+compatible with defines in pci_regs.h.
 
+All unused defines are removed from skfbi.h.
 
+Changes in v5:
+Removed unused PCI definitions which were left in v4
 
-> ---
-> V2 - use the unsigned constants for all flags, not just one
-> RESEND - Added Nicolas Pitre to CC list, added reviewed by tags.
-> 
->  include/uapi/linux/cramfs_fs.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/cramfs_fs.h b/include/uapi/linux/cramfs_fs.h
-> index 6713669aa2ed..71cb602d4198 100644
-> --- a/include/uapi/linux/cramfs_fs.h
-> +++ b/include/uapi/linux/cramfs_fs.h
-> @@ -98,8 +98,8 @@ struct cramfs_super {
->   *
->   * That leaves room for 3 flag bits in the block pointer table.
->   */
-> -#define CRAMFS_BLK_FLAG_UNCOMPRESSED	(1 << 31)
-> -#define CRAMFS_BLK_FLAG_DIRECT_PTR	(1 << 30)
-> +#define CRAMFS_BLK_FLAG_UNCOMPRESSED	(1U << 31)
-> +#define CRAMFS_BLK_FLAG_DIRECT_PTR	(1U << 30)
->  
->  #define CRAMFS_BLK_FLAGS	( CRAMFS_BLK_FLAG_UNCOMPRESSED \
->  				| CRAMFS_BLK_FLAG_DIRECT_PTR )
-> -- 
-> 2.21.0
-> 
-> 
+Changes in v4:
+Removed unused PCI definitions which were left in v3
+
+Changes in v3:
+Renamed all local PCI definitions to Generic names.
+Corrected coding style mistakes.
+
+Changes in v2:
+Converted individual patches to a series.
+Made sure that individual patches build correctly
+
+Puranjay Mohan (3):
+  net: fddi: skfp: Rename local PCI defines to match generic PCI defines
+  net: fddi: skfp: Include generic PCI definitions
+  net: fddi: skfp: Remove unused private PCI definitions
+
+ drivers/net/fddi/skfp/drvfbi.c  |   3 +-
+ drivers/net/fddi/skfp/h/skfbi.h | 231 +-------------------------------
+ 2 files changed, 6 insertions(+), 228 deletions(-)
+
+-- 
+2.21.0
+
