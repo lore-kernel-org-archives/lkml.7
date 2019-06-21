@@ -2,141 +2,76 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69F8C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D1C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A72206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9508A206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LOaqH/Dl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="HtOzTPWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfFUNjO (ORCPT
+        id S1726180AbfFUNjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:39:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42832 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfFUNjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:39:13 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b18so4391991qkc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W1v9REbUjdM2ZPgzn5WvSncnmCktMY/9EZgX6QI0HOA=;
-        b=LOaqH/DlAyTiaVsb+/cJ5fNqCKK9dcYheZzqBkbU8/dJCNcbdbTdvycRRW6WsdWNrq
-         s1KlIlJ8pqtzQuZr4K+pscDPf+VAoNvvbLh7zGps691WEcEWVHVgG/y+SfGLilLH8xno
-         0bDlX2xF7lyCGAB4ZXKagYnPnFu5m/m8VbNEpdAbBtffvGdOG5+2xjfKlD1S7GX/sCJ8
-         Tki+kAZuPALbN16uIeo3/RJOzrwHbwCpqBWSiMTS52KfM4E4JV89wOogvhl4vLh60o2b
-         9hG2keijKi4DWyDadCzOTDOZpyKgf7ZyhWBT1TsI17RSZcSyUl57cSd5RfTlT2NIe0b0
-         X9Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W1v9REbUjdM2ZPgzn5WvSncnmCktMY/9EZgX6QI0HOA=;
-        b=mzsgTHfy0CHgBA60XDT+rRxABoZxrW5NYRAHJelWd1JVyNhADXHmfGh1hzw+oesfTt
-         qeZ6l+/gz5OUtoqGPOtoaptjd8hqTEmNkaakP343tjcX1zOZ/nrXPdHeH+1Tf8cHOBXH
-         zkVoBNOYRCejY7WjTRT7QZjcZs6KMFOiVnNm2NU/0hUr4eleffXD4lBGiuv6Db8iAHNk
-         RMteGPJHgUa8uYcxFbacmFSI3vDD3frnpACpeVoz9Lgg6d5l06OFsVhRUHwPqQR6H4hI
-         jXLxrFDHqsWG45OntCIGQNpZD3jmxgq2nG/XDOkFdYjMctHv7dxdPVEtaPedechL0FPH
-         nwKg==
-X-Gm-Message-State: APjAAAVDyIZ7Wg96NTKsDAFv4qXs5hoFfk82W43VDgb6sp3rvNS5+Rqu
-        2gTk2WrfJLD4bvum84biCF28hw==
-X-Google-Smtp-Source: APXvYqwDjXm2EEI8RDeCs7A5M5DgZpv1lwL8EVk5ylfRpHYYLvhclwPmRsPezAJyTvAyxaG7iZQC7A==
-X-Received: by 2002:a37:ef01:: with SMTP id j1mr40587433qkk.163.1561124352349;
-        Fri, 21 Jun 2019 06:39:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id a6sm1525606qth.76.2019.06.21.06.39.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 06:39:11 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1heJl1-00005R-4p; Fri, 21 Jun 2019 10:39:11 -0300
-Date:   Fri, 21 Jun 2019 10:39:11 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/16] mm: use untagged_addr() for get_user_pages_fast
- addresses
-Message-ID: <20190621133911.GL19891@ziepe.ca>
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-2-hch@lst.de>
+        Fri, 21 Jun 2019 09:39:40 -0400
+Received: from m15-14.126.com ([220.181.15.14]:46907 "EHLO m15-14.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfFUNjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:39:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=QGdsU
+        gyXCSYHoOEp1Wefv/TO84Pvr2WEjxPG073SWEk=; b=HtOzTPWrh4OlfO89a6B8o
+        NxANss8JkIJn+zNkYys1QiDA09nMJhL/t62eic3xpaHIPb87r/reROWpqGsDqZTA
+        iTXGOR7dV3JUJLbHMfqpUsS5Mi8dsVcOlDAR1xMvcuT7rcjxqi3X/P3tWIPILsQS
+        yaXCjttebq5dux8RpEqeXs=
+Received: from kernelpatch$126.com ( [117.136.87.52] ) by
+ ajax-webmail-wmsvr14 (Coremail) ; Fri, 21 Jun 2019 21:38:44 +0800 (CST)
+X-Originating-IP: [117.136.87.52]
+Date:   Fri, 21 Jun 2019 21:38:44 +0800 (CST)
+From:   "Tiezhu Yang" <kernelpatch@126.com>
+To:     "Borislav Petkov" <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+Subject: Re:Re: [PATCH] kexec: fix warnig of crash_zero_bytes in crash.c
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20190614(cb3344cf) Copyright (c) 2002-2019 www.mailtech.cn 126com
+In-Reply-To: <20190620163900.GF28032@zn.tnic>
+References: <fa5d08.1fe.16b5848e5f7.Coremail.kernelpatch@126.com>
+ <20190620163900.GF28032@zn.tnic>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611144102.8848-2-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <7c86df5d.8b94.16b7a42c5be.Coremail.kernelpatch@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: DsqowAA3JVbl3QxdKMRFAA--.18968W
+X-CM-SenderInfo: xnhu0vxosd3ubk6rjloofrz/1tbirwDa9VpD6Xs+gwABs3
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 04:40:47PM +0200, Christoph Hellwig wrote:
-> This will allow sparc64 to override its ADI tags for
-> get_user_pages and get_user_pages_fast.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
->  mm/gup.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097cf9e4..6bb521db67ec 100644
-> +++ b/mm/gup.c
-> @@ -2146,7 +2146,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
->  	unsigned long flags;
->  	int nr = 0;
->  
-> -	start &= PAGE_MASK;
-> +	start = untagged_addr(start) & PAGE_MASK;
->  	len = (unsigned long) nr_pages << PAGE_SHIFT;
->  	end = start + len;
-
-Hmm, this function, and the other, goes on to do:
-
-        if (unlikely(!access_ok((void __user *)start, len)))
-                return 0;
-
-and I thought that access_ok takes in the tagged pointer?
-
-How about re-order it a bit?
-
-diff --git a/mm/gup.c b/mm/gup.c
-index ddde097cf9e410..f48747ced4723b 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2148,11 +2148,12 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
- 
- 	start &= PAGE_MASK;
- 	len = (unsigned long) nr_pages << PAGE_SHIFT;
--	end = start + len;
--
- 	if (unlikely(!access_ok((void __user *)start, len)))
- 		return 0;
- 
-+	start = untagged_ptr(start);
-+	end = start + len;
-+
- 	/*
- 	 * Disable interrupts.  We use the nested form as we can already have
- 	 * interrupts disabled by get_futex_key.
+QXQgMjAxOS0wNi0yMSAwMDozOTowMCwgIkJvcmlzbGF2IFBldGtvdiIgPGJwQGFsaWVuOC5kZT4g
+d3JvdGU6Cj5PbiBTYXQsIEp1biAxNSwgMjAxOSBhdCAwNzoxODoyMEFNICswODAwLCBUaWV6aHUg
+WWFuZyB3cm90ZToKPj4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIHNwYXJzZSB3YXJu
+aW5nOgo+Cj5Bdm9pZCBoYXZpbmcgIlRoaXMgcGF0Y2giIG9yICJUaGlzIGNvbW1pdCIgaW4gdGhl
+IGNvbW1pdCBtZXNzYWdlLiBJdCBpcwo+dGF1dG9sb2dpY2FsbHkgdXNlbGVzcy4KPgo+QWxzbywg
+ZG8KPgo+JCBnaXQgZ3JlcCAnVGhpcyBwYXRjaCcgRG9jdW1lbnRhdGlvbi9wcm9jZXNzCj4KPmZv
+ciBtb3JlIGRldGFpbHMuCj4KPj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NTk6MTU6Cj4+IHdh
+cm5pbmc6IHN5bWJvbCAnY3Jhc2hfemVyb19ieXRlcycgd2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxk
+IGl0IGJlIHN0YXRpYz8KPj4gCj4+IEluIGFkZGl0aW9uLCBjcmFzaF96ZXJvX2J5dGVzIGlzIHVz
+ZWQgd2hlbiBDT05GSUdfS0VYRUNfRklMRSBpcwo+PiBzZXQsIHNvIG1ha2UgaXQgb25seSBhdmFp
+bGFibGUgdW5kZXIgQ09ORklHX0tFWEVDX0ZJTEUuIE90aGVyd2lzZSwKPj4gaWYgQ09ORklHX0tF
+WEVDX0ZJTEUgaXMgbm90IHNldCwgdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdpbGwgYXBwZWFyOgo+
+PiAKPj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NTk6MjI6Cj4+IHdhcm5pbmc6IKGuY3Jhc2hf
+emVyb19ieXRlc6GvIGRlZmluZWQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC12YXJpYWJsZV0KPgo+
+VGhhdCBoYXBwZW5zIG9ubHkgd2hlbiB5b3UgbWFrZSBpdCBzdGF0aWMsIHNvIHBsZWFzZSBzdGF0
+ZSB0aGF0IGluIHRoZQo+Y29tbWl0IG1lc3NhZ2UuCgpUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlv
+biwgSSB3aWxsIHNlbmQgYSB2MiBwYXRjaC4KClRoYW5rcywKCj4KPlRoeC4KPgo+LS0gCj5SZWdh
+cmRzL0dydXNzLAo+ICAgIEJvcmlzLgo+Cj5Hb29kIG1haWxpbmcgcHJhY3RpY2VzIGZvciA0MDA6
+IGF2b2lkIHRvcC1wb3N0aW5nIGFuZCB0cmltIHRoZSByZXBseS4K
