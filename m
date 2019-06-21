@@ -2,152 +2,135 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1BAC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A7CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1A3208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="Xqj1hDki"
+	by mail.kernel.org (Postfix) with ESMTP id E9BD12083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561126360;
+	bh=G84cVl5U5XlLByeL5a0wTKaDWpH+c8GB7sbMdafSIyM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tgEZp3H7InoGrYBNhl4XuHuqgeR/JWN+TkGopgjEoodzXvSmOtrUiQyE9PHcWRMz+
+	 YEDmGuluiN9aW0zwScr4jLVH7x/HlFx1FEAkZaigwIEViYdRTK9EzUTQmozm0LOxoE
+	 kgW8ojd7+QWTyjgH5niHBLKKlES7iFzcnAPeMOTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfFUOLk (ORCPT
+        id S1726205AbfFUOMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:11:40 -0400
-Received: from mail-eopbgr780117.outbound.protection.outlook.com ([40.107.78.117]:45863
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:11:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wkc8PlDfgnc0z0QGHwV5rL8OLqorBQx8NN9Pv+BA9LA=;
- b=Xqj1hDkiC+qFTOK8hHZjeF3Pd5cCXG4/SKXMB7ef6M4Qz47WcXL7MtqLR3Ss22ExwSMKZs9HyAh5l7KK1NzpJQ9tn9jVSi+EGHDlvTEaVWnZ9O/7pZAIsqbbxhhqp1zpkpXWWoG0enwrM4L2QWJ2aMg05WzVgRHxYFuMCGF90sE=
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
- BL0PR07MB5603.namprd07.prod.outlook.com (20.177.242.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Fri, 21 Jun 2019 14:11:34 +0000
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 14:11:34 +0000
-From:   Ken Sloat <KSloat@aampglobal.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     Kasun Beddewela <KBeddewela@aampglobal.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ken Sloat <KSloat@aampglobal.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: input: Device Tree Properties for Captouch Button Device
- Registers
-Thread-Topic: input: Device Tree Properties for Captouch Button Device
- Registers
-Thread-Index: AdUmniJSlNglerPZSFOVaVVYianGHABm/o3g
-Date:   Fri, 21 Jun 2019 14:11:33 +0000
-Message-ID: <BL0PR07MB41150BF0740C6F7E63FF4E11ADE70@BL0PR07MB4115.namprd07.prod.outlook.com>
-References: <BL0PR07MB4115574AA13B8F8C2E036644ADE50@BL0PR07MB4115.namprd07.prod.outlook.com>
-In-Reply-To: <BL0PR07MB4115574AA13B8F8C2E036644ADE50@BL0PR07MB4115.namprd07.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=KSloat@aampglobal.com; 
-x-originating-ip: [100.3.71.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12c116e0-bea0-4d03-a3f2-08d6f6525de0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5603;
-x-ms-traffictypediagnostic: BL0PR07MB5603:
-x-microsoft-antispam-prvs: <BL0PR07MB5603F321029FECE485908448ADE70@BL0PR07MB5603.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39850400004)(376002)(136003)(366004)(13464003)(199004)(189003)(76176011)(478600001)(81166006)(71190400001)(2351001)(186003)(6506007)(26005)(2501003)(74316002)(53546011)(7696005)(66446008)(99286004)(54906003)(5660300002)(52536014)(66476007)(76116006)(66066001)(81156014)(6116002)(66946007)(3846002)(66556008)(64756008)(316002)(102836004)(72206003)(71200400001)(7736002)(256004)(9686003)(8676002)(8936002)(73956011)(80792005)(4326008)(2906002)(6436002)(68736007)(1361003)(14454004)(33656002)(6916009)(6246003)(53936002)(11346002)(446003)(476003)(25786009)(229853002)(5640700003)(55016002)(305945005)(86362001)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5603;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: aampglobal.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EKLl5YENnKGwL4eX3BcUHp1kBa5NyX8+WJnpedSvTdDN9qkrYLh1HvQLqNGTSUIMvTcK5kdrEJ8RhXvWKyYrknQcOkIEUmSquQuz4FamTCSb5pdFUNgN7/VM0u5zUM67jWykjtnKburTjPRUk9bZwEwHD5mrvnvqTIldSNQbGVNSFmGNass1YgbJPJXrNjZ/k3OAP+0y/n3SEXuqEzPnpUQebKTLwXv/YnUelUBTaX/vkRXtoyxpSI1qn1nyoGxWofNoUoGMFL9pvUOCqKG5UO7/BXswdJWZYXj1Scq8RM8MbBChPYVm49vQEk5Vuzx2enu8hXC0lwHONFjl+KN506REl+pI2kA61LdLP0b++8EcNj+0/9NVh2ATt2TSm67h3XUpFtj9t71AzIMRFzWc48pLDoHoM2xIUDtfbQtJPwI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: aampglobal.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12c116e0-bea0-4d03-a3f2-08d6f6525de0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 14:11:33.9909
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5603
-X-MS-Exchange-CrossPremises-AuthAs: Internal
-X-MS-Exchange-CrossPremises-AuthMechanism: 04
-X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
-X-MS-Exchange-CrossPremises-TransportTrafficType: Email
-X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
-X-MS-Exchange-CrossPremises-SCL: 1
-X-MS-Exchange-CrossPremises-messagesource: StoreDriver
-X-MS-Exchange-CrossPremises-BCC: 
-X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
-X-MS-Exchange-CrossPremises-transporttraffictype: Email
-X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
-X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
-X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
-X-OrganizationHeadersPreserved: BL0PR07MB5603.namprd07.prod.outlook.com
+        Fri, 21 Jun 2019 10:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfFUOMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:12:38 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B003B20679;
+        Fri, 21 Jun 2019 14:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561126357;
+        bh=G84cVl5U5XlLByeL5a0wTKaDWpH+c8GB7sbMdafSIyM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iWxgDadIIMQNr42MRK4sNX1lV++z1lT0Tex5UZtMnkMExk7i5Q4ZfzPJz6ip5stCQ
+         UnzWAGwftOy6ujrpdIQbZJHOe6P2e7GE9bWBW3hNpqhrTpwL1ZqjYcwrZIQTcanN/k
+         qsc/lS+UOYx7/A8Q4wm5ecSjXRJL4Vep+aw9qPLc=
+Date:   Fri, 21 Jun 2019 23:12:32 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: WARN_ON: userstacktrace on irq events
+Message-Id: <20190621231232.259536faeea4b19cf39a7688@kernel.org>
+In-Reply-To: <20190405093209.7a5c5133@gandalf.local.home>
+References: <20190403121640.70128095@gandalf.local.home>
+        <alpine.DEB.2.21.1904051000290.1802@nanos.tec.linutronix.de>
+        <20190405093209.7a5c5133@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Ken Sloat
-> Sent: Wednesday, June 19, 2019 8:55 AM
-> To: dmitry.torokhov@gmail.com
-> Cc: Kasun Beddewela <KBeddewela@aampglobal.com>; linux-
-> input@vger.kernel.org; linux-kernel@vger.kernel.org; Ken Sloat
-> <KSloat@aampglobal.com>
-> Subject: input: Device Tree Properties for Captouch Button Device Registe=
-rs
->=20
-> Hello Dmitry,
->=20
-> We have a new input driver we are currently working on and would like to
-> submit
-> to the Linux kernel when we finish it. Specifically, this is a cap touch =
-IC which
-> implements potentially multiple individual proximity and cap touch button=
-s
-> (which
-> would be reported like key events as seems to be the standard). A couple =
-of
-> questions:
->=20
-> 1. What is the preferred/proper method to expose the many registers that
-> these devices have via device tree?
->=20
-> These devices have dozens of registers, many of which might be needed
-> depending
-> on the individual application. It wouldn't be useful in the majority of c=
-ases to
-> provide
-> default values in the driver as the registers are custom tuned to the
-> individual application.
->=20
-> 2. Where should this device live? I am guessing in input/misc?
->=20
-> Thanks,
-> Ken Sloat
+On Fri, 5 Apr 2019 09:32:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-CC'ing people from device tree mailing list since this discussion would be =
-relevant there as well, so the more generic question would be: For any devi=
-ce which requires multiple unique register configuration values per target =
-application - what is the preferred method to expose all these via devicetr=
-ee? Maybe there are some good examples of this already somewhere in the ker=
-nel drivers?
+> On Fri, 5 Apr 2019 10:12:27 +0200 (CEST)
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> > > BOOM! Warn on.
+> > > 
+> > > Can we make that access_ok() call in the copy_stack_frame not trigger
+> > > the warning just if we are in an interrupt?  
+> > 
+> > You really want to have access_ok_atomic() or such which does not have the
+> > WARN and use that in copy_stack_frame(). That's fine here because the
+> > actual copy is inside a pagefault disabled region.
+> 
+> I was thinking the same.
+> 
+> Masami, did you post patches to do something like this?
+> "access_ok_inatomic()" or something?
 
-Thanks,
-Ken Sloat
+Yeah, last month I sent 
+"x86/uaccess: Allow access_ok() in irq context if pagefault_disabled"
+
+If you correctly disables the pagefault, access_ok() shouldn't warn it.
+Ah, I see.
+
+copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
+{
+        int ret;
+
+        if (!access_ok(fp, sizeof(*frame))) <== this is out of pagefault_disable()!
+                return 0;
+
+        ret = 1;
+        pagefault_disable();
+        if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
+                ret = 0;
+        pagefault_enable();
+
+        return ret;
+}
+
+How is below patch?
+
+---
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 2abf27d7df6b..36ff77c801f7 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -98,14 +98,11 @@ struct stack_frame_user {
+ static int
+ copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
+ {
+-	int ret;
++	int ret = 1;
+ 
+-	if (!access_ok(fp, sizeof(*frame)))
+-		return 0;
+-
+-	ret = 1;
+ 	pagefault_disable();
+-	if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
++	if (!access_ok(fp, sizeof(*frame)) ||
++	    __copy_from_user_inatomic(frame, fp, sizeof(*frame)))
+ 		ret = 0;
+ 	pagefault_enable();
+ 
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
