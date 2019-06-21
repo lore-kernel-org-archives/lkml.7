@@ -2,139 +2,163 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1C9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43714C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED182089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB532075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n7PC265D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfFUPew (ORCPT
+        id S1726296AbfFUPgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:34:52 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49943 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUPew (ORCPT
+        Fri, 21 Jun 2019 11:36:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45212 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfFUPgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:34:52 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3D8651C000E;
-        Fri, 21 Jun 2019 15:34:46 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, nicolas.ferre@microchip.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com
-Subject: [PATCH net-next] net: macb: use GRO
-Date:   Fri, 21 Jun 2019 17:30:02 +0200
-Message-Id: <20190621153002.30587-1-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 21 Jun 2019 11:36:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LFOCdN084301;
+        Fri, 21 Jun 2019 15:35:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=6t/T0oCX3FYtWnSX59C7RPueclXGYaVh3ih9FejJyy8=;
+ b=n7PC265Dn1bw/BeVQsMjARhjLsH2Q5nXXw5HrQQxZRruJV3Pk3wuDJoJppdU8WjTwsE5
+ IFOO4VQ1ALO3Tkqca1A1aKFr2myITmN65QxfOid1gg19CyyUUp5tW5p0gcveHhrEOhRp
+ bccPzjsBjxJ37TIq0DEoxTFJ3GSerzNRpyQgmcNIrgRZcWIJi6frNAUKxJQrh1B7Domg
+ h+0kFLkrc++e4VL6uWl+SqEVobF25+Aly2yk1RoVooheayqd01ChzxdKKr3O9if86pf1
+ 0CuQzsjTBC6fhX2gfPmrldWHTXgV8F98JdJPt1DFwiWomTWPOxESNbF+r+mTo403B7Bo dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t7809q6yq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 15:35:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LFZJQK100494;
+        Fri, 21 Jun 2019 15:35:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t7rdxtbm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 15:35:19 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LFZDpA005218;
+        Fri, 21 Jun 2019 15:35:13 GMT
+Received: from [10.154.105.108] (/10.154.105.108)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Jun 2019 08:35:13 -0700
+Subject: Re: [PATCH 01/16] mm: use untagged_addr() for get_user_pages_fast
+ addresses
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
+References: <20190611144102.8848-1-hch@lst.de>
+ <20190611144102.8848-2-hch@lst.de> <20190621133911.GL19891@ziepe.ca>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <9a4e1485-4683-92b0-3d26-73f26896d646@oracle.com>
+Date:   Fri, 21 Jun 2019 09:35:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190621133911.GL19891@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=857
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906210125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=897 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906210125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the macb driver to use NAPI GRO helpers when
-receiving SKBs. This improves performances.
+On 6/21/19 7:39 AM, Jason Gunthorpe wrote:
+> On Tue, Jun 11, 2019 at 04:40:47PM +0200, Christoph Hellwig wrote:
+>> This will allow sparc64 to override its ADI tags for
+>> get_user_pages and get_user_pages_fast.
+>>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>  mm/gup.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index ddde097cf9e4..6bb521db67ec 100644
+>> +++ b/mm/gup.c
+>> @@ -2146,7 +2146,7 @@ int __get_user_pages_fast(unsigned long start, i=
+nt nr_pages, int write,
+>>  	unsigned long flags;
+>>  	int nr =3D 0;
+>> =20
+>> -	start &=3D PAGE_MASK;
+>> +	start =3D untagged_addr(start) & PAGE_MASK;
+>>  	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+>>  	end =3D start + len;
+>=20
+> Hmm, this function, and the other, goes on to do:
+>=20
+>         if (unlikely(!access_ok((void __user *)start, len)))
+>                 return 0;
+>=20
+> and I thought that access_ok takes in the tagged pointer?
+>=20
+> How about re-order it a bit?
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/ethernet/cadence/macb.h      |  3 ++-
- drivers/net/ethernet/cadence/macb_main.c | 18 ++++++++++--------
- 2 files changed, 12 insertions(+), 9 deletions(-)
+access_ok() can handle tagged or untagged pointers. It just strips the
+tag bits from the top bits. Current order doesn't really matter from
+functionality point of view. There might be minor gain in delaying
+untagging in __get_user_pages_fast() but I could go either way.
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 00ee5e8e0ff0..a8ed28b597c0 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -1063,7 +1063,8 @@ struct macb_or_gem_ops {
- 	int	(*mog_alloc_rx_buffers)(struct macb *bp);
- 	void	(*mog_free_rx_buffers)(struct macb *bp);
- 	void	(*mog_init_rings)(struct macb *bp);
--	int	(*mog_rx)(struct macb_queue *queue, int budget);
-+	int	(*mog_rx)(struct macb_queue *queue, struct napi_struct *napi,
-+			  int budget);
- };
- 
- /* MACB-PTP interface: adapt to platform needs. */
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 1cd1f2c36d6f..f1cf50b8ad11 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -994,7 +994,8 @@ static void discard_partial_frame(struct macb_queue *queue, unsigned int begin,
- 	 */
- }
- 
--static int gem_rx(struct macb_queue *queue, int budget)
-+static int gem_rx(struct macb_queue *queue, struct napi_struct *napi,
-+		  int budget)
- {
- 	struct macb *bp = queue->bp;
- 	unsigned int		len;
-@@ -1076,7 +1077,7 @@ static int gem_rx(struct macb_queue *queue, int budget)
- 			       skb->data, 32, true);
- #endif
- 
--		netif_receive_skb(skb);
-+		napi_gro_receive(napi, skb);
- 	}
- 
- 	gem_rx_refill(queue);
-@@ -1084,8 +1085,8 @@ static int gem_rx(struct macb_queue *queue, int budget)
- 	return count;
- }
- 
--static int macb_rx_frame(struct macb_queue *queue, unsigned int first_frag,
--			 unsigned int last_frag)
-+static int macb_rx_frame(struct macb_queue *queue, struct napi_struct *napi,
-+			 unsigned int first_frag, unsigned int last_frag)
- {
- 	unsigned int len;
- 	unsigned int frag;
-@@ -1161,7 +1162,7 @@ static int macb_rx_frame(struct macb_queue *queue, unsigned int first_frag,
- 	bp->dev->stats.rx_bytes += skb->len;
- 	netdev_vdbg(bp->dev, "received skb of length %u, csum: %08x\n",
- 		    skb->len, skb->csum);
--	netif_receive_skb(skb);
-+	napi_gro_receive(napi, skb);
- 
- 	return 0;
- }
-@@ -1184,7 +1185,8 @@ static inline void macb_init_rx_ring(struct macb_queue *queue)
- 	queue->rx_tail = 0;
- }
- 
--static int macb_rx(struct macb_queue *queue, int budget)
-+static int macb_rx(struct macb_queue *queue, struct napi_struct *napi,
-+		   int budget)
- {
- 	struct macb *bp = queue->bp;
- 	bool reset_rx_queue = false;
-@@ -1221,7 +1223,7 @@ static int macb_rx(struct macb_queue *queue, int budget)
- 				continue;
- 			}
- 
--			dropped = macb_rx_frame(queue, first_frag, tail);
-+			dropped = macb_rx_frame(queue, napi, first_frag, tail);
- 			first_frag = -1;
- 			if (unlikely(dropped < 0)) {
- 				reset_rx_queue = true;
-@@ -1275,7 +1277,7 @@ static int macb_poll(struct napi_struct *napi, int budget)
- 	netdev_vdbg(bp->dev, "poll: status = %08lx, budget = %d\n",
- 		    (unsigned long)status, budget);
- 
--	work_done = bp->macbgem_ops.mog_rx(queue, budget);
-+	work_done = bp->macbgem_ops.mog_rx(queue, napi, budget);
- 	if (work_done < budget) {
- 		napi_complete_done(napi, work_done);
- 
--- 
-2.21.0
+--
+Khalid
+
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ddde097cf9e410..f48747ced4723b 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2148,11 +2148,12 @@ int __get_user_pages_fast(unsigned long start, =
+int nr_pages, int write,
+> =20
+>  	start &=3D PAGE_MASK;
+>  	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+> -	end =3D start + len;
+> -
+>  	if (unlikely(!access_ok((void __user *)start, len)))
+>  		return 0;
+> =20
+> +	start =3D untagged_ptr(start);
+> +	end =3D start + len;
+> +
+>  	/*
+>  	 * Disable interrupts.  We use the nested form as we can already have=
+
+>  	 * interrupts disabled by get_futex_key.
+>=20
+
 
