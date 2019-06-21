@@ -2,113 +2,122 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A02C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FF3208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1143721537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zrrtFvrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfFUNeX (ORCPT
+        id S1726066AbfFUNgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:34:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27116 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbfFUNeX (ORCPT
+        Fri, 21 Jun 2019 09:36:13 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45330 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfFUNgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:34:23 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LDXqJS056726
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:34:21 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8x5wwdsd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:34:21 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 21 Jun 2019 14:34:18 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Jun 2019 14:34:14 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LDYD4M48496984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 13:34:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3A85B206B;
-        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4320B205F;
-        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.175.77])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Jun 2019 13:34:13 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 4269E16C1D2F; Fri, 21 Jun 2019 06:34:14 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 06:34:14 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        frederic@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Reply-To: paulmck@linux.ibm.com
-References: <20190619181903.GA14233@linux.ibm.com>
- <20190620121032.GU3436@hirez.programming.kicks-ass.net>
- <20190620160118.GQ26519@linux.ibm.com>
- <20190620211019.GA3436@hirez.programming.kicks-ass.net>
- <20190620221336.GZ26519@linux.ibm.com>
- <20190621105503.GI3436@hirez.programming.kicks-ass.net>
- <20190621121630.GE26519@linux.ibm.com>
- <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+        Fri, 21 Jun 2019 09:36:13 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a14so10102723edv.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cnC3suzlgwD62Q8O7FoLN2Bc0yj3F9CWcR6TgaR1LLc=;
+        b=zrrtFvrl4p7uTqycYUBHGqaztc91HANl9u9PpKLY7U7rcWsCOOeWiEDqlASL4SSEuY
+         ZqqicXW/nV5z+021k5EusmejEXXNNfgLn3AvyKy6M71xezPYdXaG0rCj9wTdkWiMDHkG
+         /Cl3PE8EUukQhj0s9A9WX3zqTgEwNaIZaXQQnVAE/2/gc7JSt8hB0gS4w2ympIr1Yrxy
+         mmZzOvlxL/7bfRgFnthfff+zVrJS39UskfbFNPwu7sXRX8oj+Ufgl3BNlkqQMt6o9YAN
+         jqRYeFjPL/z3fsImc5/ifslgFZuK7s81erlgqIukiir0X2pl9WFKyjdvldE9MDFxGJ+Y
+         EpPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cnC3suzlgwD62Q8O7FoLN2Bc0yj3F9CWcR6TgaR1LLc=;
+        b=npYilcgpruJ7CZ7VYGVJHpTd0AtHcTaUTCEIPRJuzDY8+CkPm+3Z2Vw9Dt7+SW+mb7
+         bsTaQ/w0JwXA3D3VubN+fgoWiu9KdgKRtyj3SPfIXPbkgQueomM0wNRBvluwJXrxUdYO
+         uPfvLsM25LXrRrQOYhbAFT1M9sBW0GvL+rKnwc8k0QbR91uVkis9qtJuXi4XvV99Vxuj
+         ltDrfXqvDqAogjIBhpiRVcfnFbjSQL4VgjlvQGIehVBRRdoAYCVqjkIIzAjl4SpNPAO1
+         9Y9LQ4xOqthHdPsCNrw3nE0WTSPp027a0vUZTZ4OCWtY61nufc/+XXQjJurVlnYULT+g
+         b+7g==
+X-Gm-Message-State: APjAAAW5w40GMbaRd/ePXPwtLCyQep+zrVAQfvrZu/knq0ZG2GiiLjAY
+        nt401DF/fUbeydi1/3T+K0+Vyw1dOo4=
+X-Google-Smtp-Source: APXvYqylF/ZGnoajREjtqJ3qd8ZnbSjXbf2NB4U/xNXjWS/QwEe58V6Y8Ny7PU80e6ICaU6cNuj7qg==
+X-Received: by 2002:a17:906:5008:: with SMTP id s8mr80542081ejj.308.1561124171736;
+        Fri, 21 Jun 2019 06:36:11 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id e1sm432826ejl.2.2019.06.21.06.36.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 06:36:11 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 39A5410289C; Fri, 21 Jun 2019 16:36:13 +0300 (+03)
+Date:   Fri, 21 Jun 2019 16:36:13 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH v4 5/5] uprobe: collapse THP pmd after removing all
+ uprobes
+Message-ID: <20190621133613.xnzpdlicqvjklrze@box>
+References: <20190613175747.1964753-1-songliubraving@fb.com>
+ <20190613175747.1964753-6-songliubraving@fb.com>
+ <20190621124823.ziyyx3aagnkobs2n@box>
+ <B72B62C9-78EE-4440-86CA-590D3977BDB1@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190621122927.GV3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062113-2213-0000-0000-000003A2729B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011302; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01221194; UDB=6.00642471; IPR=6.01002333;
- MB=3.00027407; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-21 13:34:16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062113-2214-0000-0000-00005EF0A80C
-Message-Id: <20190621133414.GF26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=913 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210113
+In-Reply-To: <B72B62C9-78EE-4440-86CA-590D3977BDB1@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 02:29:27PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 21, 2019 at 05:16:30AM -0700, Paul E. McKenney wrote:
-> > A pair of full hangs at boot (TASKS03 and TREE04), no console output
-> > whatsoever.  Not sure how these changes could cause that, but suspicion
-> > falls on sched_tick_offload_init().  Though even that is a bit strange
-> > because if so, why didn't TREE01 and TREE07 also hang?  Again, looking
-> > into it.
+On Fri, Jun 21, 2019 at 01:17:05PM +0000, Song Liu wrote:
 > 
-> Pesky details ;-)
+> 
+> > On Jun 21, 2019, at 5:48 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > 
+> > On Thu, Jun 13, 2019 at 10:57:47AM -0700, Song Liu wrote:
+> >> After all uprobes are removed from the huge page (with PTE pgtable), it
+> >> is possible to collapse the pmd and benefit from THP again. This patch
+> >> does the collapse.
+> >> 
+> >> An issue on earlier version was discovered by kbuild test robot.
+> >> 
+> >> Reported-by: kbuild test robot <lkp@intel.com>
+> >> Signed-off-by: Song Liu <songliubraving@fb.com>
+> >> ---
+> >> include/linux/huge_mm.h |  7 +++++
+> >> kernel/events/uprobes.c |  5 ++-
+> >> mm/huge_memory.c        | 69 +++++++++++++++++++++++++++++++++++++++++
+> > 
+> > I still sync it's duplication of khugepaged functinallity. We need to fix
+> > khugepaged to handle SCAN_PAGE_COMPOUND and probably refactor the code to
+> > be able to call for collapse of particular range if we have all locks
+> > taken (as we do in uprobe case).
+> > 
+> 
+> I see the point now. I misunderstood it for a while. 
+> 
+> If we add this to khugepaged, it will have some conflicts with my other 
+> patchset. How about we move the functionality to khugepaged after these
+> two sets get in? 
 
-And backing out to the earlier patch removes the hangs, though statistical
-insignificance and all that.
+Is the last patch of the patchset essential? I think this part can be done
+a bit later in a proper way, no?
 
-Ah, in answer to your earlier question, if you want it in v5.3, you
-will need to take it (but I do humbly request that you wait until it
-actually works).  If you don't take it, I won't be submitting it earlier
-than v5.4.  Either way, your choice!
-
-							Thanx, Paul
-
+-- 
+ Kirill A. Shutemov
