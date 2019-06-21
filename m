@@ -2,129 +2,69 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148C5C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760C4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF036208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561134099;
-	bh=VQ1gK6vkj14oTbza27TvV5pVzRXxHavJndzesvK8YsM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZI0CpvIKEZzLqwzb3oOObwTcHrdjRlO8auEcjFyRhw7vJOC0zLYv3q8/asLNaUWs/
-	 R8tBySO/DDHS76HzACUEFj9N4LyATqKXkL/CpUAxyd3CZu56VwdSrU+st/wfyBegRi
-	 ZaNLA/QCwKQLZ78uqWMUVZCqJL7IC5EZMBuojb/0=
+	by mail.kernel.org (Postfix) with ESMTP id 5045720673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfFUQVi (ORCPT
+        id S1726147AbfFUQWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbfFUQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:21:35 -0400
-Received: from localhost.localdomain (unknown [194.230.155.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85693208C3;
-        Fri, 21 Jun 2019 16:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561134095;
-        bh=VQ1gK6vkj14oTbza27TvV5pVzRXxHavJndzesvK8YsM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L8ShRieLALbliX4bD80CpehWcw480E8W9D7C+4nhiShZAIKKUYk9bPeiQnxjXoMdt
-         +RBcA9bZ408CDP4RRZoOnzU+OhZNbYECMpnLOIzC7FFzynBmo4S8zMQcsbAVG4bq0n
-         dKe6RCru5rgJ4vNRQJoK+/YEh1U4TnPhpDtn7dWk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Qiang Yu <yuq825@gmail.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 4/4] drm/lima: Reduce the amount of logs on deferred probe of clocks and reset controller
-Date:   Fri, 21 Jun 2019 18:21:17 +0200
-Message-Id: <20190621162117.22533-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621162117.22533-1-krzk@kernel.org>
-References: <20190621162117.22533-1-krzk@kernel.org>
+        Fri, 21 Jun 2019 12:22:34 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:49370 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFUQWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:22:33 -0400
+Received: from relay2-d.mail.gandi.net (unknown [217.70.183.194])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id ADDAE3AB780;
+        Fri, 21 Jun 2019 15:30:12 +0000 (UTC)
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 710BE40012;
+        Fri, 21 Jun 2019 15:30:03 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, nicolas.ferre@microchip.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com
+Subject: [PATCH net-next] net: macb: use NAPI_POLL_WEIGHT
+Date:   Fri, 21 Jun 2019 17:28:55 +0200
+Message-Id: <20190621152855.30330-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point to print deferred probe messages as errors.  Adjust
-the printks for error paths of obtaining clocks and reset controller.
-This removes the error message of lima_clk_init() call in favor or
-specific failure messages inside.
+Use NAPI_POLL_WEIGHT, the default NAPI poll() weight instead of
+redefining our own value (which turns out to be 64 as well).
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes since v1:
-1. New patch
----
- drivers/gpu/drm/lima/lima_device.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
-index 9a6cd879bcb1..d86b8d81a483 100644
---- a/drivers/gpu/drm/lima/lima_device.c
-+++ b/drivers/gpu/drm/lima/lima_device.c
-@@ -84,14 +84,16 @@ static int lima_clk_init(struct lima_device *dev)
- 	dev->clk_bus = devm_clk_get(dev->dev, "bus");
- 	if (IS_ERR(dev->clk_bus)) {
- 		err = PTR_ERR(dev->clk_bus);
--		dev_err(dev->dev, "get bus clk failed %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev->dev, "get bus clk failed %d\n", err);
- 		return err;
- 	}
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 163deba244ab..1cd1f2c36d6f 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3490,7 +3490,7 @@ static int macb_init(struct platform_device *pdev)
  
- 	dev->clk_gpu = devm_clk_get(dev->dev, "core");
- 	if (IS_ERR(dev->clk_gpu)) {
- 		err = PTR_ERR(dev->clk_gpu);
--		dev_err(dev->dev, "get core clk failed %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev->dev, "get core clk failed %d\n", err);
- 		return err;
- 	}
- 
-@@ -106,11 +108,17 @@ static int lima_clk_init(struct lima_device *dev)
- 	dev->reset = devm_reset_control_get_optional(dev->dev, NULL);
- 	if (IS_ERR(dev->reset)) {
- 		err = PTR_ERR(dev->reset);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev->dev, "get reset controller failed %d\n",
-+				err);
- 		goto error_out1;
- 	} else if (dev->reset != NULL) {
- 		err = reset_control_deassert(dev->reset);
--		if (err)
-+		if (err) {
-+			dev_err(dev->dev,
-+				"reset controller deassert failed %d\n", err);
- 			goto error_out1;
-+		}
- 	}
- 
- 	return 0;
-@@ -287,10 +295,8 @@ int lima_device_init(struct lima_device *ldev)
- 	dma_set_coherent_mask(ldev->dev, DMA_BIT_MASK(32));
- 
- 	err = lima_clk_init(ldev);
--	if (err) {
--		dev_err(ldev->dev, "clk init fail %d\n", err);
-+	if (err)
- 		return err;
--	}
- 
- 	err = lima_regulator_init(ldev);
- 	if (err)
+ 		queue = &bp->queues[q];
+ 		queue->bp = bp;
+-		netif_napi_add(dev, &queue->napi, macb_poll, 64);
++		netif_napi_add(dev, &queue->napi, macb_poll, NAPI_POLL_WEIGHT);
+ 		if (hw_q) {
+ 			queue->ISR  = GEM_ISR(hw_q - 1);
+ 			queue->IER  = GEM_IER(hw_q - 1);
 -- 
-2.17.1
+2.21.0
 
