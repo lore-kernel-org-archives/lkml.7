@@ -2,168 +2,143 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF826C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8E8C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF5421530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C9F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="jW8tPV+L"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Jjv7wREe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfFUMkg (ORCPT
+        id S1726832AbfFUMkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:40:36 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:57652 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbfFUMkg (ORCPT
+        Fri, 21 Jun 2019 08:40:42 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40630 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfFUMkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:40:36 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LCBHZC018678;
-        Fri, 21 Jun 2019 08:14:21 -0400
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2053.outbound.protection.outlook.com [104.47.42.53])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2t8vahrgnj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jun 2019 08:14:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m9ujq0FjNOpnARa0wtTiJpN2igZAh/C9uap/d0xAMGw=;
- b=jW8tPV+L8C9e/0UCm/bBo/joKkCv67W6M9/r8NtApBw9oMlv/sSIgqi1JJrfWWpypK1DAEyOSyPQHFCF0e2KHlhBfoiiTt8Yp1LmC+ZCeNQsveoNmsJTQUB/zqDDI+c2YClRcJ2pt7dhhECRyb6cXX89d0xje2GOgtS4wU91cMc=
-Received: from BN6PR03CA0116.namprd03.prod.outlook.com (2603:10b6:404:10::30)
- by BL2PR03MB547.namprd03.prod.outlook.com (2a01:111:e400:c23::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13; Fri, 21 Jun
- 2019 12:14:19 +0000
-Received: from BL2NAM02FT012.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::207) by BN6PR03CA0116.outlook.office365.com
- (2603:10b6:404:10::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13 via Frontend
- Transport; Fri, 21 Jun 2019 12:14:19 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT012.mail.protection.outlook.com (10.152.77.27) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Fri, 21 Jun 2019 12:14:18 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5LCEIJ8023562
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 21 Jun 2019 05:14:18 -0700
-Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 21 Jun 2019 08:14:18 -0400
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V2 3/4] iio: adc: ad7124: Shift to dynamic allocation for channel configuration
-Date:   Fri, 21 Jun 2019 15:13:43 +0300
-Message-ID: <20190621121344.24917-3-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621121344.24917-1-mircea.caprioru@analog.com>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com>
+        Fri, 21 Jun 2019 08:40:41 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190621124039euoutp0105f3bc4d88ff7169b01bb8013cd2187e~qNyHrmRPA2886828868euoutp01f
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:40:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190621124039euoutp0105f3bc4d88ff7169b01bb8013cd2187e~qNyHrmRPA2886828868euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561120839;
+        bh=8kS2pxnsEaPOj1BInin3UbKyqgpFMf6kwywPiLXgiEY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Jjv7wREegHklLHKYBIuFWVCfcTYv9+lymrykXUEmpy4s+iVib4Wlaf0OYrsi7dTSa
+         ZPQGws0YHK/beFoQWifbSFvjMumpY55YxyUA/tOLCt/Hf598o/uf4zEscwUXrKGwuI
+         BdpYGOR1CVFl4NQ7ND3PaoAuzCnLcIiIAB3JgkRk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190621124039eucas1p2ad34629456ceb682b2727edf5024410f~qNyHZvgzK2811828118eucas1p2t;
+        Fri, 21 Jun 2019 12:40:39 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id B6.35.04325.740DC0D5; Fri, 21
+        Jun 2019 13:40:39 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190621124038eucas1p2bcb63eb4c575c499b1450eab5356430e~qNyGx32th0061200612eucas1p2N;
+        Fri, 21 Jun 2019 12:40:38 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190621124038eusmtrp230219c1d2b12ddb35a018d51c869173f~qNyGj5myT2599325993eusmtrp2f;
+        Fri, 21 Jun 2019 12:40:38 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-10-5d0cd0479f61
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CF.DD.04140.640DC0D5; Fri, 21
+        Jun 2019 13:40:38 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190621124038eusmtip12ce56187f0d5cc33aae9dbc2b3d2e4b6~qNyGR2mAa2222122221eusmtip1S;
+        Fri, 21 Jun 2019 12:40:38 +0000 (GMT)
+Subject: Re: [PATCH] video: fbdev-MMP: Use struct_size() in devm_kzalloc()
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <f789452f-5b4e-543e-67e2-16157af8e49e@samsung.com>
+Date:   Fri, 21 Jun 2019 14:40:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(2980300002)(54534003)(199004)(189003)(336012)(77096007)(2351001)(86362001)(186003)(246002)(106002)(70206006)(70586007)(47776003)(5660300002)(316002)(16586007)(1076003)(26005)(7636002)(305945005)(2906002)(4326008)(7696005)(76176011)(8676002)(356004)(50466002)(6666004)(6916009)(107886003)(51416003)(8936002)(14444005)(476003)(126002)(486006)(426003)(54906003)(2616005)(446003)(478600001)(50226002)(11346002)(36756003)(48376002)(44832011)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL2PR03MB547;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f0f4dad3-23e6-4724-a30c-08d6f641fc88
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL2PR03MB547;
-X-MS-TrafficTypeDiagnostic: BL2PR03MB547:
-X-Microsoft-Antispam-PRVS: <BL2PR03MB547E9222B4EE8AD70D6B5FC81E70@BL2PR03MB547.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0075CB064E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: xYqLZJp+zOOkdyQAsHgI31cpt+VQ6zFzUNSPNsgbH/IMkVrea5V0tqYxMh9hzdtCk3VZ/61OTv1Vn6piB2h+Mr49aOuicyxUNbPGZBwhLUIvbkydGP1yDpzZoQff8gZq2A4U2u6dCyoOu+BixmtOad/IQ2QFjaBQSmEYC41eaZwjrt83B5bdezKl8rMT9hHyeaGP3DZNfQ+Cgrm6/vg+XI83abZgfScAUQI+r/at1gju/wyu8SLUPDK/3X0t8IxP8VUpx6RkOyvGevxgfcmoyawrPMTWGy8IJnk3NJBO4t6gRzczxn8WK3AmVc70JI664hXN0B150Jvqo9dnj5XWVduEiKji7G+dc3+nivvt1IHtzviWswjcHznx65H90xKK+Xt0ZOy6jtoWI4kKLf+2b8BGLv+uDKZIpS9lVJzmiCk=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 12:14:18.8423
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0f4dad3-23e6-4724-a30c-08d6f641fc88
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2PR03MB547
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210104
+In-Reply-To: <20190604233205.GA5377@embeddedor>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOV33CzyxBp+OsVlc+fqezWLrHlWL
+        E30fWC0u75rD5sDise6gqsf97uNMHp83yQUwR3HZpKTmZJalFunbJXBlXN9wgK3gHXvF9hcG
+        DYyz2LoYOTkkBEwkeq6cB7K5OIQEVjBK7Dh+iAXC+cIo8XTmBiaQKiGBz4wSTzY4w3R8+DUP
+        qmM5o0TL5O3sEM5bRomtr5awgFQJC3hJdO06AGaLCBhJzJ7RzQpiMwskSJxedA8sziZgJTGx
+        fRUjiM0rYCexc/9EZhCbRUBVYt+Xm2A1ogIREvePbWCFqBGUODnzCVicU0BfYumTk0wQM8Ul
+        bj2ZD2XLS2x/O4cZ5CAJgXZ2iccfZjNDnO0i8WDFG0YIW1ji1fEt7BC2jMT/nSDNIA3rGCX+
+        dryA6t7OKLF88j9oMFlLHD5+EegMDqAVmhLrd+lDhB0l3r1tZQMJSwjwSdx4KwhxBJ/EpG3T
+        mSHCvBIdbUIQ1WoSG5ZtYINZ27VzJfMERqVZSF6bheSdWUjemYWwdwEjyypG8dTS4tz01GLj
+        vNRyveLE3OLSvHS95PzcTYzAZHL63/GvOxj3/Uk6xCjAwajEw3tgFnesEGtiWXFl7iFGCQ5m
+        JRFenhyeWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE0hNLUrNTUwtSi2CyTBycUg2M
+        lnt4F89bZ/Hi8/vbmRtSVzQ9vCGoEW749aqjrO7EZSeOnjEpe93zuVf9RN9iRYtV5XPfetp4
+        /fugb/Dud8cc3j1FfdtqdOY/bpVZcp+/Otd97xXmm98em1tcY+uLm9mteq1fZjUjY98JB49p
+        zZKzVlz9ZGCYPDnxhu1yuT0hO0zlp+x++OHGUiWW4oxEQy3mouJEACD9VDsiAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsVy+t/xu7puF3hiDebvl7S48vU9m8XWPaoW
+        J/o+sFpc3jWHzYHFY91BVY/73ceZPD5vkgtgjtKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx
+        1DM0No+1MjJV0rezSUnNySxLLdK3S9DLuL7hAFvBO/aK7S8MGhhnsXUxcnJICJhIfPg1D8jm
+        4hASWMoo8f7LW5YuRg6ghIzE8fVlEDXCEn+udUHVvGaU2L64FaxZWMBLomvXARYQW0TASGL2
+        jG5WkF5mgQSJZ/NSQMJCAk2MEkdfSYPYbAJWEhPbVzGC2LwCdhI7909kBrFZBFQl9n25CTZG
+        VCBC4sz7FSwQNYISJ2c+AbM5BfQllj45yQRiMwuoS/yZd4kZwhaXuPVkPlRcXmL72znMExiF
+        ZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjJxtx35u2cHY9S74
+        EKMAB6MSD++BWdyxQqyJZcWVuYcYJTiYlUR4eXJ4YoV4UxIrq1KL8uOLSnNSiw8xmgI9N5FZ
+        SjQ5HxjVeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGNPTfOJj
+        fZ8Enp5zpurY/t33fh09qOlVuvmS8aJFxrYV7CHMJyM+N/cm5K2O6WVi61q/7E7vRdttOy4K
+        5z8RkWh89n5eT4tM8tWNy+av1Awz4+V4+zcs4nTdYjtb4SW8n84Un9DLuJoxa4aWnU2L0toZ
+        +ZezUta7sTtcvqd9fpay1wTPhRqxAkosxRmJhlrMRcWJAMi3q0CyAgAA
+X-CMS-MailID: 20190621124038eucas1p2bcb63eb4c575c499b1450eab5356430e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190604233211epcas1p1473ce5a9bb5e1113a91b37ec9a43f320
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190604233211epcas1p1473ce5a9bb5e1113a91b37ec9a43f320
+References: <CGME20190604233211epcas1p1473ce5a9bb5e1113a91b37ec9a43f320@epcas1p1.samsung.com>
+        <20190604233205.GA5377@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the channel configuration member of the device
-structure from a fixed size array to a dynamic allocated one with a size
-equal to the number of channels specified in the device tree. This will
-ensure a more flexibility for compatible devices.
 
-Ex. ad7124-4 - can have 4 differential or 8 pseudo-differential channels
-ad7124-8 - can have 8 differential or 16 pseudo-differential channels
+On 6/5/19 1:32 AM, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct foo {
+>     int stuff;
+>     struct boo entry[];
+> };
+> 
+> size = sizeof(struct foo) + count * sizeof(struct boo);
+> instance = devm_kzalloc(dev, size, GFP_KERNEL);
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+> 
+> instance = devm_kzalloc(dev, struct_size(instance, entry, count), GFP_KERNEL);
+> 
+> Notice that, in this case, variable size is not necessary, hence it
+> is removed.
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Also the device can suspport any other combination of differential and
-pseudo-differential channels base on the physical number of inputs
-available.
+Patch queued for v5.3, thanks.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
-
-Changelog v2:
-- nothing changed here
-
- drivers/iio/adc/ad7124.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index ab52c5e9ecb1..edc6f1cc90b2 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -121,7 +121,7 @@ struct ad7124_channel_config {
- struct ad7124_state {
- 	const struct ad7124_chip_info *chip_info;
- 	struct ad_sigma_delta sd;
--	struct ad7124_channel_config channel_config[4];
-+	struct ad7124_channel_config *channel_config;
- 	struct regulator *vref[4];
- 	struct clk *mclk;
- 	unsigned int adc_control;
-@@ -439,6 +439,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 	struct ad7124_state *st = iio_priv(indio_dev);
- 	struct device_node *child;
- 	struct iio_chan_spec *chan;
-+	struct ad7124_channel_config *chan_config;
- 	unsigned int ain[2], channel = 0, tmp;
- 	int ret;
- 
-@@ -453,8 +454,14 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 	if (!chan)
- 		return -ENOMEM;
- 
-+	chan_config = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
-+				   sizeof(*chan_config), GFP_KERNEL);
-+	if (!chan_config)
-+		return -ENOMEM;
-+
- 	indio_dev->channels = chan;
- 	indio_dev->num_channels = st->num_channels;
-+	st->channel_config = chan_config;
- 
- 	for_each_available_child_of_node(np, child) {
- 		ret = of_property_read_u32(child, "reg", &channel);
--- 
-2.17.1
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
