@@ -2,97 +2,151 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F469C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F0C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04946208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563A120679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3xAV4Ny"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PC43vDQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfFUOzv (ORCPT
+        id S1726378AbfFUO4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:55:51 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:43063 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUOzv (ORCPT
+        Fri, 21 Jun 2019 10:56:06 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38292 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFUO4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:55:51 -0400
-Received: by mail-vk1-f194.google.com with SMTP id m193so1342856vke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:55:50 -0700 (PDT)
+        Fri, 21 Jun 2019 10:56:05 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n11so7201905qtl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=McASa29lxjZpj0oJ3ZfQEaOaFXbUU/UG3+m1x1GG8co=;
-        b=X3xAV4NyA3y9UzA2IA/Mk+qrbdrPKZIojhR+endGbpMJCR38xtZNqJ9k22djG6EF8T
-         lgeu4QQxt/tsghp0XWw3YgkSmM36uLQez2tVp4MN+NadgIHC0T2hblyRbSo9szBtCly7
-         Wl/mDoc9QOORA8aKlSOXdTAQ2mVhqtKyuShPZOn9t5BGSWAGAHhGSbwIAFb5WEVoeR7E
-         kP+EjwXcBAkzjawd196Z/h9+budQycSYG4WoqpHICVdO3OTu0jmpgEthvef+K46SvBJp
-         k+whefb30M+1PGYlpvNw5ZQWAt4m/unHVMNLGpia4S28NYrHiRibidO0Ao1/uRPdY6o9
-         rBaQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R6wGdifeYAUiKIP0GGBLBBUmTIFn7pweCX0GnLETICU=;
+        b=PC43vDQr0y9Pg1xdmHWeVytAX0ixGDJ2KVFtpgNjVmhFcr7lbZ/t7arGdgSs8On4Ak
+         ohXY78wNEgZSyIcjb+KONvqeB3pqoKuDYW70mISNbDqa7lpE5pU4K3quOAsgO49Qywyv
+         /Y+V1Au4AV7aqfEcLunnS5+kC4RjT1K+J/HNYLYNNNJ8knZASPBiDA5dSKl8/ubBkWfK
+         CFCv6jpPDFaO7GdHIugMNa56NIMAf3wAjJhG3o9RBtaIwCLOxPpbHEQdK38zIy8t5lJt
+         FK2vkXbIVTeXWMsQRMZB8VpadI3wrbanvwNdt65Chd6QoQlwOxyYaeUkJPH+6sSYCqmP
+         KZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=McASa29lxjZpj0oJ3ZfQEaOaFXbUU/UG3+m1x1GG8co=;
-        b=mSqIUyPOsJZYcK/iem99k+FHrMmFHhYxmUYlO5x+Fr0CqaonCO34kAJE9wIyv0NB8r
-         9GO4Wnt4nFQ5iH8An+3qgd7ACu7Mv/R7alSnKwxHDO3qNoeItNeWRqV9sWhRweiczMMM
-         q77SGs6oJV/RJJxPIqHKQ250fNeiem8y7iLvaXIMo2RsHYO9Exb9Gb53901a18QDWYUs
-         eymMvQKWdWCWK0LIkao1PGQ5bG6wK/4MdnQNiPPgL4ihV3fKTSiMf7123nVQtJLG4oJ5
-         GSAqBcTD4c2Nou1k9zkQIMHbCGYC+UpODrXKntqJQ7NEnWvpAHsuxu1wHeH7gT0Qw/E/
-         /RdQ==
-X-Gm-Message-State: APjAAAVKNRUIVG/sjpGEMBMmAIrcwdFtJ27W/gNdkP/Pm3oVVZLssdzi
-        OLAx2+Q8U/vpLhARTnWfFwDQPeal2LTi/SAtZ3w=
-X-Google-Smtp-Source: APXvYqxCcxQEXetp+8qxWOCkYRfCFeSjQTr5ue+VK7qlD1hltuVYOFpeQY0fPGUN+r8Luu/8sd8vTD7bA2pcXXHSCQ0=
-X-Received: by 2002:a1f:14c1:: with SMTP id 184mr9771787vku.69.1561128950035;
- Fri, 21 Jun 2019 07:55:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R6wGdifeYAUiKIP0GGBLBBUmTIFn7pweCX0GnLETICU=;
+        b=aI47+SsvyvVODTcIQOV/J8PwF+J5i6E/JSJIPT82WeKwJz58lN5GLyVex+4ULCvCQX
+         b3fZXuyQeCmJL2NnjUQUnmIYZmAvbbl0FCpdS3rZLCXHSnO+TPIKtuRAn+S46d0pCFNr
+         Om95uklMVa9s4TYJoajO3rEUkjFsI2YFhQdZQipOAJYpHUwbUMtXBn8KpZxYuqlLq/8v
+         ZT2br5wuiGPMTUYSTTbvSjZOTncwlQ4z0eWf+m3uHue85IttBSyywXqKZx4ow1LgzoPt
+         ynC9qeViHZ0kO4lFhN5wCkVsWT9WO+fwjrnbrak8kgaklyaJ899T/KzXheBc+hDQkuwb
+         nZ/A==
+X-Gm-Message-State: APjAAAXDBBqqN0Vq62KxbLZqy6650CFd24ILQtAlYhj7Tja6kxvkyZ+A
+        B/kEfJfR0qfKJikgujfk0OBWRA==
+X-Google-Smtp-Source: APXvYqyAbsm7eaRgX9kud1TQA1Yyk/iFLRylWhqYxFe6R8hA4ojV40v1zXQ0PAw31WmaCEsLhCsTyg==
+X-Received: by 2002:ac8:7349:: with SMTP id q9mr113636418qtp.151.1561128964914;
+        Fri, 21 Jun 2019 07:56:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id y29sm1546916qkj.8.2019.06.21.07.56.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Jun 2019 07:56:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1heKxQ-00014G-1d; Fri, 21 Jun 2019 11:56:04 -0300
+Date:   Fri, 21 Jun 2019 11:56:04 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dag Moxnes <dag.moxnes@oracle.com>
+Cc:     dledford@redhat.com, leon@kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Parav Pandit <parav@mellanox.com>
+Subject: Re: [PATCH] RDMA/core: Fix race when resolving IP address
+Message-ID: <20190621145604.GS19891@ziepe.ca>
+References: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
 MIME-Version: 1.0
-References: <1560755897-5002-1-git-send-email-yannick.fertre@st.com>
- <CACvgo50vSNCTTTKp9D_07tazOE9YkU-zKAsDywvWe6h0NgcEmQ@mail.gmail.com> <2c169739-febb-12a9-0fa1-d5da053ded67@st.com>
-In-Reply-To: <2c169739-febb-12a9-0fa1-d5da053ded67@st.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Fri, 21 Jun 2019 15:53:32 +0100
-Message-ID: <CACvgo52tK2Gaz7wzJ0Cw1rKsTog6PbGF4G8at=cO-oyiEZ4EUg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/stm: drv: fix suspend/resume
-To:     Yannick FERTRE <yannick.fertre@st.com>
-Cc:     Philippe CORNU <philippe.cornu@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 at 15:01, Yannick FERTRE <yannick.fertre@st.com> wrote:
->
-> Hi Emil,
->
-> The msm driver tests the return value & set state to NULL if no error is
-> detected.
->
-> the ltdc driver tests the return value & force to suspend if an error is
-> detected.
->
-> It's not exactly the same.
->
-D'oh I've misread that patch as pm_runtime_force_suspend() being
-called when the atomic helper succeeds.
+On Fri, Jun 21, 2019 at 04:09:16PM +0200, Dag Moxnes wrote:
+> Use neighbour lock when copying MAC address from neighbour data struct
+> in dst_fetch_ha.
+> 
+> When not using the lock, it is possible for the function to race with
+> neigh_update, causing it to copy an invalid MAC address.
+> 
+> It is possible to provoke this error by calling rdma_resolve_addr in a
+> tight loop, while deleting the corresponding ARP entry in another tight
+> loop.
+> 
+> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+> Change-Id: I3c5f982b304457f0a83ea7def2fac70315ed38b4
+>  drivers/infiniband/core/addr.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+> index 2f7d141598..e4945fd1bb 100644
+> +++ b/drivers/infiniband/core/addr.c
+> @@ -333,12 +333,16 @@ static int dst_fetch_ha(const struct dst_entry *dst,
+>  	if (!n)
+>  		return -ENODATA;
+>  
+> +	read_lock_bh(&n->lock)
+>  	if (!(n->nud_state & NUD_VALID)) {
+> -		neigh_event_send(n, NULL);
+>  		ret = -ENODATA;
+>  	} else {
+>  		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+>  	}
+> +	read_unlock_bh(&n->lock);
+> +
+> +	if (ret)
+> +		neigh_event_send(n, NULL);
+>  
+>  	neigh_release(n);
 
-Thanks for the correction :-)
-Emil
+Can we write this with less spaghetti please, maybe:
+
+static int dst_fetch_ha(const struct dst_entry *dst,
+			struct rdma_dev_addr *dev_addr,
+			const void *daddr)
+{
+	struct neighbour *n;
+	int ret = 0;
+
+	n = dst_neigh_lookup(dst, daddr);
+	if (!n)
+		return -ENODATA;
+
+	read_lock_bh(&n->lock);
+	if (!(n->nud_state & NUD_VALID)) {
+		read_unlock_bh(&n->lock);
+		goto out_send;
+	}
+	memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+	read_unlock_bh(&n->lock);
+
+	goto out_release;
+
+out_send:
+	neigh_event_send(n, NULL);
+	ret = -ENODATA;
+out_release:
+	neigh_release(n);
+
+	return ret;
+}
+
+Also, Parav should look at it.
+
+Thanks,
+Jason
