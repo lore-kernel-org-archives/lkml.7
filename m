@@ -2,167 +2,108 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B384C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D07C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29CC20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TD4qocmg"
+	by mail.kernel.org (Postfix) with ESMTP id 5273721537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFUJiA (ORCPT
+        id S1726579AbfFUJiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:38:00 -0400
-Received: from mout.web.de ([212.227.17.12]:44073 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfFUJiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:38:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561109844;
-        bh=kT4uxcn8PVrD/eGpDIX0oHe4BUNKCY9msva6hg3SIZQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=TD4qocmgEZ9An9idJU6ffuqI+DiOJf8r3XHj1NmfILGML2HXRs16i8WntIYUY/Y76
-         HgSbUSodbag7XqyEEUN6fjq2485zpYom/Cx2zJ+qaJBcFILN22A45P1Zu7Rxvq3ozF
-         sk2tjfzaseCibihOgoEkzC2LzF7LzLPFiPevg69Q=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.156.129]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MRUBA-1i2Uwe17Hs-00ShUz; Fri, 21
- Jun 2019 11:37:24 +0200
-Subject: Re: Coccinelle: Add a SmPL script for the reconsideration of
- redundant dev_err() calls
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        kernel-janitors@vger.kernel.org
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>
-References: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de>
- <alpine.DEB.2.21.1906202046550.3087@hadrien>
- <34d528db-5582-5fe2-caeb-89bcb07a1d30@web.de>
- <alpine.DEB.2.21.1906202110310.3087@hadrien>
- <13890878-9e5f-f297-7f7c-bcc1212d83b7@web.de>
- <alpine.DEB.2.20.1906211119430.3740@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <15ca8d4b-e2d0-f021-de6e-c929cf3e1039@web.de>
-Date:   Fri, 21 Jun 2019 11:37:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 21 Jun 2019 05:38:09 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33086 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:38:09 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so3963560qkc.0;
+        Fri, 21 Jun 2019 02:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FEpr/HTFcZTm84CTGTRQ7vot2qZMrXbzR3E1H7td1Y=;
+        b=SJlqq79/sQy4z1pGNEszIyefch+9nPWjNa5pIvVOv5cpZN39HPRWrK7gbrkt5cPU5D
+         SEIM1rHI+caxqklyXGVnu/pTwQ62Xz6REbk3xPJgRSVLG5sMULj0K3IKqXsgjMZ+ENby
+         ehMPPjz71mwa+zaeIq0ZA6+psF8vgrld6oy0nO8OnOEtafAXq/7/1Khlw+Xyn7G7nkVC
+         U+kQOrxkZ5Ae3Bc2ZHQUOl5r3w8x71lCMqzweB/kNHfQAxuaiQeJbmxe3y0F9QAS9V00
+         R/n7cUgVEMBpEbvpInVmom2oHJ7PcHI4poxqf5NYeycC1/FaaKvaRvdXnwxDtHN6QK7T
+         xurA==
+X-Gm-Message-State: APjAAAVmHtQE7793zZou5tfG86mSID+bvNk1RtUngck7W8/JaXxACtlT
+        UjZJAhA38SQK1xqE6jDAZ9vNLSx4UtfwATKvc5s=
+X-Google-Smtp-Source: APXvYqyu1R3/ArJ1RnXaJee6C3gWbMnJXIFJvhO/RLJ0IrTQdGZ3aTOn68Wt0uwa5ueBtlRMpktn3DRr8VyhAhaQnSA=
+X-Received: by 2002:a37:dcc7:: with SMTP id v190mr110347907qki.286.1561109887787;
+ Fri, 21 Jun 2019 02:38:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.20.1906211119430.3740@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:u7gPVXMyt/am6ioNH4VSIIFCmOT+btfvIGfJ1Ix/khkhdwc7CIr
- NfWagkfmmIoKJfdyXSCTjMGtZ0tXS413CNLldTiiRVJnl3jE3RVjzUesOQ0tw2osb6FK4Rv
- LtPhN1dO+v7flAaoXNAtVwXnaFqn3i7B0CbMd5B5ZHp5rIq/k73nWwBzQ1yMFrNkk2Fvy/l
- JB1eyQmpkb7if8HTSfv4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ujdmrse1UAA=:eKcdsKUKU7NCDrs12IR7rO
- PyKP5wHeDosUjD4cW68XYIZWESL9gwFmNGMojCtJn3a8Am6XM+dk+7gS43JBWw2POzLhYlY0i
- diHr2KHnqDQZACyKGE7hY+I1Hg0XNRmJ05eFMhSGlUJ49CMQ4ZSx27FdfxxFCGT3Rpde58lBK
- 799Oi/7SxkV/uvBIH18CmvhYvorLLAQHkgpd2ApzJ9iRlJpsyxMvNlaOVmZnijhqKtvnVmHin
- m7jQ4DBQqUNxlwclWED2kIfdpsBcxgHkR+TLA6Pk9Qle1vSidxYfQUCLe3LfaYw+7Ba02Pxq9
- S66HKggxuYZAnOgls2Kz3+jsaiFe5oNYGDl4GEqVnBVzshE3ZdLt8b71K2jeT+sqkFbffr3ng
- BeK+87oYtGC8tXS9Rg5vDVc/Loq9RHyngIQwPsjcCe+oyNDlSoH8d1MY7jcTJcascsIb+vZbP
- Glxa0q71SozzloGWLeDs6xSED+GS/tn64AX8KTzOJIrrWGTBQ922F4uPHZ5uxLR2lkRVr/H2j
- yDv2HyYS2YA8KENNGkDnC7IHOENiwORz4UC9NuMfSjzqfhbXkegqTu2yd9tQxfBTjRgtzfPVI
- xsKO6VFXKn9DtwIJe4PjwZX3G+w0dEGdjma/+02h/krrOWHVXB2S7pC9dv3+8IAcgvDZJtsHe
- rXSmopLDUOc5aGADF4AtPm0OEudBKsiiOpH8DA4DRxWAEI2SRBzFtwA/4RHzHM94XLYUMWalW
- 5rhTc07BHJTtMaH8kQqDno85yvtuxbEVKcaphohSACLytkeer/UWJZV7RQULQCRwtKYaieFsz
- 6/Uayw38D7oJMOnXUwtk7YZreCztey+Og0zjFDzs25YXe5lzglz9Octu0I0M4eql/IXbxhRLF
- gPtMT9r7QOrN7OWYFx9sz9Qq1Qq4xZ6XBGM+PhOLvLklqLCTWEXqaY+8zMQU7pbc+MqGXGiUP
- dcPENdluTfQdkkFrOzqYfubq8wOHZ1uElVM/VChmIJbbOIUVjuGa3
+References: <20190604160944.4058-1-christian@brauner.io> <20190604160944.4058-2-christian@brauner.io>
+ <20190620184451.GA28543@roeck-us.net> <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+In-Reply-To: <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 21 Jun 2019 11:37:50 +0200
+Message-ID: <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I still don't see the point of specifying return.  Why not just S, where=
- S
-> is a statement metavariable?
-
-Do you find the following SmPL change specification more appropriate?
-
-@deletion depends on patch@
-expression e;
-statement s;
-@@
- e =3D devm_ioremap_resource(...);
- if (IS_ERR(e))
-(
--{
--   dev_err(...);
-    s
--}
-|
- {
- <+...
--   dev_err(...);
- ...+>
- }
-)
-
-
-Will any additional constraints become relevant?
-
-
->> Would this approach need a version check for the Coccinelle software?
+On Fri, Jun 21, 2019 at 12:10 AM Christian Brauner <christian@brauner.io> wrote:
+> On Thu, Jun 20, 2019 at 11:44:51AM -0700, Guenter Roeck wrote:
+> > On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
 >
-> Why would that be necessary?
+> clone3() was placed under __ARCH_WANT_SYS_CLONE. Most architectures
+> simply define __ARCH_WANT_SYS_CLONE and are done with it.
+> Some however, such as nios2 and h8300 don't define it but instead
+> provide a sys_clone stub of their own because of architectural
+> requirements (or tweaks) and they are mostly written in assembly. (That
+> should be left to arch maintainers for sys_clone3.)
+>
+> The build failures were on my radar already. I hadn't yet replied
+> since I haven't pushed the fixup below.
+> The solution is to define __ARCH_WANT_SYS_CLONE3 and add a
+> cond_syscall(clone3) so we catch all architectures that do not yet
+> provide clone3 with a ENOSYS until maintainers have added it.
+>
+> diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
+> index 7a39e77984ef..aa35aa5d68dc 100644
+> --- a/arch/arm/include/asm/unistd.h
+> +++ b/arch/arm/include/asm/unistd.h
+> @@ -40,6 +40,7 @@
+>  #define __ARCH_WANT_SYS_FORK
+>  #define __ARCH_WANT_SYS_VFORK
+>  #define __ARCH_WANT_SYS_CLONE
+> +#define __ARCH_WANT_SYS_CLONE3
 
-I guess that the application of SmPL disjunctions for if statements
-can trigger development concerns.
+I never really liked having __ARCH_WANT_SYS_CLONE here
+because it was the only one that a new architecture needed to
+set: all the other __ARCH_WANT_* are for system calls that
+are already superseded by newer ones, so a new architecture
+would start out with an empty list.
 
-Regards,
-Markus
+Since __ARCH_WANT_SYS_CLONE3 replaces
+__ARCH_WANT_SYS_CLONE for new architectures, how about
+leaving __ARCH_WANT_SYS_CLONE untouched but instead
+coming up with the reverse for clone3 and mark the architectures
+that specifically don't want it (if any)?
+
+       Arnd
