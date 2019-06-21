@@ -2,87 +2,77 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE8AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACD3C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BD9205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DB0205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfFUVRr (ORCPT
+        id S1726311AbfFUVSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 17:17:47 -0400
-Received: from sauhun.de ([88.99.104.3]:56154 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfFUVRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 17:17:47 -0400
-Received: from localhost (p5486CF54.dip0.t-ipconnect.de [84.134.207.84])
-        by pokefinder.org (Postfix) with ESMTPSA id 21D772C077A;
-        Fri, 21 Jun 2019 23:17:45 +0200 (CEST)
-Date:   Fri, 21 Jun 2019 23:17:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c
- drivers
-Message-ID: <20190621211744.GC950@kunai>
-References: <1560796779-17117-1-git-send-email-info@metux.net>
+        Fri, 21 Jun 2019 17:18:17 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:38309 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfFUVSR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 17:18:17 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id BD8DAE0006;
+        Fri, 21 Jun 2019 21:18:11 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 23:18:11 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: SoC for 5.3
+Message-ID: <20190621211811.GA29792@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560796779-17117-1-git-send-email-info@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Arnd, Olof,
 
---da4uJneut+ArUgXk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A single fix for a warning when compiling with W=1
 
-On Mon, Jun 17, 2019 at 08:39:37PM +0200, Enrico Weigelt, metux IT consult =
-wrote:
-> From: Enrico Weigelt <info@metux.net>
->=20
-> Add more helper macros for trivial driver init cases, similar to the
-> already existing module_i2c_driver()+friends - now for those which
-> are initialized at other stages (eg. by subsys_initcall()).
->=20
-> This helps to further reduce driver init boilerplate.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Uh, no! Using subsys_initcall is an old fashioned hack to work around
-boot time dependencies. Unless there are very strong arguments, I
-usually do not accept them anymore. So, any simplification of that sends
-out the wrong message.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
+are available in the Git repository at:
 
---da4uJneut+ArUgXk
-Content-Type: application/pgp-signature; name="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/at91-5.3-soc
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to 95701b1c3c8fe36368361394e3950094eece4723:
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0NSXgACgkQFA3kzBSg
-KbZjXw/7BDQPWzOvqZPNd97wNb483GXB/NYxRB2BDp1AfM5gWiuL/Bboumrl55JP
-p4olpY5+yuKMld0e4kFyNHAwtLYwrYtSxu/BORhV4Cw4J0JdgaCuw6fcOEgQ2nze
-vE4rBvCZ5iQHWCG077uhNkH1SdO9yiIadcycWst7DhFCCIPj5o5SNNXM6xdnLUO1
-DVcZkiO8yqQGemySpJXRGlQH6qQ3JEVTOaliWB8A49JFioI9zNkMEUyLxzw2vNvL
-PCfcDjTIDa0nwgFxoty5FNK/UJRBMwO9GOGqUfSemS/INjYp4OQ8e6q+IGYWVSUE
-0uwkg/aYvvKLCEPtBOspdRO+larQQIlkykicBDRRzzbbjG4CNgc0pyZCK1u15yQb
-Ag1T55ThdT4DS9dgWnPjHnTh6Zb3Ge3KuJu2WuwGitlA+XPKCWMIESUwZ4gyTJd/
-joshHaK0TvtqtRVxvtcEqo8JCXHd1IH0OWx/pacGPW9NkmBpjTRHIo1xGPwzFnkj
-PyC8qyh/rSDZyfVvGXDcdYOqCzj6Rznqh9rcSgGqxKWKDNaCjwk8xa3p5weahKIc
-gPJF8Z/VflyKGhpTBzFRGMpigvqfwINbWvVOi8T9FLlEkAFGNa4Ty/hI3d+xY6dj
-pNu2XykPMevZrYs2y2JDiQ1Zb+66MBl6ES5FLspJ6NV52t58wZ0=
-=5ptx
------END PGP SIGNATURE-----
+  arm: add missing include platform-data/atmel.h (2019-06-20 12:15:47 +0200)
 
---da4uJneut+ArUgXk--
+----------------------------------------------------------------
+AT91 SoC for 5.3
+
+ - fix a pm.c warning with W=1
+
+----------------------------------------------------------------
+Philippe Mazenauer (1):
+      arm: add missing include platform-data/atmel.h
+
+ arch/arm/mach-at91/pm.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
