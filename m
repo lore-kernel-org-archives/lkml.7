@@ -2,166 +2,113 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA1C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9707C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3712064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8CD2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5cwSWd8"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YwbmlECQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfFUBoG (ORCPT
+        id S1726231AbfFUBpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:44:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36109 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFUBoF (ORCPT
+        Thu, 20 Jun 2019 21:45:07 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39464 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbfFUBpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:44:05 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so2170392plt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tkhWcpP90IbCc1eyz8PQ0udFiMlHh5Rce8pgGVY2kqc=;
-        b=Y5cwSWd84cr5pT+ngrBbRH9+/jE2OLSDi0XBYRKj6+Xus5HgLPw1PJdKybc44+nUq1
-         X3dWOffFmP1CVquRKX3fXOgWa8rTvna91lq/GyTuuaUPaH+RnKh9YffwEhOJRx81tOa8
-         46MwCFN+/0W2M46jOSujkeC2v1R7szVirSpn4XvYNKC8TuDZ+H8h5se3jdQAwoePEaHC
-         /Rzze0bP7Z5ZL/wr1D6H7RItwgP+7T/SrAg/v8ulxcNElp+ntccKXuVxK9SkHblpGGbm
-         VMjZVlaodt68TaUWIaUhE4aRYv1khWwHZFnPTaUvRmNqe0kXa8zoicsrwwrJ8jEmKftr
-         sKMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tkhWcpP90IbCc1eyz8PQ0udFiMlHh5Rce8pgGVY2kqc=;
-        b=cF0vwOZlgCwthM6618TlPQ15EHK2jVHCugQvrSxo122/3NuU7ahF9p833vhKy5bSYv
-         Wt2wkFzggkDLhsKWBgdoiT8Kl4uNU5aXKISYe5rHVwsr2JbeKtLZQB5q/0ojVnAczsG2
-         Psh8bresAnOVUrVgT0jcfmA/G4QYLwTI6aSLXEQraPAaxgpwrwpu2AqoFWJ495MzjkU5
-         9sgKeftGehLwBvUj3aZ/GbimOnT5I7AI70Z4WcX5ZTUfPwASMoW+V6PMONt2C4hefwfs
-         LuVeWztDyvHFkRbZW13blqNa809bxHvqyqf2OY3chOlTvTu4nYxwm1A3LmEs0KmEK2Hq
-         AqkQ==
-X-Gm-Message-State: APjAAAU5KTXlvos33zTFEmFz6xT+97tytTGOIvlqCVMht+UznX/xuKf0
-        aomOvxsi+6ZPdGbULqda+QHsTmQ1
-X-Google-Smtp-Source: APXvYqzrMYBb0VFopsTbd4r4MVBFyvwIJ9B3mR3PK+YTa21v0FfnE2hgifoWrwe0qsGetzNidIeJwg==
-X-Received: by 2002:a17:902:1101:: with SMTP id d1mr7875672pla.212.1561080916138;
-        Thu, 20 Jun 2019 18:35:16 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id p68sm707845pfb.80.2019.06.20.18.35.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Jun 2019 18:35:15 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH v2] sched/isolation: Prefer housekeeping cpu in local node
-Date:   Fri, 21 Jun 2019 09:35:11 +0800
-Message-Id: <1561080911-22655-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Jun 2019 21:45:06 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L1iKEY017834
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:45:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=NrRfeE6O7zXK/MPIrNgUA7F0KokJIm+rRUwD+I5/RIw=;
+ b=YwbmlECQarVIHe+7+Zcp+04wW8sLZNiRRKUUlSsjhNCIQFWKP4J3xYvpw7v/ROb40/Hb
+ GBwGbQD4Ep2Xan37H+JU2JD19E8FWCBRuN7WcW/N2Q4SVCitMBYFitkW8T2AhjuT+PIN
+ SXSxIxhkpvQcMt6F/MSOnXul92qHClbDxPk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t8aj32h9b-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:45:05 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 20 Jun 2019 18:44:56 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 5AFF962E2B4E; Thu, 20 Jun 2019 18:44:56 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@fb.com>, <acme@redhat.com>, <davidca@fb.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>, <stable@vger.kernel.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf-script: assume native_arch for pipe mode
+Date:   Thu, 20 Jun 2019 18:44:38 -0700
+Message-ID: <20190621014438.810342-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210013
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+In pipe mode, session->header.env.arch is not populated until the events
+are processed. Therefore, the following command crashes:
 
-In real product setup, there will be houseeking cpus in each nodes, it 
-is prefer to do housekeeping from local node, fallback to global online 
-cpumask if failed to find houseeking cpu from local node.
+   perf record -o - | perf script
 
-Cc: Ingo Molnar <mingo@redhat.com> 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+(gdb) bt
+
+It fails when we try to compare env.arch against uts.machine:
+
+        if (!strcmp(uts.machine, session->header.env.arch) ||
+            (!strcmp(uts.machine, "x86_64") &&
+             !strcmp(session->header.env.arch, "i386")))
+                native_arch = true;
+
+In pipe mode, it is tricky to find env.arch at this stage. To keep it
+simple, let's just assume native_arch is always true for pipe mode.
+
+Cc: stable@vger.kernel.org #v5.1+
+Fixes: 3ab481a1cfe1 ("perf script: Support insn output for normal samples")
+Reported-by: David Carrillo Cisneros <davidca@fb.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
-v1 -> v2:
- * introduce sched_numa_find_closest
+ tools/perf/builtin-script.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- kernel/sched/isolation.c | 12 ++++++++++--
- kernel/sched/sched.h     |  5 ++---
- kernel/sched/topology.c  | 14 ++++++++++++++
- 3 files changed, 26 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 123ea07..589afba 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -16,9 +16,17 @@ static unsigned int housekeeping_flags;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 61f00055476a..3355af25e7d0 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3733,7 +3733,8 @@ int cmd_script(int argc, const char **argv)
+ 		goto out_delete;
  
- int housekeeping_any_cpu(enum hk_flags flags)
- {
--	if (static_branch_unlikely(&housekeeping_overridden))
--		if (housekeeping_flags & flags)
-+	int cpu;
-+
-+	if (static_branch_unlikely(&housekeeping_overridden)) {
-+		if (housekeeping_flags & flags) {
-+			cpu = sched_numa_find_closest(housekeeping_mask, smp_processor_id());
-+			if (cpu < nr_cpu_ids)
-+				return cpu;
-+
- 			return cpumask_any_and(housekeeping_mask, cpu_online_mask);
-+		}
-+	}
- 	return smp_processor_id();
- }
- EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b08dee2..0db7431 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1212,9 +1212,6 @@ enum numa_topology_type {
- extern enum numa_topology_type sched_numa_topology_type;
- extern int sched_max_numa_distance;
- extern bool find_numa_distance(int distance);
--#endif
--
--#ifdef CONFIG_NUMA
- extern void sched_init_numa(void);
- extern void sched_domains_numa_masks_set(unsigned int cpu);
- extern void sched_domains_numa_masks_clear(unsigned int cpu);
-@@ -1224,6 +1221,8 @@ static inline void sched_domains_numa_masks_set(unsigned int cpu) { }
- static inline void sched_domains_numa_masks_clear(unsigned int cpu) { }
- #endif
- 
-+extern int sched_numa_find_closest(const struct cpumask *cpus, int cpu);
-+
- #ifdef CONFIG_NUMA_BALANCING
- /* The regions in numa_faults array from task_struct */
- enum numa_faults_stats {
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 63184cf..3d3fb04 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1726,6 +1726,20 @@ void sched_domains_numa_masks_clear(unsigned int cpu)
- 
- #endif /* CONFIG_NUMA */
- 
-+int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
-+{
-+#ifdef CONFIG_NUMA
-+	int i, j = cpu_to_node(cpu);
-+
-+	for (i = 0; i < sched_domains_numa_levels; i++) {
-+		cpu = cpumask_any_and(cpus, sched_domains_numa_masks[i][j]);
-+		if (cpu < nr_cpu_ids)
-+			return cpu;
-+	}
-+#endif
-+	return nr_cpu_ids;
-+}
-+
- static int __sdt_alloc(const struct cpumask *cpu_map)
- {
- 	struct sched_domain_topology_level *tl;
+ 	uname(&uts);
+-	if (!strcmp(uts.machine, session->header.env.arch) ||
++	if (data.is_pipe ||  /* assume pipe_mode indicates native_arch */
++	    !strcmp(uts.machine, session->header.env.arch) ||
+ 	    (!strcmp(uts.machine, "x86_64") &&
+ 	     !strcmp(session->header.env.arch, "i386")))
+ 		native_arch = true;
 -- 
-2.7.4
+2.17.1
 
