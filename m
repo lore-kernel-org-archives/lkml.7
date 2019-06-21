@@ -2,130 +2,76 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5DBC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7492DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B5521530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EB2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFULE2 (ORCPT
+        id S1726634AbfFULFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:04:28 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52099 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFULE1 (ORCPT
+        Fri, 21 Jun 2019 07:05:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33644 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfFULFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:04:27 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id AEB14804F9; Fri, 21 Jun 2019 13:04:14 +0200 (CEST)
-Date:   Fri, 21 Jun 2019 13:04:05 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lukas Schneider <lukas.s.schneider@fau.de>
-Cc:     kim.jamie.bradley@gmail.com, pakki001@umn.edu,
-        colin.king@canonical.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Jannik Moritz <jannik.moritz@fau.de>,
-        linux-kernel@i4.cs.fau.de
-Subject: Re: [PATCH 4/4] rts5208: Fix usleep range is preferred over udelay
-Message-ID: <20190621110405.GG24145@amd>
-References: <20190619154648.13840-1-lukas.s.schneider@fau.de>
- <20190619154648.13840-4-lukas.s.schneider@fau.de>
+        Fri, 21 Jun 2019 07:05:37 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x2so6490258qtr.0;
+        Fri, 21 Jun 2019 04:05:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uWrjRbv5sT8Ycn8FrgxcuobL7x+daQ4VNzNCCGx2zM4=;
+        b=gDeOrE0giz3FHfLZXaSk9EmPKJQw2RLL+gXvzpCsy9cajxIJEsjB6Xi+WGuFlTkCDM
+         qGSam0tW5i+a8PxQ6z77UKxJ+7rlatFUjm8rg/fvzV9AxaJSAopf2k6ohwA94H1lQhgY
+         GoK2bKpqxjlIbAKSCmRLYRh/cCo/bQ5JZVlSz45NGW/pRozmv+M5q/b18oEE3NZSwX9H
+         OdFMAblZXIA+baMDPTux4pEyEsvAiitdrtSCXk2qJHvpD4Y3FYQ9RSk+9E3DoY6XQOxU
+         9tfPyV0u7CzO66sEnSAaa2HU+yqCfZArMUiPSi22C4tFN1c6aZm8dr+Y6KqiFsJt7zWa
+         ifEw==
+X-Gm-Message-State: APjAAAWiNowFQ1UAPwy6s8ra5NHV+kj26Vb2N81ABIXv89Sg0GgT2XDV
+        8IvNEwVIfcTyiqWT/EHvHmUw3dJyZuXA0sJNg2g=
+X-Google-Smtp-Source: APXvYqw5uqxdf+phL6riSVug0c30oEd9Ob3YA4KXECDUZ7l4rUQff3J+CqHtXgfdMec/Uqfgyj4gqSkdxcvTzscBjxU=
+X-Received: by 2002:ac8:3485:: with SMTP id w5mr38463529qtb.142.1561115135877;
+ Fri, 21 Jun 2019 04:05:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
-Content-Disposition: inline
-In-Reply-To: <20190619154648.13840-4-lukas.s.schneider@fau.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CGME20190617131645epcas1p3340c80f9e83af93bcbb4c68128b1ea44@epcas1p3.samsung.com>
+ <20190617131624.2382303-1-arnd@arndb.de> <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
+In-Reply-To: <1628618a-7cf6-506e-9d87-c0966a99fbea@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 21 Jun 2019 13:05:19 +0200
+Message-ID: <CAK8P3a3qTCnJn7X1msg03Av71aZmmN8YB=WNs0JfzYoMH+uL-w@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: pvr2fb: fix link error for pvr2fb_pci_exit
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 12:58 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+>
+> On 6/17/19 3:16 PM, Arnd Bergmann wrote:
+> > When the driver is built-in for PCI, we reference the exit function
+> > after discarding it:
+> >
+> > `pvr2fb_pci_exit' referenced in section `.ref.data' of drivers/video/fbdev/pvr2fb.o: defined in discarded section `.exit.text' of drivers/video/fbdev/pvr2fb.o
+> >
+> > Just remove the __exit annotation as the easiest workaround.
+>
+> Don't we also need to fix pvr2fb_dc_exit() for CONFIG_SH_DREAMCAST=y case?
 
---p7qwJlK53pWzbayA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think that's correct, yes. Can you fix that up when applying the patch?
 
-On Wed 2019-06-19 17:46:48, Lukas Schneider wrote:
-> This patch fixes the issue reported by checkpatch:
->=20
-> CHECK: usleep_range is preferred over udelay;
-> see Doucmentation/timers/timers-howto.txt
->=20
-> It's save to sleep here instead of using busy waiting,
-> because we are not in an atomic context.
-
-Is it good idea? How can the system really sleep for 50 usec?
-
-      	   	     	     	    	   	     Pavel
-
-> @@ -865,7 +865,7 @@ static int sd_change_phase(struct rtsx_chip *chip, u8=
- sample_point, u8 tune_dir)
->  						     PHASE_CHANGE);
->  			if (retval)
->  				return retval;
-> -			udelay(50);
-> +			usleep_range(50, 60);
->  			retval =3D rtsx_write_register(chip, SD_VP_CTL, 0xFF,
->  						     PHASE_CHANGE |
->  						     PHASE_NOT_RESET |
-> @@ -877,14 +877,14 @@ static int sd_change_phase(struct rtsx_chip *chip, =
-u8 sample_point, u8 tune_dir)
->  						     CHANGE_CLK, CHANGE_CLK);
->  			if (retval)
->  				return retval;
-> -			udelay(50);
-> +			usleep_range(50, 60);
->  			retval =3D rtsx_write_register(chip, SD_VP_CTL, 0xFF,
->  						     PHASE_NOT_RESET |
->  						     sample_point);
->  			if (retval)
->  				return retval;
->  		}
-> -		udelay(100);
-> +		usleep_range(100, 110);
-> =20
->  		rtsx_init_cmd(chip);
->  		rtsx_add_cmd(chip, WRITE_REG_CMD, SD_DCMPS_CTL, DCMPS_CHANGE,
-> @@ -918,7 +918,7 @@ static int sd_change_phase(struct rtsx_chip *chip, u8=
- sample_point, u8 tune_dir)
->  				return retval;
->  		}
-> =20
-> -		udelay(50);
-> +		usleep_range(50, 60);
->  	}
-> =20
->  	retval =3D rtsx_write_register(chip, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);
-> @@ -1416,7 +1416,7 @@ static int sd_wait_data_idle(struct rtsx_chip *chip)
->  			retval =3D STATUS_SUCCESS;
->  			break;
->  		}
-> -		udelay(100);
-> +		usleep_range(100, 110);
->  	}
->  	dev_dbg(rtsx_dev(chip), "SD_DATA_STATE: 0x%02x\n", val);
-> =20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---p7qwJlK53pWzbayA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0MuaUACgkQMOfwapXb+vJdwQCbBhRj4pZVZbSxjFw5Ou1WPS5+
-SJIAnRX/bJiI/3/Npo1cUiL+ZXtQx3UK
-=+6QU
------END PGP SIGNATURE-----
-
---p7qwJlK53pWzbayA--
+     Arnd
