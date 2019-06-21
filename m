@@ -2,90 +2,82 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C11C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAB6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CDB2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:24:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZnhVfspA"
+	by mail.kernel.org (Postfix) with ESMTP id C45C22084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfFULY2 (ORCPT
+        id S1726525AbfFUL2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:24:28 -0400
-Received: from ozlabs.org ([203.11.71.1]:35271 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbfFULY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:24:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Vbtc4QFXz9s4V;
-        Fri, 21 Jun 2019 21:24:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561116265;
-        bh=w9QqvJ0HjQ+a4vkaOugPMvDP3ZNXDtM3YxoGeN1r9wk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZnhVfspAFndgY7TT1s+MnpETU1yntpVIjiSPTeJiju9Qkv3UNe6FOhWYChPt1sJdY
-         iNdcvMLjuRZQMgtSe5KB/uGVbMpgbJ09QpHVXvFvWo1NKjfgbgC8I0jqOxhGCKnsze
-         yrXfYalJfVum5CJRx6is70ZpxL97CEAYOrOJCYbB+tzrmz3nIG4KN6Tg8A4XMm4oOu
-         FHp0aQjSE0RlSEUY+rbsVp4E4fzvVLru2hSry92dNzsIEvzwmuUUN60pypXurSWL+p
-         JH0C4jZ7BDBwyeLmeFxD6hao9iNPPnKwaQx5JwjLFRj/NIaa8pT+kklWPaxlMLWZb2
-         kRyNd/IiPzWoQ==
-Date:   Fri, 21 Jun 2019 21:24:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: linux-next: unexpected file in the usb tree
-Message-ID: <20190621212423.2b264411@canb.auug.org.au>
+        Fri, 21 Jun 2019 07:28:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42284 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbfFUL2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:28:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D351FAF8A;
+        Fri, 21 Jun 2019 11:27:58 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 13:27:58 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 3/5] livepatch: Allow to distinguish different version of
+ system state changes
+In-Reply-To: <20190611135627.15556-4-pmladek@suse.com>
+Message-ID: <alpine.LSU.2.21.1906211326140.5415@pobox.suse.cz>
+References: <20190611135627.15556-1-pmladek@suse.com> <20190611135627.15556-4-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/XJOShJY0Ij/5q/Xu_UDrkXw"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XJOShJY0Ij/5q/Xu_UDrkXw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> +/* Check if the patch is able to deal with the given system state. */
+> +static bool klp_is_state_compatible(struct klp_patch *patch,
+> +                                 struct klp_state *state)
+> +{
+> +     struct klp_state *new_state;
+> +
+> +     new_state = klp_get_state(patch, state->id);
+> +
+> +     if (new_state)
+> +             return new_state->version < state->version ? false : true;
 
-Hi Greg,
+return new_state->version >= state->version;
 
-Commit
+?
 
-  ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-ap=
-i")
+> +     /* Cumulative livepatch must handle all already modified states. 
+*/
+> +     return patch->replace ? false : true;
 
-added this unexpected file:
+return !patch->replace;
 
-  Documentation/index.rst.rej
+?
 
---=20
-Cheers,
-Stephen Rothwell
+> + * Check if the new livepatch will not break the existing system states.
+> + * Cumulative patches must handle all already modified states.
+> + * Non-cumulative patches can touch already modified states.
+> + */
+> +bool klp_is_patch_compatible(struct klp_patch *patch)
 
---Sig_/XJOShJY0Ij/5q/Xu_UDrkXw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+make C=1 kernel/livepatch/state.o
 
------BEGIN PGP SIGNATURE-----
+kernel/livepatch/state.c:107:6: warning: symbol 'klp_is_patch_compatible' was not declared. Should it be static?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0MvmcACgkQAVBC80lX
-0Gz43wgAl00qKYCW7nw2PVf9Fkqw56z65Mw8ZCrBhUodoTEqCxSYG7w5lZ0VwsJj
-mvnPvsJbBgLLf/7tZX8fdtKTr32JqESWyjOo9z7XTOO/FuNRA+E4GHglq4GGOXGt
-dMUMaBxMJBCVMCAqA8er6WtP6kgIgNJmI/JovOnBHfUZ/dD0U+8x7EtWW+pY7QCK
-9ZVZq9zSgzWsjmSlHMYkvy8qrWtWu0Wl50gKD9Z9Lx28oSknz7hmVsBUDBwRd8Mt
-XLcfUDFJGZ6v6b4mUwjtH/MYsIgHdS/ulqn40jK1EJuYP2L+K1qKHUTnyRYkfHFL
-G8UQXZfpOlc9MxMb20D4RuQbXr7OqA==
-=e0zi
------END PGP SIGNATURE-----
+#include "state.h" in state.c would solve it.
 
---Sig_/XJOShJY0Ij/5q/Xu_UDrkXw--
+Miroslav
