@@ -2,235 +2,140 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD81C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C20C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6D42064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwVLkyUO"
+	by mail.kernel.org (Postfix) with ESMTP id 33E162064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfFUBrU (ORCPT
+        id S1726147AbfFUBuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:47:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42058 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFUBrT (ORCPT
+        Thu, 20 Jun 2019 21:50:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32821 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFUBue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:47:19 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so202675ior.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:47:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9yrO084oxG4dfNiDRfSabLfvEkBQAcPHS7taeQ/jeGI=;
-        b=YwVLkyUOFNcOL0L8d9UZznf+xeeBIZ3g7ZUlrHDcDXBqLeWn0K9Nh1qZw9MCgGaBqb
-         bsZDq3fFnLiUXnPvImtfor3a/phBY9+2zH+Do1BBqFhffuGg56NP49qLr/2sqGmf4RoD
-         dBPVR54f6mQoB6gvXOLPeez5jvChN+nQ+jpNmWMt+CFi5AMLJhrJuktKhq3OI26jj6DA
-         GrvQT8G1lfOsQWFP47xVxQLMf3WpyB4aq7PWUKYCOwYSjf13bJjzA0lXyuF7XawLdCyO
-         7WDd+DM8NXTV1ediGy1tO6AcrJnwj7GMoiz5G4IZu2FIiAPzcKTPqdpqyD0E407nmjBU
-         ZlPw==
+        Thu, 20 Jun 2019 21:50:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so2713846pfq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:50:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9yrO084oxG4dfNiDRfSabLfvEkBQAcPHS7taeQ/jeGI=;
-        b=Us3xO+nGWTWBWto8YEa5yzjb72tLojUOxFJzOlS7/+dExxaSsn2rgtKIybeoEovP/F
-         dw+n8a9rCAE+yG3n31RBvqCR5wgnYQYrpa2dGobDbipji341perJjUU7l2C4EmO9htXy
-         tPE3M3BljNha4VS/iJwck7nTGRDQhLMmdNfssI2tH6QtMxiohfmAZNaYSRc3SiOizNDZ
-         hPNlmE6NpC/7r/2LTZIjVOPajN3NitJq/ML6ZK6YMrYMLSLrI2Du4Eq6/64dk+wmPiQx
-         NmAhC0EQba28osgeF/ZNIg5K3s0+MrrJaphjMNPJNISvZ6QFBQhoS0ySS84L2n8cmnqs
-         4hRg==
-X-Gm-Message-State: APjAAAWk1NcZAmH8T9EKtsd7SBYrPaZmwdQ5T3p+NRm23IhHg6AW9IJI
-        9B4Y0zarLjVs9YldTRubNfxl3lAYI0LdV/EbrFxkxQ==
-X-Google-Smtp-Source: APXvYqxR8Ec8V67QRIv0YSxrqeF2qZ0ENo0zWc+r/BTUyQHPOeP071K+gI3WACD+zZ/Y6TZ2ZUXUkDwEBHuqzlrfHGY=
-X-Received: by 2002:a5d:8497:: with SMTP id t23mr6017508iom.298.1561081638030;
- Thu, 20 Jun 2019 18:47:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523074924.19659-1-hch@lst.de> <20190523074924.19659-3-hch@lst.de>
-In-Reply-To: <20190523074924.19659-3-hch@lst.de>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Fri, 21 Jun 2019 11:47:07 +1000
-Message-ID: <CAOSf1CFu_T=7weW0eagzjTc8474ntVx1uCKdQh8sX85bfaPxCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] powerpc/powernv: remove the unused tunneling exports
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=j5EwuhwdKeX+aMQ1HhFBPq9OFCfHqk3KViLFexG5B9E=;
+        b=dlFEtWTOXXp+XHAC4reFd5KEDcbxrVaABYW9+9LRPy9RWpq19Tc3Io1A4xpFuMxtkT
+         tK0v/qT+W6S+7L9bQ4humqYxom+6iLdTsAXOMVXGsvH+yKeeR4pFKbqnM/xImvPOpf0c
+         PDdrWsj7xMGQjOKmrA1naJsbU0872KMDwW/WsKqSMyDOGoXZ96m50zdw7Pbht6XJQwWD
+         +HhC2bDbe/sGVrx3x6CfX70SNvCNBr7ebipUmMpwShL+Q6l226P08a3X9pntjCWCCygP
+         aw11wAiBakoJ9kn3PsmixUc9NwQHMlGMI15v0AByJjahO1tL+qEmqdQVuqbrMXgMzKLG
+         PHTw==
+X-Gm-Message-State: APjAAAWlNd162Lpx1iRAfXH1Xgsn8crHnWe7GCHP5qhFnoPsuiAVaIlS
+        zFbpjViX45q6jvX4Axk643MvcA==
+X-Google-Smtp-Source: APXvYqz7taZv4NZMlPtAvodeU7r1q7k5R6++mRN+Pt4d3ymudWUR1cbBXbtQFmIcoBHVIqS85x5ApQ==
+X-Received: by 2002:a17:90a:8c0c:: with SMTP id a12mr2983319pjo.67.1561081832818;
+        Thu, 20 Jun 2019 18:50:32 -0700 (PDT)
+Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
+        by smtp.gmail.com with ESMTPSA id h11sm694257pfn.170.2019.06.20.18.50.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 18:50:31 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:50:31 -0700 (PDT)
+X-Google-Original-Date: Thu, 20 Jun 2019 18:50:24 PDT (-0700)
+Subject:     Re: [PATCH v2] RISC-V: Break load reservations during switch_to
+In-Reply-To: <20190619073600.GA29918@lakrids.cambridge.arm.com>
+CC:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+        me@carlosedp.com, joel@sing.id.au, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     mark.rutland@arm.com
+Message-ID: <mhng-c41d9776-2f3e-4a49-8be9-78f9fd55cfda@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 5:51 PM Christoph Hellwig <hch@lst.de> wrote:
+On Wed, 19 Jun 2019 00:36:01 PDT (-0700), mark.rutland@arm.com wrote:
+> On Fri, Jun 07, 2019 at 03:22:22PM -0700, Palmer Dabbelt wrote:
+>> The comment describes why in detail.  This was found because QEMU never
+>> gives up load reservations, the issue is unlikely to manifest on real
+>> hardware.
+>>
+>> Thanks to Carlos Eduardo for finding the bug!
 >
-> These have been unused ever since they've been added to the kernel.
+>> @@ -330,6 +330,17 @@ ENTRY(__switch_to)
+>>  	add   a3, a0, a4
+>>  	add   a4, a1, a4
+>>  	REG_S ra,  TASK_THREAD_RA_RA(a3)
+>> +	/*
+>> +	 * The Linux ABI allows programs to depend on load reservations being
+>> +	 * broken on context switches, but the ISA doesn't require that the
+>> +	 * hardware ever breaks a load reservation.  The only way to break a
+>> +	 * load reservation is with a store conditional, so we emit one here.
+>> +	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
+>> +	 * know this will always fail, but just to be on the safe side this
+>> +	 * writes the same value that was unconditionally written by the
+>> +	 * previous instruction.
+>> +	 */
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/powerpc/include/asm/pnv-pci.h        |  4 --
->  arch/powerpc/platforms/powernv/pci-ioda.c |  4 +-
->  arch/powerpc/platforms/powernv/pci.c      | 71 -----------------------
->  arch/powerpc/platforms/powernv/pci.h      |  1 -
->  4 files changed, 3 insertions(+), 77 deletions(-)
+> I suspect that you need to do the same as 32-bit ARM, and clear this in
+> your exception return path, rather than in __switch_to, since handlers
+> for interrupts and other exceptions could leave a dangling reservation.
 >
-> diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
-> index 9fcb0bc462c6..1ab4b0111abc 100644
-> --- a/arch/powerpc/include/asm/pnv-pci.h
-> +++ b/arch/powerpc/include/asm/pnv-pci.h
-> @@ -27,12 +27,8 @@ extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
->  extern int pnv_pci_set_power_state(uint64_t id, uint8_t state,
->                                    struct opal_msg *msg);
->
-> -extern int pnv_pci_enable_tunnel(struct pci_dev *dev, uint64_t *asnind);
-> -extern int pnv_pci_disable_tunnel(struct pci_dev *dev);
->  extern int pnv_pci_set_tunnel_bar(struct pci_dev *dev, uint64_t addr,
->                                   int enable);
-> -extern int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid,
-> -                                     u32 *pid, u32 *tid);
+> For ARM, the architecture permits a store-exclusive to succeed even if
+> the address differed from the load-exclusive. I don't know if the same
+> applies here, but regardless I believe the case above applies if an IRQ
+> is taken from kernel context, since the handler can manipulate the same
+> variable as the interrupted code.
 
-IIRC as-notify was for CAPI which has an in-tree driver (cxl). Fred or
-Andrew (+cc), what's going on with this? Will it ever see the light of
-day?
+RISC-V has the same constraint: an LR can cause the subsequent SC on any
+address to succeed.  When writing the patch I thought they had to have matching
+addresses, v4 should have a correct comment (assuming I've managed to send it,
+I'm on my third continent this week so I'm a bit out of it).
 
->  int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
->  int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
->                            unsigned int virq);
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 126602b4e399..6b0caa2d0425 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -54,6 +54,8 @@
->  static const char * const pnv_phb_names[] = { "IODA1", "IODA2", "NPU_NVLINK",
->                                               "NPU_OCAPI" };
->
-> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
-> +
->  void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->                             const char *fmt, ...)
->  {
-> @@ -2360,7 +2362,7 @@ static long pnv_pci_ioda2_set_window(struct iommu_table_group *table_group,
->         return 0;
->  }
->
-> -void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
-> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
->  {
->         uint16_t window_id = (pe->pe_number << 1 ) + 1;
->         int64_t rc;
-> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-> index 8d28f2932c3b..fc69f5611020 100644
-> --- a/arch/powerpc/platforms/powernv/pci.c
-> +++ b/arch/powerpc/platforms/powernv/pci.c
-> @@ -868,54 +868,6 @@ struct device_node *pnv_pci_get_phb_node(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL(pnv_pci_get_phb_node);
->
-> -int pnv_pci_enable_tunnel(struct pci_dev *dev, u64 *asnind)
-> -{
-> -       struct device_node *np;
-> -       const __be32 *prop;
-> -       struct pnv_ioda_pe *pe;
-> -       uint16_t window_id;
-> -       int rc;
-> -
-> -       if (!radix_enabled())
-> -               return -ENXIO;
-> -
-> -       if (!(np = pnv_pci_get_phb_node(dev)))
-> -               return -ENXIO;
-> -
-> -       prop = of_get_property(np, "ibm,phb-indications", NULL);
-> -       of_node_put(np);
-> -
-> -       if (!prop || !prop[1])
-> -               return -ENXIO;
-> -
-> -       *asnind = (u64)be32_to_cpu(prop[1]);
-> -       pe = pnv_ioda_get_pe(dev);
-> -       if (!pe)
-> -               return -ENODEV;
-> -
-> -       /* Increase real window size to accept as_notify messages. */
-> -       window_id = (pe->pe_number << 1 ) + 1;
-> -       rc = opal_pci_map_pe_dma_window_real(pe->phb->opal_id, pe->pe_number,
-> -                                            window_id, pe->tce_bypass_base,
-> -                                            (uint64_t)1 << 48);
-> -       return opal_error_code(rc);
-> -}
-> -EXPORT_SYMBOL_GPL(pnv_pci_enable_tunnel);
-> -
-> -int pnv_pci_disable_tunnel(struct pci_dev *dev)
-> -{
-> -       struct pnv_ioda_pe *pe;
-> -
-> -       pe = pnv_ioda_get_pe(dev);
-> -       if (!pe)
-> -               return -ENODEV;
-> -
-> -       /* Restore default real window size. */
-> -       pnv_pci_ioda2_set_bypass(pe, true);
-> -       return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(pnv_pci_disable_tunnel);
-> -
->  int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
->  {
->         __be64 val;
-> @@ -970,29 +922,6 @@ int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
->  }
->  EXPORT_SYMBOL_GPL(pnv_pci_set_tunnel_bar);
->
-> -#ifdef CONFIG_PPC64    /* for thread.tidr */
-> -int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid, u32 *pid,
-> -                              u32 *tid)
-> -{
-> -       struct mm_struct *mm = NULL;
-> -
-> -       if (task == NULL)
-> -               return -EINVAL;
-> -
-> -       mm = get_task_mm(task);
-> -       if (mm == NULL)
-> -               return -EINVAL;
-> -
-> -       *pid = mm->context.id;
-> -       mmput(mm);
-> -
-> -       *tid = task->thread.tidr;
-> -       *lpid = mfspr(SPRN_LPID);
-> -       return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(pnv_pci_get_as_notify_info);
-> -#endif
-> -
->  void pnv_pci_shutdown(void)
->  {
->         struct pci_controller *hose;
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index 4f11c077af62..469c24463247 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -195,7 +195,6 @@ extern int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type);
->  extern void pnv_teardown_msi_irqs(struct pci_dev *pdev);
->  extern struct pnv_ioda_pe *pnv_ioda_get_pe(struct pci_dev *dev);
->  extern void pnv_set_msi_irq_chip(struct pnv_phb *phb, unsigned int virq);
-> -extern void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
->  extern unsigned long pnv_pci_ioda2_get_table_size(__u32 page_shift,
->                 __u64 window_size, __u32 levels);
->  extern int pnv_eeh_post_init(void);
-> --
-> 2.20.1
->
+I'd considered breaking reservations on trap entry, but decided it wasn't
+necessary.  I hadn't considered doing this on trap exit, but I don't see a
+difference so I might be missing something.  The case that I see as an issue is
+when a trap comes in the middle of an LR/SC sequence, which boils down to three
+cases:
+
+* The trap handler doesn't contend with the LR/SC sequence in any way, in which
+  case it's fine for the sequence to succeed.
+* The trap handler contends by doing its own LR/SC sequence.  Since the trap
+  handler must execute completely before returning control back the parent, we
+  know the SC in the trap handler will execute.  Thus there is no way the SC in
+  the parent can pair with the LR in the trap handler.  This applies even when
+  traps are nested.
+* The trap handler contends by performing a regular store to the same address
+  as the LR that was interrupted.  In this case the SC must fail, and while I
+  assumed that the store would cause that failure the ISA manual doesn't appear
+  to require that behavior -- it does allow the SC to always fail in that case,
+  but it doesn't mandate it always fails (which is how I got confused).
+
+Assuming the ISA manual is correct in not specifying that stores within an
+LR/SC sequence break the load reservations, then I think we do need to break
+load reservations on all traps.  I'll go check with the ISA people, but now
+that I've noticed it this does seem somewhat reasonable -- essentially it lets
+LR just take a line exclusively, SC to succeed only on already exclusively held
+lines, and doesn't impose any extra constraints on regular memory operations.
+
+I don't see any reason that breaking reservations on entry as opposed to exit
+would be incorrect.  I feel like doing this on entry is a better bet, as we're
+already doing a bunch of stores there so I don't need to bring an additional
+cache line in for writing.  These lines would be on the kernel stack so it's
+unlikely anyone else has them for writing anyway, so maybe it just doesn't
+matter.  The only issue I can think of here is that there might be something
+tricky for implementations to handle WRT the regular store -> store conditional
+forwarding, as that's a pattern that is unlikely to manifest on regular code
+but is now in a high performance path.  The regular load -> store conditional
+may be easier to handle, and since this is done on the kernel stack it's
+unlikely that upgrading a line for writing would be an expensive operation
+anyway.
+
+LMK if I'm missing something, otherwise I'll spin another version of the patch
+to break reservations on trap entry.
