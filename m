@@ -2,119 +2,151 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63CBC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C902084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561155586;
-	bh=Yr+8cNaWwZaZrftJhz2ZpQQ+4eC5SROdu2ZTa9+UWGM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GbC3aj85JKy9IZbxrM4gcxxykOy9hIivhpVrItiD4QFuQTlWX3D5+iTi7bCFsb28l
-	 nYaW+PAilI9cE9AQ4cL41aLC/WGm3831WaHvm8N55ZIj3CQ+Sr/hfsyNXDlFNUXTFt
-	 sLJLdd/pxx0hA6S2Adsai7Apdx3XXeheVdosttTw=
+	by mail.kernel.org (Postfix) with ESMTP id 284862084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="O8EEIPIG";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="f8KkSwom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfFUWTo (ORCPT
+        id S1726275AbfFUWVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 18:19:44 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:44327 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfFUWTo (ORCPT
+        Fri, 21 Jun 2019 18:21:46 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:48528 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726017AbfFUWVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 18:19:44 -0400
-Received: by mail-lj1-f181.google.com with SMTP id k18so7256653ljc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 15:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qnhyB5vk+XiyLXNMoZEM9dhU0jTrIQzBci7bAAtuoaE=;
-        b=a9/ijy3BN58/m6zYcz1WvuxZVURngMcAjm2x8xNyRdZxxj0rMw43d7H7IuqgEVi/Ho
-         6X5fZNMXAwUlFyykTCQmA6YBh2Z65MerKRko2lTP3HIsf7gMw0jxTOP/98vW8p8fbUxq
-         sRglJ6SGtMg0SvxfzBHfj8YiD6lBiPUBFZLnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qnhyB5vk+XiyLXNMoZEM9dhU0jTrIQzBci7bAAtuoaE=;
-        b=jZPzPc9UUXInKqIlY9bN8sGMpw5hJ0fX7D9YskDTfzWaEhJ7hKMxwn2vgzl8KVxzk+
-         S5As2sWRqmY6CdcoRe/3+M4qxYyKwPdwRAho0S51LQtq4FUfdfRRiznFYxe0UkQOQIBO
-         YU1PDtxxJ6CgqEqR9YzDxuJqSIU3kAxq2kbm6rXEee+eTexmDe8wDP8NUnF7eSdaZEab
-         gf77/TqwJTacgKMNtnd0fXeBx0aCkm9NHMSn6dJ12YYcaGhy/CNxyHRoxqIxRhaV25rx
-         vXjhwxm1TnkGm9N3loBMWj8aHCweSUhSANhMLi7yPD+sYeBR4Oovb+G3uiPrYvfZNzEm
-         JeDg==
-X-Gm-Message-State: APjAAAUmhpeZfx8cgs20zdJpU9uUvsgxrZ0kUFMZFflA7p3TPGKn7ymO
-        KMI5ziJho5kKvm/lvjTjeEi3ecVmyjQ=
-X-Google-Smtp-Source: APXvYqwEgVjCnmZJPmqTF6lfXsz7AcY5u0zs8SDOFquMQZAdfjz1IWiDvdHT0/RsadWaR2CNML4dtw==
-X-Received: by 2002:a2e:b0c4:: with SMTP id g4mr36270070ljl.155.1561155581925;
-        Fri, 21 Jun 2019 15:19:41 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id f1sm557604ljf.53.2019.06.21.15.19.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 15:19:40 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id 16so7249498ljv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 15:19:40 -0700 (PDT)
-X-Received: by 2002:a2e:9a58:: with SMTP id k24mr28824220ljj.165.1561155580434;
- Fri, 21 Jun 2019 15:19:40 -0700 (PDT)
+        Fri, 21 Jun 2019 18:21:46 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5LMJOrx007817;
+        Fri, 21 Jun 2019 15:21:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=tjIANEhCUDVKg0jVk2JP2VRHzydhosJyCmitKn3FUR4=;
+ b=O8EEIPIGUD+acRYB27TISRPb/23tDSYjBe33oIb5+ZRz5vGM92dEAB7Ut2IUXAQP4Je6
+ HKi/nK9jbBgI/shZmuz1lvQv+w/oxHDwuvU2v2Hsa7DbRcve/nB2m6epx4NUZU2CzQLa
+ EG3bT81GtHLbRjNfPCvZRPmzNjqOxPeYTCw= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2t936x117a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 15:21:26 -0700
+Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 21 Jun 2019 15:21:25 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 21 Jun 2019 15:21:25 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 21 Jun 2019 15:21:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tjIANEhCUDVKg0jVk2JP2VRHzydhosJyCmitKn3FUR4=;
+ b=f8KkSwomnAT+0TfDo0im4pjFjPP6gjezLViI2X030hv5zKK+cksmmIvvFzkmAbOHVubo8j4b0poL8MU26gEB8oAmwuxbQlk5mKQIlDUGwYZ+Il3kbT8kUkcvjFO3P95A/HglEJ41NYdIya7IujxjhGo7opMRdbDq2sajY9PlUgs=
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
+ MWHPR15MB1725.namprd15.prod.outlook.com (10.174.255.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 21 Jun 2019 22:21:23 +0000
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::d51f:8f19:e2b5:3ae8]) by MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::d51f:8f19:e2b5:3ae8%6]) with mapi id 15.20.2008.014; Fri, 21 Jun 2019
+ 22:21:23 +0000
+From:   Tao Ren <taoren@fb.com>
+To:     Ryan Chen <ryan_chen@aspeedtech.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [Potential Spoof] Re: [PATCH 1/2] i2c: aspeed: allow to customize
+ base clock divisor
+Thread-Topic: [Potential Spoof] Re: [PATCH 1/2] i2c: aspeed: allow to
+ customize base clock divisor
+Thread-Index: AQHVJuIcteG+E70PmUey9PLXreYJ5KajfUSAgAASwwCAAJYbgIAAB62AgAABSgCAAANYAIACfxgA
+Date:   Fri, 21 Jun 2019 22:21:23 +0000
+Message-ID: <4b939e17-f364-4e63-f254-17bd531f75e6@fb.com>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+ <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
+ <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
+ <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
+ <56ff5fa8-091a-2cbc-dfa3-b912cf328695@fb.com>
+In-Reply-To: <56ff5fa8-091a-2cbc-dfa3-b912cf328695@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MW2PR16CA0013.namprd16.prod.outlook.com (2603:10b6:907::26)
+ To MWHPR15MB1216.namprd15.prod.outlook.com (2603:10b6:320:22::17)
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::1:fd4a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0421b61e-ab66-4d58-dad3-08d6f696cb00
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1725;
+x-ms-traffictypediagnostic: MWHPR15MB1725:
+x-microsoft-antispam-prvs: <MWHPR15MB17259FF253AEE918E79FDD47B2E70@MWHPR15MB1725.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(68736007)(6116002)(229853002)(52116002)(76176011)(2906002)(99286004)(476003)(186003)(7416002)(446003)(14454004)(102836004)(46003)(53546011)(6506007)(11346002)(486006)(86362001)(2616005)(31696002)(65826007)(478600001)(25786009)(4326008)(6436002)(6486002)(6246003)(386003)(5660300002)(8676002)(71190400001)(65956001)(65806001)(71200400001)(53936002)(66446008)(66556008)(66476007)(66946007)(73956011)(64756008)(81166006)(81156014)(31686004)(7736002)(58126008)(110136005)(54906003)(8936002)(6512007)(14444005)(256004)(316002)(36756003)(64126003)(4744005)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1725;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fn+XIMkxdFpBCFbl1dv7++jkHcfsVChkETw11eXwQXobHxqi0NARJ55Ks0I4JNfEECpFRZbAihbcu3e7kGbZkMZ3SsY8zRnQwCB4jGI4HbK4+3jLxxKNacAHiCovhxo9Q8uXHqyVH7G6xr74+4ZCR/lfxqitkT8Sbi5tQPEA1c5MSNNSokfb38iEeM2tV2NYgi6waPJZ0M37rWEz6wZU6AVHzKehG6O41vsVIxF0PdmnKp1whGJhQGqoxOaCn4KfTHfVjuGVOx8y4t5Vj68R76m32OoUkRNJEB8VwaBngGCbhyNoL4jLW5SGtPYXsGybWTOjz+yOzcKK+ebMkmRJciMzvzez/7m7tkqGCMN/FPsGt9ftaqqplvxmXfBz7zJoJpYs315Qk16gWBDhj6QxRq+GfLi7TxoJHoUFcyZAZqk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C8E8C6F9194EF449903DD6E5BB84EF0B@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <a624ec85-ea21-c72e-f997-06273d9b9f9e@valvesoftware.com> <20190621214139.GA31034@kroah.com>
-In-Reply-To: <20190621214139.GA31034@kroah.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Jun 2019 15:19:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgXoBMWdBahuQR9e75ri6oeVBBjoVEnk0rN1QXfSKK2Eg@mail.gmail.com>
-Message-ID: <CAHk-=wgXoBMWdBahuQR9e75ri6oeVBBjoVEnk0rN1QXfSKK2Eg@mail.gmail.com>
-Subject: Re: Steam is broken on new kernels
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Eric Dumazet <edumazet@google.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0421b61e-ab66-4d58-dad3-08d6f696cb00
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 22:21:23.4695
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: taoren@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1725
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210170
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 2:41 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> What specific commit caused the breakage?
-
-Both on reddit and on github there seems to be confusion about whether
-it's a problem or not. Some people have it working with the exact same
-kernel that breaks for others.
-
-And then some people seem to say it works intermittently for them,
-which seems to indicate a timing issue.
-
-Looking at the SACK patches (assuming it's one of them), I'd suspect
-the "tcp: tcp_fragment() should apply sane memory limits".
-
-Eric, that one does
-
-       if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
-               NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
-               return -ENOMEM;
-       }
-
-but I think it's *normal* for "sk_wmem_queued >> 1" to be around the
-same size as sk_sndbuf. So if there is some fragmentation, and we add
-more skb's to it, that would seem to trigger fairly easily.
-Particularly since this is all in "truesize" units, which can be a lot
-bigger than the packets themselves.
-
-I don't know the code, so I may be out to lunch and barking up
-completely the wrong tree, but that particular check does seem like it
-might trigger much more easily than I think the code _intended_ it to
-trigger?
-
-Pierre-Loup - do you guys have a test-case inside of valve? Or is this
-purely "we see some people with problems"?
-
-               Linus
+T24gNi8yMC8xOSAxOjEzIEFNLCBUYW8gUmVuIHdyb3RlOg0KPiBPbiA2LzIwLzE5IDE6MDEgQU0s
+IFJ5YW4gQ2hlbiB3cm90ZToNCj4+IEhlbGxvIFRhbywNCj4+IAlMZXQgbWUgbW9yZSBjbGVhci4g
+V2hlbiB5b3Ugc2V0ICgzLCAxNSwgMTQpIHRoZSBkZXZpY2Ugc29tZXRpbWVzIHJlc3BvbnNlIG5h
+Y2suIA0KPj4gCWJ1dCB3aGVuIHlvdSBzZXQgKDQsIDcsIDcpLCB0aGUgZGV2aWNlIGFsd2F5cyBh
+Y2suIEFtIEkgcmlnaHQ/IA0KPj4gUnlhbg0KPiANCj4gSGVsbG8gUnlhbiwNCj4gDQo+IEl0J3Mg
+Y29ycmVjdC4gV2UgaGF2ZSBzZWVuIHRoZSBwcm9ibGVtIG9uIDIgRmFjZWJvb2sgQk1DIHBsYXRm
+b3JtcyBzbyBmYXIuIEdpdmVuIHRoZSBvdGhlciB+MTAgRmFjZWJvb2sgQk1DIHBsYXRmb3JtcyBh
+cmUgc3RpbGwgcnVubmluZyBrZXJuZWwgNC4xICh3aXRoICg0LCA3LCA3KSBzZXR0aW5ncyksIEkn
+ZCBhc3N1bWUgbW9yZSBwbGF0Zm9ybXMgd2lsbCBiZSBpbXBhY3RlZCBhZnRlciB1cGdyYWRpbmcg
+dG8gdGhlIGxhdGVzdCBrZXJuZWwuDQo+IA0KPiBUaGFuayB5b3UgZm9yIHNwZW5kaW5nIHRpbWUg
+b24gdGhpcyENCg0KSnVzdCBoZWFkcyB1cCBSeWFuIGFuZCBJIGFyZSB3b3JraW5nIHdpdGggT0RN
+IHZlbmRvcnMgdG8gY29sbGVjdCBzY29wZSBvdXRwdXQ7IHdpbGwgdXBkYXRlIGJhY2sgd2hlbiB3
+ZSBoYXZlIG5ldyBmaW5kaW5ncy4gVGhhbmsgeW91IGFsbCBmb3Igc3BlbmRpbmcgdGltZSBvbiB0
+aGlzLg0KDQoNCkNoZWVycywNCg0KVGFvDQo=
