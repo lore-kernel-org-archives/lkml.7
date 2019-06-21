@@ -2,187 +2,107 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81F7C4646C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFE9208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8980A20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O+q7znAO";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="TwpHuqBw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNGeB8au"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFUPjd (ORCPT
+        id S1726676AbfFUPjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:39:33 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:40226 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726196AbfFUPjb (ORCPT
+        Fri, 21 Jun 2019 11:39:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46340 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfFUPjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:39:31 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AF172C0D9C;
-        Fri, 21 Jun 2019 15:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561131571; bh=6079FvYrnSuIcm6KjAAvflaWDCqsqM0Yq9xGQZzLwWQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=O+q7znAOzBk/+h2uPxLq7f1cdPH5exgEndPAn6kmrW4tvwo6e/anGnpLZyJZ0rNH8
-         ABlwMnqdnSxB9Wea78xBX//9Ecio+JN7Be+wijHOm/GVcr7+iE78c63SUXV56TPOTh
-         8KiQvdhKEEaQFreibsXvAY8ub4bHprV2Vx1QYajKfmByG6m81tvoCoXXxl8yiCQayy
-         3CvXxVwv7eC9XvY66IPos8zgTwX0QZ9PVhGNT+g5NtSwY0ZsU9SI625zjaIRHwA9dG
-         pnpDlpmLfsSLYHE3forkgseok1Ae5z61ydo/tfq+9kxtKMT84nQzVPNEOgOmiPtnw6
-         /Vc6AnewBBTPg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 4E3B2A0067;
-        Fri, 21 Jun 2019 15:39:29 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 21 Jun 2019 08:39:29 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 08:39:28 -0700
+        Fri, 21 Jun 2019 11:39:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so6323144ljg.13;
+        Fri, 21 Jun 2019 08:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fK77iwFW/p1wq0uLyo2wr+jo704PfAHVr6SzTpkXxGs=;
- b=TwpHuqBw5ZJMLSIlSNUynwR0MwpZXtqNWSVw7AgyAsmGlblcaDRFruV18VIvioXL1hXEl+80rSKaypgHsycL77r1Oe13BQe0edkdilCIQuNxKNxW5oXYEfa4bsyK0S3lXADd4O1DdnHP28T7MsTw1av/ZScUVYjlvLd5icIMTWM=
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
- CY4PR1201MB0184.namprd12.prod.outlook.com (10.172.78.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Fri, 21 Jun 2019 15:39:27 +0000
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::d536:9377:4e1c:75ad]) by CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::d536:9377:4e1c:75ad%4]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 15:39:27 +0000
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: RE: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Index: AQHVItAEofkbV+NXXEuPQB3Di+rJQKakNJEAgADZNACAATpIEA==
-Date:   Fri, 21 Jun 2019 15:39:27 +0000
-Message-ID: <CY4PR1201MB0120D86E5774F93769320B59A1E70@CY4PR1201MB0120.namprd12.prod.outlook.com>
-References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
- <20190619081227.GL3419@hirez.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
- <20190620075224.GT3419@hirez.programming.kicks-ass.net>
- <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
-In-Reply-To: <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abrodkin@synopsys.com; 
-x-originating-ip: [188.243.7.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d51d80cd-b358-4c8c-7259-08d6f65ea506
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1201MB0184;
-x-ms-traffictypediagnostic: CY4PR1201MB0184:
-x-microsoft-antispam-prvs: <CY4PR1201MB01841C05DCDAE94EA848DC39A1E70@CY4PR1201MB0184.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39850400004)(396003)(376002)(346002)(189003)(13464003)(199004)(54906003)(6636002)(3846002)(6116002)(8676002)(66066001)(26005)(186003)(99286004)(81166006)(446003)(6436002)(11346002)(53546011)(476003)(102836004)(7736002)(9686003)(68736007)(8936002)(76176011)(71200400001)(81156014)(7696005)(6506007)(486006)(229853002)(73956011)(55016002)(256004)(6862004)(14454004)(316002)(66476007)(74316002)(25786009)(33656002)(71190400001)(2906002)(305945005)(5660300002)(66446008)(53936002)(66946007)(66556008)(6246003)(64756008)(76116006)(4326008)(52536014)(478600001)(107886003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0184;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YRzWRAhD8HI6vlD80FWP/P9AVgehMaKOJC4a4Z2B+sXae6mufMVCvcE58LzAs1EnRQdAjquzN79VPYa4nTrkLOjjpQ+g1fNKFpiOW38P9oXd4TawI6t0Ulo2dTDVG9fYmHIg56TLqsLUHi+RlHvAeei9NGzfzOWFyaLq4Imlm9g5GmMgFY1133y/rwtHPmywQX51erlcbERjrxZR/3nUbA7rN8JaBvA0pRLMvOW0JfZPi/CBoaBLfJb5Z7N+AnbjnMhF+YZahIdBzK722V9+rAE8/apRSVlN3NtxO2aY/YPIB9hedDdAunMAmnIY9j+QbA0F1Bq33oPA1WK/A+to0Pm51z1XgKmSfk4hV5jlJyHI6VgeW1jQWYyhFKqaUM7+/Zk+jnUAMckSbdX0+DLVcNGtkCPw6GN6FQfE5jLFWY8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FTokQgNx7cdPK/mv6WeJrmrK4oV61TYi+9Ysp/6TCqk=;
+        b=QNGeB8au8O4X7zRxBILcHMpiRAvThsjSSlCDFzpzLn1gzxbzWjjsQK7XJrjtVI6A6W
+         Tgz6QjqHyp67mHUQp8WsiowO6LVI6QEqYSp5HfPqDcCyCK45NZbldsRXJPaHCNmaNFCj
+         WHUnRrkKUOgK9VcmNDl7giRvj7NBo0rW7wuad8P2OEHM+ZAWBhn3KeYsiWdxEeFhmVCY
+         2IS5cVLmlChE4PS34FeFGM7AgNylk72tiCxwLE42XYJn26OcPxKxJQuzKqFPcdXLAM3b
+         Uy40pnT3QPNcmLMREtzCaO9/zItQM86ctpG3iCR9c0KQjVQVqzVwtvBGsU3EoZkkbm5p
+         Fi0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FTokQgNx7cdPK/mv6WeJrmrK4oV61TYi+9Ysp/6TCqk=;
+        b=RuF5znzzjwSR1j7mL7C2n5Yjpc//73iRh/L/J10lMt/8aWTVbTIv4T1B3RXpHpw4lC
+         7/5Ez0R0/u1DODy9hKcE4SGVcFoQmHXGehm0syECefXW026Dmv9nPOtxKU+Zzghs8Jq6
+         W2ioMxq4GuE1ryGiaZUgirREciT8YmBY8IZc0aMfJKc+Fwroo+qJPF9bAPwX3JKgA1nt
+         z8iOjMTYMv18jXKqeprRZ/LcxmdAUOFJMhmPP7WgtIuoPQXSDlNE8fjEj1JjaxcO9XxV
+         5SrHU+RcfCZ9hxErdDLW2jwQQpK4JZ8+OfKsWU4XSk50bwsEt4mmOyKjQQhQcdo6JULr
+         n/BQ==
+X-Gm-Message-State: APjAAAVfxL8NHNZsN/7u7K5r8//CjEmSy0XTdOdWcHVyCv6husp9WDnX
+        ARMO5MC938XzX+vj6uG6DOozVf5S2A216ZCIEz0=
+X-Google-Smtp-Source: APXvYqxhyvKOX88teGy56BaP4nj6I0qAUv/MiHp1Om2bnmvacGEay3hQQw60oMQOe4cFzs8KKjanBBAqFj3PL249YRM=
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr52525936lje.214.1561131589876;
+ Fri, 21 Jun 2019 08:39:49 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d51d80cd-b358-4c8c-7259-08d6f65ea506
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 15:39:27.4584
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abrodkin@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0184
-X-OriginatorOrg: synopsys.com
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+ <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+ <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+ <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com>
+ <CAOMZO5BsJWTw0nCeUboam4kuKyCO3N_Ch5ZW8k5Y9KFtQBanhQ@mail.gmail.com>
+ <CAOuPNLjrAU_C_TUKFMs1d0eGsw=AxuG6d6FhNHtHFwVhfYZGgA@mail.gmail.com> <CAOuPNLhstoCjxijrnKNmV1iKWjAXvSZ38Z13tfd5bvGbYSqPAA@mail.gmail.com>
+In-Reply-To: <CAOuPNLhstoCjxijrnKNmV1iKWjAXvSZ38Z13tfd5bvGbYSqPAA@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 21 Jun 2019 12:40:07 -0300
+Message-ID: <CAOMZO5CD-QQaZwNfiX6mOLAup4J8dBiqEb_V_6jz_z5jXZ5cEw@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Pintu Agarwal <pintu.ping@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vineet,
+On Fri, Jun 21, 2019 at 12:13 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
 
-> -----Original Message-----
-> From: linux-snps-arc <linux-snps-arc-bounces@lists.infradead.org> On Beha=
-lf Of Vineet Gupta
-> Sent: Thursday, June 20, 2019 11:50 PM
-> To: Peter Zijlstra <peterz@infradead.org>
-> Cc: linux-arch@vger.kernel.org; Ard Biesheuvel <ard.biesheuvel@linaro.org=
->; Alexey Brodkin
-> <abrodkin@synopsys.com>; linux-kernel@vger.kernel.org; Jason Baron <jbaro=
-n@akamai.com>; Paolo Bonzini
-> <pbonzini@redhat.com>; linux-snps-arc@lists.infradead.org; Eugeniy Paltse=
-v
-> <Eugeniy.Paltsev@synopsys.com>
-> Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patchin=
-g
+> Okay there is some update on the 2nd part.
+> Now I am able to successfully install all imx modules after the resume
+> (no hang).
+> But, I got some errors after install finish:
+> [drm] disabling vblank on crtc 1
+> [IMX]: imx_drm_disable_vblank - called
+> [drm:drm_atomic_helper_commit_cleanup_done] *ERROR* [CRTC:24:crtc-0]
+> flip_done timed out
+>
+> Also I am able to start the weston successfully.
+> But I see LCD/HDMI display is not working (only some backlight is visible).
+>
+> And, I noticed, weston also reports the following errors:
+> imx-ipuv3 2400000.ipu: DC stop timeout after 50 ms
+> [IMX]: drm_crtc_vblank_off - called
+> [IMX]: imx_drm_disable_vblank - called
+> INFO: rcu_preempt detected stalls on CPUs/tasks: { 1} (detected by 0,
+> t=6002 jiffies, g=289, c=288, q=8)
+> Task dump for CPU 1:
+> weston          R running      0   306      1 0x00000000
+> [<c05282d8>] (__schedule) from [<00080193>] (0x80193)
+>
+> Do you have any clue about these errors ?
 
-[snip]
-
-> Insn encoding is always middl eendina - irrespective of endianness.
-
-Apparently only in little-endian mode instructions are encoded as middle-en=
-dian,
-see:
--------------->8-------------
-# cat endian.S
-
-.global myfunc
-myfunc:
-        mov r0, r1
--------------->8-------------
-
-Little-endian:
--------------->8-------------
-# arc-linux-gcc -c -mcpu=3Darchs endian.S -EL
-# arc-linux-objdump -d endian.o
-
-endian.o:     file format elf32-littlearc
-
-Disassembly of section .text:
-00000000 <myfunc>:
-   0:   200a 0040               mov     r0,r1
-
-# arc-linux-readelf -x .text endian.o
-Hex dump of section '.text':
-  0x00000000 0a204000                            . @.
--------------->8-------------
-
-Big-endian:
--------------->8-------------
-# arc-linux-gcc -c -mcpu=3Darchs endian.S -EB
-# arc-linux-objdump -d endian.o
-
-endian.o:     file format elf32-bigarc
-
-Disassembly of section .text:
-00000000 <myfunc>:
-   0:   200a 0040               mov     r0,r1
-
-# arc-linux-readelf -x .text endian.o
-
-Hex dump of section '.text':
-  0x00000000 200a0040                             ..@
--------------->8-------------
-
--Alexey
+Which kernel version is this?
