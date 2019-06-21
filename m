@@ -2,130 +2,207 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0708AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B83C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FFA206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7874206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIhTAt82"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="tqAjREXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfFUOek (ORCPT
+        id S1726277AbfFUOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:34:40 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35734 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFUOej (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:34:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so1708514ioo.2;
-        Fri, 21 Jun 2019 07:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AECDYLxDxs7t3GCnNHcYsgiH9u/iWrvr6DiFBtVCaR0=;
-        b=mIhTAt82nLco82ZUCJu8f/BQnr1sKyonZ/h33w52rRQFbAOYmW2zAdH0eWvaTJf7Em
-         DkojVv9wiWl1xGazjMm7vANa5MqniYm2SNgbHhRHcbjhcsxUmhC+xSPMsvNvZl077ZXU
-         HvOFr05BCX8m5Js9aFlBaBOrX0OIeWz6z+1GNXjAk6tqk6GIa2BxsvSAdwXldf2GA5SX
-         GrmcZ69IVV7SMeiIzA3rEo/dniNGU7dAwPwGwUgSr+lBdmB8QN4xJqB4dvqBdBK5F9jo
-         SgdLf2McEtqSD1SHw+fYhZvNpfzZMGQ0E5fk5VA6hnPxroPzz6JqGFTVyUT/LsT1MRZy
-         FJFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AECDYLxDxs7t3GCnNHcYsgiH9u/iWrvr6DiFBtVCaR0=;
-        b=lMh5Xeg4FpEu+DQZYNgcmwN9wY00YtoOT5YOJqixJbbNGOC2C8LU8P8yii5hpI3/8r
-         PV3bR74Zm/P9eHIZ9G7W2yAOYNIPahz/2WOx9itIsWnhZdn6ogC/FtDKbKQo7YCoJp23
-         9s9U1S2x1RmE8TGUJmw/4Z91FsDmmM2Jc3KTM8fqvYxKpcweykMRdFQ9vvpFWj/91b22
-         H1KUgSGRbwQsisoGgwtLwZ47lkzx6owjCiyVWxDbvku7GwVz5n5wehtL4njHmQiZDuyH
-         BY0KuEKapKbJWNmGYYJXhzIt8OKLU6sEO8hepQsDubRpO7IkwYAKmlGlAJ43Fjpg+JFT
-         Nxsw==
-X-Gm-Message-State: APjAAAU5nydtAVBFDVq+dt5yCXwWj+csmGtwd5gPMtnm1IFlJr6Og2OF
-        3TDhKjb9E72U8APQzfRkLhzcnMbqRmgtWWvHqX0=
-X-Google-Smtp-Source: APXvYqz0iwFlA6JkJ14KUgH9IUB7/KVGlNFIqw6N33AuxBl5sBzGUS41/e3kXim7cgQDGO9nrhRXSXrQ9eLv923pxlw=
-X-Received: by 2002:a5d:8049:: with SMTP id b9mr2356470ior.199.1561127678260;
- Fri, 21 Jun 2019 07:34:38 -0700 (PDT)
+        Fri, 21 Jun 2019 10:36:12 -0400
+Received: from mail-eopbgr40088.outbound.protection.outlook.com ([40.107.4.88]:1795
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726052AbfFUOgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:36:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NX5L5F8xPNoJ5V01tQB34FROEeVHHpne1sUFjq/ejGY=;
+ b=tqAjREXxnx8hE2bqXIoeIy3DDhwPviqOBrxrnYOVFBwek97GDcXe2IsPRK6kZugNUCWRsrwywSgu0DHg3djMSlRFNEmk5QCGzrA/LTW0F/HAUkE70obv1f8NK5rB7KnMSGfPAkfAjmfFhUsHHVHcS2qyEch61Sz9IfGHVzgy/A8=
+Received: from DB8PR08MB4105.eurprd08.prod.outlook.com (20.179.12.12) by
+ DB8PR08MB5243.eurprd08.prod.outlook.com (20.179.15.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 21 Jun 2019 14:35:54 +0000
+Received: from DB8PR08MB4105.eurprd08.prod.outlook.com
+ ([fe80::b4db:b3ed:75ff:167]) by DB8PR08MB4105.eurprd08.prod.outlook.com
+ ([fe80::b4db:b3ed:75ff:167%3]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 14:35:54 +0000
+From:   Steve Capper <Steve.Capper@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "david@redhat.com" <david@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        James Morse <James.Morse@arm.com>,
+        "cpandya@codeaurora.org" <cpandya@codeaurora.org>,
+        "arunks@codeaurora.org" <arunks@codeaurora.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Ard Biesheuvel <Ard.Biesheuvel@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH V6 3/3] arm64/mm: Enable memory hot remove
+Thread-Topic: [PATCH V6 3/3] arm64/mm: Enable memory hot remove
+Thread-Index: AQHVJlX53xPGOkVoAU2rO4Hf7Xy7J6amMIYA
+Date:   Fri, 21 Jun 2019 14:35:53 +0000
+Message-ID: <20190621143540.GA3376@capper-debian.cambridge.arm.com>
+References: <1560917860-26169-1-git-send-email-anshuman.khandual@arm.com>
+ <1560917860-26169-4-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1560917860-26169-4-git-send-email-anshuman.khandual@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [82.20.117.196]
+x-clientproxiedby: DM5PR18CA0057.namprd18.prod.outlook.com
+ (2603:10b6:3:22::19) To DB8PR08MB4105.eurprd08.prod.outlook.com
+ (2603:10a6:10:b0::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Steve.Capper@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 255e8f05-0120-466c-08c8-08d6f655c382
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR08MB5243;
+x-ms-traffictypediagnostic: DB8PR08MB5243:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <DB8PR08MB5243320303F4912FC6AAB43881E70@DB8PR08MB5243.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(66446008)(5660300002)(3846002)(229853002)(54906003)(66066001)(8676002)(6246003)(6486002)(6862004)(81156014)(4326008)(6436002)(316002)(81166006)(66476007)(66556008)(6512007)(66946007)(53936002)(14444005)(99286004)(58126008)(8936002)(44832011)(76176011)(7416002)(6636002)(26005)(33656002)(446003)(102836004)(7736002)(64756008)(486006)(52116002)(6116002)(186003)(73956011)(476003)(25786009)(71200400001)(71190400001)(2906002)(86362001)(11346002)(6506007)(386003)(68736007)(478600001)(14454004)(305945005)(256004)(1076003)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR08MB5243;H:DB8PR08MB4105.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dlqzxa4c3rI15RIYjatdpzG4RA3W30poknff97UGqg+YZ9slzXe1e90bipr9EPWaFPm2KynI0rxMfy7783taBsoETxHXuo888UztQ8fXKJQF2B93AbjfNkqXuSINJnnnUBOH1UK8c+SFcgYHrhw6a12K6kEbUeGomLLQ5NAjXOVcHmqQ8SRlCv3KxSHn60nmHIApe7W2iOE0B4YEgqoAgEtRFRBCvK9SX6WKXKBbZkkPWaqSK3dKGprAn44V+1VP1WaDh5o6U7+UNTBqyaK52f6Epjsks/FHE5wvtNLNP+u3SZ3lAe8XkkcTPnRJLGInzsb3vfiS6UFSQN3JWQePxJVTQxXkPPT8eLv3x4spesy6ktZQ0gEtbEmSQ7Gpz5iA/CDbqNf4sNHGFdD8eEWcXoXhl2uK6xX1lnHSPp0rY8Q=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13FA276463D2474F8F2A95257EB18BC4@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
- <20190620143318.11880-1-jeffrey.l.hugo@gmail.com> <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
-In-Reply-To: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 21 Jun 2019 08:34:26 -0600
-Message-ID: <CAOCk7NoKB6UtA3g-0+Yxi4Y46PDqapnOH0dHH0CupvnQ=ZSKVQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 255e8f05-0120-466c-08c8-08d6f655c382
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 14:35:53.8832
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Steve.Capper@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5243
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:34 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Jeffrey,
->
-> On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >  #ifdef CONFIG_OF
-> > -static const struct of_device_id elan_of_match[] = {
-> > -       { .compatible = "elan,ekth3000" },
-> > -       { /* sentinel */ }
-> > -};
->
-> I think OF IDs should stay in this file since we agreed HID will not
-> be checking them.
+Hi Anshuman,
 
-I thought it would be convenient to keep all the IDs in one place, but
-I'll put these back.
+On Wed, Jun 19, 2019 at 09:47:40AM +0530, Anshuman Khandual wrote:
+> The arch code for hot-remove must tear down portions of the linear map an=
+d
+> vmemmap corresponding to memory being removed. In both cases the page
+> tables mapping these regions must be freed, and when sparse vmemmap is in
+> use the memory backing the vmemmap must also be freed.
+>=20
+> This patch adds a new remove_pagetable() helper which can be used to tear
+> down either region, and calls it from vmemmap_free() and
+> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
+> backing memory will be freed.
+>=20
+> remove_pagetable() makes two distinct passes over the kernel page table.
+> In the first pass it unmaps, invalidates applicable TLB cache and frees
+> backing memory if required (vmemmap) for each mapped leaf entry. In the
+> second pass it looks for empty page table sections whose page table page
+> can be unmapped, TLB invalidated and freed.
+>=20
+> While freeing intermediate level page table pages bail out if any of its
+> entries are still valid. This can happen for partially filled kernel page
+> table either from a previously attempted failed memory hot add or while
+> removing an address range which does not span the entire page table page
+> range.
+>=20
+> The vmemmap region may share levels of table with the vmalloc region.
+> There can be conflicts between hot remove freeing page table pages with
+> a concurrent vmalloc() walking the kernel page table. This conflict can
+> not just be solved by taking the init_mm ptl because of existing locking
+> scheme in vmalloc(). Hence unlike linear mapping, skip freeing page table
+> pages while tearing down vmemmap mapping.
+>=20
+> While here update arch_add_memory() to handle __add_pages() failures by
+> just unmapping recently added kernel linear mapping. Now enable memory ho=
+t
+> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
+>=20
+> This implementation is overall inspired from kernel page table tear down
+> procedure on X86 architecture.
+>=20
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
->
-> >  MODULE_DEVICE_TABLE(of, elan_of_match);
-> >  #endif
-> >
-> > diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-> > new file mode 100644
-> > index 000000000000..8130bbebbdda
-> > --- /dev/null
-> > +++ b/include/linux/input/elan-i2c-ids.h
-> > @@ -0,0 +1,68 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Elan I2C Touchpad devide whitelist
->
-> s/devide/device/
+FWIW:
+Acked-by: Steve Capper <steve.capper@arm.com>
 
-Doh.  Will fix.
+One minor comment below though.
 
->
-> > + *
-> > + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
->
-> This just moves the code around. If anything I'd say it should keep
-> the original Elan copyright.
+>  arch/arm64/Kconfig  |   3 +
+>  arch/arm64/mm/mmu.c | 290 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++--
+>  2 files changed, 284 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 6426f48..9375f26 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -270,6 +270,9 @@ config HAVE_GENERIC_GUP
+>  config ARCH_ENABLE_MEMORY_HOTPLUG
+>  	def_bool y
+> =20
+> +config ARCH_ENABLE_MEMORY_HOTREMOVE
+> +	def_bool y
+> +
+>  config SMP
+>  	def_bool y
+> =20
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 93ed0df..9e80a94 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -733,6 +733,250 @@ int kern_addr_valid(unsigned long addr)
+> =20
+>  	return pfn_valid(pte_pfn(pte));
+>  }
+> +
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +static void free_hotplug_page_range(struct page *page, size_t size)
+> +{
+> +	WARN_ON(!page || PageReserved(page));
+> +	free_pages((unsigned long)page_address(page), get_order(size));
+> +}
 
-Ok.  No problem.
+We are dealing with power of 2 number of pages, it makes a lot more
+sense (to me) to replace the size parameter with order.
 
->
-> Thanks.
->
-> --
-> Dmitry
+Also, all the callers are for known compile-time sizes, so we could just
+translate the size parameter as follows to remove any usage of get_order?
+PAGE_SIZE -> 0
+PMD_SIZE -> PMD_SHIFT - PAGE_SHIFT
+PUD_SIZE -> PUD_SHIFT - PAGE_SHIFT
+
+Cheers,
+--=20
+Steve
