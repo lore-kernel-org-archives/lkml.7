@@ -2,146 +2,110 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BDC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFA5C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A8C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t6XLQK+2"
+	by mail.kernel.org (Postfix) with ESMTP id A0690208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfFUL4T (ORCPT
+        id S1726594AbfFUL6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:56:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45789 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFUL4N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:56:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so4848159lfm.12;
-        Fri, 21 Jun 2019 04:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pCsNSIhjCg2UmLajKiPXkdtHAurjo1ODjNh3/mWoClA=;
-        b=t6XLQK+21pUtRXc7cF53j9Jq3VtzW+ROxWWda0+c7ksrFBHTdz8iD1jgNN1UucJgOR
-         cy5F40eiIbhTg1StMkkocZlnVZyvdJDu8g9JiZjqKnRt2xDWB1Fx7W9bhhC1skRJoimc
-         CRxR1ZjllvBKZPzowD1n2HwVprm2bmBk4xQN9fX5SLLZQ9Q6nUVcGWTHSdtrSZkpE5RU
-         FKh1CO2EjUUek+3yQVs6Rw1KrDIAMYS15XhaTOHZt5zUGO/jhbZMYhXAZkusi4jpsHMt
-         gKIAYbODe/HkOl9Qjg7xx050nVAwt8lF2xVfCec70ljVQe4kb3df5lNsOtsJOcbdFTpV
-         uAag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pCsNSIhjCg2UmLajKiPXkdtHAurjo1ODjNh3/mWoClA=;
-        b=ai5Lfqwk6mqH4rsVecJHhOwuOcYwAx+RCvhKNjQ0yY0202a1ItIMDHHuJLZJhx2ksK
-         qdUZmEQ3dVYoGU+nhBpb4/xcUmdngA8sWCergIxa61hQEuIDy7/2mZuI8EpkVotYPQQ1
-         qMuml11noKjCt8cx83qVq0nOiAzBM3GFRYDvdT7B/zU5N9roUO6TUEh3h0fGAIcwuCjI
-         NefIjXKsgBS/xGvPlLSlVg7aU1erkYWEhECOUXkwINNbR7osjnm2v3ZScrw7k20zti06
-         5EizbdC+znldFH3WaL37V8FMurnLso+6Sx0crMDsIQ9FoLJGYzwhfjONX4QpCGp87kzo
-         +Ndw==
-X-Gm-Message-State: APjAAAXSmHAg70kgOYIfIm6V4q4/62Q9cbACzJz6BHRVVoCMnuB71hmN
-        jy4Fyi/re/JJf1ju0dGw/WQ=
-X-Google-Smtp-Source: APXvYqwm0zb8cKHdWTip+O/MfIH2WGl+lLZVyzk7rsIfknm+CFaWo6YdBbHwK8FAbWRlqBDECOKUow==
-X-Received: by 2002:ac2:54ae:: with SMTP id w14mr4069909lfk.124.1561118171386;
-        Fri, 21 Jun 2019 04:56:11 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a315:5445:5300:a5e4:32fe:c6e4:d5eb])
-        by smtp.googlemail.com with ESMTPSA id s14sm356791ljd.88.2019.06.21.04.56.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 04:56:10 -0700 (PDT)
-From:   =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-To:     sre@kernel.org
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode binding
-Date:   Fri, 21 Jun 2019 13:56:02 +0200
-Message-Id: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
-References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Jun 2019 07:58:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54262 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfFUL57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:57:59 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7A49985A03;
+        Fri, 21 Jun 2019 11:57:59 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-212.ams2.redhat.com [10.36.116.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFFFB5D772;
+        Fri, 21 Jun 2019 11:57:56 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id AB5DA17472; Fri, 21 Jun 2019 13:57:55 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     ckoenig.leichtzumerken@gmail.com,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 01/18] drm/ttm: add gem base object
+Date:   Fri, 21 Jun 2019 13:57:38 +0200
+Message-Id: <20190621115755.8481-2-kraxel@redhat.com>
+In-Reply-To: <20190621115755.8481-1-kraxel@redhat.com>
+References: <20190621115755.8481-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 21 Jun 2019 11:57:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds devicetree bindings documentation for
-battery charging controller as the subnode of MAX8998 PMIC.
+Add drm_gem_object struct to ttm_buffer_object, so ttm objects are a gdm
+object superclass.  Add a function to check whenever a given bo actually
+uses the embedded drm_gem_object, for the transition period.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
-Changes from v3:
-  - Property prefix should be maxim, not max8998
-  - Describe what End of Charge in percent means
+ include/drm/ttm/ttm_bo_api.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Changes from v2:
-  - Make charge-restart-level-microvolt optional.
-  - Make charge-timeout-hours optional.
-
-Changes from v1:
-  - Removed unneeded Fixes tag
-  - Correct description of all charger values
-  - Added missing property unit
----
- .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
-index 5f2f07c09c90..368f787d6079 100644
---- a/Documentation/devicetree/bindings/mfd/max8998.txt
-+++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-@@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
- - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
-   for buck2 regulator that can be selected using dvs gpio.
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 49d9cdfc58f2..72f6aeda619c 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -31,6 +31,7 @@
+ #ifndef _TTM_BO_API_H_
+ #define _TTM_BO_API_H_
  
-+Charger: Configuration for battery charging controller should be added
-+inside a child node named 'charger'.
-+  Required properties:
-+  - maxim,end-of-charge-percentage: End of Charge in percent.
-+    When the charge current in constant-voltage phase drops below
-+    end-of-charge-percentage of it's start value, charging is terminated.
-+    If value equals 0, leave it unchanged. Otherwise it should be value
-+    from 10 to 45 by 5 step.
-+
-+  Optional properties:
-+  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
-+    If property is not present, this will be disabled.
-+    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
-+    unchanged.
-+
-+  - maxim,charge-timeout: Charge timeout in hours. If property is not
-+    present, this will be disabled. Valid values are: 0, 5, 6, 7.
-+    If the value equals 0, leave it unchanged.
-+
- Regulators: All the regulators of MAX8998 to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
- by a child node of the 'regulators' node.
-@@ -97,6 +116,13 @@ Example:
- 		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
- 		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
++#include <drm/drm_gem.h>
+ #include <drm/drm_hashtab.h>
+ #include <drm/drm_vma_manager.h>
+ #include <linux/kref.h>
+@@ -127,6 +128,7 @@ struct ttm_tt;
+ /**
+  * struct ttm_buffer_object
+  *
++ * @base: drm_gem_object superclass data.
+  * @bdev: Pointer to the buffer object device structure.
+  * @type: The bo type.
+  * @destroy: Destruction function. If NULL, kfree is used.
+@@ -169,6 +171,8 @@ struct ttm_tt;
+  */
  
-+		/* Charger configuration */
-+		charger {
-+			maxim,end-of-charge-percentage = <20>;
-+			maxim,charge-restart-threshold = <100>;
-+			maxim,charge-timeout = <7>;
-+		};
+ struct ttm_buffer_object {
++	struct drm_gem_object base;
 +
- 		/* Regulators to instantiate */
- 		regulators {
- 			ldo2_reg: LDO2 {
+ 	/**
+ 	 * Members constant at init.
+ 	 */
+@@ -768,4 +772,18 @@ int ttm_bo_swapout(struct ttm_bo_global *glob,
+ 			struct ttm_operation_ctx *ctx);
+ void ttm_bo_swapout_all(struct ttm_bo_device *bdev);
+ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo);
++
++/**
++ * ttm_bo_uses_embedded_gem_object - check if the given bo uses the
++ * embedded drm_gem_object.
++ *
++ * Helper for the transition period, once all drivers are switched to
++ * use the embedded drm_gem_object this can go away.
++ *
++ * @bo: The bo to check.
++ */
++static inline bool ttm_bo_uses_embedded_gem_object(struct ttm_buffer_object *bo)
++{
++	return bo->base.dev != NULL;
++}
+ #endif
 -- 
-2.17.1
+2.18.1
 
