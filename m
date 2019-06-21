@@ -2,112 +2,190 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBB2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58903C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1FA2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318382089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561133990;
+	bh=ORMFjD6wvQgU8GJG9KyEN/0vByMQj7Txl0lQOL6VHH8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nvKFVna5X9RfQGF91wcH7n8hmQgnp25EFW2vLsBc7H2iVKSQM0nR/oW4wrPut+VJi
+	 qmIoOwOYJLqneRna5+Ekg0MI3DCr5vDq/rP1S55Bq1HipOclQpOStdpr2UDSknnfC/
+	 o62T1zl7jSUtDllNtGCuOcSe3MYR3CzoGD3jvP2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfFUQTq (ORCPT
+        id S1726533AbfFUQTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:19:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6408 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726017AbfFUQTp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:19:45 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LGCti1030581
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:19:44 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t92bxgw3q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 12:19:44 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Fri, 21 Jun 2019 17:19:41 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Jun 2019 17:19:39 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LGJbw738601180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 16:19:37 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD98011C05C;
-        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3894811C054;
-        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
-Received: from sig-9-145-18-245.uk.ibm.com (unknown [9.145.18.245])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 21 Jun 2019 16:19:37 +0000 (GMT)
-Date:   Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Cornelia Huck <cohuck@redhat.com>
-cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-In-Reply-To: <20190613110815.17251-1-cohuck@redhat.com>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+        Fri, 21 Jun 2019 12:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfFUQTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:19:47 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5266F21537;
+        Fri, 21 Jun 2019 16:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561133986;
+        bh=ORMFjD6wvQgU8GJG9KyEN/0vByMQj7Txl0lQOL6VHH8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1qUowMlNFdqlG9xi/RUi5XqeU1RcVS3QWD9HL2jMV/QymdUoIaHZnNjRcJ/fSZw1q
+         OiTMj95vh99D6za79bG5n3YCgxTMOjvq7JfjLeUIZD/W1hcaxZ0qUhIVwu9PfDUmA8
+         486+k41d5qvsCTnEMRlU7M04IQyEhZZop0RjVkUM=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC PATCH 10/11] tracing: of: Add kprobe event support
+Date:   Sat, 22 Jun 2019 01:19:40 +0900
+Message-Id: <156113398039.28344.4353616217444927643.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19062116-0020-0000-0000-0000034C3EC4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062116-0021-0000-0000-0000219FA048
-Message-Id: <alpine.LFD.2.21.1906211817010.2388@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=871 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210131
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, Cornelia Huck wrote:
-> Sometimes, we want to control which of the matching drivers
-> binds to a subchannel device (e.g. for subchannels we want to
-> handle via vfio-ccw).
-> 
-> For pci devices, a mechanism to do so has been introduced in
-> 782a985d7af2 ("PCI: Introduce new device binding path using
-> pci_dev.driver_override"). It makes sense to introduce the
-> driver_override attribute for subchannel devices as well, so
-> that we can easily extend the 'driverctl' tool (which makes
-> use of the driver_override attribute for pci).
-> 
-> Note that unlike pci we still require a driver override to
-> match the subchannel type; matching more than one subchannel
-> type is probably not useful anyway.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Add kprobe event support in event node. User can add probe definitions
+by "probes" property as a string array.
 
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_kprobe.c |    5 +++
+ kernel/trace/trace_of.c     |   65 ++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 60 insertions(+), 10 deletions(-)
 
-Should I take that via our git tree or do you have other patches depending 
-on this one?
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 5166a12a9d49..cc5ba13028cd 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -765,6 +765,11 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
+ 	return ret == -ECANCELED ? -EINVAL : ret;
+ }
+ 
++int trace_kprobe_run_command(const char *command)
++{
++	return trace_run_command(command, create_or_delete_trace_kprobe);
++}
++
+ static int trace_kprobe_release(struct dyn_event *ev)
+ {
+ 	struct trace_kprobe *tk = to_trace_kprobe(ev);
+diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
+index 696f59234e62..43d87e5065a3 100644
+--- a/kernel/trace/trace_of.c
++++ b/kernel/trace/trace_of.c
+@@ -23,6 +23,7 @@ extern void __init trace_init_tracepoint_printk(void);
+ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 					  unsigned long size, int cpu_id);
+ extern int trigger_process_regex(struct trace_event_file *file, char *buff);
++extern int trace_kprobe_run_command(const char *command);
+ 
+ static void __init
+ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+@@ -99,14 +100,47 @@ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
+ 	}
+ }
+ 
++static int __init
++trace_of_add_kprobe_event(struct device_node *node,
++			  const char *group, const char *event)
++{
++	struct property *prop;
++	char buf[MAX_BUF_LEN];
++	const char *p;
++	char *q;
++	int len, ret;
++
++	len = snprintf(buf, ARRAY_SIZE(buf) - 1, "p:%s/%s ", group, event);
++	if (len >= ARRAY_SIZE(buf)) {
++		pr_err("Event name is too long: %s\n", event);
++		return -E2BIG;
++	}
++	q = buf + len;
++	len = ARRAY_SIZE(buf) - len;
++
++	of_property_for_each_string(node, "probes", prop, p) {
++		if (strlcpy(q, p, len) >= len) {
++			pr_err("Probe definition is too long: %s\n", p);
++			return -E2BIG;
++		}
++		ret = trace_kprobe_run_command(buf);
++		if (ret < 0) {
++			pr_err("Failed to add probe: %s\n", buf);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
+ static void __init
+ trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
+ {
+ 	struct trace_event_file *file;
+ 	struct property *prop;
+ 	char buf[MAX_BUF_LEN];
+-	char *bufp;
+-	const char *p;
++	const char *p, *group;
++	char *event;
+ 	int err;
+ 
+ 	if (!of_node_name_prefix(node, "event"))
+@@ -123,18 +157,29 @@ trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
+ 		pr_err("Event name is too long: %s\n", p);
+ 		return;
+ 	}
+-	bufp = buf;
+-
+-	p = strsep(&bufp, ":");
+-	if (!bufp) {
+-		pr_err("%s has no group name\n", buf);
+-		return;
++	event = buf;
++
++	group = strsep(&event, ":");
++	/* For a kprobe event, we have to generates an event at first */
++	if (of_find_property(node, "probes", NULL)) {
++		if (!event) {
++			event = buf;
++			group = "kprobes";
++		}
++		err = trace_of_add_kprobe_event(node, group, event);
++		if (err < 0)
++			return;
++	} else {
++		if (!event) {
++			pr_err("%s has no group name\n", buf);
++			return;
++		}
+ 	}
+ 
+ 	mutex_lock(&event_mutex);
+-	file = find_event_file(tr, buf, bufp);
++	file = find_event_file(tr, group, event);
+ 	if (!file) {
+-		pr_err("Failed to find event: %s\n", buf);
++		pr_err("Failed to find event: %s:%s\n", group, event);
+ 		return;
+ 	}
+ 
 
