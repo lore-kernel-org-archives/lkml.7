@@ -2,1143 +2,318 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9FAC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D07C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEE420B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5A12089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfFUH7L (ORCPT
+        id S1726275AbfFUIBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:59:11 -0400
-Received: from mail2.tencent.com ([163.177.67.195]:46540 "EHLO
-        mail2.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfFUH7L (ORCPT
+        Fri, 21 Jun 2019 04:01:16 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36949 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfFUIBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:59:11 -0400
-Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
-        by mail2.tencent.com (Postfix) with ESMTP id 50BD18E7CE;
-        Fri, 21 Jun 2019 15:47:21 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.22.120.143) by
- EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 15:47:21 +0800
-From:   <xiaoggchen@tencent.com>
-To:     <jasperwang@tencent.com>, <heddchen@tencent.com>
-CC:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tj@kernel.org>,
-        <lizefan@huawei.com>, <hannes@cmpxchg.org>,
-        <cgroups@vger.kernel.org>, chen xiaoguang <xiaoggchen@tencent.com>,
-        Newton Gao <newtongao@tencent.com>,
-        Shook Liu <shookliu@tencent.com>,
-        Zhiguang Peng <zgpeng@tencent.com>
-Subject: [PATCH 2/5] sched/BT: implement the BT scheduling class
-Date:   Fri, 21 Jun 2019 15:45:54 +0800
-Message-ID: <1561103157-11246-3-git-send-email-xiaoggchen@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
-References: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
+        Fri, 21 Jun 2019 04:01:15 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so8801658eds.4;
+        Fri, 21 Jun 2019 01:01:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gCeom1nFJ2arsBYjfG8dbuKtZ+vOlEvHFBBdljj8zQo=;
+        b=OfPjflHduD87cP1veDMmoqwA325F+HlX2t7TOqc5n8nbmPkZsT2DnHTiV4+IzSu/fU
+         kAdkVdd/fQVFKmvzMicAcwQ60u+/i6T1r0IdGCPb7M1FqD/FUP4tgf0qaJvJcBUPRt73
+         E4b3Bxof/DPX/fdn/pCvFG3wyG8L+pBBirCybcD8wOWWzFWpuvOx+94ybuUb1AaTIBYX
+         st6cs80HHcLSj5d1Nw8ExuQnMWXTm/68l75Jr1OFXXzdMM9v5EcNoLqauXLE2iBTH6g2
+         EUeJh/ce4TwdkfJtR8da+yb9XENJC4SKP9YlDhBEYOozRBsF5G/9TShBBZJhxT/fH6z+
+         6/Ow==
+X-Gm-Message-State: APjAAAX5UuQxysUvu2UZpPHtzu89Skvj6O2Wo64V8TXzbCjEqP43NDHh
+        ASxmJSRN88QoztlYnHM28OhjVX8Cz0E=
+X-Google-Smtp-Source: APXvYqxXXsoai6NtUnteek+FiH7uP5gvI/VkyUfSRkUIkUVvHeLnFi7ZD1JDz08ENqi+WshAHJT5Gg==
+X-Received: by 2002:a17:906:1596:: with SMTP id k22mr19416326ejd.102.1561104073020;
+        Fri, 21 Jun 2019 01:01:13 -0700 (PDT)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id j17sm624194ede.60.2019.06.21.01.01.11
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 01:01:11 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id u8so5561726wmm.1;
+        Fri, 21 Jun 2019 01:01:11 -0700 (PDT)
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr2869999wmc.25.1561104071096;
+ Fri, 21 Jun 2019 01:01:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.22.120.143]
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
+ <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
+ <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
+ <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
+ <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com>
+ <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA@mail.gmail.com>
+ <CAGb2v66onOEDPvXWLsLj7efxbReY0_z1HcQWkG78XUytLvMQ+g@mail.gmail.com> <CAMty3ZC=Mn2po=98onX7WcmTGOmV0aK+ZT5bYFEFw+q+SqK4FA@mail.gmail.com>
+In-Reply-To: <CAMty3ZC=Mn2po=98onX7WcmTGOmV0aK+ZT5bYFEFw+q+SqK4FA@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 21 Jun 2019 16:00:59 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65NYRkz=0_6jBg3kEyxmuGNv62pYp3dLk0P909T7_waCg@mail.gmail.com>
+Message-ID: <CAGb2v65NYRkz=0_6jBg3kEyxmuGNv62pYp3dLk0P909T7_waCg@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
+ gates in probe
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chen xiaoguang <xiaoggchen@tencent.com>
+On Fri, Jun 21, 2019 at 12:24 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 4:24 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Tue, Jun 18, 2019 at 6:34 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > On Tue, Jun 18, 2019 at 1:23 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > On Tue, Jun 18, 2019 at 3:45 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > >
+> > > > > On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > > > >
+> > > > > > On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > > > >
+> > > > > > > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > > > > > >
+> > > > > > > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > > > > > >
+> > > > > > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > > > > > > now these are register during bind call.
+> > > > > > > > >
+> > > > > > > > > Of which, dsi clock gate would required during DPHY probe
+> > > > > > > > > but same can miss to get since tcon top is not bound at
+> > > > > > > > > that time.
+> > > > > > > > >
+> > > > > > > > > To solve, this circular dependency move the clock gate
+> > > > > > > > > registration from bind to probe so-that DPHY can get the
+> > > > > > > > > dsi gate clock on time.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
+> > > > > > > > >  1 file changed, 49 insertions(+), 45 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > > > index 465e9b0cdfee..a8978b3fe851 100644
+> > > > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+> > > > > > > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > > > > > > >                                void *data)
+> > > > > > > > >  {
+> > > > > > > > > -       struct platform_device *pdev = to_platform_device(dev);
+> > > > > > > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
+> > > > > > > > > +       int ret;
+> > > > > > > > > +
+> > > > > > > > > +       ret = reset_control_deassert(tcon_top->rst);
+> > > > > > > > > +       if (ret) {
+> > > > > > > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
+> > > > > > > > > +               return ret;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       ret = clk_prepare_enable(tcon_top->bus);
+> > > > > > > > > +       if (ret) {
+> > > > > > > > > +               dev_err(dev, "Could not enable bus clock\n");
+> > > > > > > > > +               goto err_assert_reset;
+> > > > > > > > > +       }
+> > > > > > > >
+> > > > > > > > You have to de-assert the reset control and enable the clock before the
+> > > > > > > > clocks it provides are registered. Otherwise a consumer may come in and
+> > > > > > > > ask for the provided clock to be enabled, but since the TCON TOP's own
+> > > > > > > > reset and clock are still disabled, you can't actually access the registers
+> > > > > > > > that controls the provided clock.
+> > > > > > >
+> > > > > > > These rst and bus are common reset and bus clocks not tcon top clocks
+> > > > > > > that are trying to register here. ie reason I have not moved it in
+> > > > > > > top.
+> > > > > >
+> > > > > > And you're sure that toggling bits in the TCON TOP block doesn't require
+> > > > > > the reset to be de-asserted and the bus clock enabled?
+> > > > > >
+> > > > > > Somehow I doubt that.
+> > > > > >
+> > > > > > Once the driver register the clocks it provides, they absolutely must work.
+> > > > > > They can't only work after the bind phase when the reset gets de-asserted
+> > > > > > and the bus clock enabled. Or you should provide proper error reporting
+> > > > > > in the clock ops. I doubt you want to go that way either.
+> > > > >
+> > > > > Why would they won't work after bind phase? unlike tcon top gates,
+> > > > > these reset, and bus are common like  what we have in other DE block
+> > > > > so enable them in bind won't be an issue as per as I understand. let
+> > > > > me know if you want me to check in other directions.
+> > > >
+> > > > You misunderstood. When you moved the clock registering parts to the probe
+> > > > phase, but didn't move the clock enable and reset de-assert parts to go with,
+> > > > the clock ops will not work as expected between probe and bind time.
+> > >
+> > > If I understand correctly, I have moved tcon clock gates, not the bus
+> > > clock or the reset. Both have independent enablement phase, the bus
+> > > clock is enable in tcon top bind and the clock gate ("dsi") enable in
+> > > init call of phy_ops. is both bus clock and clock gates are same and
+> > > related that is what you are saying?
+> >
+> > I am saying that you may need the tcon top bus gates and resets properly
+> > configured to be able to read/write the tcon top address range. That includes
+> > enabling/disabling the clocks that the tcon top driver registers.
+> >
+> > In other words, the TCON TOP's bus gate and reset control have everything to do
+> > with what you can do within the TCON TOP block or address range.
+> >
+> > > >
+> > > > Simple way to verify it: Just use devmem to disable the TCON TOP bus gate
+> > > > and/or assert its reset control. Then try to toggle any of the bits in the
+> > > > TCON TOP block and see if it works, or if the bits stick.
+> > >
+> > > Yes I have verified "dsi" gate enablement before via devmem. Below is
+> > > the bus, reset disablement and re-enablement and result is similar for
+> > > the reset, bus clock in bind and even in probe.
+> > >
+> > > 00. get the existing value
+> > >
+> > > # devmem 0x1c70020
+> > > 0x00010000
+> > > # devmem 0x1c20064
+> > > 0x44021000
+> > > # devmem 0x1c202c4
+> > > 0x44021000
+> > >
+> > > 01: disable bus, and assert reset
+> > >
+> > > # devmem 0x1c20064 32 0x4021000
+> > > # devmem 0x1c202c4 32 0x4021000
+> > > # devmem 0x1c20064
+> > > 0x04021000
+> > > # devmem 0x1c202c4
+> > > 0x04021000
+> > > # devmem 0x1c70020
+> > > 0x00000000
+> >
+> > See here. The value became 0 when it was still 0x10000 in the previous phase.
+> > Any guesses to why this happened, assuming you didn't touch it?
+>
+> Yes, I didn't touch anything here. and it indeed expected since the
+> bus and reset line goes disabled and asserted.
 
-Signed-off-by: Newton Gao <newtongao@tencent.com>
-Signed-off-by: Shook Liu <shookliu@tencent.com>
-Signed-off-by: Zhiguang Peng <zgpeng@tencent.com>
-Signed-off-by: Xiaoguang Chen <xiaoggchen@tencent.com>
----
- kernel/sched/bt.c    | 1012 ++++++++++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/fair.c  |    4 +-
- kernel/sched/sched.h |    5 +-
- 3 files changed, 1018 insertions(+), 3 deletions(-)
+OK. So you understand what's going on in the hardware.
 
-diff --git a/kernel/sched/bt.c b/kernel/sched/bt.c
-index 56566e6..87eb04f 100644
---- a/kernel/sched/bt.c
-+++ b/kernel/sched/bt.c
-@@ -5,6 +5,8 @@
- 
- #include "sched.h"
- 
-+#include <trace/events/sched.h>
-+
- void init_bt_rq(struct bt_rq *bt_rq)
- {
- 	bt_rq->tasks_timeline = RB_ROOT;
-@@ -14,4 +16,1014 @@ void init_bt_rq(struct bt_rq *bt_rq)
- #endif
- }
- 
-+static inline struct bt_rq *task_bt_rq(struct task_struct *p)
-+{
-+	return &task_rq(p)->bt;
-+}
-+
-+static inline struct task_struct *bt_task_of(struct sched_bt_entity *bt_se)
-+{
-+	return container_of(bt_se, struct task_struct, bt);
-+}
-+
-+static inline struct bt_rq *bt_rq_of(struct sched_bt_entity *bt_se)
-+{
-+	struct task_struct *p = bt_task_of(bt_se);
-+	struct rq *rq = task_rq(p);
-+
-+	return &rq->bt;
-+}
-+
-+static inline struct rq *rq_of_bt_rq(struct bt_rq *bt_rq)
-+{
-+	return container_of(bt_rq, struct rq, bt);
-+}
-+
-+static u64 __calc_delta(u64 delta_exec, unsigned long weight,
-+		struct load_weight *lw);
-+
-+/*
-+ * delta /= w
-+ */
-+static inline unsigned long
-+calc_delta_bt(unsigned long delta, struct sched_bt_entity *bt_se)
-+{
-+	if (unlikely(bt_se->load.weight != NICE_0_LOAD))
-+		delta = __calc_delta(delta, NICE_0_LOAD, &bt_se->load);
-+
-+	return delta;
-+}
-+
-+static inline void update_load_add(struct load_weight *lw, unsigned long inc)
-+{
-+	lw->weight += inc;
-+	lw->inv_weight = 0;
-+}
-+
-+/*
-+ * The idea is to set a period in which each task runs once.
-+ *
-+ * When there are too many tasks (sched_nr_latency) we have to stretch
-+ * this period because otherwise the slices get too small.
-+ *
-+ * p = (nr <= nl) ? l : l*nr/nl
-+ */
-+static u64 __sched_period(unsigned long nr_running)
-+{
-+if (unlikely(nr_running > sched_nr_latency))
-+	return nr_running * sysctl_sched_min_granularity;
-+else
-+	return sysctl_sched_latency;
-+}
-+
-+/*
-+ * We calculate the wall-time slice from the period by taking a part
-+ * proportional to the weight.
-+ *
-+ * s = p*P[w/rw]
-+ */
-+static u64 sched_bt_slice(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	u64 slice = __sched_period(bt_rq->bt_nr_running + !se->on_rq);
-+	struct load_weight *load;
-+	struct load_weight lw;
-+
-+	bt_rq = bt_rq_of(se);
-+	load = &bt_rq->load;
-+
-+	if (unlikely(!se->on_rq)) {
-+		lw = bt_rq->load;
-+		update_load_add(&lw, se->load.weight);
-+		load = &lw;
-+	}
-+	slice = __calc_delta(slice, se->load.weight, load);
-+	return slice;
-+}
-+
-+/*
-+ * We calculate the vruntime slice of a to-be-inserted task.
-+ *
-+ * vs = s/w
-+ */
-+static u64 sched_bt_vslice(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	return calc_delta_bt(sched_bt_slice(bt_rq, se), se);
-+}
-+
-+static inline u64 max_vruntime(u64 max_vruntime, u64 vruntime)
-+{
-+	s64 delta = (s64)(vruntime - max_vruntime);
-+
-+	if (delta > 0)
-+		max_vruntime = vruntime;
-+
-+	return max_vruntime;
-+}
-+
-+static inline u64 min_vruntime(u64 min_vruntime, u64 vruntime)
-+{
-+	s64 delta = (s64)(vruntime - min_vruntime);
-+
-+	if (delta < 0)
-+		min_vruntime = vruntime;
-+
-+	return min_vruntime;
-+}
-+
-+static inline int bt_entity_before(struct sched_bt_entity *a,
-+				struct sched_bt_entity *b)
-+{
-+	return (s64)(a->vruntime - b->vruntime) < 0;
-+}
-+
-+static void
-+place_bt_entity(struct bt_rq *bt_rq, struct sched_bt_entity *se, int initial)
-+{
-+	u64 vruntime = bt_rq->min_vruntime;
-+
-+	/*
-+	 * The 'current' period is already promised to the current tasks,
-+	 * however the extra weight of the new task will slow them down a
-+	 * little, place the new task so that it fits in the slot that
-+	 * stays open at the end.
-+	 */
-+	if (initial && sched_feat(START_DEBIT))
-+		vruntime += sched_bt_vslice(bt_rq, se);
-+
-+	/* sleeps up to a single latency don't count. */
-+	if (!initial) {
-+		unsigned long thresh = sysctl_sched_latency;
-+
-+		/*
-+		 * Halve their sleep time's effect, to allow
-+		 * for a gentler effect of sleepers:
-+		 */
-+		if (sched_feat(GENTLE_FAIR_SLEEPERS))
-+			thresh >>= 1;
-+
-+		vruntime -= thresh;
-+	}
-+
-+	/* ensure we never gain time by being placed backwards. */
-+	se->vruntime = max_vruntime(se->vruntime, vruntime);
-+}
-+
-+static void update_bt_min_vruntime(struct bt_rq *bt_rq)
-+{
-+	u64 vruntime = bt_rq->min_vruntime;
-+
-+	if (bt_rq->curr)
-+		vruntime = bt_rq->curr->vruntime;
-+
-+	if (bt_rq->rb_leftmost) {
-+		struct sched_bt_entity *bt_se = rb_entry(bt_rq->rb_leftmost,
-+				struct sched_bt_entity,
-+				run_node);
-+
-+		if (!bt_rq->curr)
-+			vruntime = bt_se->vruntime;
-+		else
-+			vruntime = min_vruntime(vruntime, bt_se->vruntime);
-+	}
-+
-+	/* ensure we never gain time by being placed backwards. */
-+	bt_rq->min_vruntime = max_vruntime(bt_rq->min_vruntime, vruntime);
-+#ifndef CONFIG_64BIT
-+	smp_wmb();
-+	bt_rq->min_vruntime_copy = bt_rq->min_vruntime;
-+#endif
-+}
-+
-+/*
-+ * Update the current task's runtime statistics. Skip current tasks that
-+ * are not in our scheduling class.
-+ */
-+static inline void
-+__update_curr_bt(struct bt_rq *bt_rq, struct sched_bt_entity *curr,
-+		unsigned long delta_exec)
-+{
-+	unsigned long delta_exec_weighted;
-+
-+	schedstat_set(curr->statistics->exec_max,
-+		max((u64)delta_exec, curr->statistics->exec_max));
-+
-+	curr->sum_exec_runtime += delta_exec;
-+	schedstat_add(bt_rq->exec_clock, delta_exec);
-+	delta_exec_weighted = calc_delta_bt(delta_exec, curr);
-+
-+	curr->vruntime += delta_exec_weighted;
-+	update_bt_min_vruntime(bt_rq);
-+}
-+
-+static void
-+account_bt_entity_enqueue(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	update_load_add(&bt_rq->load, se->load.weight);
-+	bt_rq->bt_nr_running++;
-+}
-+
-+static inline void
-+update_stats_wait_start_bt(struct bt_rq *bt_rq, struct sched_bt_entity *bt_se)
-+{
-+	schedstat_set(bt_se->statistics->wait_start, rq_of_bt_rq(bt_rq)->clock);
-+}
-+
-+static void update_stats_enqueue_bt(struct bt_rq *bt_rq,
-+				struct sched_bt_entity *se)
-+{
-+	/*
-+	 * Are we enqueueing a waiting task? (for current tasks
-+	 * a dequeue/enqueue event is a NOP)
-+	 */
-+	if (se != bt_rq->curr)
-+		update_stats_wait_start_bt(bt_rq, se);
-+}
-+
-+static void update_curr(struct bt_rq *bt_rq)
-+{
-+	struct sched_bt_entity *curr = bt_rq->curr;
-+	u64 now = rq_of_bt_rq(bt_rq)->clock_task;
-+	unsigned long delta_exec;
-+	struct task_struct *tsk;
-+
-+	if (unlikely(!curr))
-+		return;
-+
-+	/*
-+	 * Get the amount of time the current task was running
-+	 * since the last time we changed load (this cannot
-+	 * overflow on 32 bits):
-+	 */
-+	delta_exec = (unsigned long)(now - curr->exec_start);
-+	if (!delta_exec)
-+		return;
-+
-+	__update_curr_bt(bt_rq, curr, delta_exec);
-+	curr->exec_start = now;
-+
-+	tsk = bt_task_of(curr);
-+	trace_sched_stat_runtime(tsk, delta_exec, curr->vruntime);
-+	cpuacct_charge(tsk, delta_exec);
-+}
-+
-+static void __enqueue_bt_entity(struct bt_rq *bt_rq,
-+				struct sched_bt_entity *bt_se)
-+{
-+	struct rb_node **link = &bt_rq->tasks_timeline.rb_node;
-+	struct rb_node *parent = NULL;
-+	struct sched_bt_entity *entry;
-+	int leftmost = 1;
-+
-+	/*
-+	 * Find the right place in the rbtree:
-+	 */
-+	while (*link) {
-+		parent = *link;
-+		entry = rb_entry(parent, struct sched_bt_entity, run_node);
-+		/*
-+		 * We dont care about collisions. Nodes with
-+		 * the same key stay together.
-+		 */
-+		if (bt_entity_before(bt_se, entry)) {
-+			link = &parent->rb_left;
-+		} else {
-+			link = &parent->rb_right;
-+			leftmost = 0;
-+		}
-+	}
-+
-+	/*
-+	 * Maintain a cache of leftmost tree entries (it is frequently
-+	 * used):
-+	 */
-+	if (leftmost)
-+		bt_rq->rb_leftmost = &bt_se->run_node;
-+
-+	rb_link_node(&bt_se->run_node, parent, link);
-+	rb_insert_color(&bt_se->run_node, &bt_rq->tasks_timeline);
-+}
-+
-+
-+static void
-+enqueue_bt_entity(struct bt_rq *bt_rq, struct sched_bt_entity *bt_se, int flags)
-+{
-+	bool renorm = !(flags && ENQUEUE_WAKEUP) || (flags & ENQUEUE_MIGRATED);
-+
-+	/*
-+	 * Update the normalized vruntime before updating min_vruntime
-+	 * through callig update_curr().
-+	 */
-+	if (renorm && (bt_rq->curr == bt_se))
-+		bt_se->vruntime += bt_rq->min_vruntime;
-+
-+	/*
-+	 * Update run-time statistics of the 'current'.
-+	 */
-+	update_curr(bt_rq);
-+	account_bt_entity_enqueue(bt_rq, bt_se);
-+
-+	if (flags & ENQUEUE_WAKEUP)
-+		place_bt_entity(bt_rq, bt_se, 0);
-+
-+	update_stats_enqueue_bt(bt_rq, bt_se);
-+	if (bt_se != bt_rq->curr)
-+		__enqueue_bt_entity(bt_rq, bt_se);
-+	bt_se->on_rq = 1;
-+}
-+
-+/*
-+ * The enqueue_task method is called before nr_running is
-+ * increased. Here we update the fair scheduling stats and
-+ * then put the task into the rbtree:
-+ */
-+static void
-+enqueue_task_bt(struct rq *rq, struct task_struct *p, int flags)
-+{
-+	struct bt_rq *bt_rq;
-+	struct sched_bt_entity *se = &p->bt;
-+
-+	if (se->on_rq)
-+		return;
-+
-+	bt_rq = bt_rq_of(se);
-+	flags = ENQUEUE_WAKEUP;
-+	enqueue_bt_entity(bt_rq, se, flags);
-+
-+	add_nr_running(rq, 1);
-+}
-+
-+static void
-+update_stats_wait_end_bt(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	schedstat_set(se->statistics->wait_max, max(se->statistics->wait_max,
-+		rq_of_bt_rq(bt_rq)->clock - se->statistics->wait_start));
-+	schedstat_set(se->statistics->wait_count, se->statistics->wait_count
-+			+ 1);
-+	schedstat_set(se->statistics->wait_sum, se->statistics->wait_sum +
-+		rq_of_bt_rq(bt_rq)->clock - se->statistics->wait_start);
-+#ifdef CONFIG_SCHEDSTATS
-+	trace_sched_stat_wait(bt_task_of(se),
-+	rq_of_bt_rq(bt_rq)->clock - se->statistics->wait_start);
-+#endif
-+	schedstat_set(se->statistics->wait_start, 0);
-+}
-+
-+static inline void
-+update_stats_dequeue_bt(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	/*
-+	 * Mark the end of the wait period if dequeueing a
-+	 * waiting task:
-+	 */
-+	if (se != bt_rq->curr)
-+		update_stats_wait_end_bt(bt_rq, se);
-+}
-+
-+static void __clear_buddies_next_bt(struct sched_bt_entity *se)
-+{
-+	struct bt_rq *bt_rq = bt_rq_of(se);
-+
-+	bt_rq->next = NULL;
-+}
-+
-+static void __clear_buddies_skip_bt(struct sched_bt_entity *se)
-+{
-+	struct bt_rq *bt_rq = bt_rq_of(se);
-+
-+	bt_rq->skip = NULL;
-+}
-+
-+static void set_skip_buddy_bt(struct sched_bt_entity *se)
-+{
-+	bt_rq_of(se)->skip = se;
-+}
-+
-+static void clear_buddies_bt(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	if (bt_rq->next == se)
-+		__clear_buddies_next_bt(se);
-+	if (bt_rq->skip == se)
-+		__clear_buddies_skip_bt(se);
-+}
-+
-+static void __dequeue_bt_entity(struct bt_rq *bt_rq,
-+				struct sched_bt_entity *bt_se)
-+{
-+	if (bt_rq->rb_leftmost == &bt_se->run_node) {
-+		struct rb_node *next_node;
-+
-+		next_node = rb_next(&bt_se->run_node);
-+		bt_rq->rb_leftmost = next_node;
-+	}
-+	rb_erase(&bt_se->run_node, &bt_rq->tasks_timeline);
-+}
-+
-+static inline void update_load_sub(struct load_weight *lw, unsigned long dec)
-+{
-+	lw->weight -= dec;
-+	lw->inv_weight = 0;
-+}
-+
-+static void
-+account_bt_entity_dequeue(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	update_load_sub(&bt_rq->load, se->load.weight);
-+	bt_rq->bt_nr_running--;
-+}
-+
-+static void
-+dequeue_bt_entity(struct bt_rq *bt_rq, struct sched_bt_entity *se, int flags)
-+{
-+	struct task_struct *tsk = bt_task_of(se);
-+	/*
-+	 * Update run-time statistics of the 'current'.
-+	 */
-+	update_curr(bt_rq);
-+
-+	update_stats_dequeue_bt(bt_rq, se);
-+	if (flags & DEQUEUE_SLEEP) {
-+#if defined(CONFIG_SCHEDSTATS) || defined(CONFIG_LATENCYTOP)
-+		if (tsk->state & TASK_INTERRUPTIBLE)
-+			se->statistics->sleep_start = rq_of_bt_rq(bt_rq)->clock;
-+		if (tsk->state & TASK_UNINTERRUPTIBLE)
-+			se->statistics->block_start = rq_of_bt_rq(bt_rq)->clock;
-+	}
-+#endif
-+	clear_buddies_bt(bt_rq, se);
-+
-+	if (se != bt_rq->curr)
-+		__dequeue_bt_entity(bt_rq, se);
-+	se->on_rq = 0;
-+	account_bt_entity_dequeue(bt_rq, se);
-+
-+	/*
-+	 * Normalize the entity after updating the min_vruntime because the
-+	 * update can refer to the ->curr item and we need to reflect this
-+	 * movement in our normalized position.
-+	 */
-+	if (!(flags & DEQUEUE_SLEEP))
-+		se->vruntime -= bt_rq->min_vruntime;
-+
-+	update_bt_min_vruntime(bt_rq);
-+}
-+
-+/*
-+ * The dequeue_task method is called before nr_running is
-+ * decreased. We remove the task from the rbtree and
-+ * update the fair scheduling stats:
-+ */
-+static void dequeue_task_bt(struct rq *rq, struct task_struct *p, int flags)
-+{
-+	struct bt_rq *bt_rq;
-+	struct sched_bt_entity *se = &p->bt;
-+
-+	bt_rq = bt_rq_of(se);
-+	flags = DEQUEUE_SLEEP;
-+	dequeue_bt_entity(bt_rq, se, flags);
-+
-+	bt_rq->bt_nr_running--;
-+
-+	sub_nr_running(rq, 1);
-+}
-+
-+static void update_curr_bt(struct rq *rq)
-+{
-+	update_curr(&rq->bt);
-+}
-+
-+/*
-+ * sched_yield() is very simple
-+ *
-+ * The magic of dealing with the ->skip buddy is in pick_next_entity.
-+ */
-+static void yield_task_bt(struct rq *rq)
-+{
-+	struct task_struct *curr = rq->curr;
-+	struct bt_rq *bt_rq = task_bt_rq(curr);
-+	struct sched_bt_entity *se = &curr->bt;
-+
-+	/*
-+	 * Are we the only task in the tree?
-+	 */
-+	if (unlikely(rq->nr_running == 1))
-+		return;
-+
-+	clear_buddies_bt(bt_rq, se);
-+	update_rq_clock(rq);
-+	/*
-+	 * Update run-time statistics of the 'current'.
-+	 */
-+	update_curr(bt_rq);
-+	rq_clock_skip_update(rq);
-+	set_skip_buddy_bt(se);
-+}
-+
-+struct sched_bt_entity *__pick_first_bt_entity(struct bt_rq *bt_rq)
-+{
-+	struct rb_node *left = bt_rq->rb_leftmost;
-+
-+	if (!left)
-+		return NULL;
-+
-+	return rb_entry(left, struct sched_bt_entity, run_node);
-+}
-+
-+
-+#define WMULT_CONST    (~0U)
-+#define WMULT_SHIFT    32
-+
-+static void __update_inv_weight(struct load_weight *lw)
-+{
-+	unsigned long w;
-+
-+	if (likely(lw->inv_weight))
-+		return;
-+
-+	w = scale_load_down(lw->weight);
-+
-+	if (BITS_PER_LONG > 32 && unlikely(w >= WMULT_CONST))
-+		lw->inv_weight = 1;
-+	else if (unlikely(!w))
-+		lw->inv_weight = WMULT_CONST;
-+	else
-+		lw->inv_weight = WMULT_CONST / w;
-+}
-+
-+/*
-+ * delta_exec * weight / lw.weight
-+ *   OR
-+ * (delta_exec * (weight * lw->inv_weight)) >> WMULT_SHIFT
-+ *
-+ * Either weight := NICE_0_LOAD and lw \e sched_prio_to_wmult[], in which case
-+ * we're guaranteed shift stays positive because inv_weight is guaranteed to
-+ * fit 32 bits, and NICE_0_LOAD gives another 10 bits; therefore shift >= 22.
-+ *
-+ * Or, weight =< lw.weight (because lw.weight is the runqueue weight), thus
-+ * weight/lw.weight <= 1, and therefore our shift will also be positive.
-+ */
-+static u64 __calc_delta(u64 delta_exec, unsigned long weight,
-+			struct load_weight *lw)
-+{
-+	u64 fact = scale_load_down(weight);
-+	int shift = WMULT_SHIFT;
-+
-+	__update_inv_weight(lw);
-+
-+	if (unlikely(fact >> 32)) {
-+		while (fact >> 32) {
-+			fact >>= 1;
-+			shift--;
-+		}
-+	}
-+
-+	/* hint to use a 32x32->64 mul */
-+	fact = (u64)(u32)fact * lw->inv_weight;
-+
-+	while (fact >> 32) {
-+		fact >>= 1;
-+		shift--;
-+	}
-+
-+	return mul_u64_u32_shr(delta_exec, fact, shift);
-+}
-+
-+static unsigned long
-+wakeup_gran_bt(struct sched_bt_entity *curr, struct sched_bt_entity *se)
-+{
-+	unsigned long gran = sysctl_sched_wakeup_granularity;
-+
-+	/*
-+	 * Since its curr running now, convert the gran from real-time
-+	 * to virtual-time in his units.
-+	 *
-+	 * By using 'se' instead of 'curr' we penalize light tasks, so
-+	 * they get preempted easier. That is, if 'se' < 'curr' then
-+	 * the resulting gran will be larger, therefore penalizing the
-+	 * lighter, if otoh 'se' > 'curr' then the resulting gran will
-+	 * be smaller, again penalizing the lighter task.
-+	 *
-+	 * This is especially important for buddies when the leftmost
-+	 * task is higher priority than the buddy.
-+	 */
-+	return calc_delta_bt(gran, se);
-+}
-+
-+
-+static int
-+wakeup_preempt_bt_entity(struct sched_bt_entity *curr,
-+			struct sched_bt_entity *se)
-+{
-+	s64 gran, vdiff = curr->vruntime - se->vruntime;
-+
-+	if (vdiff <= 0)
-+		return -1;
-+
-+	gran = wakeup_gran_bt(curr, se);
-+	if (vdiff > gran)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Preempt the current task with a newly woken task if needed:
-+ */
-+static void
-+check_preempt_tick_bt(struct bt_rq *bt_rq, struct sched_bt_entity *curr)
-+{
-+	unsigned long ideal_runtime, delta_exec;
-+	struct sched_bt_entity *se;
-+	s64 delta;
-+
-+	ideal_runtime = sched_bt_slice(bt_rq, curr);
-+	delta_exec = curr->sum_exec_runtime - curr->prev_sum_exec_runtime;
-+	if (delta_exec > ideal_runtime) {
-+		resched_curr(rq_of_bt_rq(bt_rq));
-+		/*
-+		 * The current task ran long enough, ensure it doesn't get
-+		 * re-elected due to buddy favours.
-+		 */
-+		clear_buddies_bt(bt_rq, curr);
-+		return;
-+	}
-+
-+	/*
-+	 * Ensure that a task that missed wakeup preemption by a
-+	 * narrow margin doesn't have to wait for a full slice.
-+	 * This also mitigates buddy induced latencies under load.
-+	 */
-+	if (delta_exec < sysctl_sched_min_granularity)
-+		return;
-+
-+	se = __pick_first_bt_entity(bt_rq);
-+	delta = curr->vruntime - se->vruntime;
-+
-+	if (delta < 0)
-+		return;
-+
-+	if (delta > ideal_runtime)
-+		resched_curr(rq_of_bt_rq(bt_rq));
-+}
-+
-+static void set_next_buddy_bt(struct sched_bt_entity *se)
-+{
-+	if (unlikely(task_has_idle_policy(bt_task_of(se))))
-+		return;
-+
-+	bt_rq_of(se)->next = se;
-+}
-+
-+/*
-+ * Preempt the current task with a newly woken task if needed:
-+ */
-+static void check_preempt_wakeup_bt(struct rq *rq, struct task_struct *p,
-+				int wake_flags)
-+{
-+	struct task_struct *curr = rq->curr;
-+	struct sched_bt_entity *se = &curr->bt, *pse = &p->bt;
-+	struct bt_rq *bt_rq = task_bt_rq(curr);
-+	int scale = bt_rq->bt_nr_running >= sched_nr_latency;
-+	int next_buddy_marked = 0;
-+
-+	if (unlikely(se == pse))
-+		return;
-+
-+	if (sched_feat(NEXT_BUDDY) && scale && !(wake_flags & WF_FORK)) {
-+		set_next_buddy_bt(pse);
-+		next_buddy_marked = 1;
-+	}
-+
-+	/*
-+	 * We can come here with TIF_NEED_RESCHED already set from new task
-+	 * wake up path.
-+	 *
-+	 * Note: this also catches the edge-case of curr being in a throttled
-+	 * group (e.g. via set_curr_task), since update_curr() (in the
-+	 * enqueue of curr) will have resulted in resched being set.  This
-+	 * prevents us from potentially nominating it as a false LAST_BUDDY
-+	 * below.
-+	 */
-+	if (test_tsk_need_resched(curr))
-+		return;
-+
-+	/* BT tasks are by definition preempted by non-bt tasks. */
-+	if (likely(p->policy < SCHED_BT))
-+		goto preempt;
-+
-+	if (!sched_feat(WAKEUP_PREEMPTION))
-+		return;
-+
-+	update_curr(bt_rq_of(se));
-+	BUG_ON(!pse);
-+	if (wakeup_preempt_bt_entity(se, pse) == 1) {
-+		/*
-+		 * Bias pick_next to pick the sched entity that is
-+		 * triggering this preemption.
-+		 */
-+		if (!next_buddy_marked)
-+			set_next_buddy_bt(pse);
-+		goto preempt;
-+	}
-+
-+	return;
-+
-+preempt:
-+	resched_curr(rq);
-+	/*
-+	 * Only set the backward buddy when the current task is still
-+	 * on the rq. This can happen when a wakeup gets interleaved
-+	 * with schedule on the ->pre_schedule() or idle_balance()
-+	 * point, either of which can * drop the rq lock.
-+	 *
-+	 * Also, during early boot the idle thread is in the fair class,
-+	 * for obvious reasons its a bad idea to schedule back to it.
-+	 */
-+	if (unlikely(!se->on_rq || curr == rq->idle))
-+		return;
-+}
-+
-+static struct sched_bt_entity *__pick_next_bt_entity(
-+					struct sched_bt_entity *bt_se)
-+{
-+	struct rb_node *next = rb_next(&bt_se->run_node);
-+
-+	if (!next)
-+		return NULL;
-+
-+	return rb_entry(next, struct sched_bt_entity, run_node);
-+}
-+
-+/*
-+ * We are picking a new current task - update its stats:
-+ */
-+static inline void
-+update_stats_curr_start_bt(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	/*
-+	 * We are starting a new run period:
-+	 */
-+	se->exec_start = rq_of_bt_rq(bt_rq)->clock_task;
-+}
-+
-+static void
-+set_next_bt_entity(struct bt_rq *bt_rq, struct sched_bt_entity *se)
-+{
-+	/* 'current' is not kept within the tree. */
-+	if (se->on_rq) {
-+		/*
-+		 * Any task has to be enqueued before it get to execute on
-+		 * a CPU. So account for the time it spent waiting on the
-+		 * runqueue.
-+		 */
-+		update_stats_wait_end_bt(bt_rq, se);
-+		__dequeue_bt_entity(bt_rq, se);
-+	}
-+
-+	update_stats_curr_start_bt(bt_rq, se);
-+	bt_rq->curr = se;
-+#ifdef CONFIG_SCHEDSTATS
-+	/*
-+	 * Track our maximum slice length, if the CPU's load is at
-+	 * least twice that of our own weight (i.e. dont track it
-+	 * when there are only lesser-weight tasks around):
-+	 */
-+	if (bt_rq->load.weight >= 2*se->load.weight) {
-+		se->statistics->slice_max = max(se->statistics->slice_max,
-+			se->sum_exec_runtime - se->prev_sum_exec_runtime);
-+	}
-+#endif
-+	se->prev_sum_exec_runtime = se->sum_exec_runtime;
-+}
-+
-+/*
-+ * Pick the next process, keeping these things in mind, in this order:
-+ * 1) keep things fair between processes/task groups
-+ * 2) pick the "next" process, since someone really wants that to run
-+ * 3) do not run the "skip" process, if something else is available
-+ */
-+static struct sched_bt_entity *pick_next_bt_entity(struct bt_rq *bt_rq)
-+{
-+	struct sched_bt_entity *se = __pick_first_bt_entity(bt_rq);
-+	struct sched_bt_entity *left = se;
-+
-+	/*
-+	 * Avoid running the skip buddy, if running something else can
-+	 * be done without getting too unfair.
-+	 */
-+	if (bt_rq->skip == se) {
-+		struct sched_bt_entity *second = __pick_next_bt_entity(se);
-+
-+		if (second && wakeup_preempt_bt_entity(second, left) < 1)
-+			se = second;
-+	}
-+
-+	/*
-+	 * Someone really wants this to run. If it's not unfair, run it.
-+	 */
-+	if (bt_rq->next && wakeup_preempt_bt_entity(bt_rq->next, left) < 1)
-+		se = bt_rq->next;
-+
-+	clear_buddies_bt(bt_rq, se);
-+
-+	return se;
-+}
-+
-+
-+static struct task_struct *
-+pick_next_task_bt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-+{
-+	struct task_struct *p;
-+	struct bt_rq *bt_rq;
-+	struct sched_bt_entity *se;
-+
-+	bt_rq = &rq->bt;
-+
-+	if (!bt_rq->bt_nr_running)
-+		return NULL;
-+
-+	put_prev_task(rq, prev);
-+
-+	se = pick_next_bt_entity(bt_rq);
-+	set_next_bt_entity(bt_rq, se);
-+
-+	p = bt_task_of(se);
-+
-+	return p;
-+}
-+
-+static void put_prev_bt_entity(struct bt_rq *bt_rq,
-+				struct sched_bt_entity *prev)
-+{
-+	/*
-+	 * If still on the runqueue then deactivate_task()
-+	 * was not called and update_curr() has to be done:
-+	 */
-+	if (prev->on_rq)
-+		update_curr(bt_rq);
-+
-+	if (prev->on_rq) {
-+		update_stats_wait_start_bt(bt_rq, prev);
-+		/* Put 'current' back into the tree. */
-+		__enqueue_bt_entity(bt_rq, prev);
-+	}
-+	bt_rq->curr = NULL;
-+}
-+
-+/*
-+ * Account for a descheduled task:
-+ */
-+static void put_prev_task_bt(struct rq *rq, struct task_struct *prev)
-+{
-+	struct sched_bt_entity *se = &prev->bt;
-+	struct bt_rq *bt_rq;
-+
-+	bt_rq = bt_rq_of(se);
-+	put_prev_bt_entity(bt_rq, se);
-+}
-+
-+#ifdef CONFIG_SMP
-+static int
-+select_task_rq_bt(struct task_struct *p, int prev_cpu, int sd_flag,
-+		int wake_flags)
-+{
-+	struct sched_domain *tmp;
-+	int cpu = smp_processor_id();
-+	int new_cpu = cpu;
-+
-+	if (p->nr_cpus_allowed == 1)
-+		return prev_cpu;
-+
-+	rcu_read_lock();
-+	for_each_domain(cpu, tmp) {
-+		if (cpumask_test_cpu(cpu, &p->cpus_allowed)) {
-+			new_cpu = cpu;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return new_cpu;
-+}
-+#endif
-+/* Account for a task changing its policy or group.
-+ *
-+ * This routine is mostly called to set bt_rq->curr field when a task
-+ * migrates between groups/classes.
-+ */
-+static void set_curr_task_bt(struct rq *rq)
-+{
-+	struct sched_bt_entity *se = &rq->curr->bt;
-+	struct bt_rq *bt_rq = bt_rq_of(se);
-+
-+	set_next_bt_entity(bt_rq, se);
-+}
-+
-+static void
-+bt_entity_tick(struct bt_rq *bt_rq, struct sched_bt_entity *curr, int queued)
-+{
-+	/*
-+	 * Update run-time statistics of the 'current'.
-+	 */
-+	update_curr(bt_rq);
-+
-+#ifdef CONFIG_SCHED_HRTICK
-+	/*
-+	 * queued ticks are scheduled to match the slice, so don't bother
-+	 * validating it and just reschedule.
-+	 */
-+	if (queued) {
-+		resched_curr(rq_of_bt_rq(bt_rq));
-+		return;
-+	}
-+#endif
-+
-+	if (bt_rq->bt_nr_running > 1)
-+		check_preempt_tick_bt(bt_rq, curr);
-+}
-+
-+/*
-+ * scheduler tick hitting a task of our scheduling class:
-+ */
-+static void task_tick_bt(struct rq *rq, struct task_struct *curr, int queued)
-+{
-+	struct bt_rq *bt_rq;
-+	struct sched_bt_entity *se = &curr->bt;
-+
-+	bt_rq = bt_rq_of(se);
-+	bt_entity_tick(bt_rq, se, queued);
-+}
-+/*
-+ * Priority of the task has changed. Check to see if we preempt
-+ * the current task.
-+ */
-+static void
-+prio_changed_bt(struct rq *rq, struct task_struct *p, int oldprio)
-+{
-+	if (!p->bt.on_rq)
-+		return;
-+
-+	/*
-+	 * Reschedule if we are currently running on this runqueue and
-+	 * our priority decreased, or if we are not currently running on
-+	 * this runqueue and our priority is higher than the current's
-+	 */
-+	if (rq->curr == p) {
-+		if (p->prio > oldprio)
-+			resched_curr(rq);
-+	} else
-+		check_preempt_curr(rq, p, 0);
-+}
-+
-+/*
-+ * We switched to the sched_fair class.
-+ */
-+static void switched_to_bt(struct rq *rq, struct task_struct *p)
-+{
-+	if (!p->bt.on_rq)
-+		return;
-+	/*
-+	 * We were most likely switched from sched_rt, so
-+	 * kick off the schedule if running, otherwise just see
-+	 * if we can still preempt the current task.
-+	 */
-+	if (rq->curr == p)
-+		resched_curr(rq);
-+	else
-+		check_preempt_curr(rq, p, 0);
-+}
-+
-+static unsigned int get_rr_interval_bt(struct rq *rq, struct task_struct *task)
-+{
-+	struct sched_bt_entity *se = &task->bt;
-+	unsigned int rr_interval = 0;
-+
-+	/*
-+	 * Time slice is 0 for SCHED_OTHER tasks that are on an otherwise
-+	 * idle runqueue:
-+	 */
-+	if (rq->bt.load.weight)
-+		rr_interval = NS_TO_JIFFIES(sched_bt_slice(bt_rq_of(se), se));
-+
-+	return rr_interval;
-+}
-+
-+const struct sched_class bt_sched_class = {
-+	.next                   = &idle_sched_class,
-+	.enqueue_task           = enqueue_task_bt,
-+	.dequeue_task           = dequeue_task_bt,
-+	.yield_task             = yield_task_bt,
-+	.check_preempt_curr     = check_preempt_wakeup_bt,
-+	.pick_next_task         = pick_next_task_bt,
-+	.put_prev_task          = put_prev_task_bt,
-+#ifdef CONFIG_SMP
-+	.select_task_rq         = select_task_rq_bt,
-+	.set_cpus_allowed       = set_cpus_allowed_common,
-+#endif
-+	.set_curr_task          = set_curr_task_bt,
-+	.task_tick              = task_tick_bt,
-+	.prio_changed           = prio_changed_bt,
-+	.switched_to            = switched_to_bt,
-+	.get_rr_interval        = get_rr_interval_bt,
-+	.update_curr            = update_curr_bt,
-+};
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f..5299ce8 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -64,7 +64,7 @@
- /*
-  * This value is kept at sysctl_sched_latency/sysctl_sched_min_granularity
-  */
--static unsigned int sched_nr_latency = 8;
-+unsigned int sched_nr_latency = 8;
- 
- /*
-  * After fork, child runs first. If set to 0 (default) then
-@@ -10653,7 +10653,7 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
-  * All the scheduling class methods:
-  */
- const struct sched_class fair_sched_class = {
--	.next			= &idle_sched_class,
-+	.next			= &bt_sched_class,
- 	.enqueue_task		= enqueue_task_fair,
- 	.dequeue_task		= dequeue_task_fair,
- 	.yield_task		= yield_task_fair,
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 320c80d..68007be 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -593,7 +593,7 @@ struct bt_rq {
- 	struct rb_root tasks_timeline;
- 	struct rb_node *rb_leftmost;
- 
--	struct sched_bt_entity *curr, *next;
-+	struct sched_bt_entity *curr, *next, *skip;
- };
- 
- static inline int rt_bandwidth_enabled(void)
-@@ -1754,6 +1754,7 @@ static inline void set_curr_task(struct rq *rq, struct task_struct *curr)
- extern const struct sched_class rt_sched_class;
- extern const struct sched_class fair_sched_class;
- extern const struct sched_class idle_sched_class;
-+extern const struct sched_class bt_sched_class;
- 
- 
- #ifdef CONFIG_SMP
-@@ -2362,4 +2363,6 @@ static inline bool sched_energy_enabled(void)
- #define perf_domain_span(pd) NULL
- static inline bool sched_energy_enabled(void) { return false; }
- 
-+extern unsigned int sched_nr_latency;
-+
- #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
--- 
-1.8.3.1
+> >
+> > Now if you keep the bus gate disabled and the reset control asserted, and
+> > try to write some non-zero value to 0x1c70020, and read it back, does the
+> > value stick?
+>
+> No, value is not stick. what ever I wrote on on 0x1c70020 it is not taking.
 
+Yes. And that is expected since the reset is asserted.
+
+> >
+> > If you don't have the bus gate enabled and the reset control de-asserted,
+> > any operations you do to the TCON TOP is essentially not happening. Including
+> > bit operations that the clocks you registered are required to do.
+> >
+> > Get what I'm saying?
+>
+> I understand it, the for accessing tcon space we have bus and reset
+> line to be enabled and desserted. But the thing is I didn't see any
+> difference in the behavior even If I enable or deassert the bus and
+> reset in probe or in bind.
+
+You mean the display pipeline bind as usual, regardless of whether
+you reset in probe or in bind, right?
+
+That is because the TCON and DSI blocks bind _after_ the TCON TOP block.
+The display component is traversed breadth first, and components bind
+in that order.
+
+What I'm trying to tell you is not that the display pipeline will stop
+working, but that you have a problem with how you use the API in the
+TCON TOP driver.
+
+
+When you call clk_hw_register_gate(), you are saying that from this point
+onward, the clock that got registered is available and will work properly,
+or it will return an error if not.
+
+That is not the case here. Because the TCON TOP reset control is deasserted
+and the bus clock enabled much later, right _now_ any attempts to control
+the newly registered gate will silently fail, because writes to the register
+do not go through.
+
+> The devmem numbers which I have listed above is same for both the
+> cases, one with this patch and another one is handle via probe
+> https://paste.ubuntu.com/p/ndHj9wHzvX/
+>
+> >
+> > You need to have the bus gate enabled and the reset control de-asserted
+> > BEFORE you register the clocks you are providing, or something is going
+> > to go very wrong.
+> >
+> > Worst case scenario: the reset control was left de-asserted by the bootloader
+> > but the bus gate was disabled. When you register the clocks, the CCF tries
+> > to read back the current status of the clocks, and the I/O stalls because
+> > the bus gate wasn't enabled. System stalls.
+> >
+> > Do I need to draw a time flow chart for you?
+>
+> Sure, please.
+
+    tcon top probe                        tcon top bind
+--[--------------|-]------------>-------[------|--------]------------->
+                 |                             |
+                 clk_hw_register_gate()        |
+                                               reset_control_deassert()
+                                               clk_prepare_enable()
+
+
+So the above is what is happening with your patch:
+
+Between the two square bracket blocks, if any consumer tries to use the
+clocks created by clk_hw_register_gate(), it will silently fail, because
+the function calls enabling the TCON TOP block happen much later.
+
+Again, the problem is not that the display pipeline stops working. Instead
+it is more fundamental: the code is not living up to the API contract that
+it declared it is following.
+
+There is also another register/unregister mismatch in this driver. You
+moved clk_hw_register_gate(), but the corresponding clk_hw_unregister_gate()
+calls that need to happen are still in the unbind function.
+
+So if I were to probe but not bind the driver, and then subsequently
+remove the driver, it would be leaking the registered clocks. (At this
+point the clocks might not even have code backing them, since I might
+have removed the module. I'm not sure if that's possible.) If I try
+to probe the driver again, it will fail because it tries to register
+clocks with the same names as the ones leaked in the previous round.
+
+
+ChenYu
+
+> > Also see the very simple example:
+> >
+> >     https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c#L113
+> >
+> > where the bus gate is enabled before registering the clocks. This hardware
+> > block doesn't have a reset control for it, but the same principle applies.
+>
+> Got it, thanks.
