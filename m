@@ -2,122 +2,131 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77FAC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DACC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C204B2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582FF2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n+thdKWW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNtMHae5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfFULld (ORCPT
+        id S1726663AbfFULoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:41:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41671 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfFULlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:41:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45VcGJ2BnWz9s4V;
-        Fri, 21 Jun 2019 21:41:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561117289;
-        bh=IJZ9MBhkOnX8UeUtLbRa+iceXBCLLi5U3KV3hQANtp0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=n+thdKWWhF26yQRPjtlvBt5Y3P5UccVFzi7niBsmYI/11ZMBEV2e0El7oV2WhlZTM
-         BEwjml9TeyvuL9l9xTmRKAUywH3eigjfTFNZ4EC5FhC8UuMHme6zeiK8h43fdtVEsK
-         arI/kFNuQOY/WFikl3iNWZ1e+UqybthedcBV3UmGNbg12GLHQl2AvUwmASLx9k0tVZ
-         nz/5QaNs66gXp7/hkJeK8O8K6e+GkYpCNjsKbFSH21XRZj+KzEsYJYU1vYh2MB9rVv
-         apJO8lTD7uNnNquEJhBHQgKUSmHKOcpweOYn9pMDXL5m42eoi330sweMkQrG+EXGw7
-         uL1EuBkxzOUsA==
-Date:   Fri, 21 Jun 2019 21:41:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: linux-next: Fixes tags need some work in the drm-fixes tree
-Message-ID: <20190621214125.6fb68eee@canb.auug.org.au>
+        Fri, 21 Jun 2019 07:44:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36345 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfFULoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:44:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u8so6276475wmm.1;
+        Fri, 21 Jun 2019 04:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=671B8ITw4iRBQJ3GVRyh3fkF3c8OsHI/COzEcd1834M=;
+        b=eNtMHae59YB07kaBK2IyGYRtNhXpOIn76XcLvsWX8VXoI+RbfGrhSY+RWVkZkPHSSM
+         Eu1AiEN2RJGwgDZ4nSocPVdPN1JVYHhwL1Tisste7lSrGNbk1cOinEo3W9C/HidX9eoz
+         Nus+QLFisaKhv86/QJ9U8DxYJ5fFa3sMRYZZTMf/jJPMe1pYkcDhGCSLt7MMFuv0T//u
+         Ku4hG5r4nLoPEWdvddObDmdgahkN2hrb8wL/5mXyn7jQLoQUZJYmvxr3GQX07+wR0UF9
+         y0UiOIesN6VH/z4/nBy7aOHbLH5RrVyqgNu1+nnz/XRuEDRAmz1wPlC76SUbevC5ggCk
+         PDxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=671B8ITw4iRBQJ3GVRyh3fkF3c8OsHI/COzEcd1834M=;
+        b=BoH4l9490oZYVWE+iA54R++WDlPVOGHNaTX3L+F5CA6ibUIRJ2aonAgu+86SO7G9qJ
+         3KNpGC98Fi35MYdioyfwQOVmIq1OLPv/l4ODeRRA3TRWwIwe2szOkfeFWbLFBVGNdGyf
+         UEEXPR2t6CBnZcAJmx+vjBJly+pXc+5ae4/AkaAbw2Nt/a/gzA3DwRj8Bo4cexJ3ujmW
+         2REltMw5P5bNRDvUOsJvifY0FMxDQdOndgKhRmY8YcMNBVS/l2SKe0QOw1fMfjMl3Jm9
+         DB2ch9y/Q5vflofVI0FJ9BYdcAg1E31XmVuMT/g13en6zYDdljFgnZ5XzBSK9APxQj0W
+         tCfA==
+X-Gm-Message-State: APjAAAWO6Ww5g5erxjpnA1Ogtfq2OPT26Pu0bCXm0xL2k7aWlXHm1EfR
+        H2VzetWd65QdJqYHcS8R5to=
+X-Google-Smtp-Source: APXvYqwMO1kthRI1MdROhaylSw1sgGK/5sYomAtT784ZV+TKYvX7heUFUkZWJRfM37dLdrva1oW1eA==
+X-Received: by 2002:a7b:cd04:: with SMTP id f4mr4147489wmj.64.1561117446857;
+        Fri, 21 Jun 2019 04:44:06 -0700 (PDT)
+Received: from alan-laptop.carrier.duckdns.org (host-89-243-246-11.as13285.net. [89.243.246.11])
+        by smtp.gmail.com with ESMTPSA id o2sm1698861wrq.56.2019.06.21.04.44.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 04:44:06 -0700 (PDT)
+From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] mm: fix setting the high and low watermarks
+Date:   Fri, 21 Jun 2019 12:43:25 +0100
+Message-Id: <20190621114325.711-1-alan.christopher.jenkins@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4V3qudpAXLoFUGuq/4lQ8fY"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4V3qudpAXLoFUGuq/4lQ8fY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When setting the low and high watermarks we use min_wmark_pages(zone).
+I guess this is to reduce the line length.  But we forgot that this macro
+includes zone->watermark_boost.  We need to reset zone->watermark_boost
+first.  Otherwise the watermarks will be set inconsistently.
 
-Hi all,
+E.g. this could cause inconsistent values if the watermarks have been
+boosted, and then you change a sysctl which triggers
+__setup_per_zone_wmarks().
 
-In commit
+I strongly suspect this explains why I have seen slightly high watermarks.
+Suspicious-looking zoneinfo below - notice high-low != low-min.
 
-  912bbf7e9ca4 ("gpu: ipu-v3: image-convert: Fix image downsize coefficient=
-s")
+Node 0, zone   Normal
+  pages free     74597
+        min      9582
+        low      34505
+        high     36900
 
-Fixes tag
+https://unix.stackexchange.com/questions/525674/my-low-and-high-watermarks-seem-higher-than-predicted-by-documentation-sysctl-vm/525687
 
-  Fixes: 70b9b6b3bcb21 ("gpu: ipu-v3: image-convert: calculate per-tile
+Signed-off-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
+                      fragmentation event occurs")
+Cc: stable@vger.kernel.org
+---
 
-has these problem(s):
+Tested by compiler :-).
 
-  - Please don't split Fixes tags across more than one line
+Ideally the commit message would be clear about what happens the
+*first* time __setup_per_zone_watermarks() is called.  I guess that
+zone->watermark_boost is *usually* zero, or we would have noticed
+some wild problems :-).  However I am not familiar with how the zone
+structures are allocated & initialized.  Maybe there is a case where
+zone->watermark_boost could contain an arbitrary unitialized value
+at this point.  Can we rule that out?
 
-In commit
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  bca4d70cf1b8 ("gpu: ipu-v3: image-convert: Fix input bytesperline for pac=
-ked formats")
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index c02cff1ed56e..db9758cda6f8 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7606,9 +7606,9 @@ static void __setup_per_zone_wmarks(void)
+ 			    mult_frac(zone_managed_pages(zone),
+ 				      watermark_scale_factor, 10000));
+ 
++		zone->watermark_boost = 0;
+ 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+ 		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+-		zone->watermark_boost = 0;
+ 
+ 		spin_unlock_irqrestore(&zone->lock, flags);
+ 	}
+-- 
+2.20.1
 
-Fixes tag
-
-  Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
-
-has these problem(s):
-
-  - Please don't split Fixes tags across more than one line
-
-In commit
-
-  ff391ecd65a1 ("gpu: ipu-v3: image-convert: Fix input bytesperline width/h=
-eight align")
-
-Fixes tag
-
-  Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
-
-has these problem(s):
-
-  - Please don't split Fixes tags across more than one line
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4V3qudpAXLoFUGuq/4lQ8fY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0MwmYACgkQAVBC80lX
-0Gw8/ggAmp6BXM1yok7PGdrUeuZO3ZUpBk7wH0HQF6/IDo4r0Qg88D1cOxcyCCAt
-FJAIiQNAAq0mN8VxoNSBhvNKMFfyv60avcxrGNhRq73C8NO4Ivv9Sc1TqcjrdZib
-ERO5EBQ/wHYJl14XDnmnM+rGQnzHUS/nLh9bsmi3r84034nXYVuUbyQ8gycyYFFA
-J/ruc3Cpmn0kWAmYIWbjUG4VWm47OramSJHJTg1pm4bZ1CF9PgcwTaLQ1z44UlV4
-Z3JcOoSML6AJP1EiBvHiUHHam99Hmh3UANlJjOCkMHiFylAOVi9+0KhuxiOeXrOU
-TOSo2xgvvZISqx3iD6pPCZ94wnQTew==
-=W5UV
------END PGP SIGNATURE-----
-
---Sig_/4V3qudpAXLoFUGuq/4lQ8fY--
