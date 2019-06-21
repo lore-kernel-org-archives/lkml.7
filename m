@@ -2,103 +2,237 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF93BC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830C3C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4402084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49EF12084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aX9ICw6U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hSnRTQPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfFUMIL (ORCPT
+        id S1726766AbfFUMJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:08:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54642 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFUMIL (ORCPT
+        Fri, 21 Jun 2019 08:09:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58686 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfFUMJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:08:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g135so6095075wme.4;
-        Fri, 21 Jun 2019 05:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=POlTtNJe8i4EyB2J0dXIX6qA1ovmeEXANz2w4jxAvWo=;
-        b=aX9ICw6U5MSGkcGoawKALCmi84pOuNi8sHD7srb+00gG/yMN+DYCKEX/2H9sPUEmv6
-         GFQVpJc6dRzWFFNx6VtJcDLGZiH/OSVk7QSoN0bHoHPntGJXssO/3/vs3EJ9PkDq2blh
-         CKUS1dedd02/WzmcufMN0OKRrCIJII+gPfq1aasDbemBaaZYZi7FYJflhPNB5KeJG5rb
-         VZBHS1AWxKnk8fbet1jnqlyor5Crig7x1mgR0+kYw2kcjM5H/GcJkVQTo6rzNibWRLlt
-         2A2voQC5IhiaBOm4iDf+9+lEn7MpmSk4UMlLw0UnnbIYXE7ABqilsRIk4xlsnLbI88X5
-         uyPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:in-reply-to
-         :message-id:references:user-agent:mime-version;
-        bh=POlTtNJe8i4EyB2J0dXIX6qA1ovmeEXANz2w4jxAvWo=;
-        b=RWbnnxe5VKfVqOIFV1908okdX09QZvZ3qO6cy0G5YLZGWFrMaOLcI8kgifVjqarCC8
-         BSJl/MZbJq5oyzRFtGZIzme1rT1cS2wF/Y5tnFdhoZp4wwdMdVj2hZtGdjn9+SQxangv
-         M0+zZivj1Tbl10XnkWMeVtrQEtGz9del+3s/QEQwEgjtT+XNC9pH4vOuiCGdR84Je5/n
-         oX1G5vN18vxtB3PCQrRS0Io05kcv4tdhOok6peFuqEAM+Dt79nhrwUNq01vgwXeoog8Q
-         GiuXkct0SDxgr169XrzPJ3MRd/FlObn/VLZ+m7luH/3E/OBKU3q0lCqgxYz1EsnDxiCb
-         7mDw==
-X-Gm-Message-State: APjAAAWlOApvodbd7l+PUNu1i9kUNzQ17CeTbjxyWGD2XnILRSaiZHN9
-        X/kSzn07ulIfIMYH/oAIcpU=
-X-Google-Smtp-Source: APXvYqzub0N+WsXm4k2ccoqppi8JP34Xt0GhFOXLDfgKZaHHKHoEswJ7pEl/Ij0XFmwMTWQRSvCvdg==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr3747753wmk.99.1561118888896;
-        Fri, 21 Jun 2019 05:08:08 -0700 (PDT)
-Received: from planxty ([2a02:8108:1700:1960:91dd:e2f9:ed05:ee2b])
-        by smtp.gmail.com with ESMTPSA id 5sm1833234wmg.42.2019.06.21.05.08.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 05:08:08 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 14:08:01 +0200 (CEST)
-From:   John Kacur <jkacur@redhat.com>
-X-X-Sender: jkacur@planxty
-To:     David Runge <dave@sleepmap.de>
-cc:     Linux RT Users <linux-rt-users@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Clark Williams <williams@redhat.com>
-Subject: Re: [ANNOUNCE] New release rt-tests-1.4
-In-Reply-To: <20190621065807.GJ20165@dvzrv.localdomain>
-Message-ID: <alpine.LFD.2.21.1906211407410.3661@planxty>
-References: <alpine.LFD.2.21.1906201444220.6702@planxty> <20190621065807.GJ20165@dvzrv.localdomain>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 21 Jun 2019 08:09:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TLk+4THjY639lP4H3Ig0SGJVbynvk/vuhBXQ5z+cMtc=; b=hSnRTQPSKxpEbpf8hVcB69sR4
+        B1SGehk3ShdniUYDS+6JkdDpGy+UMF5cv15XPf0lJ03734Jdex15xwd1CHpeEhjD5t5k2OfQKNAiP
+        iERKz4RaUbK0xWCgAl15kqqG9WTK16lW6uAvBzLOr/IDOfrbfNGmLvLpW9hBZ+tcq3240y99J5Bpl
+        x0BvHTpuSfBARdJH9QvgSni7VFrxlr71uY0xmTdBGiZYP2z9kw2m9gRuLmk3cI1g63CJ9VC4UxEEI
+        J/wnStdlskwyE/+z90FKCzAZGpFyOi7aVpZmhD5Jij7TCcXjPwVPjeZzpL8//NDLh10/4vVc1cF4F
+        Jy8vtiB4g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1heIM9-0004Za-CW; Fri, 21 Jun 2019 12:09:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 437442021E58E; Fri, 21 Jun 2019 14:09:23 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 14:09:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        namit@vmware.com
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Message-ID: <20190621120923.GT3463@hirez.programming.kicks-ass.net>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+ <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
+ <20190620070120.GU3402@hirez.programming.kicks-ass.net>
+ <a0a1aa81-d46e-71db-ff7b-207bc468068d@synopsys.com>
+ <20190620212256.GC3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620212256.GC3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 20, 2019 at 11:22:56PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 20, 2019 at 11:48:17AM -0700, Vineet Gupta wrote:
 
+> > I do worry about the occasional alignment induced extra NOP_S instruction (2 byte)
+> > but there doesn't seem to be an easy solution. Heck if we could use the NOP_S /
+> > B_S in first place. While not a clean solution by any standards, could anything be
+> > done to reduce the code path of DO_ONCE() so that unlikely code is not too far off.
+> 
+> if one could somehow get the arch_static_branch*() things to
+> conditionally emit either the 2 or 4 byte jump, depending on the offset
+> (which is known there, since we stick it in the __jump_table), then we
+> can have arch_jump_label_transform() use that same condition to switch
+> between 2 and 4 bytes too.
+> 
+> I just don't know if it's possible :-/
 
-On Fri, 21 Jun 2019, David Runge wrote:
+So I had to try; but GAS macro .if directives don't like labels as
+arguments, not constant enough for them.
 
-> Hi!
-> 
-> On 2019-06-20 15:26:30 (+0200), John Kacur wrote:
-> > We haven't had a release in a while as people were content to work
-> > from git. However, in order to make it easier to use, test, and put
-> > into distributions, now would be a good time for an official release.
-> Good news! :)
-> 
-> It seems the tag is not available yet (according to `git tag -l`).
-> Could you add it? I would like to package it.
-> 
-> Thanks a lot!
-> 
-> Best,
-> David
-> 
-> -- 
-> https://sleepmap.de
-> 
+../arch/x86/include/asm/jump_label.h:26: Error: non-constant expression in ".if" statement
 
-I just pushed the tags, let me know if you can see them now.
+Damn!
 
-thanks
-
-John
+---
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -12,24 +12,19 @@
+ # define STATIC_KEY_INIT_NOP GENERIC_NOP5_ATOMIC
+ #endif
+ 
+-#include <asm/asm.h>
+-#include <asm/nops.h>
++asm(".include \"asm/jump_label_asm.h\"");
+ 
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/stringify.h>
+ #include <linux/types.h>
++#include <asm/asm.h>
++#include <asm/nops.h>
+ 
+ static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
+ {
+-	asm_volatile_goto("1:"
+-		".byte " __stringify(STATIC_KEY_INIT_NOP) "\n\t"
+-		".pushsection __jump_table,  \"aw\" \n\t"
+-		_ASM_ALIGN "\n\t"
+-		".long 1b - ., %l[l_yes] - . \n\t"
+-		_ASM_PTR "%c0 + %c1 - .\n\t"
+-		".popsection \n\t"
+-		: :  "i" (key), "i" (branch) : : l_yes);
++	asm_volatile_goto("STATIC_BRANCH_NOP l_yes=\"%l[l_yes]\", key=\"%c0\", branch=\"%c1\""
++			  : : "i" (key), "i" (branch) : : l_yes);
+ 
+ 	return false;
+ l_yes:
+@@ -38,57 +33,13 @@ static __always_inline bool arch_static_
+ 
+ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
+ {
+-	asm_volatile_goto("1:"
+-		".byte 0xe9\n\t .long %l[l_yes] - 2f\n\t"
+-		"2:\n\t"
+-		".pushsection __jump_table,  \"aw\" \n\t"
+-		_ASM_ALIGN "\n\t"
+-		".long 1b - ., %l[l_yes] - . \n\t"
+-		_ASM_PTR "%c0 + %c1 - .\n\t"
+-		".popsection \n\t"
+-		: :  "i" (key), "i" (branch) : : l_yes);
++	asm_volatile_goto("STATIC_BRANCH_JMP l_yes=\"%l[l_yes]\", key=\"%c0\", branch=\"%c1\""
++			  : : "i" (key), "i" (branch) : : l_yes);
+ 
+ 	return false;
+ l_yes:
+ 	return true;
+ }
+ 
+-#else	/* __ASSEMBLY__ */
+-
+-.macro STATIC_JUMP_IF_TRUE target, key, def
+-.Lstatic_jump_\@:
+-	.if \def
+-	/* Equivalent to "jmp.d32 \target" */
+-	.byte		0xe9
+-	.long		\target - .Lstatic_jump_after_\@
+-.Lstatic_jump_after_\@:
+-	.else
+-	.byte		STATIC_KEY_INIT_NOP
+-	.endif
+-	.pushsection __jump_table, "aw"
+-	_ASM_ALIGN
+-	.long		.Lstatic_jump_\@ - ., \target - .
+-	_ASM_PTR	\key - .
+-	.popsection
+-.endm
+-
+-.macro STATIC_JUMP_IF_FALSE target, key, def
+-.Lstatic_jump_\@:
+-	.if \def
+-	.byte		STATIC_KEY_INIT_NOP
+-	.else
+-	/* Equivalent to "jmp.d32 \target" */
+-	.byte		0xe9
+-	.long		\target - .Lstatic_jump_after_\@
+-.Lstatic_jump_after_\@:
+-	.endif
+-	.pushsection __jump_table, "aw"
+-	_ASM_ALIGN
+-	.long		.Lstatic_jump_\@ - ., \target - .
+-	_ASM_PTR	\key + 1 - .
+-	.popsection
+-.endm
+-
+-#endif	/* __ASSEMBLY__ */
+-
+-#endif
++#endif /* __ASSEMBLY__ */
++#endif /* _ASM_X86_JUMP_LABEL_H */
+--- /dev/null
++++ b/arch/x86/include/asm/jump_label_asm.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_JUMP_LABEL_ASM_H
++#define _ASM_X86_JUMP_LABEL_ASM_H
++
++#include <asm/asm.h>
++#include <asm/nops.h>
++
++#ifdef __ASSEMBLY__
++
++.macro STATIC_BRANCH_ENTRY l_target:req l_yes:req key:req branch:req
++	.pushsection __jump_table, "aw"
++	.long		\l_target - ., \l_yes - .
++#ifdef __X86_64__
++	.quad		(\key - .) + \branch
++#else
++	.long		(\key - .) + \branch
++#endif
++	.popsection
++.endm
++
++.macro STATIC_BRANCH_NOP l_yes:req key:req branch:req
++.Lstatic_branch_nop_\@:
++.iflt 127 - .
++	.byte 0x66, 0x90
++.else
++	.byte STATIC_KEY_INIT_NOP
++.endif
++	STATIC_BRANCH_ENTRY l_target=.Lstatic_branch_nop_\@, l_yes=\l_yes, key=\key, branch=\branch
++.endm
++
++.macro STATIC_BRANCH_JMP l_yes:req key:req branch:req
++.Lstatic_branch_jmp_\@:
++.if \l_yes - . < 127
++	.byte 0xeb
++	.byte \l_yes - (. + 1)
++.else
++	.byte 0xe9
++	.long \l_yes - (. + 4)
++.endif
++	STATIC_BRANCH_ENTRY l_target=.Lstatic_branch_jmp_\@, l_yes=\l_yes, key=\key, branch=\branch
++.endm
++
++#endif /* __ASSEMBLY__ */
++#endif /* _ASM_X86_JUMP_LABEL_ASM_H */
