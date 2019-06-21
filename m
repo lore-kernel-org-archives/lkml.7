@@ -2,203 +2,99 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A761FC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E861C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B87208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="U3s/yHg0";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kGUuYYiT"
+	by mail.kernel.org (Postfix) with ESMTP id 5FD04208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561134717;
+	bh=UcfMc1ASXqklmAnizKrMCBrZWJYP/6BAOOe+TG0bhw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MZ/sDLXv/YBiE3CyrNJ2mAdQK3gYeCOxwKpnMyMRTpLORPiERU/IxhwEk3A36Mf2H
+	 jgGsn6VeetwXG7yf0Q0SyIpzo/IyKHRH8AYjJglD8h+TVDLxpJhNWfQ7Dmq1I8d6K1
+	 g7N0RVhh+9CXIN5OG+bT/7MsYqq3RXiCOEoDbVvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfFUQbu (ORCPT
+        id S1726129AbfFUQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:31:50 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33160 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726002AbfFUQbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:31:50 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5LGO01k004531;
-        Fri, 21 Jun 2019 09:30:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=0qTXnWbgZ2y9IbGAMibal2DIgS8gvxNT+41nZ2D/Dl8=;
- b=U3s/yHg0hh7rWogH1ptMe3FO1h4BlINB0Ys7tPmYe6mmuo5mQsICNYTEcSqpGiNTtoy8
- Z2aXPvznL789zUex0QMn0BK0a4pU25PrbvGm4MaD4/xjy1YPZ4qLBLtr5k521yiI1fHg
- XUmA49IcGVzDhTjTgFHaPhb5IYD346yA8/c= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2t8y020wee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 21 Jun 2019 09:30:07 -0700
-Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 21 Jun 2019 09:30:06 -0700
-Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
- ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 21 Jun 2019 09:30:06 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 21 Jun 2019 09:30:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0qTXnWbgZ2y9IbGAMibal2DIgS8gvxNT+41nZ2D/Dl8=;
- b=kGUuYYiTvo77BSwYIgm4jCvXPfn8v9Dp438QG8utOgAWcJpVDH8lvrdG+H2pEyfkBqyhe9PV3UXdaQAIp3nP8CiPXSAyTMNxgE9g99h2IbZ1jtMIqzmDvltkNCI4J+jNRspZbGHqGaYw8ODAAIR/WajGepRZKxB18uLI1dMA/No=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1616.namprd15.prod.outlook.com (10.175.142.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Fri, 21 Jun 2019 16:30:04 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.014; Fri, 21 Jun 2019
- 16:30:04 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "Kernel Team" <Kernel-team@fb.com>
-Subject: Re: [PATCH v4 5/5] uprobe: collapse THP pmd after removing all
- uprobes
-Thread-Topic: [PATCH v4 5/5] uprobe: collapse THP pmd after removing all
- uprobes
-Thread-Index: AQHVIhGkBNxZAI1nUkK1d2OfbYvmTqamGxWAgAAIBYCAAAVYgIAAAncAgAAuG4A=
-Date:   Fri, 21 Jun 2019 16:30:04 +0000
-Message-ID: <707D52CA-E782-4C9A-AC66-75938C8E3358@fb.com>
-References: <20190613175747.1964753-1-songliubraving@fb.com>
- <20190613175747.1964753-6-songliubraving@fb.com>
- <20190621124823.ziyyx3aagnkobs2n@box>
- <B72B62C9-78EE-4440-86CA-590D3977BDB1@fb.com>
- <20190621133613.xnzpdlicqvjklrze@box>
- <4B58B3B3-10CB-4593-8BEC-1CEF41F856A1@fb.com>
-In-Reply-To: <4B58B3B3-10CB-4593-8BEC-1CEF41F856A1@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::1:e314]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 637ab245-7cc0-476e-1212-08d6f665b71d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1616;
-x-ms-traffictypediagnostic: MWHPR15MB1616:
-x-microsoft-antispam-prvs: <MWHPR15MB16166E627F6BB6978AEA180EB3E70@MWHPR15MB1616.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(366004)(346002)(136003)(199004)(189003)(5660300002)(76116006)(73956011)(256004)(50226002)(6246003)(54906003)(6916009)(33656002)(102836004)(186003)(76176011)(53546011)(6506007)(478600001)(25786009)(66946007)(486006)(4326008)(66556008)(66446008)(64756008)(66476007)(2906002)(7736002)(57306001)(81156014)(14454004)(46003)(81166006)(99286004)(316002)(476003)(8676002)(53936002)(6512007)(6486002)(6116002)(36756003)(2616005)(11346002)(229853002)(71200400001)(71190400001)(6436002)(68736007)(446003)(86362001)(8936002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1616;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aQa6KhLL3tB5eksbA19jSs8upkISddY089JT1IO6zWnJlvIip9I1FMsDjUnVAOdG8LluV5BRIBl2eDqRXy/HEc5yyOwZNFkxFDF2D3VkYJUMp4vqTj4xXAOx0xV0dL3sNlP9Hm9M4V4R8M9zj3jfTOb1FeZmLubnyefbEsjlpwqWO0bbOyWU9y+Ges4Wyhfyxv66xSPku8WrbrGpUODwQaDEAhHV2W1wS6cgndnW6nithhAygoVQhAtAs7DMTN3j3LlZC2/DoX20ixRVQ/OsYfUXaIidUlaNd/P/aotdEwSF/g+t/QypzFe40CeEm91mD6L2jyvKVw+dW5k2p272T5nN+h2MzaaBe7IrpagF8CzX8c8SETdJ/eFP7/6tW0UxfZ7ZpCyweUiC+8cdoI+JNNe0ckd77J2uMOl6hrOpYCA=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <274FD60A5325DD41BC5BD6A652FD3B91@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Jun 2019 12:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfFUQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:31:53 -0400
+Received: from linux-8ccs (ip5f5adbc0.dynamic.kabel-deutschland.de [95.90.219.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3874620673;
+        Fri, 21 Jun 2019 16:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561134712;
+        bh=UcfMc1ASXqklmAnizKrMCBrZWJYP/6BAOOe+TG0bhw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1apq8T89fxZZBpaF4gUEZnjgdRJBnuMF9uzm5yssy3csi3d7C2kVFecBOXZhe814
+         ATVGIVhR1TWYc0fxr6FehNFsGqL/LLXLLVYfpqqvcydjYN6XKNjUzJafFSpiRdDsH/
+         mwWUIA1zZzBEPGRS3ScUA1m811gq4zGarY56MZAo=
+Date:   Fri, 21 Jun 2019 18:31:46 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
+ errors
+Message-ID: <20190621163146.GB24038@linux-8ccs>
+References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
+ <20190619112350.GN3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 637ab245-7cc0-476e-1212-08d6f665b71d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 16:30:04.1697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1616
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=706 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210132
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190619112350.GN3419@hirez.programming.kicks-ass.net>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Peter Zijlstra [19/06/19 13:23 +0200]:
+>On Wed, Jun 19, 2019 at 01:12:12PM +0200, Miroslav Benes wrote:
+>> > @@ -3780,7 +3781,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+>> >
+>> >  	err = prepare_coming_module(mod);
+>> >  	if (err)
+>> > -		goto bug_cleanup;
+>> > +		goto coming_cleanup;
+>>
+>> Not good. klp_module_going() is not prepared to be called without
+>> klp_module_coming() succeeding. "Funny" things might happen.
+>
+>Bah, I did look at that but failed to spot it :/
+>
+>> So it calls for more fine-grained error handling.
+>
+>Another approach that I considered was trying to re-iterate the notifier
+>list up until the point we got, but that was fairly non-trivial and
+>needed changes to the notifier crud itself.
+>
+>I'll try again.
 
-
-> On Jun 21, 2019, at 6:45 AM, Song Liu <songliubraving@fb.com> wrote:
->=20
->=20
->=20
->> On Jun 21, 2019, at 6:36 AM, Kirill A. Shutemov <kirill@shutemov.name> w=
-rote:
->>=20
->> On Fri, Jun 21, 2019 at 01:17:05PM +0000, Song Liu wrote:
->>>=20
->>>=20
->>>> On Jun 21, 2019, at 5:48 AM, Kirill A. Shutemov <kirill@shutemov.name>=
- wrote:
->>>>=20
->>>> On Thu, Jun 13, 2019 at 10:57:47AM -0700, Song Liu wrote:
->>>>> After all uprobes are removed from the huge page (with PTE pgtable), =
-it
->>>>> is possible to collapse the pmd and benefit from THP again. This patc=
-h
->>>>> does the collapse.
->>>>>=20
->>>>> An issue on earlier version was discovered by kbuild test robot.
->>>>>=20
->>>>> Reported-by: kbuild test robot <lkp@intel.com>
->>>>> Signed-off-by: Song Liu <songliubraving@fb.com>
->>>>> ---
->>>>> include/linux/huge_mm.h |  7 +++++
->>>>> kernel/events/uprobes.c |  5 ++-
->>>>> mm/huge_memory.c        | 69 ++++++++++++++++++++++++++++++++++++++++=
-+
->>>>=20
->>>> I still sync it's duplication of khugepaged functinallity. We need to =
-fix
->>>> khugepaged to handle SCAN_PAGE_COMPOUND and probably refactor the code=
- to
->>>> be able to call for collapse of particular range if we have all locks
->>>> taken (as we do in uprobe case).
->>>>=20
->>>=20
->>> I see the point now. I misunderstood it for a while.=20
->>>=20
->>> If we add this to khugepaged, it will have some conflicts with my other=
-=20
->>> patchset. How about we move the functionality to khugepaged after these
->>> two sets get in?=20
->>=20
->> Is the last patch of the patchset essential? I think this part can be do=
-ne
->> a bit later in a proper way, no?
->=20
-> Technically, we need this patch to regroup pmd mapped page, and thus get=
-=20
-> the performance benefit after the uprobe is detached.=20
->=20
-> On the other hand, if we get the first 4 patches of the this set and the=
-=20
-> other set in soonish. I will work on improving this patch right after tha=
-t..
-
-Actually, it might be pretty easy. We can just call try_collapse_huge_pmd()=
-=20
-in khugepaged.c (in khugepaged_scan_shmem() or khugepaged_scan_file() after=
-=20
-my other set).=20
-
-Let me fold that in and send v5.=20
+Hm.. I would prefer if we didn't complicate the error handling too
+much, especially since you mention it seems non-trivial, and it
+doesn't look too nice. You also checked that calling the GOING without
+the COMING notifiers should be safe, so I think we can keep things
+simple. I tried to look at how other places in the kernel handle
+blocking_notifier_call_chain() errors and the places that do look at
+the error code (most invocations of blocking_notifier_call_chain()
+seem to just ignore the return value) just call the opposing notifiers
+(module "going" in our case) to cleanup. I also would not mind
+breaking up prepare_coming_module() to refine the error handling, as I
+mentioned in my other mail.
 
 Thanks,
-Song
 
-
+Jessica
