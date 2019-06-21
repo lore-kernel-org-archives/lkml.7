@@ -2,124 +2,138 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D0AC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93D7C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE7A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JBhYcKNb"
+	by mail.kernel.org (Postfix) with ESMTP id BFA1C208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561128106;
+	bh=Zx8Cb3sL7YY/8HdLMmq9f5WsUHM/Py3MlcVld2ei5Jo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WvHLIU6f2kXB+FFpMLAcgnGpxbT6/eVZbKa7qU1v5VCBRGKY8k0+pyMjBa1gk3dQJ
+	 7k7POSrgDQaGWkKmSpMixvwpJNOVQvJpUg0qT73NgWUXWqZRqc5BIt1JuwwjrIZ2QF
+	 KQ3rg8714eximfUs3K6MkB3eRiW90uKPBYd87+Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfFUOld (ORCPT
+        id S1726311AbfFUOlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:41:33 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39991 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfFUOld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:41:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so7125394qtn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iAefoNx0q/97YiPDebPSTk9gILnOd0FXIWcUIRJLLtA=;
-        b=JBhYcKNbnw5KS/Bw3jUGnXGizAYOGrGCynlCyAlg63WK1n8IqOySZ1+bye3/YiT63n
-         v8/sbGh4AD1MHRynheN2Dlq8lFKIq7z1NImXxzvLdoGCc7lemxe5AEO2L8rqLF3E00oD
-         oaCz+g/xDkcmsm0KQgBXxPRK1i/pBAcltUXftd0yNlKSLRQGkTTISqj5EmoKiqW1z/7C
-         xGMPI7hpBo4aEfjJYbvL1QdYdl0bqL8gAEgqgeQ8mr+Rnu3ZBMhGaV4qz/zk8iv9SFhb
-         jZCzIqRVkaT3gufXwch0VFa0geY+UKfMoNAoGmczoezyVySF3//gJOB7bFyrvTarIu6t
-         jP6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iAefoNx0q/97YiPDebPSTk9gILnOd0FXIWcUIRJLLtA=;
-        b=h384LdIoLQRUOmfanrlyWVuWBcCaxqRU+Wq/JnYsjw4ch9XsJLA+7yOL4D/qrZLwrI
-         kTVA4ReaXjJQcho/03Na9IJgLrwDYdvf9jQSDxmqnM/Uj7YCZ8ovFlxdMWYKjcsLn0WJ
-         9vmT1TxWb42gg/LtzJPB4M2Wr611w078tiHRUXrL7y7OdoeGUGndtLY+ffKhqyVdnqfN
-         F5OwB7j/FDw5XkO82RXcTRqLmXp2WvxkDSan2LTzqC7yS35iq+T7bF2FvW7B5sITalUo
-         0Sctx57cfJJdguPQq1S6L8ocqp8AMQFzNm1SGLluOzbjqu7DB6q6BRbnOGmLeQqE75+2
-         wM/Q==
-X-Gm-Message-State: APjAAAXSdvuhMkOOE3wRsISYf0ZuHx3FdlnEqTNddZOP1NTMwvgFFeYb
-        esit3GH83kNz42Ztfr4Kar1sBQ==
-X-Google-Smtp-Source: APXvYqwAiNjv+b7qPtfzYMe/a9zWSjQhOq9v3skvi7StNK2ILH/OsN4mGdlL0jsjEcF4n4D7/7paYA==
-X-Received: by 2002:a0c:b12b:: with SMTP id q40mr15375817qvc.0.1561128092068;
-        Fri, 21 Jun 2019 07:41:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id c55sm1767604qtk.53.2019.06.21.07.41.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 07:41:31 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1heKjL-0000un-67; Fri, 21 Jun 2019 11:41:31 -0300
-Date:   Fri, 21 Jun 2019 11:41:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Fri, 21 Jun 2019 10:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbfFUOlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:41:44 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2FF2089E;
+        Fri, 21 Jun 2019 14:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561128104;
+        bh=Zx8Cb3sL7YY/8HdLMmq9f5WsUHM/Py3MlcVld2ei5Jo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z8vJLfX+AQ0JZQfXq307TNp2IDXglTStolUHvFcBpgj1DxYpi4qD386PJeQeLg4TN
+         uND0xqA5PxXmC8Dtf8w1p0JZ6mGe+/8eVM/D6U797f+mt07uppsqnVP9Ly2cXalJGi
+         hptA7WUg5PQJ2Vt63iDJpgVvfw67y8nb/MnSvsRw=
+Date:   Fri, 21 Jun 2019 23:41:40 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/16] mm: consolidate the get_user_pages* implementations
-Message-ID: <20190621144131.GQ19891@ziepe.ca>
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-12-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611144102.8848-12-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] kprobes/ftrace: Use ftrace_location() when
+ [dis]arming probes
+Message-Id: <20190621234140.5604fcd4ae5260b1020deccb@kernel.org>
+In-Reply-To: <4fedad69107b7fd81b9324315ce4fbf6287e5084.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <4fedad69107b7fd81b9324315ce4fbf6287e5084.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 04:40:57PM +0200, Christoph Hellwig wrote:
-> @@ -2168,7 +2221,7 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
->   */
->  static bool gup_fast_permitted(unsigned long start, unsigned long end)
+On Tue, 18 Jun 2019 20:17:05 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+
+> Ftrace location could include more than a single instruction in case of
+> some architectures (powerpc64, for now). In this case, kprobe is
+> permitted on any of those instructions, and uses ftrace infrastructure
+> for functioning.
+> 
+> However, [dis]arm_kprobe_ftrace() uses the kprobe address when setting
+> up ftrace filter IP. This won't work if the address points to any
+> instruction apart from the one that has a branch to _mcount(). To
+> resolve this, have [dis]arm_kprobe_ftrace() use ftrace_function() to
+> identify the filter IP.
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
+> 
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> ---
+>  kernel/kprobes.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 445337c107e0..282ee704e2d8 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -978,10 +978,10 @@ static int prepare_kprobe(struct kprobe *p)
+>  /* Caller must lock kprobe_mutex */
+>  static int arm_kprobe_ftrace(struct kprobe *p)
 >  {
-> -	return true;
-> +	return IS_ENABLED(CONFIG_HAVE_FAST_GUP) ? true : false;
-
-The ?: is needed with IS_ENABLED?
-
+> +	unsigned long ftrace_ip = ftrace_location((unsigned long)p->addr);
+>  	int ret = 0;
+>  
+> -	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
+> -				   (unsigned long)p->addr, 0, 0);
+> +	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 0, 0);
+>  	if (ret) {
+>  		pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
+>  			 p->addr, ret);
+> @@ -1005,13 +1005,14 @@ static int arm_kprobe_ftrace(struct kprobe *p)
+>  	 * non-empty filter_hash for IPMODIFY ops, we're safe from an accidental
+>  	 * empty filter_hash which would undesirably trace all functions.
+>  	 */
+> -	ftrace_set_filter_ip(&kprobe_ftrace_ops, (unsigned long)p->addr, 1, 0);
+> +	ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 1, 0);
+>  	return ret;
 >  }
->  #endif
+>  
+>  /* Caller must lock kprobe_mutex */
+>  static int disarm_kprobe_ftrace(struct kprobe *p)
+>  {
+> +	unsigned long ftrace_ip = ftrace_location((unsigned long)p->addr);
+>  	int ret = 0;
+>  
+>  	if (kprobe_ftrace_enabled == 1) {
+> @@ -1022,8 +1023,7 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
+>  
+>  	kprobe_ftrace_enabled--;
+>  
+> -	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
+> -			   (unsigned long)p->addr, 1, 0);
+> +	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 1, 0);
+>  	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n",
+>  		  p->addr, ret);
+>  	return ret;
+> -- 
+> 2.22.0
+> 
 
-Oh, you fixed the util.c this way instead of the headerfile
-#ifdef..
 
-I'd suggest to revise this block a tiny bit:
-
--#ifndef gup_fast_permitted
-+#if !IS_ENABLED(CONFIG_HAVE_FAST_GUP) || !defined(gup_fast_permitted)
- /*
-  * Check if it's allowed to use __get_user_pages_fast() for the range, or
-  * we need to fall back to the slow version:
-  */
--bool gup_fast_permitted(unsigned long start, int nr_pages)
-+static bool gup_fast_permitted(unsigned long start, int nr_pages)
- {
-
-Just in case some future arch code mismatches the header and kconfig..
-
-Regards,
-Jason
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
