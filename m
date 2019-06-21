@@ -2,32 +2,30 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AB2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C700C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809B52089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0CD208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfFUHzL (ORCPT
+        id S1726376AbfFUHzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:55:11 -0400
-Received: from mail4.tencent.com ([183.57.53.109]:44579 "EHLO
+        Fri, 21 Jun 2019 03:55:16 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:41450 "EHLO
         mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfFUHzK (ORCPT
+        with ESMTP id S1726030AbfFUHzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:55:10 -0400
-X-Greylist: delayed 458 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jun 2019 03:55:09 EDT
+        Fri, 21 Jun 2019 03:55:16 -0400
 Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
-        by mail4.tencent.com (Postfix) with ESMTP id 3E3635022C;
-        Fri, 21 Jun 2019 15:47:25 +0800 (CST)
+        by mail4.tencent.com (Postfix) with ESMTP id DE2845025D;
+        Fri, 21 Jun 2019 15:47:22 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.22.120.143) by
  EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 15:47:24 +0800
+ 14.3.408.0; Fri, 21 Jun 2019 15:47:22 +0800
 From:   <xiaoggchen@tencent.com>
 To:     <jasperwang@tencent.com>, <heddchen@tencent.com>
 CC:     <mingo@redhat.com>, <peterz@infradead.org>,
@@ -37,9 +35,9 @@ CC:     <mingo@redhat.com>, <peterz@infradead.org>,
         Newton Gao <newtongao@tencent.com>,
         Shook Liu <shookliu@tencent.com>,
         Zhiguang Peng <zgpeng@tencent.com>
-Subject: [PATCH 5/5] sched/BT: add debug information for BT scheduling class
-Date:   Fri, 21 Jun 2019 15:45:57 +0800
-Message-ID: <1561103157-11246-6-git-send-email-xiaoggchen@tencent.com>
+Subject: [PATCH 3/5] sched/BT: extend the priority for BT scheduling class
+Date:   Fri, 21 Jun 2019 15:45:55 +0800
+Message-ID: <1561103157-11246-4-git-send-email-xiaoggchen@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
 References: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
@@ -53,104 +51,244 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: chen xiaoguang <xiaoggchen@tencent.com>
 
+The priority of BT scheduler is from 140 to 179.
+
 Signed-off-by: Newton Gao <newtongao@tencent.com>
 Signed-off-by: Shook Liu <shookliu@tencent.com>
 Signed-off-by: Zhiguang Peng <zgpeng@tencent.com>
 Signed-off-by: Xiaoguang Chen <xiaoggchen@tencent.com>
 ---
- kernel/sched/bt.c    | 11 +++++++++++
- kernel/sched/debug.c | 37 +++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h |  3 +++
- 3 files changed, 51 insertions(+)
+ include/linux/ioprio.h     |  2 +-
+ include/linux/sched/bt.h   | 30 ++++++++++++++++++++++++++++++
+ include/linux/sched/prio.h |  5 ++++-
+ init/init_task.c           |  6 +++---
+ kernel/sched/core.c        | 15 ++++++++++++---
+ kernel/sched/cputime.c     | 26 ++++++++++++++++++++------
+ kernel/sched/sched.h       | 12 ++++++++++++
+ 7 files changed, 82 insertions(+), 14 deletions(-)
+ create mode 100644 include/linux/sched/bt.h
 
-diff --git a/kernel/sched/bt.c b/kernel/sched/bt.c
-index 87eb04f..11b4abd 100644
---- a/kernel/sched/bt.c
-+++ b/kernel/sched/bt.c
-@@ -1027,3 +1027,14 @@ static unsigned int get_rr_interval_bt(struct rq *rq, struct task_struct *task)
- 	.update_curr            = update_curr_bt,
- };
- 
-+#ifdef CONFIG_SCHED_DEBUG
-+void print_bt_stats(struct seq_file *m, int cpu)
-+{
-+	struct bt_rq *bt_rq;
+diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
+index e9bfe69..3adb9ad 100644
+--- a/include/linux/ioprio.h
++++ b/include/linux/ioprio.h
+@@ -62,7 +62,7 @@ static inline int task_nice_ioprio(struct task_struct *task)
+  */
+ static inline int task_nice_ioclass(struct task_struct *task)
+ {
+-	if (task->policy == SCHED_IDLE)
++	if (task->policy == SCHED_IDLE || task->policy == SCHED_BT)
+ 		return IOPRIO_CLASS_IDLE;
+ 	else if (task_is_realtime(task))
+ 		return IOPRIO_CLASS_RT;
+diff --git a/include/linux/sched/bt.h b/include/linux/sched/bt.h
+new file mode 100644
+index 0000000..5f40600
+--- /dev/null
++++ b/include/linux/sched/bt.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SCHED_BT_H
++#define _SCHED_BT_H
 +
-+	rcu_read_lock();
-+	bt_rq = &cpu_rq(cpu)->bt;
-+	print_bt_rq(m, cpu, bt_rq);
-+	rcu_read_unlock();
++/*
++ * SCHED_BT tasks has 140~179 priorities, reflecting
++ * the fact that any of them has slower prio than RT and
++ * NORMAL/BATCH tasks.
++ */
++#define NICE_TO_BT_PRIO(nice)  (MAX_RT_PRIO + (nice) + 20 + 40)
++#define PRIO_TO_BT_NICE(prio)  ((prio) - MAX_RT_PRIO - 20 - 40)
++static inline int task_bt_nice(const struct task_struct *p)
++{
++	return PRIO_TO_BT_NICE((p)->static_prio);
 +}
-+#endif
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 678bfb9..44d0859 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -497,6 +497,43 @@ static void print_rq(struct seq_file *m, struct rq *rq, int rq_cpu)
- 	rcu_read_unlock();
++
++static inline int bt_prio(int prio)
++{
++	if (unlikely(prio < MAX_PRIO && prio >= MIN_BT_PRIO))
++		return 1;
++	return 0;
++}
++
++static inline int bt_task(struct task_struct *p)
++{
++	return bt_prio(p->prio);
++}
++#endif /* _SCHED_BT_H */
++
++
+diff --git a/include/linux/sched/prio.h b/include/linux/sched/prio.h
+index 7d64fea..5c36ed2 100644
+--- a/include/linux/sched/prio.h
++++ b/include/linux/sched/prio.h
+@@ -22,9 +22,12 @@
+ #define MAX_USER_RT_PRIO	100
+ #define MAX_RT_PRIO		MAX_USER_RT_PRIO
+ 
+-#define MAX_PRIO		(MAX_RT_PRIO + NICE_WIDTH)
++#define MAX_PRIO		(MAX_RT_PRIO + NICE_WIDTH + 40)
+ #define DEFAULT_PRIO		(MAX_RT_PRIO + NICE_WIDTH / 2)
+ 
++#define MIN_BT_PRIO		(MAX_RT_PRIO + 40)
++#define MAX_BT_PRIO		(MAX_PRIO - 1)
++
+ /*
+  * Convert user-nice values [ -20 ... 0 ... 19 ]
+  * to static priority [ MAX_RT_PRIO..MAX_PRIO-1 ],
+diff --git a/init/init_task.c b/init/init_task.c
+index c70ef65..603ec4f 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -68,9 +68,9 @@ struct task_struct init_task
+ 	.stack		= init_stack,
+ 	.usage		= REFCOUNT_INIT(2),
+ 	.flags		= PF_KTHREAD,
+-	.prio		= MAX_PRIO - 20,
+-	.static_prio	= MAX_PRIO - 20,
+-	.normal_prio	= MAX_PRIO - 20,
++	.prio		= MAX_PRIO - 20 - 40,
++	.static_prio	= MAX_PRIO - 20 - 40,
++	.normal_prio	= MAX_PRIO - 20 - 40,
+ 	.policy		= SCHED_NORMAL,
+ 	.cpus_allowed	= CPU_MASK_ALL,
+ 	.nr_cpus_allowed= NR_CPUS,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3eb4723..b542c17 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2312,7 +2312,8 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	 * Revert to default priority/policy on fork if requested.
+ 	 */
+ 	if (unlikely(p->sched_reset_on_fork)) {
+-		if (task_has_dl_policy(p) || task_has_rt_policy(p)) {
++		if (task_has_dl_policy(p) || task_has_rt_policy(p) ||
++		    task_has_bt_policy(p)) {
+ 			p->policy = SCHED_NORMAL;
+ 			p->static_prio = NICE_TO_PRIO(0);
+ 			p->rt_priority = 0;
+@@ -2333,6 +2334,8 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 		return -EAGAIN;
+ 	else if (rt_prio(p->prio))
+ 		p->sched_class = &rt_sched_class;
++	else if (bt_prio(p->prio))
++		p->sched_class = &bt_sched_class;
+ 	else
+ 		p->sched_class = &fair_sched_class;
+ 
+@@ -3833,6 +3836,12 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+ 		if (oldprio < prio)
+ 			queue_flag |= ENQUEUE_HEAD;
+ 		p->sched_class = &rt_sched_class;
++	} else if (bt_prio(prio)) {
++		if (dl_prio(oldprio))
++			p->dl.dl_boosted = 0;
++		if (rt_prio(oldprio))
++			p->rt.timeout = 0;
++		p->sched_class = &bt_sched_class;
+ 	} else {
+ 		if (dl_prio(oldprio))
+ 			p->dl.dl_boosted = 0;
+@@ -3991,7 +4000,7 @@ int idle_cpu(int cpu)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+ 
+-	if (rq->curr != rq->idle)
++	if (rq->curr != rq->idle && !bt_prio(rq->curr->prio))
+ 		return 0;
+ 
+ 	if (rq->nr_running)
+@@ -6200,7 +6209,7 @@ void normalize_rt_tasks(void)
+ 		schedstat_set(p->se.statistics.sleep_start, 0);
+ 		schedstat_set(p->se.statistics.block_start, 0);
+ 
+-		if (!dl_task(p) && !rt_task(p)) {
++		if (!dl_task(p) && !rt_task(p) && !bt_task(p)) {
+ 			/*
+ 			 * Renice negative nice level userspace
+ 			 * tasks back to 0:
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 2305ce8..ca26a04 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -122,7 +122,10 @@ void account_user_time(struct task_struct *p, u64 cputime)
+ 	p->utime += cputime;
+ 	account_group_user_time(p, cputime);
+ 
+-	index = (task_nice(p) > 0) ? CPUTIME_NICE : CPUTIME_USER;
++	if (bt_prio(p->static_prio))
++		index = (task_bt_nice(p) > 0) ? CPUTIME_NICE : CPUTIME_USER;
++	else
++		index = (task_nice(p) > 0) ? CPUTIME_NICE : CPUTIME_USER;
+ 
+ 	/* Add user time to cpustat. */
+ 	task_group_account_field(p, index, cputime);
+@@ -146,13 +149,24 @@ void account_guest_time(struct task_struct *p, u64 cputime)
+ 	p->gtime += cputime;
+ 
+ 	/* Add guest time to cpustat. */
+-	if (task_nice(p) > 0) {
+-		cpustat[CPUTIME_NICE] += cputime;
+-		cpustat[CPUTIME_GUEST_NICE] += cputime;
++	if (bt_prio(p->static_prio)) {
++		if (task_bt_nice(p) > 0) {
++			cpustat[CPUTIME_NICE] += cputime;
++			cpustat[CPUTIME_GUEST_NICE] += cputime;
++		} else {
++			cpustat[CPUTIME_USER] += cputime;
++			cpustat[CPUTIME_GUEST] += cputime;
++		}
+ 	} else {
+-		cpustat[CPUTIME_USER] += cputime;
+-		cpustat[CPUTIME_GUEST] += cputime;
++		if (task_nice(p) > 0) {
++			cpustat[CPUTIME_NICE] += cputime;
++			cpustat[CPUTIME_GUEST_NICE] += cputime;
++		} else {
++			cpustat[CPUTIME_USER] += cputime;
++			cpustat[CPUTIME_GUEST] += cputime;
++		}
+ 	}
++
  }
  
-+void print_bt_rq(struct seq_file *m, int cpu, struct bt_rq *bt_rq)
-+{
-+	s64 MIN_vruntime = -1, min_vruntime, max_vruntime = -1,
-+		spread, rq0_min_vruntime, spread0;
-+	struct rq *rq = cpu_rq(cpu);
-+	unsigned long flags;
-+
-+	SEQ_printf(m, "\nbt_rq[%d]:\n", cpu);
-+
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "exec_clock",
-+			SPLIT_NS(bt_rq->exec_clock));
-+
-+	raw_spin_lock_irqsave(&rq->lock, flags);
-+	if (bt_rq->rb_leftmost)
-+		MIN_vruntime = (__pick_first_bt_entity(bt_rq))->vruntime;
-+	min_vruntime = bt_rq->min_vruntime;
-+	rq0_min_vruntime = cpu_rq(0)->bt.min_vruntime;
-+	raw_spin_unlock_irqrestore(&rq->lock, flags);
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "MIN_vruntime",
-+		SPLIT_NS(MIN_vruntime));
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "min_vruntime",
-+		SPLIT_NS(min_vruntime));
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "max_vruntime",
-+		SPLIT_NS(max_vruntime));
-+	spread = max_vruntime - MIN_vruntime;
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "spread",
-+		SPLIT_NS(spread));
-+	spread0 = min_vruntime - rq0_min_vruntime;
-+	SEQ_printf(m, "  .%-30s: %lld.%06ld\n", "spread0",
-+		SPLIT_NS(spread0));
-+	SEQ_printf(m, "  .%-30s: %d\n", "nr_spread_over",
-+		bt_rq->nr_spread_over);
-+	SEQ_printf(m, "  .%-30s: %d\n", "nr_running", bt_rq->bt_nr_running);
-+	SEQ_printf(m, "  .%-30s: %ld\n", "load", bt_rq->load.weight);
-+}
-+
-+
- void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
- {
- 	s64 MIN_vruntime = -1, min_vruntime, max_vruntime = -1,
+ /*
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 403eec6..749f580 100644
+index 68007be..403eec6 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2120,6 +2120,8 @@ static inline void double_rq_unlock(struct rq *rq1, struct rq *rq2)
- extern struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq);
- extern struct sched_entity *__pick_last_entity(struct cfs_rq *cfs_rq);
+@@ -32,6 +32,7 @@
+ #include <linux/sched/user.h>
+ #include <linux/sched/wake_q.h>
+ #include <linux/sched/xacct.h>
++#include <linux/sched/bt.h>
  
-+extern struct sched_bt_entity *__pick_first_bt_entity(struct bt_rq *bt_rq);
+ #include <uapi/linux/sched/types.h>
+ 
+@@ -172,6 +173,12 @@ static inline int dl_policy(int policy)
+ {
+ 	return policy == SCHED_DEADLINE;
+ }
 +
- #ifdef	CONFIG_SCHED_DEBUG
- extern bool sched_debug_enabled;
++static inline int bt_policy(int policy)
++{
++	return policy == SCHED_BT;
++}
++
+ static inline bool valid_policy(int policy)
+ {
+ 	return idle_policy(policy) || fair_policy(policy) ||
+@@ -193,6 +200,11 @@ static inline int task_has_dl_policy(struct task_struct *p)
+ 	return dl_policy(p->policy);
+ }
  
-@@ -2129,6 +2131,7 @@ static inline void double_rq_unlock(struct rq *rq1, struct rq *rq2)
- extern void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq);
- extern void print_rt_rq(struct seq_file *m, int cpu, struct rt_rq *rt_rq);
- extern void print_dl_rq(struct seq_file *m, int cpu, struct dl_rq *dl_rq);
-+extern void print_bt_rq(struct seq_file *m, int cpu, struct bt_rq *bt_rq);
- #ifdef CONFIG_NUMA_BALANCING
- extern void
- show_numa_stats(struct task_struct *p, struct seq_file *m);
++static inline int task_has_bt_policy(struct task_struct *p)
++{
++	return bt_policy(p->policy);
++}
++
+ #define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
+ 
+ /*
 -- 
 1.8.3.1
 
