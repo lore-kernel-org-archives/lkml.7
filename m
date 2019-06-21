@@ -2,152 +2,87 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA6EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A772FC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B9F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mXKem9+P"
+	by mail.kernel.org (Postfix) with ESMTP id 885F721530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfFUKIq (ORCPT
+        id S1726810AbfFUKKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:08:46 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:11732 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbfFUKIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:08:43 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LA4Qou000349;
-        Fri, 21 Jun 2019 05:08:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=1NgFvVDhvCHqSR/CePJrSFYwI0WzzG6j+CKs/AV+u6Y=;
- b=mXKem9+PZFl4SV/dnAvDtezRzEWZ8qgnlHG2Jai8vONemgHFzoK81SwdBdR/PgIYPWdf
- FtvlNMt/tLysY6X/rUPTiFgmRAAPFr2VLiL/D9NKiNzJGkC3iB3WBwydjshMTwI+ToHc
- 0V29oAD+uuHfCPuZl6qO+pQH/T6AIgT82YBsOgfCZUo9S0WvJCcWLLTg4pZnavUNO1i0
- dmbfSgh8ykAxuceJHyXVe8w3QnDZzce+g7QZkeRr9N9nKIf/vQL/LkKPgG55X/H9X0l0
- 37/ssyTrzyRosJEGDhX108I2OZdXymCst/Kp+6T0gPVgfeG42lur9F2iPV063rEKEeAz EQ== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t780cuxbr-1;
-        Fri, 21 Jun 2019 05:08:16 -0500
-Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail2.cirrus.com (Postfix) with ESMTP id 7BA9B605A6BF;
-        Fri, 21 Jun 2019 05:08:16 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 21 Jun
- 2019 11:08:15 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 21 Jun 2019 11:08:15 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2C0DE2DB;
-        Fri, 21 Jun 2019 11:08:15 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v6 2/7] i2c: acpi: Use available IRQ helper functions
-Date:   Fri, 21 Jun 2019 11:08:10 +0100
-Message-ID: <20190621100815.12417-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
-References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
+        Fri, 21 Jun 2019 06:10:02 -0400
+Received: from sauhun.de ([88.99.104.3]:51526 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbfFUKKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 06:10:01 -0400
+Received: from localhost (p5486CF54.dip0.t-ipconnect.de [84.134.207.84])
+        by pokefinder.org (Postfix) with ESMTPSA id 746702C077A;
+        Fri, 21 Jun 2019 12:09:59 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 12:09:59 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
+Cc:     "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "peda@axentia.se" <peda@axentia.se>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: Re: [PATCH] mfd: da9063: occupy second I2C address, too
+Message-ID: <20190621100959.GA2568@kunai>
+References: <AM6PR10MB218184C8F2206024C6CB77EAFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+ <20190620092116.y7aqun6jjjn4mgow@katana>
+ <AM6PR10MB218134CDB4ECB0A9534B6B96FEE70@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=993 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210085
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+In-Reply-To: <AM6PR10MB218134CDB4ECB0A9534B6B96FEE70@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the available IRQ helper functions, most of the functions have
-additional helpful side affects like configuring the trigger type of the
-IRQ.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes since v5:
- - Pass info->irq to i2c_acpi_add_resource directly
- - Remove call to acpi_dev_free_resource_list since we never add
-   anything to the list.
 
-Thanks,
-Charles
+> For what it's worth, maybe consider adding a dev_warn attached to the return
+> of devm_i2c_new_dummy_device?
 
- drivers/i2c/i2c-core-acpi.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+I am in the middle of some API changes. Once those are over, I want to
+think about such warnings as a second step. I'd rather have them in the
+core than in each and every driver. But this needs more thinking...
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index f1d648962b223..3951e352317ff 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -133,13 +133,24 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
- 	return 0;
- }
- 
-+static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
-+{
-+	int *irq = data;
-+	struct resource r;
-+
-+	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
-+		*irq = i2c_dev_irq_from_resources(&r, 1);
-+
-+	/* No need to add resource to the list, free list if this changes */
-+	return 1;
-+}
-+
- static int i2c_acpi_get_info(struct acpi_device *adev,
- 			     struct i2c_board_info *info,
- 			     struct i2c_adapter *adapter,
- 			     acpi_handle *adapter_handle)
- {
- 	struct list_head resource_list;
--	struct resource_entry *entry;
- 	struct i2c_acpi_lookup lookup;
- 	int ret;
- 
-@@ -172,19 +183,11 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
- 
- 	/* Then fill IRQ number if any */
- 	INIT_LIST_HEAD(&resource_list);
--	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-+	ret = acpi_dev_get_resources(adev, &resource_list,
-+				     i2c_acpi_add_resource, &info->irq);
- 	if (ret < 0)
- 		return -EINVAL;
- 
--	resource_list_for_each_entry(entry, &resource_list) {
--		if (resource_type(entry->res) == IORESOURCE_IRQ) {
--			info->irq = entry->res->start;
--			break;
--		}
--	}
--
--	acpi_dev_free_resource_list(&resource_list);
--
- 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
- 			  sizeof(info->type));
- 
--- 
-2.11.0
 
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0MrPIACgkQFA3kzBSg
+KbYm4Q/9H7oGk9dvSws93hBTXQq8GGkBg3/iP/rzVeOpHfHb4ar4v/SDUvWJUT4E
+dF3wlzG6GmtyBzqu1HFEtgTk2fLb3SM6WTqllb8mGlHkSvt3IGbgmSZ1MOZD5F1w
+GrdFTT0scnTlehuxQLAHoHXBwSn8mkPBxCQuyoylyOYcgSpUVoZ/GiuSay3f2LRu
+fe8V/FH8VlOYLVjcHD+TjpeIgmww8FhkUZa6Lq5SM8mLT51B4oMswJMSnnWkXCcC
+a8oHMpObhBoY7wuPqWDcpW8VdMHshpKUZm2aU6Rd8QNuLf1FzPd5aMVVlr0rl/k7
+keeRT+zsI8ARe5pDampkPVbCeRLRWhDLMgZDu+AxV5dJ5YuJysO6xlk0R0k8jKRZ
+bGCqlqEqhPPnw0oJlVvOiBZNaGIMmSvjf/vg4VkOFUvkB+xext7KJwUF0kMT2u9O
+7uP8AtnUNYp2pgzAiFJAKGWv+9o0PGBJNRKvNUwCuOjyT6l22dgsrI+nEGhybfcO
+zOiEaydo4Buq9IphDWGW5kMoEpvUC8V4Giq3mhnnMt+PxdcGAgh2Y4QiVqGush/U
+dltqDxZ1oO+/d6FYArYcmjvAQD0ICQElAMSNJnQxuOPh43OPYn+J8AKSANLtOr2b
+cde3kVi8+eJU+J0tYPn5qDQzAT/KkfknHdDrxJNe78xyDvGkHus=
+=BnpT
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
