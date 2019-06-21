@@ -2,93 +2,96 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5DBC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4346AC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951AA208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561136311;
-	bh=qcAmA6iF0AIm7/tu2hMQ8OQryWmpvx9GB4nsOh/Bb7o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tvhMwyS/pnlrrmDvJCa/NgBBTGCu423HPMQ+bWC/dfDmS5JHbtWBB0uIsV6Mcfwk8
-	 hsUB9lH1QfwK6ugRHHO3aCsOgPppyK0KLMjpDLyvnsYCFi5wTZBI/OnHeoY/fWSHvK
-	 IDHf+3wpNn/MumwORoj/kgNuXh53EscCF55TkjXY=
+	by mail.kernel.org (Postfix) with ESMTP id 125C82089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1uawYuat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbfFUQ6a (ORCPT
+        id S1726203AbfFUQ6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:58:30 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:34659 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUQ63 (ORCPT
+        Fri, 21 Jun 2019 12:58:46 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:30028 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUQ6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:58:29 -0400
-Received: by mail-lj1-f170.google.com with SMTP id p17so6610831ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qqgwigxeGvjK7xvfQe9Dvq5Cf0ZDiG37Tc57yFWJcMQ=;
-        b=HLPSctb6nl32d222OwEgCE8oXMwKKjmA5QJ5svDz1qmhQDBKuR4ch/qK2amWcD9BAr
-         nwk3pIDezfn/h8eg4B6mI5VTRVMWDjnPVhM5AN5msZa2mEd0pBEChghfh/EjDx6RAgZM
-         MFQltZWhYR0PlHn4Nr0+9mdGGZV+iUXEPTUNM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqgwigxeGvjK7xvfQe9Dvq5Cf0ZDiG37Tc57yFWJcMQ=;
-        b=V65HWF+O0/1nMOf1UAag6f4kSSFVXG0te8DJzw3QfuDinKuqsaHTFF2zfL8msjSV8X
-         18Vcong76PfXi0B2/JlVO+Kj6Im4vtOdr/gnjyuVdW0Uxo0a9vEBmPCg7fDzwVYApNxa
-         eT4IUntang+Pv8nal8awf9MJoqrC4UCC71WnlzgPXgQmSG/bTMHNdWQlXXWh50gnNxcf
-         3dceW0P0sc4Az0QFClU6qE+7NtDWwxSH8ONUm3lPfl+qUTCwcH9WLdPIRBZDhiYU36VT
-         qJQCzwaSkzRFf5fghjfq/LO9YCzApk1umQdGv3ZUfB2wVj8R+Tg135UWcTNzUUX8K7W9
-         0LxA==
-X-Gm-Message-State: APjAAAV1XlrThhrUo2GS1vAafqsQYKYvUCvjwXy63SwGL0TyhnEJ4Lz/
-        wVnJzl2ByAaEOgJ0arFFwepm8oxG/DY=
-X-Google-Smtp-Source: APXvYqyUT4yAEiM5wmEgqF0V1kglPNcoRq/9DC/kssp5Msut5NW/b5xqkeZvtlwaSi3/P8wCOArllA==
-X-Received: by 2002:a2e:9d18:: with SMTP id t24mr45175579lji.2.1561136307253;
-        Fri, 21 Jun 2019 09:58:27 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id b25sm459924lff.42.2019.06.21.09.58.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 09:58:26 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id a25so5582286lfg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:58:26 -0700 (PDT)
-X-Received: by 2002:a19:f808:: with SMTP id a8mr5270618lff.29.1561136306025;
- Fri, 21 Jun 2019 09:58:26 -0700 (PDT)
+        Fri, 21 Jun 2019 12:58:46 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x5LGwQCk013255
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 01:58:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5LGwQCk013255
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561136307;
+        bh=BdGlYHfhJn0WnD4j8rj3j0Dpi7bkUswm7gLUuW2VoBQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1uawYuatNdqEqxzcJpgQW/gvsybkA6Ru4SsyggVJAXjQslufFjMtq4AlphsSdE6Jj
+         TPc+JfVJOQLXuhkJ3ClXJbarN6pg8Z4A2lpf3RwZM/TMT2TNakvusNat9c0Ona3zfc
+         2Xz+X/iepW2zl0IWoMIXlE5iF4GmJC3JHZk9jO70kDzD8PBB0iD1UJzSPA2KRwrqnF
+         QuBVevl16he/A1o1rE2Fkjqb6sAiPcTxDFHkOanpCBIb24zVzk9Rv1H14VqD1zddyV
+         MAhKQBjd9Bi4NyIH1ah9SsaTm+Lix+m5LcmSrAv8825JopeEm7XR6weJnbVQspCM+K
+         /oW4Mex8JgFMA==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id o19so3184076uap.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:58:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAWwuusnil8vYVFWOaJsZhHlp4FI5CHp5x1te/ELnZRMcFPH6pWJ
+        URnbFdrBxUTGrhmsqUfzg9ffIo1jJoFGexFHsQc=
+X-Google-Smtp-Source: APXvYqynjTsOBby/fwoXbj0npyktZc+1wLFGdI9BsLVjzp1gJwjGqgGJv0WpCwLjiHLXKxj5mqMFlE2d7ItZhUSMS88=
+X-Received: by 2002:ab0:2b0a:: with SMTP id e10mr43253033uar.109.1561136305833;
+ Fri, 21 Jun 2019 09:58:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPM=9tyM7BRfAwruJ4QsY_gMCGVHxS=ag7cNA1H304zcnAFK+A@mail.gmail.com>
-In-Reply-To: <CAPM=9tyM7BRfAwruJ4QsY_gMCGVHxS=ag7cNA1H304zcnAFK+A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Jun 2019 09:58:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wifNAnkd+bXfoNWXO1K5NQ8Tr+Hc13SgaBXU3RoQB7Pwg@mail.gmail.com>
-Message-ID: <CAHk-=wifNAnkd+bXfoNWXO1K5NQ8Tr+Hc13SgaBXU3RoQB7Pwg@mail.gmail.com>
-Subject: Re: [git pull] drm fixes for 5.2-rc6
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190618131048.543-1-will.deacon@arm.com> <CAK8P3a3phkiL8LFQM_AewMCE0EpQaCTOmgkVJe4x9oV84F4_7g@mail.gmail.com>
+ <20190618162021.GA4270@fuggles.cambridge.arm.com>
+In-Reply-To: <20190618162021.GA4270@fuggles.cambridge.arm.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 22 Jun 2019 01:57:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQRMnovWQA0F8A6mEqDjPxXOGM-1AHoyh1gQa367f+FqQ@mail.gmail.com>
+Message-ID: <CAK7LNAQRMnovWQA0F8A6mEqDjPxXOGM-1AHoyh1gQa367f+FqQ@mail.gmail.com>
+Subject: Re: [PATCH] genksyms: Teach parser about 128-bit built-in types
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Martin <dave.martin@arm.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 9:21 PM Dave Airlie <airlied@gmail.com> wrote:
+On Wed, Jun 19, 2019 at 1:21 AM Will Deacon <will.deacon@arm.com> wrote:
 >
-> Just catching up on the week since back from holidays, everything
-> seems quite sane.
+> Hi Arnd,
+>
+> On Tue, Jun 18, 2019 at 04:17:35PM +0200, Arnd Bergmann wrote:
+> > On Tue, Jun 18, 2019 at 3:10 PM Will Deacon <will.deacon@arm.com> wrote:
+> > >
+> > > +       { "__int128", BUILTIN_INT_KEYW },
+> > > +       { "__int128_t", BUILTIN_INT_KEYW },
+> > > +       { "__uint128_t", BUILTIN_INT_KEYW },
+> >
+> > I wonder if it's safe to treat them as the same type, since
+> > __int128_t and __uint128_t differ in signedness.
+> >
+> > If someone exports a symbol with one and changes it to the other, they
+> > would appear to be the same type.
+>
+> My understanding is that the actual CRC generation for normal symbols is
+> based purely on the string-representation of the function signature, and
+> so the underlying type information isn't relevant to that. I can also
+> confirm that the CRC for an exported symbol that returns a __uint128_t
+> is not the same if you change it to return a __int128_t instead.
 
-.. well, except for anongit.freedesktop.org itself, which seems very
-sick indeed.
+Right.
+Applied to linux-kbuild. Thanks!
 
-Does it work for you? I'm getting a connection reset, no data.
 
-               Linus
+-- 
+Best Regards
+Masahiro Yamada
