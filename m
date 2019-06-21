@@ -2,156 +2,90 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9096AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1067CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DCC20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbgpcQM2"
+	by mail.kernel.org (Postfix) with ESMTP id D42E521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561110125;
+	bh=BqH9Qhk/cLiuyBOOBEqaHd57WIG/8b+VS3FZ1Grpbt0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ynbbhMU80JEMuMtP2G5s3TbDw5QCthFFhNkLMLs2Lyl4F+olRsSyFPwKfr1PFtUhu
+	 TcQgKyvWb4DPHxAe6DRGcQq9cm4GO1HgXBKu+EgBGPSON2JsyNvruTIBtZ2bVfJ9Ku
+	 NgmzpZ3QAurIXw+gzoleY5fKNn8F6mq8nlx4/uPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFUJmC (ORCPT
+        id S1727002AbfFUJmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:42:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42652 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfFUJkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:40:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so3302354pff.9;
-        Fri, 21 Jun 2019 02:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VFFDwCFq2HrwKhsHNYdr3dT1d0gmmMXbwXl7POD+wiY=;
-        b=sbgpcQM2m9MBSvQd3EUe0CH/Mk4+9lsnZbyu5Mu/IkNvbK4yFK8dEevd3McuKRNa2f
-         a9RGuZ9PaUsNqOBjv6djvkLxwtprLnPhhERbPWDLVYh/ZBKgdeacG/G0IKAkPEqKIlE9
-         sZLPEcaPSJMQgVcyOPlZA2/MRc7GEp2a0s6bqpFJWPAksLT2QgK6j4qxwkbONTAOJ1GN
-         kKtnyYYcI9d9Y0vzOaFN2P4gip/9QgWNsyCC8PyLJJ5C/rDUEKR1rF1A5msD/eFEkdsp
-         l1nnuQ8lWndjdxsQ8nps+mDjxGIitmLZbhaJd5ehXGINdOpuF2QFk+Br+V1Bqp1+6yI5
-         l5QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VFFDwCFq2HrwKhsHNYdr3dT1d0gmmMXbwXl7POD+wiY=;
-        b=W4qcF5LHgsAVuWCYBpPpyXt7/BEGQgg+HDuPldMiZz0f1oirI6YnzDZz3S7siot4UU
-         PGZIsf0JoP7XVVALH9NphMPgH5wXyN9vNNvD5A4CIrW3IWxhkl6tsocCBsgsjVHHnrmg
-         jWI1uD6hU7oFLd9PJZwLosi89K/N9HTAYvZpqexBQYRvwxufFEZQwwAUVZ9VwJ1rD+ap
-         UlxdO2L53qmPjVZx1meZhALkWuFHshBz4ti61lI9oc5DUuNK3E1ZRepXRfSVt/M9S1Qx
-         +DIYGQbFjIqwSIKI/Qs1Gwt9Cbe3ZyKDr2xkIaCOaCoG0V1elezacLORaBnK+unbdgsO
-         HBSA==
-X-Gm-Message-State: APjAAAWXV+/6fFBjr7FaU1ut4tziUWP8YcnIlp6aDTKtETjpXP8kUCnE
-        WDVVof5DlY5GVpFSZfXKupBVHtBu
-X-Google-Smtp-Source: APXvYqyHehEeolnb2QZc6Z006tgVoFjj482pMwpaJUF2twxMM4abrBgp+fBdMFxhFpPjJwxEYg6xxQ==
-X-Received: by 2002:a17:90a:bb8b:: with SMTP id v11mr5356446pjr.64.1561110014949;
-        Fri, 21 Jun 2019 02:40:14 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id y14sm1999506pjr.13.2019.06.21.02.40.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 21 Jun 2019 02:40:14 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [PATCH v5 1/4] KVM: LAPIC: Make lapic timer unpinned
-Date:   Fri, 21 Jun 2019 17:39:59 +0800
-Message-Id: <1561110002-4438-2-git-send-email-wanpengli@tencent.com>
+        Fri, 21 Jun 2019 05:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbfFUJkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:40:13 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414ED20673;
+        Fri, 21 Jun 2019 09:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561110013;
+        bh=BqH9Qhk/cLiuyBOOBEqaHd57WIG/8b+VS3FZ1Grpbt0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GSUX2iSUGlbkYLWKzwvCt5gySJNway4w7KFc34dlTv2Sg+uSr/8QiUW5recGm7zOr
+         EmCRj74iOVIlFnMvk5efJfZOMQTGT4+WlD9Doy2DTVW2X0uwZWei1BiVrxAynWCRn4
+         e5+eDutgvhCEgOqj1GWUucKTQfJNBfDbOT0zPrVc=
+From:   guoren@kernel.org
+To:     julien.grall@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org
+Cc:     linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V2 0/4] csky: Use generic asid function from arm
+Date:   Fri, 21 Jun 2019 17:39:55 +0800
+Message-Id: <1561109999-4322-1-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Guo Ren <ren_guo@c-sky.com>
 
-Commit 61abdbe0bcc2 ("kvm: x86: make lapic hrtimer pinned") pinned the 
-lapic timer to avoid to wait until the next kvm exit for the guest to 
-see KVM_REQ_PENDING_TIMER set. There is another solution to give a kick 
-after setting the KVM_REQ_PENDING_TIMER bit, make lapic timer unpinned 
-will be used in follow up patches.
+For C-SKY the first implementation is from mips and it's not implemented
+well for SMP in performance. Arm's asid allocator is right for us and
+we've tested it in our all CPUs:610/807/810/860 and it really reduce the
+tlb flush. We'll continue stress testing before merge into master.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 8 ++++----
- arch/x86/kvm/x86.c   | 6 +-----
- 2 files changed, 5 insertions(+), 9 deletions(-)
+Changes for V2:
+ - Add back set/clear cpu_mm.
+ - Update commit message to explain asid allocator.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index e82a18c..87ecb56 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1578,7 +1578,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
- 	    likely(ns > apic->lapic_timer.timer_advance_ns)) {
- 		expire = ktime_add_ns(now, ns);
- 		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
--		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS);
- 	} else
- 		apic_timer_expired(apic);
- 
-@@ -1680,7 +1680,7 @@ static void start_sw_period(struct kvm_lapic *apic)
- 
- 	hrtimer_start(&apic->lapic_timer.timer,
- 		apic->lapic_timer.target_expiration,
--		HRTIMER_MODE_ABS_PINNED);
-+		HRTIMER_MODE_ABS);
- }
- 
- bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu)
-@@ -2317,7 +2317,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
- 	apic->vcpu = vcpu;
- 
- 	hrtimer_init(&apic->lapic_timer.timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_ABS_PINNED);
-+		     HRTIMER_MODE_ABS);
- 	apic->lapic_timer.timer.function = apic_timer_fn;
- 	if (timer_advance_ns == -1) {
- 		apic->lapic_timer.timer_advance_ns = 1000;
-@@ -2506,7 +2506,7 @@ void __kvm_migrate_apic_timer(struct kvm_vcpu *vcpu)
- 
- 	timer = &vcpu->arch.apic->lapic_timer.timer;
- 	if (hrtimer_cancel(timer))
--		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start_expires(timer, HRTIMER_MODE_ABS);
- }
- 
- /*
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index eb5cd25..d7c757d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1437,12 +1437,8 @@ static void update_pvclock_gtod(struct timekeeper *tk)
- 
- void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
- {
--	/*
--	 * Note: KVM_REQ_PENDING_TIMER is implicitly checked in
--	 * vcpu_enter_guest.  This function is only called from
--	 * the physical CPU that is running vcpu.
--	 */
- 	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
-+	kvm_vcpu_kick(vcpu);
- }
- 
- static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
+Guo Ren (4):
+  csky: Revert mmu ASID mechanism
+  csky: Add new asid lib code from arm
+  csky: Use generic asid algorithm to implement switch_mm
+  csky: Improve tlb operation with help of asid
+
+ arch/arm64/lib/asid.c               |   9 +-
+ arch/csky/abiv1/inc/abi/ckmmu.h     |   6 +
+ arch/csky/abiv2/inc/abi/ckmmu.h     |  10 ++
+ arch/csky/include/asm/asid.h        |  78 ++++++++++++
+ arch/csky/include/asm/mmu.h         |   2 +-
+ arch/csky/include/asm/mmu_context.h | 114 ++---------------
+ arch/csky/include/asm/pgtable.h     |   2 -
+ arch/csky/kernel/smp.c              |   2 -
+ arch/csky/mm/Makefile               |   2 +
+ arch/csky/mm/asid.c                 | 188 ++++++++++++++++++++++++++++
+ arch/csky/mm/context.c              |  46 +++++++
+ arch/csky/mm/init.c                 |   2 -
+ arch/csky/mm/tlb.c                  | 238 ++++++++++++++----------------------
+ 13 files changed, 444 insertions(+), 255 deletions(-)
+ create mode 100644 arch/csky/include/asm/asid.h
+ create mode 100644 arch/csky/mm/asid.c
+ create mode 100644 arch/csky/mm/context.c
+
 -- 
 2.7.4
 
