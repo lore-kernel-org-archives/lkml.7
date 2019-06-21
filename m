@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21651C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2C9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC522208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F45A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561140148;
-	bh=kOXrOATchPDjqjaXCZf5RTt6UsgtNnQOmhinsiIP4As=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZFKhxehsQfixOYfn8FK41ZOE2/TORJjflj+ilbFcNChQaYrwThD0VRyv6oXnUTMU5
-	 /KcrLxWD3TmWL24zFBUFu6bW1P4OYCTu+CcN4/IuzLNgsVCks7suNpQ7v5KGIpHHDk
-	 BKuxA6gsWuKX0brYQTAEzUsMbWCyyzhz9G1YCg8c=
+	s=default; t=1561140152;
+	bh=eunsB9axngpbwgAv86zG8SLCyKeyRPBGXGEeasE/nUE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YJ1FelsVX6zzT4ptI5+UtJdIRKq3ccaiWCHDGvUknTzx4KFijfdCFFKLdcRggd/ho
+	 WnPd/52SFHcvk69Mmol3JnUp7XAl8vbWNcl7LG3Dswr0bZwB/fCNJtPERqa3VJ+CTG
+	 dHUuz6zjNVRdmdvlPJXXPviXnVrPNxcTguIesMlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFUSC0 (ORCPT
+        id S1726431AbfFUSCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 14:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfFUSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:02:26 -0400
+        id S1725992AbfFUSCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:02:30 -0400
 Received: from localhost.localdomain (unknown [194.230.155.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E74762070B;
-        Fri, 21 Jun 2019 18:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D35215EA;
+        Fri, 21 Jun 2019 18:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561140145;
-        bh=kOXrOATchPDjqjaXCZf5RTt6UsgtNnQOmhinsiIP4As=;
-        h=From:To:Cc:Subject:Date:From;
-        b=U2ZF4cs6LAR1BHvpT4BE4VkqFlx0BF7npjfh4eOOMKHbMwUNLAvnuvvU8lujqfe/d
-         ttVViCvoYT+6LKe3YKk5SJ77aWbwV6pylRhJRASBonj3AnGu7L6R9tDd3EeJPTMzuv
-         qIEJIff9HTbuw/w4zdLFNO3qtbY4hXka1UnsKzxg=
+        s=default; t=1561140149;
+        bh=eunsB9axngpbwgAv86zG8SLCyKeyRPBGXGEeasE/nUE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xHfe2I8Cm0NV/f7gFxOe/r7qIN14zaIFQTSa6q/OrsrrF2OzeKUiW8yCOlgUbdFQ2
+         XEQlXF6pa7tHIB7QhaROX9OyaW8X4ydmLtIWwGlvzpSss+EYWSCGtUsOL7ZHl/prD6
+         rSA1ak3c6SSMQJ8O3i0u2fGbiCI2NaWbibOwHuqI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -54,20 +54,26 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Joseph Kogut <joseph.kogut@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH v2 1/7] ARM: dts: exynos: Add GPU/Mali 400 node to Exynos3250
-Date:   Fri, 21 Jun 2019 20:02:02 +0200
-Message-Id: <20190621180208.25361-1-krzk@kernel.org>
+Subject: [PATCH v2 2/7] ARM: dts: exynos: Add GPU/Mali 400 node to Exynos4
+Date:   Fri, 21 Jun 2019 20:02:03 +0200
+Message-Id: <20190621180208.25361-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621180208.25361-1-krzk@kernel.org>
+References: <20190621180208.25361-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for GPU (Mali 400) to Exynos3250.  This is still limited and
-not tested:
-1. No dynamic voltage and frequency scaling,
-2. Not sure what to do with CLK_G3D clock responsible for gating entire
-   IP block (it is now being disabled as unused).
+Add nodes for GPU (Mali 400) to Exynos4210 and Exynos4412.  Describe the
+GPU as much as possible however still few elements are missing:
+1. Exynos4210 bus clock is not described in hardware manual therefore
+   the IP gate clock was provided,
+2. Exynos4412: Not sure what to do with CLK_G3D clock responsible for
+   gating entire IP block (it is now being disabled as unused),
+3. Regulator supplies on Trats board.
+
+Limited testing on Odroid U3 (Exynos4412).
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
@@ -76,83 +82,45 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Use samsung,exynos4210-mali compatible
 2. Use CLK_G3D as bus clock (clock for entire IP block)
+3. Remove some of operating points to match Mali in Tizen kernel.
+   Previously they were taken from datasheet but this information is too
+   generic.
+4. Add 533 MHz opp to Exynos4412-prime.
 ---
- arch/arm/boot/dts/exynos3250-artik5.dtsi |  5 ++++
- arch/arm/boot/dts/exynos3250-monk.dts    |  5 ++++
- arch/arm/boot/dts/exynos3250-rinato.dts  |  5 ++++
- arch/arm/boot/dts/exynos3250.dtsi        | 33 ++++++++++++++++++++++++
- 4 files changed, 48 insertions(+)
+ arch/arm/boot/dts/exynos4.dtsi                | 36 +++++++++++++++++++
+ arch/arm/boot/dts/exynos4210-origen.dts       |  5 +++
+ arch/arm/boot/dts/exynos4210-trats.dts        |  4 +++
+ .../boot/dts/exynos4210-universal_c210.dts    |  5 +++
+ arch/arm/boot/dts/exynos4210.dtsi             | 17 +++++++++
+ .../boot/dts/exynos4412-itop-scp-core.dtsi    |  5 +++
+ arch/arm/boot/dts/exynos4412-midas.dtsi       |  5 +++
+ .../boot/dts/exynos4412-odroid-common.dtsi    |  5 +++
+ arch/arm/boot/dts/exynos4412-prime.dtsi       |  7 ++++
+ arch/arm/boot/dts/exynos4412.dtsi             | 25 +++++++++++++
+ 10 files changed, 114 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-index ace50e194a45..dee35e3a5c4b 100644
---- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
-+++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-@@ -59,6 +59,11 @@
- 	cpu0-supply = <&buck2_reg>;
- };
- 
-+&gpu {
-+	mali-supply = <&buck3_reg>;
-+	status = "okay";
-+};
-+
- &i2c_0 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
-index e25765500e99..248bd372fe70 100644
---- a/arch/arm/boot/dts/exynos3250-monk.dts
-+++ b/arch/arm/boot/dts/exynos3250-monk.dts
-@@ -172,6 +172,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	mali-supply = <&buck3_reg>;
-+	status = "okay";
-+};
-+
- &hsotg {
- 	vusb_d-supply = <&ldo15_reg>;
- 	vusb_a-supply = <&ldo12_reg>;
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 7479993755da..86c26a4edfd7 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -244,6 +244,11 @@
- 	};
- };
- 
-+&gpu {
-+	mali-supply = <&buck3_reg>;
-+	status = "okay";
-+};
-+
- &i2c_0 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index 8ce3a7786b19..c17870a54acf 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -126,6 +126,39 @@
- 		};
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 36ccf227434d..ceaa169032c8 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -51,6 +51,42 @@
+ 		serial3 = &serial_3;
  	};
  
 +	gpu: gpu@13000000 {
 +		compatible = "samsung,exynos4210-mali", "arm,mali-400";
 +		reg = <0x13000000 0x10000>;
-+		interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-names = "gp",
 +				  "gpmmu",
 +				  "pp0",
@@ -164,17 +132,194 @@ index 8ce3a7786b19..c17870a54acf 100644
 +				  "pp3",
 +				  "ppmmu3",
 +				  "pmu";
-+		clocks = <&cmu CLK_G3D>,
-+			 <&cmu CLK_SCLK_G3D>;
++		/*
++		 * CLK_G3D is not actually bus clock but a IP-level clock.
++		 * The bus clock is not described in hardware manual.
++		 */
++		clocks = <&clock CLK_G3D>,
++			 <&clock CLK_SCLK_G3D>;
 +		clock-names = "bus", "core";
 +		power-domains = <&pd_g3d>;
 +		status = "disabled";
-+		/* TODO: operating points for DVFS, assigned clock as 134 MHz */
 +	};
 +
- 	pmu {
- 		compatible = "arm,cortex-a7-pmu";
- 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+ 	pmu: pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&combiner>;
+diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+index 36b1edea254a..0d1e1a9c2f6e 100644
+--- a/arch/arm/boot/dts/exynos4210-origen.dts
++++ b/arch/arm/boot/dts/exynos4210-origen.dts
+@@ -132,6 +132,11 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&buck3_reg>;
++	status = "okay";
++};
++
+ &hsotg {
+ 	vusb_d-supply = <&ldo3_reg>;
+ 	vusb_a-supply = <&ldo8_reg>;
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 6882480dbaf7..7c39dd1c4d3a 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -239,6 +239,10 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	status = "okay";
++};
++
+ &hsotg {
+ 	vusb_d-supply = <&vusb_reg>;
+ 	vusb_a-supply = <&vusbdac_reg>;
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index bf092e97e14f..82a8b5449978 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -262,6 +262,11 @@
+ 	};
+ };
+ 
++&gpu {
++	mali-supply = <&buck2_reg>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index ea0e043cd2b4..bf312ebed01f 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -449,6 +449,23 @@
+ 	samsung,lcd-wb;
+ };
+ 
++&gpu {
++	operating-points-v2 = <&gpu_opp_table>;
++
++	gpu_opp_table: opp_table {
++		compatible = "operating-points-v2";
++
++		opp-160000000 {
++			opp-hz = /bits/ 64 <160000000>;
++			opp-microvolt = <950000>;
++		};
++		opp-267000000 {
++			opp-hz = /bits/ 64 <267000000>;
++			opp-microvolt = <1050000>;
++		};
++	};
++};
++
+ &mdma1 {
+ 	power-domains = <&pd_lcd0>;
+ };
+diff --git a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+index 0038465f38f1..462a5409b1de 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
++++ b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+@@ -115,6 +115,11 @@
+ 	cpu0-supply = <&buck2_reg>;
+ };
+ 
++&gpu {
++	mali-supply = <&buck4_reg>;
++	status = "okay";
++};
++
+ &hsotg {
+ 	vusb_d-supply = <&ldo15_reg>;
+ 	vusb_a-supply = <&ldo12_reg>;
+diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+index 4c15cb616cdf..83be3a797411 100644
+--- a/arch/arm/boot/dts/exynos4412-midas.dtsi
++++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+@@ -453,6 +453,11 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&buck4_reg>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index 08d3a0a7b4eb..ea55f377d17c 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -229,6 +229,11 @@
+ 	assigned-clock-rates = <0>, <176000000>;
+ };
+ 
++&gpu {
++	mali-supply = <&buck4_reg>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/exynos4412-prime.dtsi b/arch/arm/boot/dts/exynos4412-prime.dtsi
+index d83fbd4e434c..3731a225f779 100644
+--- a/arch/arm/boot/dts/exynos4412-prime.dtsi
++++ b/arch/arm/boot/dts/exynos4412-prime.dtsi
+@@ -38,3 +38,10 @@
+ 	cooling-device = <&cpu0 15 15>, <&cpu1 15 15>,
+ 			 <&cpu2 15 15>, <&cpu3 15 15>;
+ };
++
++&gpu_opp_table {
++	opp-533000000 {
++		opp-hz = /bits/ 64 <533000000>;
++		opp-microvolt = <1075000>;
++	};
++};
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index e5c041ec0756..fb53d96934cc 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -716,6 +716,31 @@
+ 	cpu-offset = <0x4000>;
+ };
+ 
++&gpu {
++	operating-points-v2 = <&gpu_opp_table>;
++
++	gpu_opp_table: opp_table {
++		compatible = "operating-points-v2";
++
++		opp-160000000 {
++			opp-hz = /bits/ 64 <160000000>;
++			opp-microvolt = <875000>;
++		};
++		opp-267000000 {
++			opp-hz = /bits/ 64 <267000000>;
++			opp-microvolt = <900000>;
++		};
++		opp-350000000 {
++			opp-hz = /bits/ 64 <350000000>;
++			opp-microvolt = <950000>;
++		};
++		opp-440000000 {
++			opp-hz = /bits/ 64 <440000000>;
++			opp-microvolt = <1025000>;
++		};
++	};
++};
++
+ &hdmi {
+ 	compatible = "samsung,exynos4212-hdmi";
+ };
 -- 
 2.17.1
 
