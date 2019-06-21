@@ -2,154 +2,130 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB75C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B258DC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731B3208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jpDMD7h4"
+	by mail.kernel.org (Postfix) with ESMTP id 9899E208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfFUSNR (ORCPT
+        id S1726414AbfFUSN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:13:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40193 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfFUSNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:13:13 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so7441901wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dEyGlTsnsKuBLwX5xX2JKI/ESGQXtRFnkrYp5ebnbEM=;
-        b=jpDMD7h4CQgiptV4ihUW/bUNgJKDqTi71iQj64iG0gyAevW/vejPrbeHwJKqytGUxs
-         JH//IpRhhpQq5/ACeHQIHb/A0y8Y+60JkKT9VVqp6Y5N1SSLTFYLqjmfxB5qNM8NYNEi
-         wKFg81RKKrcff5f4kOgSsGDmV7e/fagFLOX3fnLvxw1/PIFWBbs5tzHdOrVuGHa16z41
-         WM/EOmwP0nCV72YLzbXnExNO5PreQzUviu7SnqBKpMjro3IHKcxkQUyFnWRPHz1mLlWQ
-         3fqK2GFsob1NgeqZeby50at4AgQenZ/yDnz1A0hUrXWaBs/j2FK9iNBCxwbKNfZprUtZ
-         aBMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dEyGlTsnsKuBLwX5xX2JKI/ESGQXtRFnkrYp5ebnbEM=;
-        b=hpZ9vYg84oJhoweMSciaWoPkFie/MjFTUpBGzI4zr6ZKqrgRGxaT8DoAcBtlFmkxqd
-         EfZPB+IS22tj+riuR928J38gdodoALRSRHHm0Og28hhC7b0OZSsuRsnMee2JwIUVBchl
-         ioU2yq3T4XJCR919Z9DAmXUiZDuZdijy1PakXttXkmnaDpXYJvOwapOihK60wPfZx0iK
-         +QF6dO7fpdV45OIKHU9ROSStCaK47pJSXIxdKOr2ewXe/QqlbspUqWwNK4dcQ2pk0BJK
-         v9YRtuaCj1FDfmj9sYsi9A5/5xwn2GzztfO/d4EYxpCMYEJ6c4Hg/UCUcILtespYP+LT
-         hS/Q==
-X-Gm-Message-State: APjAAAV4eBO/iG9J8iwcOR055yzTYIPqRtCKv8E3E0theb33nNsRf/L3
-        +MhvbKg/d+xtYB064hQqXZdttnip6rCwdA3Lj50+00D1WMIl
-X-Google-Smtp-Source: APXvYqyDZAMAe0SGrsikwsOgiVKLU6ZWCS7eXygDIMzxOPc8qc57aRbkICtb2bfT9w1wvSlQ1kgHFd43Ln85KNGdZs8=
-X-Received: by 2002:a1c:3dc1:: with SMTP id k184mr5129288wma.88.1561140791059;
- Fri, 21 Jun 2019 11:13:11 -0700 (PDT)
+        Fri, 21 Jun 2019 14:13:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:53525 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfFUSN4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:13:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 11:13:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,401,1557212400"; 
+   d="scan'208";a="162947849"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 21 Jun 2019 11:13:50 -0700
+Date:   Fri, 21 Jun 2019 11:13:50 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/gup: speed up check_and_migrate_cma_pages() on huge
+ page
+Message-ID: <20190621181349.GA21680@iweiny-DESK2.sc.intel.com>
+References: <1561112116-23072-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-References: <20190621163921.26188-1-puranjay12@gmail.com> <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
- <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
-In-Reply-To: <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri, 21 Jun 2019 13:12:58 -0500
-Message-ID: <CAErSpo6iRVWU-yL5CRF_GEY7CWg5iV=Jw0BrdNV4h3Jvh5AuAw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
- definitions instead of private duplicates
-To:     Joe Perches <joe@perches.com>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561112116-23072-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:27 PM Joe Perches <joe@perches.com> wrote:
->
-> (adding the atlx maintainers to cc)
->
-> On Fri, 2019-06-21 at 12:11 -0500, Bjorn Helgaas wrote:
-> > On Fri, Jun 21, 2019 at 11:39 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
-> > > This patch series removes the private duplicates of PCI definitions in
-> > > favour of generic definitions defined in pci_regs.h.
-> > >
-> > > Puranjay Mohan (3):
-> > >   net: ethernet: atheros: atlx: Rename local PCI defines to generic
-> > >     names
-> > >   net: ethernet: atheros: atlx: Include generic PCI definitions
-> > >   net: ethernet: atheros: atlx: Remove unused and private PCI
-> > >     definitions
-> > >
-> > >  drivers/net/ethernet/atheros/atlx/atl2.c | 5 +++--
-> > >  drivers/net/ethernet/atheros/atlx/atl2.h | 2 --
-> > >  drivers/net/ethernet/atheros/atlx/atlx.h | 1 -
-> > >  3 files changed, 3 insertions(+), 5 deletions(-)
-> >
-> > Let's slow this down a little bit; I'm afraid we're going to overwhelm folks.
->
-> I generally disagree.
->
-> Consolidation of these sorts of changes are generally
-> better done treewide all at once, posted as a series to
-> a list and maintainers allowing time (weeks to months)
-> for the specific maintainers to accept them and then
-> whatever remainder exists reposted and possibly applied
-> by an overall maintainer (e.g.: Dave M)
->
-> > Before posting more to LKML/netdev, how about we first complete a
-> > sweep of all the drivers to see what we're getting into.  It could be
-> > that this will end up being more churn than it's worth.
->
-> Also doubtful.
->
-> Subsystem specific local PCI #defines without generic
-> naming is poor style and makes treewide grep and
-> refactoring much more difficult.
+On Fri, Jun 21, 2019 at 06:15:16PM +0800, Pingfan Liu wrote:
+> Both hugetlb and thp locate on the same migration type of pageblock, since
+> they are allocated from a free_list[]. Based on this fact, it is enough to
+> check on a single subpage to decide the migration type of the whole huge
+> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+> similar on other archs.
+> 
+> Furthermore, when executing isolate_huge_page(), it avoid taking global
+> hugetlb_lock many times, and meanless remove/add to the local link list
+> cma_page_list.
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Linux-kernel@vger.kernel.org
+> ---
+>  mm/gup.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ddde097..2eecb16 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1342,16 +1342,19 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  	LIST_HEAD(cma_page_list);
+>  
+>  check_again:
+> -	for (i = 0; i < nr_pages; i++) {
+> +	for (i = 0; i < nr_pages;) {
+> +
+> +		struct page *head = compound_head(pages[i]);
+> +		long step = 1;
+> +
+> +		if (PageCompound(head))
+> +			step = compound_order(head) - (pages[i] - head);
+>  		/*
+>  		 * If we get a page from the CMA zone, since we are going to
+>  		 * be pinning these entries, we might as well move them out
+>  		 * of the CMA zone if possible.
+>  		 */
+>  		if (is_migrate_cma_page(pages[i])) {
 
-Don't worry, we have the same objectives.  I totally agree that local
-#defines are a bad thing, which is why I proposed this project in the
-first place.
+I like this but I think for consistency I would change this pages[i] to be
+head.  Even though it is not required.
 
-I'm just saying that this is a "first-patch" sort of learning project
-and I think it'll avoid some list spamming and discouragement if we
-can figure out the scope and shake out some of the teething problems
-ahead of time.  I don't want to end up with multiple versions of
-dozens of little 2-3 patch series posted every week or two.  I'd
-rather be able to deal with a whole block of them at one time.
+Ira
 
-> The atlx maintainers should definitely have been cc'd
-> on these patches.
->
-> Jay Cliburn <jcliburn@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
-> Chris Snook <chris.snook@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
->
-> Puranjay, can you please do a few things more here:
->
-> 1: Make sure you use scripts/get_maintainer.pl to cc the
->    appropriate people.
->
-> 2: Show that you compiled the object files and verified
->    where possible that there are no object file changes.
-
-Do you have any pointers for the best way to do this?  Is it as simple
-as comparing output of "objdump -d"?
-
-> 3: State that there are no object changes in the proposed
->    commit log.
-
-Thanks for the additional tips.
-
-Bjorn
+> -
+> -			struct page *head = compound_head(pages[i]);
+> -
+>  			if (PageHuge(head)) {
+>  				isolate_huge_page(head, &cma_page_list);
+>  			} else {
+> @@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  				}
+>  			}
+>  		}
+> +
+> +		i += step;
+>  	}
+>  
+>  	if (!list_empty(&cma_page_list)) {
+> -- 
+> 2.7.5
+> 
