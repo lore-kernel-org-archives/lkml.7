@@ -2,56 +2,56 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB1C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2247C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D323321530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A949C208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="gRvibSR/"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="f7xjDjeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfFUKI4 (ORCPT
+        id S1726760AbfFUKJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:08:56 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:61486 "EHLO
+        Fri, 21 Jun 2019 06:09:04 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:33360 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbfFUKIv (ORCPT
+        by vger.kernel.org with ESMTP id S1726622AbfFUKIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:08:51 -0400
+        Fri, 21 Jun 2019 06:08:48 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LA4Qot000349;
-        Fri, 21 Jun 2019 05:08:16 -0500
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LA3kSs032314;
+        Fri, 21 Jun 2019 05:08:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=PODMain02222019;
- bh=LXfKiBcitALEhcT0OeQ7qJQiQ+c2JkVF+KsqYJhdbbU=;
- b=gRvibSR/NW0HKrEGI6d+4vsxplqQHtnAzo308YLCM2gIQoW3Fw/ptP+AfWekYJ0+V4t1
- lO8wbY77wIBlCcNMJFh5+Q6D/NWvn4HlTftwT4tEi9MGto1/06eW1wM220OYN9OA3gvi
- 7Cb+uEdgLw8JENKLZA2zEcOouloePlqzlXNcnv0kDCmp3Xoukjj/ixxk4jRKgKndQS+E
- UC8UpcuxXFm7BbjSmTZq/J8ZV3Mzkso9WrhCHIvZ82+0CWCrs0EgaPj9q17vnILaMKlQ
- Otj6fv1WGpMYq/Ygb3OlmLqDGG1YU3U0rXpmop8U+mO/F65O6HBK80859qTLbxo/pRnO LA== 
+ bh=UKo5CllAPGADG3RdYfRA7XHfkfa9kmT6PUJVXJZbPt4=;
+ b=f7xjDjehuoy+ShhADBH8cChc9jfUmwhdrKLF6A2jWig2qyU5IzYF3WGGYrhz+gVhCRoc
+ LgV8NDtJDfzw6vX7kPw7gm7eznUzUMS5qSJbm0+dlOfmI2IEHsBXG+TqjZ7C5BDrHkDW
+ uPwReaDlwAB5VWv0Wdo4rpQdOjLVD3S/O+ai2cjg1iyhhriQcLj4ZZGTwJ4RHLhOeuwz
+ R99sZKUAcbcZjgEm+5zVV/6o3ice/Lq0frsRMXLDxMqixXrd5j2k8Ad5GjW9aI5Mhqdd
+ rN56DkL+inpgOAAmseaxE6MBhKVHTQTz6kjKEeLLG73VG0DO3PO8iaez6wme72pu5mB1 ZQ== 
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t780cuxbq-1;
-        Fri, 21 Jun 2019 05:08:16 -0500
-Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
-        by mail4.cirrus.com (Postfix) with ESMTP id 68FAF611C8A7;
-        Fri, 21 Jun 2019 05:08:15 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t780cuxbs-2;
+        Fri, 21 Jun 2019 05:08:17 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail2.cirrus.com (Postfix) with ESMTP id 88001605DBF0;
+        Fri, 21 Jun 2019 05:08:17 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 21 Jun
  2019 11:08:15 +0100
 Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Fri, 21 Jun 2019 11:08:15 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3C9A52DA;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 794BF2DA;
         Fri, 21 Jun 2019 11:08:15 +0100 (BST)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
@@ -60,17 +60,17 @@ CC:     <jarkko.nikula@linux.intel.com>,
         <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v6 3/7] i2c: acpi: Factor out getting the IRQ from ACPI
-Date:   Fri, 21 Jun 2019 11:08:11 +0100
-Message-ID: <20190621100815.12417-4-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v6 7/7] i2c: core: Tidy up handling of init_irq
+Date:   Fri, 21 Jun 2019 11:08:15 +0100
+Message-ID: <20190621100815.12417-8-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
 References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=802 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906210085
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,74 +78,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for future refactoring factor out the fetch of the IRQ
-into its own helper function. Whilst we are at it update the handling
-to return the actual error code returned from acpi_dev_get_resources
-as well.
+Only set init_irq during i2c_device_new and only handle client->irq on
+the probe/remove paths.
 
+Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
 
-Changes since v5:
- - Return error code from acpi_dev_get_resources
- - Bail out if i2c_acpi_get_irq fails
+No changes since v5.
 
 Thanks,
 Charles
 
- drivers/i2c/i2c-core-acpi.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+ drivers/i2c/i2c-core-base.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 3951e352317ff..c91492eaacd93 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -145,12 +145,29 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
- 	return 1;
- }
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 87a2ad8f41a76..b3cc581f6465b 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -314,6 +314,8 @@ static int i2c_device_probe(struct device *dev)
  
-+static int i2c_acpi_get_irq(struct acpi_device *adev)
-+{
-+	struct list_head resource_list;
-+	int irq = -ENOENT;
-+	int ret;
-+
-+	INIT_LIST_HEAD(&resource_list);
-+
-+	ret = acpi_dev_get_resources(adev, &resource_list,
-+				     i2c_acpi_add_resource, &irq);
-+	if (ret < 0)
-+		return ret;
-+
-+	acpi_dev_free_resource_list(&resource_list);
-+
-+	return irq;
-+}
-+
- static int i2c_acpi_get_info(struct acpi_device *adev,
- 			     struct i2c_board_info *info,
- 			     struct i2c_adapter *adapter,
- 			     acpi_handle *adapter_handle)
- {
--	struct list_head resource_list;
- 	struct i2c_acpi_lookup lookup;
- 	int ret;
+ 	driver = to_i2c_driver(dev->driver);
  
-@@ -182,11 +199,9 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
- 		*adapter_handle = lookup.adapter_handle;
++	client->irq = client->init_irq;
++
+ 	if (!client->irq && !driver->disable_i2c_core_irq_mapping) {
+ 		int irq = -ENOENT;
  
- 	/* Then fill IRQ number if any */
--	INIT_LIST_HEAD(&resource_list);
--	ret = acpi_dev_get_resources(adev, &resource_list,
--				     i2c_acpi_add_resource, &info->irq);
--	if (ret < 0)
--		return -EINVAL;
-+	info->irq = i2c_acpi_get_irq(adev);
-+	if (info->irq < 0)
-+		return info->irq;
+@@ -424,7 +426,7 @@ static int i2c_device_remove(struct device *dev)
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
  
- 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
- 			  sizeof(info->type));
+-	client->irq = client->init_irq;
++	client->irq = 0;
+ 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+ 		pm_runtime_put(&client->adapter->dev);
+ 
+@@ -741,7 +743,6 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
+ 	if (!client->init_irq)
+ 		client->init_irq = i2c_dev_irq_from_resources(info->resources,
+ 							 info->num_resources);
+-	client->irq = client->init_irq;
+ 
+ 	strlcpy(client->name, info->type, sizeof(client->name));
+ 
 -- 
 2.11.0
 
