@@ -2,263 +2,226 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994E0C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD7FC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02721530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02E221530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R4Fg8mu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfFUJVq (ORCPT
+        id S1726631AbfFUJVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:21:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57176 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfFUJVp (ORCPT
+        Fri, 21 Jun 2019 05:21:50 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14721 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:21:45 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L9IKea031042
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:21:45 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8vg0840q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:21:44 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Fri, 21 Jun 2019 10:21:42 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Jun 2019 10:21:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5L9Ldbk59506730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 09:21:39 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1DFFA42049;
-        Fri, 21 Jun 2019 09:21:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDCBA42045;
-        Fri, 21 Jun 2019 09:21:38 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.83.243])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Jun 2019 09:21:38 +0000 (GMT)
-Subject: Re: [PATCH 2/4] powerpc/powernv: remove the unused tunneling exports
-To:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-References: <20190523074924.19659-1-hch@lst.de>
- <20190523074924.19659-3-hch@lst.de>
- <CAOSf1CFu_T=7weW0eagzjTc8474ntVx1uCKdQh8sX85bfaPxCQ@mail.gmail.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Fri, 21 Jun 2019 11:21:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Jun 2019 05:21:48 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0ca1aa0001>; Fri, 21 Jun 2019 02:21:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 21 Jun 2019 02:21:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 21 Jun 2019 02:21:47 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
+ 2019 09:21:47 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 21 Jun 2019 09:21:47 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0ca1a80000>; Fri, 21 Jun 2019 02:21:46 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
+        <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V5 2/3] PCI: dwc: Cleanup DBI read and write APIs
+Date:   Fri, 21 Jun 2019 14:51:26 +0530
+Message-ID: <20190621092127.17930-2-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621092127.17930-1-vidyas@nvidia.com>
+References: <20190621092127.17930-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CFu_T=7weW0eagzjTc8474ntVx1uCKdQh8sX85bfaPxCQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr-MC
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062109-0020-0000-0000-0000034C21B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062109-0021-0000-0000-0000219F80AF
-Message-Id: <048e1242-a6ea-5d56-dc9a-e16f9eedf6d9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210077
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561108906; bh=gUSSSIrVqrmoGoE/GpE6TwYgyp2qpDNo/uHMFwCOUbc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=R4Fg8mu0G9f6lne7V97M57cwZp9dMnHyOs1P/4iqT5Tn0XhjIDa7wpuuf6vsk0lIf
+         I/i88vlmsBZ9Z18KsRaLd64yzT82yb5TqT7kB2CcPfpiob8y1aKFptDGX4gVcNtOc5
+         Rq260Hhx/k+1nQQI3wGxeodlhCpFIm/D6HFZwfKV6h5vk38FseJyVdtC+5xqvAUa1O
+         PvL5EXtNSI/fRJ1bQ3dPGbBK7L8LNWrrnSbwOPlkazoPqqNbe694G96FHY05yRvRZT
+         dW0TM2lHC6h3csNxuQK/0zqYi1Cm7eon2Pfj3io23U4TldpInyhLdccY9xPyFBeynx
+         0YTRPWFkOQKbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cleanup DBI read and write APIs by removing "__" (underscore) from their
+names as there are no no-underscore versions and the underscore versions
+are already doing what no-underscore versions typically do.
 
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+Changes from v4:
+* This is a new patch in this series
 
-Le 21/06/2019 à 03:47, Oliver O'Halloran a écrit :
-> On Thu, May 23, 2019 at 5:51 PM Christoph Hellwig <hch@lst.de> wrote:
->>
->> These have been unused ever since they've been added to the kernel.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> ---
->>   arch/powerpc/include/asm/pnv-pci.h        |  4 --
->>   arch/powerpc/platforms/powernv/pci-ioda.c |  4 +-
->>   arch/powerpc/platforms/powernv/pci.c      | 71 -----------------------
->>   arch/powerpc/platforms/powernv/pci.h      |  1 -
->>   4 files changed, 3 insertions(+), 77 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
->> index 9fcb0bc462c6..1ab4b0111abc 100644
->> --- a/arch/powerpc/include/asm/pnv-pci.h
->> +++ b/arch/powerpc/include/asm/pnv-pci.h
->> @@ -27,12 +27,8 @@ extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
->>   extern int pnv_pci_set_power_state(uint64_t id, uint8_t state,
->>                                     struct opal_msg *msg);
->>
->> -extern int pnv_pci_enable_tunnel(struct pci_dev *dev, uint64_t *asnind);
->> -extern int pnv_pci_disable_tunnel(struct pci_dev *dev);
->>   extern int pnv_pci_set_tunnel_bar(struct pci_dev *dev, uint64_t addr,
->>                                    int enable);
->> -extern int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid,
->> -                                     u32 *pid, u32 *tid);
-> 
-> IIRC as-notify was for CAPI which has an in-tree driver (cxl). Fred or
-> Andrew (+cc), what's going on with this? Will it ever see the light of
-> day?
+ drivers/pci/controller/dwc/pcie-designware.c | 16 ++++-----
+ drivers/pci/controller/dwc/pcie-designware.h | 36 ++++++++++----------
+ 2 files changed, 26 insertions(+), 26 deletions(-)
 
-
-The as-notify can be used in both CAPI mode and PCI mode. In capi mode, 
-it's integrated in the capi protocol, so the cxl driver doesn't need to 
-do extra setup, compared to what's already done to activate capi.
-As mentioned in a previous iteration of that patchset, those APIs are to 
-be used by the Mellanox CX5 driver. The in-tree driver is always a step 
-behind their latest, but word is they are working on upstreaming those 
-interactions.
-
-   Fred
-
->>   int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
->>   int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
->>                             unsigned int virq);
->> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->> index 126602b4e399..6b0caa2d0425 100644
->> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -54,6 +54,8 @@
->>   static const char * const pnv_phb_names[] = { "IODA1", "IODA2", "NPU_NVLINK",
->>                                                "NPU_OCAPI" };
->>
->> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
->> +
->>   void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->>                              const char *fmt, ...)
->>   {
->> @@ -2360,7 +2362,7 @@ static long pnv_pci_ioda2_set_window(struct iommu_table_group *table_group,
->>          return 0;
->>   }
->>
->> -void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
->> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable)
->>   {
->>          uint16_t window_id = (pe->pe_number << 1 ) + 1;
->>          int64_t rc;
->> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
->> index 8d28f2932c3b..fc69f5611020 100644
->> --- a/arch/powerpc/platforms/powernv/pci.c
->> +++ b/arch/powerpc/platforms/powernv/pci.c
->> @@ -868,54 +868,6 @@ struct device_node *pnv_pci_get_phb_node(struct pci_dev *dev)
->>   }
->>   EXPORT_SYMBOL(pnv_pci_get_phb_node);
->>
->> -int pnv_pci_enable_tunnel(struct pci_dev *dev, u64 *asnind)
->> -{
->> -       struct device_node *np;
->> -       const __be32 *prop;
->> -       struct pnv_ioda_pe *pe;
->> -       uint16_t window_id;
->> -       int rc;
->> -
->> -       if (!radix_enabled())
->> -               return -ENXIO;
->> -
->> -       if (!(np = pnv_pci_get_phb_node(dev)))
->> -               return -ENXIO;
->> -
->> -       prop = of_get_property(np, "ibm,phb-indications", NULL);
->> -       of_node_put(np);
->> -
->> -       if (!prop || !prop[1])
->> -               return -ENXIO;
->> -
->> -       *asnind = (u64)be32_to_cpu(prop[1]);
->> -       pe = pnv_ioda_get_pe(dev);
->> -       if (!pe)
->> -               return -ENODEV;
->> -
->> -       /* Increase real window size to accept as_notify messages. */
->> -       window_id = (pe->pe_number << 1 ) + 1;
->> -       rc = opal_pci_map_pe_dma_window_real(pe->phb->opal_id, pe->pe_number,
->> -                                            window_id, pe->tce_bypass_base,
->> -                                            (uint64_t)1 << 48);
->> -       return opal_error_code(rc);
->> -}
->> -EXPORT_SYMBOL_GPL(pnv_pci_enable_tunnel);
->> -
->> -int pnv_pci_disable_tunnel(struct pci_dev *dev)
->> -{
->> -       struct pnv_ioda_pe *pe;
->> -
->> -       pe = pnv_ioda_get_pe(dev);
->> -       if (!pe)
->> -               return -ENODEV;
->> -
->> -       /* Restore default real window size. */
->> -       pnv_pci_ioda2_set_bypass(pe, true);
->> -       return 0;
->> -}
->> -EXPORT_SYMBOL_GPL(pnv_pci_disable_tunnel);
->> -
->>   int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
->>   {
->>          __be64 val;
->> @@ -970,29 +922,6 @@ int pnv_pci_set_tunnel_bar(struct pci_dev *dev, u64 addr, int enable)
->>   }
->>   EXPORT_SYMBOL_GPL(pnv_pci_set_tunnel_bar);
->>
->> -#ifdef CONFIG_PPC64    /* for thread.tidr */
->> -int pnv_pci_get_as_notify_info(struct task_struct *task, u32 *lpid, u32 *pid,
->> -                              u32 *tid)
->> -{
->> -       struct mm_struct *mm = NULL;
->> -
->> -       if (task == NULL)
->> -               return -EINVAL;
->> -
->> -       mm = get_task_mm(task);
->> -       if (mm == NULL)
->> -               return -EINVAL;
->> -
->> -       *pid = mm->context.id;
->> -       mmput(mm);
->> -
->> -       *tid = task->thread.tidr;
->> -       *lpid = mfspr(SPRN_LPID);
->> -       return 0;
->> -}
->> -EXPORT_SYMBOL_GPL(pnv_pci_get_as_notify_info);
->> -#endif
->> -
->>   void pnv_pci_shutdown(void)
->>   {
->>          struct pci_controller *hose;
->> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->> index 4f11c077af62..469c24463247 100644
->> --- a/arch/powerpc/platforms/powernv/pci.h
->> +++ b/arch/powerpc/platforms/powernv/pci.h
->> @@ -195,7 +195,6 @@ extern int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type);
->>   extern void pnv_teardown_msi_irqs(struct pci_dev *pdev);
->>   extern struct pnv_ioda_pe *pnv_ioda_get_pe(struct pci_dev *dev);
->>   extern void pnv_set_msi_irq_chip(struct pnv_phb *phb, unsigned int virq);
->> -extern void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
->>   extern unsigned long pnv_pci_ioda2_get_table_size(__u32 page_shift,
->>                  __u64 window_size, __u32 levels);
->>   extern int pnv_eeh_post_init(void);
->> --
->> 2.20.1
->>
-> 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 9d7c51c32b3b..5d22028d854e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -52,8 +52,8 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+-u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-		       size_t size)
++u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		     size_t size)
+ {
+ 	int ret;
+ 	u32 val;
+@@ -68,8 +68,8 @@ u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+ 	return val;
+ }
+ 
+-void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			 size_t size, u32 val)
++void dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		       size_t size, u32 val)
+ {
+ 	int ret;
+ 
+@@ -83,8 +83,8 @@ void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+ 		dev_err(pci->dev, "Write DBI address failed\n");
+ }
+ 
+-u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			size_t size)
++u32 dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		      size_t size)
+ {
+ 	int ret;
+ 	u32 val;
+@@ -99,8 +99,8 @@ u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+ 	return val;
+ }
+ 
+-void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			  size_t size, u32 val)
++void dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
++			size_t size, u32 val)
+ {
+ 	int ret;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 14762e262758..1f6858385602 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -254,14 +254,14 @@ struct dw_pcie {
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+ int dw_pcie_write(void __iomem *addr, int size, u32 val);
+ 
+-u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-		       size_t size);
+-void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			 size_t size, u32 val);
+-u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			size_t size);
+-void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+-			  size_t size, u32 val);
++u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		     size_t size);
++void dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		       size_t size, u32 val);
++u32 dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
++		      size_t size);
++void dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
++			size_t size, u32 val);
+ int dw_pcie_link_up(struct dw_pcie *pci);
+ int dw_pcie_wait_for_link(struct dw_pcie *pci);
+ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+@@ -275,52 +275,52 @@ void dw_pcie_setup(struct dw_pcie *pci);
+ 
+ static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+ {
+-	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
++	dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
+ }
+ 
+ static inline u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg)
+ {
+-	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
++	return dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
+ }
+ 
+ static inline void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 val)
+ {
+-	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
++	dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
+ }
+ 
+ static inline u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg)
+ {
+-	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
++	return dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
+ }
+ 
+ static inline void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 val)
+ {
+-	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
++	dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
+ }
+ 
+ static inline u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
+ {
+-	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
++	return dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
+ }
+ 
+ static inline void dw_pcie_writel_dbi2(struct dw_pcie *pci, u32 reg, u32 val)
+ {
+-	__dw_pcie_write_dbi2(pci, pci->dbi_base2, reg, 0x4, val);
++	dw_pcie_write_dbi2(pci, pci->dbi_base2, reg, 0x4, val);
+ }
+ 
+ static inline u32 dw_pcie_readl_dbi2(struct dw_pcie *pci, u32 reg)
+ {
+-	return __dw_pcie_read_dbi2(pci, pci->dbi_base2, reg, 0x4);
++	return dw_pcie_read_dbi2(pci, pci->dbi_base2, reg, 0x4);
+ }
+ 
+ static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
+ {
+-	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
++	dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
+ }
+ 
+ static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
+ {
+-	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
++	return dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
+ }
+ 
+ static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
+-- 
+2.17.1
 
