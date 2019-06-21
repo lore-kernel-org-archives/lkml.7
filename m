@@ -2,178 +2,152 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C861C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19810C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23F9208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD86E2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="Xf8yOiJS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oK5wx/+n";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zRRJtZps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfFUW1s (ORCPT
+        id S1726230AbfFUWbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 18:27:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35578 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfFUW1s (ORCPT
+        Fri, 21 Jun 2019 18:31:34 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:14764 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfFUWba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 18:27:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d126so4287162pfd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 15:27:47 -0700 (PDT)
+        Fri, 21 Jun 2019 18:31:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561156290; x=1592692290;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=CwTyE5oAojXhA3u6jQqYZFBh1XJD0rLbYRD5s+d6l+g=;
+  b=oK5wx/+n/M/HsK9S7nw9R/MPhNKRt+cjZBpa4insQBEdBaVeIbjtDG1g
+   6EGeUD7OGRTLeDadTMt0HR4o8JlcBtdjeqVIfiAqTOgXYF9Hnilng2xgE
+   tIf4LZ2CGNz3jmv/G71wjEZXTOmW48ctu2ecCR57waQZnilp/xnn4gTfg
+   Uu2opLpy7P4goHEIayw2LCltcREM7nCByvY8Yj5lNBJWIokaeoqkF86FD
+   jouyTnl7IqKVDsB1Mw/0lqAbbENhxwg+W2ZNwIxbpGPnZSRcf1U7eERLq
+   5u9Gw7YoYxXsHOUlongMO59blJPHDkgQLi449ck82ie7FTwpL4UtacQZt
+   w==;
+X-IronPort-AV: E=Sophos;i="5.63,402,1557158400"; 
+   d="scan'208";a="112418534"
+Received: from mail-by2nam01lp2050.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.50])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2019 06:31:29 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=12Gmw5zKib47jcBiDKW7HN4evhmenszIUvUtcBNVr/w=;
-        b=Xf8yOiJSLOSDq8hWrSlqpVXhoLaAmtIuYSuhh/74sBbU3do17BqBGp8WItUeF/yGen
-         7QyMyUUFMICKWkLKDOjqV9xQzIl8ml5EglhEaZ5q7B7ht6KlF5augdWsLTNIeapnDgwo
-         tsiSht9gHfvxnPm6uEpfxtFooUB4B5AVXpaJNLwYWGHj9n0asq1s+48vQT5N11RUCUam
-         xkooi/XOAN4ALTzwT5nU+13PdxyRVZOvq/9+uocblGa/k3frtWsRIz8BBt1wcobxNprH
-         qQd1iUwf1V6UKbv2VDNdJ/VX+PsCET2klo7Q7Prr2VV0Le1jdGqcfBRVx5BEQbhf/2Ua
-         VkVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=12Gmw5zKib47jcBiDKW7HN4evhmenszIUvUtcBNVr/w=;
-        b=K40pmg99OG4jL8EFlqZjAPr5H+4llKJCEIIXoa8nWnSCVb+1AMsQUJD2Nih3ceQUec
-         7fVIHAf2wjnnZsw3JT+1/+E5nuVQ/o9fpOFjpiFuNFG5+0pWPhSXfs8lzGUBYi98Zfwy
-         wQXGB7Ov3tseWFhcPoMCu+B9slT0si9Rdkh60gJYT+9l/GAQ+f0PU0XV7oEGW92hsqrK
-         kvlp6SOhJRxapmRSebQbvXHEeq98uuCHgHuDfrUEyqf7t6OpmgRVuJkE4311g9qojDwS
-         CTexhXCSa9jUdI/HvvSZxJIkRmfh/WVDyLV2LGu4WhZrMvCCbf/M9a7cCmgBM8D/XLHn
-         NUAw==
-X-Gm-Message-State: APjAAAVSVURKuP0jATqWF8sXj3RWW9ZiXcmxVSTVOARBrJq8QTn538GD
-        FbB4OK5fdl/ujQHOvUZrBrKh6Q==
-X-Google-Smtp-Source: APXvYqyaiXsnJomCA0jaG6+PiyM9/ArBlY8whr81Mb/Rcx7aNr8Hgjb7UwlTl2XzXFsDehOifOqB8w==
-X-Received: by 2002:a17:90a:9b8a:: with SMTP id g10mr9335809pjp.66.1561156067118;
-        Fri, 21 Jun 2019 15:27:47 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id m2sm3241108pgq.48.2019.06.21.15.27.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 15:27:46 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 15:27:45 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
-Subject: Re: [selftests/bpf] 69d96519db:
- kernel_selftests.bpf.test_socket_cookie.fail
-Message-ID: <20190621222745.GH1383@mini-arch>
-References: <20190621084040.GU7221@shao2-debian>
- <20190621161039.GF1383@mini-arch>
- <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CwTyE5oAojXhA3u6jQqYZFBh1XJD0rLbYRD5s+d6l+g=;
+ b=zRRJtZps0xN7icO/bbgp9vv4vZ+DpwoqgPZ2ua8a1oQyM74WtUKFLVNFyVeErlEsgmQe1+8J8uMoH96TR3M1lLJjJ2aRVm2ki8zM2bn3MVF8vxo8v+amyI/z5T51bS4ftJ3J1FskGAvz7h3qurhGr2fRvnZSvmxd4ZPmjfJFKXY=
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com (52.135.214.142) by
+ BYAPR04MB6056.namprd04.prod.outlook.com (20.178.233.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Fri, 21 Jun 2019 22:31:28 +0000
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::65e3:6069:d7d5:90a2]) by BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::65e3:6069:d7d5:90a2%5]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 22:31:28 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rfontana@redhat.com" <rfontana@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "ottosabart@seberm.com" <ottosabart@seberm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v7 3/7] cpu-topology: Move cpu topology code to common
+ code.
+Thread-Topic: [PATCH v7 3/7] cpu-topology: Move cpu topology code to common
+ code.
+Thread-Index: AQHVJT7xIDv/dWmHkUmsJR6AXUgH+qajQP2AgAN2pAA=
+Date:   Fri, 21 Jun 2019 22:31:27 +0000
+Message-ID: <91559562f2958fa904b53e621e596d6216efa9fb.camel@wdc.com>
+References: <20190617185920.29581-1-atish.patra@wdc.com>
+         <20190617185920.29581-4-atish.patra@wdc.com>
+         <20190619173801.GB20916@kroah.com>
+In-Reply-To: <20190619173801.GB20916@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 16275102-8761-4c03-078c-08d6f6983390
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB6056;
+x-ms-traffictypediagnostic: BYAPR04MB6056:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <BYAPR04MB6056F3504653162A4ECF3035FAE70@BYAPR04MB6056.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(6116002)(5660300002)(76116006)(6436002)(76176011)(72206003)(81166006)(66946007)(256004)(99286004)(68736007)(2906002)(102836004)(54906003)(6506007)(3846002)(4744005)(6512007)(14454004)(316002)(478600001)(71190400001)(36756003)(81156014)(229853002)(8936002)(7416002)(73956011)(53936002)(8676002)(6916009)(66556008)(71200400001)(11346002)(476003)(446003)(4326008)(25786009)(26005)(2616005)(6246003)(66476007)(6486002)(66066001)(66446008)(64756008)(486006)(118296001)(86362001)(186003)(7736002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB6056;H:BYAPR04MB3782.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bpihA2OFNr62h73iZ0P9jpk7naT/xsUgCEuMtbqqLoDVkS7ut1yKmx7k5/M05DetLwIjsnkuRWpqVN4gG1eT15gXOUhOhlywGAEFiAcsNRdVZAOP2cb6wleyzYMOo6zyIEyVgbBdkbX6VwK/ZTV3BHtFsEkblh7Nzrw7969PBhELT/aZMvf8VxbwrwaXb0U1T6SQVFavyAmT34jNWdoqbkZvOk4ekx5tfaCFu0FIAcxDrSDbcD38GFh7BAGQtYlxVjBZHUjsx1iW41IlccMcMebWMA2xoPeLvfSm+x6RY9Vf2ZiUFbgA3y38BIyHoqnBXVIl7v45TAgQo65lxV1es8IP6JGnYzamQUrM1rRHFEQvjahVOHnI2jddpJHl716o/bEbwOwxSeV2P0w34/4e3VZgasiNf+3vPHjwWXjQTtE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <27C05F5F6A9C554FA6F50BCF64D1706A@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16275102-8761-4c03-078c-08d6f6983390
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 22:31:27.9153
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Atish.Patra@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/21, Andrii Nakryiko wrote:
-> )
-> 
-> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> >
-> > On 06/21, kernel test robot wrote:
-> > > FYI, we noticed the following commit (built with gcc-7):
-> > >
-> > > commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
-> > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> > >
-> > > in testcase: kernel_selftests
-> > > with following parameters:
-> > >
-> > >       group: kselftests-00
-> > >
-> > > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> > >
-> > >
-> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> > >
-> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > >
-> > >
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > >
-> > > # selftests: bpf: test_socket_cookie
-> > > # libbpf: failed to create map (name: 'socket_cookies'): Invalid
-> > > # argument
-> > Another case of old clang trying to create a map that depends on BTF?
-> > Should we maybe switch those BTF checks in the kernel to return
-> > EOPNOTSUPP to make it easy to diagnose?
-> 
-> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
-> 
-> libbpf: DATASEC '.maps' not found.
-> 
-> So this must be something else. I just confirmed with clang version
-> 7.0.20180201 that for ./test_socket_cookie that's the first line
-> that's emitted on failure.
-Thanks for checking, I also took a look at the attached kernel_selftests.xz,
-here is what it has:
-2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
-2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
-...
-# BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
-# BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
-...
-# Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
-# failed to load test BTF: -2
-# Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
-# failed to load test BTF: -2
-...
-
-And so on. So there is clearly an old clang that doesn't emit any
-BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
-linux-next, that's why it doesn't complain about missing/corrupt BTF.
-
-We need to convince lkp people to upgrade clang, otherwise, I suppose,
-we'll get more of these reportings after your recent df0b77925982 :-(
-
-> > > # libbpf: failed to load object './socket_cookie_prog.o'
-> > > # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
-> > > # ./socket_cookie_prog.o
-> > > # FAILED
-> > > not ok 15 selftests: bpf: test_socket_cookie
-> > >
-> > >
-> > >
-> > >
-> > > To reproduce:
-> > >
-> > >         # build kernel
-> > >       cd linux
-> > >       cp config-5.2.0-rc2-00598-g69d9651 .config
-> > >       make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
-> > >       make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
-> > >       make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
-> > >       make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
-> > >       make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
-> > >
-> > >
-> > >         git clone https://github.com/intel/lkp-tests.git
-> > >         cd lkp-tests
-> > >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> > >
-> > >
-> > >
-> > > Thanks,
-> > > Rong Chen
-> > >
-> >
-> 
-> <mega snip>
+T24gV2VkLCAyMDE5LTA2LTE5IGF0IDE5OjM4ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6DQo+IE9uIE1vbiwgSnVuIDE3LCAyMDE5IGF0IDExOjU5OjE2QU0gLTA3MDAsIEF0aXNoIFBh
+dHJhIHdyb3RlOg0KPiA+IEJvdGggUklTQy1WICYgQVJNNjQgYXJlIHVzaW5nIGNwdS1tYXAgZGV2
+aWNlIHRyZWUgdG8gZGVzY3JpYmUNCj4gPiB0aGVpciBjcHUgdG9wb2xvZ3kuIEl0J3MgYmV0dGVy
+IHRvIG1vdmUgdGhlIHJlbGV2YW50IGNvZGUgdG8NCj4gPiBhIGNvbW1vbiBwbGFjZSBpbnN0ZWFk
+IG9mIGR1cGxpY2F0ZSBjb2RlLg0KPiA+IA0KPiA+IFRvOiBXaWxsIERlYWNvbiA8d2lsbC5kZWFj
+b25AYXJtLmNvbT4NCj4gPiBUbzogQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJt
+LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBdGlzaCBQYXRyYSA8YXRpc2gucGF0cmFAd2RjLmNv
+bT4NCj4gPiBbVGVzdGVkIG9uIFFERjI0MDBdDQo+ID4gVGVzdGVkLWJ5OiBKZWZmcmV5IEh1Z28g
+PGpodWdvQGNvZGVhdXJvcmEub3JnPg0KPiA+IFtUZXN0ZWQgb24gSnVubyBhbmQgb3RoZXIgZW1i
+ZWRkZWQgcGxhdGZvcm1zLl0NCj4gPiBUZXN0ZWQtYnk6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhv
+bGxhQGFybS5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxh
+QGFybS5jb20+DQo+ID4gQWNrZWQtYnk6IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29t
+Pg0KPiANCj4gQWNrZWQtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRh
+dGlvbi5vcmc+DQoNCkhpIFBhdWwsDQpJIGd1ZXNzIEdyZWcgaGFzIGFja2VkIHRoZSBzZXJpZXMg
+YXNzdW1pbmcgdGhhdCBpdCB3aWxsIGdvIHRocm91Z2ggc29tZQ0Kb3RoZXIgdHJlZS4gQ2FuIHlv
+dSB0YWtlIGl0IHRocm91Z2ggUklTQy1WIHRyZWUgPw0KDQpTb3JyeSBmb3IgdGhlIGNvbmZ1c2lv
+bi4NCg0KTm90ZTogV2UgYXJlIHN0aWxsIHdhaXRpbmcgZm9yIFJNSydzIEFDSyBvbiBhcm0gcGF0
+Y2ggYmVmb3JlIGl0IGNhbiBiZQ0Kc2VudCBhcyBhIFBSLg0KDQpSZWdhcmRzLA0KQXRpc2gNCg==
