@@ -2,114 +2,156 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83E8C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EA6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CA320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:09:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NleuHgZJ"
+	by mail.kernel.org (Postfix) with ESMTP id E30B7206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561090863;
+	bh=prwIjTMabwEr3qse8OU5sFHLYf7QIq1SDJ61Unl5cu4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CWI7hrdj3TamYgOcek5sTYp5Nj+17Cl3H3J819cH1LKC6HJK+WZzEiq5dpKLTU5uq
+	 kM5AQiX2bRUUwJxRA0n5y3XZ5a762Ipg0NsQ/XpomRcvRcdb4OnKHNfSt2Ieon700s
+	 Ap2G2IkS/fiJzxElh5x+B8XfsiadCa49+B0OdJP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbfFUEJl (ORCPT
+        id S1726112AbfFUEUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 00:09:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40805 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfFUEJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 00:09:40 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so2863427pfp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 21:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=s+s/XSWVXkMdm2LhsY97bPHzncR03/yzplCNbJ4zAnU=;
-        b=NleuHgZJxbf2bxIW5QCtsY+dKkhc5T/rAVLCWaztJ1qrdcVBIHlpEDmP3xMUP8eKh8
-         73toW62S4i2QSAS9AMrp+Cqj0ue16FPdKbh2JTsCmwKgYThnNOOFpBWR6LH/RPhYXGV4
-         tDcCjXb7IgGi84/+G+GMw6dpHN8vCNKrh0zkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s+s/XSWVXkMdm2LhsY97bPHzncR03/yzplCNbJ4zAnU=;
-        b=CsrSDGLAaduAVKC3WDllvvQhD5ru+zO8tBSj8ccdmHbTxTQmSOCetihL5+VKSXD6zL
-         xXMXisvpVwgPcHochneRkuJ/VV4QdadWgAbTzQRmEVIaWcIB4UVteoh8xMUMMwb7BD3A
-         UtBtLVDZVTITl/isowh52GsYyEHGwrkjBNxbkZhIgtIdh6QX+D4hLf5SWUQhCaDMmu8T
-         0Wtwhg+o0wz1heaPB1dcC8Y81mkpJ4Je+lD9dWO9jcSkIaIKtWVkadYvyHnP+8VKQuyz
-         wtOlaRpSHBhW+WpdTBXShkxoXF9sDUGsXvoNoCrVkDat4NwZs5A+07m2CV4R9xobfyUN
-         fktw==
-X-Gm-Message-State: APjAAAU8XypjFmWewzIO5FVg3RHpSmJIW12oacbrXkbhF/WZExBtnFzD
-        JBUqdWUzJgoFsax6CzdMXdzB/A==
-X-Google-Smtp-Source: APXvYqwmQXLi5Pk3pGhuyO8qiBBiKgdkX+g+szMSnhLqCYqNltxbT3SHmRFeIwEaMyQpArp0jmo8vQ==
-X-Received: by 2002:a63:c60b:: with SMTP id w11mr5685117pgg.356.1561090179984;
-        Thu, 20 Jun 2019 21:09:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 23sm958498pfn.176.2019.06.20.21.09.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 21:09:39 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 21:09:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH V33 27/30] lockdown: Print current->comm in restriction
- messages
-Message-ID: <201906202109.F7662EB8@keescook>
-References: <20190621011941.186255-1-matthewgarrett@google.com>
- <20190621011941.186255-28-matthewgarrett@google.com>
+        Fri, 21 Jun 2019 00:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfFUEUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 00:20:36 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E63D2089E;
+        Fri, 21 Jun 2019 04:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561090835;
+        bh=prwIjTMabwEr3qse8OU5sFHLYf7QIq1SDJ61Unl5cu4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PUjtvdYnjRZ85n2+boZZ9k0pcAQpl5gbLH4chdr3VOnzC2ymZ6RTrHnXvI+Gfwi82
+         R3Wq3QS2QMN3ZaDeflueVH8b6m9BqBc9+mtgKpMq5r+KQilk3j5UqxZysFK9h2NWpM
+         C7IjdiJujJReLSrX1ny21nxoQJCsa4+GoIF4tzuc=
+Received: by mail-wr1-f46.google.com with SMTP id k11so5127991wrl.1;
+        Thu, 20 Jun 2019 21:20:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAWcNySek6iTkyGD8yWIfBG7CSVzkBNaHpPWHsdiuqx6A3yk4N29
+        88EHVlWMt5P6BMjkMUUAQZHbFrY9d48k0kIMMJ4=
+X-Google-Smtp-Source: APXvYqyem6YyhVDjXx8VqeVnlAnT6mMzfo+2vIgBSpxxGHHIA0jqkRTx1R2WW6U4OzYACci7P3HmkWXjKBhpGjfJgS8=
+X-Received: by 2002:adf:afd5:: with SMTP id y21mr92511949wrd.12.1561090834068;
+ Thu, 20 Jun 2019 21:20:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621011941.186255-28-matthewgarrett@google.com>
+References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
+In-Reply-To: <20190429035515.73611-3-drinkcat@chromium.org>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 20 Jun 2019 21:20:22 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
+Message-ID: <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 06:19:38PM -0700, Matthew Garrett wrote:
-> Print the content of current->comm in messages generated by lockdown to
-> indicate a restriction that was hit.  This makes it a bit easier to find
-> out what caused the message.
-> 
-> The message now patterned something like:
-> 
->         Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
+Hi, Nicolas
+
+On Sun, Apr 28, 2019 at 8:55 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> During suspend/resume, mtk_eint_mask may be called while
+> wake_mask is active. For example, this happens if a wake-source
+> with an active interrupt handler wakes the system:
+> irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> that it can be handled later on in the resume flow.
+>
+> However, this may happen before mtk_eint_do_resume is called:
+> in this case, wake_mask is loaded, and cur_mask is restored
+> from an older copy, re-enabling the interrupt, and causing
+> an interrupt storm (especially for level interrupts).
+>
+> Instead, we just record mask/unmask changes in cur_mask. This
+> also avoids the need to read the current mask in eint_do_suspend,
+> and we can remove mtk_eint_chip_read_mask function.
+>
+
+The change is worth rewording the commit message you added above as an instance
+and adding Fixes tag as a fixup to mean you're fixing the existing
+problem in the driver.
+
+And then Acked-by: Sean Wang <sean.wang@kernel.org>
+
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
->  security/lockdown/lockdown.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 14edc475d75c..408f0048f8a2 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -80,8 +80,8 @@ early_param("lockdown", lockdown_param);
->  static int lockdown_is_locked_down(enum lockdown_reason what)
->  {	
->  	if ((kernel_locked_down >= what) && lockdown_reasons[what])
-> -		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
-> -			  lockdown_reasons[what]);
-> +		pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-> +			  current->comm, lockdown_reasons[what]);
->  	return (kernel_locked_down >= what);
+>  drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 737385e86beb807..7e526bcf5e0b55c 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
+>         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+>                                                 eint->regs->mask_set);
+>
+> +       eint->cur_mask[d->hwirq >> 5] &= ~mask;
+> +
+>         writel(mask, reg);
 >  }
-
-Maybe needs ratelimiting?
-
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-
--- 
-Kees Cook
+>
+> @@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
+>         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+>                                                 eint->regs->mask_clr);
+>
+> +       eint->cur_mask[d->hwirq >> 5] |= mask;
+> +
+>         writel(mask, reg);
+>
+>         if (eint->dual_edge[d->hwirq])
+> @@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+>         }
+>  }
+>
+> -static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
+> -                                   void __iomem *base, u32 *buf)
+> -{
+> -       int port;
+> -       void __iomem *reg;
+> -
+> -       for (port = 0; port < eint->hw->ports; port++) {
+> -               reg = base + eint->regs->mask + (port << 2);
+> -               buf[port] = ~readl_relaxed(reg);
+> -               /* Mask is 0 when irq is enabled, and 1 when disabled. */
+> -       }
+> -}
+> -
+>  static int mtk_eint_irq_request_resources(struct irq_data *d)
+>  {
+>         struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
+> @@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+>
+>  int mtk_eint_do_suspend(struct mtk_eint *eint)
+>  {
+> -       mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
+>         mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+>
+>         return 0;
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
