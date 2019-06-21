@@ -2,106 +2,176 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71239C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0580FC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4305520673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC71320673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hHLAXTyT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hXCUBy0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfFUJDY (ORCPT
+        id S1726452AbfFUJEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:03:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38242 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfFUJDX (ORCPT
+        Fri, 21 Jun 2019 05:04:22 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41475 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFUJEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:03:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z/vrGL+hnN6XNQ43GJSsHqsTwEI017tyqqk0CCrmcjg=; b=hHLAXTyTKk+f6P3ai3jU2yJL1
-        TjZE8LsMp5pT6hxylcX6uRTXh+9EymIy0MYL8eRgCfX+Ha/2LQ8twWzpM3ou71le940xrTlTrYWTR
-        Mnmx+WNjeCWcvSB6bHVzU8z32HthcD8oE8qhYxNlZKfYcBJ+rzbJ0KZHKjTMQMQPVxHMvlyHh2ghi
-        Up+f8+gN4BbFtRCD14azsoFPdCewlgayeuMXFDSEreQJji2u9Yk7noToMCF4qfy9JrVteeOtTyvPb
-        IEL8dIduaoRniyVBmi3NzCS6mBEVG/x7ZyZsEMfqf8tzPmrdQd/AZhzbmRH0LXEr3PmIGMDe+bJAb
-        5/2tv8FDg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58946)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1heFS0-00049H-3a; Fri, 21 Jun 2019 10:03:16 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1heFRy-00038K-2T; Fri, 21 Jun 2019 10:03:14 +0100
-Date:   Fri, 21 Jun 2019 10:03:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH v3 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190621090313.xuaqvmyxxrzxh5aw@shell.armlinux.org.uk>
-References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
- <1561106090-8465-1-git-send-email-pthombar@cadence.com>
+        Fri, 21 Jun 2019 05:04:21 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so9004325eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 02:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=U2b/yBDUn2uxWh84cUIQKg+GqhT7DNRX+9D0eV4BYx0=;
+        b=hXCUBy0vJZx/iaLqA18XGnONO5xU0CBUctQ9kVsR+JlFuzMPmjyatmNwL7y3Je4J3B
+         NZd7KNNLq0qD0brieEut21alVmiz2awz3K38YaDoe6x/nbnhz/mkhTOAn9nogfGlixvA
+         DAvioi8fkMHMxT1Eh9fLjg3ytJibj/3a/mwK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=U2b/yBDUn2uxWh84cUIQKg+GqhT7DNRX+9D0eV4BYx0=;
+        b=eKVMZVb5A5KzjLgMk0n/83rra6oN/2ZHcPuurdw0lqNchD5sI+FvFXnUzliwnUHXCI
+         XFb6TUgTFbSpvoLr/u2Rfj3rB09JvAFtZCYLlp1hTuyvOsYOdhXtnf5mRCITDkrD0N2O
+         KwsyX7FRAlSsM8p0XXzkgYoQnAGPKLTLgVvjFENh01qcwyTysmdvidqtbOpB314HheCc
+         PUU3uZ0pFlXLWv9+8anJLoGbyOdnh6TBYEtPImAO5f4U8JH8afpvOlWq298PW8jJH6hh
+         6uoxUOCs+r2qg2bbYx4UkEVaUHVlLVZqGY5uDGZj4RDo3XR7yL9eZUs+7/fc2RWAssGr
+         T29Q==
+X-Gm-Message-State: APjAAAXDhIoFcSRVvkN6yPSpveWzpOWuuU/iE+Bsrge4KioeX3kC9V6R
+        Ylno3iIVxcT63bI3UXjaxApbnQ==
+X-Google-Smtp-Source: APXvYqzqBoWvjvXM4lrIaSCxZfX9YLrVK1oWpzeuauWLMJPPlPE+IUOZ9YVWpg82mA+3sRhl0+KeQA==
+X-Received: by 2002:a17:906:6c19:: with SMTP id j25mr45383796ejr.21.1561107859109;
+        Fri, 21 Jun 2019 02:04:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id j30sm654087edb.8.2019.06.21.02.04.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 02:04:18 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 11:04:11 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
+Message-ID: <20190621090411.GY12905@phenom.ffwll.local>
+Mail-Followup-To: Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+References: <20190603152331.23160-1-paul@crapouillou.net>
+ <20190603152331.23160-2-paul@crapouillou.net>
+ <20190619122622.GB29084@ravnborg.org>
+ <1561040159.1978.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1561106090-8465-1-git-send-email-pthombar@cadence.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561040159.1978.0@crapouillou.net>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:34:50AM +0100, Parshuram Thombare wrote:
-> This patch add support for SGMII interface) and
-> 2.5Gbps MAC in Cadence ethernet controller driver.
+On Thu, Jun 20, 2019 at 04:15:59PM +0200, Paul Cercueil wrote:
+> 
+> 
+> Le mer. 19 juin 2019 à 14:26, Sam Ravnborg <sam@ravnborg.org> a écrit :
+> > Hi Paul.
+> > 
+> > On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
+> > >  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
+> > >  This driver is meant to replace the aging jz4740-fb driver.
+> > > 
+> > >  This driver does not make use of the simple pipe helper, for the
+> > > reason
+> > >  that it will soon be updated to support more advanced features like
+> > >  multiple planes, IPU integration for colorspace conversion and
+> > > up/down
+> > >  scaling, support for DSI displays, and TV-out and HDMI outputs.
+> > > 
+> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> > >  ---
+> > > 
+> > >  Notes:
+> > >      v2: - Remove custom handling of panel. The panel is now
+> > > discovered using
+> > >      	  the standard API.
+> > >      	- Lots of small tweaks suggested by upstream
+> > > 
+> > >      v3: - Use devm_drm_dev_init()
+> > >      	- Update compatible strings to -lcd instead of -drm
+> > >      	- Add destroy() callbacks to plane and crtc
+> > >      	- The ingenic,lcd-mode is now read from the bridge's DT node
+> > > 
+> > >      v4: Remove ingenic,lcd-mode property completely. The various
+> > > modes are now
+> > >      	deduced from the connector type, the pixel format or the bus
+> > > flags.
+> > > 
+> > >      v5: - Fix framebuffer size incorrectly calculated for 24bpp
+> > > framebuffers
+> > >      	- Use 32bpp framebuffer instead of 16bpp, as it'll work with
+> > > both
+> > >      	  16-bit and 24-bit panel
+> > >      	- Get rid of drm_format_plane_cpp() which has been dropped
+> > > upstream
+> > >      	- Avoid using drm_format_info->depth, which is deprecated.
+> > In the drm world we include the revision notes in the changelog.
+> > So I did this when I applied it to drm-misc-next.
+> > 
+> > Fixed a few trivial checkpatch warnings about indent too.
+> > There was a few too-long-lines warnings that I ignored. Fixing them
+> > would have hurt readability.
+> 
+> Thanks.
+> 
+> > I assume you will maintain this driver onwards from now.
+> > Please request drm-misc commit rights (see
+> > https://www.freedesktop.org/wiki/AccountRequests/)
+> > You will need a legacy SSH account.
+> 
+> I requested an account here:
+> https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/162
 
-Also, I'm not sure that merely using PHY_INTERFACE_MODE_SGMII with a
-speed of 2.5Gbps is really on for up-clocked SGMII.
+This 404s for me. Did you set the issue to private by any chance? Or
+deleted already again?
+-Daniel
 
-Cisco SGMII is defined as running at a fixed 1.25Gbps with the control
-word indicating whether the negotiated speed is 1G, 100M or 10M, and
-the MAC and PHY expect symbols to be replicated the appropriate number
-of times for the slower speeds.  Cisco SGMII as defined does not
-support 2.5Gbps.
-
-The same is true of 802.3z - this defines 1000BASE-X, but we also have
-an up-clocked version which we use a separate phy interface mode for
-when supporting 2.5Gbps, since it requires both ends to be configured
-differently.  This appears to be the case with your 2.5Gbps up-clocked
-SGMII - the MAC needs to be told to up-clock the link.
-
-So, I'm wondering whether we need PHY_INTERFACE_MODE_2500SGMII, which
-means that if the PHY automatically selects between 1G and 2.5G SGMII,
-then it needs to automatically change its interface mode reported back
-to the MAC - that is, providing it really _does_ use an up-clocked
-2.5Gbps SGMII and doesn't actually switch to 2.5Gbps BASE-X instead.
-
-Other PHYs (the 10G Marvell 88x3310) dynamically switch their MAC
-facing interface between 10GBASE-R, 2500BASE-X and SGMII depending on
-the negotiated link speed, so there is precedent for this already.
-
-Finally, note that it is possible for a mismatched SGMII / BASE-X
-link to come up and appear to work, but either end is going to be
-interpreting the 16-bit control word differently, which is obviously
-incorrect.
-
-Please ensure that details such as "SGMII" vs "BASE-X" are as correct
-as possible.
+> 
+> > And you should familiarize yourself with the maintainer-tools:
+> > https://drm.pages.freedesktop.org/maintainer-tools/index.html
+> > 
+> > For my use I use "dim update-branches; dim apply; dim push
+> > So only a small subset i needed for simple use.
+> > 
+> > 	Sam
+> 
+> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
