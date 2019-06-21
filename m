@@ -2,213 +2,176 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13DAC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39562084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D04E2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bvnsdxk0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQpDOqAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfFUDqP (ORCPT
+        id S1726052AbfFUDuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:46:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42937 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfFUDqO (ORCPT
+        Thu, 20 Jun 2019 23:50:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46031 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfFUDuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:46:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so2831754pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:46:14 -0700 (PDT)
+        Thu, 20 Jun 2019 23:50:12 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so4619560lje.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UcRKm0yi/1LOFFoCKIK/Brfe9Z+qKqObyoVYwCPqe5A=;
-        b=Bvnsdxk047qMCYZomJxCMLbIam0txekt2/bzcLlDt3dkDaii0on+5apAz3gIOCEMqH
-         81cQ0ZSMvmDZgtWfEUqWzNpWd1x9cEb4y5gXnkcs5iqWbMELw72NEciomEFq6bsWnYwX
-         aeIwqqjyes8QQfZe1VlD0+WPmw0Z/wIaKzrms=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h17P65wYqaQ1YLx9/xtvrVHKv+agP862+Ce4hJtzuQU=;
+        b=JQpDOqAKc0XWb3yDJHrQ0DnC/nK6fOYatWsinidQr7TYaGJoXXIgtga2p0SFn3r6Lt
+         XUuR4kQwrnjBSvBhAImhpeSbHFqO9yOfb/wCE7cMRRNz9/CYU8jfECXkJqCwKZg58o7A
+         9EcA82sM33Imh8nQ16CCKZ8+1M9wPvgi4O1k6GO3TS3vmUrgOlmim1K5iJ7Am+Dly81/
+         iUMLXBao4M9RvcPiJgpmnVbH715NXCewTudYztdZlP76I/ZLX5PUnuxDV9ERWVBDHfDV
+         zepsWR5vGPzLD9ZnP0BxgA3EK3mu7gbSyJoKBy/k2iSkE4MjYIQFKGJ6xDL+LhXoytF1
+         hxzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UcRKm0yi/1LOFFoCKIK/Brfe9Z+qKqObyoVYwCPqe5A=;
-        b=DGFkCt4812+qSgHQMpo1Pqu35KjHp9btKXc8vKny7cg+Axs8p4h+UX4CT2I+Y1LPfg
-         FlSWZx9kKR5Iu4j1zwQ1xYVctiKZ67ACKQO4hNYn0xPVSl22oA+kfFdMiK9jTtUZ4vhb
-         5XL+mx1SpTxK6+F71J+zF8x5bgasTKcRXfie0cnZxcT/OuNKa4z+0zNjGyX3X6IIB2MP
-         LXA5zzVv7QVJ4azml9UP1t5psuNe1nKSRJYX64q/yOaD7p5y+pPHCY6aTLjuZW5SXczL
-         4ry5GUhUikIiXpu7qy+dgVDTz0hPAm/xJdb22pwkvp4tCu8YlzCGWdH4SjGFUaadk2W8
-         Y5wQ==
-X-Gm-Message-State: APjAAAXHKMo/UkIEHC37z3dSz0HJP6Y+aHaFdGngyJrL2mgnhhFaDDdP
-        uqSRDhdRZTQXgmdaYPYlnDtACxj5QN8=
-X-Google-Smtp-Source: APXvYqxMjepKCHZFI7Rja6rx/OhPhF71GP3zxOtZth3VkELV2td1AR57r2nqWQZ8Y/4q8yTsH/RngQ==
-X-Received: by 2002:a63:f648:: with SMTP id u8mr15989938pgj.132.1561088773619;
-        Thu, 20 Jun 2019 20:46:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k197sm966289pgc.22.2019.06.20.20.46.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 20:46:12 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 20:46:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH V33 04/30] Enforce module signatures if the kernel is
- locked down
-Message-ID: <201906202045.793323FC@keescook>
-References: <20190621011941.186255-1-matthewgarrett@google.com>
- <20190621011941.186255-5-matthewgarrett@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h17P65wYqaQ1YLx9/xtvrVHKv+agP862+Ce4hJtzuQU=;
+        b=rXsVIqMcQtQ7qBdsPxBhdRx++PAGwyjSOhavw6mKblPhC8/ZtoM3eaQHDMrpk5p17k
+         RaZ3GACYpROd6dNIy2ViCpwu9m+XL+WrySZzbsK/RbDCXFR7Hq8hRZyk2P7LpaqyaXQh
+         k63B98S5yAqYXRVqKPyLCOmuw4Wv9JhGsj4KJr1VaKixcihCQVA4MiBM3vRhUsc4bbff
+         gs5tJjKGj2JBidYNkjVcKyPVsEFqmp2mr437X+gfHh9yv6LfbM42QAmCXAoibe1rbNnu
+         aRsRHPQvJN/tqXvBrAbwbsWiCH9AXAVbKn23fylSi8Cn/4hzEufrRwBlOnRNxISHwfFV
+         sSSg==
+X-Gm-Message-State: APjAAAUCzZJxQ32pGMvf4uREkDM7Bv1NY6v5ViCH14WBa/LAVlwAOCfw
+        egudUXPR+Tf3EaGEPes43rWj6FfpBRpmDZJoWOQhVKlMhUQ=
+X-Google-Smtp-Source: APXvYqzipemEf5jIf3vP9EBRV/mWVluJxH2EUb6MW1+67X5oexY8lxJlqe8aHwUZ3CHgMAE5mFd0HpRmM+4K7O3Z0FE=
+X-Received: by 2002:a2e:8495:: with SMTP id b21mr7978898ljh.149.1561089010213;
+ Thu, 20 Jun 2019 20:50:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621011941.186255-5-matthewgarrett@google.com>
+References: <20190620174328.608036501@linuxfoundation.org>
+In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 21 Jun 2019 09:19:58 +0530
+Message-ID: <CA+G9fYu0wezAm+8-YJxUyGo54b8Wv4Ky8sj+aTrGFhbTkBdf3A@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/45] 4.14.129-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 06:19:15PM -0700, Matthew Garrett wrote:
-> From: David Howells <dhowells@redhat.com>
-> 
-> If the kernel is locked down, require that all modules have valid
-> signatures that we can verify.
-> 
-> I have adjusted the errors generated:
-> 
->  (1) If there's no signature (ENODATA) or we can't check it (ENOPKG,
->      ENOKEY), then:
-> 
->      (a) If signatures are enforced then EKEYREJECTED is returned.
-> 
->      (b) If there's no signature or we can't check it, but the kernel is
-> 	 locked down then EPERM is returned (this is then consistent with
-> 	 other lockdown cases).
-> 
->  (2) If the signature is unparseable (EBADMSG, EINVAL), the signature fails
->      the check (EKEYREJECTED) or a system error occurs (eg. ENOMEM), we
->      return the error we got.
-> 
-> Note that the X.509 code doesn't check for key expiry as the RTC might not
-> be valid or might not have been transferred to the kernel's clock yet.
-> 
->  [Modified by Matthew Garrett to remove the IMA integration. This will
->   be replaced with integration with the IMA architecture policy
->   patchset.]
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> ---
->  include/linux/security.h     |  1 +
->  kernel/module.c              | 39 +++++++++++++++++++++++++++++-------
->  security/lockdown/lockdown.c |  1 +
->  3 files changed, 34 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index a86a7739ca24..a7612b03b42a 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -82,6 +82,7 @@ enum lsm_event {
->   */
->  enum lockdown_reason {
->  	LOCKDOWN_NONE,
-> +	LOCKDOWN_MODULE_SIGNATURE,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 0b9aa8ab89f0..780e9605ff88 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2763,8 +2763,9 @@ static inline void kmemleak_load_module(const struct module *mod,
->  #ifdef CONFIG_MODULE_SIG
->  static int module_sig_check(struct load_info *info, int flags)
->  {
-> -	int err = -ENOKEY;
-> +	int err = -ENODATA;
->  	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
-> +	const char *reason;
->  	const void *mod = info->hdr;
->  
->  	/*
-> @@ -2779,16 +2780,40 @@ static int module_sig_check(struct load_info *info, int flags)
->  		err = mod_verify_sig(mod, info);
->  	}
->  
-> -	if (!err) {
-> +	switch (err) {
-> +	case 0:
->  		info->sig_ok = true;
->  		return 0;
-> -	}
->  
-> -	/* Not having a signature is only an error if we're strict. */
-> -	if (err == -ENOKEY && !is_module_sig_enforced())
-> -		err = 0;
-> +		/* We don't permit modules to be loaded into trusted kernels
-> +		 * without a valid signature on them, but if we're not
-> +		 * enforcing, certain errors are non-fatal.
-> +		 */
-> +	case -ENODATA:
-> +		reason = "Loading of unsigned module";
-> +		goto decide;
-> +	case -ENOPKG:
-> +		reason = "Loading of module with unsupported crypto";
-> +		goto decide;
-> +	case -ENOKEY:
-> +		reason = "Loading of module with unavailable key";
-> +	decide:
-> +		if (is_module_sig_enforced()) {
-> +			pr_notice("%s is rejected\n", reason);
-> +			return -EKEYREJECTED;
-> +		}
->  
-> -	return err;
-> +		if (security_is_locked_down(LOCKDOWN_MODULE_SIGNATURE))
-> +			return -EPERM;
+On Thu, 20 Jun 2019 at 23:39, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.129 release.
+> There are 45 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.129-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-LSM hooks should return the desired error code. Here and in all the
-other patches, I'd expect to see stuff like:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-	ret = security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
-	if (ret)
-		return ret;
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.129-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 7741fd984e5da7edc8b42719cac2db8d8f56b9a3
+git describe: v4.14.128-46-g7741fd984e5d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.128-46-g7741fd984e5d
 
 
-> +		return 0;
-> +
-> +		/* All other errors are fatal, including nomem, unparseable
-> +		 * signatures and signature check failures - even if signatures
-> +		 * aren't required.
-> +		 */
-> +	default:
-> +		return err;
-> +	}
->  }
->  #else /* !CONFIG_MODULE_SIG */
->  static int module_sig_check(struct load_info *info, int flags)
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 1ecb2eecb245..08abd7e6609b 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -18,6 +18,7 @@ static enum lockdown_reason kernel_locked_down;
->  
->  static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_NONE] = "none",
-> +	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->  };
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+No regressions (compared to build v4.14.128)
 
--- 
-Kees Cook
+No fixes (compared to build v4.14.128)
+
+
+Ran 23866 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
