@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D15C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91008C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29264208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DA7206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfFUO3X (ORCPT
+        id S1726382AbfFUOaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:29:23 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37436 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFUO3X (ORCPT
+        Fri, 21 Jun 2019 10:30:08 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43725 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfFUOaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:29:23 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d15so4548518qkl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:29:22 -0700 (PDT)
+        Fri, 21 Jun 2019 10:30:07 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w17so7064316qto.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 07:30:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CWdNZb0wE4dC/rZhIJMb29V7hyTgCCOlQoVKnFRbUj0=;
-        b=nkMnHCjfURsPXVcgUtD+UirSpuT7GDUOAQgTeRoDdGLqrVPkjzN9RVFchYIxjZGM56
-         kUrEQ2GAhysChIh7eQmt5mKWpkwHeNpwhFoNYguL4wmtSvuzKo2mSH88p5jpaLYvkSl0
-         bBjOQ4gyEbEHFzZzrdgeVpEiTxfbc6po73NeSBHsl5uKFERrbBlggQxfkOgTniaSEUtN
-         7i4vBEvfEFsne3q5drLPVf135uOdFvtARpoRlsDIaz7dCNNYd1KipEXYhXwpuNtdi6i2
-         2gchklkvoN8U9xRH1+cEcmOEuy9hJwod6I4ENB80sEmfdJsOjsZrfM687QWEhOFW+irv
-         uqKg==
-X-Gm-Message-State: APjAAAUYmAQBvRhGOnAcnwWDmB/G/aguQnbXCn4WXgvFvnUEsrr6lKn5
-        oUEBBfiS/tjn0H+mFIoD9ZLTRf9TlmHCu+GRvB4KqKJyr8Q=
-X-Google-Smtp-Source: APXvYqyzjrAMQA3W4bZICWFmeXwvEIIWgiICGlLPuf95yft8XRA2MUyiCXRRzjyQw81tt2dy1tLs7bespMYm0ShFBWs=
-X-Received: by 2002:a05:620a:12db:: with SMTP id e27mr99441567qkl.352.1561127362445;
- Fri, 21 Jun 2019 07:29:22 -0700 (PDT)
+        bh=5TbbcZvsIKaxtIS7FqGvDDvNk0JCEAo015DOsbTJhC4=;
+        b=FRCYKvhRfaK30uGMqKLkZ3twQEd8shDb/N12QPu8aBoMvVDb4IFo3qPeMfVnIWyI9E
+         gTqLHiXA8V33ximEXDHnztgUh8bq/AuabSEP4Y7MyAZugLYQkjiZCz1uiTlQVnqL6xMG
+         f1h3l4Awuz7GnoDkVWQ+2j+XtGLqnrQ3/tef5AFD/WgvwtnbQjM/Jew7ymg0PQenycEb
+         JmWP+0jA+tGxFIWdd4lxC01fCQvVuHI6WQKi6Jtf6xeyrAFSHzWSQE+W5Pxn8uCnHyav
+         S0tWbQELCcraVk9E7eQQE3oYryF/GVZG/yZs6oq5GEuu2FiIMf5KfhmSGAu5F7F1mxVQ
+         455Q==
+X-Gm-Message-State: APjAAAV8MFMRs2txHrVkITAQVCsBPDA3QKvCLW6BMXpCypb0RXTCjfBM
+        WDT3do6v251VqgLdqvJZmMXwCNNk9YCOPpRZJFg=
+X-Google-Smtp-Source: APXvYqzrCK+h6qkXj9rHJP9MuO5+nYUSnuRVG6XZM+5Digug57BvxLC4M94kkCnC75G2UbudyM/CmS2u010PjTTKBGc=
+X-Received: by 2002:a0c:91dd:: with SMTP id r29mr1041117qvr.93.1561127406817;
+ Fri, 21 Jun 2019 07:30:06 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAHmME9pyf1AmjWOFFdJFXV9-OBv-ChpKZ130733+x=BtjF62mA@mail.gmail.com>
- <20190620141159.15965-1-Jason@zx2c4.com>
-In-Reply-To: <20190620141159.15965-1-Jason@zx2c4.com>
+ <20190620141159.15965-1-Jason@zx2c4.com> <20190620141159.15965-2-Jason@zx2c4.com>
+In-Reply-To: <20190620141159.15965-2-Jason@zx2c4.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 16:29:06 +0200
-Message-ID: <CAK8P3a14=isYJFZYZ5BGGPQY0eLCA7zswHTt=F7Yd4kN-8EtrA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] timekeeping: add missing non-_ns functions for fast accessors
+Date:   Fri, 21 Jun 2019 16:29:50 +0200
+Message-ID: <CAK8P3a1_arn_4gUdwYJeuxTcYQgiakFpdci7LauRd0j+3eb3qg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] timekeeping: use proper ktime_add when adding nsecs
+ in coarse offset
 To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -57,32 +58,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Jun 20, 2019 at 4:12 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-> Previously there was no analogue to get proper ktime_t versions of the
-> fast variety of ktime invocations. This commit makes the interface
-> uniform with the other accessors.
+> While this doesn't actually amount to a real difference, since the macro
+> evaluates to the same thing, every place else operates on ktime_t using
+> these functions, so let's not break the pattern.
 >
+> Fixes: e3ff9c3678b4 ("timekeeping: Repair ktime_get_coarse*() granularity")
 > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 > Cc: Arnd Bergmann <arnd@arndb.de>
 > Cc: Thomas Gleixner <tglx@linutronix.de>
 
-Consistent is good, not sure if there is a real use for the *_fast()
-functions returning a ktime_t, but I don't mind adding them.
-
-> +.. c:function:: ktime_t ktime_get_mono_fast_ns( void )
-> +               ktime_t ktime_get_raw_fast_ns( void )
-> +               ktime_t ktime_get_boottime_fast_ns( void )
-> +               ktime_t ktime_get_real_fast_ns( void )
-> +
->  .. c:function:: u64 ktime_get_mono_fast_ns( void )
->                 u64 ktime_get_raw_fast_ns( void )
->                 u64 ktime_get_boot_fast_ns( void )
-
-Typo: you have the same function names listed twice here,
-one of them should be ktime_get_mono_fast() instead of
-ktime_get_mono_fast_ns().
-
-Also, we might want to rename ktime_get_boot_fast_ns()
-to ktime_get_boottime_fast_ns in the process. It seems there
-is only a single caller.
-
-      Arnd
+Acked-by: Arnd Bergmann <arnd@arndb.de>
