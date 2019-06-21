@@ -2,283 +2,125 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE52C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E09C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B897D206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE5D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mF442hqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfFUNiP (ORCPT
+        id S1726315AbfFUNiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:38:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50915 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfFUNiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:38:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7D3DE3097032;
-        Fri, 21 Jun 2019 13:38:08 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-60.sin2.redhat.com [10.67.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 05EE95B689;
-        Fri, 21 Jun 2019 13:37:33 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v14 3/7] libnvdimm: add dax_dev sync flag
-Date:   Fri, 21 Jun 2019 19:04:51 +0530
-Message-Id: <20190621133455.3303-4-pagupta@redhat.com>
-In-Reply-To: <20190621133455.3303-1-pagupta@redhat.com>
-References: <20190621133455.3303-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 21 Jun 2019 13:38:13 +0000 (UTC)
+        Fri, 21 Jun 2019 09:38:25 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35143 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfFUNiY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:38:24 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u124so3846747vsu.2;
+        Fri, 21 Jun 2019 06:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y3RLgKLOFIxvZMzXOwU7F5Yurn0c+NOUw+jUTBkhCgo=;
+        b=mF442hqXyWC8aR9fMe4LMrIymhJ7j/2eWnIxti4QdqJLT13eFvyCmkjK/JQY0DiqUe
+         Rq+PluQKYySpM44e6mT8Fm8qEge3slgpf2R8P8egW9Hyx/L0JR2nPtmBa7matk//sNQW
+         diWPsvfkFSQHfIHvRtYfVlPMNPrI7TOvuYKlGLalZP/wLcqU5gIoyZkN6gaJJeAwupkC
+         8ancpd/cKIYDueEMn3+rvFNdtVbyXc3MqtnyGv0wiwK6rvwrOlACLt9uxgIetlB2wdsF
+         kYVkSBrSp7gkRX0eAVJhu5jnxXWNG+cdqzM9jEDNm/UCzUyCTUvT7BlY0XV2fvJJTLY3
+         J2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y3RLgKLOFIxvZMzXOwU7F5Yurn0c+NOUw+jUTBkhCgo=;
+        b=sHgOQznNqWDy5VzJfpZkiIc34P26Z7vlgx6G5B3CfVdFupaBJ6KKoT3knEAhpwycMy
+         RCQnXpwjSyAqp/xfye0zEfpi1jv5IH7HXSI2SGguf5sE1zPz79DskOpjRmmAhsYZNn33
+         ODFY0h4DjngHgX/1GqQfETYJjcqrxwK9wsc/ay56Y89gAXltN8AiIZpUccx+bui9pgD5
+         8NI5DLWEo7Z+CLN1UYS4FksgNJnFZznlTjiS0Txs+1bI8CXgqOATN8I+d7vJjQru0HCy
+         HYEnaY4ZSdXepuC/AzrbFMf3hwuE9Kf/++rXLxEpuhjSL35/UXdNUiiGO3kWnNMZdwTr
+         nv8w==
+X-Gm-Message-State: APjAAAWnFMVgKhwboa+EqhexjtaR7XjYc5G/ap+NqRmIIRfSRg0i21SF
+        mCco8960SpkwMniulC9MiEMRlWIkLVGvLbVfsWU=
+X-Google-Smtp-Source: APXvYqwXhGSaeU4cIvOV+lL4GHqdL9eNUIi3gdmDB80kH/6pe8U/CrLJNfH7mhCD+EiR1b9dDIWgOj4eTxHfMp3XkCI=
+X-Received: by 2002:a67:f8d4:: with SMTP id c20mr11787135vsp.239.1561124302979;
+ Fri, 21 Jun 2019 06:38:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-4-git-send-email-alcooperx@gmail.com> <1561095579.32589.3.camel@mhfsdcap03>
+In-Reply-To: <1561095579.32589.3.camel@mhfsdcap03>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Fri, 21 Jun 2019 09:39:08 -0400
+Message-ID: <CAOGqxeWUHbo51k-BpBJ0NT=s1hhJW5TOQ_js2QyqHV=mGbYUEw@mail.gmail.com>
+Subject: Re: [PATCH 3/6] usb: bdc: driver may fail to get USB PHY
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds 'DAXDEV_SYNC' flag which is set
-for nd_region doing synchronous flush. This later
-is used to disable MAP_SYNC functionality for
-ext4 & xfs filesystem for devices don't support
-synchronous flush.
+It's been very useful to have the DEFER debug message so I'd like to
+leave in the check for DEFER. I should not be skipping the clock
+disable, so I'll "goto clk_cleanup" for both cases.
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
----
- drivers/dax/bus.c            |  2 +-
- drivers/dax/super.c          | 19 ++++++++++++++++++-
- drivers/md/dm.c              |  3 ++-
- drivers/nvdimm/pmem.c        |  5 ++++-
- drivers/nvdimm/region_devs.c |  7 +++++++
- drivers/s390/block/dcssblk.c |  2 +-
- include/linux/dax.h          | 24 ++++++++++++++++++++++--
- include/linux/libnvdimm.h    |  1 +
- 8 files changed, 56 insertions(+), 7 deletions(-)
+Thanks
+Al
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 2109cfe80219..5f184e751c82 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -388,7 +388,7 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
- 	 * No 'host' or dax_operations since there is no access to this
- 	 * device outside of mmap of the resulting character device.
- 	 */
--	dax_dev = alloc_dax(dev_dax, NULL, NULL);
-+	dax_dev = alloc_dax(dev_dax, NULL, NULL, DAXDEV_F_SYNC);
- 	if (!dax_dev)
- 		goto err;
- 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 4e5ae7e8b557..8ab12068eea3 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -195,6 +195,8 @@ enum dax_device_flags {
- 	DAXDEV_ALIVE,
- 	/* gate whether dax_flush() calls the low level flush routine */
- 	DAXDEV_WRITE_CACHE,
-+	/* flag to check if device supports synchronous flush */
-+	DAXDEV_SYNC,
- };
- 
- /**
-@@ -372,6 +374,18 @@ bool dax_write_cache_enabled(struct dax_device *dax_dev)
- }
- EXPORT_SYMBOL_GPL(dax_write_cache_enabled);
- 
-+bool __dax_synchronous(struct dax_device *dax_dev)
-+{
-+	return test_bit(DAXDEV_SYNC, &dax_dev->flags);
-+}
-+EXPORT_SYMBOL_GPL(__dax_synchronous);
-+
-+void __set_dax_synchronous(struct dax_device *dax_dev)
-+{
-+	set_bit(DAXDEV_SYNC, &dax_dev->flags);
-+}
-+EXPORT_SYMBOL_GPL(__set_dax_synchronous);
-+
- bool dax_alive(struct dax_device *dax_dev)
- {
- 	lockdep_assert_held(&dax_srcu);
-@@ -526,7 +540,7 @@ static void dax_add_host(struct dax_device *dax_dev, const char *host)
- }
- 
- struct dax_device *alloc_dax(void *private, const char *__host,
--		const struct dax_operations *ops)
-+		const struct dax_operations *ops, unsigned long flags)
- {
- 	struct dax_device *dax_dev;
- 	const char *host;
-@@ -549,6 +563,9 @@ struct dax_device *alloc_dax(void *private, const char *__host,
- 	dax_add_host(dax_dev, host);
- 	dax_dev->ops = ops;
- 	dax_dev->private = private;
-+	if (flags & DAXDEV_F_SYNC)
-+		set_dax_synchronous(dax_dev);
-+
- 	return dax_dev;
- 
-  err_dev:
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 5475081dcbd6..b1caa7188209 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1991,7 +1991,8 @@ static struct mapped_device *alloc_dev(int minor)
- 	sprintf(md->disk->disk_name, "dm-%d", minor);
- 
- 	if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
--		md->dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
-+		md->dax_dev = alloc_dax(md, md->disk->disk_name,
-+					&dm_dax_ops, 0);
- 		if (!md->dax_dev)
- 			goto bad;
- 	}
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 223da63d1bd7..8be868e2a18b 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -376,6 +376,7 @@ static int pmem_attach_disk(struct device *dev,
- 	struct gendisk *disk;
- 	void *addr;
- 	int rc;
-+	unsigned long flags = 0UL;
- 
- 	pmem = devm_kzalloc(dev, sizeof(*pmem), GFP_KERNEL);
- 	if (!pmem)
-@@ -474,7 +475,9 @@ static int pmem_attach_disk(struct device *dev,
- 	nvdimm_badblocks_populate(nd_region, &pmem->bb, &bb_res);
- 	disk->bb = &pmem->bb;
- 
--	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops);
-+	if (is_nvdimm_sync(nd_region))
-+		flags = DAXDEV_F_SYNC;
-+	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops, flags);
- 	if (!dax_dev) {
- 		put_disk(disk);
- 		return -ENOMEM;
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index eca2e62af134..56f2227f192a 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -1211,6 +1211,13 @@ int nvdimm_has_cache(struct nd_region *nd_region)
- }
- EXPORT_SYMBOL_GPL(nvdimm_has_cache);
- 
-+bool is_nvdimm_sync(struct nd_region *nd_region)
-+{
-+	return is_nd_pmem(&nd_region->dev) &&
-+		!test_bit(ND_REGION_ASYNC, &nd_region->flags);
-+}
-+EXPORT_SYMBOL_GPL(is_nvdimm_sync);
-+
- struct conflict_context {
- 	struct nd_region *nd_region;
- 	resource_size_t start, size;
-diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
-index d04d4378ca50..63502ca537eb 100644
---- a/drivers/s390/block/dcssblk.c
-+++ b/drivers/s390/block/dcssblk.c
-@@ -679,7 +679,7 @@ dcssblk_add_store(struct device *dev, struct device_attribute *attr, const char
- 		goto put_dev;
- 
- 	dev_info->dax_dev = alloc_dax(dev_info, dev_info->gd->disk_name,
--			&dcssblk_dax_ops);
-+			&dcssblk_dax_ops, DAXDEV_F_SYNC);
- 	if (!dev_info->dax_dev) {
- 		rc = -ENOMEM;
- 		goto put_dev;
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index becaea5f4488..8b535bc4526f 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -7,6 +7,9 @@
- #include <linux/radix-tree.h>
- #include <asm/pgtable.h>
- 
-+/* Flag for synchronous flush */
-+#define DAXDEV_F_SYNC (1UL << 0)
-+
- typedef unsigned long dax_entry_t;
- 
- struct iomap_ops;
-@@ -38,18 +41,28 @@ extern struct attribute_group dax_attribute_group;
- #if IS_ENABLED(CONFIG_DAX)
- struct dax_device *dax_get_by_host(const char *host);
- struct dax_device *alloc_dax(void *private, const char *host,
--		const struct dax_operations *ops);
-+		const struct dax_operations *ops, unsigned long flags);
- void put_dax(struct dax_device *dax_dev);
- void kill_dax(struct dax_device *dax_dev);
- void dax_write_cache(struct dax_device *dax_dev, bool wc);
- bool dax_write_cache_enabled(struct dax_device *dax_dev);
-+bool __dax_synchronous(struct dax_device *dax_dev);
-+static inline bool dax_synchronous(struct dax_device *dax_dev)
-+{
-+	return  __dax_synchronous(dax_dev);
-+}
-+void __set_dax_synchronous(struct dax_device *dax_dev);
-+static inline void set_dax_synchronous(struct dax_device *dax_dev)
-+{
-+	__set_dax_synchronous(dax_dev);
-+}
- #else
- static inline struct dax_device *dax_get_by_host(const char *host)
- {
- 	return NULL;
- }
- static inline struct dax_device *alloc_dax(void *private, const char *host,
--		const struct dax_operations *ops)
-+		const struct dax_operations *ops, unsigned long flags)
- {
- 	/*
- 	 * Callers should check IS_ENABLED(CONFIG_DAX) to know if this
-@@ -70,6 +83,13 @@ static inline bool dax_write_cache_enabled(struct dax_device *dax_dev)
- {
- 	return false;
- }
-+static inline bool dax_synchronous(struct dax_device *dax_dev)
-+{
-+	return true;
-+}
-+static inline void set_dax_synchronous(struct dax_device *dax_dev)
-+{
-+}
- #endif
- 
- struct writeback_control;
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index e13100f424c8..7a64b3ddb408 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -263,6 +263,7 @@ int generic_nvdimm_flush(struct nd_region *nd_region);
- int nvdimm_has_flush(struct nd_region *nd_region);
- int nvdimm_has_cache(struct nd_region *nd_region);
- int nvdimm_in_overwrite(struct nvdimm *nvdimm);
-+bool is_nvdimm_sync(struct nd_region *nd_region);
- 
- static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 		unsigned int buf_len, int *cmd_rc)
--- 
-2.20.1
-
+On Fri, Jun 21, 2019 at 1:39 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> On Thu, 2019-06-20 at 17:09 -0400, Al Cooper wrote:
+> > Initialization order is important for the USB PHY and the PHY clients.
+> > The init order is based on the build order of the drivers in the
+> > makefiles and the PHY drivers are built early to help with
+> > dependencies, but the new SCMI based clock subsystem has the side
+> > effect of making some additional drivers DEFER until the clock
+> > is ready. This is causing the USB PHY driver to defer which is causing
+> > some PHY clients to fail when they try to get the PHY. The fix is to have
+> > the client driver return DEFER when it's "get phy" routine returns DEFER.
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > ---
+> >  drivers/usb/gadget/udc/bdc/bdc_core.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > index 11a43de6c1c6..c794890d785b 100644
+> > --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > @@ -543,9 +543,13 @@ static int bdc_probe(struct platform_device *pdev)
+> >                       dev, dev->of_node, phy_num);
+> >               if (IS_ERR(bdc->phys[phy_num])) {
+> >                       ret = PTR_ERR(bdc->phys[phy_num]);
+> > +                     if (ret == -EPROBE_DEFER) {
+> > +                             dev_dbg(bdc->dev, "DEFER, waiting for PHY\n");
+> why not disable clock here? when re-probe, will enable clock again.
+> to me, no need check -EPROBE_DEFFER.
+> > +                             return ret;
+> > +                     }
+>
+> >                       dev_err(bdc->dev,
+> >                               "BDC phy specified but not found:%d\n", ret);
+> > -                     return ret;
+> > +                     goto clk_cleanup;
+> >               }
+> >       }
+> >
+>
+>
