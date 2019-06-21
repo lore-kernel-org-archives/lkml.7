@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DEDC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7815C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85662208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0A321655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561133967;
-	bh=rU/NZFAWgkzWwR8g9f7KBhzgXduaDUDa3zFBVfr8FQ4=;
+	s=default; t=1561133977;
+	bh=/kwntWQW3LP0jIYi0ujmhqQBYlYdyIflNjwJ6hVtcyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWh3NlRRTflHOPu1Rl4Um62J7G3i3SUAA9zn4BaDz/NVbI3oePzLblXGqXHcpIuMK
-	 /4SGbec6SLE4OzZKeNzXDnD/H7DVHTU7IH+9bX9FnsnbJN16PsEqB28a9+SgL9xe8T
-	 A2G+O9uYhTjUAI/YDf2qE9a82h4brjt4IaV6lt64=
+	b=bo9wEM8H07DRsdQx/1yHPlLvNLZyvgdF436Vjz28TsxbovN9PelgTCUC5jWAqBWqF
+	 aVENSu3gkPhjzUz0c1m2vQ6M05UTk9VKtSOfxs1cq+D2RlgiKEB+jDF57bsCA98JyH
+	 zRL5pxFORHFXBB0Tx/EobfFJ8sTGq20kvc/XiiHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfFUQT0 (ORCPT
+        id S1726043AbfFUQTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:19:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 12:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfFUQT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:19:26 -0400
+        id S1726052AbfFUQTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:19:35 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7652089E;
-        Fri, 21 Jun 2019 16:19:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F63208CA;
+        Fri, 21 Jun 2019 16:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561133964;
-        bh=rU/NZFAWgkzWwR8g9f7KBhzgXduaDUDa3zFBVfr8FQ4=;
+        s=default; t=1561133974;
+        bh=/kwntWQW3LP0jIYi0ujmhqQBYlYdyIflNjwJ6hVtcyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWxiM6RRXusE628wAogWeRENIgphfxUXDqxMWEQlt7QxAaCxGVgsC4UqTiYWH9N3C
-         OU9i+1k2Y/asVHVOajrFtXnBiKuN+tFTIqq+YaXMDzWItdzbczH9xHf4+HrZBOAolR
-         daEf49/uq2NVsav3jg+JYVqYYPP5LBE3MaYuTq14=
+        b=DeVZG3oHwcAJHg/sjbWMBLJuxrr2U8BBKSwHdXkkxtf531RZUR33wKuWqtOg0AmDZ
+         EgkIklMGEDcSGoS4PmsCKhkilU6HppGV9EpIurkBdhEv2JLsm9rFdd+NPJg/HdZWk8
+         srhKN2eMvErjIa3kjyKkG7oDbkrEHCC9YFY9Movo=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH 08/11] tracing: of: Add setup tracing by devicetree support
-Date:   Sat, 22 Jun 2019 01:19:18 +0900
-Message-Id: <156113395876.28344.16763791604213205587.stgit@devnote2>
+Subject: [RFC PATCH 09/11] tracing: of: Add trace event settings
+Date:   Sat, 22 Jun 2019 01:19:30 +0900
+Message-Id: <156113396992.28344.5633907708861645713.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
 References: <156113387975.28344.16009584175308192243.stgit@devnote2>
@@ -63,285 +63,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup tracing options by devicetree instead of kernel parameters.
-
-Since the kernel parameter is limited length, sometimes there is
-no space to setup the tracing options. This will read the tracing
-options from devicetree "ftrace" node and setup tracers at boot.
-
-Note that this is not replacing the kernel parameters, because
-this devicetree based setting is later than that. If you want to
-trace earlier boot events, you still need kernel parameters.
+Add per-event settings, which includes filter and actions.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/Kconfig    |   10 +++
- kernel/trace/Makefile   |    1 
- kernel/trace/trace.c    |   38 +++++++++----
- kernel/trace/trace_of.c |  137 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 173 insertions(+), 13 deletions(-)
- create mode 100644 kernel/trace/trace_of.c
+ kernel/trace/trace_events_trigger.c |    2 -
+ kernel/trace/trace_of.c             |   81 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 07d22c61b634..025198bb2764 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -796,6 +796,16 @@ config GCOV_PROFILE_FTRACE
- 	  Note that on a kernel compiled with this config, ftrace will
- 	  run significantly slower.
- 
-+config OF_TRACING
-+	bool "Boot Trace Programming by Devicetree"
-+	depends on OF && TRACING
-+	select OF_EARLY_FLATTREE
-+	default y
-+	help
-+	  Enable developer to setup ftrace subsystem via devicetree
-+	  at boot time for debugging (tracing) driver initialization
-+	  and boot process.
-+
- endif # FTRACE
- 
- endif # TRACING_SUPPORT
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index c2b2148bb1d2..6f68271f5c56 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -82,6 +82,7 @@ endif
- obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
- obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
- obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
-+obj-$(CONFIG_OF_TRACING) += trace_of.o
- 
- obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6530f6004643..7d481260bdd6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -158,7 +158,7 @@ union trace_eval_map_item {
- static union trace_eval_map_item *trace_eval_maps;
- #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
- 
--static int tracing_set_tracer(struct trace_array *tr, const char *buf);
-+int tracing_set_tracer(struct trace_array *tr, const char *buf);
- static void ftrace_trace_userstack(struct ring_buffer *buffer,
- 				   unsigned long flags, int pc);
- 
-@@ -178,6 +178,11 @@ static int __init set_cmdline_ftrace(char *str)
- }
- __setup("ftrace=", set_cmdline_ftrace);
- 
-+void __init trace_init_dump_on_oops(int mode)
-+{
-+	ftrace_dump_on_oops = mode;
-+}
-+
- static int __init set_ftrace_dump_on_oops(char *str)
- {
- 	if (*str++ != '=' || !*str) {
-@@ -4614,7 +4619,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 	return 0;
- }
- 
--static int trace_set_options(struct trace_array *tr, char *option)
-+int trace_set_options(struct trace_array *tr, char *option)
- {
- 	char *cmp;
- 	int neg = 0;
-@@ -5505,8 +5510,8 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 2a2912cb4533..74a19c18219f 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -208,7 +208,7 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
  	return ret;
  }
  
--static ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
--					  unsigned long size, int cpu_id)
-+ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
-+				  unsigned long size, int cpu_id)
+-static int trigger_process_regex(struct trace_event_file *file, char *buff)
++int trigger_process_regex(struct trace_event_file *file, char *buff)
  {
- 	int ret = size;
- 
-@@ -5585,7 +5590,7 @@ static void add_tracer_options(struct trace_array *tr, struct tracer *t)
- 	create_trace_option_files(tr, t);
- }
- 
--static int tracing_set_tracer(struct trace_array *tr, const char *buf)
-+int tracing_set_tracer(struct trace_array *tr, const char *buf)
- {
- 	struct tracer *t;
- #ifdef CONFIG_TRACER_MAX_TRACE
-@@ -9160,16 +9165,23 @@ __init static int tracer_alloc_buffers(void)
- 	return ret;
- }
- 
-+void __init trace_init_tracepoint_printk(void)
-+{
-+	tracepoint_printk = 1;
-+
-+	tracepoint_print_iter =
-+		kmalloc(sizeof(*tracepoint_print_iter), GFP_KERNEL);
-+	if (WARN_ON(!tracepoint_print_iter))
-+		tracepoint_printk = 0;
-+	else
-+		static_key_enable(&tracepoint_printk_key.key);
-+}
-+
- void __init early_trace_init(void)
- {
--	if (tracepoint_printk) {
--		tracepoint_print_iter =
--			kmalloc(sizeof(*tracepoint_print_iter), GFP_KERNEL);
--		if (WARN_ON(!tracepoint_print_iter))
--			tracepoint_printk = 0;
--		else
--			static_key_enable(&tracepoint_printk_key.key);
--	}
-+	if (tracepoint_printk)
-+		trace_init_tracepoint_printk();
-+
- 	tracer_alloc_buffers();
- }
- 
+ 	char *command, *next = buff;
+ 	struct event_command *p;
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-new file mode 100644
-index 000000000000..5e34e2475d42
---- /dev/null
+index 5e34e2475d42..696f59234e62 100644
+--- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -0,0 +1,137 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * trace_of.c
-+ * devicetree tracing programming APIs
-+ */
-+
-+#define pr_fmt(fmt)	"trace_of: " fmt
-+
-+#include <linux/ftrace.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+
-+#include "trace.h"
-+
-+#define MAX_BUF_LEN 256
-+
-+extern int trace_set_options(struct trace_array *tr, char *option);
-+extern enum ftrace_dump_mode ftrace_dump_on_oops;
-+extern int __disable_trace_on_warning;
-+extern int tracing_set_tracer(struct trace_array *tr, const char *buf);
-+extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
-+extern void __init trace_init_tracepoint_printk(void);
-+extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
-+					  unsigned long size, int cpu_id);
-+
+@@ -22,6 +22,7 @@ extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ extern void __init trace_init_tracepoint_printk(void);
+ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 					  unsigned long size, int cpu_id);
++extern int trigger_process_regex(struct trace_event_file *file, char *buff);
+ 
+ static void __init
+ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+@@ -98,6 +99,85 @@ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
+ 	}
+ }
+ 
 +static void __init
-+trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
++trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
 +{
++	struct trace_event_file *file;
 +	struct property *prop;
-+	const char *p;
 +	char buf[MAX_BUF_LEN];
-+	u32 v = 0;
++	char *bufp;
++	const char *p;
 +	int err;
 +
-+	/* Common ftrace options */
-+	of_property_for_each_string(node, "options", prop, p) {
++	if (!of_node_name_prefix(node, "event"))
++		return;
++
++	err = of_property_read_string(node, "event", &p);
++	if (err) {
++		pr_err("Failed to find event on %s\n", of_node_full_name(node));
++		return;
++	}
++
++	err = strlcpy(buf, p, ARRAY_SIZE(buf));
++	if (err >= ARRAY_SIZE(buf)) {
++		pr_err("Event name is too long: %s\n", p);
++		return;
++	}
++	bufp = buf;
++
++	p = strsep(&bufp, ":");
++	if (!bufp) {
++		pr_err("%s has no group name\n", buf);
++		return;
++	}
++
++	mutex_lock(&event_mutex);
++	file = find_event_file(tr, buf, bufp);
++	if (!file) {
++		pr_err("Failed to find event: %s\n", buf);
++		return;
++	}
++
++	err = of_property_read_string(node, "filter", &p);
++	if (!err) {
 +		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+			pr_err("String is too long: %s\n", p);
++			pr_err("filter string is too long: %s\n", p);
++			return;
++		}
++
++		if (apply_event_filter(file, buf) < 0) {
++			pr_err("Failed to apply filter: %s\n", buf);
++			return;
++		}
++	}
++
++	of_property_for_each_string(node, "actions", prop, p) {
++		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++			pr_err("action string is too long: %s\n", p);
 +			continue;
 +		}
 +
-+		if (trace_set_options(tr, buf) < 0)
-+			pr_err("Failed to set option: %s\n", buf);
++		if (trigger_process_regex(file, buf) < 0)
++			pr_err("Failed to apply an action: %s\n", buf);
 +	}
 +
-+	err = of_property_read_string(node, "trace-clock", &p);
-+	if (!err) {
-+		if (tracing_set_clock(tr, p) < 0)
-+			pr_err("Failed to set trace clock: %s\n", p);
++	if (of_property_read_bool(node, "enable")) {
++		if (trace_event_enable_disable(file, 1, 0) < 0)
++			pr_err("Failed to enable event node: %s\n",
++				of_node_full_name(node));
 +	}
-+
-+	/* Command line boot options */
-+	if (of_find_property(node, "dump-on-oops", NULL)) {
-+		err = of_property_read_u32_index(node, "dump-on-oops", 0, &v);
-+		if (err || v == 1)
-+			ftrace_dump_on_oops = DUMP_ALL;
-+		else if (!err && v == 2)
-+			ftrace_dump_on_oops = DUMP_ORIG;
-+	}
-+
-+	if (of_find_property(node, "traceoff-on-warning", NULL))
-+		__disable_trace_on_warning = 1;
-+
-+	if (of_find_property(node, "tp-printk", NULL))
-+		trace_init_tracepoint_printk();
-+
-+	/* This accepts per-cpu buffer size in KB */
-+	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
-+	if (!err) {
-+		v <<= 10;	/* KB to Byte */
-+		if (v < PAGE_SIZE)
-+			pr_err("Buffer size is too small: %d KB\n", v >> 10);
-+		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
-+			pr_err("Failed to resize trace buffer to %d KB\n",
-+				v >> 10);
-+	}
-+
-+	if (of_find_property(node, "alloc-snapshot", NULL))
-+		if (tracing_alloc_snapshot() < 0)
-+			pr_err("Failed to allocate snapshot buffer\n");
++	mutex_unlock(&event_mutex);
 +}
 +
 +static void __init
-+trace_of_enable_events(struct trace_array *tr, struct device_node *node)
++trace_of_init_events(struct trace_array *tr, struct device_node *node)
 +{
-+	struct property *prop;
-+	char buf[MAX_BUF_LEN];
-+	const char *p;
++	struct device_node *enode;
 +
-+	of_property_for_each_string(node, "events", prop, p) {
-+		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+			pr_err("String is too long: %s\n", p);
-+			continue;
-+		}
-+
-+		if (ftrace_set_clr_event(tr, buf, 1) < 0)
-+			pr_err("Failed to enable event: %s\n", p);
-+	}
++	for_each_child_of_node(node, enode)
++		trace_of_init_one_event(tr, enode);
 +}
 +
-+static void __init
-+trace_of_enable_tracer(struct trace_array *tr, struct device_node *trace_node)
-+{
-+	const char *p;
-+
-+	if (!of_property_read_string(trace_node, "tracer", &p)) {
-+		if (tracing_set_tracer(tr, p) < 0)
-+			pr_err("Failed to set given tracer: %s\n", p);
-+
-+	}
-+}
-+
-+static int __init trace_of_init(void)
-+{
-+	struct device_node *trace_node;
-+	struct trace_array *tr;
-+
-+	trace_node = of_find_compatible_node(NULL, NULL, "linux,ftrace");
-+	if (!trace_node)
-+		return 0;
-+
-+	trace_node = of_node_get(trace_node);
-+
-+	tr = top_trace_array();
-+	if (!tr)
-+		goto end;
-+
-+	trace_of_set_ftrace_options(tr, trace_node);
-+	trace_of_enable_events(tr, trace_node);
-+	trace_of_enable_tracer(tr, trace_node);
-+
-+end:
-+	of_node_put(trace_node);
-+	return 0;
-+}
-+
-+fs_initcall(trace_of_init);
+ static void __init
+ trace_of_enable_tracer(struct trace_array *tr, struct device_node *trace_node)
+ {
+@@ -126,6 +206,7 @@ static int __init trace_of_init(void)
+ 		goto end;
+ 
+ 	trace_of_set_ftrace_options(tr, trace_node);
++	trace_of_init_events(tr, trace_node);
+ 	trace_of_enable_events(tr, trace_node);
+ 	trace_of_enable_tracer(tr, trace_node);
+ 
 
