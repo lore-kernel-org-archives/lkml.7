@@ -2,114 +2,123 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DFEC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9695C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343E72083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B055F2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="hdfVD4y3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfFUSg0 (ORCPT
+        id S1726485AbfFUSh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:36:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32036 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfFUSg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:36:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 11:36:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,401,1557212400"; 
-   d="scan'208";a="151340684"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jun 2019 11:36:25 -0700
-Date:   Fri, 21 Jun 2019 11:39:38 -0700
-From:   Jacob Pan <jacob.jun.pan@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Ashok Raj <ashok.raj@intel.com>, x86 <x86@kernel.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Juergen Gross <jgross@suse.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        jacob.jun.pan@intel.com
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-Message-ID: <20190621113938.1679f329@jacob-builder>
-In-Reply-To: <20190621103126.585ca6d3@jacob-builder>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
-        <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
-        <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
-        <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
-        <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
-        <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
-        <20190619084316.71ce5477@jacob-builder>
-        <alpine.DEB.2.21.1906211732330.5503@nanos.tec.linutronix.de>
-        <20190621103126.585ca6d3@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 21 Jun 2019 14:37:56 -0400
+Received: from mail-eopbgr780054.outbound.protection.outlook.com ([40.107.78.54]:35840
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726034AbfFUShz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:37:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PgWjE1rz16RhETQba2fgJ9jKhgKMAqa1youUV/hZvC8=;
+ b=hdfVD4y3/G198i0+Y2v7yqzuScuarb3Q6nbjsMu0+kFtK2PeKuGz97o53L5eu+17JgoX0xtw0BAvyhqJ++dJTkoyYkPXXm1e12lvs0tVHdQ6QuE6mX3UvRzu4RurfglJQWETMjEvS8PaJWKrNbQnvlXp0r+O0rBXM9xzAOJ4+GU=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5637.namprd05.prod.outlook.com (20.177.186.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Fri, 21 Jun 2019 18:37:52 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Fri, 21 Jun 2019
+ 18:37:52 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Index: AQHVKCowqQ8fumhXhUmhiclA75S5v6amBQCAgABriIA=
+Date:   Fri, 21 Jun 2019 18:37:52 +0000
+Message-ID: <D25EC873-572E-457C-AEB1-DC0C1FAF8E85@vmware.com>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+ <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
+ <20190620070120.GU3402@hirez.programming.kicks-ass.net>
+ <a0a1aa81-d46e-71db-ff7b-207bc468068d@synopsys.com>
+ <20190620212256.GC3436@hirez.programming.kicks-ass.net>
+ <20190621120923.GT3463@hirez.programming.kicks-ass.net>
+ <20190621121259.GU3463@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190621121259.GU3463@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7474e0fa-ef8a-48fa-ee33-08d6f67791c7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5637;
+x-ms-traffictypediagnostic: BYAPR05MB5637:
+x-microsoft-antispam-prvs: <BYAPR05MB56371A34F5DE21F95C0404F6D0E70@BYAPR05MB5637.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(189003)(199004)(66556008)(186003)(476003)(25786009)(446003)(71190400001)(66446008)(11346002)(486006)(26005)(6506007)(53546011)(2616005)(64756008)(14454004)(4326008)(66476007)(54906003)(36756003)(86362001)(66066001)(478600001)(256004)(316002)(71200400001)(66946007)(8936002)(8676002)(81166006)(5660300002)(7416002)(76116006)(6436002)(53936002)(33656002)(99286004)(76176011)(305945005)(229853002)(7736002)(6116002)(102836004)(6512007)(3846002)(73956011)(2906002)(68736007)(81156014)(6486002)(6246003)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5637;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jmqN/qlY+Oms0RA/6Gg7g6Njx8u4U3gHcgHG6s2n85yzEU6t8uFKkZyKYxFbKX1XMuUJgX5xm/w5tcbV5TE2V36dixlIp7d0C07wXF8Yl2RXZvFUEMiOIttq3ofrIq9YDOPyjN5ZJdUXkmzS74g4jjd2RtsHm1s299Mvyawav20rYV/34YWbCu8MLnQuxkf9wZyZYnsiM8LTR82d8JqehW+cBL+RkmnzmhrQlLt/5JN0klBZh92J5+xC2iPjCaJ7V1fyBqHrEckX2xwGQk0MURnOWcL/497yi0wKzCvoAItiUTsiKX+86tm079EKENGrOuGjhuTb0a28JFV7ljqW2l/jQserJRbAOCiQHz3w9UUJl83AmjGv7IR2SbTNagjn66f+JtRXiCpKKW5tAFp3Ephj/W4gWU9ITCerSxTzwcw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <081FCB91BD58C248919E7BE5CBB9E2A6@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7474e0fa-ef8a-48fa-ee33-08d6f67791c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 18:37:52.5124
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5637
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 10:31:26 -0700
-Jacob Pan <jacob.jun.pan@intel.com> wrote:
-
-> On Fri, 21 Jun 2019 17:33:28 +0200 (CEST)
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> > On Wed, 19 Jun 2019, Jacob Pan wrote:  
-> > > On Tue, 18 Jun 2019 01:08:06 +0200 (CEST)
-> > > Thomas Gleixner <tglx@linutronix.de> wrote:    
-> > > > 
-> > > > Unless this problem is not solved and I doubt it can be solved
-> > > > after talking to IOMMU people and studying manuals,    
-> > >
-> > > I agree. modify irte might be done with cmpxchg_double() but the
-> > > queued invalidation interface for IRTE cache flush is shared with
-> > > DMA and requires holding a spinlock for enque descriptors, QI tail
-> > > update etc.
-> > > 
-> > > Also, reserving & manipulating IRTE slot for hpet via backdoor
-> > > might not be needed if the HPET PCI BDF (found in ACPI) can be
-> > > utilized. But it might need more work to add a fake PCI device for
-> > > HPET.    
-> > 
-> > What would PCI/BDF solve?  
-> I was thinking if HPET is a PCI device then it can naturally
-> gain slots in IOMMU remapping table IRTEs via PCI MSI code. Then
-> perhaps it can use the IRQ subsystem to set affinity etc. w/o
-> directly adding additional helper functions in IRQ remapping code. I
-> have not followed all the discussions, just a thought.
-> 
-I looked at the code again, seems the per cpu HPET code already taken
-care of HPET MSI management. Why can't we use IR-HPET-MSI chip and
-domain to allocate and set affinity etc.?
-Most APIC timer has ARAT not enough per cpu HPET, so per cpu HPET is
-not used mostly.
-
-
-Jacob
+PiBPbiBKdW4gMjEsIDIwMTksIGF0IDU6MTIgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
+cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBGcmksIEp1biAyMSwgMjAxOSBhdCAwMjowOToy
+M1BNICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gDQo+PiAtLS0gL2Rldi9udWxsDQo+
+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9qdW1wX2xhYmVsX2FzbS5oDQo+PiBAQCAtMCww
+ICsxLDQ0IEBADQo+PiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCj4+
+ICsjaWZuZGVmIF9BU01fWDg2X0pVTVBfTEFCRUxfQVNNX0gNCj4+ICsjZGVmaW5lIF9BU01fWDg2
+X0pVTVBfTEFCRUxfQVNNX0gNCj4+ICsNCj4+ICsjaW5jbHVkZSA8YXNtL2FzbS5oPg0KPj4gKyNp
+bmNsdWRlIDxhc20vbm9wcy5oPg0KPj4gKw0KPj4gKyNpZmRlZiBfX0FTU0VNQkxZX18NCj4+ICsN
+Cj4+ICsubWFjcm8gU1RBVElDX0JSQU5DSF9FTlRSWSBsX3RhcmdldDpyZXEgbF95ZXM6cmVxIGtl
+eTpyZXEgYnJhbmNoOnJlcQ0KPj4gKwkucHVzaHNlY3Rpb24gX19qdW1wX3RhYmxlLCAiYXciDQo+
+PiArCS5sb25nCQlcbF90YXJnZXQgLSAuLCBcbF95ZXMgLSAuDQo+PiArI2lmZGVmIF9fWDg2XzY0
+X18NCj4+ICsJLnF1YWQJCShca2V5IC0gLikgKyBcYnJhbmNoDQo+PiArI2Vsc2UNCj4+ICsJLmxv
+bmcJCShca2V5IC0gLikgKyBcYnJhbmNoDQo+PiArI2VuZGlmDQo+PiArCS5wb3BzZWN0aW9uDQo+
+PiArLmVuZG0NCj4+ICsNCj4+ICsubWFjcm8gU1RBVElDX0JSQU5DSF9OT1AgbF95ZXM6cmVxIGtl
+eTpyZXEgYnJhbmNoOnJlcQ0KPj4gKy5Mc3RhdGljX2JyYW5jaF9ub3BfXEA6DQo+PiArLmlmbHQg
+MTI3IC0gLg0KPiANCj4gVGhhdCBzaG91bGQndmUgYmVlbjoNCj4gDQo+IC5pZiBcbF95ZXMgLSAu
+IDwgMTI3DQo+IA0KPiB0b28sIEkgaGFkIGJlZW4gcGxheWluZyB3aXRoIHZhcmlvdXMgZm9ybXMg
+dG8gc2VlIHdoZW4gaXQgY29tcGlsZXMuDQo+IEJ1dCBhcyBzb29uIGFzIGEgbGFiZWwgKGVpdGhl
+ciBcbF95ZXMgb3IgJy4nIGdldHMgdXNlZCkgaXQgYmFyZnMuDQoNCkkgdGhpbmsgdGhlIGVycm9y
+IG1ha2VzIHNlbnNlIGFzIGl0IGNyZWF0ZXMgYSDigJxjaXJjdWxhciBkZXBlbmRlbmN54oCdOg0K
+YXNzZW1ibHkgb2YgdGhlIGNvZGUgbWlnaHQgYWZmZWN0IHRoZSBsYWJlbCBhZGRyZXNzLCBhbmQg
+dGhpcyBhZGRyZXNzIGFmZmVjdA0KdGhlIGFzc2VtYmx5Lg0KDQo=
