@@ -2,129 +2,73 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2247C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86292C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A949C208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="f7xjDjeh"
+	by mail.kernel.org (Postfix) with ESMTP id 65AAC21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfFUKJE (ORCPT
+        id S1726785AbfFUKJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:09:04 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:33360 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726622AbfFUKIs (ORCPT
+        Fri, 21 Jun 2019 06:09:08 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:56132 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfFUKJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:08:48 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LA3kSs032314;
-        Fri, 21 Jun 2019 05:08:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=UKo5CllAPGADG3RdYfRA7XHfkfa9kmT6PUJVXJZbPt4=;
- b=f7xjDjehuoy+ShhADBH8cChc9jfUmwhdrKLF6A2jWig2qyU5IzYF3WGGYrhz+gVhCRoc
- LgV8NDtJDfzw6vX7kPw7gm7eznUzUMS5qSJbm0+dlOfmI2IEHsBXG+TqjZ7C5BDrHkDW
- uPwReaDlwAB5VWv0Wdo4rpQdOjLVD3S/O+ai2cjg1iyhhriQcLj4ZZGTwJ4RHLhOeuwz
- R99sZKUAcbcZjgEm+5zVV/6o3ice/Lq0frsRMXLDxMqixXrd5j2k8Ad5GjW9aI5Mhqdd
- rN56DkL+inpgOAAmseaxE6MBhKVHTQTz6kjKEeLLG73VG0DO3PO8iaez6wme72pu5mB1 ZQ== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t780cuxbs-2;
-        Fri, 21 Jun 2019 05:08:17 -0500
-Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail2.cirrus.com (Postfix) with ESMTP id 88001605DBF0;
-        Fri, 21 Jun 2019 05:08:17 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 21 Jun
- 2019 11:08:15 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 21 Jun 2019 11:08:15 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 794BF2DA;
-        Fri, 21 Jun 2019 11:08:15 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v6 7/7] i2c: core: Tidy up handling of init_irq
-Date:   Fri, 21 Jun 2019 11:08:15 +0100
-Message-ID: <20190621100815.12417-8-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
-References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
+        Fri, 21 Jun 2019 06:09:06 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23994550AbfFUKJDD0AoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
+        Fri, 21 Jun 2019 12:09:03 +0200
+Date:   Fri, 21 Jun 2019 11:09:03 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Paul Burton <paul.burton@mips.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
+In-Reply-To: <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
+Message-ID: <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org>
+References: <20190614063341.1672-1-fancer.lancer@gmail.com> <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org> <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210085
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only set init_irq during i2c_device_new and only handle client->irq on
-the probe/remove paths.
+On Fri, 21 Jun 2019, Arnd Bergmann wrote:
 
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+> >  The use of 64-bit operations to access option's packet memory, which is
+> > true SRAM, i.e. no side effects, is to improve throughput only and there's
+> > no need for atomicity here nor also any kind of barriers, except at the
+> > conclusion.  Splitting 64-bit accesses into 32-bit halves in software
+> > would not be a functional error here.
+> 
+> The other property of packet memory and similar things is that you
+> basically want memcpy()-behavior with no byteswaps. This is one
+> of the few cases in which __raw_readq() is actually the right accessor
+> in (mostly) portable code.
 
-No changes since v5.
+ Correct, but we're missing an `__raw_readq_relaxed', etc. interface and 
+having additional barriers applied on every access would hit performance 
+very badly; in fact even the barriers `*_relaxed' accessors imply would 
+best be removed in this use (which is why defza.c uses `readw_o' vs 
+`readw_u', etc. internally), but after all the struggles over the years 
+for weakly ordered internal APIs x86 people are so averse to I'm not sure 
+if I want to start another one.  We can get away with `readq_relaxed' in 
+this use though as all the systems this device can be used with are 
+little-endian as is TURBOchannel, so no byte-swapping will ever actually 
+occur.
 
-Thanks,
-Charles
-
- drivers/i2c/i2c-core-base.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 87a2ad8f41a76..b3cc581f6465b 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -314,6 +314,8 @@ static int i2c_device_probe(struct device *dev)
- 
- 	driver = to_i2c_driver(dev->driver);
- 
-+	client->irq = client->init_irq;
-+
- 	if (!client->irq && !driver->disable_i2c_core_irq_mapping) {
- 		int irq = -ENOENT;
- 
-@@ -424,7 +426,7 @@ static int i2c_device_remove(struct device *dev)
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
- 
--	client->irq = client->init_irq;
-+	client->irq = 0;
- 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
- 		pm_runtime_put(&client->adapter->dev);
- 
-@@ -741,7 +743,6 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
- 	if (!client->init_irq)
- 		client->init_irq = i2c_dev_irq_from_resources(info->resources,
- 							 info->num_resources);
--	client->irq = client->init_irq;
- 
- 	strlcpy(client->name, info->type, sizeof(client->name));
- 
--- 
-2.11.0
-
+  Maciej
