@@ -2,115 +2,110 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCDDC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972B7C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED46D2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1A32084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 04:35:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mxa9wvtP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvxKvx3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfFUEeY (ORCPT
+        id S1726192AbfFUEfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 00:34:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43233 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFUEeX (ORCPT
+        Fri, 21 Jun 2019 00:35:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34272 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfFUEfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 00:34:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so75954ios.10;
-        Thu, 20 Jun 2019 21:34:23 -0700 (PDT)
+        Fri, 21 Jun 2019 00:35:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c85so2914286pfc.1;
+        Thu, 20 Jun 2019 21:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ica3ySUaR522yE/ZMxZYijSnhD1xDLlEp+v8Cx/mej0=;
-        b=Mxa9wvtP/UVcehlG+S94/uUMn1COAyoRZ2nTdlBsJ3zad9huyWhwYg/cSWnwOFXbOz
-         lrmnwE1Ha/V1irJ03HR0I9WNPsv0kaCxzt4z8cy0KJMIgB49TKsVhNqNBUoxVLIZ/zWc
-         mVha4mE8S1zpx44V9n5k/ORXV9M4TCZjXUtYknxYbCu2JI+SGYniuPlW84Z19kN7IjUT
-         cQoHtsbVqvxzOBherxXPhGvK137Jsm/Om0hvM5zNbsl3vpkuiDvvCSDVqYnWxfeKm1xT
-         SBoOj7gPBq2khCIR1k3yR+m/yZHVdHpRmC0oOGLT1nM/t0+UWtqP4VY2Lrk1MNKwAm/e
-         7QpQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=A6hpEgoP1HI2YorrXleNsa6bGrxBTridY5fsAuWOnjU=;
+        b=CvxKvx3xNelgjCHpJ4YVwgMYvH7pIpFmcjBoqo+5hiBcck1xOmKIBU2sNZsPAHY3rn
+         ypMs2JdXApsw99Gci4FIdnWQA5BFZiUCaQZvGFpmvVij3FViQJ4Q4gSEWqDWe2aZvxxW
+         ItyN694Bucdwm3/8akBSS9gNF4s2AamaJ4q0tZwS5oBQOTwO4ofqIil/ysgTZ/6jn3lS
+         w/uzdz0DoyIqa1oIl9unuRGQje77Be28kTniBSEv+r5NO1Y2ZrC1NXIjwsP/Ga5ziTTj
+         5uOv+/27xPJSjccf83Zr6fSAx6JRvPC3mz3jAnqr4lGcr9hIVYHDfkGIreuu2jlvaORm
+         unnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ica3ySUaR522yE/ZMxZYijSnhD1xDLlEp+v8Cx/mej0=;
-        b=WHQK/toU5lubVf5UhB5peFInL4xyfo8JwNE0iGHo3zqrU9AC+sceCsKwfOiNJk8WAN
-         2u98GGRHkjIRFHq7iVrmqGcylIPuRRLqM3JzVlI74/fhbA5uSXYS+h0wFSBlJ6MmT90O
-         mA/D+8YrkKP/H4ssK/x5Gxn7Q2WU+HLr+q0Rm5aD713L+56xaUuOH45YWvnGjxUXkpX2
-         CjCxZOH2k7dmcKqnQXfjQQc1hhotuMPSgRSKX2bjjDFRFN73qoLrqv5Lp4Xv960IAOWB
-         lKQyy2pWfC0hcA0oikjurQZQtKOJKV3ZMEG3Vn+XdUFE0XtN9MYQYdULjQKmqQ216YXK
-         RQIA==
-X-Gm-Message-State: APjAAAVePo1DPVbtqHqDo/G9uLNl+cEfHkHEdy+3T55J9sIisdp4luYj
-        SfIxRfsM3F3I99vwQrxvwmFpU805p9IVM+O2hVI=
-X-Google-Smtp-Source: APXvYqypTQWp8EcBhntIVc2vxfGSjLvBmtNgQYl5tub6+s8/UsvK5TV6Kcvr1YAq20lnIcw9L9ct7MBwgyUvalDzaD0=
-X-Received: by 2002:a5e:de4d:: with SMTP id e13mr20647673ioq.272.1561091662310;
- Thu, 20 Jun 2019 21:34:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com> <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
-In-Reply-To: <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Thu, 20 Jun 2019 21:34:10 -0700
-Message-ID: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org, Lee Jones <lee.jones@linaro.org>,
-        xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A6hpEgoP1HI2YorrXleNsa6bGrxBTridY5fsAuWOnjU=;
+        b=Y5nvBLz/MwZYmbaSGJHoAfTGAdXzsFKSq1NFrFeoBPiLd7c5dkxaiEXnTKB1TvmSOL
+         O/GcvfQHKx7lNit0S4N5jpydj0ErUovwyvKgmOO8EIUPgZ2H8+PCU7LSPQ/n7O33jC+3
+         MFZTxXgwChqCZW68iYMQvDz5SMBonyG7/p/Z/p7OkYBIgr8F/Z26RqqMDGzQ7CIvAyVa
+         xxICvNGVAOEPTMVHRWw56Soex8I4HyBeCaZ+tQstj0n6TKUQ2FCeQmNFIUOtmD7x6g+P
+         273EmPX+mjfz9FuicOIASJJci7sBl5Vysg3YmXDjJtW0JJJX1JNt8HwClGlOgU5GC830
+         1EsQ==
+X-Gm-Message-State: APjAAAUuuYFvrVI1SjZPQPc5UINLL0AG7PqIKMThMBN/1fi9uiZHxrNW
+        FWb5nsS6qYIANvXL9N3J4Q3CuVNimnHtpA==
+X-Google-Smtp-Source: APXvYqxHMHyhPdKQxCrGfvw9wAOrl15TkC2ds302Ew8Wn3SFF+bYxm8yb3RoY+JJegiIJ2gtpXYTgQ==
+X-Received: by 2002:a63:5247:: with SMTP id s7mr15570937pgl.29.1561091706357;
+        Thu, 20 Jun 2019 21:35:06 -0700 (PDT)
+Received: from AHMCPU1978.einfochips.com ([219.65.62.52])
+        by smtp.gmail.com with ESMTPSA id g13sm1015258pfi.93.2019.06.20.21.35.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Jun 2019 21:35:05 -0700 (PDT)
+From:   Aliasgar Surti <aliasgar.surti500@gmail.com>
+X-Google-Original-From: Aliasgar Surti
+To:     linux-media@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Aliasgar Surti <aliasgar.surti500@gmail.com>
+Subject: [PATCH v2 1/1] staging: media: fix style problem
+Date:   Fri, 21 Jun 2019 10:04:53 +0530
+Message-Id: <1561091693-18427-1-git-send-email-aliasgar.surti500@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
+From: Aliasgar Surti <aliasgar.surti500@gmail.com>
 
-On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->  #ifdef CONFIG_OF
-> -static const struct of_device_id elan_of_match[] = {
-> -       { .compatible = "elan,ekth3000" },
-> -       { /* sentinel */ }
-> -};
+checkpatch reported "WARNING: line over 80 characters".
+This patch fixes the warning for file davinci_vpfe/dm365_isif.c
 
-I think OF IDs should stay in this file since we agreed HID will not
-be checking them.
+Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
+---
+Changes in v2:
+	- Fixed styling as per suggestion in comments
+ 
+ drivers/staging/media/davinci_vpfe/dm365_isif.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->  MODULE_DEVICE_TABLE(of, elan_of_match);
->  #endif
->
-> diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-> new file mode 100644
-> index 000000000000..8130bbebbdda
-> --- /dev/null
-> +++ b/include/linux/input/elan-i2c-ids.h
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Elan I2C Touchpad devide whitelist
-
-s/devide/device/
-
-> + *
-> + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
-
-This just moves the code around. If anything I'd say it should keep
-the original Elan copyright.
-
-Thanks.
-
+diff --git a/drivers/staging/media/davinci_vpfe/dm365_isif.c b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+index 46fd818..e9c8de1 100644
+--- a/drivers/staging/media/davinci_vpfe/dm365_isif.c
++++ b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+@@ -532,7 +532,8 @@ static int isif_validate_dfc_params(const struct vpfe_isif_dfc *dfc)
+ #define DM365_ISIF_MAX_CLVSV			0x1fff
+ #define DM365_ISIF_MAX_HEIGHT_BLACK_REGION	0x1fff
+ 
+-static int isif_validate_bclamp_params(const struct vpfe_isif_black_clamp *bclamp)
++static int
++isif_validate_bclamp_params(const struct vpfe_isif_black_clamp *bclamp)
+ {
+ 	int err = -EINVAL;
+ 
+@@ -593,7 +594,8 @@ isif_validate_raw_params(const struct vpfe_isif_raw_config *params)
+ 	return isif_validate_bclamp_params(&params->bclamp);
+ }
+ 
+-static int isif_set_params(struct v4l2_subdev *sd, const struct vpfe_isif_raw_config *params)
++static int isif_set_params(struct v4l2_subdev *sd,
++			   const struct vpfe_isif_raw_config *params)
+ {
+ 	struct vpfe_isif_device *isif = v4l2_get_subdevdata(sd);
+ 	int ret = -EINVAL;
 -- 
-Dmitry
+2.7.4
+
