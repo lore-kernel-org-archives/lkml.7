@@ -2,103 +2,161 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B067C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B6CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224BC2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA6F2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfFUREh (ORCPT
+        id S1726159AbfFURGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:04:37 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:55438 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUREg (ORCPT
+        Fri, 21 Jun 2019 13:06:17 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:51860 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFURGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:04:36 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1heMxd-000217-6g; Fri, 21 Jun 2019 19:04:25 +0200
-Date:   Fri, 21 Jun 2019 19:04:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hillf Danton <hdanton@sina.com>
-cc:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, tipbuild@zytor.com, lkp@01.org
-Subject: Re: [x86/hpet] 286b15db78: BUG:KASAN:wild-memory-access_in_t
-In-Reply-To: <20190620032009.716-1-hdanton@sina.com>
-Message-ID: <alpine.DEB.2.21.1906211902060.5503@nanos.tec.linutronix.de>
-References: <20190620032009.716-1-hdanton@sina.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 21 Jun 2019 13:06:17 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 28B4972CC6C;
+        Fri, 21 Jun 2019 20:06:14 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 16D7C7CCE2E; Fri, 21 Jun 2019 20:06:14 +0300 (MSK)
+Date:   Fri, 21 Jun 2019 20:06:14 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] samples: make pidfd-metadata fail gracefully on older
+ kernels
+Message-ID: <20190621170613.GA26182@altlinux.org>
+References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
+ <20190620110037.GA4998@altlinux.org>
+ <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019, Hillf Danton wrote:
-> > 
-> > +------------------------------------------+------------+------------+
-> > |                                          | dfd001e50c | 286b15db78 |
-> > +------------------------------------------+------------+------------+
-> > | boot_successes                           | 14         | 0          |
-> > | boot_failures                            | 0          | 16         |
-> > | BUG:KASAN:wild-memory-access_in_t        | 0          | 16         |
-> > | general_protection_fault:#[##]           | 0          | 16         |
-> > | RIP:try_module_get                       | 0          | 16         |
-> > | Kernel_panic-not_syncing:Fatal_exception | 0          | 16         |
-> > +------------------------------------------+------------+------------+
-> > 
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > 
-> > 
-> > [    2.801166] BUG: KASAN: wild-memory-access in try_module_get+0x78/0x1bf
-> > [    2.803334] Read of size 4 at addr 6b6b6b6b6b6b6b6b by task swapper/0
 
-Yuck.
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > 
-> Try to pump up module after checking it is valid only if .owner = THIS_MODULE
-> does not help in the case of hpet.
+On Thu, Jun 20, 2019 at 01:10:37PM +0200, Christian Brauner wrote:
+> On Thu, Jun 20, 2019 at 02:00:37PM +0300, Dmitry V. Levin wrote:
+> > Cc'ed more people as the issue is not just with the example but
+> > with the interface itself.
+> >=20
+> > On Thu, Jun 20, 2019 at 12:31:06PM +0200, Christian Brauner wrote:
+> > > On Thu, Jun 20, 2019 at 06:11:44AM +0300, Dmitry V. Levin wrote:
+> > > > Initialize pidfd to an invalid descriptor, to fail gracefully on
+> > > > those kernels that do not implement CLONE_PIDFD and leave pidfd
+> > > > unchanged.
+> > > >=20
+> > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> > > > ---
+> > > >  samples/pidfd/pidfd-metadata.c | 8 ++++++--
+> > > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-m=
+etadata.c
+> > > > index 14b454448429..ff109fdac3a5 100644
+> > > > --- a/samples/pidfd/pidfd-metadata.c
+> > > > +++ b/samples/pidfd/pidfd-metadata.c
+> > > > @@ -83,7 +83,7 @@ static int pidfd_metadata_fd(pid_t pid, int pidfd)
+> > > > =20
+> > > >  int main(int argc, char *argv[])
+> > > >  {
+> > > > -	int pidfd =3D 0, ret =3D EXIT_FAILURE;
+> > > > +	int pidfd =3D -1, ret =3D EXIT_FAILURE;
+> > >=20
+> > > Hm, that currently won't work since we added a check in fork.c for
+> > > pidfd =3D=3D 0. If it isn't you'll get EINVAL.
+> >=20
+> > Sorry, I must've missed that check.  But this makes things even worse.
+> >=20
+> > > This was done to ensure that
+> > > we can potentially extend CLONE_PIDFD by passing in flags through the
+> > > return argument.
+> > > However, I find this increasingly unlikely. Especially since the
+> > > interface would be horrendous and an absolute last resort.
+> > > If clone3() gets merged for 5.3 (currently in linux-next) we also have
+> > > no real need anymore to extend legacy clone() this way. So either wait
+> > > until (if) we merge clone3() where the check I mentioned is gone anyw=
+ay,
+> > > or remove the pidfd =3D=3D 0 check from fork.c in a preliminary patch.
+> > > Thoughts?
+> >=20
+> > Userspace needs a reliable way to tell whether CLONE_PIDFD is supported
+> > by the kernel or not.
+>=20
+> Right, that's the general problem with legacy clone(): it ignores
+> unknown flags... clone3() will EINVAL you if you pass any flag it
+> doesn't know about.
+>=20
+> For legacy clone you can pass
+>=20
+> (CLONE_PIDFD | CLONE_DETACHED)
+>=20
+> on all relevant kernels >=3D 2.6.2. CLONE_DETACHED will be silently
+> ignored by the kernel if specified in flags. But if you specify both
+> CLONE_PIDFD and CLONE_DETACHED on a kernel that does support CLONE_PIDFD
+> you'll get EINVALed. (We did this because we wanted to have the ability
+> to make CLONE_DETACHED reuseable with CLONE_PIDFD.)
+> Does that help?
 
-Errrm?
+Yes, this is feasible, but the cost is extra syscall for new kernels
+and more complicated userspace code, so...
 
-> Hillf
-> ---
->  kernel/time/tick-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-> index 529143b..1b33215 100644
-> --- a/kernel/time/tick-common.c
-> +++ b/kernel/time/tick-common.c
-> @@ -311,7 +311,7 @@ void tick_check_new_device(struct clock_event_device *newdev)
->  	if (!tick_check_preferred(curdev, newdev))
->  		goto out_bc;
->  
-> -	if (!try_module_get(newdev->owner))
-> +	if (newdev->owner && !try_module_get(newdev->owner))
+> > If CLONE_PIDFD is not supported, then pidfd remains unchanged.
+> >=20
+> > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd =
+=3D=3D 0
+> > also remains unchanged, which effectively means that userspace must ens=
+ure
+> > that fd 0 is not closed when invoking CLONE_PIDFD.  This is ugly.
+> >=20
+> > If we can assume that clone(CLONE_PIDFD) is not going to be extended,
+> > then I'm for removing the pidfd =3D=3D 0 check along with recommending
+> > userspace to initialize pidfd with -1.
+>=20
+> Right, I'm ok with that too.
 
-How does that prevent the above? That's not about a NULL pointer. Its
-simply uninitialized memory.
+=2E.. I'd prefer this variant.
 
-Aside that the check is pointless as try_module_get() has a NULL pointer
-check inside already.
 
-Thanks,
+--=20
+ldv
 
-	tglx
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJdDQ6FAAoJEAVFT+BVnCUIYXwQAIKbUhvT4Z2vjgR254TQyg7z
+USsWogmcsXA9rUf2n1UYOw40Ekm263RDwe0EcR+5OExFPAl6cLoVCUeN12Uyzp1+
+U0kKp8KEiMkPXscso2KOJorhBD8asyVtrSmk8STcfvpNJ4YpH/Y5MBGetRylmfU0
+0s56mpXoN5khbF6pfm7LnCGu98GZUPuidwGZXPprnnXlMGdvHX/bDvDzzeE0A+u5
+BqPGrJ7gt70Urzij7W/57i6KHMYwT5YQS+jxrZM3NlB8cHjI4LBRBMMT7s/KVaKn
+SCUyCJyTuSL6/plT8i0gOQp9wfmUwaNVvBGcnwGl15qS7q/J0FXqtnmoz049JloB
+dbuS3+ZV82umgmVj5zgfJyBkCXN5zFi5gkZ3yS/16+74Fin/8h/Ouv05YcNOKUDi
+Zdb2i7r5LaHFcLGT82TLRp0jMsVkhSSs83idFo7BjNXYA84wP+HmmsBbitlFtUpA
+MXvhLgfg0pw/Lj0vaAMRiqqad92NMHZGN8r342RH6DJqyBBJPL1P75HL4Aw1TqZz
+48s8brt/dR79UN5i8f7KKBUulXVwimzX7WCs6v3whH1lvA4tI5WlqAwSFCjSTY9Z
+h0Kpw4Huv6qL1oelIp9qiPdxcMllfnsxUtgNE4MY1uZvnh8a7H7YlXGPCTY5I4v3
+lxdOqIClduB5NK+VMHdO
+=S7AN
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
