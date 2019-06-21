@@ -2,88 +2,134 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD4DC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018F8C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D98A21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2C9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkN/qi8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfFUVOQ (ORCPT
+        id S1726168AbfFUVQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 17:14:16 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58684 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfFUVOO (ORCPT
+        Fri, 21 Jun 2019 17:16:45 -0400
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:44667 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfFUVQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 17:14:14 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A6D78260195
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-rockchip@lists.infradead.org,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-Date:   Fri, 21 Jun 2019 18:13:46 -0300
-Message-Id: <20190621211346.1324-4-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190621211346.1324-1-ezequiel@collabora.com>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
+        Fri, 21 Jun 2019 17:16:44 -0400
+Received: by mail-pg1-f180.google.com with SMTP id n2so3924870pgp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 14:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ee7dIZ6uP6QXNcDhtf383EXh+QJWWk7ZjpJlf1hao0g=;
+        b=qkN/qi8Kbd8EBvRSeNglafT8WHdsT6KSGK8BbqDwGMfz8caRBQQJWkq7B/DdSQKES3
+         vrMUhIY+/V39FxHSDpMgxmgiAbGANCFFyenU+/X3g5PJRqQ/1LYFMfxwEjJ+X+hhr0s9
+         OI11/dhh5KjSFQWy+fxuVJv/rxRXBgDS/O3y3B0QzbPR4CD5rM5BjFxUdJlAYCIPX2uz
+         cwBj9+6GZ4hAkzdUQqeW3kX1OAgEmwXQZQaZu7xWbPQokIRnaz9ImxOIOAs4MA84phqS
+         hnL+9EBdZ55OrbqRLSJahRb3g/mKJsfX6wNPr4lYLuzlmF0Izj0mJyGzP8AxjbWq23tU
+         YqQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ee7dIZ6uP6QXNcDhtf383EXh+QJWWk7ZjpJlf1hao0g=;
+        b=E8WlnH+fpX7rzJOJCY7OqGDyG5tuOqxQVVG8+tvIYdFpzk/VREGbA0qnkY+5BC8hE5
+         qbjH+wdWqzWQISORZQNxG8S0egOPKrklojQBfrTxfQYMB0AvY17HyfNO3B92mfTVMp09
+         gZOu1EB8mTqeUeikMAGrMwsuuSmjZSxpYA2mpCtktsdLnh5DCS8UDKPC0cNgMq5t79+D
+         7CXis0UshjHk8p8z1vtWkxKsWjD+7rRhP3bn/sczaJp1gF0fOAtHV+nWw0gDwIxyT1uc
+         5y871rFiAkLuV9limoUF/AZHT8m4v/+U693dCqAqc/x0f8GZkiA3GqdHlLD1GDS+f1UH
+         2fKg==
+X-Gm-Message-State: APjAAAWUtQHfGlVLwR1dMBEBeEq5LN2BaHQAHbsbroe3uT913HFUPIIQ
+        UXzcGltAGgLzHbQI3UmB/PyF+A==
+X-Google-Smtp-Source: APXvYqzImg3CJgpFdQNkZkifeLhRrlBNhd3lJLtmXTamXKF6i/FQMziQdLYRjCbUgP1OER/BKZtqhA==
+X-Received: by 2002:a63:ed06:: with SMTP id d6mr20481370pgi.267.1561151803708;
+        Fri, 21 Jun 2019 14:16:43 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id w14sm3691529pfn.47.2019.06.21.14.16.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 14:16:42 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 14:16:41 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrea Arcangeli <aarcange@redhat.com>
+cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
+ allocations"
+In-Reply-To: <alpine.DEB.2.21.1906061451001.121338@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.1906211415050.77141@chino.kir.corp.google.com>
+References: <20190503223146.2312-1-aarcange@redhat.com> <20190503223146.2312-3-aarcange@redhat.com> <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com> <20190520153621.GL18914@techsingularity.net> <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+ <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org> <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com> <20190531092236.GM6896@dhcp22.suse.cz> <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com> <20190605093257.GC15685@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1906061451001.121338@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK3288 SoC VOPs have optional support Gamma LUT setting,
-which requires specifying the Gamma LUT address in the devicetree.
+On Thu, 6 Jun 2019, David Rientjes wrote:
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-Changes from v1:
-* Drop reg-names, as suggested by Doug.
----
- arch/arm/boot/dts/rk3288.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> The idea that I had was snipped from this, however, and it would be nice 
+> to get some feedback on it: I've suggested that direct reclaim for the 
+> purposes of hugepage allocation on the local node is never worthwhile 
+> unless and until memory compaction can both capture that page to use (not 
+> rely on the freeing scanner to find it) and that migration of a number of 
+> pages would eventually result in the ability to free a pageblock.
+> 
+> I'm hoping that we can all agree to that because otherwise it leads us 
+> down a bad road if reclaim is doing pointless work (freeing scanner can't 
+> find it or it gets allocated again before it can find it) or compaction 
+> can't make progress as a result of it (even though we can migrate, it 
+> still won't free a pageblock).
+> 
+> In the interim, I think we should suppress direct reclaim entirely for 
+> thp allocations, regardless of enabled=always or MADV_HUGEPAGE because it 
+> cannot be proven that the reclaim work is beneficial and I believe it 
+> results in the swap storms that are being reported.
+> 
+> Any disagreements so far?
+> 
+> Furthermore, if we can agree to that, memory compaction when allocating a 
+> transparent hugepage fails for different reasons, one of which is because 
+> we fail watermark checks because we lack migration targets.  This is 
+> normally what leads to direct reclaim.  Compaction is *supposed* to return 
+> COMPACT_SKIPPED for this but that's overloaded as well: it happens when we 
+> fail extfrag_threshold checks and wheng gfp flags doesn't allow it.  The 
+> former matters for thp.
+> 
+> So my proposed change would be:
+>  - give the page allocator a consistent indicator that compaction failed
+>    because we are low on memory (make COMPACT_SKIPPED really mean this),
+>  - if we get this in the page allocator and we are allocating thp, fail,
+>    reclaim is unlikely to help here and is much more likely to be
+>    disruptive
+>      - we could retry compaction if we haven't scanned all memory and
+>        were contended,
+>  - if the hugepage allocation fails, have thp check watermarks for order-0 
+>    pages without any padding,
+>  - if watermarks succeed, fail the thp allocation: we can't allocate
+>    because of fragmentation and it's better to return node local memory,
+>  - if watermarks fail, a follow up allocation of the pte will likely also
+>    fail, so thp retries the allocation with a cleared  __GFP_THISNODE.
+> 
+> This doesn't sound very invasive and I'll code it up if it will be tested.
+> 
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index aa017abf4f42..40d5ebd663ef 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1025,7 +1025,7 @@
- 
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>;
-+		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-@@ -1075,7 +1075,7 @@
- 
- 	vopl: vop@ff940000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff940000 0x0 0x19c>;
-+		reg = <0x0 0xff940000 0x0 0x19c>, <0x0 0xff941000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--- 
-2.20.1
-
+Following up on this since there has been no activity in a week, I am 
+happy to prototype this.  Andrea, would you be able to test a patch once 
+it is ready for you to try?
