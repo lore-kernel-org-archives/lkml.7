@@ -2,94 +2,82 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE44BC48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3731CC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992FD208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561097680;
-	bh=A3cLXC9IgxeYKMEPSFA14Lxq/Vkdf3l3p5k7jQ5X/18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EoQ2hZj6WA8N1iun9Wmc3+cPulCgSOBTzjyLrXJu3dT1HvG1qtnb1QtQK4OydMHAG
-	 aW9va/dE6VOdXlxrFPcDtr4XlxNufZkiMN0+tCmdOHluVzUjhkioWp/3Mqys3pDjSM
-	 cKnhs4iU85jNNTfiV0E1mA+0QH6ylQeCuKxGfoB8=
+	by mail.kernel.org (Postfix) with ESMTP id F3DF5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="S6BOnd4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfFUGOj (ORCPT
+        id S1726200AbfFUGQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 02:14:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfFUGOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 02:14:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756EA2083B;
-        Fri, 21 Jun 2019 06:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561097678;
-        bh=A3cLXC9IgxeYKMEPSFA14Lxq/Vkdf3l3p5k7jQ5X/18=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fCZhn3CeJk/hX44NfUsHxXgulCDj9D/Dnp3ssvjFWjXZnkfQzZxRbsyfl94fXn5gP
-         ByuNbO83sV9gErx3vhZ0ywzzf2RGRDnY5KtM54YazDSWp4nIx48fRJAS+Xfrfp/JCK
-         eLEcNTbQTRvIzvU/5jctHuYSG6U9Atm9PgslfObo=
-Date:   Fri, 21 Jun 2019 08:14:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.1 00/98] 5.1.13-stable review
-Message-ID: <20190621061435.GB28816@kroah.com>
-References: <20190620174349.443386789@linuxfoundation.org>
- <CA+G9fYv8M2OPuktEt4N7VPpwOCnLa9F90u6ORAfqshnjZTcc6w@mail.gmail.com>
+        Fri, 21 Jun 2019 02:16:52 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:64994 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfFUGQw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 02:16:52 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x5L6GlEk022160;
+        Fri, 21 Jun 2019 15:16:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5L6GlEk022160
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561097808;
+        bh=a1r/AXdPUfjndw8LmQLErWaw7Q5y8shtAXjWlzQTg3c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S6BOnd4yTHvHwyp562WmDpcw6/IC4++QneQdjjlMP/28zko30KZpGq1c/wQ4rjKzF
+         DlMfkNnXteCuOK32TW7OTIqjD3t6384lscW3hhn1OHd440kpT7AQKUpwyEePs5iqpi
+         hEIljDYCq426yhPZL7C4SgkiYvOY4+U2dJ7a1GG0WoIHA32Oc5fkxq9VWAJKWfBRx/
+         6cKX9drWwZZlTmKFgYI4i6ts2f/EAVWZCDBBs0tQibZjA56A1o9T5fl8BOfI4ggZ0J
+         wg4hTo2PabQOYNkvH+Zxh6OX/lCBZCpin9gqsQnRAeM2psWO9J73taAFdEVF6u3xb4
+         KVhpuUjtLw5oQ==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id k9so3129763vso.5;
+        Thu, 20 Jun 2019 23:16:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVRNTHUosTbPQs3caKa1ctEz1bKKi/zUAbE1w+fOouiLUBS15gO
+        BPA5br6mp+2cmr0vO4zMJuAV6y9UleH9s0qDyrQ=
+X-Google-Smtp-Source: APXvYqwHdZIoIyJd+Mcw4P98HkdWmF2Q+PRm9NDtqftuDYgMf/FC7vKJHlCsVLajZw6+wNIrhdv2yhD9KlimPQ5/H0A=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr3990201vsd.215.1561097807250;
+ Thu, 20 Jun 2019 23:16:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYv8M2OPuktEt4N7VPpwOCnLa9F90u6ORAfqshnjZTcc6w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190621060511.29609-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190621060511.29609-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 21 Jun 2019 15:16:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
+Message-ID: <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: remove another TMIO MMC variant usdhi6rol0.c
+To:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rabin Vincent <rabin.vincent@axis.com>,
+        Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:25:54AM +0530, Naresh Kamboju wrote:
-> On Thu, 20 Jun 2019 at 23:44, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.13 release.
-> > There are 98 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.13-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+(Added Lars Persson, Guennadi Liakhovetski)
 
-Wonderful, thanks for testing all of these and letting me know.
+On Fri, Jun 21, 2019 at 3:06 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-greg k-h
+This needs Ack from Renesas.
+But, I do not know if TMIO folks are sure about this driver, though.
+(If they had been sure about it, they should not have duplicated the driver
+in the first place.)
+
+-- 
+Best Regards
+Masahiro Yamada
