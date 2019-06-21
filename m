@@ -2,92 +2,154 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C98C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB75C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9DB20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561140769;
-	bh=2R3oUQcJMMZmCh0PNjkySpJmH/XshwWM5185+M83vcs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lDM72d7AC4TheuvXj//Zcvwjdw+y8rpOYVbfYi5+VLPk2Bt4U50MhIbjgjlEjukA4
-	 +zWadwaqBDPCmpxBniqQGoh9x1tfO/W1AYoECmyAVGXuJG70knvmhtMntFIOrXXkEQ
-	 YS6gp6Be7X1q9isQBz6umlbdiX3oxLJ4nYob+gvw=
+	by mail.kernel.org (Postfix) with ESMTP id 731B3208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jpDMD7h4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfFUSMs (ORCPT
+        id S1726390AbfFUSNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:12:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50750 "EHLO
+        Fri, 21 Jun 2019 14:13:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40193 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfFUSMr (ORCPT
+        with ESMTP id S1726034AbfFUSNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:12:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c66so7148008wmf.0;
-        Fri, 21 Jun 2019 11:12:46 -0700 (PDT)
+        Fri, 21 Jun 2019 14:13:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so7441901wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dEyGlTsnsKuBLwX5xX2JKI/ESGQXtRFnkrYp5ebnbEM=;
+        b=jpDMD7h4CQgiptV4ihUW/bUNgJKDqTi71iQj64iG0gyAevW/vejPrbeHwJKqytGUxs
+         JH//IpRhhpQq5/ACeHQIHb/A0y8Y+60JkKT9VVqp6Y5N1SSLTFYLqjmfxB5qNM8NYNEi
+         wKFg81RKKrcff5f4kOgSsGDmV7e/fagFLOX3fnLvxw1/PIFWBbs5tzHdOrVuGHa16z41
+         WM/EOmwP0nCV72YLzbXnExNO5PreQzUviu7SnqBKpMjro3IHKcxkQUyFnWRPHz1mLlWQ
+         3fqK2GFsob1NgeqZeby50at4AgQenZ/yDnz1A0hUrXWaBs/j2FK9iNBCxwbKNfZprUtZ
+         aBMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K8ZqNlSRzlw+iByGaPZNdN2szcR/O2ehXG6DihUgi5k=;
-        b=drmGJzhuScrC+d+ESdKGFkTiWyPI+iYoi3r8jzPdAp1kp67l5PNG5LvWNIBaa0Oa0b
-         SFxv6Rj81jbfZy2Vr1MlW35NMfac8g3a0H5/YyPl4FIVQgA4Uo6v4kUGvx1On//+oVVN
-         TeEj9dUfCyepxs1U2aqBy88CI5KIsRV5z0b49U9r3ezYjMS9oU3PqLbamo1GooqIdAII
-         orzSSxXBRoHjUCcsQCcW23W+VpnKBSn1gdMGJEGkoZfkYEuJObey5gWlZXNQ9iVFiSJM
-         HJgr06ZO/CeF5iJme9o2O/nrEMqXv6LWkL+75Uk1U/XIG6pd9V4AiWAmb1m4CBWI7yqK
-         k2ZA==
-X-Gm-Message-State: APjAAAWjadfnwrw4p8EEbjh2W7GAPLWJsJF5wLmyUjqiqCIMjw5v8gjg
-        xVtCeVWfvcf0mJJbE+9wwIuNov+5
-X-Google-Smtp-Source: APXvYqxxO+HkCjrMZC9y5KfK+BU2nNihU5fwC/SA7zEcs/MVwbeu/GDip2tz7utkxVE97ewJTt8utg==
-X-Received: by 2002:a1c:1947:: with SMTP id 68mr4932544wmz.171.1561140765354;
-        Fri, 21 Jun 2019 11:12:45 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.186])
-        by smtp.googlemail.com with ESMTPSA id h90sm4746092wrh.15.2019.06.21.11.12.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 11:12:44 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 20:12:42 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: exynos: only build mcpm support if used
-Message-ID: <20190621181242.GA18341@kozik-lap>
-References: <20190619125545.1087023-1-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dEyGlTsnsKuBLwX5xX2JKI/ESGQXtRFnkrYp5ebnbEM=;
+        b=hpZ9vYg84oJhoweMSciaWoPkFie/MjFTUpBGzI4zr6ZKqrgRGxaT8DoAcBtlFmkxqd
+         EfZPB+IS22tj+riuR928J38gdodoALRSRHHm0Og28hhC7b0OZSsuRsnMee2JwIUVBchl
+         ioU2yq3T4XJCR919Z9DAmXUiZDuZdijy1PakXttXkmnaDpXYJvOwapOihK60wPfZx0iK
+         +QF6dO7fpdV45OIKHU9ROSStCaK47pJSXIxdKOr2ewXe/QqlbspUqWwNK4dcQ2pk0BJK
+         v9YRtuaCj1FDfmj9sYsi9A5/5xwn2GzztfO/d4EYxpCMYEJ6c4Hg/UCUcILtespYP+LT
+         hS/Q==
+X-Gm-Message-State: APjAAAV4eBO/iG9J8iwcOR055yzTYIPqRtCKv8E3E0theb33nNsRf/L3
+        +MhvbKg/d+xtYB064hQqXZdttnip6rCwdA3Lj50+00D1WMIl
+X-Google-Smtp-Source: APXvYqyDZAMAe0SGrsikwsOgiVKLU6ZWCS7eXygDIMzxOPc8qc57aRbkICtb2bfT9w1wvSlQ1kgHFd43Ln85KNGdZs8=
+X-Received: by 2002:a1c:3dc1:: with SMTP id k184mr5129288wma.88.1561140791059;
+ Fri, 21 Jun 2019 11:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190619125545.1087023-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190621163921.26188-1-puranjay12@gmail.com> <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
+ <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
+In-Reply-To: <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Fri, 21 Jun 2019 13:12:58 -0500
+Message-ID: <CAErSpo6iRVWU-yL5CRF_GEY7CWg5iV=Jw0BrdNV4h3Jvh5AuAw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
+ definitions instead of private duplicates
+To:     Joe Perches <joe@perches.com>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 02:55:29PM +0200, Arnd Bergmann wrote:
-> We get a link error for configurations that enable an exynos
-> SoC that does not require mcpm, but then manually enable
-> mcpm anyway wihtout also turning on the arm-cci:
-> 
-> arch/arm/mach-exynos/mcpm-exynos.o: In function `exynos_pm_power_up_setup':
-> mcpm-exynos.c:(.text+0x8): undefined reference to `cci_enable_port_for_self'
-> 
-> Change it back to only build the code we actually need, by
-> introducing a CONFIG_EXYNOS_MCPM that serves the same purpose
-> as the older CONFIG_EXYNOS5420_MCPM.
-> 
-> Fixes: 2997520c2d4e ("ARM: exynos: Set MCPM as mandatory for Exynos542x/5800 SoCs")
+On Fri, Jun 21, 2019 at 12:27 PM Joe Perches <joe@perches.com> wrote:
+>
+> (adding the atlx maintainers to cc)
+>
+> On Fri, 2019-06-21 at 12:11 -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 21, 2019 at 11:39 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
+> > > This patch series removes the private duplicates of PCI definitions in
+> > > favour of generic definitions defined in pci_regs.h.
+> > >
+> > > Puranjay Mohan (3):
+> > >   net: ethernet: atheros: atlx: Rename local PCI defines to generic
+> > >     names
+> > >   net: ethernet: atheros: atlx: Include generic PCI definitions
+> > >   net: ethernet: atheros: atlx: Remove unused and private PCI
+> > >     definitions
+> > >
+> > >  drivers/net/ethernet/atheros/atlx/atl2.c | 5 +++--
+> > >  drivers/net/ethernet/atheros/atlx/atl2.h | 2 --
+> > >  drivers/net/ethernet/atheros/atlx/atlx.h | 1 -
+> > >  3 files changed, 3 insertions(+), 5 deletions(-)
+> >
+> > Let's slow this down a little bit; I'm afraid we're going to overwhelm folks.
+>
+> I generally disagree.
+>
+> Consolidation of these sorts of changes are generally
+> better done treewide all at once, posted as a series to
+> a list and maintainers allowing time (weeks to months)
+> for the specific maintainers to accept them and then
+> whatever remainder exists reposted and possibly applied
+> by an overall maintainer (e.g.: Dave M)
+>
+> > Before posting more to LKML/netdev, how about we first complete a
+> > sweep of all the drivers to see what we're getting into.  It could be
+> > that this will end up being more churn than it's worth.
+>
+> Also doubtful.
+>
+> Subsystem specific local PCI #defines without generic
+> naming is poor style and makes treewide grep and
+> refactoring much more difficult.
 
-Thanks, applied.
+Don't worry, we have the same objectives.  I totally agree that local
+#defines are a bad thing, which is why I proposed this project in the
+first place.
 
-Best regards,
-Krzysztof
+I'm just saying that this is a "first-patch" sort of learning project
+and I think it'll avoid some list spamming and discouragement if we
+can figure out the scope and shake out some of the teething problems
+ahead of time.  I don't want to end up with multiple versions of
+dozens of little 2-3 patch series posted every week or two.  I'd
+rather be able to deal with a whole block of them at one time.
 
+> The atlx maintainers should definitely have been cc'd
+> on these patches.
+>
+> Jay Cliburn <jcliburn@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
+> Chris Snook <chris.snook@gmail.com> (maintainer:ATLX ETHERNET DRIVERS)
+>
+> Puranjay, can you please do a few things more here:
+>
+> 1: Make sure you use scripts/get_maintainer.pl to cc the
+>    appropriate people.
+>
+> 2: Show that you compiled the object files and verified
+>    where possible that there are no object file changes.
+
+Do you have any pointers for the best way to do this?  Is it as simple
+as comparing output of "objdump -d"?
+
+> 3: State that there are no object changes in the proposed
+>    commit log.
+
+Thanks for the additional tips.
+
+Bjorn
