@@ -2,121 +2,138 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA8CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944F720665
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D576A20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eIkfdIS+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ud99mkFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfFUQkK (ORCPT
+        id S1726224AbfFUQkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:40:10 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:60112 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUQkK (ORCPT
+        Fri, 21 Jun 2019 12:40:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45960 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUQkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:40:10 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x5LGdXbA030778;
-        Sat, 22 Jun 2019 01:39:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x5LGdXbA030778
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561135174;
-        bh=ozhNqk/jJbRlOJsA1fVCfpWIUlNkHQWb4qUWtLdFnnk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eIkfdIS+O26Z2YOKvyyUQPDJEfS8R4Fhs0ivGILBOqSQUUm5uWKbiPvKnX/+WtwFg
-         bR6tU9HZ4+pLdiRnLxprJkokHFgCtkFoMktC1DDnmtum2THZ3CVntvFIDae0PqQwJz
-         UKsDDf8vlHPw6lhKvHOC5bPX9K+MKp9Zup6GlavY83airXFt5PwUrWGHKBwQLMLuVU
-         kmDNdZ4svkbDbE9jeS3mqKjBXcv5ohpvAiAgS9EWfEq5D4E5/eDRtcyqvkzithnuhb
-         xtCZFMEJe7KxegEtkFkx2ypPYLJzg/fgwsSocOPsVDT+rg+2BXnDFsGwl+LcF3XH9e
-         bZh+TEYRkfgHg==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] kbuild: compile-test global headers to ensure they are self-contained
-Date:   Sat, 22 Jun 2019 01:39:31 +0900
-Message-Id: <20190621163931.19397-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Jun 2019 12:40:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so3867178pfq.12;
+        Fri, 21 Jun 2019 09:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2IgUDhVqnZ8k9zguuMKJ5AeaSmmdRNsRB+Xd+mp5hgs=;
+        b=Ud99mkFqZdT93NgONfoC7H1liw3Br8yMsWJ1tKy5eZOl35FyKD3b+R8hNIaxqJSUOp
+         hlwKBSZURFw5kD5bbct9rsiOgrWonsrGOrUjIXsJJaqQncpbLztQuagcmCBld8GJPbpa
+         1GtnF6nY0Yk65VuaRhOpO6Dm+0zxD0WmT1lTbOly816f8oqoT2Or9Kv8dNcS2I5yZRmR
+         Ux0As5qkUaJzk0wiL+cPWVnvj4PiEFnR2SLAPck3kfkk50E7YA6o378KpUQtIS1NExkC
+         XpHlgNQ5WwjoGCylqP3szEpNaQlRyvVPHlfCdTt3oZb2b7zokYRFY5NLRo/75/dwZxpb
+         5X8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2IgUDhVqnZ8k9zguuMKJ5AeaSmmdRNsRB+Xd+mp5hgs=;
+        b=jZXrfcqusf3DrV21sed73FNmoIbqXtiCFGqhsSSrWAlLbeqwRu9h9vTTY+Kc0we69m
+         I5D/eU8pTHyQnNCSSl8WWUqqnPB6gri1tnPMDWg+of+qv9Ydsw4BoWx3gyfJqUpVHFtt
+         WhOs/EldoZWGgnQgZorS6b6i+ZWkE81gqE08PsSuXxxc5972d7J18awvR9mdMDX69l3K
+         qpDNyfqSqq/MYMg2zWdzDlXf/a00z91vSRS8Hwr7Vv9BLqDTMyvYxLG3rrwijQ/cAQBd
+         W+VXFqhAzJ5Vjq75cQMNOrIS7ANj/XA21L3gTlQx1clHJOTfvyqg6zLaGmDaNA3vPRzu
+         XOwA==
+X-Gm-Message-State: APjAAAX3AyVYvPP/nAg96E0Pvg/rYU9ePaZbPe/vQmESkZW+rmaIV7w/
+        D6WaLei4vVgKiEftDYSej7o=
+X-Google-Smtp-Source: APXvYqyXbcJjprGeaBIgVzs96UiAfpSm2B+Tj1uMXB/VRI5m36QXniyeA1HZFkG67i83JewfIahBWw==
+X-Received: by 2002:a63:c20e:: with SMTP id b14mr18670962pgd.96.1561135213429;
+        Fri, 21 Jun 2019 09:40:13 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.13])
+        by smtp.googlemail.com with ESMTPSA id n89sm25702450pjc.0.2019.06.21.09.39.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 09:40:13 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 1/3] net: ethernet: atheros: atlx: Rename local PCI defines to generic names
+Date:   Fri, 21 Jun 2019 22:09:19 +0530
+Message-Id: <20190621163921.26188-2-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190621163921.26188-1-puranjay12@gmail.com>
+References: <20190621163921.26188-1-puranjay12@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make as many headers self-contained as possible so that they can be
-included without relying on a specific include order.
+Rename all local PCI definitons to Generic PCI definitions to make them
+compatible with generic definitions present in pci_regs.h
 
-This commit compiles only a few headers, but it is a good start point.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 ---
+ drivers/net/ethernet/atheros/atlx/atl2.c | 4 ++--
+ drivers/net/ethernet/atheros/atlx/atl2.h | 2 +-
+ drivers/net/ethernet/atheros/atlx/atlx.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
- Makefile         |  1 +
- include/Makefile | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 include/Makefile
-
-diff --git a/Makefile b/Makefile
-index c23f5e8381ad..82c1722dd9e9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -610,6 +610,7 @@ drivers-y	:= drivers/ sound/
- drivers-$(CONFIG_SAMPLES) += samples/
- net-y		:= net/
- libs-y		:= lib/
-+libs-$(CONFIG_HEADER_TEST) += include/
- core-y		:= usr/
- virt-y		:= virt/
- endif # KBUILD_EXTMOD
-diff --git a/include/Makefile b/include/Makefile
-new file mode 100644
-index 000000000000..68a76ac732c3
---- /dev/null
-+++ b/include/Makefile
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+# extend the test coverage when existing errors are fixed
-+
-+header-test += linux/w*.h
-+header-test += linux/x*.h
-+header-test += linux/y*.h
-+header-test += ras/*.h
-+header-test += soc/at91/*.h
-+header-test += soc/bcm2835/*.h
-+header-test += soc/mediatek/*.h
-+header-test += soc/sa1100/*.h
-+
-+all-headers = $(patsubst $(srctree)/include/%,%,\
-+	    $(wildcard $(addprefix $(srctree)/include/, $(header-test))))
-+
-+# Do not include directly
-+no-header-test += linux/compiler-clang.h
-+no-header-test += linux/compiler-gcc.h
-+no-header-test += linux/patchkey.h
-+no-header-test += linux/rwlock_api_smp.h
-+no-header-test += linux/spinlock_types_up.h
-+no-header-test += linux/spinlock_up.h
-+no-header-test += linux/wimax/debug.h
-+no-header-test += rdma/uverbs_named_ioctl.h
-+
-+# Conditionally included
-+no-header-test += linux/byteorder/big_endian.h
-+no-header-test += linux/byteorder/little_endian.h
-+
-+header-test-y = $(filter-out $(no-header-test), $(all-headers))
+diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
+index 3a3fb5ce0fee..478db3fe920a 100644
+--- a/drivers/net/ethernet/atheros/atlx/atl2.c
++++ b/drivers/net/ethernet/atheros/atlx/atl2.c
+@@ -2103,13 +2103,13 @@ static s32 atl2_reset_hw(struct atl2_hw *hw)
+ 	int i;
+ 
+ 	/* Workaround for PCI problem when BIOS sets MMRBC incorrectly. */
+-	atl2_read_pci_cfg(hw, PCI_REG_COMMAND, &pci_cfg_cmd_word);
++	atl2_read_pci_cfg(hw, PCI_COMMAND, &pci_cfg_cmd_word);
+ 	if ((pci_cfg_cmd_word &
+ 		(CMD_IO_SPACE|CMD_MEMORY_SPACE|CMD_BUS_MASTER)) !=
+ 		(CMD_IO_SPACE|CMD_MEMORY_SPACE|CMD_BUS_MASTER)) {
+ 		pci_cfg_cmd_word |=
+ 			(CMD_IO_SPACE|CMD_MEMORY_SPACE|CMD_BUS_MASTER);
+-		atl2_write_pci_cfg(hw, PCI_REG_COMMAND, &pci_cfg_cmd_word);
++		atl2_write_pci_cfg(hw, PCI_COMMAND, &pci_cfg_cmd_word);
+ 	}
+ 
+ 	/* Clear Interrupt mask to stop board from generating
+diff --git a/drivers/net/ethernet/atheros/atlx/atl2.h b/drivers/net/ethernet/atheros/atlx/atl2.h
+index d97613bd15d5..c53b810a831d 100644
+--- a/drivers/net/ethernet/atheros/atlx/atl2.h
++++ b/drivers/net/ethernet/atheros/atlx/atl2.h
+@@ -202,7 +202,7 @@ static void atl2_force_ps(struct atl2_hw *hw);
+ #define MII_DBG_DATA	0x1E
+ 
+ /* PCI Command Register Bit Definitions */
+-#define PCI_REG_COMMAND		0x04
++#define PCI_COMMAND		0x04
+ #define CMD_IO_SPACE		0x0001
+ #define CMD_MEMORY_SPACE	0x0002
+ #define CMD_BUS_MASTER		0x0004
+diff --git a/drivers/net/ethernet/atheros/atlx/atlx.h b/drivers/net/ethernet/atheros/atlx/atlx.h
+index 7f5d4e24eb9f..09464cb02ce0 100644
+--- a/drivers/net/ethernet/atheros/atlx/atlx.h
++++ b/drivers/net/ethernet/atheros/atlx/atlx.h
+@@ -445,7 +445,7 @@
+ #define MII_DBG_DATA			0x1E
+ 
+ /* PCI Command Register Bit Definitions */
+-#define PCI_REG_COMMAND			0x04	/* PCI Command Register */
++#define PCI_COMMAND			0x04	/* PCI Command Register */
+ #define CMD_IO_SPACE			0x0001
+ #define CMD_MEMORY_SPACE		0x0002
+ #define CMD_BUS_MASTER			0x0004
 -- 
-2.17.1
+2.21.0
 
