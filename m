@@ -2,102 +2,156 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AC6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618C0C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CE120B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561102156;
-	bh=kPwFEjWK93xycgmBhsOnGfFIY99Nc6Bkb8Tptor+iqs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ccl9WGTIlym7NNNRLX6p2cWGNk0Y4kVU78vjynqxOLkpCQ8Dx0vUn0ArMRS5RpZT1
-	 X15bERYC6ySP9YAuckps6CCDRs2pbIuvoNmlbI3t94Xynwai7iPocIzEqGk9etDEjC
-	 VymIuH726t288w1BgQr0NSvuqgL8LCuY+6mUSU4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 12035208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="PBP5wU9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfFUH3P (ORCPT
+        id S1726282AbfFUHaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfFUH3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:29:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E9D208C3;
-        Fri, 21 Jun 2019 07:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561102153;
-        bh=kPwFEjWK93xycgmBhsOnGfFIY99Nc6Bkb8Tptor+iqs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=y41jUmAOSMnjkujPbnGkQf0zhRwU2Je97kQwG2jtH13S07da1Dmedk5OCCnfN0dsP
-         L3UuM3nclZUdf6qnbGhOaQxa9KMPxh2DDh7B7RbyC0s+yTiG8N6sdeSeTS3f4V1Xrf
-         aakaUfGwqNs+2LbC6oyPvendd31cETNHqhMwZrmo=
-Date:   Fri, 21 Jun 2019 09:29:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: PCI/AER sysfs files violate the rules of how sysfs works
-Message-ID: <20190621072911.GA21600@kroah.com>
+        Fri, 21 Jun 2019 03:30:02 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45110 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfFUHaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:30:02 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s22so3718637qkj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 00:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WkEaRfmJ2lxB4cHAZsrZusAKPE5Z2Z71MkZUO31Jx1E=;
+        b=PBP5wU9tISPGu63i2R9PbxfTJtcQFFou7Ba8+cA4XCF0cCZw0gPKoZMDS+pFGeC9X1
+         EkS5TJRYu13Jv8LU8D3BtRk6eFaLYrM9fmePkuo6gL3pGWztZRoVh5lhYCitvaoYqgKT
+         JebB4ZRbWfOwWfVfHetepvBktv8YN5n1VqX24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WkEaRfmJ2lxB4cHAZsrZusAKPE5Z2Z71MkZUO31Jx1E=;
+        b=Kh9hFfbObVRMS3iuhRqBPdCnW6wsomiLCTY71bh1sKa1dS4BqbqO5CnEOiic4km7hA
+         eKqgDdoYBW3qAhLxQf+QFdGf8UPpwqNjACD3tjg3xW7aXdtIX8GwQLOXKfcyGR5rGnpB
+         RfRbTIN3t56/nHZvC4UA0Ivam7lZOE7e77GVdldvA5H99pyM18wVjfy0rAWTSKZO5ePL
+         LXpyYpnR3JCHIOdfFw7I1clFHG0c0aWJPSDGunsf531yAf1dcG0wnjOcGM2FsMJc6SUy
+         38FDpGLd6rNqEC2JNktnmDLt/+xPdJcZYoS8K9hoUnA4HT+fdte0DqrQXT4oG/pVPk9j
+         fvBQ==
+X-Gm-Message-State: APjAAAUIiH88xC2ORqR18ZFnVkcDCZi3q0iWteQXFs+OBP/JzXRz7RSb
+        37Ys/WwuDH0G9+Lap8d6yTHBjVkn0WqUuo4btu4=
+X-Google-Smtp-Source: APXvYqxexvdzv8wMFI7/+0MMKKue+8G4GIfPwAZsaxvkV7vkjuQW1Mf3UgQ1yYV0Al23wlw3lNbsU4MWWJOxSLbcjXs=
+X-Received: by 2002:a37:b0c6:: with SMTP id z189mr60239543qke.208.1561102200763;
+ Fri, 21 Jun 2019 00:30:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190621071342.17897-1-malat@debian.org>
+In-Reply-To: <20190621071342.17897-1-malat@debian.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 21 Jun 2019 07:29:48 +0000
+Message-ID: <CACPK8XcJgtCHqrHuNe6f2eLDKWvHRP-uEq1ozOdEnsmED-KL2Q@mail.gmail.com>
+Subject: Re: [PATCH] crypto: Fix build for clang
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 21 Jun 2019 at 07:13, Mathieu Malaterre <malat@debian.org> wrote:
+>
+> The header file `longlong.h` makes uses of GNU extensions, this trigger
+> an error when compiling this code with clang. Add a special flag to make
+> clang tolerate this syntax.
 
-When working on some documentation scripts to show the
-Documentation/ABI/ files in an automated way, I ran across this "gem" of
-a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+Another old copy of longlong.h in the kernel!
 
-In it you describe how the files
-/sys/bus/pci/devices/<dev>/aer_dev_correctable and
-/sys/bus/pci/devices/<dev>/aer_dev_fatal and
-/sys/bus/pci/devices/<dev>/aer_dev_nonfatal
-all display a bunch of text on multiple lines.
+This looks similar to another clang related warnings I fixed in the
+powerpc math-emu code. There's an updated version of these macros in
+GCC, and we updated the kernel version to match the GCC version. Can
+you see if a similar change would work here?
 
-This violates the "one value per sysfs file" rule, and should never have
-been merged as-is :(
+https://lore.kernel.org/linuxppc-dev/43BCRQ6ZqDz9s55@ozlabs.org/
+https://git.kernel.org/torvalds/c/b682c8692442711684befe413cf93cf01c5324ea
 
-Please fix it up to be a lot of individual files if your really need all
-of those different values.
+Cheers,
 
-Remember, sysfs files should never have to have a parser to read them
-other than a simple "what is this single value", and you should NEVER
-have fun macros like:
+Joel
 
-        for (i = 0; i < ARRAY_SIZE(strings_array); i++) {               \
-                if (strings_array[i])                                   \
-                        str += sprintf(str, "%s %llu\n",                \
-                                       strings_array[i], stats[i]);     \
-                else if (stats[i])                                      \
-                        str += sprintf(str, #stats_array "_bit[%d] %llu\n",\
-                                       i, stats[i]);                    \
-        }                                                               \
-        str += sprintf(str, "TOTAL_%s %llu\n", total_string,            \
-                       pdev->aer_stats->total_field);                   \
-
-spit out sysfs information.
-
-Note, I am all for not properly checking the length of the sysfs file
-when writing to it, but that is ONLY because you "know" that a single
-integer will never overflow anything.  Here you are writing a ton of
-different values, with no error checking at all.  So just when I thought
-it couldn't be any worse...
-
-Please fix.
-
-thanks,
-
-greg k-h
+>
+> Silence the following warnings triggered using W=1:
+>
+>     CC      lib/mpi/generic_mpih-mul1.o
+>   ../lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+>         -fheinous-gnu-extensions
+>                   umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+>           : "=r" ((USItype) ph) \
+>                   ~~~~~~~~~~^~
+>
+> and
+>
+>     CC      lib/mpi/generic_mpih-mul2.o
+>   ../lib/mpi/generic_mpih-mul2.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+>         -fheinous-gnu-extensions
+>                   umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+>           : "=r" ((USItype) ph) \
+>                   ~~~~~~~~~~^~
+>
+>   1 warning generated.
+>     CC      lib/mpi/generic_mpih-mul3.o
+>   ../lib/mpi/generic_mpih-mul3.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
+>         -fheinous-gnu-extensions
+>                   umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
+>           : "=r" ((USItype) ph) \
+>                   ~~~~~~~~~~^~
+>
+> Or even:
+>
+>   ../lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
+>                                   sub_ddmmss(n1, n0, n1, n0, d1, d0);
+>                                   ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+>  lib/mpi/Makefile | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/lib/mpi/Makefile b/lib/mpi/Makefile
+> index d5874a7f5ff9..de4d96e988a3 100644
+> --- a/lib/mpi/Makefile
+> +++ b/lib/mpi/Makefile
+> @@ -5,6 +5,13 @@
+>
+>  obj-$(CONFIG_MPILIB) = mpi.o
+>
+> +ifdef CONFIG_CC_IS_CLANG
+> +CFLAGS_generic_mpih-mul1.o  += -fheinous-gnu-extensions
+> +CFLAGS_generic_mpih-mul2.o  += -fheinous-gnu-extensions
+> +CFLAGS_generic_mpih-mul3.o  += -fheinous-gnu-extensions
+> +CFLAGS_mpih-div.o  += -fheinous-gnu-extensions
+> +endif
+> +
+>  mpi-y = \
+>         generic_mpih-lshift.o           \
+>         generic_mpih-mul1.o             \
+> --
+> 2.20.1
+>
