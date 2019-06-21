@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A942C48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F5821530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9820216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfFUJyh (ORCPT
+        id S1727246AbfFUJyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:54:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:55684 "EHLO foss.arm.com"
+        Fri, 21 Jun 2019 05:54:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:55606 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbfFUJxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:53:55 -0400
+        id S1726617AbfFUJxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:53:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FD291500;
-        Fri, 21 Jun 2019 02:53:54 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 135F5147A;
+        Fri, 21 Jun 2019 02:53:49 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15F783F246;
-        Fri, 21 Jun 2019 02:53:51 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CDD83F246;
+        Fri, 21 Jun 2019 02:53:46 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -46,9 +45,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Huw Davies <huw@codeweavers.com>,
         Shijith Thotton <sthotton@marvell.com>,
         Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v7 17/25] arm: Add clock_getres entry point
-Date:   Fri, 21 Jun 2019 10:52:44 +0100
-Message-Id: <20190621095252.32307-18-vincenzo.frascino@arm.com>
+Subject: [PATCH v7 15/25] arm64: Add vDSO compat support
+Date:   Fri, 21 Jun 2019 10:52:42 +0100
+Message-Id: <20190621095252.32307-16-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190621095252.32307-1-vincenzo.frascino@arm.com>
 References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
@@ -59,86 +58,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic vDSO library provides an implementation of clock_getres() that
-can be leveraged by each architecture.
+Add vDSO compat support to the arm64 building system.
 
-Add clock_getres() entry point on arm to be on pair with arm64.
-
-Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Tested-by: Shijith Thotton <sthotton@marvell.com>
+Tested-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm/include/asm/vdso/gettimeofday.h | 20 ++++++++++++++++++++
- arch/arm/vdso/vdso.lds.S                 |  1 +
- arch/arm/vdso/vgettimeofday.c            |  6 ++++++
- 3 files changed, 27 insertions(+)
+ arch/arm64/Kconfig         |  1 +
+ arch/arm64/Makefile        | 23 +++++++++++++++++++++--
+ arch/arm64/kernel/Makefile |  6 +++++-
+ 3 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/include/asm/vdso/gettimeofday.h b/arch/arm/include/asm/vdso/gettimeofday.h
-index 30ce4e87dffc..5b879ae7afc1 100644
---- a/arch/arm/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm/include/asm/vdso/gettimeofday.h
-@@ -12,6 +12,8 @@
- #include <asm/unistd.h>
- #include <uapi/linux/time.h>
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 952c9f8cf3b8..f5eb592b8579 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -108,6 +108,7 @@ config ARM64
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
++	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HARDIRQS_SW_RESEND
+ 	select HAVE_PCI
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index b025304bde46..4db50d4b2476 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -49,9 +49,25 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
+   endif
+ endif
  
-+#define VDSO_HAS_CLOCK_GETRES		1
+-KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
++ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
++  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
 +
- extern struct vdso_data *__get_datapage(void);
++  ifeq ($(CONFIG_CC_IS_CLANG), y)
++    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
++  else ifeq ($(CROSS_COMPILE_COMPAT),)
++    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
++  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
++    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
++  else
++    export CROSS_COMPILE_COMPAT
++    export CONFIG_COMPAT_VDSO := y
++    compat_vdso := -DCONFIG_COMPAT_VDSO=1
++  endif
++endif
++
++KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst) $(compat_vdso)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+-KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
++KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst) $(compat_vdso)
  
- static __always_inline int gettimeofday_fallback(
-@@ -50,6 +52,24 @@ static __always_inline long clock_gettime_fallback(
- 	return ret;
- }
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+ KBUILD_AFLAGS	+= $(call cc-option,-mabi=lp64)
+@@ -163,6 +179,9 @@ ifeq ($(KBUILD_EXTMOD),)
+ prepare: vdso_prepare
+ vdso_prepare: prepare0
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
++	$(if $(CONFIG_COMPAT_VDSO),$(Q)$(MAKE) \
++		$(build)=arch/arm64/kernel/vdso32  \
++		include/generated/vdso32-offsets.h)
+ endif
  
-+static __always_inline int clock_getres_fallback(
-+					clockid_t _clkid,
-+					struct __kernel_timespec *_ts)
-+{
-+	register struct __kernel_timespec *ts asm("r1") = _ts;
-+	register clockid_t clkid asm("r0") = _clkid;
-+	register long ret asm ("r0");
-+	register long nr asm("r7") = __NR_clock_getres_time64;
-+
-+	asm volatile(
-+	"       swi #0\n"
-+	: "=r" (ret)
-+	: "r" (clkid), "r" (ts), "r" (nr)
-+	: "memory");
-+
-+	return ret;
-+}
-+
- static __always_inline u64 __arch_get_hw_counter(int clock_mode)
- {
- #ifdef CONFIG_ARM_ARCH_TIMER
-diff --git a/arch/arm/vdso/vdso.lds.S b/arch/arm/vdso/vdso.lds.S
-index 89ca89f12d23..1d81e8c3acf6 100644
---- a/arch/arm/vdso/vdso.lds.S
-+++ b/arch/arm/vdso/vdso.lds.S
-@@ -82,6 +82,7 @@ VERSION
- 	global:
- 		__vdso_clock_gettime;
- 		__vdso_gettimeofday;
-+		__vdso_clock_getres;
- 	local: *;
- 	};
- }
-diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
-index fea6b3c89f43..d3330c0c1147 100644
---- a/arch/arm/vdso/vgettimeofday.c
-+++ b/arch/arm/vdso/vgettimeofday.c
-@@ -32,6 +32,12 @@ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
- 	return __cvdso_gettimeofday(tv, tz);
- }
+ define archhelp
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 9e7dcb2c31c7..478491f07b4f 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -28,7 +28,10 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
+ 	$(call if_changed,objcopy)
  
-+int __vdso_clock_getres(clockid_t clock_id,
-+			struct old_timespec32 *res)
-+{
-+	return __cvdso_clock_getres_time32(clock_id, res);
-+}
-+
- /* Avoid unresolved references emitted by GCC */
+ obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
+-					   sigreturn32.o sys_compat.o
++					   sys_compat.o
++ifneq ($(CONFIG_COMPAT_VDSO), y)
++obj-$(CONFIG_COMPAT)			+= sigreturn32.o
++endif
+ obj-$(CONFIG_KUSER_HELPERS)		+= kuser32.o
+ obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o entry-ftrace.o
+ obj-$(CONFIG_MODULES)			+= module.o
+@@ -62,6 +65,7 @@ obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
+ obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
  
- void __aeabi_unwind_cpp_pr0(void)
+ obj-y					+= vdso/ probes/
++obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
+ head-y					:= head.o
+ extra-y					+= $(head-y) vmlinux.lds
+ 
 -- 
 2.21.0
 
