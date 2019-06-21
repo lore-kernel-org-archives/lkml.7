@@ -2,146 +2,220 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7377C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB851C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F7C206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921982089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNHPZJQT"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jbf4KPE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfFUHN4 (ORCPT
+        id S1726276AbfFUHQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:13:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34599 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfFUHNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:13:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so5475679wrl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 00:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1XT/pfvoYcCU99F59K2rs15fGDiUVH52ZV6XFVTDAZg=;
-        b=FNHPZJQT0oP/iQev1yEfbzz7TBuZfZ/U6l19Qs+u5B4uUVILUj88XveLBnE1cP7phD
-         avkhrE2Nk/QJZ5WTFd9XtYLs8i2uMGwzJog4716PxM9t1zTTHSm08eZ2djwc6Ey6xNVK
-         ysMqi/6adk3t9hKFEV0mEDjWFJKoa4qeHjIzhil/lLLR6ipm+rV9Rb5RiYQJNc3+zHZg
-         71MlXZ4N8KghHFoGBeSAc4jjai+PyXVFVf7/goaDUPZSUgPVgquWFPoyCg/TBXPLaQJ4
-         RwmPH2Ez8uxL58aVivHwpMCDxRASNQiqvVkqNa2F0axmXHDjvBdYY8itTDMKcbRTJvH8
-         oIoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=1XT/pfvoYcCU99F59K2rs15fGDiUVH52ZV6XFVTDAZg=;
-        b=tP0iry0NzHGS6TbzkuIgKfsA0e1NQzvHmyi9apBQsjEiLZX8bGcRJ/kgzJ08GtwCtP
-         qtYdc4JnONpZGQNWKDzTIMaKhKy+WiEuGt7wZZtRWZD1QREzGUhxaMMuRGQb/vQTc6sc
-         BnZyDK4KS63Wz6Wg5TOQXgzKWwAbST6snRrWy5RMJoyIRwD1WWX7qz2OeUr2dUTPzPTE
-         4PjhdGgMP3VJwQZMCCLfpL/FMSDOkp11OOBdlmd+EjKLFy4+KISe5SALl7LyDKkZ9mYq
-         BPv8u50WOQsi9T03fXMsoXkO+82izRVmT9CjearltItuGfc2eqdFofbsri2W5KotR9jv
-         GXFg==
-X-Gm-Message-State: APjAAAU+ER0HW0aJ7bBj3NDSCZtbErBs36bCGn3c5hHIEoRsqxDpx29M
-        2l248zEtp2sBpsXOfeQsOrU=
-X-Google-Smtp-Source: APXvYqwic8lT0iHowCcMQQlRyfpllWHv0oF80PCYXOg98bo0prLqUtrK6pWcKhlDH+DD0zDRFjsgUg==
-X-Received: by 2002:a5d:65c5:: with SMTP id e5mr39709226wrw.266.1561101233750;
-        Fri, 21 Jun 2019 00:13:53 -0700 (PDT)
-Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
-        by smtp.gmail.com with ESMTPSA id b2sm2202403wrp.72.2019.06.21.00.13.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 00:13:53 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id E9CBB11459C7; Fri, 21 Jun 2019 09:13:51 +0200 (CEST)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     Dmitry Kasatkin <dmitry.kasatkin@intel.com>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: Fix build for clang
-Date:   Fri, 21 Jun 2019 09:13:42 +0200
-Message-Id: <20190621071342.17897-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Jun 2019 03:16:09 -0400
+Received: from mail-eopbgr1320098.outbound.protection.outlook.com ([40.107.132.98]:36144
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726008AbfFUHQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:16:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AeUcAgMbO8ZAt6d0/qGVwLqdRAfRu0hYjAtKKDzdhMsiSCROaIh1A36Qo18AxAWF6dDhnGLL/Xy3/r3ClAadDqkxlN3YZYqj3kTZ2Od5a0ugCHrVbJqIC1c3nzrW8KHSxrVRT3Ko5nSdZNguEBqMk383/dJBFW6AqGVE7eNaKSk+kUeRbkmDYyI3EbnYJj4XsMu2ojLoWGy5QqvNsBOXP1TqrOa1fYP49kkIQxpiF+42xaDfODy7XZ5Gccm+VC11mUyr24wtwYordHqTg5Gz+5qQfvxhm/k1DqS9Kex97c3erhGhcWO3IOzLzz6tUdTNrsdGqDvbysd1YXFlJKU3vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Unt8Dg+vuqUA9gSK4AUZJpp2XO8rshPozLolP4/3+z0=;
+ b=GVQzhLujA7vt0WSaWi+I+vzZID/BPNWeYTu65CAtnMCQo5wpdUcLERKdaHDzjUW8J+2lMFk1cQPu+MDQG1v4/Al3RlNE2h6WNUaviz3hLFjXTrunA99I5aoabndpAE8avIB5fBWkt+YklL5v8jwLB97vadJVrVLO13t6v/x34tA4cSAATxeSh5r3CWOPC2v0UyPD7upmDtkIXWtXd/1K94rWpIkOeLP9PmZXolbeCqpmfd1Sb3mhhOXnfpSDaeKE09tSsB2i4qjforu8vZtIcefkr5IJo9xpRK4PeNtfUZ0SO/8k26g8nVrhZvV5FYb+qinolwNnISHV1cpUmD6CPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Unt8Dg+vuqUA9gSK4AUZJpp2XO8rshPozLolP4/3+z0=;
+ b=jbf4KPE1fgpaglj0kdiuPGL380BUxf6p87mlaYdCWtcBcwppU2OKPhdk/IadBlVKkTiY4sVlwm4PytPI8zXPrTD/O68oLnMYXkqbQGKhpkxMKe6LMSfZZIHk4rd1Z3LhEZR6/bg1Szu+qUZPslOtWuJAiiUmz47NrtT3lyd33Xk=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0107.APCP153.PROD.OUTLOOK.COM (10.170.188.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.6; Fri, 21 Jun 2019 07:15:49 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::19b8:f479:a623:509b]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::19b8:f479:a623:509b%5]) with mapi id 15.20.2032.008; Fri, 21 Jun 2019
+ 07:15:49 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Russ Dill <Russ.Dill@ti.com>,
+        Sebastian Capella <sebastian.capella@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Thread-Topic: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Thread-Index: AQHVIt2lUviLbUjfZEmzRslUu7e03qabnRQggAAYmbCABFQwAIAALIpAgAQ7H4CAAOhCUA==
+Date:   Fri, 21 Jun 2019 07:15:48 +0000
+Message-ID: <PU1P153MB016948F8B81454D4A5C13136BFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
+ <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+ <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
+ <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190620113057.GA16460@atrey.karlin.mff.cuni.cz>
+In-Reply-To: <20190620113057.GA16460@atrey.karlin.mff.cuni.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-21T07:15:45.2170027Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=522de71d-c779-4f12-ba15-bdb3bccf93af;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:f58c:4b5a:d34b:1e33]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2606ef1f-5fae-4a86-946c-08d6f61849aa
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0107;
+x-ms-traffictypediagnostic: PU1P153MB0107:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0107009764D9C54BB0CF136FBFE70@PU1P153MB0107.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(39860400002)(396003)(189003)(199004)(66446008)(66556008)(66476007)(68736007)(446003)(476003)(11346002)(14454004)(86362001)(76116006)(46003)(486006)(66946007)(73956011)(6116002)(64756008)(52536014)(186003)(71190400001)(71200400001)(7416002)(5660300002)(6916009)(54906003)(53936002)(6246003)(102836004)(478600001)(229853002)(76176011)(4326008)(9686003)(74316002)(305945005)(6506007)(22452003)(7696005)(7736002)(316002)(10290500003)(6436002)(8936002)(256004)(14444005)(2906002)(8990500004)(55016002)(10090500001)(8676002)(81156014)(81166006)(25786009)(33656002)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0107;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vBW/aPIAUhkLbSWTri2EJbv3qw3iYDZH0MPmuCD6tPt8bh7jgnOA+jat2Y5pzdC0rnYILUgNKGV8iv2EvYTxDQe8RjSCuX/KExQYrRkRa/CiUB+4UPCkkHYf+y3E2wQKJRzYbupf5Wqn0Vyf+Z4IraUF9Xzz+SOWOFIGjtCGHpQz3llmredR21hBbAzc+8TBl/9+t0t0EKhnf3RFC/LaRkgh2T4J89UxzzbIHvcRNJaQGj04KaSMX34UU9N67OVGkEQ43lyp15COrgyYV6mafOOziX9P2sr+NSchGBmGJpazVbt28Cet5F/A/+PoGzVBRFuDHLO55mCjW/ZaAtgKZID//YHMpGbyfoTsxTSHVO1TVQMG5oCSmut/+Ccru2/hjTlbesyyg6rTNNY2pktAKdKpg6ALi3HLMvrJhco/hAw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2606ef1f-5fae-4a86-946c-08d6f61849aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 07:15:48.8921
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header file `longlong.h` makes uses of GNU extensions, this trigger
-an error when compiling this code with clang. Add a special flag to make
-clang tolerate this syntax.
+> From: linux-hyperv-owner@vger.kernel.org
+> > ...
+> > When a Linux guest runs on Hyper-V (x86_32, x86_64, or ARM64) , we have=
+ a
+> > front-end balloon driver in the guest, which balloons up/down and
+> > hot adds/removes the guest's memory when the host requests that. The
+> > problem
+> > is: the back-end driver on the host can not really save and restore the=
+ states
+> > related to the front-end balloon driver on guest hibernation, so we mad=
+e the
+> > decision that balloon up/down and hot-add/remove are not supported when
+> > we enable hibernation for a guest; BTW, we still want to load the front=
+-end
+> > driver in the guest, because the driver has a functionality of reportin=
+g the
+> > guest's memory pressure to the host, which we think is useful.
+> >
+> > On x86_32 and x86_64, we enable hibernation for a guest by enabling
+> > the virtual ACPI S4 state for the guest; on ARM64, so far we don't have=
+ the
+> > host side changes required to support guest hibernation, so the details=
+ are
+> > still unclear.
+> >
+> > After I discussed with Michael Kelley, it looks we don't really need to
+> > export drivers/acpi/sleep.c: acpi_sleep_state_supported(), but I think =
+we do
+> > need to make it non-static.
+> >
+> > Now I propose the below changes. I plan to submit a patch first for the
+> > changes made to drivers/acpi/sleep.c and include/acpi/acpi_bus.h in a f=
+ew
+> > days, if there is no objection.
+> >
+> > Please let me know how you think of this. Thanks!
+>=20
+> No.
+>=20
+> Hibernation should be always supported, no matter what firmware. If it
+> can powerdown, it can hibernate.
+>=20
+> That is for x86-32/64, too.
+> 						Pavel
 
-Silence the following warnings triggered using W=1:
+Hi Pavel,
+Yes, I totally agree hibernation should be always supported, as long as the
+system can power down. This is also true for Linux guest running on
+Hyper-V, when the pava-virtualized drivers are not loaded in the guest
 
-    CC      lib/mpi/generic_mpih-mul1.o
-  ../lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
-        -fheinous-gnu-extensions
-                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
-          : "=r" ((USItype) ph) \
-                  ~~~~~~~~~~^~
+However, unluckily the situation is a little different when the pava-virtua=
+lized
+drivers are loaded in the guest:
 
-and
+1) Old Hyper-V hosts are unable to support guest hibernation and these host=
+s
+don't support the virtual ACPI S4 state.
 
-    CC      lib/mpi/generic_mpih-mul2.o
-  ../lib/mpi/generic_mpih-mul2.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
-        -fheinous-gnu-extensions
-                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
-          : "=r" ((USItype) ph) \
-                  ~~~~~~~~~~^~
+2) The recent Hyper-V host is able to support guest hibernation, but when
+guest hibernation is used, the guest needs to disable some features in the
+guest balloon driver, as I explained in the previous mail; on the other han=
+d,
+we also want to keep the ability to enable the features, so the Hyper-V guy=
+s=20
+decided to use the absence of the virtual ACPI S4 state to signify the abil=
+ity
+of enabling the features, and there is a host command tool which can
+enable or disable the virtual ACPI S4 state for a guest.
 
-  1 warning generated.
-    CC      lib/mpi/generic_mpih-mul3.o
-  ../lib/mpi/generic_mpih-mul3.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with
-        -fheinous-gnu-extensions
-                  umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                  ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ../lib/mpi/longlong.h:824:20: note: expanded from macro 'umul_ppmm'
-          : "=r" ((USItype) ph) \
-                  ~~~~~~~~~~^~
+In summary:
+1) On old Hyper-V hosts or a recent host, the virtual ACPI S4 state is
+unsupported or disabled, respectively, and we don't allow Linux guest
+hibernation so we can use the full features of the guest balloon driver.
 
-Or even:
+2) On a recent host, after we use the host command tool to enable the
+virtual ACPI S4 state, we allow Linux guest hibernation and we only use a
+subset of the full features of the guest balloon driver.=20
 
-  ../lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
-                                  sub_ddmmss(n1, n0, n1, n0, d1, d0);
-                                  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+This is why I need to know if the virtual ACPI S4 state is supported-and-en=
+abled.
 
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- lib/mpi/Makefile | 7 +++++++
- 1 file changed, 7 insertions(+)
+Exporting acpi_sleep_state_supported() may be overkill, and now making it
+non-static seems the only way to help me out. IMO the function is unlikely
+to change in the future, and it should be stable enough to become non-stati=
+c.
 
-diff --git a/lib/mpi/Makefile b/lib/mpi/Makefile
-index d5874a7f5ff9..de4d96e988a3 100644
---- a/lib/mpi/Makefile
-+++ b/lib/mpi/Makefile
-@@ -5,6 +5,13 @@
- 
- obj-$(CONFIG_MPILIB) = mpi.o
- 
-+ifdef CONFIG_CC_IS_CLANG
-+CFLAGS_generic_mpih-mul1.o  += -fheinous-gnu-extensions
-+CFLAGS_generic_mpih-mul2.o  += -fheinous-gnu-extensions
-+CFLAGS_generic_mpih-mul3.o  += -fheinous-gnu-extensions
-+CFLAGS_mpih-div.o  += -fheinous-gnu-extensions
-+endif
-+
- mpi-y = \
- 	generic_mpih-lshift.o		\
- 	generic_mpih-mul1.o		\
--- 
-2.20.1
+Looking forward to your insights!
 
+Thanks,
+-- Dexuan
