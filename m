@@ -2,74 +2,69 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D6C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6CCC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528C32070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="xYV18237"
+	by mail.kernel.org (Postfix) with ESMTP id 52DA121530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561137908;
+	bh=WJfaQHHTtyAG58jD/On+knb225KjDgZSrOCP4affZBI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=b7e8wwa9ru5g4+WkhWMJNZ4NMHLTO+WNJfkDYCrh5GfkDWFD/tlYcxv9WWoIdPOmn
+	 3hIaoPhXGLlMbUihxz/yNz1harM2M/54S2aREEZ1z7aAxeV+dKdp2ApZuH7eJnS7tJ
+	 B/5yyj430NcCFv5oPGT/1empL79OCi0lR/EV4vHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfFURVs (ORCPT
+        id S1726066AbfFURZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:21:48 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:37248 "EHLO mail.z3ntu.xyz"
+        Fri, 21 Jun 2019 13:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbfFURVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:21:47 -0400
-Received: from localhost.localdomain (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 57BE8C6647;
-        Fri, 21 Jun 2019 17:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1561137705; bh=LUu3Vfg+EG2c+fNXyI1ZyzCVTnhx29KZ2Jnx2l94c8U=;
-        h=From:To:Cc:Subject:Date;
-        b=xYV18237cJrWCIP991uu7xsMyj9RWWWLg8yt8kn68sxYjPLi31dHGjxLh3ZuceQ2o
-         h4arblbV4QFWVKDXu41Q1oJTO7VwBYb3uXZXjKGs9HCo6/DF9PsbrRk+0cgS+HQlSU
-         xV9Z/Sx7D1Iyhw2wMUBphMWUelkXyykrbnlp3QHo=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-media@vger.kernel.org
-Cc:     ~martijnbraam/pmos-upstream@lists.sr.ht,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: ov5640: Add support for flash and lens devices
-Date:   Fri, 21 Jun 2019 19:20:25 +0200
-Message-Id: <20190621172025.27881-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1725985AbfFURZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:25:06 -0400
+Subject: Re: [GIT PULL] SMB3 Fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561137905;
+        bh=WJfaQHHTtyAG58jD/On+knb225KjDgZSrOCP4affZBI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=2F0O1hG3XuCHJ4Ow0an69ruH6fAiFgzDJfthJQ8jBNDjtVSI6hCP14Z7+iDa7g8D1
+         hZeZcqIzxTHRRAyVNuZsU9KnJaQdIpUx2KDHmtjWLTBeG4OwEnrMRC7BhFRsTzArxy
+         Bq5QVSkqBH6kunplTC4yP8ynd2rkS5rwdlTYfysU=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5mumke0cYEdt3nCsmWmqgUcShYFMy6UacMnAuKcER4RNSQ@mail.gmail.com>
+References: <CAH2r5mumke0cYEdt3nCsmWmqgUcShYFMy6UacMnAuKcER4RNSQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5mumke0cYEdt3nCsmWmqgUcShYFMy6UacMnAuKcER4RNSQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.2-rc5-smb3-fixes
+X-PR-Tracked-Commit-Id: 61cabc7b0a5cf0d3c532cfa96594c801743fe7f6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 05512b0f46526c4e248b1da9386d73a84b7d327b
+Message-Id: <156113790569.2072.11730292495415983203.pr-tracker-bot@kernel.org>
+Date:   Fri, 21 Jun 2019 17:25:05 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parse async sub-devices related to the sensor by switching the async
-sub-device registration function.
+The pull request you sent on Thu, 20 Jun 2019 21:02:17 -0500:
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/media/i2c/ov5640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.2-rc5-smb3-fixes
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 82d4ce93312c..0c6f890bc708 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -3054,7 +3054,7 @@ static int ov5640_probe(struct i2c_client *client,
- 	if (ret)
- 		goto entity_cleanup;
- 
--	ret = v4l2_async_register_subdev(&sensor->sd);
-+	ret = v4l2_async_register_subdev_sensor_common(&sensor->sd);
- 	if (ret)
- 		goto free_ctrls;
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/05512b0f46526c4e248b1da9386d73a84b7d327b
+
+Thank you!
+
 -- 
-2.22.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
