@@ -2,222 +2,161 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459E3C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFD0C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC5820673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561110089;
-	bh=RUhdn1Fmrgf8hVLPUiLBH+TPrUQP4dOPOdTJb/LnqtY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mowcbmv9oneO4FYbiSPWhHxpVtHUQzjkSkRyDucYamfyR0TDDV+yHDy1j47qqbfme
-	 j87tNvzGJ/Oxt3p7ExJYUwOw1djCR8dA5qRwJNg99ax8G/v3amMXoWDeaQhGWfVTkc
-	 V2ltB0Z+X3w2FMYuhm/r9GIjmLwWxfzg194LwSpk=
+	by mail.kernel.org (Postfix) with ESMTP id C57AC21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atUeVU1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfFUJl2 (ORCPT
+        id S1726954AbfFUJlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfFUJkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:40:25 -0400
-Received: from localhost.localdomain (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F1820673;
-        Fri, 21 Jun 2019 09:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561110024;
-        bh=RUhdn1Fmrgf8hVLPUiLBH+TPrUQP4dOPOdTJb/LnqtY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUmaTQod0r/I/XSqI+fJry40BgwW1Z8jeSlAYe0F6cPJ7Soy8mOxJM4SG4pXm3lCo
-         o7GQ46bOwXMiwzB02MHEIX4qh2CreB80W3GuN3/s59hlE0gQGSvk00T5S11U2eOD55
-         e7NPsZzpZdlAZyeOwFZnh/pFbD4LWcqkur0Bj+cA=
-From:   guoren@kernel.org
-To:     julien.grall@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org
-Cc:     linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V2 3/4] csky: Use generic asid algorithm to implement switch_mm
-Date:   Fri, 21 Jun 2019 17:39:58 +0800
-Message-Id: <1561109999-4322-4-git-send-email-guoren@kernel.org>
+        Fri, 21 Jun 2019 05:41:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34080 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFUJkV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:40:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so3324146pfc.1;
+        Fri, 21 Jun 2019 02:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gDChq3jgrlh7Kfl67z51Bq3UYV+aDXpvLz2pr3LXsbw=;
+        b=atUeVU1wcczoU76Kdq0ubtl5EaLRaarzaAxHhV7CRiTol2lTgAi9mSfuHgTZ4jKcj0
+         jWsm59MMmrpQlZaBYrKadRnDSwL6g0pmpPvaQtwuaR6FC3AZ+mSoKRamYX4T8dGWFWQH
+         XTjaJUe0QI7NHZcmtnAQthuYuXr5FeKtPUNEqo6E2SYRKGV5I2om1c8raJLtJlcKKCGu
+         +KCqV1Auk6nxjztT0Izd9sbJnH3S74UFGKxP00k2HT883OVeZkzArgneusEK8A4+RO7c
+         oNkB5OOftcpimbjwsuXTAAZ8VK2LneXxrWqyuw6QdVDA36ixe73J6xaF41jOmcSNErN9
+         rXfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gDChq3jgrlh7Kfl67z51Bq3UYV+aDXpvLz2pr3LXsbw=;
+        b=FZMW3GkllWkTb3eF/zqt4/LPMIVRIBzmTG7IdqgEUPFnoewUNrTpRneaDvudfhxpt+
+         oBbjjvZVXqj6vwy62x4KwqvUjWbZ02WqMqu0yhrUEgcHFBxfdOcXPevZLkxCYJZeoGrZ
+         1eL9UNN3PDvpRXmt6y9IYOUEr0BwSDU15In5KcWkUKpjNmmeDAcf1Wubxws0EK2zPVm0
+         Mw6czHqFIi4dIc8H+1PxEbYBP+yXqy6yoqnnjZHzPU0oA+OHFqQQVzCKuucmBWGNKL2p
+         4Ouj02Ax8toe/DXkpbW6pAc/KceipuDbfvZcYf06oPlJUN/RWmY7SE19JbRB/yitrnYv
+         Yung==
+X-Gm-Message-State: APjAAAWELRfHiG3io65i8yuZv87dhMEXX5n5/NRhMnTuhnxo2PxRsSmH
+        sfH9HRcUsjv83v7R1PWtZkXpV2NW
+X-Google-Smtp-Source: APXvYqzSpDiVbBYFbXVJ82vVhV16mKsR/7Exr86GibnvfdCZ6k7SBKf0ewTsP0MSq+vCZSjvt2AhHQ==
+X-Received: by 2002:a17:90a:22ef:: with SMTP id s102mr5601135pjc.2.1561110021153;
+        Fri, 21 Jun 2019 02:40:21 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id y14sm1999506pjr.13.2019.06.21.02.40.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 21 Jun 2019 02:40:20 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH v5 4/4] KVM: LAPIC: Don't inject already-expired timer via posted interrupt
+Date:   Fri, 21 Jun 2019 17:40:02 +0800
+Message-Id: <1561110002-4438-5-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561109999-4322-1-git-send-email-guoren@kernel.org>
-References: <1561109999-4322-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Use linux generic asid/vmid algorithm to implement csky
-switch_mm function. The algorithm is from arm and it could
-work with SMP system. It'll help reduce tlb flush for
-switch_mm in task/vm switch.
+already-expired timer interrupt can be injected to guest when vCPU who 
+arms the lapic timer re-vmentry, don't posted inject in this case.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/csky/abiv1/inc/abi/ckmmu.h     |  6 +++++
- arch/csky/abiv2/inc/abi/ckmmu.h     | 10 ++++++++
- arch/csky/include/asm/mmu.h         |  1 +
- arch/csky/include/asm/mmu_context.h | 12 ++++++++--
- arch/csky/mm/Makefile               |  1 +
- arch/csky/mm/context.c              | 46 +++++++++++++++++++++++++++++++++++++
- 6 files changed, 74 insertions(+), 2 deletions(-)
- create mode 100644 arch/csky/mm/context.c
+ arch/x86/kvm/lapic.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/csky/abiv1/inc/abi/ckmmu.h b/arch/csky/abiv1/inc/abi/ckmmu.h
-index 81f3771..ba8eb58 100644
---- a/arch/csky/abiv1/inc/abi/ckmmu.h
-+++ b/arch/csky/abiv1/inc/abi/ckmmu.h
-@@ -78,6 +78,12 @@ static inline void tlb_invalid_all(void)
- 	cpwcr("cpcr8", 0x04000000);
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index ae575c0..7cd95ea 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1452,7 +1452,7 @@ static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
+ 	}
  }
  
-+
-+static inline void local_tlb_invalid_all(void)
-+{
-+	tlb_invalid_all();
-+}
-+
- static inline void tlb_invalid_indexed(void)
+-static void apic_timer_expired(struct kvm_lapic *apic)
++static void apic_timer_expired(struct kvm_lapic *apic, bool can_pi_inject)
  {
- 	cpwcr("cpcr8", 0x02000000);
-diff --git a/arch/csky/abiv2/inc/abi/ckmmu.h b/arch/csky/abiv2/inc/abi/ckmmu.h
-index e4480e6..73ded7c 100644
---- a/arch/csky/abiv2/inc/abi/ckmmu.h
-+++ b/arch/csky/abiv2/inc/abi/ckmmu.h
-@@ -85,6 +85,16 @@ static inline void tlb_invalid_all(void)
- #endif
+ 	struct kvm_vcpu *vcpu = apic->vcpu;
+ 	struct swait_queue_head *q = &vcpu->wq;
+@@ -1464,7 +1464,7 @@ static void apic_timer_expired(struct kvm_lapic *apic)
+ 	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
+ 		ktimer->expired_tscdeadline = ktimer->tscdeadline;
+ 
+-	if (posted_interrupt_inject_timer(apic->vcpu)) {
++	if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
+ 		if (apic->lapic_timer.timer_advance_ns)
+ 			kvm_wait_lapic_expire(vcpu, true);
+ 		kvm_apic_inject_pending_timer_irqs(apic);
+@@ -1607,7 +1607,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+ 		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
+ 		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS);
+ 	} else
+-		apic_timer_expired(apic);
++		apic_timer_expired(apic, false);
+ 
+ 	local_irq_restore(flags);
  }
+@@ -1697,7 +1697,7 @@ static void start_sw_period(struct kvm_lapic *apic)
  
-+static inline void local_tlb_invalid_all(void)
-+{
-+#ifdef CONFIG_CPU_HAS_TLBI
-+	asm volatile("tlbi.all\n":::"memory");
-+	sync_is();
-+#else
-+	tlb_invalid_all();
-+#endif
-+}
-+
- static inline void tlb_invalid_indexed(void)
- {
- 	mtcr("cr<8, 15>", 0x02000000);
-diff --git a/arch/csky/include/asm/mmu.h b/arch/csky/include/asm/mmu.h
-index 06f509a..b382a14 100644
---- a/arch/csky/include/asm/mmu.h
-+++ b/arch/csky/include/asm/mmu.h
-@@ -5,6 +5,7 @@
- #define __ASM_CSKY_MMU_H
+ 	if (ktime_after(ktime_get(),
+ 			apic->lapic_timer.target_expiration)) {
+-		apic_timer_expired(apic);
++		apic_timer_expired(apic, false);
  
- typedef struct {
-+	atomic64_t	asid;
- 	void *vdso;
- } mm_context_t;
+ 		if (apic_lvtt_oneshot(apic))
+ 			return;
+@@ -1759,7 +1759,7 @@ static bool start_hv_timer(struct kvm_lapic *apic)
+ 		if (atomic_read(&ktimer->pending)) {
+ 			cancel_hv_timer(apic);
+ 		} else if (expired) {
+-			apic_timer_expired(apic);
++			apic_timer_expired(apic, false);
+ 			cancel_hv_timer(apic);
+ 		}
+ 	}
+@@ -1809,7 +1809,7 @@ void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu)
+ 		goto out;
+ 	WARN_ON(swait_active(&vcpu->wq));
+ 	cancel_hv_timer(apic);
+-	apic_timer_expired(apic);
++	apic_timer_expired(apic, false);
  
-diff --git a/arch/csky/include/asm/mmu_context.h b/arch/csky/include/asm/mmu_context.h
-index 86dde48..0285b0a 100644
---- a/arch/csky/include/asm/mmu_context.h
-+++ b/arch/csky/include/asm/mmu_context.h
-@@ -20,20 +20,28 @@
- #define TLBMISS_HANDLER_SETUP_PGD_KERNEL(pgd) \
- 	setup_pgd(__pa(pgd), true)
+ 	if (apic_lvtt_period(apic) && apic->lapic_timer.period) {
+ 		advance_periodic_target_expiration(apic);
+@@ -2312,7 +2312,7 @@ static enum hrtimer_restart apic_timer_fn(struct hrtimer *data)
+ 	struct kvm_timer *ktimer = container_of(data, struct kvm_timer, timer);
+ 	struct kvm_lapic *apic = container_of(ktimer, struct kvm_lapic, lapic_timer);
  
--#define init_new_context(tsk,mm)	0
-+#define ASID_MASK		((1 << CONFIG_CPU_ASID_BITS) - 1)
-+#define cpu_asid(mm)		(atomic64_read(&mm->context.asid) & ASID_MASK)
-+
-+#define init_new_context(tsk,mm)	({ atomic64_set(&(mm)->context.asid, 0); 0; })
- #define activate_mm(prev,next)		switch_mm(prev, next, current)
+-	apic_timer_expired(apic);
++	apic_timer_expired(apic, true);
  
- #define destroy_context(mm)		do {} while (0)
- #define enter_lazy_tlb(mm, tsk)		do {} while (0)
- #define deactivate_mm(tsk, mm)		do {} while (0)
- 
-+void check_and_switch_context(struct mm_struct *mm, unsigned int cpu);
-+
- static inline void
- switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 	  struct task_struct *tsk)
- {
-+	unsigned int cpu = smp_processor_id();
-+
- 	if (prev != next)
--		tlb_invalid_all();
-+		check_and_switch_context(next, cpu);
- 
- 	TLBMISS_HANDLER_SETUP_PGD(next->pgd);
-+	write_mmu_entryhi(next->context.asid.counter);
- }
- #endif /* __ASM_CSKY_MMU_CONTEXT_H */
-diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
-index 897368f..34cb5b1 100644
---- a/arch/csky/mm/Makefile
-+++ b/arch/csky/mm/Makefile
-@@ -12,3 +12,4 @@ obj-y +=			ioremap.o
- obj-y +=			syscache.o
- obj-y +=			tlb.o
- obj-y +=			asid.o
-+obj-y +=			context.o
-diff --git a/arch/csky/mm/context.c b/arch/csky/mm/context.c
-new file mode 100644
-index 0000000..0d95bdd
---- /dev/null
-+++ b/arch/csky/mm/context.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#include <linux/bitops.h>
-+#include <linux/sched.h>
-+#include <linux/slab.h>
-+#include <linux/mm.h>
-+
-+#include <asm/asid.h>
-+#include <asm/mmu_context.h>
-+#include <asm/smp.h>
-+#include <asm/tlbflush.h>
-+
-+static DEFINE_PER_CPU(atomic64_t, active_asids);
-+static DEFINE_PER_CPU(u64, reserved_asids);
-+
-+struct asid_info asid_info;
-+
-+void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
-+{
-+	asid_check_context(&asid_info, &mm->context.asid, cpu, mm);
-+}
-+
-+static void asid_flush_cpu_ctxt(void)
-+{
-+	local_tlb_invalid_all();
-+}
-+
-+static int asids_init(void)
-+{
-+	BUG_ON(((1 << CONFIG_CPU_ASID_BITS) - 1) <= num_possible_cpus());
-+
-+	if (asid_allocator_init(&asid_info, CONFIG_CPU_ASID_BITS, 1,
-+				asid_flush_cpu_ctxt))
-+		panic("Unable to initialize ASID allocator for %lu ASIDs\n",
-+		      NUM_ASIDS(&asid_info));
-+
-+	asid_info.active = &active_asids;
-+	asid_info.reserved = &reserved_asids;
-+
-+	pr_info("ASID allocator initialised with %lu entries\n",
-+		NUM_CTXT_ASIDS(&asid_info));
-+
-+	return 0;
-+}
-+early_initcall(asids_init);
+ 	if (lapic_is_periodic(apic)) {
+ 		advance_periodic_target_expiration(apic);
 -- 
 2.7.4
 
