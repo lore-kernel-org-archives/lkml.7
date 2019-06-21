@@ -2,129 +2,115 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94074C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD114C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC7B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9372C20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rd0vI8kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfFUSrH (ORCPT
+        id S1726257AbfFUSuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:47:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53452 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726066AbfFUSrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:47:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 03377AEE0;
-        Fri, 21 Jun 2019 18:47:06 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] xen/events: fix binding user event channels to cpus
-Date:   Fri, 21 Jun 2019 20:47:03 +0200
-Message-Id: <20190621184703.17108-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Fri, 21 Jun 2019 14:50:37 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54936 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfFUSug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:50:36 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5LIoHEF052869;
+        Fri, 21 Jun 2019 13:50:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561143017;
+        bh=FUfdXghZ+WdB/YXoYFyffGxBU8NgjsmjyojagHwI8VU=;
+        h=From:To:CC:Subject:Date;
+        b=rd0vI8kpVHY9UilLPsPZ4pcRyjrmf/IXZlv3H0QqQ3nr2RkTdoCJG+KsoG34xcQas
+         LEtN1gv5JK7uJdKFj3FO6zeZxBeUWX9E/uOKSLj5KYzKoTygdSrpWtccFm6cpleONJ
+         eQ6GgCK0ANZYD0MO7zw8iJjmcApsFygGx8IGtcJw=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5LIoH91099109
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Jun 2019 13:50:17 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
+ Jun 2019 13:50:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 21 Jun 2019 13:50:16 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5LIoGYn078863;
+        Fri, 21 Jun 2019 13:50:16 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     Henrik Rydberg <rydberg@bitmath.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 1/1] Input: edt-ft5x06 - disable irq handling during suspend
+Date:   Fri, 21 Jun 2019 13:51:24 -0500
+Message-ID: <20190621185124.28966-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When binding an interdomain event channel to a vcpu via
-IOCTL_EVTCHN_BIND_INTERDOMAIN not only the event channel needs to be
-bound, but the affinity of the associated IRQi must be changed, too.
-Otherwise the IRQ and the event channel won't be moved to another vcpu
-in case the original vcpu they were bound to is going offline.
+As a wakeup source when the system is in suspend there is little point
+trying to access a register across the i2c bus as it is probably still
+inactive. We need to prevent the irq handler from being called during
+suspend.
 
-Cc: <stable@vger.kernel.org> # 4.13
-Fixes: c48f64ab472389df ("xen-evtchn: Bind dyn evtchn:qemu-dm interrupt to next online VCPU")
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Without this modification upon wakeup you would see the following kernel
+error:
+
+[ 118.733717] PM: Wakeup source GPIO0
+[ 118.751933] edt_ft5x06 1-0038: Unable to fetch data, error: -13
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/xen/events/events_base.c | 12 ++++++++++--
- drivers/xen/evtchn.c             |  2 +-
- include/xen/events.h             |  3 ++-
- 3 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index ff9b51055b14..e718c8fea18b 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1294,7 +1294,7 @@ void rebind_evtchn_irq(int evtchn, int irq)
- }
- 
- /* Rebind an evtchn so that it gets delivered to a specific cpu */
--int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
-+static int xen_rebind_evtchn_to_cpu(int evtchn, unsigned int tcpu)
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index c639ebce914c..c885bfe783a4 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1200,8 +1200,10 @@ static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
  {
- 	struct evtchn_bind_vcpu bind_vcpu;
- 	int masked;
-@@ -1328,7 +1328,6 @@ int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 
+-	if (device_may_wakeup(dev))
++	if (device_may_wakeup(dev)) {
+ 		enable_irq_wake(client->irq);
++		disable_irq(client->irq);
++	}
  
  	return 0;
  }
--EXPORT_SYMBOL_GPL(xen_rebind_evtchn_to_cpu);
- 
- static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
- 			    bool force)
-@@ -1342,6 +1341,15 @@ static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
- 	return ret;
- }
- 
-+/* To be called with desc->lock held. */
-+int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu)
-+{
-+	struct irq_data *d = irq_desc_get_irq_data(desc);
-+
-+	return set_affinity_irq(d, cpumask_of(tcpu), false);
-+}
-+EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
-+
- static void enable_dynirq(struct irq_data *data)
+@@ -1210,8 +1212,10 @@ static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
  {
- 	int evtchn = evtchn_from_irq(data->irq);
-diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
-index f341b016672f..052b55a14ebc 100644
---- a/drivers/xen/evtchn.c
-+++ b/drivers/xen/evtchn.c
-@@ -447,7 +447,7 @@ static void evtchn_bind_interdom_next_vcpu(int evtchn)
- 	this_cpu_write(bind_last_selected_cpu, selected_cpu);
+ 	struct i2c_client *client = to_i2c_client(dev);
  
- 	/* unmask expects irqs to be disabled */
--	xen_rebind_evtchn_to_cpu(evtchn, selected_cpu);
-+	xen_set_affinity_evtchn(desc, selected_cpu);
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+-	if (device_may_wakeup(dev))
++	if (device_may_wakeup(dev)) {
+ 		disable_irq_wake(client->irq);
++		enable_irq(client->irq);
++	}
+ 
+ 	return 0;
  }
- 
-diff --git a/include/xen/events.h b/include/xen/events.h
-index a48897199975..c0e6a0598397 100644
---- a/include/xen/events.h
-+++ b/include/xen/events.h
-@@ -3,6 +3,7 @@
- #define _XEN_EVENTS_H
- 
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #ifdef CONFIG_PCI_MSI
- #include <linux/msi.h>
- #endif
-@@ -59,7 +60,7 @@ void evtchn_put(unsigned int evtchn);
- 
- void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector);
- void rebind_evtchn_irq(int evtchn, int irq);
--int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu);
-+int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu);
- 
- static inline void notify_remote_via_evtchn(int port)
- {
 -- 
-2.16.4
+2.17.1
 
