@@ -5,68 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601AFC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D7C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399322084A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E29D2084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 01:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uAl+pb5U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9TAlZ5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFUBUT (ORCPT
+        id S1726703AbfFUBU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 21:20:19 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:50913 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfFUBUQ (ORCPT
+        Thu, 20 Jun 2019 21:20:29 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:51453 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbfFUBUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 21:20:16 -0400
-Received: by mail-pl1-f202.google.com with SMTP id 71so2653718pld.17
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:16 -0700 (PDT)
+        Thu, 20 Jun 2019 21:20:23 -0400
+Received: by mail-pl1-f201.google.com with SMTP id d2so2651756pla.18
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=JqSAbEGn1HiZP7c6GcuMsV6mwVA+ao3NtmgYDy/YB50=;
-        b=uAl+pb5UgR8qbNWvTqgNyUdGrjYg0S8BfztU1IaK3wSoovw9zlPCjs+fxR/Zldidjt
-         wn9jEjHX6zhp2cY/ATrv0Ui2iFYIO/84hN6Y9U0zSrxpdUGNw4l6ofnhy4DW6H1w1REh
-         e7xaSuXohECGbWYKz7+urb02nPjB4dMxHHraE2pgWMJeOrKlP6Brq6ZYzgnti8M6knOD
-         M5dofE5spcg4W1bE+A2c24KQml7+KGHeAK64yt51wq5qc77KvrpFdOMYA4aIUfufBhW/
-         VF40DkSCXitcpI+sAdK9CQdmQyjHL8QEx8o56v+XmnMnicC0CjNjNkw0OspKK1lBtU/2
-         MRZw==
+        bh=ad/yNjk/bvrZoco4Mw8YoxzrZODyqSCNyrUtVdvZI0s=;
+        b=b9TAlZ5KNSkYjsrvs/PzLlMDftAEdoVj8mEsBEzleqTi807SU2DjvF7a8CmhiMbuxb
+         Hzn6NmDTyehRi4XpCLIg5IgZdnBCugdvbJRkEvBW6m/v9TfQlimXc8K7QlV9RPWQRBPT
+         f4Ow8iVgacQqNXu0wQ8l7Do9OM6r9JSh1nQhJUQ3jHXWewrXQMQLMtMJjSrDMiEn5ekc
+         a9MHX4SMQ/Opp1EiBA117qOw/ds+Xy9wXhODb0amjF3lM2AQlR4odDrH9d2dUW2FZGj0
+         QwDvuDjnhYK5u/K0KLCvqWRKIKOFif4rqul98NbkhtZ9j4dkupr+HqgzrEz0ZKv83ZAB
+         IHVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=JqSAbEGn1HiZP7c6GcuMsV6mwVA+ao3NtmgYDy/YB50=;
-        b=nRT9cI1qSUSE6OADpPit18E2iSxMQX58uvgwwoyWaIgG1bRD1g87/QciWbP4w60RRt
-         jK9XmgVruXF0rSPcjvcdCFR/VGNviqBRaAxqGZOkRjaSV/V2/6Yi3cPax3ZJ3STM6XAI
-         LxQwLOpYjNq3G2Nf3tU8TaW3pyLhzuGxpzGRywePmuMDKsqxfgEi+1tQ0JlnB9nc39G7
-         czOuYM5Q3heMEPCDicSdDgKaRU4uzjDgDlFOQ6zAbzgfx9sbmaI1RENE9Q1ZWtMYxlht
-         JbsNRKI5ApslgAi/yuhrRMsCy3Sdw095edHTjQy3xbQ9uZmLP53n8ljg34LseYAC1e8w
-         fevg==
-X-Gm-Message-State: APjAAAX0nyEVZLxzduT/oc0SgEFeF2TTb+Y7mkESX7KecBTBBXQRqs23
-        IPg90YktgO1v9HIOMH7Q2/jI8Qe5wkXtTmEoTa5gTA==
-X-Google-Smtp-Source: APXvYqwT26wVJK6nFrq7e+H8nLKZxTkGEC6Cm+2MlyXrmHTpSaeB1v4qyUV96R/qlEsGT6gqXZ46YMXwlQeXlC7AVr9xzw==
-X-Received: by 2002:a65:5006:: with SMTP id f6mr10257389pgo.402.1561080015411;
- Thu, 20 Jun 2019 18:20:15 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 18:19:22 -0700
+        bh=ad/yNjk/bvrZoco4Mw8YoxzrZODyqSCNyrUtVdvZI0s=;
+        b=XRdxMSiHBp1wAtc3geygDYbe04kPDJuL8Pgz0gNGNF+M6qbrVJ03NBd+zNZ7aM3oNw
+         /rOSbZ9WP2zGnC0V9T0Eoboy/2LMmArvNKni5qXD9tscZLrfE8oKoYXFflutOTTOiLAH
+         8To8J50aNluKZ2U0F906ppk5WXzeYhFBQJurdBqSVtCXsl2nMnb4hzGy4zzYCNx4tbtt
+         wW9h+j9YHF9O6/T9/41AoH+GNz4xRFq/Et3W2pwlMArGPKLhOZKy8KZLq+yQsygkHMl1
+         3s3TYXTKkRqH76DdpcLwmh9X/vrGP74Bf1i/lqNg6OMlqBWRuofF0iw2fQVag0uAyPen
+         639w==
+X-Gm-Message-State: APjAAAV7XmA8qmPUcBLko+2+p/SwI0mF0df1Sub/3JcX6n2/3a1rlkDe
+        pRJkaxCpBZs/Ty7IOjDkVHWYRe2yBT1Zv9+H9lNvPA==
+X-Google-Smtp-Source: APXvYqxiWB8RGelDojcowMZSvi/aE6GUQF8hluI7DbVZsjcNnSvnBPNmxITR2+IuuuJY/CSZdRz9iOw/4EPHdhzOxcl1XA==
+X-Received: by 2002:a63:360d:: with SMTP id d13mr15523401pga.80.1561080022714;
+ Thu, 20 Jun 2019 18:20:22 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:19:25 -0700
 In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
-Message-Id: <20190621011941.186255-12-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-15-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190621011941.186255-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V33 11/30] uswsusp: Disable when the kernel is locked down
+Subject: [PATCH V33 14/30] x86/msr: Restrict MSR access when the kernel is
+ locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-api@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
         David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>, linux-pm@vger.kernel.org,
-        pavel@ucw.cz, rjw@rjwysocki.net
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -75,41 +77,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-uswsusp allows a user process to dump and then restore kernel state, which
-makes it possible to modify the running kernel.  Disable this if the kernel
-is locked down.
+Writing to MSRs should not be allowed if the kernel is locked down, since
+it could lead to execution of arbitrary code in kernel mode.  Based on a
+patch by Kees Cook.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-cc: linux-pm@vger.kernel.org
-Cc: pavel@ucw.cz
-Cc: rjw@rjwysocki.net
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+cc: x86@kernel.org
 ---
- kernel/power/user.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/msr.c        | 8 ++++++++
+ include/linux/security.h     | 1 +
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 10 insertions(+)
 
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 2d8b60a3c86b..8a8d7f1c8fbb 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -24,6 +24,7 @@
- #include <linux/console.h>
- #include <linux/cpu.h>
- #include <linux/freezer.h>
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 4588414e2561..72f0ed5a93c3 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -39,6 +39,7 @@
+ #include <linux/notifier.h>
+ #include <linux/uaccess.h>
+ #include <linux/gfp.h>
 +#include <linux/security.h>
  
- #include <linux/uaccess.h>
+ #include <asm/cpufeature.h>
+ #include <asm/msr.h>
+@@ -84,6 +85,9 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 	int err = 0;
+ 	ssize_t bytes = 0;
  
-@@ -52,6 +53,9 @@ static int snapshot_open(struct inode *inode, struct file *filp)
- 	if (!hibernation_available())
- 		return -EPERM;
- 
-+	if (security_is_locked_down(LOCKDOWN_HIBERNATION))
++	if (security_is_locked_down(LOCKDOWN_MSR))
 +		return -EPERM;
 +
- 	lock_system_sleep();
+ 	if (count % 8)
+ 		return -EINVAL;	/* Invalid chunk size */
  
- 	if (!atomic_add_unless(&snapshot_device_available, -1, 0)) {
+@@ -135,6 +139,10 @@ static long msr_ioctl(struct file *file, unsigned int ioc, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		if (security_is_locked_down(LOCKDOWN_MSR)) {
++			err = -EPERM;
++			break;
++		}
+ 		err = wrmsr_safe_regs_on_cpu(cpu, regs);
+ 		if (err)
+ 			break;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 59f0ac7adfa6..81c0968e485f 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -88,6 +88,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_HIBERNATION,
+ 	LOCKDOWN_PCI_ACCESS,
+ 	LOCKDOWN_IOPORT,
++	LOCKDOWN_MSR,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 6e426887bb23..a01301972290 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -24,6 +24,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_HIBERNATION] = "hibernation",
+ 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+ 	[LOCKDOWN_IOPORT] = "raw io port access",
++	[LOCKDOWN_MSR] = "raw MSR access",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
