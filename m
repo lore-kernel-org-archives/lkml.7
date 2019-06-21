@@ -2,135 +2,186 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A7CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D68C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BD12083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561126360;
-	bh=G84cVl5U5XlLByeL5a0wTKaDWpH+c8GB7sbMdafSIyM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tgEZp3H7InoGrYBNhl4XuHuqgeR/JWN+TkGopgjEoodzXvSmOtrUiQyE9PHcWRMz+
-	 YEDmGuluiN9aW0zwScr4jLVH7x/HlFx1FEAkZaigwIEViYdRTK9EzUTQmozm0LOxoE
-	 kgW8ojd7+QWTyjgH5niHBLKKlES7iFzcnAPeMOTA=
+	by mail.kernel.org (Postfix) with ESMTP id 9293C208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfFUOMi (ORCPT
+        id S1726299AbfFUOMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:12:38 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B003B20679;
-        Fri, 21 Jun 2019 14:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561126357;
-        bh=G84cVl5U5XlLByeL5a0wTKaDWpH+c8GB7sbMdafSIyM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iWxgDadIIMQNr42MRK4sNX1lV++z1lT0Tex5UZtMnkMExk7i5Q4ZfzPJz6ip5stCQ
-         UnzWAGwftOy6ujrpdIQbZJHOe6P2e7GE9bWBW3hNpqhrTpwL1ZqjYcwrZIQTcanN/k
-         qsc/lS+UOYx7/A8Q4wm5ecSjXRJL4Vep+aw9qPLc=
-Date:   Fri, 21 Jun 2019 23:12:32 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: WARN_ON: userstacktrace on irq events
-Message-Id: <20190621231232.259536faeea4b19cf39a7688@kernel.org>
-In-Reply-To: <20190405093209.7a5c5133@gandalf.local.home>
-References: <20190403121640.70128095@gandalf.local.home>
-        <alpine.DEB.2.21.1904051000290.1802@nanos.tec.linutronix.de>
-        <20190405093209.7a5c5133@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 21 Jun 2019 10:12:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36208 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725985AbfFUOMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:12:40 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0630A528127AE37879EE;
+        Fri, 21 Jun 2019 22:12:36 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Jun 2019
+ 22:12:29 +0800
+Subject: Re: [PATCH 1/5] lib: logic_pio: Fix RCU usage
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+ <1561026716-140537-2-git-send-email-john.garry@huawei.com>
+ <20190621134332.GC82584@google.com>
+CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <joe@perches.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <885f3c01-82b9-5978-5e7f-1130021bde57@huawei.com>
+Date:   Fri, 21 Jun 2019 15:12:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
+MIME-Version: 1.0
+In-Reply-To: <20190621134332.GC82584@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Apr 2019 09:32:09 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 21/06/2019 14:43, Bjorn Helgaas wrote:
+> On Thu, Jun 20, 2019 at 06:31:52PM +0800, John Garry wrote:
 
-> On Fri, 5 Apr 2019 10:12:27 +0200 (CEST)
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> > > BOOM! Warn on.
-> > > 
-> > > Can we make that access_ok() call in the copy_stack_frame not trigger
-> > > the warning just if we are in an interrupt?  
-> > 
-> > You really want to have access_ok_atomic() or such which does not have the
-> > WARN and use that in copy_stack_frame(). That's fine here because the
-> > actual copy is inside a pagefault disabled region.
-> 
-> I was thinking the same.
-> 
-> Masami, did you post patches to do something like this?
-> "access_ok_inatomic()" or something?
+Hi Bjorn,
 
-Yeah, last month I sent 
-"x86/uaccess: Allow access_ok() in irq context if pagefault_disabled"
+>> The traversing of io_range_list with list_for_each_entry_rcu()
+>> is not properly protected by rcu_read_lock(), so add it.
+>>
 
-If you correctly disables the pagefault, access_ok() shouldn't warn it.
-Ah, I see.
+Functions rcu_read_lock() and rcu_read_unlock() mark the critical 
+section scope where the list is protected for the reader, it cannot be 
+"reclaimed". Any updater - in this case, the logical PIO registration or 
+unregistration functions - cannot update the list until the reader exits 
+this critical section.
 
-copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
-{
-        int ret;
+>> In addition, the list traversing used in logic_pio_register_range()
+>> does not need to use the rcu variant.
 
-        if (!access_ok(fp, sizeof(*frame))) <== this is out of pagefault_disable()!
-                return 0;
+We don't need rcu variant as we're already using the mutex to guarantee 
+mutual exclusion from mutating the list.
 
-        ret = 1;
-        pagefault_disable();
-        if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
-                ret = 0;
-        pagefault_enable();
+>
+> Not being an RCU expert myself, a few words here about why one path
+> needs protection but the other doesn't would be helpful.  This
+> basically restates what the patch *does*, which is obvious from the
+> diff, but not *why*.
 
-        return ret;
-}
+OK, I can add what I mentioned above.
 
-How is below patch?
+Thanks again,
+John
 
----
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2abf27d7df6b..36ff77c801f7 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -98,14 +98,11 @@ struct stack_frame_user {
- static int
- copy_stack_frame(const void __user *fp, struct stack_frame_user *frame)
- {
--	int ret;
-+	int ret = 1;
- 
--	if (!access_ok(fp, sizeof(*frame)))
--		return 0;
--
--	ret = 1;
- 	pagefault_disable();
--	if (__copy_from_user_inatomic(frame, fp, sizeof(*frame)))
-+	if (!access_ok(fp, sizeof(*frame)) ||
-+	    __copy_from_user_inatomic(frame, fp, sizeof(*frame)))
- 		ret = 0;
- 	pagefault_enable();
- 
+>
+>> Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>  lib/logic_pio.c | 49 +++++++++++++++++++++++++++++++++++--------------
+>>  1 file changed, 35 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+>> index feea48fd1a0d..761296376fbc 100644
+>> --- a/lib/logic_pio.c
+>> +++ b/lib/logic_pio.c
+>> @@ -46,7 +46,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>>  	end = new_range->hw_start + new_range->size;
+>>
+>>  	mutex_lock(&io_range_mutex);
+>> -	list_for_each_entry_rcu(range, &io_range_list, list) {
+>> +	list_for_each_entry(range, &io_range_list, list) {
+>>  		if (range->fwnode == new_range->fwnode) {
+>>  			/* range already there */
+>>  			goto end_register;
+>> @@ -108,26 +108,38 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>>   */
+>>  struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
+>>  {
+>> -	struct logic_pio_hwaddr *range;
+>> +	struct logic_pio_hwaddr *range, *found_range = NULL;
+>>
+>> +	rcu_read_lock();
+>>  	list_for_each_entry_rcu(range, &io_range_list, list) {
+>> -		if (range->fwnode == fwnode)
+>> -			return range;
+>> +		if (range->fwnode == fwnode) {
+>> +			found_range = range;
+>> +			break;
+>> +		}
+>>  	}
+>> -	return NULL;
+>> +	rcu_read_unlock();
+>> +
+>> +	return found_range;
+>>  }
+>>
+>>  /* Return a registered range given an input PIO token */
+>>  static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
+>>  {
+>> -	struct logic_pio_hwaddr *range;
+>> +	struct logic_pio_hwaddr *range, *found_range = NULL;
+>>
+>> +	rcu_read_lock();
+>>  	list_for_each_entry_rcu(range, &io_range_list, list) {
+>> -		if (in_range(pio, range->io_start, range->size))
+>> -			return range;
+>> +		if (in_range(pio, range->io_start, range->size)) {
+>> +			found_range = range;
+>> +			break;
+>> +		}
+>>  	}
+>> -	pr_err("PIO entry token %lx invalid\n", pio);
+>> -	return NULL;
+>> +	rcu_read_unlock();
+>> +
+>> +	if (!found_range)
+>> +		pr_err("PIO entry token 0x%lx invalid\n", pio);
+>> +
+>> +	return found_range;
+>>  }
+>>
+>>  /**
+>> @@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
+>>  {
+>>  	struct logic_pio_hwaddr *range;
+>>
+>> +	rcu_read_lock();
+>>  	list_for_each_entry_rcu(range, &io_range_list, list) {
+>>  		if (range->flags != LOGIC_PIO_CPU_MMIO)
+>>  			continue;
+>> -		if (in_range(addr, range->hw_start, range->size))
+>> -			return addr - range->hw_start + range->io_start;
+>> +		if (in_range(addr, range->hw_start, range->size)) {
+>> +			unsigned long cpuaddr;
+>> +
+>> +			cpuaddr = addr - range->hw_start + range->io_start;
+>> +
+>> +			rcu_read_unlock();
+>> +			return cpuaddr;
+>> +		}
+>>  	}
+>> -	pr_err("addr %llx not registered in io_range_list\n",
+>> -	       (unsigned long long) addr);
+>> +	rcu_read_unlock();
+>> +
+>> +	pr_err("addr %pa not registered in io_range_list\n", &addr);
+>> +
+>>  	return ~0UL;
+>>  }
+>>
+>> --
+>> 2.17.1
+>>
+>
+> .
+>
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+
