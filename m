@@ -2,134 +2,89 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C4C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA4C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFEB320673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="O+sP4P2d"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCDD20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561107754;
+	bh=6Fsldr5ySj7ombUaOz/6PYPhO3cHLQdyQZ5gwcAdiNo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZZI4TxrfJAGqKCaCPJ2mDU102CTNEgljywF81rDby75sRY8Z1BN0w6nKOLrWZ8hr7
+	 NPC0p5R9jhHws/xoPCjGK5kpbMG1ab6wVOhL/93xEEFwQHp2jrqzYhZ7ZnK83Es85H
+	 kwHShHjsg5w0xLP63AHL6i5o4Q6kM1ytCBbzvLgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfFUJBg (ORCPT
+        id S1726486AbfFUJCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:01:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46089 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUJBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:01:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so5721188wrw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 02:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PhJ5lM9SlnKYa02k5MazR2be+0vjCQ5zI7j0EPBUS+8=;
-        b=O+sP4P2dWSo99F+WM+aneeiKuNCkGrHe0jBV/hU1Wk+iZFjbunHTPxPqH5idH8e8EJ
-         HDbIrEdt+maab64kQ+MXFytkNwk0t7QJxiXrpMXe4YyDS5+FOUeiH2NFPqHKTd4ZI/X+
-         KhkJHMUD4JBbhLUNqpjzSOR+6iEjHZAbgkOg/NxfBaBC6GbGYVcFTz2FFHlEXeqkZtKh
-         WGCwa30qut6W2U0M5dhJzttoIJQcKNRwHn5UMpGxA/fQ1Kp2Eqiuz8HyKnj08ZIUM+HF
-         dJKz/LliHBOw4iz8Y13dCH1V2yMgHecTVxviU0bPYTLgKb/T5AuXb9ZGQ6jYQN5n/DRs
-         4phw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PhJ5lM9SlnKYa02k5MazR2be+0vjCQ5zI7j0EPBUS+8=;
-        b=GSpx2lEHfPesEHX8rDM+TXI9L0Q3hb+OeEKhwSKqDW0lV6rsFAKoUVB+tnSR6+LUmQ
-         8TlVU4nU0DSL6yVeowxXzDz0Qz6a4dsMXlqVxjze2NIRjmJrWah7tIOJ43h+h6LtcHdE
-         TEcTSm6RrklttRKUC50F8Hb0iUy+QGuQEf0I305xqoM5p1oHdJvc/zkg2wBn/xW9uk8G
-         lYp9q/F9vjNBTr0cWG4wloVOjq/T8uSqO40DI+VBsbHryRmsmiqFtQWl8NxgMS8eWPBe
-         K+850hbFIfgbcQ8J10e7OuV5uRo9DIf2l/Stkvp1hSbemHtqcAgQvR94XRd9Tws9umC1
-         mK6w==
-X-Gm-Message-State: APjAAAXQxPHrkSz6zePad+/tbm4cY6dliS6jRbzGpAA96zsbgBbpkmeW
-        J7+c5GqxwWpzpCMbq4PMFB0jMR9STPsd/Q4wceqwmA==
-X-Google-Smtp-Source: APXvYqxOi1lX0UaV5+3I6iUfGLV2BrlPD7WGGLosyqcwBAr5aiHi9gL+td/S/5IwQmge5WwTR7sXISD2kIFnl5hxOX0=
-X-Received: by 2002:a5d:5448:: with SMTP id w8mr62546020wrv.180.1561107693128;
- Fri, 21 Jun 2019 02:01:33 -0700 (PDT)
+        Fri, 21 Jun 2019 05:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfFUJCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:02:32 -0400
+Received: from localhost.localdomain (unknown [106.201.116.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF2AE20673;
+        Fri, 21 Jun 2019 09:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561107751;
+        bh=6Fsldr5ySj7ombUaOz/6PYPhO3cHLQdyQZ5gwcAdiNo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lPEynh4Mgr2RjzIZPl0bAO1eC375blSNspKB7UcsMp2GkV3un+KGosvRNWsqHOP8Q
+         jVQq8d5BEgLK+API8yDXTVn36aUQYD81leGlLBEn0uwGqPBhiyOKu6URQ0XnKWio0z
+         aPNMn7iph7x0jdROzaJGM2NEp1LUwjP4cmgOOn2k=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5]  usb: xhci: Add support for Renesas USB controllers
+Date:   Fri, 21 Jun 2019 14:29:08 +0530
+Message-Id: <20190621085913.8722-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1561097422-25130-1-git-send-email-yash.shah@sifive.com> <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 21 Jun 2019 14:31:22 +0530
-Message-ID: <CAAhSdy2zHozRnwAU6-+U+BE-5h5uNE67D_0TXHJnrHMi53gMog@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: Add DT node for SiFive FU540 Ethernet
- controller driver
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, sachin.ghadi@sifive.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:40 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> index 4e8fbde..584e737 100644
-> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> @@ -225,5 +225,25 @@
->                         #address-cells = <1>;
->                         #size-cells = <0>;
->                 };
-> +               eth0: ethernet@10090000 {
-> +                       compatible = "sifive,fu540-macb";
-> +                       interrupt-parent = <&plic0>;
-> +                       interrupts = <53>;
-> +                       reg = <0x0 0x10090000 0x0 0x2000
-> +                              0x0 0x100a0000 0x0 0x1000>;
-> +                       reg-names = "control";
-> +                       local-mac-address = [00 00 00 00 00 00];
-> +                       phy-mode = "gmii";
-> +                       phy-handle = <&phy1>;
-> +                       clock-names = "pclk", "hclk";
-> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-> +                                <&prci PRCI_CLK_GEMGXLPLL>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
+This series add support for Renesas USB controllers uPD720201 and uPD720202.
+These require firmware to be loaded and in case devices have ROM those can
+also be programmed if empty. If ROM is programmed, it runs from ROM as well.
 
-Have status = "disabled"; here and have
-status = "okay" in board DTS file.
+This includes two patches from Christian which supported these controllers
+w/o ROM and later my patches for ROM support and multiple firmware versions.
 
-General convention for any SOC device with external
-connection (e.g. ethernet, SPI, SDHC, SATA, PCI, etc)
-is:
+Changes in v2:
+  used macros for timeout count and delay
+  removed renesas_fw_alive_check
+  cleaned renesas_fw_callback
+  removed recurion for renesas_fw_download
+  added MODULE_FIRMWARE
+  added comment for multiple fw order
 
-1. Define only device DT node in SOC DTSi file with
-status = "disabled"
-2. Enable device in Board DTS file with
-status = "okay"
-3. Define PHY or external PIN connection details
-in Board DTS file
+Christian Lamparter (2):
+  usb: xhci: add firmware loader for uPD720201 and uPD720202 w/o ROM
+  usb: xhci: handle uPD720201 and uPD720202 w/o ROM
 
-> +                       phy1: ethernet-phy@0 {
-> +                               reg = <0>;
-> +                       };
+Vinod Koul (3):
+  usb: xhci: Use register defined and field names
+  usb: xhci: Add ROM loader for uPD720201
+  usb: xhci: allow multiple firmware versions
 
-The PHY DT node should be in Board DTS file.
+ drivers/usb/host/xhci-pci.c | 942 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 942 insertions(+)
 
-Of course, same comments apply to SPI DT nodes as well
-but I missed reviewing those DT nodes. You can send separate
-DT patch to re-organize SPI DT nodes.
+-- 
+2.20.1
 
-Regards,
-Anup
