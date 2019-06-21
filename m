@@ -2,86 +2,397 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81607C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFD2C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1012070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jjX0zTNC"
+	by mail.kernel.org (Postfix) with ESMTP id D92912085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 03:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561086899;
+	bh=xIh99WcTC0hVI6CXEimYwuAnqqCPU1DE5HA8KthNOyo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ip30IHfIjx68BY0NeTHBoUCQ1O4BlRZuUW+B/jtitoXy92uqYM5bNzXfMqty4Qpmf
+	 FICLnPAe0bWNL3GnxAekSnGQ/3re7DOOd6AS6Hm/6ISUz+JlntZS3edjCam8quXtwk
+	 OpZyhS76TRO0b/iZdtqqCH6QBDzED3xig0hILQRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfFUDGf (ORCPT
+        id S1726019AbfFUDOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 23:06:35 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17833 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFUDGe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 23:06:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0c49b80000>; Thu, 20 Jun 2019 20:06:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 20:06:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 20:06:33 -0700
-Received: from [10.24.70.43] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
- 2019 03:06:29 +0000
-Subject: Re: [PATCH] dmaengine: tegra210-adma: fix transfer failure
-To:     Jon Hunter <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>
-CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
- <bf478236-9aa7-68cc-4a56-296db2fc4379@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <bcd31292-4caf-19fa-c4ea-d85c5fd77861@nvidia.com>
-Date:   Fri, 21 Jun 2019 08:36:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 20 Jun 2019 23:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfFUDOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 23:14:08 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AECD2085A
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 03:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561086845;
+        bh=xIh99WcTC0hVI6CXEimYwuAnqqCPU1DE5HA8KthNOyo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r6jfmr9aB7aqulMrlsANZe2CGGxaio95PieVPl0xyP7xljl6HsNi0ZrsLndyj4zAP
+         Wzxt83OqUcJy0SwZbb/PKZbNHOaa4GOGOOFmDd8pHngatEel4TDgtyeSDCuVQcXrcD
+         CE/zJHnC8HoQPY5tQCDB6KaBQRnXALxJavWzx8Gc=
+Received: by mail-wr1-f54.google.com with SMTP id n9so5051500wru.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 20:14:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/up+XTFlWKuSBZpHuRDwsE8YruIgvVWSItJnUVNo52Dhr8fcj
+        GDr+nQtgiPypszLNglgNuFUUz+Br9iQIaKjsS9I=
+X-Google-Smtp-Source: APXvYqy853hCZFBjQMQoLlV7zgCSOxyk0nz8DcMFMhJBdXQoBaXvrLFM575cIgskO+P1tB2UKZ7tKD/GMsmXnLvqqlI=
+X-Received: by 2002:a5d:4311:: with SMTP id h17mr97510215wrq.9.1561086843666;
+ Thu, 20 Jun 2019 20:14:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bf478236-9aa7-68cc-4a56-296db2fc4379@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561086393; bh=40qWngcJ5jntuve/oNsoItdezzKA7yP0XJAN671D/Fc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jjX0zTNCpWzwZOI5kUCnaO+ziNCoL60UwRp4Gpg10j2KAIp4X1bHHGwRjnvugJeuI
-         ppw0PSoFcmoq0amnR8DQeAvCgiQ/9iaYqhiDxDOAoctQWYatWZseJVsGflTjgGGGTc
-         Yi2MOXGddTqDzNT7EG7cje5DxIF3K54kGl5iAMJ6HkJqBHlYWqnnGzzsaaSRL2zm58
-         cbWNYbc5FVls9IAfYdW3wQ0xcE34FlA0g0X/9JClw6XQSAQ+pT/PR9DRxeNl0vPj40
-         VL0EXtnx8Eo2ypZA15xalfJCMrHMQR+pGS1dshOQv21B5525dwEicuM3WZoZ4R9EEs
-         Y9UM/nbS9LwcQ==
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-2-jagan@amarulasolutions.com> <20190523203407.o5obg2wtj7wwau6a@flea>
+ <CAMty3ZDDYEOvSbi7kmacjJZS6f3whpaGd4xsf4OUkXmBbTE3Qg@mail.gmail.com>
+ <20190529145450.qnitxpmpr2a2xemk@flea> <CAMty3ZB89cPc8AycFPuNTfPC1dot4cNgN87v+rtQVW2zQh8uZg@mail.gmail.com>
+ <20190604100011.cqkhpwmmmwh3vr3y@flea> <CAMty3ZAFdg1Ow8ececmqF2L0ckitkLdqUPmME3fGBoOaP32kzA@mail.gmail.com>
+ <20190613125630.2b2fvvtvrcjlx4lv@flea> <CAMty3ZCNJK+Wcdw3AXKjUQZTD=PWijq9caNsTzpz+pSEqpUy_A@mail.gmail.com>
+ <20190614144526.lorg3saj4wjopgne@flea> <CAMty3ZBuKWFKckPt+C=XeXgvSLtYL6uuyy29vw2C89TSiDs15w@mail.gmail.com>
+ <CAGb2v679C2PRsEJFo_Q+PbKZXvW3B72T28mUJJDe1Sqarjy36A@mail.gmail.com>
+ <CAMty3ZANkmf=ih4snh1xCLxJaFvPoBPvzpD=aZQCiuSM004UVw@mail.gmail.com>
+ <CAGb2v64gBGcgxXDB0Xd1oxE_jX4kWp4dGE0uORFSYW=PAFAEvA@mail.gmail.com> <CAMty3ZC_CSNP_oJboExZPyzw7Z8MoCc3OfGLsXtLQf_Reyb8fw@mail.gmail.com>
+In-Reply-To: <CAMty3ZC_CSNP_oJboExZPyzw7Z8MoCc3OfGLsXtLQf_Reyb8fw@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Fri, 21 Jun 2019 11:13:51 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67RZXuKrzqVNMjZ2XODCY+Xn9ijs8bO-eFSg39HowCvEA@mail.gmail.com>
+Message-ID: <CAGb2v67RZXuKrzqVNMjZ2XODCY+Xn9ijs8bO-eFSg39HowCvEA@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v10 01/11] drm/sun4i: dsi: Fix TCON DRQ
+ set bits
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/20/2019 10:13 PM, Jon Hunter wrote:
-> On 20/06/2019 17:15, Sameer Pujar wrote:
->>  From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
->> configuration register (bits 7:4). ADMA allows a maximum of 8 reads
->> to source and that many writes to target memory be outstanding at any
->> given point of time. If this field is not programmed, DMA transfers
->> fail to happen.
-> BTW, I am not sure I follow the above. You say a max of 8 reads to the
-> source, however, the field we are programming can have a value of up to
-> 15. So does that mean this field should only be programmed with a max of 8?
-Yes. As per spec. ADMA allows max value of 8.
-> Thanks
-> Jon
+On Fri, Jun 21, 2019 at 2:51 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
+> On Tue, Jun 18, 2019 at 8:15 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Tue, Jun 18, 2019 at 8:11 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > On Tue, Jun 18, 2019 at 5:13 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > On Tue, Jun 18, 2019 at 6:51 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > >
+> > > > > On Fri, Jun 14, 2019 at 8:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > >
+> > > > > > On Fri, Jun 14, 2019 at 12:03:13PM +0530, Jagan Teki wrote:
+> > > > > > > On Thu, Jun 13, 2019 at 6:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, Jun 05, 2019 at 01:17:11PM +0530, Jagan Teki wrote:
+> > > > > > > > > On Tue, Jun 4, 2019 at 3:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Wed, May 29, 2019 at 11:44:56PM +0530, Jagan Teki wrote:
+> > > > > > > > > > > On Wed, May 29, 2019 at 8:24 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Fri, May 24, 2019 at 03:48:51PM +0530, Jagan Teki wrote:
+> > > > > > > > > > > > > On Fri, May 24, 2019 at 2:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Mon, May 20, 2019 at 02:33:08PM +0530, Jagan Teki wrote:
+> > > > > > > > > > > > > > > According to "DRM kernel-internal display mode structure" in
+> > > > > > > > > > > > > > > include/drm/drm_modes.h the current driver is trying to include
+> > > > > > > > > > > > > > > sync timings along with front porch value while checking and
+> > > > > > > > > > > > > > > computing drq set bits in non-burst mode.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > With adding additional sync timings, the dsi controller leads to
+> > > > > > > > > > > > > > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
+> > > > > > > > > > > > > > > trigger panel flip_done timed out as:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > > > > > > > > > > > > >  [CRTC:46:crtc-0] vblank wait timed out
+> > > > > > > > > > > > > > >  Modules linked in:
+> > > > > > > > > > > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+> > > > > > > > > > > > > > >  Hardware name: Allwinner sun8i Family
+> > > > > > > > > > > > > > >  Workqueue: events deferred_probe_work_func
+> > > > > > > > > > > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > > > > > > > > > > > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > > > > > > > > > > > > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > > > > > > > > > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > > > > > > > > > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > > > > > > > > > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > > > > > > > > > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > > > > > > > > > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > > > > > > > > > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > > > > > > > > > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > > > > > > > > > > > > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > > > > > > > > > > > > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > > > > > > > > > > > > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > > > > > > > > > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > > > > > > > > > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > > > > > > > > > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > > > > > > > > > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > > > > > > > > > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > > > > > > > > > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > > > > > > > > > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > > > > > > > > > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > > > > > > > > > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > > > > > > > > > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > > > > > > > > > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > > > > > > > > > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+> > > > > > > > > > > > > > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+> > > > > > > > > > > > > > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > > > > > > > > > > > > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+> > > > > > > > > > > > > > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+> > > > > > > > > > > > > > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+> > > > > > > > > > > > > > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+> > > > > > > > > > > > > > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+> > > > > > > > > > > > > > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+> > > > > > > > > > > > > > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+> > > > > > > > > > > > > > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > > > > > > > > > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > > > > > > > > > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > > > > > > > > > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > > > > > > > > > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > > > > > > > > > > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > > > > > > > > > > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > > > > > > > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > > > > > > > > > > > >  ---[ end trace b57eb1e5c64c6b8b ]---
+> > > > > > > > > > > > > > >  random: fast init done
+> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > > > > > > > > > > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
+> > > > > > > > > > > > > > > non-burst DSI mode can be computed based on "horizontal front porch"
+> > > > > > > > > > > > > > > value only (no sync timings included).
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
+> > > > > > > > > > > > > > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
+> > > > > > > > > > > > > > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
+> > > > > > > > > > > > > > > => tt->hor_front_porch - 20
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > The thing is, while your explanation on the DRM side is sound,
+> > > > > > > > > > > > > > Allwinner has been using the hbp field of their panel description to
+> > > > > > > > > > > > > > store what DRM calls the backporch and the sync period.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Exactly, hbp = backporch + sync
+> > > > > > > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > And the above computation is rely on that as well. If you can see the
+> > > > > > > > > > > > > final out of the above computation you can get the front porch value
+> > > > > > > > > > > > > (w/o sync )
+> > > > > > > > > > > >
+> > > > > > > > > > > > As I was saying, you are explaining it well for DRM, but in order for
+> > > > > > > > > > > > your last formula (the one coming from the BSP) to make sense, you
+> > > > > > > > > > > > have to explain that the horizontal back porch for Allwinner contains
+> > > > > > > > > > > > the sync period, otherwise your expansion of lcd_ht doesn't make
+> > > > > > > > > > > > sense.
+> > > > > > > > > > >
+> > > > > > > > > > > I'm not sure why we need to take care of back porch since the formula
+> > > > > > > > > > > clearly evaluating a result as front porch, without sync timing (as
+> > > > > > > > > > > current code included this sync), I keep the hbp and trying to
+> > > > > > > > > > > substitute the lcd_ht value so the end result would cancel hbp.
+> > > > > > > > > >
+> > > > > > > > > > Because it changes how lcd_ht expands. In the DRM case, it will expand
+> > > > > > > > > > to the displayed area, the front porch, the sync period and the back
+> > > > > > > > > > porch.
+> > > > > > > > > >
+> > > > > > > > > > In your case, you expand it to the displayed area, the front porch and
+> > > > > > > > > > the back porch, precisely because in Allwinner's case, the back porch
+> > > > > > > > > > has the sync period.
+> > > > > > > > >
+> > > > > > > > > I understand the point, but technically it matter about the final
+> > > > > > > > > computation result.  May be we can even manage the same computation in
+> > > > > > > > > back porch, but I'm not sure. Since the final output doesn't involve
+> > > > > > > > > any sync length, why we can include that ie what I'm not sure.
+> > > > > > > >
+> > > > > > > > We have the following formula:
+> > > > > > > > lcd_ht - lcd_x - lcd_hbp - 20
+> > > > > > > >
+> > > > > > > > Using the concepts as they are defined in DRM, this expands to:
+> > > > > > > > x + hbp + hsync + hfp - x - hbp - 20
+> > > > > > >
+> > > > > > > Here is diff between allwinner hbp vs hbp in DRM.
+> > > > > > >
+> > > > > > > Say hbp in DRM can call it hbackporch, so
+> > > > > > >
+> > > > > > > => x + hbackporch + hsync + hfp - -x - hbp - 20
+> > > > > > >
+> > > > > > > (and here we need to substitute hbp formula from allwinner since the
+> > > > > > > actual equation would coming from there
+> > > > > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046)
+> > > > > >
+> > > > > > And this is precisely what needs to be said, with an explanation about
+> > > > > > where that hor_back_porch is being used later on, and what impact it
+> > > > > > could have.
+> > > > >
+> > > > > Yes, it an equation and the mathematical equations can be substitute
+> > > > > to variety kind I did agree with that, whether you can use hbackporch
+> > > > > or not or use another-way the final resulting value is equivalent to
+> > > > > the value of front porch. In that case we can solve based on what I
+> > > > > explained above. If you still dought me, please run BSP and check the
+> > > > > resulting value on this check, you can get the front porch value.
+> > > >
+> > > > Maxime is not doubting you. He is saying that you need to include the
+> > > > detailed explanation in your commit log, and not just reference pieces
+> > > > of code. This is separate from the requirement of having a correct patch.
+> > > >
+> > > > Providing just a mathematical formula isn't enough either, because it
+> > > > is not clear to the average reader which term expanded into what. A
+> > >
+> > > Not sure whether you see my commit log on this version or not. Each
+> > > one has it's own way of providing the details and explanation and at
+> > > the end people in ML should understand it. I'm not proving a simple
+> > > formula here (like I did it in initial version) instead I'm giving all
+> > > the respective information along with the bug log, and the bsp links
+> > > where it comes from etc. This is easier way for everyone to
+> > > understand.
+> >
+> > I did, and I'm telling you it's not easy to follow.
+> >
+> > > Just a bit to explain what I've mentioned in the log.
+> > >
+> > > Paragraph 1:
+> > >
+> > > "
+> > > According to "DRM kernel-internal display mode structure" in
+> > > include/drm/drm_modes.h the current driver is trying to include
+> > > sync timings along with front porch value while checking and
+> > > computing drq set bits in non-burst mode.
+> > >
+> > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
+> > > "
+> > >
+> > > This paragraph explains what the existing code is using according to
+> > > DRM, which indeed help new users to understand by providing
+> > > include/drm/drm_modes.h file.
+> >
+> > This at the beginning makes no sense. It would be better placed with
+> > the formula after
+> > the bug report
+> >
+> > > Paragraph 2:
+> > >
+> > > "
+> > > With adding additional sync timings, the dsi controller leads to
+> > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
+> > > trigger panel flip_done timed out as:
+> > > "
+> > >
+> > > This paragraph explains what is the relevant issue with existing change.
+> > >
+> > > Paragraph 3:
+> > >
+> > > BUG or WARNING log
+> >
+> > You should lead with these two. These explain "why".
+> >
+> > > Paragraph 4:
+> > >
+> > > "
+> > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
+> > > non-burst DSI mode can be computed based on "horizontal front porch"
+> > > value only (no sync timings included).
+> > > "
+> > >
+> > > This paragraph explains what is BSP is using compared with mainline.
+> > >
+> > > Paragraph 5:
+> > >
+> > > "
+> > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
+> > >
+> > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
+> > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
+> > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
+> > > => tt->hor_front_porch - 20
+> > > "
+> > >
+> > > This paragraph explains the detailed steps of equation evaluation by
+> > > providing BSP links.
+> >
+> > This actually makes it harder to read. For example it takes a couple passes
+> > to realize lcd_ht expands to the stuff in the parenthesis. All the while I
+> > still have no idea what all these variables mean or where they came from.
+> > As I said, please don't ask users to open links and dig through code.
+>
+> The main reasons I have included this information and the BSP links
+> are for future reference, to know the real proofs if anyone would want
+> to. and even the timeout log. My idea of formula evaluation here just
+> like what you refer in the diagram in previous mail. I thought
+> mathematical equations are much easier to understand and provable.
+
+Unfortunately the plain-text formatting sometimes doesn't help. Simple
+text descriptions work better in most cases, diffs in others. You can
+still include the formula as a reference, but it is better to explain
+it outright in simple sentences, rather than providing the formula and
+guiding the reader through it.
+
+ChenYu
+
+> > You should provide a simple explanation about what went wrong. As I
+> > mentioned, you could have simply stated that when the driver was
+> > reimplemented, the DRQ formula (which you can provide in its original
+> > form) was incorrectly expanded because Allwinner's definition of "hbp"
+> > is actually "hbp + sync" in DRM terms. That is actually the root cause,
+> > which I believe is what Maxime wants detailed in the commit log.
+> > This immediately points out what went wrong and how it went wrong,
+> > without jumping through hoops.
+> >
+> > Again the diagram helps immensely. (Well, maybe not for screen readers.)
+> > It also directly shows why you replaced hsync_end with hsync_start.
+>
+> True, this indeed has different and direct understanding of what went
+> wrong. thanks for this.
+>
+> >
+> > > Paragraph 6:
+> > >
+> > > "
+> > > Which is mode->hsync_start - mode->hdisplay as per
+> > > "DRM kernel-internal display mode structure" in include/drm/drm_modes.h
+> > > "
+> > >
+> > > This paragraph give fix details in according to Linux DRM.
+> >
+> > Yes, and first you need to understand the formula you gave, which I
+> > already mentioned is a bit hard.
+> >
+> > On the side, going through the code and understanding it actually is quite
+> > hard as I already did it a couple times before and it was really taxing.
+> >
+> > > So, all the explanation which I'm trying to provide here will help to
+> > > understand, what is the issue with existing code and BUG log, how it
+> > > handle in BSP, with justification of equations and links where it
+> > > refers. Please note that I'm providing bug log and before that I've
+> > > mentioned this timeout because of additional sync. why is the timeout
+> > > with additional sync time, which I'm unaware since we don't have
+> > > associated datasheets for this but we have working BSP's to prove
+> > > that.
+> > >
+> > > Frankly, I still didn't understand what I missed here to explain the
+> > > issue. request for help if you see any issues on this format or
+> > > information.
+> >
+> > The one thing you missed, and that Maxime requested, was how hbp, and
+> > the misinterpretation of it plays into all of this. In fact the different
+> > definitions of terms between DRM and Allwinner code / FEX files is what
+> > led to all this. The rest is, well, somewhat hard to read. I already
+> > shared my way of explaining everything above.
+>
+> Okay, will try to re-arrange the commit in next version. hope this
+> time will more cleaner. thanks.
