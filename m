@@ -2,101 +2,117 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2E1C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BBDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC91F205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8tes+em"
+	by mail.kernel.org (Postfix) with ESMTP id 709DC20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfFUT70 (ORCPT
+        id S1726138AbfFUUFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 15:59:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55153 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUT70 (ORCPT
+        Fri, 21 Jun 2019 16:05:25 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:34458 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725985AbfFUUFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 15:59:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g135so7319510wme.4;
-        Fri, 21 Jun 2019 12:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rrgP+tN7q+KdQueUxlF4aRY0BkMcXUVAckmsuIhwpT0=;
-        b=L8tes+emvST9pmj/IRzX9+hojeOq4GZDIGhXxywVATI8gFUF36BSHIDNOPx7EIFvlg
-         Dqe2ZBXumHdHNB1+AaiBqOA2ciM0EzKSuqJHmqrR4CY5zxj6myfpVBLFs6HNNVHzuJ/1
-         nhMcwOfXVXk1CSdtsVbkKXKgFp1yssRB/NXBEV/sbWRH0Q58Q/2V8sNWgQyyq00gNLee
-         R7uLrPpIAr8oMpiNVuhE+zjJn6CY+v2PDedNHna3YUOukRp4NOqOualC7fuoGOqHVCqx
-         iH80DV2EdO8Fwg7g5PpHdcs0d4hG6uqbt8HgPDt6BbL37SL9c1CIx0hSkPA+0C12TLn/
-         tLMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rrgP+tN7q+KdQueUxlF4aRY0BkMcXUVAckmsuIhwpT0=;
-        b=YfTFUWBlurPB21AnPQS1yRWZHjlIzJcnJAG7tEtiuagqZKSPzHHkVlhtbGHaOTn4Zw
-         kaQPZo3m5PwymEv4PMXx/cphMVmrhMMOuWJKaXPEjsh0FnW+JD7UXPWdTlK2b7hQlXAb
-         7DIjf8xPv+4UZXR6n4IYs3elIJAomAyk03jwg5Gp2QZstTLFWe0xybTVIwHhYSXngby/
-         HTlqseS20/46ph5DJVHiECFPi5pX5aZ7A9rjPCEC2zzu/H4Ve7lhVluHGeJzjwfg9THl
-         4ONZ5P6vFvVjzshdwzn780I4oMjqu4fvZifjf+Cpwi9teOrnxQffW/srqj4EP2+HHWTy
-         A7Qw==
-X-Gm-Message-State: APjAAAWJekkrbYi/PRy02wNYGCjoFuj/RfMEwbgsTmH6/Yl7WOFKzKKB
-        PqUjkvoBa8TzO5sYYUv27sA=
-X-Google-Smtp-Source: APXvYqxBKJ3IjnD6wDUtMi2m6hREJvgcNdbUZ0ji3JRi+mfPQSCt2CnZ9Or3TiA5SwO0YHSVt46P6g==
-X-Received: by 2002:a1c:a654:: with SMTP id p81mr4872126wme.36.1561147163961;
-        Fri, 21 Jun 2019 12:59:23 -0700 (PDT)
-Received: from debian64.daheim (pD9E297F7.dip0.t-ipconnect.de. [217.226.151.247])
-        by smtp.gmail.com with ESMTPSA id g19sm2198006wmg.10.2019.06.21.12.59.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 12:59:23 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hePgw-0006iD-KX; Fri, 21 Jun 2019 21:59:22 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] usb: xhci: add firmware loader for uPD720201 and uPD720202 w/o ROM
-Date:   Fri, 21 Jun 2019 21:59:22 +0200
-Message-ID: <1897697.zOhlaAKarQ@debian64>
-In-Reply-To: <20190621085913.8722-2-vkoul@kernel.org>
-References: <20190621085913.8722-1-vkoul@kernel.org> <20190621085913.8722-2-vkoul@kernel.org>
+        Fri, 21 Jun 2019 16:05:25 -0400
+Received: (qmail 11223 invoked by uid 2102); 21 Jun 2019 16:05:24 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 21 Jun 2019 16:05:24 -0400
+Date:   Fri, 21 Jun 2019 16:05:24 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Suwan Kim <suwan.kim027@gmail.com>
+cc:     shuah@kernel.org, <valentina.manea.m@gmail.com>,
+        <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usbip: Implement SG support to vhci
+In-Reply-To: <20190621174553.28862-3-suwan.kim027@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1906211548560.1471-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, June 21, 2019 10:59:09 AM CEST Vinod Koul wrote:
-> +	/*
-> +	 * The Firmware's Data Format is describe in
-> +	 * "6.3 Data Format" R19UH0078EJ0500 Rev.5.00 page 124
-> +	 */
+On Sat, 22 Jun 2019, Suwan Kim wrote:
+
+> There are bugs on vhci with usb 3.0 storage device. Originally, vhci
+> doesn't supported SG. So, USB storage driver on vhci divides SG list
+> into multiple URBs and it causes buffer overflow on the xhci of the
+> server. So we need to add SG support to vhci
+
+It doesn't cause buffer overflow.  The problem was that a transfer got
+terminated too early because the transfer length for one of the URBs
+was not divisible by the maxpacket size.
+
+> In this patch, vhci basically support SG and it sends each SG list
+> entry to the stub driver. Then, the stub driver sees total length of
+> the buffer and allocates SG table and pages according to the total
+> buffer length calling sgl_alloc(). After the stub driver receives
+> completed URB, it again sends each SG list entry to the vhci.
+> 
+> If HCD of server doesn't support SG, the stub driver allocates
+> big buffer using kmalloc() instead of using sgl_alloc() which
+> allocates SG list and pages.
+
+You might be better off not using kmalloc.  It's easier for the kernel 
+to allocate a bunch of small buffers than a single big one.  Then you 
+can create a separate URB for each buffer.
+
+> Alan fixed vhci bug with the USB 3.0 storage device by modifying
+> USB storage driver.
+> ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+> But the fundamental solution of it is to add SG support to vhci.
+> 
+> This patch works well with the USB 3.0 storage devices without Alan's
+> patch, and we can revert Alan's patch if it causes some troubles.
+
+These last two paragraphs don't need to be in the patch description.
+
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+
+I'm not sufficiently familiar with the usbip drivers to review most of 
+this.  However...
+
+> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> index be87c8a63e24..cc93c1a87a3e 100644
+> --- a/drivers/usb/usbip/vhci_hcd.c
+> +++ b/drivers/usb/usbip/vhci_hcd.c
+> @@ -696,7 +696,8 @@ static int vhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+>  	}
+>  	vdev = &vhci_hcd->vdev[portnum-1];
+>  
+> -	if (!urb->transfer_buffer && urb->transfer_buffer_length) {
+> +	if (!urb->transfer_buffer && !urb->num_sgs &&
+> +	     urb->transfer_buffer_length) {
+>  		dev_dbg(dev, "Null URB transfer buffer\n");
+>  		return -EINVAL;
+>  	}
+> @@ -1142,6 +1143,11 @@ static int vhci_setup(struct usb_hcd *hcd)
+>  		hcd->speed = HCD_USB3;
+>  		hcd->self.root_hub->speed = USB_SPEED_SUPER;
+>  	}
 > +
-> +	/* "Each row is 8 bytes". => firmware size must be a multiple of 8. */
-> +	if (length % 8 != 0)
-> +		dev_warn(&dev->dev, "firmware size is not a multiple of 8.");
+> +	/* support sg */
+> +	hcd->self.sg_tablesize = ~0;
+> +	hcd->self.no_sg_constraint = 1;
 
-It doesn't look like this holds true for the newer K2026090.mem which
-arguably fixes a lot of bugs over K2013080.mem. I think we should remove
-this check and message.
+You probably shouldn't do this, for two reasons.  First, sg_tablesize
+of the server's HCD may be smaller than ~0.  If the client's value is
+larger than the server's, a transfer could be accepted on the client
+but then fail on the server because the SG list was too big.
 
-Cheers,
-Christian
+Also, you may want to restrict the size of SG transfers even further,
+so that you don't have to allocate a tremendous amount of memory all at
+once on the server.  An SG transfer can be quite large.  I don't know 
+what a reasonable limit would be -- 16 perhaps?
 
+Alan Stern
 
