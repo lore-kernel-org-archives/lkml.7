@@ -2,72 +2,74 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13945C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E249E2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528C32070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="xYV18237"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfFURTY (ORCPT
+        id S1726127AbfFURVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:19:24 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:55496 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFURTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:19:24 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1heNC4-0002RK-SJ; Fri, 21 Jun 2019 19:19:21 +0200
-Date:   Fri, 21 Jun 2019 19:19:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, jgross@suse.com,
-        ndesaulniers@google.com, gregkh@linuxfoundation.org,
-        srinivas.eeda@oracle.com
-Subject: Re: [PATCH] x86/speculation/mds: Flush store buffer after wake up
- from sleep
-In-Reply-To: <1561011237-12312-1-git-send-email-zhenzhong.duan@oracle.com>
-Message-ID: <alpine.DEB.2.21.1906211916000.5503@nanos.tec.linutronix.de>
-References: <1561011237-12312-1-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 21 Jun 2019 13:21:48 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:37248 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbfFURVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:21:47 -0400
+Received: from localhost.localdomain (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 57BE8C6647;
+        Fri, 21 Jun 2019 17:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1561137705; bh=LUu3Vfg+EG2c+fNXyI1ZyzCVTnhx29KZ2Jnx2l94c8U=;
+        h=From:To:Cc:Subject:Date;
+        b=xYV18237cJrWCIP991uu7xsMyj9RWWWLg8yt8kn68sxYjPLi31dHGjxLh3ZuceQ2o
+         h4arblbV4QFWVKDXu41Q1oJTO7VwBYb3uXZXjKGs9HCo6/DF9PsbrRk+0cgS+HQlSU
+         xV9Z/Sx7D1Iyhw2wMUBphMWUelkXyykrbnlp3QHo=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-media@vger.kernel.org
+Cc:     ~martijnbraam/pmos-upstream@lists.sr.ht,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: ov5640: Add support for flash and lens devices
+Date:   Fri, 21 Jun 2019 19:20:25 +0200
+Message-Id: <20190621172025.27881-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Jun 2019, Zhenzhong Duan wrote:
+Parse async sub-devices related to the sensor by switching the async
+sub-device registration function.
 
-> Intel document says: "When a thread wakes from a sleep state, the store
-> buffer is repartitioned again. This causes the store buffer to transfer
-> store buffer entries from the thread that was already active to the one
-> which just woke up."
-> 
-> To avoid data leak from sibling thread to the woken thread, flush store
-> buffer right after wake up.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ drivers/media/i2c/ov5640.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That's a pointless exercise. The buffers are flushed again when returning
-to user space. Inside the kernel the potential leak is completely
-uninteresting unless you consider the kernel as a malicious entity.
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 82d4ce93312c..0c6f890bc708 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -3054,7 +3054,7 @@ static int ov5640_probe(struct i2c_client *client,
+ 	if (ret)
+ 		goto entity_cleanup;
  
-> Move mds_idle_clear_cpu_buffers() after trace_hardirqs_on() to ensure
-> all store buffer entries are flushed before sleep.
+-	ret = v4l2_async_register_subdev(&sensor->sd);
++	ret = v4l2_async_register_subdev_sensor_common(&sensor->sd);
+ 	if (ret)
+ 		goto free_ctrls;
+ 
+-- 
+2.22.0
 
-I'm fine with that change, albeit trace_hardirqs_on() is hardly leaking
-somethimg interesting.
-
-Thanks,
-
-	tglx
