@@ -4,179 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD93FC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC0C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41292083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03EA2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="jAkjttrk"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PAE6OEZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfFUNHl (ORCPT
+        id S1726969AbfFUNHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:07:41 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35102 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfFUNHf (ORCPT
+        Fri, 21 Jun 2019 09:07:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33800 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfFUNHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:07:35 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x25so5921179ljh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:07:34 -0700 (PDT)
+        Fri, 21 Jun 2019 09:07:40 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so10073708edb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:07:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KIxiEPjPFTJ+1vxbl5yjwf7laBnZVBburPM3Qsvxjsc=;
-        b=jAkjttrkDBc5StTWyglwMWmrFO5xfZMZEC4/aXMujoVsmJjiVumNp87/zZAkoldEE8
-         owN6HkrMnD9li+fb0BQuGz+pdNmonPApcLo2UC5s/As+WvpPXm6Ae4a9KqIRojiU04cX
-         KKYXnVSTkkmIUcdOIY1IwzqKt9bIBvIOjMfEsmvnNiPEMhQkCWDAIHC7oGmqIM0MfWSx
-         2lMX0vWAOdnCAFaWuQgX4llUeqNe/dWyQT5F9eirTWV3QTSeiK0Lg0x+5IvLmbg9jxqa
-         GVVr15lFJs3acP1kyx5aRviZYeEn7le4EWriJvOYYdS3MhRmRuUdX0X5C2NNu1pVZlZ/
-         FMlQ==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/K0/kvf7+EWXr6rQfoz7UxMfktgW7/4j5Pgej3x77XM=;
+        b=PAE6OEZ8NC/qeGpE32S7WnaYR8nyncYe408Jq0CgpSEX5qzdvqxgDZs5ZCZwf9z2M/
+         MfmA07u7v2Dcvj6N9Gc4vkUdsz3EIDYCqEMeeoBYxLeIb/y9bGSed3H8d9o3PlC4Ytxn
+         oA+VlnKMSsS7quvovP4p8aKwmbYWhZkd0zTnk3u9Du+67+nLBJwp5bknGKkUG+ONwhjz
+         tkTJX8Bq4oIKNeZVi+bbrVcdMW8Y1t9Y67TTb0mrmwBheAxfAtMwJDljsYfa7Ogu0jLk
+         RAaOEsejUFYQQpQXuZEuxRWQuaGtNp10HL9BRM8wQxljKfSAywRlF4E5te+9lTIG2AOz
+         S/QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KIxiEPjPFTJ+1vxbl5yjwf7laBnZVBburPM3Qsvxjsc=;
-        b=lumdhDDeKQkp5E9HakinPplrWzxLjk4GKXtd1PVy+Swh4iSDCGHRKZEOiUCQOFIG4o
-         eAGdyHNmWfK68h3TnhXmhwXmD06uWrZCcgJGsymc9FY7mx0tpuTrlhfKwrO3fLNDIYJS
-         eahtPvgl9IjiYnZecB2rsjgG2mrb+/WZCe79jxYqRMF7V4v5zXfoN9GmZAPJ6xz76AMs
-         5GzfJljNQqYoPqucXsLfUJM2ZlFsGJJYOJ9PpjZGsAsWJFEV8rSzEooIcKuLtGJ1E6UK
-         JkOBJhju1vJawpfjtHLBMMAU1YghCAZCAWC0T8rPyDv5uNHnsCrKqTdKCesNh8OyJ1tI
-         nzCg==
-X-Gm-Message-State: APjAAAUVGIAx9OZIZuO6UQyqkNHV0KY3JdHS2c9Jh6yGMpYnABqu5ktw
-        5ThVkgA0Yg7gd5XQ6jFI3OmSPg==
-X-Google-Smtp-Source: APXvYqztGCnsvf/snvO0fvZpXnEV5w6WCjbqDHG4Xxb6KNLNPuizWdxlt0NMN+AmNi/deF5LAXFr2A==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr10590901ljj.51.1561122453679;
-        Fri, 21 Jun 2019 06:07:33 -0700 (PDT)
-Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id r2sm387100lfi.51.2019.06.21.06.07.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 06:07:33 -0700 (PDT)
-From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-To:     axboe@fb.com, hch@lst.de, damien.lemoal@wdc.com,
-        chaitanya.kulkarni@wdc.com, dmitry.fomichev@wdc.com,
-        ajay.joshi@wdc.com, aravind.ramesh@wdc.com,
-        martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
-        agk@redhat.com, snitzer@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH 4/4] dm: add zone open, close and finish support
-Date:   Fri, 21 Jun 2019 15:07:11 +0200
-Message-Id: <20190621130711.21986-5-mb@lightnvm.io>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190621130711.21986-1-mb@lightnvm.io>
-References: <20190621130711.21986-1-mb@lightnvm.io>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/K0/kvf7+EWXr6rQfoz7UxMfktgW7/4j5Pgej3x77XM=;
+        b=f/C5O0ws7jCiGzJ6lPAzeC/d7ejCmcz8+GX39n7aY+Ik67j/b71dfkjpZp5dtUP3+I
+         xHTDHeM+vOfnEgxIhRXYPE/cXW19Z/mRQ6h3/evAQGvtGcpy3EORgrx2JjMXZUwEVvyc
+         1mrU0fREaOPlP8cGcUeC73hVK/45AgiXZdNDRff6rCmeuWU52Gx3nWuFhen8vjN4V+HY
+         xyzdT1b6iMjhbHlXv0FOhCUsKlUFHO5Lkq9gUFnqLbw+D4X1RyoqBjyhf/M2g4UU+G1v
+         5fxcKHAglPpb18KpWONOehHx0mkC4amDmoEVhvirizQdcjjXrg4spRXoIGyGeJiWql+Z
+         hBmQ==
+X-Gm-Message-State: APjAAAU1UlTjo52T+6IbFr7dAoUw1u/KXNB0mWcYZfxPkQAM4n60qxYK
+        zhMCNYhm8rA11nXNjt8YvaCKrw==
+X-Google-Smtp-Source: APXvYqwSIu9UphVAwE3sOjCJhhXK/jVAbMQD+iKQGW5Qdf6dAWE8bX5wKC8SIAJa13mOWwqqReekHg==
+X-Received: by 2002:a50:913c:: with SMTP id e57mr95497578eda.257.1561122459409;
+        Fri, 21 Jun 2019 06:07:39 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id e12sm813636edb.72.2019.06.21.06.07.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 06:07:38 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id C59BE10289C; Fri, 21 Jun 2019 16:07:40 +0300 (+03)
+Date:   Fri, 21 Jun 2019 16:07:40 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, matthew.wilcox@oracle.com,
+        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
+        william.kucharski@oracle.com, akpm@linux-foundation.org
+Subject: Re: [PATCH v5 6/6] mm,thp: avoid writes to file with THP in pagecache
+Message-ID: <20190621130740.ehobvjjj7gjiazjw@box>
+References: <20190620205348.3980213-1-songliubraving@fb.com>
+ <20190620205348.3980213-7-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620205348.3980213-7-songliubraving@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Joshi <ajay.joshi@wdc.com>
+On Thu, Jun 20, 2019 at 01:53:48PM -0700, Song Liu wrote:
+> In previous patch, an application could put part of its text section in
+> THP via madvise(). These THPs will be protected from writes when the
+> application is still running (TXTBSY). However, after the application
+> exits, the file is available for writes.
+> 
+> This patch avoids writes to file THP by dropping page cache for the file
+> when the file is open for write. A new counter nr_thps is added to struct
+> address_space. In do_last(), if the file is open for write and nr_thps
+> is non-zero, we drop page cache for the whole file.
+> 
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+>  fs/inode.c         |  3 +++
+>  fs/namei.c         | 22 +++++++++++++++++++++-
+>  include/linux/fs.h | 31 +++++++++++++++++++++++++++++++
+>  mm/filemap.c       |  1 +
+>  mm/khugepaged.c    |  4 +++-
+>  5 files changed, 59 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index df6542ec3b88..518113a4e219 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -181,6 +181,9 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
+>  	mapping->flags = 0;
+>  	mapping->wb_err = 0;
+>  	atomic_set(&mapping->i_mmap_writable, 0);
+> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+> +	atomic_set(&mapping->nr_thps, 0);
+> +#endif
+>  	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+>  	mapping->private_data = NULL;
+>  	mapping->writeback_index = 0;
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 20831c2fbb34..de64f24b58e9 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -3249,6 +3249,22 @@ static int lookup_open(struct nameidata *nd, struct path *path,
+>  	return error;
+>  }
+>  
+> +/*
+> + * The file is open for write, so it is not mmapped with VM_DENYWRITE. If
+> + * it still has THP in page cache, drop the whole file from pagecache
+> + * before processing writes. This helps us avoid handling write back of
+> + * THP for now.
+> + */
+> +static inline void release_file_thp(struct file *file)
+> +{
+> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
+> +	struct inode *inode = file_inode(file);
+> +
+> +	if (inode_is_open_for_write(inode) && filemap_nr_thps(inode->i_mapping))
+> +		truncate_pagecache(inode, 0);
+> +#endif
+> +}
+> +
+>  /*
+>   * Handle the last step of open()
+>   */
+> @@ -3418,7 +3434,11 @@ static int do_last(struct nameidata *nd,
+>  		goto out;
+>  opened:
+>  	error = ima_file_check(file, op->acc_mode);
+> -	if (!error && will_truncate)
+> +	if (error)
+> +		goto out;
+> +
+> +	release_file_thp(file);
 
-Implement REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH
-support to allow explicit control of zone states.
+What protects against re-fill the file with THP in parallel?
 
-Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>
----
- drivers/md/dm-flakey.c    | 7 +++----
- drivers/md/dm-linear.c    | 2 +-
- drivers/md/dm.c           | 5 +++--
- include/linux/blk_types.h | 8 ++++++++
- 4 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index a9bc518156f2..fff529c0732c 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -280,7 +280,7 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
- 	struct flakey_c *fc = ti->private;
- 
- 	bio_set_dev(bio, fc->dev->bdev);
--	if (bio_sectors(bio) || bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_sectors(bio) || bio_is_zone_mgmt_op(bio))
- 		bio->bi_iter.bi_sector =
- 			flakey_map_sector(ti, bio->bi_iter.bi_sector);
- }
-@@ -322,8 +322,7 @@ static int flakey_map(struct dm_target *ti, struct bio *bio)
- 	struct per_bio_data *pb = dm_per_bio_data(bio, sizeof(struct per_bio_data));
- 	pb->bio_submitted = false;
- 
--	/* Do not fail reset zone */
--	if (bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_is_zone_mgmt_op(bio))
- 		goto map_bio;
- 
- 	/* Are we alive ? */
-@@ -384,7 +383,7 @@ static int flakey_end_io(struct dm_target *ti, struct bio *bio,
- 	struct flakey_c *fc = ti->private;
- 	struct per_bio_data *pb = dm_per_bio_data(bio, sizeof(struct per_bio_data));
- 
--	if (bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_is_zone_mgmt_op(bio))
- 		return DM_ENDIO_DONE;
- 
- 	if (!*error && pb->bio_submitted && (bio_data_dir(bio) == READ)) {
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index ad980a38fb1e..217a1dee8197 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -90,7 +90,7 @@ static void linear_map_bio(struct dm_target *ti, struct bio *bio)
- 	struct linear_c *lc = ti->private;
- 
- 	bio_set_dev(bio, lc->dev->bdev);
--	if (bio_sectors(bio) || bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_sectors(bio) || bio_is_zone_mgmt_op(bio))
- 		bio->bi_iter.bi_sector =
- 			linear_map_sector(ti, bio->bi_iter.bi_sector);
- }
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 5475081dcbd6..f4507ec20a57 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1176,7 +1176,8 @@ static size_t dm_dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 
- /*
-  * A target may call dm_accept_partial_bio only from the map routine.  It is
-- * allowed for all bio types except REQ_PREFLUSH and REQ_OP_ZONE_RESET.
-+ * allowed for all bio types except REQ_PREFLUSH, REQ_OP_ZONE_RESET,
-+ * REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH.
-  *
-  * dm_accept_partial_bio informs the dm that the target only wants to process
-  * additional n_sectors sectors of the bio and the rest of the data should be
-@@ -1629,7 +1630,7 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
- 		ci.sector_count = 0;
- 		error = __send_empty_flush(&ci);
- 		/* dec_pending submits any data associated with flush */
--	} else if (bio_op(bio) == REQ_OP_ZONE_RESET) {
-+	} else if (bio_is_zone_mgmt_op(bio)) {
- 		ci.bio = bio;
- 		ci.sector_count = 0;
- 		error = __split_and_process_non_flush(&ci);
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 067ef9242275..fd2458cd1a49 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -398,6 +398,14 @@ static inline bool op_is_zone_mgmt_op(enum req_opf op)
- 	}
- }
- 
-+/*
-+ * Check if the bio is zoned operation.
-+ */
-+static inline bool bio_is_zone_mgmt_op(struct bio *bio)
-+{
-+	return op_is_zone_mgmt_op(bio_op(bio));
-+}
-+
- static inline bool op_is_write(unsigned int op)
- {
- 	return (op & 1);
 -- 
-2.19.1
-
+ Kirill A. Shutemov
