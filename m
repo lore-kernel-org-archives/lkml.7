@@ -2,207 +2,109 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE5CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCF8C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C162075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:47:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSm9STpb"
+	by mail.kernel.org (Postfix) with ESMTP id B7182208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561146612;
+	bh=04JoEBxD3BFQvCruh9qRPwf97IIUDRYFCn4G/UANqMg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rKI3ccuHfRZrSQStCmPwQr1+7QS7RWFbqFZIEW1Go+dj8BOUryWCl/1OhUN4UI36X
+	 YIJkiFiD02E6y/ft0HKBRC+cetsc9LSvt/hYDK9o4sSyFrh/lNSruoaliI4b8Ey0Ls
+	 sEtAwnL8bppId2KmGgLhORkpczwMUqcO0Ybzmyi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbfFUTrD (ORCPT
+        id S1726100AbfFUTuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 15:47:03 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39174 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUTrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 15:47:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so7644105wrt.6;
-        Fri, 21 Jun 2019 12:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fFsmg5teo3Xbt4jw00pmFQG645DUxEriV9yh6ddPSms=;
-        b=HSm9STpbDeNJKSug1CYd2ntln3teYS8VCj+5BsFyJVQJumut2n8y5fVWDD+3ERkIEX
-         Ix51HyCwLWL1+bvLXw3nwX4MVP6cXttJxEnivRuFBNgv6pDuWy/lc18sbItGwRwhCOR7
-         cRpXWxc5kxjri20nM1KTGOHMI2Rt/6HcldBzqifW/lD4cqm0JA68rZkFkefkwkPFQAjt
-         V/KoLrAuCEt+Idq0U0pgbuawMu4llWe43sLMP8qHJ1+8sA7ritGGIUrtWfaIsJxSCuhB
-         RJna1Ixn8rjpLB3JAkq3J2VQpa1zs3mbV51o7SIuNhf/9Smmgd+VxItXsTIN2aU7eW8O
-         T/SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fFsmg5teo3Xbt4jw00pmFQG645DUxEriV9yh6ddPSms=;
-        b=jp2PKY3+k4zhvwa3rWYmb+mVEiADOEE07x5zFX6e35SQviP0Tq+JUKFN0rds7jiiWv
-         Z8w41fTut+uH7NaN2xPHotygALFuS4RHz1advrOnsefED9eC7teWAVR9+FlSN7P0amp0
-         x5voT1P2/swwxZproSe/YCoQ/yVgGXDSF0/BTlOagXQZ3/dDZ/uFjEo+D1WS1iZa9d4e
-         cHHkLL6+DXTlOA+cRKKs1h0ravIK7UCw+bI0rRBl8IkhDgx4PLQiwHQGxYRwQ4/ly/Zs
-         nziJd129b8oiTLzQqDMXGnlR0PafAjOOCF2nrvrlMSMBT8EYxXb4ouLmgdMnhdVATVGG
-         Wllg==
-X-Gm-Message-State: APjAAAXmiMP+IOMALQHE+2BAfxSAiSTM9nxGj15M7yrfz/+bsHWE3bWH
-        N9n6/eLyBtMIUk+QGJpwUL4=
-X-Google-Smtp-Source: APXvYqy9xjFwxxk/6uXq3GEa1BXMW+Ouq8bpQAz0X3ZDljdnnMPpaOjcjQ6OnU00TMs2HnLTjYGimg==
-X-Received: by 2002:adf:c506:: with SMTP id q6mr82678405wrf.219.1561146419265;
-        Fri, 21 Jun 2019 12:46:59 -0700 (PDT)
-Received: from debian64.daheim (pD9E297F7.dip0.t-ipconnect.de. [217.226.151.247])
-        by smtp.gmail.com with ESMTPSA id l1sm3652046wmg.13.2019.06.21.12.46.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 12:46:58 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hePUv-0006ct-Q6; Fri, 21 Jun 2019 21:46:57 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>, linux-usb@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] usb: xhci: allow multiple firmware versions
-Date:   Fri, 21 Jun 2019 21:46:57 +0200
-Message-ID: <4561421.lKpHrRjrp5@debian64>
-In-Reply-To: <20190621085913.8722-6-vkoul@kernel.org>
-References: <20190621085913.8722-1-vkoul@kernel.org> <20190621085913.8722-6-vkoul@kernel.org>
+        Fri, 21 Jun 2019 15:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfFUTuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 15:50:10 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A0DD21530;
+        Fri, 21 Jun 2019 19:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561146610;
+        bh=04JoEBxD3BFQvCruh9qRPwf97IIUDRYFCn4G/UANqMg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c/DvUGTRbo284HFgnXzdQ1URo3qv+8FtczRuvG/PEF2kvColGkafTHWVSlKwemimP
+         QimdsMdIrkhxHixKgp+8wxLp9u6+NU66LuWrYMI1SyaNdJBD3W3eByS7n67tu2oZw1
+         nhYNqW3ADmPBB/XGFH9x2gwJpEpW9kmECmb5AIw0=
+Received: by mail-qk1-f178.google.com with SMTP id r6so5354686qkc.0;
+        Fri, 21 Jun 2019 12:50:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAX95WkH3x9K8iXrZAW5+FAqr2cfdYXB1RpAg9XD3e9XJV2BBmfe
+        Ob+VLO8gEBBs3kTuiH6l+W2z5MEnLmzsgVFOFw==
+X-Google-Smtp-Source: APXvYqz5cBp3x+DmSEQitU24gvMNTmfNuB58xPNZsCfkqZeUWaT8NtfpQbGa48QKpKo3Wv6jZktZ44i2bkYwwhqXESo=
+X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr17358138qkl.254.1561146609224;
+ Fri, 21 Jun 2019 12:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190602080126.31075-1-paul.walmsley@sifive.com>
+ <20190602080126.31075-4-paul.walmsley@sifive.com> <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
+In-Reply-To: <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Jun 2019 13:49:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL1a-irBa4MaVzak5DrTjxiySuqTJSQOqwzymVa=Uz=gg@mail.gmail.com>
+Message-ID: <CAL_JsqL1a-irBa4MaVzak5DrTjxiySuqTJSQOqwzymVa=Uz=gg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] dt-bindings: riscv: convert cpu binding to json-schema
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, June 21, 2019 10:59:13 AM CEST Vinod Koul wrote:
-> Allow multiple firmware file versions in table and load them in
-> increasing order as we find them in the file system.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> ---
->  drivers/usb/host/xhci-pci.c | 46 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 44 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 771948ce3d38..1fb890984d6d 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -336,13 +336,19 @@ static const struct renesas_fw_entry {
->  	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
->  	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
->  	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-> +	 *
-> +	 *  Entry expected_version should be kept in increasing order for a
-> +	 *  chip, so that driver will pick first version and if that fails
-> +	 *  then next one will be picked
+On Mon, Jun 10, 2019 at 3:46 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sun, Jun 2, 2019 at 2:01 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > At Rob's request, we're starting to migrate our DT binding
+> > documentation to json-schema YAML format.  Start by converting our cpu
+> > binding documentation.  While doing so, document more properties and
+> > nodes.  This includes adding binding documentation support for the E51
+> > and U54 CPU cores ("harts") that are present on this SoC.  These cores
+> > are described in:
+> >
+> >     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> >
+> > This cpus.yaml file is intended to be a starting point and to
+> > evolve over time.  It passes dt-doc-validate as of the yaml-bindings
+> > commit 4c79d42e9216.
+> >
+> > This patch was originally based on the ARM json-schema binding
+> > documentation as added by commit 672951cbd1b7 ("dt-bindings: arm: Convert
+> > cpu binding to json-schema").
+> >
+> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-riscv@lists.infradead.org
+> > ---
+> >  .../devicetree/bindings/riscv/cpus.yaml       | 168 ++++++++++++++++++
+> >  1 file changed, 168 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/riscv/cpus.yaml
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Wouldn't it be better to do that in reverse order and try the latest
-firmware first? And then fall back to the older ones?
+You all have applied this now leaving the binding checks broken. I
+have a fix for one issue validating the schema, but there's a
+dependency on schemas/cpus.yaml which I gave feedback on.
 
->  	 */
->  	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
->  	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
-> +	{ "K2026090.mem", 0x0014, 0x03, 0x2026 },
->  	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
-The uPD720202 (ProductID 0x0015 with rev 0x02) also
-works with the K2026090.mem I found online.
-
-so,
-
-+  	{ "K2026090.mem", 0x0015, 0x02, 0x2026 },
-
->  };
->  
->  MODULE_FIRMWARE("K2013080.mem");
-> +MODULE_FIRMWARE("K2026090.mem");
->  
->  static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
->  {
-> @@ -363,6 +369,24 @@ static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
->  	return NULL;
->  }
->  
-> +static const struct
-> +renesas_fw_entry *renesas_get_next_entry(struct pci_dev *dev,
-> +					 const struct renesas_fw_entry *entry)
-> +{
-> +	const struct renesas_fw_entry *next_entry;
-> +	size_t i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
-> +		next_entry = &renesas_fw_table[i];
-> +		if (next_entry->device == dev->device &&
-> +		    next_entry->revision == dev->revision &&
-> +		    next_entry->expected_version > entry->expected_version)
-> +			return next_entry;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  static int renesas_fw_download_image(struct pci_dev *dev,
->  				     const u32 *fw,
->  				     size_t step)
-> @@ -709,6 +733,7 @@ struct renesas_fw_ctx {
->  	struct pci_dev *pdev;
->  	const struct pci_device_id *id;
->  	bool resume;
-> +	const struct renesas_fw_entry *entry;
->  };
->  
->  static int xhci_pci_probe(struct pci_dev *pdev,
-> @@ -968,13 +993,29 @@ static void renesas_fw_callback(const struct firmware *fw,
->  	struct renesas_fw_ctx *ctx = context;
->  	struct pci_dev *pdev = ctx->pdev;
->  	struct device *parent = pdev->dev.parent;
-> +	const struct renesas_fw_entry *next_entry;
->  	bool rom;
->  	int err;
->  
->  	if (!fw) {
->  		dev_err(&pdev->dev, "firmware failed to load\n");
-> -
-> -		goto cleanup;
-> +		/*
-> +		 * we didn't find firmware, check if we have another
-> +		 * entry for this device
-> +		 */
-> +		next_entry = renesas_get_next_entry(ctx->pdev, ctx->entry);
-> +		if (next_entry) {
-> +			ctx->entry = next_entry;
-> +			dev_dbg(&pdev->dev, "Found next entry, requesting: %s\n",
-> +				next_entry->firmware_name);
-> +			request_firmware_nowait(THIS_MODULE, 1,
-> +						next_entry->firmware_name,
-> +						&pdev->dev, GFP_KERNEL,
-> +						ctx, renesas_fw_callback);
-> +			return;
-> +		} else {
-> +			goto cleanup;
-> +		}
->  	}
->  
->  	err = renesas_fw_verify(pdev, fw->data, fw->size);
-> @@ -1072,6 +1113,7 @@ static int renesas_fw_download_to_hw(struct pci_dev *pdev,
->  	ctx->pdev = pdev;
->  	ctx->resume = do_resume;
->  	ctx->id = id;
-> +	ctx->entry = entry;
->  
->  	pci_dev_get(pdev);
->  	err = request_firmware_nowait(THIS_MODULE, 1, entry->firmware_name,
-> 
-
-
-
-
+Rob
