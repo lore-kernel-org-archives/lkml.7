@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B5C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1804C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C121421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCD5215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561133907;
-	bh=gk5QRD503VoN6s0s5xcmhGL4AOPRgWEPH5X97MTra/0=;
+	s=default; t=1561133916;
+	bh=PwyIRlw4eGqVixKLTAdetpyYxnczvxvkrv1PiQ/hkbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VifWn7xgwlATuo132EftY1eOe/coiEopOFaytqz8JbqhsbqBZ8SAnsAasVOGlbhma
-	 fxclEq6dvJ39sErAF3DdjI9i1HfHdw2MOEzawgs2ZK9Pb0hN6mpGVnEtSaqlC8sAq7
-	 7fU3IbWIwrMjQfzv93aBCPp6N10GhWOdg2G9tK1Q=
+	b=knIpfDDwUST/l3uMI5xRsmtqyOKF9MyDGJS6y+8+Xf9ZqiG0G3Y7dcAuX+egTZYJ2
+	 QPDMxmyyBq7PtJ59NeSHhWHFJEumzCydSZ3P30aFBeQWViF5KIkxBpEbkfxama8Jnb
+	 AR+FDkIYrkdjzcKeZFK4qfzOf2Hwo6B3N+e9TsOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFUQS0 (ORCPT
+        id S1726362AbfFUQSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 12:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfFUQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:18:26 -0400
+        id S1726032AbfFUQSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:18:35 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814D621530;
-        Fri, 21 Jun 2019 16:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B4C2089E;
+        Fri, 21 Jun 2019 16:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561133905;
-        bh=gk5QRD503VoN6s0s5xcmhGL4AOPRgWEPH5X97MTra/0=;
+        s=default; t=1561133914;
+        bh=PwyIRlw4eGqVixKLTAdetpyYxnczvxvkrv1PiQ/hkbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S1T8hRsw0SBqWe36N+NzgcoSr0caiwZ2/mZdzSRek3W9bFBdpciQCFy+exUdGBhLc
-         asgyKICP4NwitjPbAnIRdL0iRQU+FsoQsAsbO/c6LbV9jLkbzqytzk1wFGDM0H9sWq
-         0vfPKWgKeSjR6iYObcndOQnxt9d7jgOljIpybto8=
+        b=ILXggq8rI3dwdWMakT32bI0nuIjhZ7NSpfKISdj95Zbwivj/Avg9lFb4W699NqM/f
+         uItgLS2TJIRYw0glDjWmVgL1maykq4yTqqH1Q+j+EwqZuxJ17+3sfUnpVeRcby6Rx4
+         Ee5ULya3BYiaCTrLWwU1Z3jAstFNDiz6MFpbk5b0=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH 02/11] tracing: kprobes: Output kprobe event to printk buffer
-Date:   Sat, 22 Jun 2019 01:18:20 +0900
-Message-Id: <156113389986.28344.14014048862104392592.stgit@devnote2>
+Subject: [RFC PATCH 03/11] tracing: Expose EXPORT_SYMBOL_GPL symbol
+Date:   Sat, 22 Jun 2019 01:18:30 +0900
+Message-Id: <156113391031.28344.15363982923173501964.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
 References: <156113387975.28344.16009584175308192243.stgit@devnote2>
@@ -63,163 +63,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kprobe-events use event_trigger_unlock_commit_regs() directly,
-that events doesn't show up in printk buffer if "tp_printk" is set.
-
-Use trace_event_buffer_commit() in kprobe events so that it can
-invoke output_printk() as same as other trace events.
+Since ftrace_set_clr_event is already exported by EXPORT_SYMBOL_GPL,
+it should not be static.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- include/linux/trace_events.h |    1 +
- kernel/trace/trace.c         |    4 +--
- kernel/trace/trace_events.c  |    1 +
- kernel/trace/trace_kprobe.c  |   57 +++++++++++++++++++++---------------------
- 4 files changed, 32 insertions(+), 31 deletions(-)
+ kernel/trace/trace_events.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 8a62731673f7..9f3ddbdb4955 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -210,6 +210,7 @@ struct trace_event_buffer {
- 	void				*entry;
- 	unsigned long			flags;
- 	int				pc;
-+	struct pt_regs			*regs;
- };
- 
- void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4a6154f8abdb..6530f6004643 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2572,9 +2572,9 @@ void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
- 	if (static_key_false(&tracepoint_printk_key.key))
- 		output_printk(fbuffer);
- 
--	event_trigger_unlock_commit(fbuffer->trace_file, fbuffer->buffer,
-+	event_trigger_unlock_commit_regs(fbuffer->trace_file, fbuffer->buffer,
- 				    fbuffer->event, fbuffer->entry,
--				    fbuffer->flags, fbuffer->pc);
-+				    fbuffer->flags, fbuffer->pc, fbuffer->regs);
- }
- EXPORT_SYMBOL_GPL(trace_event_buffer_commit);
- 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index edc72f3b080c..733ae975e7b8 100644
+index 733ae975e7b8..c9b458dcdd36 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -279,6 +279,7 @@ void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
- 	if (!fbuffer->event)
- 		return NULL;
- 
-+	fbuffer->regs = NULL;
- 	fbuffer->entry = ring_buffer_event_data(fbuffer->event);
- 	return fbuffer->entry;
+@@ -796,7 +796,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 	return ret;
  }
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 7958da2fd922..3eb03cf880e1 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1025,10 +1025,8 @@ __kprobe_trace_func(struct trace_kprobe *tk, struct pt_regs *regs,
- 		    struct trace_event_file *trace_file)
+ 
+-static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
++int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
  {
- 	struct kprobe_trace_entry_head *entry;
--	struct ring_buffer_event *event;
--	struct ring_buffer *buffer;
--	int size, dsize, pc;
--	unsigned long irq_flags;
-+	struct trace_event_buffer fbuffer;
-+	int dsize;
- 	struct trace_event_call *call = &tk->tp.call;
- 
- 	WARN_ON(call != trace_file->event_call);
-@@ -1036,24 +1034,26 @@ __kprobe_trace_func(struct trace_kprobe *tk, struct pt_regs *regs,
- 	if (trace_trigger_soft_disabled(trace_file))
- 		return;
- 
--	local_save_flags(irq_flags);
--	pc = preempt_count();
-+	local_save_flags(fbuffer.flags);
-+	fbuffer.pc = preempt_count();
-+	fbuffer.trace_file = trace_file;
- 
- 	dsize = __get_data_size(&tk->tp, regs);
--	size = sizeof(*entry) + tk->tp.size + dsize;
- 
--	event = trace_event_buffer_lock_reserve(&buffer, trace_file,
--						call->event.type,
--						size, irq_flags, pc);
--	if (!event)
-+	fbuffer.event =
-+		trace_event_buffer_lock_reserve(&fbuffer.buffer, trace_file,
-+					call->event.type,
-+					sizeof(*entry) + tk->tp.size + dsize,
-+					fbuffer.flags, fbuffer.pc);
-+	if (!fbuffer.event)
- 		return;
- 
--	entry = ring_buffer_event_data(event);
-+	fbuffer.regs = regs;
-+	entry = fbuffer.entry = ring_buffer_event_data(fbuffer.event);
- 	entry->ip = (unsigned long)tk->rp.kp.addr;
- 	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
- 
--	event_trigger_unlock_commit_regs(trace_file, buffer, event,
--					 entry, irq_flags, pc, regs);
-+	trace_event_buffer_commit(&fbuffer);
- }
- 
- static void
-@@ -1073,36 +1073,35 @@ __kretprobe_trace_func(struct trace_kprobe *tk, struct kretprobe_instance *ri,
- 		       struct trace_event_file *trace_file)
- {
- 	struct kretprobe_trace_entry_head *entry;
--	struct ring_buffer_event *event;
--	struct ring_buffer *buffer;
--	int size, pc, dsize;
--	unsigned long irq_flags;
-+	struct trace_event_buffer fbuffer;
- 	struct trace_event_call *call = &tk->tp.call;
-+	int dsize;
- 
- 	WARN_ON(call != trace_file->event_call);
- 
- 	if (trace_trigger_soft_disabled(trace_file))
- 		return;
- 
--	local_save_flags(irq_flags);
--	pc = preempt_count();
-+	local_save_flags(fbuffer.flags);
-+	fbuffer.pc = preempt_count();
-+	fbuffer.trace_file = trace_file;
- 
- 	dsize = __get_data_size(&tk->tp, regs);
--	size = sizeof(*entry) + tk->tp.size + dsize;
--
--	event = trace_event_buffer_lock_reserve(&buffer, trace_file,
--						call->event.type,
--						size, irq_flags, pc);
--	if (!event)
-+	fbuffer.event =
-+		trace_event_buffer_lock_reserve(&fbuffer.buffer, trace_file,
-+					call->event.type,
-+					sizeof(*entry) + tk->tp.size + dsize,
-+					fbuffer.flags, fbuffer.pc);
-+	if (!fbuffer.event)
- 		return;
- 
--	entry = ring_buffer_event_data(event);
-+	fbuffer.regs = regs;
-+	entry = fbuffer.entry = ring_buffer_event_data(fbuffer.event);
- 	entry->func = (unsigned long)tk->rp.kp.addr;
- 	entry->ret_ip = (unsigned long)ri->ret_addr;
- 	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
- 
--	event_trigger_unlock_commit_regs(trace_file, buffer, event,
--					 entry, irq_flags, pc, regs);
-+	trace_event_buffer_commit(&fbuffer);
- }
- 
- static void
+ 	char *event = NULL, *sub = NULL, *match;
+ 	int ret;
 
