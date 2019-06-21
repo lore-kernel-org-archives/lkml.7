@@ -2,148 +2,73 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5226FC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D05C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDEA2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279D92083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rNCL4zhw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZF4pc1R7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfFUM00 (ORCPT
+        id S1726533AbfFUM3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:26:26 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34467 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFUM00 (ORCPT
+        Fri, 21 Jun 2019 08:29:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59702 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfFUM3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:26:26 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m29so6704073qtu.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qJu/XBwrdsSLLRIcidZtwfJoKMutHo2qTycz/kmN2wg=;
-        b=rNCL4zhw8eHMFBzdfTNk3LaqHtJy2EdKZJhC4JXKAVokf50roNkhJcamXNbNQyIVbk
-         +F17JkX4Da30UUmMIxKB2HEDgT2swpPABPB1JTWNYcIz2BSH6vtRK0RFRpu1WePTy9/F
-         MCSwm4S5qGfQkVVEaPJIoSu7nRJqFislMwMYb3/BeYPK7gGaNHd771r4+0lydNcQWGxn
-         vAwjd47h9gxP8ZfpLWwLEafFXMG3ZHoyNREYtPldn08LG37GPGOV0vCMUAC7aD6fvL68
-         h5FfNck7iuH5lhV5mJ6KI5IRTJMNl8hmI9hIyrop1DU5T5FPvLCGLOc2NSltYwywZ05u
-         hsng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qJu/XBwrdsSLLRIcidZtwfJoKMutHo2qTycz/kmN2wg=;
-        b=SOp5HMcmAH4tibXuYACDWxyNTlakO0OgD6YnNu6qjXXehfRbnGrM7gmbvrRrTL7DSk
-         VOB8QYkGOmCVGTnGt/pb/1pVnu7yG+Y98g7T8GVjGa9Qm6tbnYBxBdrR8MD7f35DS4p8
-         ZU7WxylPWjMeAgW/WCWjieL5Byp54uUvMFrd00BZha2hGT/b2tZik+iezaCnAgTDZ5e1
-         EI0QO0HaIMdeGtAogCCUVRR0cgIHIyjZGcCJccssxQVEMq4riaHousORlhPJ8eC/hSQo
-         T0HXRs3sTktXL84eZguRFZ4YiDcpfQ+VB+tdi7dRNl/m7OQpbn4A1kUsGRiRmZhforbd
-         tvqA==
-X-Gm-Message-State: APjAAAWWFDFjUNj8nnQi+WEeiUUhUSjN6VzSO0V+5z3zg6aWvGa1rMDv
-        fJxIBxa4ab9TV8wLumFz+Dk1rg==
-X-Google-Smtp-Source: APXvYqyGQfBNrLQhGqn1W0umgpDTMCzpvsh9uq4Mq2YLC5VhGLFENF58ZpwrlKTJ4RrZgekglzPwsw==
-X-Received: by 2002:aed:39e5:: with SMTP id m92mr34477935qte.135.1561119985333;
-        Fri, 21 Jun 2019 05:26:25 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y42sm2003943qtc.66.2019.06.21.05.26.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 05:26:24 -0700 (PDT)
-Message-ID: <1561119983.5154.33.camel@lca.pw>
-Subject: Re: [PATCH -next v2] mm/page_alloc: fix a false memory corruption
-From:   Qian Cai <cai@lca.pw>
-To:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 21 Jun 2019 08:26:23 -0400
-In-Reply-To: <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
-References: <1561063566-16335-1-git-send-email-cai@lca.pw>
-         <201906201801.9CFC9225@keescook>
-         <CAG_fn=VRehbrhvNRg0igZ==YvONug_nAYMqyrOXh3kO2+JaszQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Jun 2019 08:29:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JtzNg/W/9Z6R95MFKLpT3RlW96vhlKcRykI0P3sQui0=; b=ZF4pc1R7fl8qHacYV1cu3GmxH
+        XPxWGMaPLa9b+5Gjos6wyI+1XXE4oNWt9RtlIy123V7hm0dkm8subteupi4VU5+1SrBGDROPOv7b/
+        PsA6S0xmnJ4HsscJjuMXCDISBjcQzDl/hGeICkQKKk/UUQEHfYN4ZmX6vpGsJDsGjI5qfX9fH9UFa
+        5n7Nmkx5U1vi31FK/OzKsiUrdh5Q7wu4r4wmwHwRX6s5WCPrB89BcV03x3FfCsn3/9jAXHqsOh88M
+        0LhWFQeaZdDutUTqN5H/Kick7DzDx9Sk/MKUpBk/YOGS/TdsygR/y3aBJuFvhZidGQb/pmH+0C7q2
+        CRcSE2ccg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1heIfZ-0001vZ-SZ; Fri, 21 Jun 2019 12:29:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E4365203C694A; Fri, 21 Jun 2019 14:29:27 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 14:29:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        frederic@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Message-ID: <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+References: <20190619181903.GA14233@linux.ibm.com>
+ <20190620121032.GU3436@hirez.programming.kicks-ass.net>
+ <20190620160118.GQ26519@linux.ibm.com>
+ <20190620211019.GA3436@hirez.programming.kicks-ass.net>
+ <20190620221336.GZ26519@linux.ibm.com>
+ <20190621105503.GI3436@hirez.programming.kicks-ass.net>
+ <20190621121630.GE26519@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621121630.GE26519@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-21 at 12:39 +0200, Alexander Potapenko wrote:
-> On Fri, Jun 21, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > On Thu, Jun 20, 2019 at 04:46:06PM -0400, Qian Cai wrote:
-> > > The linux-next commit "mm: security: introduce init_on_alloc=1 and
-> > > init_on_free=1 boot options" [1] introduced a false positive when
-> > > init_on_free=1 and page_poison=on, due to the page_poison expects the
-> > > pattern 0xaa when allocating pages which were overwritten by
-> > > init_on_free=1 with 0.
-> > > 
-> > > Fix it by switching the order between kernel_init_free_pages() and
-> > > kernel_poison_pages() in free_pages_prepare().
-> > 
-> > Cool; this seems like the right approach. Alexander, what do you think?
-> 
-> Can using init_on_free together with page_poison bring any value at all?
-> Isn't it better to decide at boot time which of the two features we're
-> going to enable?
+On Fri, Jun 21, 2019 at 05:16:30AM -0700, Paul E. McKenney wrote:
+> A pair of full hangs at boot (TASKS03 and TREE04), no console output
+> whatsoever.  Not sure how these changes could cause that, but suspicion
+> falls on sched_tick_offload_init().  Though even that is a bit strange
+> because if so, why didn't TREE01 and TREE07 also hang?  Again, looking
+> into it.
 
-I think the typical use case is people are using init_on_free=1, and then decide
-to debug something by enabling page_poison=on. Definitely, don't want
-init_on_free=1 to disable page_poison as the later has additional checking in
-the allocation time to make sure that poison pattern set in the free time is
-still there.
-
-> 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > -Kees
-> > 
-> > > 
-> > > [1] https://patchwork.kernel.org/patch/10999465/
-> > > 
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > ---
-> > > 
-> > > v2: After further debugging, the issue after switching order is likely a
-> > >     separate issue as clear_page() should not cause issues with future
-> > >     accesses.
-> > > 
-> > >  mm/page_alloc.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > > index 54dacf35d200..32bbd30c5f85 100644
-> > > --- a/mm/page_alloc.c
-> > > +++ b/mm/page_alloc.c
-> > > @@ -1172,9 +1172,10 @@ static __always_inline bool
-> > > free_pages_prepare(struct page *page,
-> > >                                          PAGE_SIZE << order);
-> > >       }
-> > >       arch_free_page(page, order);
-> > > -     kernel_poison_pages(page, 1 << order, 0);
-> > >       if (want_init_on_free())
-> > >               kernel_init_free_pages(page, 1 << order);
-> > > +
-> > > +     kernel_poison_pages(page, 1 << order, 0);
-> > >       if (debug_pagealloc_enabled())
-> > >               kernel_map_pages(page, 1 << order, 0);
-> > > 
-> > > --
-> > > 1.8.3.1
-> > > 
-> > 
-> > --
-> > Kees Cook
-> 
-> 
-> 
+Pesky details ;-)
