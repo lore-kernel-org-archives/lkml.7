@@ -2,533 +2,177 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A98C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27862C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0277B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="mpcNXgRi";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="OW4UxH9i"
+	by mail.kernel.org (Postfix) with ESMTP id EC6E8208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 08:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfFUIf3 (ORCPT
+        id S1726518AbfFUIfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 04:35:29 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:20420 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726289AbfFUIf1 (ORCPT
+        Fri, 21 Jun 2019 04:35:30 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38809 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfFUIf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:35:27 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L8Vw1a022718;
-        Fri, 21 Jun 2019 01:35:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=Q6EjuuH0I6T7weVed79zuq1FD8nTezN3sF8diBSqZ60=;
- b=mpcNXgRii9FsfG8FOVuFfjMUYp26F5v8FzgwS7phToVvRfQWssVFBvGNLTHdGYbqWVzR
- 66tmBQ1vGlzRt5ilO7Xr61Z/5dY1/fJoC8on/Q83QyMv97lahsdAFb6phCXxJ97+dfUz
- S0c5dzH968mcRhopkP/n9nsMIRZfoKKq/WA5u7s9rFbYTF4I9XhsHj3pbJ3Prb6hU29X
- FXzrfP4MTkJG8cDlaEOEF2AviLLLrgLCnClQPn6GC8RUqHNTXfSo7hi+8oNdtoLinOP+
- Y/bMHcJ1bXlgIPaZJJFwPehjyZ2d3xIvekISDb0ZcZnFgvmHdSFKQGo20ZQUZzrPyYo4 Mw== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2056.outbound.protection.outlook.com [104.47.36.56])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2t8ctvc3fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jun 2019 01:35:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q6EjuuH0I6T7weVed79zuq1FD8nTezN3sF8diBSqZ60=;
- b=OW4UxH9i8A2VioiWVKGONILqBcoGV6ERN1tYc2iStpE6n2ZhafrTEe6+G6XFfshH/UA+MwvwHgxYTqL05TIiiJdTtuH9Eo2n1XF3sS+zpEVPHMLUQ+4kKBamJKRWcPaNZ9qEYkiPOCPsc/D1QV/1ry/z1JQIK80AxlE9F2I2wig=
-Received: from DM5PR07CA0098.namprd07.prod.outlook.com (2603:10b6:4:ae::27) by
- CO2PR07MB2486.namprd07.prod.outlook.com (2603:10b6:102:f::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Fri, 21 Jun 2019 08:35:14 +0000
-Received: from BY2NAM05FT013.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::207) by DM5PR07CA0098.outlook.office365.com
- (2603:10b6:4:ae::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.12 via Frontend
- Transport; Fri, 21 Jun 2019 08:35:13 +0000
-Received-SPF: PermError (protection.outlook.com: domain of cadence.com used an
- invalid SPF mechanism)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- BY2NAM05FT013.mail.protection.outlook.com (10.152.100.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.6 via Frontend Transport; Fri, 21 Jun 2019 08:35:13 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8ZBlr029317
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 21 Jun 2019 01:35:12 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 21 Jun 2019 10:35:10 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 21 Jun 2019 10:35:10 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5L8Z9hn009173;
-        Fri, 21 Jun 2019 09:35:09 +0100
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
-        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <rafalc@cadence.com>, <aniljoy@cadence.com>, <piotrs@cadence.com>,
-        <pthombar@cadence.com>
-Subject: [PATCH v3 4/5] net: macb: add support for high speed interface
-Date:   Fri, 21 Jun 2019 09:35:08 +0100
-Message-ID: <1561106108-9103-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
-References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+        Fri, 21 Jun 2019 04:35:28 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so8920142edo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:35:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mmt0kiyLRw+HeqUtPae5wb8eOqt4c0M39SkXRh/JHCk=;
+        b=TvudfNZefnjNTT4KG9Plq5BqFXTflJOYcA0n32/VPlEZ8A4fHqS1TISHInUf10VFLB
+         cItyClSbPURa8gCJHGPJNi8QntKT47PSrSPxZXcbsvjEG2R+1BhLrIoZz3OnkCxxmzQB
+         Jtts4SYgFfQ3Mrx7GhGKcOwncNjEk0s1MsGAkVp+d1oWmOSqODXAUgiNBvJuavVcLBqY
+         fTbCkuy8EBwatYm4aCgddttKRt9ivxzDjsmXZ0TBOmVH8WMuCVbQJI0n8t1oQxMl+C7G
+         wGA4Ekt2vvS1eWQtVGBKlveMkz8heRcj5EXfrLG2BWg8hPQkenXUvGiJokmzEJA2vg17
+         z0eA==
+X-Gm-Message-State: APjAAAUpA40W6zTf7Vsae/7Tak9agQb85szD1ELzjO7k6+g9ZRtghQlD
+        dgaBxXwelAyFumx/Q6Atr1gXe35NErs=
+X-Google-Smtp-Source: APXvYqwI6LagF9gG99nUgbdl/iv/EnLcdekW46tfOQEiIJernJ2D0mBQBxW6cCwnO/770Xv6q6Uu5g==
+X-Received: by 2002:a50:f7c1:: with SMTP id i1mr15861292edn.268.1561106125627;
+        Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id g16sm625392edc.76.2019.06.21.01.35.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id n9so5737737wru.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 01:35:25 -0700 (PDT)
+X-Received: by 2002:a05:6000:114b:: with SMTP id d11mr28630201wrx.167.1561106124764;
+ Fri, 21 Jun 2019 01:35:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39860400002)(136003)(2980300002)(448002)(199004)(189003)(36092001)(7636002)(8936002)(86362001)(7696005)(26005)(356004)(426003)(70206006)(77096007)(76176011)(51416003)(186003)(14444005)(7126003)(305945005)(30864003)(2616005)(26826003)(126002)(476003)(446003)(11346002)(2201001)(107886003)(336012)(486006)(4326008)(54906003)(16586007)(48376002)(50466002)(50226002)(47776003)(110136005)(53416004)(8676002)(478600001)(36756003)(70586007)(5660300002)(76130400001)(246002)(316002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2486;H:sjmaillnx2.cadence.com;FPR:;SPF:PermError;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b99e0099-5c5f-4430-b5d3-08d6f6236122
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:CO2PR07MB2486;
-X-MS-TrafficTypeDiagnostic: CO2PR07MB2486:
-X-Microsoft-Antispam-PRVS: <CO2PR07MB2486B598DF6C9B0A82C8E550C1E70@CO2PR07MB2486.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0075CB064E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: /yiCDvu2LpY+iGNTBhSlPa7to3XHErbuxdvtApSPvqDZ87QFc1tJE2zrJbq1bgZcK/ukPYM6UJIJuhO6SDcAEhYFvY4oGHzMCTymKEUtT+hJst5wZeHk+L5cJ2bd/QpAhdZwRvs0DOTxh28hjU4pwH9fJSnGHKdHJEp1f3BINbU+AuleTI6cI57hXCt/GUwjddGVwxZ2mJtdd+j+wtQRq9RA0BB0lEiO2ExicbpxIU3bteqvXwI/z45kaYTYljptZ4M5DqbTI0ALxy7H9iL126w+3dZnrILqoTlogZtDOcvqGNtBGI/0QrdHBc7mGyFa6B+EdSu14CBaXdLTIA0odrSM+jQ+XWNZwSDWPsT0fyl3Rrczf1oCj/vbF5NZBXSnNaO/12eXa6nkiuRW+ZhpHCkok5D5MiisM8StsY+UW38=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2019 08:35:13.2796
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b99e0099-5c5f-4430-b5d3-08d6f6236122
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2486
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210072
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-4-jagan@amarulasolutions.com> <20190523203836.xy7nmte3ubyxwg27@flea>
+ <CAMty3ZA2mZugso_rMy+anp1i1bSL5FtB2mAyN1v_gE3rds0LgA@mail.gmail.com>
+In-Reply-To: <CAMty3ZA2mZugso_rMy+anp1i1bSL5FtB2mAyN1v_gE3rds0LgA@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 21 Jun 2019 16:35:09 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
+Message-ID: <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v10 03/11] drm/sun4i: dsi: Fix video
+ start delay computation
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for high speed USXGMII PCS and 10G
-speed in Cadence ethernet controller driver.
+On Fri, May 24, 2019 at 6:27 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Mon, May 20, 2019 at 02:33:10PM +0530, Jagan Teki wrote:
+> > > The current code is computing vertical video start delay as
+> > >
+> > > delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+> > >
+> > > On which the second parameter
+> > >
+> > > mode->vsync_end - mode->vdisplay = front porch + sync timings
+> > >
+> > > according to "DRM kernel-internal display mode structure" in
+> > > include/drm/drm_modes.h
+> > >
+> > > With adding additional sync timings, the desired video start delay
+> > > value as 510 for "bananapi,s070wv20-ct16" panel timings which indeed
+> > > trigger panel flip_done timed out as:
+> > >
+> > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > >  [CRTC:46:crtc-0] vblank wait timed out
+> > >  Modules linked in:
+> > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
+> > >  Hardware name: Allwinner sun8i Family
+> > >  Workqueue: events deferred_probe_work_func
+> > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+> > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+> > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+> > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+> > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+> > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+> > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+> > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+> > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+> > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > >  ---[ end trace 495200a78b24980e ]---
+> > >  random: fast init done
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > >
+> > > But the expected video start delay value is 513 which states that
+> > > the second parameter on the computation is "front porch" value
+> > > (no sync timings included).
+> > >
+> > > This is clearly confirmed from the legacy [1] and new [2] bsp codes
+> > > that the second parameter on the video start delay is "front porch"
+> > >
+> > > Here is the detailed evidence for calculating front porch as per
+> > > bsp code.
+> > >
+> > > vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp
+> > > => (panel->lcd_vt) - panel->lcd_y - panel->lcd_vbp
+> > > => (tt->ver_front_porch + lcdp->panel_info.lcd_vbp
+> > >     + lcdp->panel_info.lcd_y) -  panel->lcd_y - panel->lcd_vbp
+> > > => tt->ver_front_porch
+> >
+> > The comment on patch 1 still applies on this patch
+>
+> Thanks, I have responded on that. Same applies here.
 
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- drivers/net/ethernet/cadence/macb.h      |  41 +++++
- drivers/net/ethernet/cadence/macb_main.c | 218 +++++++++++++++++++----
- 2 files changed, 220 insertions(+), 39 deletions(-)
+So this patch fixes the misinterpretation of Allwinner's back porch value,
+much like patch 1, but this one is for the vertical back porch. So I think
+you should follow the same advice I gave you for patch 1.
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index b59840f5c023..a405aeac74e6 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -85,6 +85,7 @@
- #define GEM_USRIO		0x000c /* User IO */
- #define GEM_DMACFG		0x0010 /* DMA Configuration */
- #define GEM_JML			0x0048 /* Jumbo Max Length */
-+#define GEM_HS_MAC_CONFIG	0x0050 /* GEM high speed config */
- #define GEM_HRB			0x0080 /* Hash Bottom */
- #define GEM_HRT			0x0084 /* Hash Top */
- #define GEM_SA1B		0x0088 /* Specific1 Bottom */
-@@ -170,6 +171,9 @@
- #define GEM_DCFG7		0x0298 /* Design Config 7 */
- #define GEM_DCFG8		0x029C /* Design Config 8 */
- #define GEM_DCFG10		0x02A4 /* Design Config 10 */
-+#define GEM_DCFG12		0x02AC /* Design Config 12 */
-+#define GEM_USX_CONTROL		0x0A80 /* USXGMII control register */
-+#define GEM_USX_STATUS		0x0A88 /* USXGMII status register */
- 
- #define GEM_TXBDCTRL	0x04cc /* TX Buffer Descriptor control register */
- #define GEM_RXBDCTRL	0x04d0 /* RX Buffer Descriptor control register */
-@@ -277,6 +281,8 @@
- #define MACB_IRXFCS_SIZE	1
- 
- /* GEM specific NCR bitfields. */
-+#define GEM_ENABLE_HS_MAC_OFFSET	31
-+#define GEM_ENABLE_HS_MAC_SIZE		1
- #define GEM_TWO_PT_FIVE_GIG_OFFSET	29
- #define GEM_TWO_PT_FIVE_GIG_SIZE	1
- 
-@@ -468,6 +474,10 @@
- #define MACB_REV_OFFSET				0
- #define MACB_REV_SIZE				16
- 
-+/* Bitfield in HS_MAC_CONFIG */
-+#define GEM_HS_MAC_SPEED_OFFSET			0
-+#define GEM_HS_MAC_SPEED_SIZE			3
-+
- /* Bitfields in PCS_CONTROL. */
- #define GEM_PCS_CTRL_RST_OFFSET			15
- #define GEM_PCS_CTRL_RST_SIZE			1
-@@ -513,6 +523,34 @@
- #define GEM_RXBD_RDBUFF_OFFSET			8
- #define GEM_RXBD_RDBUFF_SIZE			4
- 
-+/* Bitfields in DCFG12. */
-+#define GEM_HIGH_SPEED_OFFSET			26
-+#define GEM_HIGH_SPEED_SIZE			1
-+
-+/* Bitfields in USX_CONTROL. */
-+#define GEM_USX_CTRL_SPEED_OFFSET		14
-+#define GEM_USX_CTRL_SPEED_SIZE			3
-+#define GEM_SERDES_RATE_OFFSET			12
-+#define GEM_SERDES_RATE_SIZE			2
-+#define GEM_RX_SCR_BYPASS_OFFSET		9
-+#define GEM_RX_SCR_BYPASS_SIZE			1
-+#define GEM_TX_SCR_BYPASS_OFFSET		8
-+#define GEM_TX_SCR_BYPASS_SIZE			1
-+#define GEM_RX_SYNC_RESET_OFFSET		2
-+#define GEM_RX_SYNC_RESET_SIZE			1
-+#define GEM_TX_EN_OFFSET			1
-+#define GEM_TX_EN_SIZE				1
-+#define GEM_SIGNAL_OK_OFFSET			0
-+#define GEM_SIGNAL_OK_SIZE			1
-+
-+/* Bitfields in USX_STATUS. */
-+#define GEM_USX_TX_FAULT_OFFSET			28
-+#define GEM_USX_TX_FAULT_SIZE			1
-+#define GEM_USX_RX_FAULT_OFFSET			27
-+#define GEM_USX_RX_FAULT_SIZE			1
-+#define GEM_USX_BLOCK_LOCK_OFFSET		0
-+#define GEM_USX_BLOCK_LOCK_SIZE			1
-+
- /* Bitfields in TISUBN */
- #define GEM_SUBNSINCR_OFFSET			0
- #define GEM_SUBNSINCR_SIZE			16
-@@ -673,6 +711,7 @@
- #define MACB_CAPS_MACB_IS_GEM			BIT(31)
- #define MACB_CAPS_PCS				BIT(24)
- #define MACB_CAPS_MACB_IS_GEM_GXL		BIT(25)
-+#define MACB_CAPS_HIGH_SPEED			BIT(26)
- 
- #define MACB_GEM7010_IDNUM			0x009
- #define MACB_GEM7014_IDNU			0x107
-@@ -752,6 +791,7 @@
- 	})
- 
- #define MACB_READ_NSR(bp)	macb_readl(bp, NSR)
-+#define GEM_READ_USX_STATUS(bp)	gem_readl(bp, USX_STATUS)
- 
- /* struct macb_dma_desc - Hardware DMA descriptor
-  * @addr: DMA address of data buffer
-@@ -1265,6 +1305,7 @@ struct macb {
- 	struct macb_pm_data pm_data;
- 	struct phylink *pl;
- 	struct phylink_config pl_config;
-+	u32 serdes_rate;
- };
- 
- #ifdef CONFIG_MACB_USE_HWSTAMP
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index bdb57482644c..3146b97eac25 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -87,6 +87,20 @@ static struct sifive_fu540_macb_mgmt *mgmt;
- #define MACB_WOL_HAS_MAGIC_PACKET	(0x1 << 0)
- #define MACB_WOL_ENABLED		(0x1 << 1)
- 
-+enum {
-+	HS_MAC_SPEED_100M,
-+	HS_MAC_SPEED_1000M,
-+	HS_MAC_SPEED_2500M,
-+	HS_MAC_SPEED_5000M,
-+	HS_MAC_SPEED_10000M,
-+	HS_MAC_SPEED_25000M,
-+};
-+
-+enum {
-+	MACB_SERDES_RATE_5_PT_15625Gbps = 5,
-+	MACB_SERDES_RATE_10_PT_3125Gbps = 10,
-+};
-+
- /* Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-  */
-@@ -96,6 +110,8 @@ static struct sifive_fu540_macb_mgmt *mgmt;
- 
- #define MACB_MDIO_TIMEOUT	1000000 /* in usecs */
- 
-+#define MACB_USX_BLOCK_LOCK_TIMEOUT	1000000 /* in usecs */
-+
- /* DMA buffer descriptor might be different size
-  * depends on hardware configuration:
-  *
-@@ -448,24 +464,37 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
- 	if (!clk)
- 		return;
- 
--	switch (speed) {
--	case SPEED_10:
--		rate = 2500000;
--		break;
--	case SPEED_100:
--		rate = 25000000;
--		break;
--	case SPEED_1000:
--		rate = 125000000;
--		break;
--	case SPEED_2500:
--		if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL)
--			rate = 312500000;
--		else
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+		switch (bp->serdes_rate) {
-+		case MACB_SERDES_RATE_5_PT_15625Gbps:
-+			rate = 78125000;
-+			break;
-+		case MACB_SERDES_RATE_10_PT_3125Gbps:
-+			rate = 156250000;
-+			break;
-+		default:
-+			return;
-+		}
-+	} else {
-+		switch (speed) {
-+		case SPEED_10:
-+			rate = 2500000;
-+			break;
-+		case SPEED_100:
-+			rate = 25000000;
-+			break;
-+		case SPEED_1000:
- 			rate = 125000000;
--		break;
--	default:
--		return;
-+			break;
-+		case SPEED_2500:
-+			if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL)
-+				rate = 312500000;
-+			else
-+				return;
-+			break;
-+		default:
-+			return;
-+		}
- 	}
- 
- 	rate_rounded = clk_round_rate(clk, rate);
-@@ -494,6 +523,21 @@ static void gem_phylink_validate(struct phylink_config *pl_config,
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
- 
- 	switch (state->interface) {
-+	case PHY_INTERFACE_MODE_USXGMII:
-+	case PHY_INTERFACE_MODE_10GKR:
-+		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
-+			phylink_set(mask, 10000baseCR_Full);
-+			phylink_set(mask, 10000baseER_Full);
-+			phylink_set(mask, 10000baseKR_Full);
-+			phylink_set(mask, 10000baseLR_Full);
-+			phylink_set(mask, 10000baseLRM_Full);
-+			phylink_set(mask, 10000baseSR_Full);
-+			phylink_set(mask, 10000baseT_Full);
-+			phylink_set(mask, 5000baseT_Full);
-+			phylink_set(mask, 2500baseX_Full);
-+			phylink_set(mask, 1000baseX_Full);
-+		}
-+	/* fallthrough */
- 	case PHY_INTERFACE_MODE_SGMII:
- 		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
- 			phylink_set(mask, 2500baseT_Full);
-@@ -516,6 +560,7 @@ static void gem_phylink_validate(struct phylink_config *pl_config,
- 		phylink_set(mask, 100baseT_Half);
- 		phylink_set(mask, 100baseT_Full);
- 		break;
-+
- 	case PHY_INTERFACE_MODE_1000BASEX:
- 	case PHY_INTERFACE_MODE_2500BASEX:
- 		phylink_set(mask, 1000baseT_Full);
-@@ -537,6 +582,99 @@ static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
- 	return -EOPNOTSUPP;
- }
- 
-+static int macb_wait_for_usx_block_lock(struct macb *bp)
-+{
-+	u32 val;
-+
-+	return readx_poll_timeout(GEM_READ_USX_STATUS, bp, val,
-+				  val & GEM_BIT(USX_BLOCK_LOCK),
-+				  1, MACB_USX_BLOCK_LOCK_TIMEOUT);
-+}
-+
-+static inline int gem_mac_usx_configure(struct macb *bp, int spd)
-+{
-+	u32 speed, config;
-+
-+	gem_writel(bp, NCFGR, GEM_BIT(PCSSEL) |
-+		   (~GEM_BIT(SGMIIEN) & gem_readl(bp, NCFGR)));
-+	gem_writel(bp, NCR, gem_readl(bp, NCR) |
-+		   GEM_BIT(ENABLE_HS_MAC));
-+	gem_writel(bp, NCFGR, gem_readl(bp, NCFGR) |
-+		   MACB_BIT(FD));
-+	config = gem_readl(bp, USX_CONTROL);
-+	config = GEM_BFINS(SERDES_RATE, bp->serdes_rate, config);
-+	config &= ~GEM_BIT(TX_SCR_BYPASS);
-+	config &= ~GEM_BIT(RX_SCR_BYPASS);
-+	gem_writel(bp, USX_CONTROL, config |
-+		   GEM_BIT(TX_EN));
-+	config = gem_readl(bp, USX_CONTROL);
-+	gem_writel(bp, USX_CONTROL, config | GEM_BIT(SIGNAL_OK));
-+	if (macb_wait_for_usx_block_lock(bp) < 0) {
-+		netdev_warn(bp->dev, "USXGMII block lock failed");
-+		return -ETIMEDOUT;
-+	}
-+
-+	switch (spd) {
-+	case SPEED_10000:
-+		if (bp->serdes_rate >= MACB_SERDES_RATE_10_PT_3125Gbps) {
-+			speed = HS_MAC_SPEED_10000M;
-+		} else {
-+			netdev_warn(bp->dev, "10G speed isn't supported by HW");
-+			netdev_warn(bp->dev, "Setting speed to 1G");
-+			speed = HS_MAC_SPEED_1000M;
-+		}
-+		break;
-+	case SPEED_5000:
-+		speed = HS_MAC_SPEED_5000M;
-+		break;
-+	case SPEED_2500:
-+		speed = HS_MAC_SPEED_2500M;
-+		break;
-+	case SPEED_1000:
-+		speed = HS_MAC_SPEED_1000M;
-+		break;
-+	default:
-+	case SPEED_100:
-+		speed = HS_MAC_SPEED_100M;
-+		break;
-+	}
-+
-+	gem_writel(bp, HS_MAC_CONFIG, GEM_BFINS(HS_MAC_SPEED, speed,
-+						gem_readl(bp, HS_MAC_CONFIG)));
-+	gem_writel(bp, USX_CONTROL, GEM_BFINS(USX_CTRL_SPEED, speed,
-+					      gem_readl(bp, USX_CONTROL)));
-+	return 0;
-+}
-+
-+static inline void gem_mac_configure(struct macb *bp, int speed)
-+{
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
-+	    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
-+	    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
-+		gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
-+			   GEM_BIT(PCSSEL) |
-+			   gem_readl(bp, NCFGR));
-+
-+	switch (speed) {
-+	case SPEED_2500:
-+		gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-+			   gem_readl(bp, NCFGR));
-+		gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
-+			   gem_readl(bp, NCR));
-+		break;
-+	case SPEED_1000:
-+		gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-+			   gem_readl(bp, NCFGR));
-+		break;
-+	case SPEED_100:
-+		macb_writel(bp, NCFGR, MACB_BIT(SPD) |
-+			    macb_readl(bp, NCFGR));
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
- 			   const struct phylink_link_state *state)
- {
-@@ -574,32 +712,20 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
- 			reg &= ~GEM_BIT(GBE);
- 		macb_or_gem_writel(bp, NCFGR, reg);
- 
--		if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
--		    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
--		    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
--			gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
--				   GEM_BIT(PCSSEL) |
--				   gem_readl(bp, NCFGR));
--
- 		reg = macb_readl(bp, NCFGR);
- 		if (state->duplex)
- 			reg |= MACB_BIT(FD);
-+		macb_or_gem_writel(bp, NCFGR, reg);
- 
--		switch (state->speed) {
--		case SPEED_2500:
--			gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
--				   gem_readl(bp, NCR));
--			break;
--		case SPEED_1000:
--			reg |= GEM_BIT(GBE);
--			break;
--		case SPEED_100:
--			reg |= MACB_BIT(SPD);
--			break;
--		default:
--			break;
-+		if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+			if (gem_mac_usx_configure(bp, state->speed) < 0) {
-+				spin_unlock_irqrestore(&bp->lock, flags);
-+				phylink_mac_change(bp->pl, false);
-+				return;
-+			}
-+		} else {
-+			gem_mac_configure(bp, state->speed);
- 		}
--		macb_or_gem_writel(bp, NCFGR, reg);
- 
- 		bp->speed = state->speed;
- 		bp->duplex = state->duplex;
-@@ -3446,6 +3572,9 @@ static void macb_configure_caps(struct macb *bp,
- 		default:
- 			break;
- 		}
-+		dcfg = gem_readl(bp, DCFG12);
-+		if (GEM_BFEXT(HIGH_SPEED, dcfg) == 1)
-+			bp->caps |= MACB_CAPS_HIGH_SPEED;
- 		dcfg = gem_readl(bp, DCFG2);
- 		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
- 			bp->caps |= MACB_CAPS_FIFO_MODE;
-@@ -4434,7 +4563,18 @@ static int macb_probe(struct platform_device *pdev)
- 	} else if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL) {
- 		u32 interface_supported = 1;
- 
--		if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
-+		if (phy_mode == PHY_INTERFACE_MODE_USXGMII) {
-+			if (!(bp->caps & MACB_CAPS_HIGH_SPEED &&
-+			      bp->caps & MACB_CAPS_PCS))
-+				interface_supported = 0;
-+
-+			if (of_property_read_u32(np, "serdes-rate-gbps",
-+						 &bp->serdes_rate)) {
-+				netdev_err(dev,
-+					   "GEM serdes_rate not specified");
-+				interface_supported = 0;
-+			}
-+		} else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
- 		    phy_mode == PHY_INTERFACE_MODE_1000BASEX ||
- 		    phy_mode == PHY_INTERFACE_MODE_2500BASEX) {
- 			if (!(bp->caps & MACB_CAPS_PCS))
--- 
-2.17.1
-
+ChenYu
