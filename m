@@ -2,187 +2,107 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE70C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDA0C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153BF21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C972084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ow7PxS52"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="EGaACgO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfFUKoy (ORCPT
+        id S1726500AbfFUKtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:44:54 -0400
-Received: from vps.xff.cz ([195.181.215.36]:57978 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfFUKoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:44:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1561113891; bh=uF+1BlMGKRS6vtUXDE5TvLdvEqjdbvyP/y5+AuCPrdw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ow7PxS52be3W7D+CLStx+GnsxjXGCQTI1iuSUM4RsdIJWfx2Wksiz1Cnlbol/TQnf
-         0l7P19qDOVyz+44VF/o0q4TbwtyXww1V4VneGDWy5Uj9bzh5c0hpMrGskFUcj9TZ9P
-         l7NFkU2RW73QR563UgLKHOamD9gE5HV9F+TY0g64=
-Date:   Fri, 21 Jun 2019 12:44:50 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Jose Abreu <joabreu@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-Message-ID: <20190621104450.vyemihcou5cjayju@core.my.home>
-Mail-Followup-To: linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Jose Abreu <joabreu@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-References: <20190620134748.17866-1-megous@megous.com>
+        Fri, 21 Jun 2019 06:49:13 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:48330 "EHLO
+        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfFUKtM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 06:49:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=j2GzdxnYBK8G7Fj9E5HisiRxVngkkouaD3FQTjun8xw=; b=EGaACgO9PwJhsTSBqdwtLIVr+
+        NwMW1810knKUDihDGmTj5uZ9ZTEq9zNnCGvyJyYctDTJ2Slu6pp/Wf534Xz+gL3gyQEN0extj+Ix/
+        sH1jTIrlijGT4xbDNd/9OmdmJKxZqATv/EvWUMPh9BPDt+AiJa9AlPMcdQGghjRVCNwpk=;
+Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <huw@codeweavers.com>)
+        id 1heH6x-0003kV-6K; Fri, 21 Jun 2019 05:49:40 -0500
+Received: from daviesh by merlot with local (Exim 4.90_1)
+        (envelope-from <huw@codeweavers.com>)
+        id 1heH6M-0001lJ-SR; Fri, 21 Jun 2019 11:49:03 +0100
+Date:   Fri, 21 Jun 2019 11:49:02 +0100
+From:   Huw Davies <huw@codeweavers.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v7 03/25] kernel: Unify update_vsyscall implementation
+Message-ID: <20190621104902.GA6646@merlot.physics.ox.ac.uk>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-4-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620134748.17866-1-megous@megous.com>
+In-Reply-To: <20190621095252.32307-4-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 03:47:42PM +0200, verejna wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> This series implements support for Xunlong Orange Pi 3 board.
-> 
-> - ethernet support (patches 1-3)
-> - HDMI support (patches 4-6)
-> 
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
-> 
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
+On Fri, Jun 21, 2019 at 10:52:30AM +0100, Vincenzo Frascino wrote:
+> diff --git a/kernel/vdso/vsyscall.c b/kernel/vdso/vsyscall.c
+> new file mode 100644
+> index 000000000000..d1e8074e3d10
+> --- /dev/null
+> +++ b/kernel/vdso/vsyscall.c
+> +static inline void update_vdso_data(struct vdso_data *vdata,
+> +				    struct timekeeper *tk)
+> +{
+> +	struct vdso_timestamp *vdso_ts;
+> +	u64 nsec;
+> +
+> +	vdata[CS_HRES_COARSE].cycle_last	= tk->tkr_mono.cycle_last;
+> +	vdata[CS_HRES_COARSE].mask		= tk->tkr_mono.mask;
+> +	vdata[CS_HRES_COARSE].mult		= tk->tkr_mono.mult;
+> +	vdata[CS_HRES_COARSE].shift		= tk->tkr_mono.shift;
+> +	vdata[CS_RAW].cycle_last		= tk->tkr_raw.cycle_last;
+> +	vdata[CS_RAW].mask			= tk->tkr_raw.mask;
+> +	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
+> +	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
+> +
+> +	/* CLOCK_REALTIME */
+> +	vdso_ts		=  &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
 
-Other theory to test is that the PHY requires two power supplies to be
-enabled at the same time, and during reboot one of them (one controlled
-via GPIO) may be turned off, and ALDO2 controlled by AXP805 may not.
+There's an extraneous space after the '='.  Hopefully Thomas can
+fix this up if this patchset is otherwise ok.
 
-It should be possible to turn off ALDO2 in u-boot via CONFIG_AXP_ALDO2_VOLT=0
-(You may need to enable CONFIG_AXP809_POWER and other options too, since
-it seems AXP805 support is not enabled for orange pi 3 in u-boot)
+> +	vdso_ts->sec	= tk->xtime_sec;
+> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
 
-regards,
-	o.
-
-> 
-> Please take a look.
-> 
-> thank you and regards,
->   Ondrej Jirman
-> 
-> 
-> Changes in v7:
-> - dropped stored reference to connector_pdev as suggested by Jernej
-> - added forgotten dt-bindings reviewed-by tag
-> 
-> Changes in v6:
-> - added dt-bindings reviewed-by tag
-> - fix wording in stmmac commit (as suggested by Sergei)
-> 
-> Changes in v5:
-> - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
-> - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
-> - changed hdmi-connector's ddc-supply property to ddc-en-gpios
->   (Rob Herring)
-> 
-> Changes in v4:
-> - fix checkpatch warnings/style issues
-> - use enum in struct sunxi_desc_function for io_bias_cfg_variant
-> - collected acked-by's
-> - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
->   caused by missing conversion from has_io_bias_cfg struct member
->   (I've kept the acked-by, because it's a trivial change, but feel free
->   to object.) (reported by Martin A. on github)
->   I did not have A80 pinctrl enabled for some reason, so I did not catch
->   this sooner.
-> - dropped brcm firmware patch (was already applied)
-> - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
->   along with bluetooth support, in a separate series)
-> 
-> Changes in v3:
-> - dropped already applied patches
-> - changed pinctrl I/O bias selection constants to enum and renamed
-> - added /omit-if-no-ref/ to mmc1_pins
-> - made mmc1_pins default pinconf for mmc1 in H6 dtsi
-> - move ddc-supply to HDMI connector node, updated patch descriptions,
->   changed dt-bindings docs
-> 
-> Changes in v2:
-> - added dt-bindings documentation for the board's compatible string
->   (suggested by Clement)
-> - addressed checkpatch warnings and code formatting issues (on Maxime's
->   suggestions)
-> - stmmac: dropped useless parenthesis, reworded description of the patch
->   (suggested by Sergei)
-> - drop useles dev_info() about the selected io bias voltage
-> - docummented io voltage bias selection variant macros
-> - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
->   because wifi depends on H6 RTC support that's not merged yet (suggested
->   by Clement)
-> - added missing signed-of-bys
-> - changed &usb2otg dr_mode to otg, and added a note about VBUS
-> - improved wording of HDMI driver's DDC power supply patch
-> 
-> Icenowy Zheng (2):
->   net: stmmac: sun8i: add support for Allwinner H6 EMAC
->   net: stmmac: sun8i: force select external PHY when no internal one
-> 
-> Ondrej Jirman (4):
->   arm64: dts: allwinner: orange-pi-3: Enable ethernet
->   dt-bindings: display: hdmi-connector: Support DDC bus enable
->   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
->   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-> 
->  .../display/connector/hdmi-connector.txt      |  1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
->  5 files changed, 144 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.22.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Huw.
