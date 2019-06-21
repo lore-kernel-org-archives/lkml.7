@@ -2,157 +2,108 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DAEC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC2C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6B2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Gku07hFQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjRYDV0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfFULPH (ORCPT
+        id S1726656AbfFULP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:15:07 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34603 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfFULPH (ORCPT
+        Fri, 21 Jun 2019 07:15:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39792 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfFULP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:15:07 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190621111505euoutp02677658eb12c0a4236e26ade1d1ccfb36~qMnaI8oDe2215822158euoutp02I
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:15:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190621111505euoutp02677658eb12c0a4236e26ade1d1ccfb36~qMnaI8oDe2215822158euoutp02I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561115705;
-        bh=s+UrBPQaVR3tcbqs3Ol/m34bGN/nZjeSUNnxd+RCh/w=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Gku07hFQ9DkB9j5Dh9oBBcbRE57oOmbW8bmDePpXGZN8PrDzY8Zi9rarPD0B16Wy3
-         fTgf3GhKDk2Z4rXuWMfDzHRcWWzu2sz5Cgs+uTbT0JMMeYicZ737vJ/zYhAIG5sZNB
-         Jg7+rUJd9flCI2ciZWlLx2OQ4PDSwkIK4m/Vh89I=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190621111504eucas1p24f641ba01defb3d4090372c1cc47fc24~qMnZeAsNo3122131221eucas1p2j;
-        Fri, 21 Jun 2019 11:15:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 2B.7C.04377.83CBC0D5; Fri, 21
-        Jun 2019 12:15:04 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190621111503eucas1p2dfbd7cd8b9e3eb1a2f7f36f178fdf92d~qMnYohBvW0269402694eucas1p2p;
-        Fri, 21 Jun 2019 11:15:03 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190621111503eusmtrp244fb004c79e5e18732496dd5c877925e~qMnYaeHtn0599205992eusmtrp2U;
-        Fri, 21 Jun 2019 11:15:03 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-9e-5d0cbc38c3c4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8F.25.04140.73CBC0D5; Fri, 21
-        Jun 2019 12:15:03 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190621111503eusmtip23118a0d64fb6a8e431a10b4eca01fb80~qMnYA7gST0528405284eusmtip2b;
-        Fri, 21 Jun 2019 11:15:03 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: pvr2fb: fix compile-testing as module
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mike Marshall <hubcap@omnibond.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <3ee91294-044d-9bcd-0c4c-3365c0c97604@samsung.com>
-Date:   Fri, 21 Jun 2019 13:15:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190617124758.1252449-1-arnd@arndb.de>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjtt7vd3c3NrtPYh0rDSYVWmj1gWZhF0P4MghBr1S0vajq1Xd/+
-        Y2U+FolNLJziA0lLQecqzTHILJzOB6ZZpjaVli8SK52QpuW8Sv53vu87h3MOfAQmMfI8iei4
-        RFoTR8XKcSG3qf1370GFWaQ6VJ/ro1jVtfMVHxzzuCLnSz5H8frbFFfRkf+DpxgwleKKUccU
-        N5SvXFnWIWXWuzmesso8w1GO3bdwlMsjozzlgnH3eTxceDKCjo1OpjWBIdeEUVN5Njyh2yV1
-        wj7Ez0RvBFokIIA8Cqu6So4WCQkJ+RRB5+zg5rCIoNBsQuywgMD0s4q7JSkbb+exhxoEVeOP
-        +Owwh6B4pYzjZLmTShi0DmBO7EH6QNH0JOYkYWQ3ArPVukHCyWB4mFOLnFhMhoChro/vxFxy
-        DxgNXRviXWQYjLUbeCzHDTqL7RsxBOQxeJL3EXdijJTCsL2cw2IZNM+VbpgB2cYHbUkTxuY+
-        Cw1L85sd3GHW8oLPYm/421LOYQX1CFZzpzfVzQhqCtdwlnUC3lrer8cg1i38oMEUyK5PQ8Hz
-        MuRcA+kKQ3NubAhX0DU9xti1GHKzJSx7LxiqDfiWrbblGVaA5Ppt1fTb6ui31dH/961A3Fok
-        pZMYdSTNHI6jUwIYSs0kxUUG3IhXG9H6J3WtWRZfIdOf622IJJBcJG7Vu6gkPCqZSVO3ISAw
-        uYdYFCtSScQRVFo6rYm/qkmKpZk25EVw5VJxxo7xSxIykkqkY2g6gdZsXTmEwDMTpc42CvJa
-        9x2XfQ1zpJz7ZaOWxlJbLySEk7dtVN3MgZRAeV1lVmNJU0HJTf+ZBa3w1Ej/pEfvSHxRn+zy
-        Wr/j85UHMcMd+1+GqpeCvncVtvjecmOU2T3edyfuSe/E+Pp52e1FWemq/DM7y0NmLpptE8EZ
-        1iPNQv6nIFm1X4W0Z1LOZaKoIH9Mw1D/AO08n/pFAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xe7rme3hiDX7tUbL4O+kYu8WVr+/Z
-        LNrv9jFZ7H/6nMXiRN8HVovLu+awWdz5+pzFgd3j969JjB4tR96yeize85LJ4373cSaPX7fv
-        sHp83iQXwBalZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
-        b5egl/G88x5bwRnuiodPbrA3MB7k7GLk5JAQMJGY9+AYaxcjF4eQwFJGieW/zgE5HEAJGYnj
-        68sgaoQl/lzrYoOoec0o8WnTCTaQhLCAh8TVU5eZQWwRAUWJqS+eMYMUMQucYZR4uuIL1NQO
-        Ron2SVNYQarYBKwkJravYgSxeQXsJDasvsAOYrMIqEps2nAabJKoQITEmfcrWCBqBCVOznwC
-        ZnMKmEos7bwGtplZQF3iz7xLzBC2uMStJ/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDI
-        sopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwArcd+7llB2PXu+BDjAIcjEo8vAdmcccKsSaW
-        FVfmHmKU4GBWEuHlyeGJFeJNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YHLIK4k3NDU0t7A0
-        NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWLznx8N116POSGTuynn2vzBkxs6f
-        h17HVz6R3+t84S7Pt2VX2uvLO2aduNIVaH/e6umsW1cUT6ZdUJzUa/RjTqXLkcUvi3yPiZ6M
-        vtT5VXZKRs/14MTEmhYDCYV47R9q17a3n9E7P2tZ47vXe/+mhVv8LfJt/1+9pcX5/ZOnBQe/
-        hYs3hC20eqXEUpyRaKjFXFScCAAXu4PR1gIAAA==
-X-CMS-MailID: 20190621111503eucas1p2dfbd7cd8b9e3eb1a2f7f36f178fdf92d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190617124822epcas2p2c93d6cec3b60d08d85f228945d5c7623
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190617124822epcas2p2c93d6cec3b60d08d85f228945d5c7623
-References: <CGME20190617124822epcas2p2c93d6cec3b60d08d85f228945d5c7623@epcas2p2.samsung.com>
-        <20190617124758.1252449-1-arnd@arndb.de>
+        Fri, 21 Jun 2019 07:15:56 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so3442214pfe.6;
+        Fri, 21 Jun 2019 04:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6Dz4Z+dmuRUi0NOnymZGvWj/MoeH9WQhV7Y+qJ24/00=;
+        b=SjRYDV0MkGpoVQrf6DKrSzISHxIt8y/kiuPlX5j3sK09B6aAzHi5CxPUXhs3+l4edL
+         BXNIVe4XRBry5jx6zib7eLlg495Ku11/2Hskk6W0FNs+JksUHNUK782wGrQ/3urknmHC
+         wMh0GL+DxFVt0sHutVHNzW2V6lh8jlsyy43fKe5AyJZWk4y8Y9yTwGofLgX2vFVMVPft
+         TCBCdfDB6Bk8vUj/wDkAdzUj7R9o4pSVAvPu/io/VJfSskVoM78a+4dDBDTgTIQ7cRTg
+         DCbnw/3wcDwcgI6cvTsXs5JKQaYOnPI9wEWrC9pO9roSEnnPHpqfy9F+f+XVVNamCae+
+         wT3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6Dz4Z+dmuRUi0NOnymZGvWj/MoeH9WQhV7Y+qJ24/00=;
+        b=i1ThiM0ubki/IwY9D6v/U69EqJ2Xy3ERJ94hShG7vF2ScQx0GeExzl27WkWkSkxZYB
+         OT3F4F8/k988GumEr2lgJ8l5AGvBBtvMQ8YyuHWQZtgJYfM+AdV6KrwucMYRVIwWpx9E
+         1STqbvXpkwDC8jFKPRgYNfQcSoJo1DKBTh/RBqhpdeUf+5WoGhSu8yxGC6PkBKhRY3IQ
+         i0Rmd4iXK81eDUwUBtIkC7l1p8VBV/BpqBZGa9iM9+LTu9xEAwtA94OI8i4TQ5mcjf1X
+         vIn8fCf/iRy0WTcfndcpj8NeQySlkM07fJJnI4w/sUmP4Gl5viKfJdyo/NEodOunrAjL
+         tW8g==
+X-Gm-Message-State: APjAAAV3X06MAulBthhoz8fk+aOQGz2SVhXg6twubC6nuAmXxGaVZVBd
+        +CuCNeI0AcMWQCVXcwaCHgk=
+X-Google-Smtp-Source: APXvYqxb6mOFj/WG4GMZNsDDWZmPushL+3w5hnh8g2Y4/W0ZvCeDMNUmpcLN/zUJCAeyvoIW3mmUFQ==
+X-Received: by 2002:a65:4383:: with SMTP id m3mr17452043pgp.435.1561115755503;
+        Fri, 21 Jun 2019 04:15:55 -0700 (PDT)
+Received: from Pilot130.192.168.0.22 (211-20-114-70.HINET-IP.hinet.net. [211.20.114.70])
+        by smtp.googlemail.com with ESMTPSA id w4sm2405737pfw.97.2019.06.21.04.15.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 21 Jun 2019 04:15:54 -0700 (PDT)
+From:   "sudheer.v" <open.sudheer@gmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
+        andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        shivahshankar.shankarnarayanrao@aspeedtech.com,
+        shivahshankar@gmail.com, sudheer.veliseti@aspeedtech.com
+Cc:     sudheer veliseti <sudheer.open@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Subject: [patch 0/5] *** DMA based UART driver for AST2500 ***
+Date:   Fri, 21 Jun 2019 16:47:30 +0530
+Message-Id: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: sudheer veliseti <sudheer.open@gmail.com>
 
-On 6/17/19 2:47 PM, Arnd Bergmann wrote:
-> Building an allmodconfig kernel now produces a harmless warning:
-> 
-> drivers/video/fbdev/pvr2fb.c:726:12: error: unused function 'pvr2_get_param_val' [-Werror,-Wunused-function]
-> 
-> Shut this up the same way as we do for other unused functions
-> in the same file, using the __maybe_unused attribute.
-> 
-> Fixes: 0f5a5712ad1e ("video: fbdev: pvr2fb: add COMPILE_TEST support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi,
+AST2500 has dedicated Uart DMA controller which has 12 sets of
+Tx and RX channels connected to UART controller directly.
+Since the DMA controller have dedicated buffers and registers,
+there would be little benifit in adding DMA framework overhead.
+So the software for DMA controller is included within the UART driver itself.
 
-Thanks but I've fixed it already by adding #ifndef MODULE (since other
-functions in the same file using __maybe_unused depend on either PCI or
-SH_DREAMCAST I've preferred not to use this attribute):
+Thanks and Regards
+Sudheer.V
 
-https://marc.info/?l=linux-fbdev&m=156050904010778&w=2
+sudheer veliseti (5):
+  AST2500 DMA UART driver
+  build configuration for AST2500 DMA UART driver
+  DT nodes for AST2500 DMA UART driver
+  defconfig and MAINTAINERS updated for AST2500 DMA UART driver
+  Documentation: DT bindings AST2500 DMA UART driver
 
-> ---
->  drivers/video/fbdev/pvr2fb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
-> index 59c59b3a67cb..cf9cfdc5e685 100644
-> --- a/drivers/video/fbdev/pvr2fb.c
-> +++ b/drivers/video/fbdev/pvr2fb.c
-> @@ -723,8 +723,8 @@ static struct fb_ops pvr2fb_ops = {
->  	.fb_imageblit	= cfb_imageblit,
->  };
->  
-> -static int pvr2_get_param_val(const struct pvr2_params *p, const char *s,
-> -			      int size)
-> +static int __maybe_unused pvr2_get_param_val(const struct pvr2_params *p,
-> +					     const char *s, int size)
->  {
->  	int i;
+ .../bindings/serial/ast2500-dma-uart.txt      |   40 +
+ MAINTAINERS                                   |   13 +
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts      |   21 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |   71 +-
+ arch/arm/configs/aspeed_g5_defconfig          |    1 +
+ .../tty/serial/8250/8250_ast2500_uart_dma.c   | 1879 +++++++++++++++++
+ drivers/tty/serial/8250/Kconfig               |   35 +-
+ drivers/tty/serial/8250/Makefile              |    1 +
+ 8 files changed, 2056 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+ create mode 100644 drivers/tty/serial/8250/8250_ast2500_uart_dma.c
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+-- 
+2.17.1
+
+
