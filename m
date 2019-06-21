@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02F2C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD5EC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7345C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4064120657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 12:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfFUM5U (ORCPT
+        id S1726894AbfFUM5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 08:57:20 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:47325 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfFUM5J (ORCPT
+        Fri, 21 Jun 2019 08:57:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44473 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbfFUM5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Jun 2019 08:57:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id r27so10594164iob.14
+Received: by mail-io1-f72.google.com with SMTP id i133so10572538ioa.11
         for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 05:57:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A2VyUgGWSWywv45HUYrnIhNKgZQgapXa0xol2XPthjo=;
-        b=Bt3FMIdsmbZm9xxWDDPs0SU13Qd5v7FN+pCGT09qCEqrUud06wexJtCKJjnll0Qf8I
-         fViwHxqEgjwDU/7OlmfvPsiZrImFvcYh4/5mzTguFJr7j0NLcFXCo7MR3bibo7nUKDSD
-         hVlaaL6kLAEK+APKdSqoriL+7V5cNkHvEoIo5U6lLJg4vCvvkZi1Mk5u9Ko2wrkryH1y
-         AxnuQBBDzt94+6PZm7h806Q/saNQgYsIMPqdhPI/G4I1JK9bs4GY8PYAR5vv0an6aHgo
-         0EOMfeP5d9vispc5b7FZZmoaY/zbi3X6N/ww3DuikmrTnwqpZYVl+hO6riIzxzrDdghQ
-         XmtQ==
-X-Gm-Message-State: APjAAAV/psSkZUwg9dLdekSuw+s1FuyeQEaarNRzOpPwdI+GS3lgrVv3
-        Ga7zNmESE+UZtppzWxtXwBoibhyihHJZxdpHYzFjmaH1/2Vw
-X-Google-Smtp-Source: APXvYqwEAPS8Ttb1NEzMaqieQyGHRSY3lNKotU5V0uQHcZCAPmIWBd1axRTsm58KdcPaci/eIZUZBNxE3PxBpaAQ1QfNpju3lp1Q
+        bh=rrJgEkmhWL/jAI/VVr1E6xB9thGk94zrBrmoibWlXfE=;
+        b=QSJ7GhoPQNjaEH+pFvjCjzufO4d6luothe2ooXDV5hWOKbAkz5XYwfF7PMwUFsWuTZ
+         2p1ViXAxxEtm0kwkRdUpiixBR4vhyXaj++BUlxejSKrdfrukWGoW85bFbNpPg5J/c+nT
+         640f5z5yAO9EPs9bZdo7b9QUx+MmvDJpi+bnL/a7VKOdt6ld/4lzA4HuLkks+7tJ8uDT
+         9BLA2ex2Cfn8HZu3NnlZlmrbLne24Wj243hmbyiLVybt2HJmD9L8XjaBBhQBKxEXEujJ
+         at3hpGTtt7J9rNTCFoWLXBpObll6KPSLd3Dc+PbFeaX7qBVWLwFs/xaMEoiIzkSoE+Eu
+         5hIQ==
+X-Gm-Message-State: APjAAAVGAUswBrl2POpX+gXmZxIUw2J7+WUvS3mKx8uTbfoy9MGjhWef
+        9xyMi+zhcfSO1O33mIbSc01l4Pe9Lg7iMRkQY/WCXUl1f2gK
+X-Google-Smtp-Source: APXvYqwPOGegcwnFEX0aJMbIj9Al8/IJwTfxUbnFQhM/VWS+5moqNPPcR3X3TvCWl7yjicCua4ZleN/YDWWbAReZZfGtuzKytRyO
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b256:: with SMTP id b83mr16068710iof.48.1561121827887;
- Fri, 21 Jun 2019 05:57:07 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 05:57:07 -0700
+X-Received: by 2002:a05:6602:22cc:: with SMTP id e12mr20577466ioe.192.1561121828208;
+ Fri, 21 Jun 2019 05:57:08 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 05:57:08 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000000ac4f058bd50039@google.com>
-Subject: WARNING in is_bpf_text_address
-From:   syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
+Message-ID: <000000000000058a0f058bd50068@google.com>
+Subject: memory leak in llc_ui_create (2)
+From:   syzbot <syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,363 +60,114 @@ syzbot found the following crash on:
 
 HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15336041a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14cc10b1a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
+dashboard link: https://syzkaller.appspot.com/bug?extid=6bf095f9becf5efef645
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1698d45ea00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
 
-WARNING: CPU: 1 PID: 8444 at kernel/bpf/core.c:851 bpf_jit_free+0x1a8/0x1f0
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  panic+0x28a/0x7c9 kernel/panic.c:219
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886f758 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886f790 R08: ffffffff818032cb R09: ffffed1015d66bf8
-R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#2] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886f2e0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886f318 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#3] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886ee60 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886ee98 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#4] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886e9e0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886ea18 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#5] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886e560 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886e598 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#6] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886e0e0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886e118 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#7] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886dc60 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886dc98 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#8] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886d7e0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886d818 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#9] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886d360 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886d398 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#10] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886cee0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886cf18 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#11] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886ca60 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886ca98 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page fault for address: fffffbfff400c000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD a3fe2067 PTE 0
-Oops: 0000 [#12] PREEMPT SMP KASAN
-CPU: 1 PID: 8444 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
-Code: 25 81 f5 ff 4d 39 f4 76 10 e8 1b 7f f5 ff 49 83 c7 10 eb 46 0f 1f 44  
-00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84  
-c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
-RSP: 0018:ffff88808886c5e0 EFLAGS: 00010806
-RAX: 1ffffffff400c000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff8880961b8680 RSI: ffffffffffffffff RDI: ffffffffa0060000
-RBP: ffff88808886c618 R08: ffffffff818032cb R09: 0000000000000001
-R10: ffffffff81811539 R11: 1ffff11015d66bf7 R12: ffffffffa0060000
-R13: 0000000000000000 R14: ffffffffffffffff R15: ffff88808914cab8
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff400c000 CR3: 00000000a3ba4000 CR4: 00000000001406e0
-Call Trace:
-BUG: unable to handle page
+85.529503][ T7031] 8021q: adding VLAN 0 to HW filter on device batadv0
+2019/06/20 19:36:46 executed programs: 1
+2019/06/20 19:36:51 executed programs: 3
+BUG: memory leak
+unreferenced object 0xffff888118b8d800 (size 2048):
+   comm "syz-executor.0", pid 7054, jiffies 4295036362 (age 12.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+   backtrace:
+     [<000000004a3a66c0>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000004a3a66c0>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000004a3a66c0>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000004a3a66c0>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<000000004a3a66c0>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<00000000cc5a7d28>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000cc5a7d28>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1602
+     [<000000000c449f88>] sk_alloc+0x35/0x2f0 net/core/sock.c:1656
+     [<0000000008b99378>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
+     [<00000000d4e72aed>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
+     [<00000000d0bfef06>] __sock_create+0x164/0x250 net/socket.c:1424
+     [<0000000058cf7a3c>] sock_create net/socket.c:1475 [inline]
+     [<0000000058cf7a3c>] __sys_socket+0x69/0x110 net/socket.c:1517
+     [<000000003ce548ba>] __do_sys_socket net/socket.c:1526 [inline]
+     [<000000003ce548ba>] __se_sys_socket net/socket.c:1524 [inline]
+     [<000000003ce548ba>] __x64_sys_socket+0x1e/0x30 net/socket.c:1524
+     [<0000000029c8eba9>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000dba589d4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888120dd7a00 (size 224):
+   comm "syz-executor.0", pid 7054, jiffies 4295036362 (age 12.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 10 0c 24 81 88 ff ff 00 d8 b8 18 81 88 ff ff  ...$............
+   backtrace:
+     [<00000000b6c096c6>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b6c096c6>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000b6c096c6>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<00000000b6c096c6>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+     [<00000000556a01d4>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:194
+     [<0000000085622924>] alloc_skb include/linux/skbuff.h:1054 [inline]
+     [<0000000085622924>] alloc_skb_with_frags+0x5f/0x250  
+net/core/skbuff.c:5328
+     [<00000000ca5b438b>] sock_alloc_send_pskb+0x269/0x2a0  
+net/core/sock.c:2222
+     [<0000000044a5b8c6>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2239
+     [<00000000b19d8ca2>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+     [<00000000aaeaeaf3>] sock_sendmsg_nosec net/socket.c:646 [inline]
+     [<00000000aaeaeaf3>] sock_sendmsg+0x54/0x70 net/socket.c:665
+     [<000000009ae2ec20>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2286
+     [<000000003ac4094d>] __sys_sendmsg+0x80/0xf0 net/socket.c:2324
+     [<00000000d3b808ba>] __do_sys_sendmsg net/socket.c:2333 [inline]
+     [<00000000d3b808ba>] __se_sys_sendmsg net/socket.c:2331 [inline]
+     [<00000000d3b808ba>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2331
+     [<0000000029c8eba9>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000dba589d4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff8881178e3800 (size 512):
+   comm "syz-executor.0", pid 7054, jiffies 4295036362 (age 12.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 ad ad f3 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000baa5fe0c>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000baa5fe0c>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000baa5fe0c>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<00000000baa5fe0c>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
+mm/slab.c:3597
+     [<00000000ef42ca2e>] __do_kmalloc_node mm/slab.c:3619 [inline]
+     [<00000000ef42ca2e>] __kmalloc_node_track_caller+0x38/0x50  
+mm/slab.c:3634
+     [<00000000792340d3>] __kmalloc_reserve.isra.0+0x40/0xb0  
+net/core/skbuff.c:138
+     [<000000003b989a40>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:206
+     [<0000000085622924>] alloc_skb include/linux/skbuff.h:1054 [inline]
+     [<0000000085622924>] alloc_skb_with_frags+0x5f/0x250  
+net/core/skbuff.c:5328
+     [<00000000ca5b438b>] sock_alloc_send_pskb+0x269/0x2a0  
+net/core/sock.c:2222
+     [<0000000044a5b8c6>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2239
+     [<00000000b19d8ca2>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+     [<00000000aaeaeaf3>] sock_sendmsg_nosec net/socket.c:646 [inline]
+     [<00000000aaeaeaf3>] sock_sendmsg+0x54/0x70 net/socket.c:665
+     [<000000009ae2ec20>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2286
+     [<000000003ac4094d>] __sys_sendmsg+0x80/0xf0 net/socket.c:2324
+     [<00000000d3b808ba>] __do_sys_sendmsg net/socket.c:2333 [inline]
+     [<00000000d3b808ba>] __se_sys_sendmsg net/socket.c:2331 [inline]
+     [<00000000d3b808ba>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2331
+     [<0000000029c8eba9>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000dba589d4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
 
 
 ---
