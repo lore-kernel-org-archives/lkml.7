@@ -2,175 +2,106 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C1AC48BE0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71239C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C7021530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4305520673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hHLAXTyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFUJDM (ORCPT
+        id S1726661AbfFUJDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:03:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57872 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfFUJDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:03:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BEE7F88305;
-        Fri, 21 Jun 2019 09:02:55 +0000 (UTC)
-Received: from localhost (ovpn-12-28.pek2.redhat.com [10.72.12.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C0F360FAB;
-        Fri, 21 Jun 2019 09:02:52 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 17:02:49 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kyle Pelton <kyle.d.pelton@intel.com>
-Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
- phys_p4d_init()
-Message-ID: <20190621090249.GL24419@MiWiFi-R3L-srv>
-References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
+        Fri, 21 Jun 2019 05:03:24 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38242 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfFUJDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z/vrGL+hnN6XNQ43GJSsHqsTwEI017tyqqk0CCrmcjg=; b=hHLAXTyTKk+f6P3ai3jU2yJL1
+        TjZE8LsMp5pT6hxylcX6uRTXh+9EymIy0MYL8eRgCfX+Ha/2LQ8twWzpM3ou71le940xrTlTrYWTR
+        Mnmx+WNjeCWcvSB6bHVzU8z32HthcD8oE8qhYxNlZKfYcBJ+rzbJ0KZHKjTMQMQPVxHMvlyHh2ghi
+        Up+f8+gN4BbFtRCD14azsoFPdCewlgayeuMXFDSEreQJji2u9Yk7noToMCF4qfy9JrVteeOtTyvPb
+        IEL8dIduaoRniyVBmi3NzCS6mBEVG/x7ZyZsEMfqf8tzPmrdQd/AZhzbmRH0LXEr3PmIGMDe+bJAb
+        5/2tv8FDg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58946)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1heFS0-00049H-3a; Fri, 21 Jun 2019 10:03:16 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1heFRy-00038K-2T; Fri, 21 Jun 2019 10:03:14 +0100
+Date:   Fri, 21 Jun 2019 10:03:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com
+Subject: Re: [PATCH v3 2/5] net: macb: add support for sgmii MAC-PHY interface
+Message-ID: <20190621090313.xuaqvmyxxrzxh5aw@shell.armlinux.org.uk>
+References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+ <1561106090-8465-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 21 Jun 2019 09:03:11 +0000 (UTC)
+In-Reply-To: <1561106090-8465-1-git-send-email-pthombar@cadence.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
+On Fri, Jun 21, 2019 at 09:34:50AM +0100, Parshuram Thombare wrote:
+> This patch add support for SGMII interface) and
+> 2.5Gbps MAC in Cadence ethernet controller driver.
 
-On 06/20/19 at 02:22pm, Kirill A. Shutemov wrote:
-> Kyle has reported that kernel crashes sometimes when it boots in
-> 5-level paging mode with KASLR enabled:
+Also, I'm not sure that merely using PHY_INTERFACE_MODE_SGMII with a
+speed of 2.5Gbps is really on for up-clocked SGMII.
 
-This is a great finding, thanks for the fix. I ever have modified codes
-to make them accommodate PMD level of randomization, this
-phys_p4d_init() part is included. Not sure why I missed it when later
-took PUD level randomization for 5-level.
+Cisco SGMII is defined as running at a fixed 1.25Gbps with the control
+word indicating whether the negotiated speed is 1G, 100M or 10M, and
+the MAC and PHY expect symbols to be replicated the appropriate number
+of times for the slower speeds.  Cisco SGMII as defined does not
+support 2.5Gbps.
 
-https://github.com/baoquan-he/linux/commit/dc91f5292bf1f55666c9139b6621d830b5b38aa5
+The same is true of 802.3z - this defines 1000BASE-X, but we also have
+an up-clocked version which we use a separate phy interface mode for
+when supporting 2.5Gbps, since it requires both ends to be configured
+differently.  This appears to be the case with your 2.5Gbps up-clocked
+SGMII - the MAC needs to be told to up-clock the link.
 
-Have some concerns, please check.
+So, I'm wondering whether we need PHY_INTERFACE_MODE_2500SGMII, which
+means that if the PHY automatically selects between 1G and 2.5G SGMII,
+then it needs to automatically change its interface mode reported back
+to the MAC - that is, providing it really _does_ use an up-clocked
+2.5Gbps SGMII and doesn't actually switch to 2.5Gbps BASE-X instead.
 
-> [    0.000000] WARNING: CPU: 0 PID: 0 at arch/x86/mm/init_64.c:87 phys_p4d_init+0x1d4/0x1ea
-...... 
-> Kyle bisected the issue to commmit b569c1843498 ("x86/mm/KASLR: Reduce
-> randomization granularity for 5-level paging to 1GB")
-> 
-> The commit relaxes KASLR alignment requirements and it can lead to
-> mismatch bentween 'i' and 'p4d_index(vaddr)' inside the loop in
-           ^ between
-> phys_p4d_init(). The mismatch in its turn leads to clearing wrong p4d
-> entry and eventually to the oops.
-> 
-> The fix is to make phys_p4d_init() walk virtual address space, not
-> physical one.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-and-tested-by: Kyle Pelton <kyle.d.pelton@intel.com>
-> Fixes: b569c1843498 ("x86/mm/KASLR: Reduce randomization granularity for 5-level paging to 1GB")
-> Cc: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/mm/init_64.c | 39 ++++++++++++++++-----------------------
->  1 file changed, 16 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 693aaf28d5fe..4628ac9105a2 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -671,41 +671,34 @@ static unsigned long __meminit
->  phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
->  	      unsigned long page_size_mask, bool init)
->  {
-> -	unsigned long paddr_next, paddr_last = paddr_end;
-> -	unsigned long vaddr = (unsigned long)__va(paddr);
-> -	int i = p4d_index(vaddr);
-> +	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;
-> +
-> +	paddr_last = paddr_end;
-> +	vaddr = (unsigned long)__va(paddr);
-> +	vaddr_end = (unsigned long)__va(paddr_end);
-> +	vaddr_start = vaddr;
+Other PHYs (the 10G Marvell 88x3310) dynamically switch their MAC
+facing interface between 10GBASE-R, 2500BASE-X and SGMII depending on
+the negotiated link speed, so there is precedent for this already.
 
-Variable vaddr_start is not used in this patch, redundent?
+Finally, note that it is possible for a mismatched SGMII / BASE-X
+link to come up and appear to work, but either end is going to be
+interpreting the 16-bit control word differently, which is obviously
+incorrect.
 
->  
->  	if (!pgtable_l5_enabled())
->  		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
->  				     page_size_mask, init);
->  
-> -	for (; i < PTRS_PER_P4D; i++, paddr = paddr_next) {
-> -		p4d_t *p4d;
-> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
-> +		p4d_t *p4d = p4d_page + p4d_index(vaddr);
->  		pud_t *pud;
->  
-> -		vaddr = (unsigned long)__va(paddr);
-> -		p4d = p4d_page + p4d_index(vaddr);
-> -		paddr_next = (paddr & P4D_MASK) + P4D_SIZE;
-> +		vaddr_next = (vaddr & P4D_MASK) + P4D_SIZE;
->  
+Please ensure that details such as "SGMII" vs "BASE-X" are as correct
+as possible.
 
-The code block as below is to zero p4d entries which are not coverred by
-the current memory range, and if haven't been mapped already. It's
-clearred away in this patch, could you also mention it in log, and tell
-why it doesn't matter now?
-
-If it doesn't matter, should we clear away the simillar code in
-phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
-clean up?
-
-Thanks
-Baoquan
-
-> -		if (paddr >= paddr_end) {
-> -			if (!after_bootmem &&
-> -			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
-> -					     E820_TYPE_RAM) &&
-> -			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
-> -					     E820_TYPE_RESERVED_KERN))
-> -				set_p4d_init(p4d, __p4d(0), init);
-> -			continue;
-> -		}
-> -
-> -		if (!p4d_none(*p4d)) {
-> -			pud = pud_offset(p4d, 0);
-> -			paddr_last = phys_pud_init(pud, paddr, paddr_end,
-> -						   page_size_mask, init);
-> +		if (p4d_val(*p4d)) {
-> +			pud = (pud_t *)p4d_page_vaddr(*p4d);
-> +			paddr_last = phys_pud_init(pud, __pa(vaddr),
-> +						   __pa(vaddr_end),
-> +						   page_size_mask,
-> +						   init);
->  			continue;
->  		}
->  
->  		pud = alloc_low_page();
-> -		paddr_last = phys_pud_init(pud, paddr, paddr_end,
-> +		paddr_last = phys_pud_init(pud, __pa(vaddr), __pa(vaddr_end),
->  					   page_size_mask, init);
->  
->  		spin_lock(&init_mm.page_table_lock);
-> -- 
-> 2.21.0
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
