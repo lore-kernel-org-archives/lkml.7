@@ -2,105 +2,143 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37369C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C78BC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5962083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC0020673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 20:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BieFlEea"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yfbm0c70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfFUUF5 (ORCPT
+        id S1726289AbfFUUGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 16:05:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39646 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUUF4 (ORCPT
+        Fri, 21 Jun 2019 16:06:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41159 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbfFUUGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 16:05:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id r185so1209524iod.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 13:05:56 -0700 (PDT)
+        Fri, 21 Jun 2019 16:06:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 43so2664184otf.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 13:06:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DypY5fiIicrIoi3ORV0h3vKCopNCu2H79dLHF98Wk1s=;
-        b=BieFlEeaOPgi+fafYZbwPJAk/rgzMYgJne9JdDRFRlJ67BByhxNbJeiWxMC9B5y/s9
-         Gp8olywbJtE8mi44Ji6k8zEHSqnnACQtDN7I28HDQcTwz/mye1jJMaedbY6/qHdXorLI
-         Wfs9/larHy+OePAeGIpWCU4PVYoHRu54s+yDpX0ZYjNvvwg5OXzrDsxcjH6q8d7OOF7j
-         48AI5VhQZTNHr+JUkc9MWxW0n/4tx9Kt3taDC+fhcfCafvOZH8dO7US0xim1pWzmY5Eh
-         uxPjC59ST8oJkI5UEY7MywS+dGHUEPH7uSwunhiu0xgIfllo0HFRZbPbo7RM3eC4BaAX
-         +b3g==
+        bh=wuEmwyEDkLTTGNEaPaNn66uye06m7pMKJtU3WQzLuW4=;
+        b=yfbm0c70FRxPQvT9ttNxjjuYHrLEhwZtbnY9goMK/0Gx78N5J7QrZtLuREOupTptR5
+         Q6lMBj1OahoCaUeB5vb1WpR4k3yMCiTX9SiElfshDMd+oBYiR1iPaQpsP3rMRLV+fSfm
+         oj5j9y4v4Mg8Pe4WYVpkvn6QZ9nFF4tNNmw85cboZbNy52Hu9yzqSZDa8Jvf30gP6dUz
+         JQ0KfefwxJcxn6gxZ7nWCvnoUnPVLI04pktSbH5XZ1iNtk6tTUJzw9EBK2RHX7rELfXD
+         jI5SVdxRvya4HhOWrk1C1ZpVxSQVBFjWZ3gh2npuCk2Bn4G3E8FRKUDJN6SxlHpBOMm6
+         FRoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DypY5fiIicrIoi3ORV0h3vKCopNCu2H79dLHF98Wk1s=;
-        b=hwsMnXsS78VlZiWBZnhdWM7BILDXyP5ctTs3hYWqWdiWNebCaIJN1zUbqp3YRvQ7U9
-         YBT3FyHGVXJFk99oLlzJsvM8ido0uHPnoG+m2uDWdTjDfBB9L4pkF2wsAeiTMFl2O69T
-         zhZOCVKVPtR+AGBcGFQyI/uMpYUnJunkgTZl8lqYiMppMBsOOeNFuv+6ceWD753wMPwF
-         6MGWa10SOcSYphbni5qQNTz4572SqMfD0mcD7k0/dAjkXGniiqmz2hpEoa3M3habrpMs
-         OU1IdoGEaau9qFXwLNje+D/V3RWDq3kpdp5pxCEXPecU8JxC7u8Fa9fpS++nw7BoVzFd
-         FDrg==
-X-Gm-Message-State: APjAAAVX4e2X0NvnAluppEpOOjngdGjtDhRrm63mBsa7RFsyNnzEkmzP
-        LmxNVlaSiyX+4mEZA10yGNmSYnnAhZxYmxDeOxFS4g==
-X-Google-Smtp-Source: APXvYqyvFcTfOyKgeM/UaweMDg4Kki2AkTgmwFItVLQmiTExSzaei2TBGbOswsUQLvi+574xJqn1fxM3Q6bPWu5Kiec=
-X-Received: by 2002:a6b:8dcf:: with SMTP id p198mr36640213iod.46.1561147555624;
- Fri, 21 Jun 2019 13:05:55 -0700 (PDT)
+        bh=wuEmwyEDkLTTGNEaPaNn66uye06m7pMKJtU3WQzLuW4=;
+        b=ieIBkzBEbh49X3PBwSA/VX/uScsR/ihyYutWLDiMw1gk8XCBfB7hrFSKrS8KjcUGnB
+         ReuyUJRlGpZu4NFUrpdxOGIH3EVE9+8vId1N8m59yLlZDqcgGtbwhja+7AT9O3wP0BE4
+         +aTy1Xg5I79iwKU3jZYdOa16mZv3dB6Hgidn+yKufYAjhmIys9swCUnXZ83wtfZOpQnv
+         b7nYFSQZA0rDF88lIZMGEFjo5HPB8e1yP6oQHI9OerpjzZb9bEdNzh+lhZKA5T7j0F2o
+         fCHlobXMfo1Xs6XiJLIU9DVHNpE2EsxiiC5oMYrYnDkjCdjSP9q4JTaqqihR4BPEGunX
+         oBdA==
+X-Gm-Message-State: APjAAAU+9syu3D2x9Qpr2/rnYrEvNJhjj2fbkxcota7fzN7TZuY79L93
+        vQanMT1/tdH3LOAMEmK4IokuS3FCMP4qnkmZ3AK+OA==
+X-Google-Smtp-Source: APXvYqyQOOqbJLjW2BcOmlG77qXX9/WsYin5lYao1Mf2DKSbEZ6q1C3Ab3BvZSOCGLndw9OyPK8hja1kJE7joCwf+Qo=
+X-Received: by 2002:a9d:7248:: with SMTP id a8mr1671387otk.363.1561147610028;
+ Fri, 21 Jun 2019 13:06:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190621011941.186255-1-matthewgarrett@google.com>
- <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
-In-Reply-To: <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Fri, 21 Jun 2019 13:05:44 -0700
-Message-ID: <CACdnJuv2sePuGBtTM6UL4S2k1UATcAk517o6vPx2EWF0Uxt8iw@mail.gmail.com>
-Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
- confidentiality mode
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     James Morris <jmorris@namei.org>, linux-security@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Chun-Yi Lee <jlee@suse.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
+ <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
+ <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
+ <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
+ <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
+ <CAPcyv4jO5WhRJ-=Nz70Jc0mCHYBJ6NsHjJNk6AerwQXH43oemw@mail.gmail.com>
+ <CAPcyv4gzhr57xa2MbR1Jk8EDFw-WLdcw3mJnEX9PeAFwVEZbDA@mail.gmail.com> <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 21 Jun 2019 13:06:38 -0700
+Message-ID: <CAPcyv4hB7EbxkcDGc1j2vXwFcX5rHOYtRZcRa7Q36CVrAk1w+g@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:22 PM Andy Lutomirski <luto@kernel.org> wrote:
-> On Thu, Jun 20, 2019 at 6:21 PM Matthew Garrett
-> <matthewgarrett@google.com> wrote:
-> > --- a/security/lockdown/lockdown.c
-> > +++ b/security/lockdown/lockdown.c
-> > @@ -33,6 +33,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
-> >         [LOCKDOWN_INTEGRITY_MAX] = "integrity",
-> >         [LOCKDOWN_KCORE] = "/proc/kcore access",
-> >         [LOCKDOWN_KPROBES] = "use of kprobes",
-> > +       [LOCKDOWN_BPF] = "use of bpf",
-> >         [LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+On Sat, Jun 8, 2019 at 12:20 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
-> The text here says "use of bpf", but what this patch is *really* doing
-> is locking down use of BPF to read kernel memory.  If the details
-> change, then every LSM needs to get updated, and we risk breaking user
-> policies that are based on LSMs that offer excessively fine
-> granularity.
+> On Fri, 7 Jun 2019 at 19:34, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Fri, Jun 7, 2019 at 8:23 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Fri, Jun 7, 2019 at 5:29 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > [..]
+> > > > > #ifdef CONFIG_EFI_APPLICATION_RESERVED
+> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > > > > {
+> > > > >         return md->type == EFI_CONVENTIONAL_MEMORY
+> > > > >                 && (md->attribute & EFI_MEMORY_SP);
+> > > > > }
+> > > > > #else
+> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > > > > {
+> > > > >         return false;
+> > > > > }
+> > > > > #endif
+> > > >
+> > > > I think this policy decision should not live inside the EFI subsystem.
+> > > > EFI just gives you the memory map, and mangling that information
+> > > > depending on whether you think a certain memory attribute should be
+> > > > ignored is the job of the MM subsystem.
+> > >
+> > > The problem is that we don't have an mm subsystem at the time a
+> > > decision needs to be made. The reservation policy needs to be deployed
+> > > before even memblock has been initialized in order to keep kernel
+> > > allocations out of the reservation. I agree with the sentiment I just
+> > > don't see how to practically achieve an optional "System RAM" vs
+> > > "Application Reserved" routing decision without an early (before
+> > > e820__memblock_setup()) conditional branch.
+> >
+> > I can at least move it out of include/linux/efi.h and move it to
+> > arch/x86/include/asm/efi.h since it is an x86 specific policy decision
+> > / implementation for now.
+>
+> No, that doesn't make sense to me. If it must live in the EFI
+> subsystem, I'd prefer it to be in the core code, not in x86 specific
+> code, since there is nothing x86 specific about it.
 
-The text is descriptive rather than normative, and no changes should
-be made that alter the semantics of a reason - it makes more sense to
-just add another reason.
+The decision on whether / if to take any action on this hint is
+implementation specific, so I argue it does not belong in the EFI
+core. The spec does not mandate any action as it's just a hint.
+Instead x86 is making a policy decision in how it translates it to the
+x86-specific E820 representation. So, I as I go to release v3 of this
+patch set I do not see an argument to move the
+is_efi_application_reserved() definition out of
+arch/x86/include/asm/efi.h it's 100% tied to the e820 translation.
 
-> I'd be more comfortable if the LSM only got to see "confidentiality"
-> or "integrity".
-
-If LSM authors can be trusted to do the right thing here, then I see
-no problem in providing additional data. I'm happy to defer to James
-on that.
+Now, if some other EFI supporting architecture wanted to follow the
+x86 policy we could move it it to a shared location, but that's
+something for a follow-on patch set.
