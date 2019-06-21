@@ -2,173 +2,86 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18321C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77655C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9202083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aCfnaPMv"
+	by mail.kernel.org (Postfix) with ESMTP id 569C2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 17:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfFURr1 (ORCPT
+        id S1726210AbfFURs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 13:47:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41093 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfFURr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 13:47:27 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d17so7719738qtj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 10:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UJ7zr3BMlP+D/21QaluO3IJXggd4WWthL7KU1eJt5LU=;
-        b=aCfnaPMvDaA78Mv5k5ur7VCixpP5F9r0nrtXoL0bNjrtavhSWpa/Xp37Y9kJAKY7Cw
-         BKosLY8jx/OuXb5vEV0atvoLpWrIk6kcWRjuMizj1Wdy4+jfyM2jdOr59/0yzrXlFK3U
-         yfmLv4y2Dm496vq2UcfTnb9rycSDhAhPproM54A1In2cWM4tiFiMSvkYk40fvwaGYKcj
-         3O97gNacC+AV8g99zW3DGJ2yeH9AloFAPriEF14JOmvBILkvyAoSWq3pfSMg6UsMmUPm
-         snbErb0HM55f7U+JUI5NHBGXuZSK21iToYFAXMeWQWtnL84ylNtmk67YrG5HEQGML7iu
-         J90w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UJ7zr3BMlP+D/21QaluO3IJXggd4WWthL7KU1eJt5LU=;
-        b=W354DiulmeNDv0j38DJR5omBLcS4ZAOO62y2PNcoTrBxuV/ITWsJJqBZkJ4dqqFc2z
-         xs7p8Bl592G1ARIiyIqk+/Xbnwm4KfrzZEfDANqfoUWhWPx4GBOc4qELC+r3FVuj4Omj
-         93zHJjXztE0KADcy+BkFFIip14aJu+Ykw1+C3+LQ1tGUYQTe1MN4GbIgJxqbyDXePvoS
-         +yM3U5gEZlDKUaAC5tmdTnClTlt8cNsjuc24fhTPmIG3KRfzHx1KJOjw9J8pFLYM5bco
-         U5HjCr+gsFodVtO+rAQd0xCHI5+Cm1tcEbpmEfz9oh/frmTDqz1tzVoZ1Xads85JeJam
-         jVbw==
-X-Gm-Message-State: APjAAAXR5yHHbK9cZwviZycQEsouOrGFpsda/nidm1aZX/xgaeLETRq4
-        Qhu6TxEbM313MtPJoGvBzw0hAw==
-X-Google-Smtp-Source: APXvYqzYxwhqo3xvnYyIGJGDhki+8Wa6Yr+9LhNg9yc2Yh32DBFiynlceLoS+GkzjCUfIhiF5T75Mg==
-X-Received: by 2002:a0c:d604:: with SMTP id c4mr12256209qvj.27.1561139245935;
-        Fri, 21 Jun 2019 10:47:25 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id a11sm1652403qkn.26.2019.06.21.10.47.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Jun 2019 10:47:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1heNdE-0005hb-Pa; Fri, 21 Jun 2019 14:47:24 -0300
-Date:   Fri, 21 Jun 2019 14:47:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190621174724.GV19891@ziepe.ca>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
- <20190620193353.GF19891@ziepe.ca>
- <CAPcyv4jyNRBvtWhr9+aHbzWP6=D4qAME+=hWMtOYJ17BVHdy2w@mail.gmail.com>
+        Fri, 21 Jun 2019 13:48:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49255 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfFURs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 13:48:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 10:48:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,401,1557212400"; 
+   d="scan'208";a="359358777"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Jun 2019 10:48:25 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 77191301C16; Fri, 21 Jun 2019 10:48:25 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 10:48:25 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Kan Liang <kan.liang@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tom Vaden <tom.vaden@hpe.com>
+Subject: Re: [RFC] perf/x86/intel: Disable check_msr for real hw
+Message-ID: <20190621174825.GA31027@tassilo.jf.intel.com>
+References: <20190614112853.GC4325@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4jyNRBvtWhr9+aHbzWP6=D4qAME+=hWMtOYJ17BVHdy2w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190614112853.GC4325@krava>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 01:18:13PM -0700, Dan Williams wrote:
-
-> > This P2P is quite distinct from DAX as the struct page* would point to
-> > non-cacheable weird memory that few struct page users would even be
-> > able to work with, while I understand DAX use cases focused on CPU
-> > cache coherent memory, and filesystem involvement.
+On Fri, Jun 14, 2019 at 01:28:53PM +0200, Jiri Olsa wrote:
+> hi,
+> the HPE server can do POST tracing and have enabled LBR
+> tracing during the boot, which makes check_msr fail falsly.
 > 
-> What I'm poking at is whether this block layer capability can pick up
-> users outside of RDMA, more on this below...
-
-The generic capability is to do a transfer through the block layer and
-scatter/gather the resulting data to some PCIe BAR memory. Currently
-the block layer can only scatter/gather data into CPU cache coherent
-memory.
-
-We know of several useful places to put PCIe BAR memory already:
- - On a GPU (or FPGA, acclerator, etc), ie the GB's of GPU private
-   memory that is standard these days.
- - On a NVMe CMB. This lets the NVMe drive avoid DMA entirely
- - On a RDMA NIC. Mellanox NICs have a small amount of BAR memory that
-   can be used like a CMB and avoids a DMA
-
-RDMA doesn't really get so involved here, except that RDMA is often
-the prefered way to source/sink the data buffers after the block layer has
-scatter/gathered to them. (and of course RDMA is often for a block
-driver, ie NMVe over fabrics)
-
-> > > My primary concern with this is that ascribes a level of generality
-> > > that just isn't there for peer-to-peer dma operations. "Peer"
-> > > addresses are not "DMA" addresses, and the rules about what can and
-> > > can't do peer-DMA are not generically known to the block layer.
-> >
-> > ?? The P2P infrastructure produces a DMA bus address for the
-> > initiating device that is is absolutely a DMA address. There is some
-> > intermediate CPU centric representation, but after mapping it is the
-> > same as any other DMA bus address.
+> It looks like check_msr code was added only to check on guests
+> MSR access, would it be then ok to disable check_msr for real
+> hardware? (as in patch below)
 > 
-> Right, this goes back to the confusion caused by the hardware / bus /
-> address that a dma-engine would consume directly, and Linux "DMA"
-> address as a device-specific translation of host memory.
-
-I don't think there is a confusion :) Logan explained it, the
-dma_addr_t is always the thing you program into the DMA engine of the
-device it was created for, and this changes nothing about that.
-
-Think of the dma vec as the same as a dma mapped SGL, just with no
-available struct page.
-
-> Is the block layer representation of this address going to go through
-> a peer / "bus" address translation when it reaches the RDMA driver? 
-
-No, it is just like any other dma mapped SGL, it is ready to go for
-the device it was mapped for, and can be used for nothing other than
-programming DMA on that device.
-
-> > ie GPU people wouuld really like to do read() and have P2P
-> > transparently happen to on-GPU pages. With GPUs having huge amounts of
-> > memory loading file data into them is really a performance critical
-> > thing.
+> We could also check if LBR tracing is enabled and make
+> appropriate checks, but this change is simpler ;-)
 > 
-> A direct-i/o read(2) into a page-less GPU mapping? 
+> ideas? thanks,
+> jirka
 
-The interesting case is probably an O_DIRECT read into a
-DEVICE_PRIVATE page owned by the GPU driver and mmaped into the
-process calling read(). The GPU driver can dynamically arrange for
-that DEVICE_PRIVATE page to linked to P2P targettable BAR memory so
-the HW is capable of a direct CPU bypass transfer from the underlying
-block device (ie NVMe or RDMA) to the GPU.
+Sorry for the late comment. I see this patch has been merged now.
 
-One way to approach this problem is to use this new dma_addr path in
-the block layer.
+Unfortunately I don't think it's a good idea. The problem 
+is that the hypervisor flags are only set for a few hypervisors
+that Linux knows about. But in practice there are many more
+Hypervisors around that will not cause these flags to be set.
+But these are still likely to miss MSRs.
 
-Another way is to feed the DEVICE_PRIVATE pages into the block layer
-and have it DMA map them to a P2P address.
+The other hypervisors are relatively obscure, but eventually
+someone will hit problems.
 
-In either case we have a situation where the block layer cannot touch
-the target struct page buffers with the CPU because there is no cache
-coherent CPU mapping for them, and we have to create a CPU clean path
-in the block layer.
+-Andi
 
-At best you could do memcpy to/from on these things, but if a GPU is
-involved even that is incredibly inefficient. The GPU can do the
-memcpy with DMA much faster than a memcpy_to/from_io.
 
-Jason
