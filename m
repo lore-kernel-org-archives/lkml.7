@@ -2,359 +2,151 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CEFC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416BFC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329132075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="prCrzdXS"
+	by mail.kernel.org (Postfix) with ESMTP id 114422089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561160582;
+	bh=9jNNQ6ZuBBOjZIW3HIow9t4gY+OUpSdjtQl5zrDEMdQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=el+SxO5NtfN5kOeCkibLxCSrVtIfD6ljCi8ve8aDRcVsOFC+6cprJwHGyzmOo8fY5
+	 hHlYQYsSwADvrjK/l8tiBOqWmn55klVsdxQkwaeBtxm/gLdRsHZJ2N9ud+dzzJQc6E
+	 vDHQPHhlkq+cOdFFewMGHfCltjJzBfkKXlQ8VliU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfFUXgM (ORCPT
+        id S1726097AbfFUXmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:36:12 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46814 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfFUXgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:36:12 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so3699931pls.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 16:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sb/H3tilyj0EK++EBKlbF8X4xe8yU07TZHy2A/fenNk=;
-        b=prCrzdXSk30AJCMv+sSZXVQB3mmI52zCpk3QjvPfrXjbWUmkr5RJeHN3VW/8BA6CtD
-         Jx+Y3u0DTDnIxHWzhNwKRF3g+yYiM0VQDnlPoGbWO6x9TECCHkj/zY2eNm2q4KwUaUZ/
-         PQbESGU8dN38EnQdNQDuqjJhGeXZSEH6VjPKkplzJ14HM3z2D0OLGNiCDAFsVLWwXGiA
-         7ZDc9Mw1C6t7AWgJLW2hxZEi1cehAPWXMRlpbHzdzBLMCJ0hGRQpxsZh6A2Mpc3unus3
-         j1UcGGXHaAcBECA9lXClfSZsiNhKKKtWOOzJkNkzfY2AZmXyeX6TxWegDfm7bsaZxvCf
-         PEmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sb/H3tilyj0EK++EBKlbF8X4xe8yU07TZHy2A/fenNk=;
-        b=gjjrqE1C/rOCBeTMpwqvbEA8Nn6IpgkACGpCWt1BN3+s86maWZnytNnI8ltV2bIOTj
-         oG/OIHLY77uMThJNivXe0rmKjqgsALhdADnI53BjN402t/PfY7Izep1TGb1OsLLU/pJ3
-         kvJ3/7bi2FacpH3+UgSH2OK+WVwDlOCAbAtnDYLlaomdSPmUQccBx7TYBPNeQyz9K9BF
-         qlX9VbiEuxqiyCVY3NMWGTOlxYEahdwkGhrDuDO/5BzwXZ2C2HEIqyVlbQfTaTJFlmkI
-         6YwlrToAw4QkR+WHxWiEojC66pcKhRH5YRXS39xtg2cn3IvfFjA9mcL6zTN5FO6u/WUz
-         rFpQ==
-X-Gm-Message-State: APjAAAXTnzksV/zcxRNrMBs+PdEJebPpQU2o+xKVkHaSGLIQBd4kUT5U
-        QvmtImGlckNfrVvKk3+Dnvxd2+9k2zjS5NHbK/L8sQ==
-X-Google-Smtp-Source: APXvYqyDOITFnbEbjASefA/StmtDVD64C4tIs4B7EpCbn+epn4j9i0oWshY43Kw2oFG+/67p1uNjgDJBcCkm/XE/zVk=
-X-Received: by 2002:a17:902:2006:: with SMTP id n6mr78068890pla.232.1561160170725;
- Fri, 21 Jun 2019 16:36:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com> <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
-In-Reply-To: <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 21 Jun 2019 16:35:59 -0700
-Message-ID: <CAFd5g44S-3J+g328PT42HVd=v4Us-JAzFP0MuA7f_qJ-srddsg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        Fri, 21 Jun 2019 19:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfFUXms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:42:48 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC20B2084E;
+        Fri, 21 Jun 2019 23:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561160568;
+        bh=9jNNQ6ZuBBOjZIW3HIow9t4gY+OUpSdjtQl5zrDEMdQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RDDEklul7g0TwzW9+rYABCiLxD3N9O7GjpeOksdPT5+/ufp4LUGpriR31HgIwLS4N
+         su+rzFDliqa/VpGbuq7WC+iq0nUGUObMkXCICTQFtPxehIJZ4EugjMAlfNTPpNEqd2
+         UO3XDcH6k2EANV4YmvD/OKPZrb5GXc3G08Mo32mA=
+Date:   Fri, 21 Jun 2019 16:42:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Banman <andrew.banman@hpe.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arun KS <arunks@codeaurora.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Michael Neuling <mikey@neuling.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v3 0/6] mm: Further memory block device cleanups
+Message-Id: <20190621164246.9a2354a571da41950bb74562@linux-foundation.org>
+In-Reply-To: <1c2edc22-afd7-2211-c4c7-40e54e5007e8@redhat.com>
+References: <20190620183139.4352-1-david@redhat.com>
+        <1561130120.5154.47.camel@lca.pw>
+        <1c2edc22-afd7-2211-c4c7-40e54e5007e8@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 6:17 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Hi Brendan,
->
-> I am only responding to this because you asked me to in the v4 thread.
+On Fri, 21 Jun 2019 20:24:59 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Yes, I did! Thank you, I appreciate it!
+> @Qian Cai, unfortunately I can't reproduce.
+> 
+> If you get the chance, it would be great if you could retry with
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 972c5336bebf..742f99ddd148 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -868,6 +868,9 @@ int walk_memory_blocks(unsigned long start, unsigned
+> long size,
+>         unsigned long block_id;
+>         int ret = 0;
+> 
+> +       if (!size)
+> +               return;
+> +
+>         for (block_id = start_block_id; block_id <= end_block_id;
+> block_id++) {
+>                 mem = find_memory_block_by_id(block_id);
+>                 if (!mem)
+> 
+> 
+> 
+> If both, start and size are 0, we would get a veeeery long loop. This
+> would mean that we have an online node that does not span any pages at
+> all (pgdat->node_start_pfn = 0, start_pfn + pgdat->node_spanned_pages = 0).
 
-> Thank you for evaluating my comments in the v4 thread and asking me to
-> comment on v5
+I think I'll make that a `return 0' and I won't drop patches 4-6 for
+now, as we appear to have this fixed.
 
-Of course, I feel as though I ought to address any and all valid comments.
 
-> On 6/17/19 1:25 AM, Brendan Higgins wrote:
-> > ## TL;DR
-> >
-> > A not so quick follow-up to Stephen's suggestions on PATCH v4. Nothing
-> > that really changes any functionality or usage with the minor exception
-> > of a couple public functions that Stephen asked me to rename.
-> > Nevertheless, a good deal of clean up and fixes. See changes below.
-> >
-> > As for our current status, right now we got Reviewed-bys on all patches
-> > except:
-> >
-> > - [PATCH v5 08/18] objtool: add kunit_try_catch_throw to the noreturn
-> >   list
-> >
-> > However, it would probably be good to get reviews/acks from the
-> > subsystem maintainers on:
-> >
-> > - [PATCH v5 06/18] kbuild: enable building KUnit
-> > - [PATCH v5 08/18] objtool: add kunit_try_catch_throw to the noreturn
-> >   list
-> > - [PATCH v5 15/18] Documentation: kunit: add documentation for KUnit
-> > - [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for
-> >   sysctl.c:proc_dointvec()
-> > - [PATCH v5 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
-> >   SYSCTL section
-> >
-> > Other than that, I think we should be good to go.
-> >
-> > One last thing, I updated the background to include my thoughts on KUnit
-> > vs. in kernel testing with kselftest in the background sections as
-> > suggested by Frank in the discussion on PATCH v2.
-> >
-> > ## Background
-> >
-> > This patch set proposes KUnit, a lightweight unit testing and mocking
-> > framework for the Linux kernel.
-> >
-> > Unlike Autotest and kselftest, KUnit is a true unit testing framework;
-> > it does not require installing the kernel on a test machine or in a VM
-> > (however, KUnit still allows you to run tests on test machines or in VMs
-> > if you want[1]) and does not require tests to be written in userspace
-> > running on a host kernel. Additionally, KUnit is fast: From invocation
-> > to completion KUnit can run several dozen tests in under a second.
-> > Currently, the entire KUnit test suite for KUnit runs in under a second
-> > from the initial invocation (build time excluded).
-> >
-> > KUnit is heavily inspired by JUnit, Python's unittest.mock, and
-> > Googletest/Googlemock for C++. KUnit provides facilities for defining
-> > unit test cases, grouping related test cases into test suites, providing
-> > common infrastructure for running tests, mocking, spying, and much more.
-> >
->
-> I looked only at this section, as was specifically requested:
->
-> > ### But wait! Doesn't kselftest support in kernel testing?!
-> >
-> > In a previous version of this patchset Frank pointed out that kselftest
-> > already supports writing a test that resides in the kernel using the
-> > test module feature[2]. LWN did a really great summary on this
-> > discussion here[3].
-> >
-> > Kselftest has a feature that allows a test module to be loaded into a
-> > kernel using the kselftest framework; this does allow someone to write
-> > tests against kernel code not directly exposed to userland; however, it
-> > does not provide much of a framework around how to structure the tests.
-> > The kselftest test module feature just provides a header which has a
-> > standardized way of reporting test failures,
->
->
-> > and then provides
-> > infrastructure to load and run the tests using the kselftest test
-> > harness.
->
-> The in-kernel tests can also be invoked at boot time if they are
-> configured (Kconfig) as in-kernel instead of as modules.  I did not
-> check how many of the tests have tri-state configuration to allow
-> this, but the few that I looked at did.
->
-> >
-> > The kselftest test module does not seem to be opinionated at all in
-> > regards to how tests are structured, how they check for failures, how
-> > tests are organized. Even in the method it provides for reporting
-> > failures is pretty simple; it doesn't have any more advanced failure
-> > reporting or logging features. Given what's there, I think it is fair to
-> > say that it is not actually a framework, but a feature that makes it
-> > possible for someone to do some checks in kernel space.
->
-> I would call that description a little dismissive.  The set of in-kernel
-> tests that I looked like followed a common pattern and reported results
-> in a uniform manner.
 
-I didn't mean to sound dismissive. I was only referring to what was
-present in the actual header itself. There really isn't much there; it
-provides a function which takes an expression, evaluates it,
-increments a counter of all tests, and if false, prints out a warning;
-also, it provides a module init which runs the user defined test
-function called selftest(), and then prints the number of tests that
-passed and the number of tests that failed; that's it. I was just
-trying to make the point that it is pretty bare bones, and isn't
-really much of a framework.
+From: David Hildenbrand <david@redhat.com>
+Subject: drivers-base-memoryc-get-rid-of-find_memory_block_hinted-v3-fix
 
-> >
-> > Furthermore, kselftest test module has very few users. I checked for all
-> > the tests that use it using the following grep command:
-> >
-> > grep -Hrn -e 'kselftest_module\.h'
-> >
-> > and only got three results: lib/test_strscpy.c, lib/test_printf.c, and
-> > lib/test_bitmap.c.
->
-> You missed many tests.  I listed much more than that in the v4 thread, and
-> someone else also listed more in the v4 thread.
+handle zero-length walks
 
-Oh, sorry, I forgot that more were listed in the thread.
+Link: http://lkml.kernel.org/r/1c2edc22-afd7-2211-c4c7-40e54e5007e8@redhat.com
+Reported-by: Qian Cai <cai@lca.pw>
+Tested-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
 
-> >
-> > So despite kselftest test module's existence, there really is no feature
-> > overlap between kselftest and KUnit, save one: that you can use either
-> > to write an in-kernel test, but this is a very small feature in
-> > comparison to everything that KUnit allows you to do. KUnit is a full
-> > x-unit style unit testing framework, whereas kselftest looks a lot more
-> > like an end-to-end/functional testing framework, with a feature that
-> > makes it possible to write in-kernel tests.
->
-> The description does not give enough credit to what is in kselftest.
+ drivers/base/memory.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-You are right about me missing a number of the tests, but there really
-is not much infrastructure in kselftest for this at all. It really
-doesn't impose any structure of any kind other than that there must be
-exactly one static function named selftest() that takes no arguments;
-and then you use KSTM_CHECK_ZERO() to do some checks; that's it. It
-doesn't have anything else in the actual kselftest module stuff.
+--- a/drivers/base/memory.c~drivers-base-memoryc-get-rid-of-find_memory_block_hinted-v3-fix
++++ a/drivers/base/memory.c
+@@ -866,6 +866,9 @@ int walk_memory_blocks(unsigned long sta
+ 	unsigned long block_id;
+ 	int ret = 0;
+ 
++	if (!size)
++		return 0;
++
+ 	for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+ 		mem = find_memory_block_by_id(block_id);
+ 		if (!mem)
 
->
-> It does not matter whether KUnit provides additional things, relative
-> to kselftest.  The point I was making is that there appears to be
-> _some_ overlap between kselftest and KUnit, and if there is overlap
-> then it is worth considering whether the overlap can be unified instead
-> of duplicated.
 
-I think I understand what you are saying, but the point I was trying
-to make here is that it is so simplistic, it doesn't really
-conceptually overlap since it is so limited in what structure and
-features it provides. It's kind of like what Ted said previously about
-how you have C so you can technically do whatever you want, but there
-is nothing inherent to the kselftest test module that does any of
-those things (other than what I mentioned above).
-
-> I don't have a dog in this fight and the discussion in the v4 thread
-> went way off track.  Thus I am not going to get sucked back into a
-> pointless debate in this thread.
-
-Sure, I don't want to debate the point further either (I had a hard
-time understanding what the point was at the end myself).
-
-Nevertheless, I do want to make sure that I addressed this because I
-think you did indeed have a point that was worth addressing, and I
-don't want to waste anyone's time in the future by not addressing it.
-
-Nevertheless, like I said, I don't want to get too detailed on the
-topic otherwise like Shuah suggests later, it might end up just
-leading people to draw a comparison that doesn't need to be made, but
-I also don't want to misrepresent anything. In anycase, I will follow
-up on this point directly with Shuah.
-
-> Thanks for adding this section to address the issue.
-
-No need to thank me; that is what I felt is the correct thing to do. I
-didn't address the point before and it caused you and other to spend a
-lot of time debating the point.
-
-Also, it looks like Shuah is asking me to drop the section. I will
-discuss this point further there.
-
-Thanks!
-
-> -Frank
->
->
-> >
-> > ### What's so special about unit testing?
-> >
-> > A unit test is supposed to test a single unit of code in isolation,
-> > hence the name. There should be no dependencies outside the control of
-> > the test; this means no external dependencies, which makes tests orders
-> > of magnitudes faster. Likewise, since there are no external dependencies,
-> > there are no hoops to jump through to run the tests. Additionally, this
-> > makes unit tests deterministic: a failing unit test always indicates a
-> > problem. Finally, because unit tests necessarily have finer granularity,
-> > they are able to test all code paths easily solving the classic problem
-> > of difficulty in exercising error handling code.
-> >
-> > ### Is KUnit trying to replace other testing frameworks for the kernel?
-> >
-> > No. Most existing tests for the Linux kernel are end-to-end tests, which
-> > have their place. A well tested system has lots of unit tests, a
-> > reasonable number of integration tests, and some end-to-end tests. KUnit
-> > is just trying to address the unit test space which is currently not
-> > being addressed.
-> >
-> > ### More information on KUnit
-> >
-> > There is a bunch of documentation near the end of this patch set that
-> > describes how to use KUnit and best practices for writing unit tests.
-> > For convenience I am hosting the compiled docs here[4].
-> >
-> > Additionally for convenience, I have applied these patches to a
-> > branch[5]. The repo may be cloned with:
-> > git clone https://kunit.googlesource.com/linux
-> > This patchset is on the kunit/rfc/v5.2-rc4/v5 branch.
-> >
-> > ## Changes Since Last Version
-> >
-> > Aside from a couple public function renames, there isn't really anything
-> > in here that changes any functionality.
-> >
-> > - Went through and fixed a couple of anti-patterns suggested by Stephen
-> >   Boyd. Things like:
-> >   - Dropping an else clause at the end of a function.
-> >   - Dropping the comma on the closing sentinel, `{}`, of a list.
-> > - Inlines a bunch of functions in the test case running logic in patch
-> >   01/18 to make it more readable as suggested by Stephen Boyd
-> > - Found and fixed bug in resource deallocation logic in patch 02/18. Bug
-> >   was discovered as a result of making a change suggested by Stephen
-> >   Boyd. This does not substantially change how any of the code works
-> >   conceptually.
-> > - Renamed new_string_stream() to alloc_string_stream() as suggested by
-> >   Stephen Boyd.
-> > - Made string-stream a KUnit managed object - based on a suggestion made
-> >   by Stephen Boyd.
-> > - Renamed kunit_new_stream() to alloc_kunit_stream() as suggested by
-> >   Stephen Boyd.
-> > - Removed the ability to set log level after allocating a kunit_stream,
-> >   as suggested by Stephen Boyd.
-> >
-> > [1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
-> > [2] https://www.kernel.org/doc/html/latest/dev-tools/kselftest.html#test-module
-> > [3] https://lwn.net/Articles/790235/
-> > [4] https://google.github.io/kunit-docs/third_party/kernel/docs/
-> > [5] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2-rc4/v5
-> >
->
