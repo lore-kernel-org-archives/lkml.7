@@ -2,117 +2,113 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0042FC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA39C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D01206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FFA206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtvZ8Caq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gH08pGvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfFUPNG (ORCPT
+        id S1726151AbfFUPOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:13:06 -0400
-Received: from mail-ua1-f45.google.com ([209.85.222.45]:34715 "EHLO
-        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfFUPNF (ORCPT
+        Fri, 21 Jun 2019 11:14:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32793 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFUPOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:13:05 -0400
-Received: by mail-ua1-f45.google.com with SMTP id c4so3141803uad.1;
-        Fri, 21 Jun 2019 08:13:05 -0700 (PDT)
+        Fri, 21 Jun 2019 11:14:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x15so3780090pfq.0;
+        Fri, 21 Jun 2019 08:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zXpqDxLfIfBJYYRkrryXotHeuidmyZAFttzUi4vHcZ8=;
-        b=QtvZ8Caqy3Wd/V+8GkF4ZDcxgC1HDyeytgaDVWRX/AWNPdSuaPd+lCKUIN4BRKFLEt
-         2nkUJcDcAA8tP4Xv5RH8b0XdGIw53gLwURKJr3peTUyU+lSdbw2rIoH96x+otXE4awDQ
-         GM8fODsYP7mv/dMJslqR81lOwMdR9dq+u0ZIgzlaw67LJBTNd1btB0TEv0RoxzdaDkPg
-         1iZtD/0L1klrJe/sWBTWjV8ds8+3mfFoSqS39ft3bSLdLxkptb4r55ImsRVOlP1+zkQ3
-         56Q8d0SuIAoYq3WkJ9sXOINgFaWLxsPCmPclIbEB5SK6Jrnwq0mnNBbEIHbIvbaA+DlX
-         6m5A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D1L+5OgsoCs/Y5oa5UVHHnNtdt7om2AYqhwfcRpZ5cw=;
+        b=gH08pGvtNsQ+WQcRdl6g0glrNBW2WH4cfDf3/RJtRPKt0u2ujl3NLToFiq7QuUd0mQ
+         +lNYvRSrCDz1YsxH7bhjMKeotLSmgnfH7YwsDE7wAIunMTk8Zvj50MiGX/vFuriJKk2U
+         AOP7806mzxJl+G7rZkOg66yygnYbLLRxmHKhB0HxJlJYteGGb0FIy/DzTf4pk9yH95bA
+         7IcU7n7uIx8p7zbOgKpnQhX8FLzs38W6UzAEZ92ybuaF34ySQ88fGjdEO+ccoRtSA/CC
+         TP0wIz0wwH94V4JVyudpbjm/p9LMWcfP3HGKzNZrgjsCG1zGuPi8eqX6TcwKB8OVlOl5
+         E9tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zXpqDxLfIfBJYYRkrryXotHeuidmyZAFttzUi4vHcZ8=;
-        b=J/jIPlMj98cQr8RJ1sI06qjohEhexOfCiaNmeti2Kcod9p5fzslFuBCJJt8AMVWx4V
-         lguIBS6jwtSeRx/pyn/aj6Zr/Lr8NgSrCyezAR1l73b+YFoyFVfRbQoEVAtr02l8PR/S
-         zCtge/BkXW/CM8QNBDHIa7OZiVcSE1+/FXXOupDnJTu6SqkKSLRFqmRXVL3ashiv93UK
-         hAT1KQYClzMghZY2sF5BkxWuz9v2ma2qK3EW6/bdAVk8UFXBQHJTr2nDrjDp2xGVLOyF
-         t+tBbTPMQTTl6wXAnv2m8IZuLdCBVcL6hw+BscbM6BvFPGwFs3TMAP/eGmcjuUuhWQlX
-         vzDg==
-X-Gm-Message-State: APjAAAVcti3RlY7z8n148y/YK7xki0iNNlYYjSI2KJwUkVChVYPsBSyv
-        3KEdvsz5vSsY23eMMzIKilzpgqVvL0c19LN71/A=
-X-Google-Smtp-Source: APXvYqxq5W/TRSvncldtz8iA0RwP6LGygzVHQZ26gcAflq59Xaw8C/VKTE5QdEWv+gLzgMtBZqD/vC1l6+JWvJfv52I=
-X-Received: by 2002:ab0:4744:: with SMTP id i4mr21428220uac.63.1561129984537;
- Fri, 21 Jun 2019 08:13:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D1L+5OgsoCs/Y5oa5UVHHnNtdt7om2AYqhwfcRpZ5cw=;
+        b=RUPHYSXBCAR410kn6HzXBQ7a8QBFgkO/qLwALGShVO6eDkDz1O4u9mI30wNLNw4kew
+         Vnf65vEG8QhD8iVY6eNgzxS71X1fTjTtBjppEV84X1XlmhTGi62/wp0CbWr+l9s5RRFe
+         deBMgq5cSkSvx/5AGGlR6vuCHJOLaRG7RalvTKKEXlx6zn+7aGziI6ctajkSKBzsaVbO
+         fdzbrO9+I5ihus7bwJq836JxJRPiEdxnuClX7+uYhwAd/1vHT328+x47Aap9+TdZyayO
+         vsHtDycUIZ5yNnpHBzeT90lSuTqhrQP7wv0jN+BHGW+DmdY0kdBoeBZee9ptwxryl5Dm
+         fVDw==
+X-Gm-Message-State: APjAAAVF3S8Akh4RWDh8jqZ0F7nYgeG+ldnH0q1D6vTFTEaxcNyCojeg
+        myyjL9k1AECIILkhU93Kdis=
+X-Google-Smtp-Source: APXvYqx+GcHnmwXxnOFv2807/Y9KuYoypP+swKOyCcZEjg1XrPM9jhbRCTujayUWU2SN003YufEL7Q==
+X-Received: by 2002:a65:56cc:: with SMTP id w12mr5892499pgs.382.1561130074417;
+        Fri, 21 Jun 2019 08:14:34 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.13])
+        by smtp.googlemail.com with ESMTPSA id 25sm3254465pfp.76.2019.06.21.08.14.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 08:14:33 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>
+Subject: [PATCH v4 0/3] net: fddi: skfp: Use PCI generic definitions instead of private duplicates
+Date:   Fri, 21 Jun 2019 20:44:12 +0530
+Message-Id: <20190621151415.10795-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
- <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
- <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
- <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
- <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
- <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com>
- <CAOMZO5BsJWTw0nCeUboam4kuKyCO3N_Ch5ZW8k5Y9KFtQBanhQ@mail.gmail.com> <CAOuPNLjrAU_C_TUKFMs1d0eGsw=AxuG6d6FhNHtHFwVhfYZGgA@mail.gmail.com>
-In-Reply-To: <CAOuPNLjrAU_C_TUKFMs1d0eGsw=AxuG6d6FhNHtHFwVhfYZGgA@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Fri, 21 Jun 2019 20:42:53 +0530
-Message-ID: <CAOuPNLhstoCjxijrnKNmV1iKWjAXvSZ38Z13tfd5bvGbYSqPAA@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 8:59 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+This patch series removes the private duplicates of PCI definitions in
+favour of generic definitions defined in pci_regs.h.
 
-> > > This scenario is not with suspend/resume.
-> > > This hang is, when we make hdmi as a loadable module (.ko) and trying
-> > > to install it after resume.
-> > > In this case, suspend/resume will not come into picture. Not sure why
-> > > it still hangs.
-> > > Do you have any clue for this scenario?
-> >
-> > I haven't tried this one.
-> >
+This driver only uses some of the generic PCI definitons,
+which are included from pci_regs.h and thier private versions
+are removed from skfbi.h with all other private defines.
 
-Okay there is some update on the 2nd part.
-Now I am able to successfully install all imx modules after the resume
-(no hang).
-But, I got some errors after install finish:
-[drm] disabling vblank on crtc 1
-[IMX]: imx_drm_disable_vblank - called
-[drm:drm_atomic_helper_commit_cleanup_done] *ERROR* [CRTC:24:crtc-0]
-flip_done timed out
+The skfbi.h defines PCI_REV_ID and other private defines with different
+names, these are renamed to Generic PCI names to make them
+compatible with defines in pci_regs.h.
 
-Also I am able to start the weston successfully.
-But I see LCD/HDMI display is not working (only some backlight is visible).
+All unused defines are removed from skfbi.h.
 
-And, I noticed, weston also reports the following errors:
-imx-ipuv3 2400000.ipu: DC stop timeout after 50 ms
-[IMX]: drm_crtc_vblank_off - called
-[IMX]: imx_drm_disable_vblank - called
-INFO: rcu_preempt detected stalls on CPUs/tasks: { 1} (detected by 0,
-t=6002 jiffies, g=289, c=288, q=8)
-Task dump for CPU 1:
-weston          R running      0   306      1 0x00000000
-[<c05282d8>] (__schedule) from [<00080193>] (0x80193)
+Changes in v4:
+Removed unused PCI definitions which were left in v3
 
-Do you have any clue about these errors ?
+Changes in v3:
+Renamed all local PCI definitions to Generic names.
+Corrected coding style mistakes.
 
-Thanks,
-Pintu
+Changes in v2:
+Converted individual patches to a series.
+Made sure that individual patches build correctly
+
+Puranjay Mohan (3):
+  net: fddi: skfp: Rename local PCI defines to match generic PCI defines
+  net: fddi: skfp: Include generic PCI definitions
+  net: fddi: skfp: Remove unused private PCI definitions
+
+ drivers/net/fddi/skfp/drvfbi.c  |   3 +-
+ drivers/net/fddi/skfp/h/skfbi.h | 217 +-------------------------------
+ 2 files changed, 6 insertions(+), 214 deletions(-)
+
+-- 
+2.21.0
+
