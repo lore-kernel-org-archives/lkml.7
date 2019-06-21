@@ -2,254 +2,163 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C28AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FD6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2541D206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3D9206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1wcagAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfFUNnM (ORCPT
+        id S1726188AbfFUNn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:43:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33988 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUNnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:43:12 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC7D9756;
-        Fri, 21 Jun 2019 13:43:06 +0000 (UTC)
-Received: from redhat.com (ovpn-121-168.rdu2.redhat.com [10.10.121.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9DEC608A7;
-        Fri, 21 Jun 2019 13:43:02 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 09:43:00 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 2/5] livepatch: Basic API to track system state changes
-Message-ID: <20190621134300.GB20356@redhat.com>
-References: <20190611135627.15556-1-pmladek@suse.com>
- <20190611135627.15556-3-pmladek@suse.com>
+        Fri, 21 Jun 2019 09:43:26 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:46124 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUNn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:43:26 -0400
+Received: by mail-ua1-f67.google.com with SMTP id o19so2954141uap.13;
+        Fri, 21 Jun 2019 06:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q33VMB3ypbHwOwppVVrLlgmUH5mxcaA4HJxW2dFca6o=;
+        b=D1wcagAnBTWmdUQeUme6lToz8OTYS/7I2UnlVWewxnV5IqtffAh5E3+h2dqHjnR0pX
+         WhKJUFrSCXwFy2tMqIixRX3uFxe17AFa8GMsCi9p/GAwRy8jw2YhomZRCUp9Gdk/7Ge7
+         seXrXjnwfOy9oKGmvvuBykq+fr0sqASSfggBSiChlAGQUZ6MVC2c4Mudl+0rIMkIXAgc
+         kEL/I2wWsxe1Icti5ydiwnMWVX3N9fnxodmPs+3zkPbmZtnU6HiNB4EUhfAdDiiKudw9
+         1tzp94IXaVMSlmBhtqAwR3y/Uj/7WMA26KO/847FNv6RE7HKIBb9H99BM3HpHsmuHb41
+         WxtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q33VMB3ypbHwOwppVVrLlgmUH5mxcaA4HJxW2dFca6o=;
+        b=BGTYz+Ar5U+LLkYYHTlYDa55SEK2b3yEjMu6PjMItRS5LNJzPXlZAB5Ji7CistGa71
+         GE1mzXjjItnsmGC38vQqDqL8E/ikvitOXfxf9PzjNNONUR0mE0/dRRvbyJhJ0h+07nsI
+         3h80JzlSzLXgEPcLrLfcoN5C3Ogcj5eU6SfeQqTAuWqaIt2Rpb5JWsS8yk71qBYPqzl2
+         RRDEVVR3WLNexKXT4JUXmUjBwfvafYKqETsImy7J0tqYZaGo07Ma3EKWcvJkM7sIJlsi
+         twLin8kdKUvfR0+y5JpYqCfXeYLUfJjztdxos8tvXLG95Mx99U+p0pAkBFG76I0vUPeU
+         8GEA==
+X-Gm-Message-State: APjAAAVp0LZvLKSg6G6b9gqobnIe+aXL12NqtzSNOJRAWGKv6lzEQTnt
+        poa1s+9wxFZID1e2lY5bEmbmIu2rLns1GfycGtE=
+X-Google-Smtp-Source: APXvYqwrAtxG9WFdU7+zxFJH2xHp33ZglUqgqJOd0aECdFmqX9cAcxHDIo1ICcA1xNjdrxSU02d6Gmef1/iDikl2EL8=
+X-Received: by 2002:ab0:2810:: with SMTP id w16mr15346167uap.118.1561124605074;
+ Fri, 21 Jun 2019 06:43:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611135627.15556-3-pmladek@suse.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 21 Jun 2019 13:43:11 +0000 (UTC)
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-3-git-send-email-alcooperx@gmail.com> <1561094780.19385.2.camel@mhfsdcap03>
+In-Reply-To: <1561094780.19385.2.camel@mhfsdcap03>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Fri, 21 Jun 2019 09:44:11 -0400
+Message-ID: <CAOGqxeV=7kwt9oyso_0yuBOT-a9bhzXJcvav-+jRY_j_=-W8QA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] usb: bdc: Cleanup clock support
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:56:24PM +0200, Petr Mladek wrote:
-> This is another step how to help maintaining more livepatches.
-> 
-> One big help was the atomic replace and cumulative livepatches. These
-> livepatches replaces the already installed ones. Therefore it should
+> > diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > index ccbd1d34eb2a..11a43de6c1c6 100644
+> > --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > @@ -490,8 +490,14 @@ static int bdc_probe(struct platform_device *pdev)
+> >
+> >       dev_dbg(dev, "%s()\n", __func__);
+> >
+> > +     bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+> > +     if (!bdc)
+> > +             return -ENOMEM;
+> > +
+> >       clk = devm_clk_get(dev, "sw_usbd");
+> >       if (IS_ERR(clk)) {
+> > +             if (PTR_ERR(clk) == -EPROBE_DEFER)
+> > +                     return -EPROBE_DEFER;
+> what about using devm_clk_get_optional()?
 
-nit: s/replaces/replaces
+Good suggestion.
+Thanks
+Al
 
-> be enough when each cumulative livepatch is consistent.
-> 
-> The problems might come with shadow variables and callbacks. They might
-> change the system behavior or state so that it is not longer safe to
 
-nit: s/not longer safe/no longer safe
-
-> go back and use an older livepatch or the original kernel code. Also
-> any new livepatch must be able to detect what changes have already been
-> done by the already installed livepatches.
-> 
-> This is where the livepatch system state tracking gets useful. It
-> allows to:
-> 
->   - find whether a system state has already been modified by
->     previous livepatches
-> 
->   - store data needed to manipulate and restore the system state
-> 
-> The information about the manipulated system states is stored in an
-> array of struct klp_state. There are two functions that allow
-> to find this structure for a given struct klp_patch or for
-> already installed (replaced) livepatches.
-> 
-
-suggestion: "Two new functions, klp_get_state() and
-klp_get_prev_state(), can find this structure ..." or perhaps drop this
-part altogether and let the future reader do a 'git show' or 'git log
--p' to see the code changes and the exact function names.
-
--- Joe
-
-> The dependencies are going to be solved by a version field added later.
-> The only important information is that it will be allowed to modify
-> the same state by more non-cumulative livepatches. It is the same logic
-> as that it is allowed to modify the same function several times.
-> The livepatch author is responsible for preventing incompatible
-> changes.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  include/linux/livepatch.h | 15 +++++++++
->  kernel/livepatch/Makefile |  2 +-
->  kernel/livepatch/state.c  | 83 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 99 insertions(+), 1 deletion(-)
->  create mode 100644 kernel/livepatch/state.c
-> 
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index eeba421cc671..591abdee30d7 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -132,10 +132,21 @@ struct klp_object {
->  	bool patched;
->  };
->  
-> +/**
-> + * struct klp_state - state of the system modified by the livepatch
-> + * @id:		system state identifier (non zero)
-> + * @data:	custom data
-> + */
-> +struct klp_state {
-> +	int id;
-> +	void *data;
-> +};
-> +
->  /**
->   * struct klp_patch - patch structure for live patching
->   * @mod:	reference to the live patch module
->   * @objs:	object entries for kernel objects to be patched
-> + * @states:	system states that can get modified
->   * @replace:	replace all actively used patches
->   * @list:	list node for global list of actively used patches
->   * @kobj:	kobject for sysfs resources
-> @@ -150,6 +161,7 @@ struct klp_patch {
->  	/* external */
->  	struct module *mod;
->  	struct klp_object *objs;
-> +	struct klp_state *states;
->  	bool replace;
->  
->  	/* internal */
-> @@ -220,6 +232,9 @@ void *klp_shadow_get_or_alloc(void *obj, unsigned long id,
->  void klp_shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor);
->  void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
->  
-> +struct klp_state *klp_get_state(struct klp_patch *patch, int id);
-> +struct klp_state *klp_get_prev_state(int id);
-> +
->  #else /* !CONFIG_LIVEPATCH */
->  
->  static inline int klp_module_coming(struct module *mod) { return 0; }
-> diff --git a/kernel/livepatch/Makefile b/kernel/livepatch/Makefile
-> index cf9b5bcdb952..cf03d4bdfc66 100644
-> --- a/kernel/livepatch/Makefile
-> +++ b/kernel/livepatch/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_LIVEPATCH) += livepatch.o
->  
-> -livepatch-objs := core.o patch.o shadow.o transition.o
-> +livepatch-objs := core.o patch.o shadow.o state.o transition.o
-> diff --git a/kernel/livepatch/state.c b/kernel/livepatch/state.c
-> new file mode 100644
-> index 000000000000..f8822b71f96e
-> --- /dev/null
-> +++ b/kernel/livepatch/state.c
-> @@ -0,0 +1,83 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * system_state.c - State of the system modified by livepatches
-> + *
-> + * Copyright (C) 2019 SUSE
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/livepatch.h>
-> +#include "core.h"
-> +#include "transition.h"
-> +
-> +#define klp_for_each_state(patch, state)		\
-> +	for (state = patch->states; state && state->id; state++)
-> +
-> +/**
-> + * klp_get_state() - get information about system state modified by
-> + *	the given patch
-> + * @patch:	livepatch that modifies the given system state
-> + * @id:		custom identifier of the modified system state
-> + *
-> + * Checks whether the given patch modifies to given system state.
-> + *
-> + * The function can be called either from pre/post (un)patch
-> + * callbacks or from the kernel code added by the livepatch.
-> + *
-> + * Return: pointer to struct klp_state when found, otherwise NULL.
-> + */
-> +struct klp_state *klp_get_state(struct klp_patch *patch, int id)
-> +{
-> +	struct klp_state *state;
-> +
-> +	klp_for_each_state(patch, state) {
-> +		if (state->id == id)
-> +			return state;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(klp_get_state);
-> +
-> +/**
-> + * klp_get_prev_state() - get information about system state modified by
-> + *	the already installed livepatches
-> + * @id:		custom identifier of the modified system state
-> + *
-> + * Checks whether already installed livepatches modify the given
-> + * system state.
-> + *
-> + * The same system state can be modified by more non-cumulative
-> + * livepatches. It is expected that the latest livepatch has
-> + * the most up-to-date information.
-> + *
-> + * The function can be called only during transition when a new
-> + * livepatch is being enabled or when such a transition is reverted.
-> + * It is typically called only from from pre/post (un)patch
-> + * callbacks.
-> + *
-> + * Return: pointer to the latest struct klp_state from already
-> + *	installed livepatches, NULL when not found.
-> + */
-> +struct klp_state *klp_get_prev_state(int id)
-> +{
-> +	struct klp_patch *patch;
-> +	struct klp_state *state, *last_state = NULL;
-> +
-> +	if (WARN_ON_ONCE(!klp_transition_patch))
-> +		return NULL;
-> +
-> +	klp_for_each_patch(patch) {
-> +		if (patch == klp_transition_patch)
-> +			goto out;
-> +
-> +		state = klp_get_state(patch, id);
-> +		if (state)
-> +			last_state = state;
-> +	}
-> +
-> +out:
-> +	return last_state;
-> +}
-> +EXPORT_SYMBOL_GPL(klp_get_prev_state);
-> -- 
-> 2.16.4
-> 
+On Fri, Jun 21, 2019 at 1:26 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> On Thu, 2019-06-20 at 17:09 -0400, Al Cooper wrote:
+> > - Fix driver to defer on clk_get defer
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > ---
+> >  drivers/usb/gadget/udc/bdc/bdc_core.c | 15 +++++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > index ccbd1d34eb2a..11a43de6c1c6 100644
+> > --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > @@ -490,8 +490,14 @@ static int bdc_probe(struct platform_device *pdev)
+> >
+> >       dev_dbg(dev, "%s()\n", __func__);
+> >
+> > +     bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+> > +     if (!bdc)
+> > +             return -ENOMEM;
+> > +
+> >       clk = devm_clk_get(dev, "sw_usbd");
+> >       if (IS_ERR(clk)) {
+> > +             if (PTR_ERR(clk) == -EPROBE_DEFER)
+> > +                     return -EPROBE_DEFER;
+> what about using devm_clk_get_optional()?
+>
+> >               dev_info(dev, "Clock not found in Device Tree\n");
+> >               clk = NULL;
+> >       }
+> > @@ -501,11 +507,6 @@ static int bdc_probe(struct platform_device *pdev)
+> >               dev_err(dev, "could not enable clock\n");
+> >               return ret;
+> >       }
+> > -
+> > -     bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+> > -     if (!bdc)
+> > -             return -ENOMEM;
+> > -
+> >       bdc->clk = clk;
+> >
+> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > @@ -551,7 +552,7 @@ static int bdc_probe(struct platform_device *pdev)
+> >       ret = bdc_phy_init(bdc);
+> >       if (ret) {
+> >               dev_err(bdc->dev, "BDC phy init failure:%d\n", ret);
+> > -             return ret;
+> > +             goto clk_cleanup;
+> >       }
+> >
+> >       temp = bdc_readl(bdc->regs, BDC_BDCCAP1);
+> > @@ -583,6 +584,8 @@ static int bdc_probe(struct platform_device *pdev)
+> >       bdc_hw_exit(bdc);
+> >  phycleanup:
+> >       bdc_phy_exit(bdc);
+> > +clk_cleanup:
+> > +     clk_disable_unprepare(bdc->clk);
+> >       return ret;
+> >  }
+> >
+>
+>
