@@ -2,102 +2,187 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C676C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E6C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616B220673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFE9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O+q7znAO";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="TwpHuqBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfFUPj3 (ORCPT
+        id S1726663AbfFUPjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:39:29 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40110 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfFUPi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:38:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 655651A0A89;
-        Fri, 21 Jun 2019 17:38:55 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 58B201A0A85;
-        Fri, 21 Jun 2019 17:38:55 +0200 (CEST)
-Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DD3F720629;
-        Fri, 21 Jun 2019 17:38:54 +0200 (CEST)
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
-Subject: [PATCH net-next 2/6] ocelot: Refactor common ocelot probing code to ocelot_init
-Date:   Fri, 21 Jun 2019 18:38:48 +0300
-Message-Id: <1561131532-14860-3-git-send-email-claudiu.manoil@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 21 Jun 2019 11:39:33 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:40226 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726196AbfFUPjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 11:39:31 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AF172C0D9C;
+        Fri, 21 Jun 2019 15:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561131571; bh=6079FvYrnSuIcm6KjAAvflaWDCqsqM0Yq9xGQZzLwWQ=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=O+q7znAOzBk/+h2uPxLq7f1cdPH5exgEndPAn6kmrW4tvwo6e/anGnpLZyJZ0rNH8
+         ABlwMnqdnSxB9Wea78xBX//9Ecio+JN7Be+wijHOm/GVcr7+iE78c63SUXV56TPOTh
+         8KiQvdhKEEaQFreibsXvAY8ub4bHprV2Vx1QYajKfmByG6m81tvoCoXXxl8yiCQayy
+         3CvXxVwv7eC9XvY66IPos8zgTwX0QZ9PVhGNT+g5NtSwY0ZsU9SI625zjaIRHwA9dG
+         pnpDlpmLfsSLYHE3forkgseok1Ae5z61ydo/tfq+9kxtKMT84nQzVPNEOgOmiPtnw6
+         /Vc6AnewBBTPg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 4E3B2A0067;
+        Fri, 21 Jun 2019 15:39:29 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 21 Jun 2019 08:39:29 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 21 Jun 2019 08:39:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fK77iwFW/p1wq0uLyo2wr+jo704PfAHVr6SzTpkXxGs=;
+ b=TwpHuqBw5ZJMLSIlSNUynwR0MwpZXtqNWSVw7AgyAsmGlblcaDRFruV18VIvioXL1hXEl+80rSKaypgHsycL77r1Oe13BQe0edkdilCIQuNxKNxW5oXYEfa4bsyK0S3lXADd4O1DdnHP28T7MsTw1av/ZScUVYjlvLd5icIMTWM=
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
+ CY4PR1201MB0184.namprd12.prod.outlook.com (10.172.78.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Fri, 21 Jun 2019 15:39:27 +0000
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::d536:9377:4e1c:75ad]) by CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::d536:9377:4e1c:75ad%4]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 15:39:27 +0000
+From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: RE: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Index: AQHVItAEofkbV+NXXEuPQB3Di+rJQKakNJEAgADZNACAATpIEA==
+Date:   Fri, 21 Jun 2019 15:39:27 +0000
+Message-ID: <CY4PR1201MB0120D86E5774F93769320B59A1E70@CY4PR1201MB0120.namprd12.prod.outlook.com>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+ <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
+ <20190620075224.GT3419@hirez.programming.kicks-ass.net>
+ <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
+In-Reply-To: <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abrodkin@synopsys.com; 
+x-originating-ip: [188.243.7.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d51d80cd-b358-4c8c-7259-08d6f65ea506
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1201MB0184;
+x-ms-traffictypediagnostic: CY4PR1201MB0184:
+x-microsoft-antispam-prvs: <CY4PR1201MB01841C05DCDAE94EA848DC39A1E70@CY4PR1201MB0184.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39850400004)(396003)(376002)(346002)(189003)(13464003)(199004)(54906003)(6636002)(3846002)(6116002)(8676002)(66066001)(26005)(186003)(99286004)(81166006)(446003)(6436002)(11346002)(53546011)(476003)(102836004)(7736002)(9686003)(68736007)(8936002)(76176011)(71200400001)(81156014)(7696005)(6506007)(486006)(229853002)(73956011)(55016002)(256004)(6862004)(14454004)(316002)(66476007)(74316002)(25786009)(33656002)(71190400001)(2906002)(305945005)(5660300002)(66446008)(53936002)(66946007)(66556008)(6246003)(64756008)(76116006)(4326008)(52536014)(478600001)(107886003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0184;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YRzWRAhD8HI6vlD80FWP/P9AVgehMaKOJC4a4Z2B+sXae6mufMVCvcE58LzAs1EnRQdAjquzN79VPYa4nTrkLOjjpQ+g1fNKFpiOW38P9oXd4TawI6t0Ulo2dTDVG9fYmHIg56TLqsLUHi+RlHvAeei9NGzfzOWFyaLq4Imlm9g5GmMgFY1133y/rwtHPmywQX51erlcbERjrxZR/3nUbA7rN8JaBvA0pRLMvOW0JfZPi/CBoaBLfJb5Z7N+AnbjnMhF+YZahIdBzK722V9+rAE8/apRSVlN3NtxO2aY/YPIB9hedDdAunMAmnIY9j+QbA0F1Bq33oPA1WK/A+to0Pm51z1XgKmSfk4hV5jlJyHI6VgeW1jQWYyhFKqaUM7+/Zk+jnUAMckSbdX0+DLVcNGtkCPw6GN6FQfE5jLFWY8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d51d80cd-b358-4c8c-7259-08d6f65ea506
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 15:39:27.4584
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: abrodkin@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0184
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is just common path code that belogs to ocelot_init,
-it has nothing to do with a specific SoC/board instance.
-Add allocation err check in the process.
+Hi Vineet,
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
- drivers/net/ethernet/mscc/ocelot.c       | 6 ++++++
- drivers/net/ethernet/mscc/ocelot_board.c | 4 ----
- 2 files changed, 6 insertions(+), 4 deletions(-)
+> -----Original Message-----
+> From: linux-snps-arc <linux-snps-arc-bounces@lists.infradead.org> On Beha=
+lf Of Vineet Gupta
+> Sent: Thursday, June 20, 2019 11:50 PM
+> To: Peter Zijlstra <peterz@infradead.org>
+> Cc: linux-arch@vger.kernel.org; Ard Biesheuvel <ard.biesheuvel@linaro.org=
+>; Alexey Brodkin
+> <abrodkin@synopsys.com>; linux-kernel@vger.kernel.org; Jason Baron <jbaro=
+n@akamai.com>; Paolo Bonzini
+> <pbonzini@redhat.com>; linux-snps-arc@lists.infradead.org; Eugeniy Paltse=
+v
+> <Eugeniy.Paltsev@synopsys.com>
+> Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patchin=
+g
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 66cf57e6fd76..f07c398f8b21 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -1674,6 +1674,11 @@ int ocelot_init(struct ocelot *ocelot)
- 	int i, cpu = ocelot->num_phys_ports;
- 	char queue_name[32];
- 
-+	ocelot->ports = devm_kcalloc(ocelot->dev, ocelot->num_phys_ports,
-+				     sizeof(struct ocelot_port *), GFP_KERNEL);
-+	if (!ocelot->ports)
-+		return -ENOMEM;
-+
- 	ocelot->lags = devm_kcalloc(ocelot->dev, ocelot->num_phys_ports,
- 				    sizeof(u32), GFP_KERNEL);
- 	if (!ocelot->lags)
-@@ -1692,6 +1697,7 @@ int ocelot_init(struct ocelot *ocelot)
- 	if (!ocelot->stats_queue)
- 		return -ENOMEM;
- 
-+	INIT_LIST_HEAD(&ocelot->multicast);
- 	ocelot_mact_init(ocelot);
- 	ocelot_vlan_init(ocelot);
- 	ocelot_ace_init(ocelot);
-diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
-index 58bde1a9eacb..2a6ee4edb858 100644
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -255,10 +255,6 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
- 
- 	ocelot->num_phys_ports = of_get_child_count(ports);
- 
--	ocelot->ports = devm_kcalloc(&pdev->dev, ocelot->num_phys_ports,
--				     sizeof(struct ocelot_port *), GFP_KERNEL);
--
--	INIT_LIST_HEAD(&ocelot->multicast);
- 	ocelot_init(ocelot);
- 
- 	for_each_available_child_of_node(ports, portnp) {
--- 
-2.17.1
+[snip]
 
+> Insn encoding is always middl eendina - irrespective of endianness.
+
+Apparently only in little-endian mode instructions are encoded as middle-en=
+dian,
+see:
+-------------->8-------------
+# cat endian.S
+
+.global myfunc
+myfunc:
+        mov r0, r1
+-------------->8-------------
+
+Little-endian:
+-------------->8-------------
+# arc-linux-gcc -c -mcpu=3Darchs endian.S -EL
+# arc-linux-objdump -d endian.o
+
+endian.o:     file format elf32-littlearc
+
+Disassembly of section .text:
+00000000 <myfunc>:
+   0:   200a 0040               mov     r0,r1
+
+# arc-linux-readelf -x .text endian.o
+Hex dump of section '.text':
+  0x00000000 0a204000                            . @.
+-------------->8-------------
+
+Big-endian:
+-------------->8-------------
+# arc-linux-gcc -c -mcpu=3Darchs endian.S -EB
+# arc-linux-objdump -d endian.o
+
+endian.o:     file format elf32-bigarc
+
+Disassembly of section .text:
+00000000 <myfunc>:
+   0:   200a 0040               mov     r0,r1
+
+# arc-linux-readelf -x .text endian.o
+
+Hex dump of section '.text':
+  0x00000000 200a0040                             ..@
+-------------->8-------------
+
+-Alexey
