@@ -2,77 +2,138 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4A9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3E9C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7ED2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4582083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 22:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH9gcHja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbfFUWfi (ORCPT
+        id S1726111AbfFUWpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 18:35:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43714 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfFUWfi (ORCPT
+        Fri, 21 Jun 2019 18:45:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35828 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfFUWpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 18:35:38 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1heS86-0000Or-EG; Fri, 21 Jun 2019 22:35:34 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vmwgfx: fix memory leak when too many retries have occurred
-Date:   Fri, 21 Jun 2019 23:35:34 +0100
-Message-Id: <20190621223534.14283-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Jun 2019 18:45:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so4305009pfd.2;
+        Fri, 21 Jun 2019 15:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iuGdW6sX88KLfCjHMKLY49KKsvlSOj2HqpD/7s+bllQ=;
+        b=MH9gcHjajms6Gyn8wPcgrt/a4VokIAMBa5DfZ7wmVaXrWS/K80A5xDhsRJaugR6yAC
+         3/4s1DsWC5EXpOiTmrBMTw1Nno7unbWJViyyF2bnpsT/D6upVJGSUFsjutys4jBAJe9x
+         QdW7ahsojf9L00i+2R94ukyA2XZykcmPZ0ZMwv1ZyVTrlzA8s6FLijRfOfsokkZEE2Fm
+         EoyuCRiaDgIeHd9NbKSkLwdVUYRSdxgs0yAIOXUfTjhgN2fIuP7sRbLHeiF/FWca3Jnt
+         RZmMWdGPoWdKLC+OvebpVyBsSKrvL9j1ANXxCUNHOIrV/Sx3IgPgFerGVYy0XfFwmuH2
+         gTHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iuGdW6sX88KLfCjHMKLY49KKsvlSOj2HqpD/7s+bllQ=;
+        b=HcvP/07PoW/iV4YemsZ0v9h1CFvvYxlaPz789ft0FQOZkpuqX4STHHLZLZPj3MCSzA
+         lo9+a8iGhPg1Fh0db53wqvkYGxPVhRoYyrvtWXA/8pWEf9GeZf80+lQPnGXb8e9kQd1E
+         jXsTMow9NbVUgOgqhUld/ZXo+8ifAR9I5H5ndXnWmaG4AuqN/jXjg8/9YipQmRHBpUpm
+         8HOq68qpHSHmMwDW9kysIuTQ92VKAtm1mxq2thihTxWuJtKj+1gNBg9vCSekg6rQi/e1
+         68gBo3yhFeeTnQxKjUFq5BeTd+bcqhMXDj8jB1F5wsYg4v50VuGZmVu0F7O9cGBeMuxc
+         5kSA==
+X-Gm-Message-State: APjAAAXCyHEgUhVMzsZfl1Rkwv6jJqhwCBszDKENh8QSDmj9Vcb7N1c/
+        jU/PBsUfCWJemsaLdy479I7tiqxPIgkWmpxMVGs=
+X-Google-Smtp-Source: APXvYqy9dBhygx88ZimvDfxuqLbtOuGacbVwbzt4VSlgkBYCzVTfmqcKSFqT/f/zCSPuyVlcP7UIOXNNSrlEjiEMpdM=
+X-Received: by 2002:a63:490d:: with SMTP id w13mr20971630pga.355.1561157122919;
+ Fri, 21 Jun 2019 15:45:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20190621163921.26188-1-puranjay12@gmail.com> <CAErSpo5TMPokae7BMY8ZcOXtW=GeGsWXX_bqS8SrZnh0pEQYxw@mail.gmail.com>
+ <698d3e3614ae903ae9582547d64c6a9846629e57.camel@perches.com>
+ <CAErSpo6iRVWU-yL5CRF_GEY7CWg5iV=Jw0BrdNV4h3Jvh5AuAw@mail.gmail.com> <838b8e84523151418ab8cda4abdbb114ce24a497.camel@perches.com>
+In-Reply-To: <838b8e84523151418ab8cda4abdbb114ce24a497.camel@perches.com>
+From:   Chris Snook <chris.snook@gmail.com>
+Date:   Fri, 21 Jun 2019 15:45:11 -0700
+Message-ID: <CAMXMK6uUgLSz=DXazLY81pkiMjtyxKxNeR_VcWOOh1NvaEyS8w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] net: ethernet: atheros: atlx: Use PCI generic
+ definitions instead of private duplicates
+To:     Joe Perches <joe@perches.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Jun 21, 2019 at 11:33 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-06-21 at 13:12 -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 21, 2019 at 12:27 PM Joe Perches <joe@perches.com> wrote:
+> []
+> > > Subsystem specific local PCI #defines without generic
+> > > naming is poor style and makes treewide grep and
+> > > refactoring much more difficult.
+> >
+> > Don't worry, we have the same objectives.  I totally agree that local
+> > #defines are a bad thing, which is why I proposed this project in the
+> > first place.
+>
+> Hi again Bjorn.
+>
+> I didn't know that was your idea.  Good idea.
+>
+> > I'm just saying that this is a "first-patch" sort of learning project
+> > and I think it'll avoid some list spamming and discouragement if we
+> > can figure out the scope and shake out some of the teething problems
+> > ahead of time.  I don't want to end up with multiple versions of
+> > dozens of little 2-3 patch series posted every week or two.
+>
+> Great, that's sensible.
+>
+> > I'd rather be able to deal with a whole block of them at one time.
+>
+> Also very sensible.
+>
+> > > 2: Show that you compiled the object files and verified
+> > >    where possible that there are no object file changes.
+> >
+> > Do you have any pointers for the best way to do this?  Is it as simple
+> > as comparing output of "objdump -d"?
+>
+> Generically, yes.
+>
+> I have a little script that does the equivalent of:
+>
+> <git reset>
+> make <foo.o>
+> mv <foo.o> <foo.o>.old
+> patch -P1 < <foo_patch>
+> make <foo.o>
+> mv <foo.o> <foo.o>.new
+> diff -urN <(objdump -d <foo.o>.old) <(objdump -d <foo.o>.new)
+>
+> But it's not foolproof as gcc does not guarantee
+> compilation repeatability.
+>
+> And some subsystems Makefiles do not allow per-file
+> compilation.
+>
 
-Currently when too many retries have occurred there is a memory
-leak on the allocation for reply on the error return path. Fix
-this by kfree'ing reply before returning.
+This should work, but be aware that the older atlx drivers did some
+regrettable things with file structure, so not all .c files are
+expected to generate a corresponding .o file.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index 8b9270f31409..8b61f16f50cf 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -301,8 +301,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
- 		break;
- 	}
- 
--	if (retries == RETRIES)
-+	if (retries == RETRIES) {
-+		kfree(reply);
- 		return -EINVAL;
-+	}
- 
- 	*msg_len = reply_len;
- 	*msg     = reply;
--- 
-2.20.1
-
+- Chris
