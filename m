@@ -2,180 +2,171 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B8C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9451AC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAC621530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561140089;
-	bh=kk0SwYShH0N5Cjl23BV6nWVdm/thRR90X/WPRMwddZ4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=co8324relMPeNoARc6JSUdp27yAOA6QMa4ZpSoALPCT+N5RuFn0ixV+Q8pV3BbdSY
-	 nyNN2lR1owGiI/r84HE4IsQYtN9qQxIqB6c5Feva/lUEiGY+9YoX/mOeVX02ln1NMw
-	 UXAWdbFolMJyAqqnM5rCO/tkIcqRC9xNg8U9+fFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6688F2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFiDyop6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFUSB1 (ORCPT
+        id S1726365AbfFUSBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfFUSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:01:27 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B4EA2070B;
-        Fri, 21 Jun 2019 18:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561140086;
-        bh=kk0SwYShH0N5Cjl23BV6nWVdm/thRR90X/WPRMwddZ4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QPDHhuTV5Lp4adKPf7x76+t0LCtvI1RqmFPdfswkG3drnYym8M3wtlFv1OVLZNiv5
-         5gft3KQUZ0ZvAkOqYBbWm6gvXN72ZtYmCWqHHDumwMCoPBfzhqbQE9JjCkXQYbCtsd
-         MQpA5kBcnidNDMJR88lWU12LI2vUyLbQ/XKN/7Lg=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@google.com>
-Subject: [PATCH] f2fs: add wsync_mode for sysfs entry
-Date:   Fri, 21 Jun 2019 11:01:24 -0700
-Message-Id: <20190621180124.82842-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
+        Fri, 21 Jun 2019 14:01:44 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37504 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfFUSBn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:01:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so7433267wrr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 11:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KddSnqJk8N2HccW5lB3LKF7N+h2SRaXdd/fZu8Bc+Lk=;
+        b=YFiDyop64/iXrObHdO/Sgrip+DwxTbflll8pn4Cep0G8Iv7W9rRpxgMdPS77jFhOby
+         iabgmfZsVJ1MLI8DaFurSwQC17KTT8Se54I4TioiBVkhKw8WSCoGkq4N8ERK6Y9Ov/l9
+         q9QTVbVkirEZsYwDXKZ6V8W051djxYse9oxxJVY3gJkS4Uu3dygzTGI0tVqRw+35JoyG
+         +TcFIS3n2HH9KWx3KgWsaESaQR04QNHJPU0G6f/snPEDqmKaA9czthbG4Gso37ZtqR7B
+         4C32o1gzAcPlRMuxgsJpZxuH6uDkwaHqcYTsIKX/R8kYUBOg713j6F/IvaJSo/9yTowY
+         fbKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KddSnqJk8N2HccW5lB3LKF7N+h2SRaXdd/fZu8Bc+Lk=;
+        b=RBd2CSvoV384ag7nH5vUJnSm9BzOacz8zVsWJDIWrMzk//IQWf4A+EuivkkOlAtxPS
+         O0bCoJ+csIfopfaigdPISVh9rXAgzN9yBISBF95UCp6Nl/cIN1e8mgZ+M5ED6VQYnGQG
+         ph8p4kNz60JVYYjYZ+OQ4wfd+zLpG1hPxWOSeqM8kbv8onvrFslJhEOVrpLLR8C4hU3b
+         /4vKPUKjKLh6qIrB8xvZGm4oNH5dTbk9sIAmNYoJJCrGh2nmDjq77LtCo2kuPp5gxZ8o
+         JLp8WYRD84el4PrJRkFtXyR+so58I677k4FpmvyMetcR86qHMe9B9iW/HAzkTdjE/trV
+         B9+w==
+X-Gm-Message-State: APjAAAWGY6/k0kuyywg3RMBKD/bOnNI+1vhMo7w6KQU7cCwqrqMUXicx
+        nls2hiOrLuaoGyr78gCbcmd38eG6mJAFQT2boFu12A==
+X-Google-Smtp-Source: APXvYqwEMcu6B71QNn1AX9wEDwh+KSuCxo40a8d81EPKtgRDVo+AbDFvw/Mqx5KeHFCuV0XErdSyljwEf4xriGyxlJ0=
+X-Received: by 2002:a5d:49c4:: with SMTP id t4mr40662447wrs.318.1561140101725;
+ Fri, 21 Jun 2019 11:01:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190601082722.44543-1-irogers@google.com> <20190621082422.GH3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190621082422.GH3436@hirez.programming.kicks-ass.net>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 21 Jun 2019 11:01:29 -0700
+Message-ID: <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
+Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups unnecessarily
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@google.com>
+On Fri, Jun 21, 2019 at 1:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Sat, Jun 01, 2019 at 01:27:22AM -0700, Ian Rogers wrote:
+> > @@ -3325,6 +3331,15 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+> >                       sid->can_add_hw = 0;
+> >       }
+> >
+> > +     /*
+> > +      * If the group wasn't scheduled then set that multiplexing is necessary
+> > +      * for the context. Note, this won't be set if the event wasn't
+> > +      * scheduled due to event_filter_match failing due to the earlier
+> > +      * return.
+> > +      */
+> > +     if (event->state == PERF_EVENT_STATE_INACTIVE)
+> > +             sid->ctx->rotate_necessary = 1;
+> > +
+> >       return 0;
+> >  }
+>
+> That looked odd; which had me look harder at this function which
+> resulted in the below. Should we not terminate the context interation
+> the moment one flexible thingy fails to schedule?
 
-This add one sysfs entry to control REQ_SYNC/REQ_BACKGROUND for write bios
-for data page writes.
+If we knew all the events were hardware events then this would be
+true, as there may be software events that always schedule then the
+continued iteration is necessary.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@google.com>
----
- Documentation/ABI/testing/sysfs-fs-f2fs |  7 +++++++
- Documentation/filesystems/f2fs.txt      |  4 ++++
- fs/f2fs/data.c                          |  3 +--
- fs/f2fs/f2fs.h                          | 12 ++++++++++++
- fs/f2fs/sysfs.c                         |  2 ++
- 5 files changed, 26 insertions(+), 2 deletions(-)
+Thanks,
+Ian
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index dca326e0ee3e..d3eca3eb3214 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -251,3 +251,10 @@ Description:
- 		If checkpoint=disable, it displays the number of blocks that are unusable.
-                 If checkpoint=enable it displays the enumber of blocks that would be unusable
-                 if checkpoint=disable were to be set.
-+
-+What:		/sys/fs/f2fs/<disk>/wsync_mode
-+Date		June 2019
-+Contact:	"Jaegeuk Kim" <jaegeuk.kim@kernel.org>
-+Description:
-+		0 gives no change. 1 assigns all the data writes with REQ_SYNC.
-+                2 does REQ_BACKGROUND instead.
-diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-index bebd1be3ba49..81c529801a88 100644
---- a/Documentation/filesystems/f2fs.txt
-+++ b/Documentation/filesystems/f2fs.txt
-@@ -413,6 +413,10 @@ Files in /sys/fs/f2fs/<devname>
-                               that would be unusable if checkpoint=disable were
-                               to be set.
- 
-+ wsync_mode                   0 is by default. 1 gives REQ_SYNC for all the data
-+                              writes. 2 gives REQ_BACKGROUND for all. This can
-+                              used for the performance tuning purpose.
-+
- ================================================================================
- USAGE
- ================================================================================
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index f4e1672bd96e..18c73a1fdef3 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -9,7 +9,6 @@
- #include <linux/f2fs_fs.h>
- #include <linux/buffer_head.h>
- #include <linux/mpage.h>
--#include <linux/writeback.h>
- #include <linux/backing-dev.h>
- #include <linux/pagevec.h>
- #include <linux/blkdev.h>
-@@ -2021,7 +2020,7 @@ static int __write_data_page(struct page *page, bool *submitted,
- 		.ino = inode->i_ino,
- 		.type = DATA,
- 		.op = REQ_OP_WRITE,
--		.op_flags = wbc_to_write_flags(wbc),
-+		.op_flags = f2fs_wbc_to_write_flags(sbi, wbc),
- 		.old_blkaddr = NULL_ADDR,
- 		.page = page,
- 		.encrypted_page = NULL,
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2be2b16573c3..1cc46a6dc340 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/page-flags.h>
- #include <linux/buffer_head.h>
-+#include <linux/writeback.h>
- #include <linux/slab.h>
- #include <linux/crc32.h>
- #include <linux/magic.h>
-@@ -1264,6 +1265,7 @@ struct f2fs_sb_info {
- 
- 	/* writeback control */
- 	atomic_t wb_sync_req[META];	/* count # of WB_SYNC threads */
-+	int wsync_mode;			/* write mode */
- 
- 	/* valid inode count */
- 	struct percpu_counter total_valid_inode_count;
-@@ -3631,6 +3633,16 @@ static inline void set_opt_mode(struct f2fs_sb_info *sbi, unsigned int mt)
- 	}
- }
- 
-+static inline int f2fs_wbc_to_write_flags(struct f2fs_sb_info *sbi,
-+				struct writeback_control *wbc)
-+{
-+	if (sbi->wsync_mode == 1)
-+		return REQ_SYNC;
-+	if (sbi->wsync_mode == 2)
-+		return REQ_BACKGROUND;
-+	return wbc_to_write_flags(wbc);
-+}
-+
- static inline bool f2fs_may_encrypt(struct inode *inode)
- {
- #ifdef CONFIG_FS_ENCRYPTION
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 3aeacd0aacfd..e3c164d921a1 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -455,6 +455,7 @@ F2FS_GENERAL_RO_ATTR(lifetime_write_kbytes);
- F2FS_GENERAL_RO_ATTR(features);
- F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
- F2FS_GENERAL_RO_ATTR(unusable);
-+F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, wsync_mode, wsync_mode);
- 
- #ifdef CONFIG_FS_ENCRYPTION
- F2FS_FEATURE_RO_ATTR(encryption, FEAT_CRYPTO);
-@@ -515,6 +516,7 @@ static struct attribute *f2fs_attrs[] = {
- 	ATTR_LIST(features),
- 	ATTR_LIST(reserved_blocks),
- 	ATTR_LIST(current_reserved_blocks),
-+	ATTR_LIST(wsync_mode),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(f2fs);
--- 
-2.19.0.605.g01d371f741-goog
-
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2314,12 +2314,8 @@ group_sched_in(struct perf_event *group_
+>                 return 0;
+>
+>         pmu->start_txn(pmu, PERF_PMU_TXN_ADD);
+> -
+> -       if (event_sched_in(group_event, cpuctx, ctx)) {
+> -               pmu->cancel_txn(pmu);
+> -               perf_mux_hrtimer_restart(cpuctx);
+> -               return -EAGAIN;
+> -       }
+> +       if (event_sched_in(group_event, cpuctx, ctx))
+> +               goto cancel;
+>
+>         /*
+>          * Schedule in siblings as one group (if any):
+> @@ -2348,10 +2344,9 @@ group_sched_in(struct perf_event *group_
+>         }
+>         event_sched_out(group_event, cpuctx, ctx);
+>
+> +cancel:
+>         pmu->cancel_txn(pmu);
+> -
+>         perf_mux_hrtimer_restart(cpuctx);
+> -
+>         return -EAGAIN;
+>  }
+>
+> @@ -3317,6 +3312,7 @@ static int pinned_sched_in(struct perf_e
+>  static int flexible_sched_in(struct perf_event *event, void *data)
+>  {
+>         struct sched_in_data *sid = data;
+> +       int ret;
+>
+>         if (event->state <= PERF_EVENT_STATE_OFF)
+>                 return 0;
+> @@ -3325,21 +3321,15 @@ static int flexible_sched_in(struct perf
+>                 return 0;
+>
+>         if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+> -               if (!group_sched_in(event, sid->cpuctx, sid->ctx))
+> -                       list_add_tail(&event->active_list, &sid->ctx->flexible_active);
+> -               else
+> +               ret = group_sched_in(event, sid->cpuctx, sid->ctx);
+> +               if (ret) {
+>                         sid->can_add_hw = 0;
+> +                       sid->ctx->rotate_necessary = 1;
+> +                       return ret;
+> +               }
+> +               list_add_tail(&event->active_list, &sid->ctx->flexible_active);
+>         }
+>
+> -       /*
+> -        * If the group wasn't scheduled then set that multiplexing is necessary
+> -        * for the context. Note, this won't be set if the event wasn't
+> -        * scheduled due to event_filter_match failing due to the earlier
+> -        * return.
+> -        */
+> -       if (event->state == PERF_EVENT_STATE_INACTIVE)
+> -               sid->ctx->rotate_necessary = 1;
+> -
+>         return 0;
+>  }
+>
