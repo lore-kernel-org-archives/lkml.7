@@ -2,119 +2,78 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEF1C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5892C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4799820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BED42083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfFUOUe (ORCPT
+        id S1726404AbfFUOUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:20:34 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39489 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFUOUd (ORCPT
+        Fri, 21 Jun 2019 10:20:53 -0400
+Received: from outbound-smtp26.blacknight.com ([81.17.249.194]:54238 "EHLO
+        outbound-smtp26.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726031AbfFUOUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:20:33 -0400
-Received: by mail-qk1-f195.google.com with SMTP id i125so4518548qkd.6;
-        Fri, 21 Jun 2019 07:20:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=86Rms5nqRiV6IeH+qjixPzoUGmZuw2YR9fMahci1Mdk=;
-        b=fwRELvTAs+c9ke3nijUMNSb4DP0u4Q30iUGCJ29fIsR7AnlS2BW2c8CfupzpIASiiw
-         uwJafIYWY4gR6TncEfarpi9yOQctri1t42X/J8h6amggUngUfoV8urf8AkxQU7rfXI0H
-         9SudSNYP/30bHxQ7vaIVwrUeRSy7ZmTcK084caACF/bblcoJXieVN2bxTJjVRhe/c6KM
-         LHVmHx/vjRqwLWQ73HToSe0dOmEElChDSDVHw2CnUKTrzAVNActYsi+R02fnUZCnTSNI
-         so29wIrhIjG432AF+cdGpQvme6DbIgNB5CXWkpGvak+N//A9RWebayEL8ls4Q+UNY36G
-         ZzlA==
-X-Gm-Message-State: APjAAAVI2Sd7r2KzIAV8krHnSjFQ+WTox1qZDMFqMF0iuQhbqjWsFet0
-        s1r7qq5Xyw4gQx041zM6sxFrvgvK1jjDqszwK+o=
-X-Google-Smtp-Source: APXvYqyqwjrhMseoqPbT7Hw4nVdhmcH/NXpQC9gPuVbWnpECa7+VTtvjMcLYD5bkOoIfs0VngajGRxZZxXjZdcnFkQg=
-X-Received: by 2002:a37:ad12:: with SMTP id f18mr68806622qkm.3.1561126832500;
- Fri, 21 Jun 2019 07:20:32 -0700 (PDT)
+        Fri, 21 Jun 2019 10:20:53 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp26.blacknight.com (Postfix) with ESMTPS id 695C2B8862
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 15:20:51 +0100 (IST)
+Received: (qmail 22845 invoked from network); 21 Jun 2019 14:20:51 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 21 Jun 2019 14:20:51 -0000
+Date:   Fri, 21 Jun 2019 15:16:33 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: fix setting the high and low watermarks
+Message-ID: <20190621141633.GA2978@techsingularity.net>
+References: <20190621114325.711-1-alan.christopher.jenkins@gmail.com>
 MIME-Version: 1.0
-References: <20190604160944.4058-1-christian@brauner.io> <20190604160944.4058-2-christian@brauner.io>
- <20190620184451.GA28543@roeck-us.net> <20190620221003.ciuov5fzqxrcaykp@brauner.io>
- <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com> <20190621111839.v5yqlws6iw7mx4aa@brauner.io>
-In-Reply-To: <20190621111839.v5yqlws6iw7mx4aa@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 16:20:15 +0200
-Message-ID: <CAK8P3a0T1=eg5ONbMFhHi=vmk1K5uogZ+5=wpsXvjVDzn6vS=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190621114325.711-1-alan.christopher.jenkins@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 1:18 PM Christian Brauner <christian@brauner.io> wrote:
-> On Fri, Jun 21, 2019 at 11:37:50AM +0200, Arnd Bergmann wrote:
-> >
-> > I never really liked having __ARCH_WANT_SYS_CLONE here
-> > because it was the only one that a new architecture needed to
-> > set: all the other __ARCH_WANT_* are for system calls that
-> > are already superseded by newer ones, so a new architecture
-> > would start out with an empty list.
-> >
-> > Since __ARCH_WANT_SYS_CLONE3 replaces
-> > __ARCH_WANT_SYS_CLONE for new architectures, how about
-> > leaving __ARCH_WANT_SYS_CLONE untouched but instead
->
-> __ARCH_WANT_SYS_CLONE is left untouched. :)
->
-> > coming up with the reverse for clone3 and mark the architectures
-> > that specifically don't want it (if any)?
->
-> Afaict, your suggestion is more or less the same thing what is done
-> here. So I'm not sure it buys us anything apart from future
-> architectures not needing to set __ARCH_WANT_SYS_CLONE3.
->
-> I expect the macro above to be only here temporarily until all arches
-> have caught up and we're sure that they don't require assembly stubs
-> (cf. [1]). A decision I'd leave to the maintainers (since even for
-> nios2 we were kind of on the fence what exactly the sys_clone stub was
-> supposed to do).
->
-> But I'm happy to take a patch from you if it's equally or more simple
-> than this one right here.
->
-> In any case, linux-next should be fine on all arches with this fixup
-> now.
+On Fri, Jun 21, 2019 at 12:43:25PM +0100, Alan Jenkins wrote:
+> When setting the low and high watermarks we use min_wmark_pages(zone).
+> I guess this is to reduce the line length.  But we forgot that this macro
+> includes zone->watermark_boost.  We need to reset zone->watermark_boost
+> first.  Otherwise the watermarks will be set inconsistently.
+> 
+> E.g. this could cause inconsistent values if the watermarks have been
+> boosted, and then you change a sysctl which triggers
+> __setup_per_zone_wmarks().
+> 
+> I strongly suspect this explains why I have seen slightly high watermarks.
+> Suspicious-looking zoneinfo below - notice high-low != low-min.
+> 
+> Node 0, zone   Normal
+>   pages free     74597
+>         min      9582
+>         low      34505
+>         high     36900
+> 
+> https://unix.stackexchange.com/questions/525674/my-low-and-high-watermarks-seem-higher-than-predicted-by-documentation-sysctl-vm/525687
+> 
+> Signed-off-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+> Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
+>                       fragmentation event occurs")
+> Cc: stable@vger.kernel.org
 
-I've looked at bit more closely at the nios2 implementation, and I
-believe this is purely an artifact of this file being copied over
-from m68k, which also has an odd definition. The glibc side
-of nios2 clone() is also odd in other ways, but that appears
-to be unrelated to the kernel ABI.
+Either way
 
-I think the best option here would be to not have any special
-cases and just hook up clone3() the same way on all
-architectures, with no #ifdef at all. If it turns out to not work
-on a particular architecture later, they can still disable the
-syscall then.
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-      Arnd
+-- 
+Mel Gorman
+SUSE Labs
