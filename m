@@ -2,219 +2,123 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0CC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9475EC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FD72166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B14208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OoC58Dqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfFULdu (ORCPT
+        id S1726635AbfFULgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:33:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43712 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbfFULdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:33:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A88BEAD76;
-        Fri, 21 Jun 2019 11:33:48 +0000 (UTC)
-Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
- correctly in mbind
-To:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190618130253.GH3318@dhcp22.suse.cz>
- <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
- <20190618182848.GJ3318@dhcp22.suse.cz>
- <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
- <20190619052133.GB2968@dhcp22.suse.cz>
- <21a0b20c-5b62-490e-ad8e-26b4b78ac095@suse.cz>
- <687f4e57-5c50-7900-645e-6ef3a5c1c0c7@linux.alibaba.com>
- <55eb2ea9-2c74-87b1-4568-b620c7913e17@linux.alibaba.com>
- <d81b36bb-876e-917a-6115-cedf496b4923@suse.cz>
- <d185f277-85ed-4dc1-8ff2-2984b54a0d64@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
- /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
- fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
- 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
- LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
- usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
- byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
- 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
- Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
- 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
- rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
- KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
- n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
- AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
- DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
- ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
- T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
- k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
- YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
- 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
- k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
- Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
- B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
- 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
- uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
- 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
- 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
- +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
- J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
- rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
- D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
- ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
- Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
- NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
- NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
- F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
- J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
- PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
- gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
- rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
- miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
- hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
- E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
- 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
- xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
- 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
- hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
- Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
-Message-ID: <9945a66f-4434-b2a6-63ac-3240ef1d52c9@suse.cz>
-Date:   Fri, 21 Jun 2019 13:33:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 21 Jun 2019 07:36:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:55225 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfFULgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 07:36:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Vc8K1P0hz9s4V;
+        Fri, 21 Jun 2019 21:36:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561116977;
+        bh=RWgnn7Lb1JqkFjRW1o/uVxPqTSzJKyIqEsKU61sD/Q0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OoC58DqfcJJui/c9WWL4N6Ep8QeGs94NOeaiDFZvfCIJgCsAVbS1g0tq88y+PmU8H
+         dJJEnMKiFmB+WmgyrePLxaxLc4gbpPcyQ7kmwXdTZr0jfPoo7tZHw5DxOgosc/gauU
+         eZEfmDIKSE2PpHCHlhBZCmuFVQpBNKZPXo6hL1rfKRGJ6HVWNwmnftQBCFUOpXxIa1
+         v1ItdiB4HG/Buwdh+E++xmwVekvpgflqBko5DwV7bYyWjePXzD17s4vsYIMYneJBUz
+         jk6X8T/8ehutuoXsDD0WsGgmlugZClBetJ+MFUxI1+nzAEEgjBh8sqTBTnUTTpAyXb
+         UYngtjiaNjGLw==
+Date:   Fri, 21 Jun 2019 21:36:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>
+Subject: linux-next: Fixes tags need some work in the arm64 tree
+Message-ID: <20190621213615.0efd4fa4@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <d185f277-85ed-4dc1-8ff2-2984b54a0d64@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/onyy20gn3_Y2vXJ__k78oe9"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/19 6:08 PM, Yang Shi wrote:
-> 
-> 
-> On 6/20/19 12:18 AM, Vlastimil Babka wrote:
->> On 6/19/19 8:19 PM, Yang Shi wrote:
->>>>>> This is getting even more muddy TBH. Is there any reason that we
->>>>>> have to
->>>>>> handle this problem during the isolation phase rather the migration?
->>>>> I think it was already said that if pages can't be isolated, then
->>>>> migration phase won't process them, so they're just ignored.
->>>> Yes，exactly.
->>>>
->>>>> However I think the patch is wrong to abort immediately when
->>>>> encountering such page that cannot be isolated (AFAICS). IMHO it should
->>>>> still try to migrate everything it can, and only then return -EIO.
->>>> It is fine too. I don't see mbind semantics define how to handle such
->>>> case other than returning -EIO.
->> I think it does. There's:
->> If MPOL_MF_MOVE is specified in flags, then the kernel *will attempt to
->> move all the existing pages* ... If MPOL_MF_STRICT is also specified,
->> then the call fails with the error *EIO if some pages could not be moved*
->>
->> Aborting immediately would be against the attempt to move all.
->>
->>> By looking into the code, it looks not that easy as what I thought.
->>> do_mbind() would check the return value of queue_pages_range(), it just
->>> applies the policy and manipulates vmas as long as the return value is 0
->>> (success), then migrate pages on the list. We could put the movable
->>> pages on the list by not breaking immediately, but they will be ignored.
->>> If we migrate the pages regardless of the return value, it may break the
->>> policy since the policy will *not* be applied at all.
->> I think we just need to remember if there was at least one page that
->> failed isolation or migration, but keep working, and in the end return
->> EIO if there was such page(s). I don't think it breaks the policy. Once
->> pages are allocated in a mapping, changing the policy is a best effort
->> thing anyway.
-> 
-> The current behavior is:
-> If queue_pages_range() return -EIO (vma is not migratable, ignore other 
-> conditions since we just focus on page migration), the policy won't be 
-> set and no page will be migrated.
+--Sig_/onyy20gn3_Y2vXJ__k78oe9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah, I see. IIUC the current behavior is due to your recent commit
-a7f40cfe3b7a ("mm: mempolicy: make mbind() return -EIO when
-MPOL_MF_STRICT is specified") in order to fix commit 6f4576e3687b
-("mempolicy: apply page table walker on queue_pages_range()"), which
-caused -EIO to be not returned enough. But I think you went too far and
-instead return -EIO too much. If I look at the code in parent commit of
-6f4576e3687b, I can see in queue_pages_range():
+Hi all,
 
-if ((flags & MPOL_MF_STRICT) ||
-        ((flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) &&
-        vma_migratable(vma))) {
+In commit
 
-        err = queue_pages_pgd_range(vma, start, endvma, nodes,
-                                flags, private);
-        if (err)
-                break;
-}
+  86fc32fee888 ("arm64: Fix incorrect irqflag restore for priority masking")
 
-and in queue_pages_pte_range():
+Fixes tag
 
-if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-        migrate_page_add(page, private, flags);
-else
-        break;
+  Fixes: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interru=
+pt masking")
 
-So originally, there was no returning of -EIO due to !vma_migratable() -
-as long as MPOL_MF_STRICT and MPOL_MF_MOVE* was specified, the code
-tried to queue for migration everything it could and didn't ever abort,
-AFAICS. And I still think that's the best possible behavior.
+has these problem(s):
 
-> However, the problem here is the vma might look migratable, but some or 
-> all the underlying pages are unmovable. So, my patch assumes the vma is 
-> *not* migratable if at least one page is unmovable. I'm not sure if it 
-> is possible to have both movable and unmovable pages for the same 
-> mapping or not, I'm supposed the vma would be split much earlier.
-> 
-> If we don't abort immediately, then we record if there is unmovable 
-> page, then we could do:
-> #1. Still follows the current behavior (then why not abort immediately?)
+  - leading word 'commit' unexpected
 
-See above how the current behavior differs from the original one.
+In commit
 
-> #2. Set mempolicy then migrate all the migratable pages. But, we may end 
-> up with the pages on node A, but the policy says node B. Doesn't it 
-> break the policy?
+  1500e8ca63f4 ("arm64: Fix interrupt tracing in the presence of NMIs")
 
-The policy can already be "broken" (violated is probably better word) by
-migrate_pages() failing. If that happens, we don't rollback the migrated
-pages and reset the policy back, right? I think the manpage is clear
-that MPOL_MF_MOVE is a best-effort. Userspace will know that not
-everything was successfully migrated (via -EIO), and can take whatever
-steps it deems necessary - attempt rollback, determine which exact
-page(s) are violating the policy, etc.
+Fixes tag
 
->>
->>>>
-> 
+  Fixes: bc3c03ccb ("arm64: Enable the support of pseudo-NMIs")
 
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+In commit
+
+  4a4063a9fbfa ("arm64: irqflags: Add condition flags to inline asm clobber=
+ list")
+
+Fixes tag
+
+  Fixes: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interru=
+pt masking")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/onyy20gn3_Y2vXJ__k78oe9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0MwS8ACgkQAVBC80lX
+0GxN/Af7BDqDnNFzp8CZmjoOEjYQTpYE6DCNdhep4jEU6tdfjTQpJhk/Wqhv1gov
+naWv82nvT1cemLtsHP1PGD5tbIAJingrNHYs0HrtchnWJWS9yBXiuvColNgnZt6e
+RbbJOwomI8VWbd9WNEdm6hypbIs//ebNDHUErJWUA32v0Qm1ncOxTk72uJ3QQhsc
+w5HIIgfTc66dmK31/Jb9WqRQzuv3YbP0S94bNk41M5z/2cdfemyrxn/Kz6weYyk1
+LzNUxFKBClkOHxHfzAlxd+dgqU6Gy9laqjdAOfaeFr36Qk2BX0mlQPQOfsLiZaqN
+loX3YGcNYyz01/KXv0NY7VKLq1K7ow==
+=hQv/
+-----END PGP SIGNATURE-----
+
+--Sig_/onyy20gn3_Y2vXJ__k78oe9--
