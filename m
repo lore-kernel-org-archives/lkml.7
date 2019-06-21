@@ -2,234 +2,101 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624C9C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B58C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F8720673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WmDnrD6G";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="AFpJ+n85"
+	by mail.kernel.org (Postfix) with ESMTP id 1C69F20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfFUJfZ (ORCPT
+        id S1726452AbfFUJhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:35:25 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:57232 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726210AbfFUJfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:35:25 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1ABB0C0D5A;
-        Fri, 21 Jun 2019 09:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561109724; bh=qiUx0QDK5xq8WpL+VqiksyOMAxrLG2ERKa69/TKc1Lc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=WmDnrD6GfGwEmck732g4Zv6RxjI9xOq+VeihBU6eVMF2FJSeupk/BCMujnaG1bMwx
-         H4PMmqlEpOwEX/HCj3sF1Y4LZzg6xMUqe2+MM8/dRbD8zen8pm0irCtT0aEGwJMaqr
-         GhACP2Lsgk7PK/pSbyuk+tuzRUJhmmpnq8Btcc/ljQpfHsmGbogsxfVEHKxtO2PeTo
-         cLYBOeVJFbC1mhyxy8QycZehDb/YBMAn8tYWq5U/CApBIjRszDpQIJO363dfyKxV4N
-         cipe9najpGQyFj0IUEQpp8wRgYfqOwwSACdH1pvkjHKRyePZFDQc3kIEY1UBt96Qxg
-         s+PusP5p24cGA==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 03F39A005D;
-        Fri, 21 Jun 2019 09:35:23 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 21 Jun 2019 02:35:23 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 02:35:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qiUx0QDK5xq8WpL+VqiksyOMAxrLG2ERKa69/TKc1Lc=;
- b=AFpJ+n85s/oi9mm4diH6+0paXmJJQTVqq0B0eraSpCQZqoSkUYBp0CKVlavdQzQ/aukzYzmKwhB5kTKTpOv7j37G1j5A09VO4ndXMkexsimEx7jBQV2kkRR/gV6Ob07ylp+5DmB5oPHR2gOTH7A5/hcKfFFZr3WHfe6YYglhdIc=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB3595.namprd12.prod.outlook.com (20.178.199.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Fri, 21 Jun 2019 09:35:20 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::bdd6:53d6:a062:dc8c]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::bdd6:53d6:a062:dc8c%6]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 09:35:20 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
-Thread-Topic: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
-Thread-Index: AQHVJQ9kwKPy1knRjkS259Lqkv5E76al0LgwgAAE24CAAAk+0A==
-Date:   Fri, 21 Jun 2019 09:35:20 +0000
-Message-ID: <DM6PR12MB4010E0D6F45C386E4A7C634ADAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190617131918.2518727-1-arnd@arndb.de>
- <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
- <CAK8P3a1qhj_YYTo8aKgbdufjMFXfa3WNdqY6m=222fFxOcQaZg@mail.gmail.com>
-In-Reply-To: <CAK8P3a1qhj_YYTo8aKgbdufjMFXfa3WNdqY6m=222fFxOcQaZg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV1V4Tm1Fd05USm1MVGswTURjdE1URmxPUzA1T0RnMUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhsTVRaaE1EVXpNUzA1TkRBM0xURXha?=
- =?utf-8?B?VGt0T1RnNE5TMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?azNOeUlnZEQwaU1UTXlNRFUxT0RNek1UZzVNVGN3TmpZd0lpQm9QU0pqZVRN?=
- =?utf-8?B?eGRYcEdibWRTZHpCeVpqRlNSVlZKY0RoRlRrNUJOVEE5SWlCcFpEMGlJaUJp?=
- =?utf-8?B?YkQwaU1DSWdZbTg5SWpFaUlHTnBQU0pqUVVGQlFVVlNTRlV4VWxOU1ZVWk9R?=
- =?utf-8?B?MmRWUVVGQ1VVcEJRVVJyVUdOTGFrWkRhbFpCVlcwNFdGQmtPVTlCU0VwVFlu?=
- =?utf-8?B?aGpPVE13TkVGamEwOUJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlNFRkJRVUZEYTBOQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UlVGQlVVRkNRVUZCUVVaMFlrSndkMEZCUVVGQlFVRkJRVUZCUVVGQlFVbzBR?=
- =?utf-8?B?VUZCUW0xQlIydEJZbWRDYUVGSE5FRlpkMEpzUVVZNFFXTkJRbk5CUjBWQllt?=
- =?utf-8?B?ZENkVUZIYTBGaVowSnVRVVk0UVdSM1FtaEJTRkZCV2xGQ2VVRkhNRUZaVVVK?=
- =?utf-8?B?NVFVZHpRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdk?=
- =?utf-8?B?QlFVRkJRVUZ1WjBGQlFVZFpRV0ozUWpGQlJ6UkJXa0ZDZVVGSWEwRllkMEoz?=
- =?utf-8?B?UVVkRlFXTm5RakJCUnpSQldsRkNlVUZJVFVGWWQwSnVRVWRaUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVTkJRVUZCUVVGRFpVRkJRVUZhWjBKMlFVaFZRV0puUW10QlNF?=
- =?utf-8?B?bEJaVkZDWmtGSVFVRlpVVUo1UVVoUlFXSm5RbXhCU0VsQlkzZENaa0ZJVFVG?=
- =?utf-8?B?WlVVSjBRVWhOUVdSUlFuVkJSMk5CV0hkQ2FrRkhPRUZpWjBKdFFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRa0ZCUVVGQlFVRkJRVUZKUVVGQlFVRkJTalJCUVVGQ2JVRkhPRUZr?=
- =?utf-8?B?VVVKMVFVZFJRV05uUWpWQlJqaEJZMEZDYUVGSVNVRmtRVUoxUVVkVlFXTm5R?=
- =?utf-8?B?bnBCUmpoQlkzZENhRUZITUVGamQwSXhRVWMwUVZwM1FtWkJTRWxCV2xGQ2Vr?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVGQlowRkJRVUZCUVc1blFV?=
- =?utf-8?B?RkJSMWxCWW5kQ01VRkhORUZhUVVKNVFVaHJRVmgzUW5kQlIwVkJZMmRDTUVG?=
- =?utf-8?B?SE5FRmFVVUo1UVVoTlFWaDNRbnBCUnpCQllWRkNha0ZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJRVUZCUVVGQlFVRkJRMEZC?=
- =?utf-8?B?UVVGQlFVTmxRVUZCUVZwblFuWkJTRlZCWW1kQ2EwRklTVUZsVVVKbVFVaEJR?=
- =?utf-8?B?VmxSUW5sQlNGRkJZbWRDYkVGSVNVRmpkMEptUVVoTlFXUkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZDUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnRRVWM0UVdSUlFuVkJSMUZCWTJk?=
- =?utf-8?B?Q05VRkdPRUZqUVVKb1FVaEpRV1JCUW5WQlIxVkJZMmRDZWtGR09FRmtRVUo2?=
- =?utf-8?B?UVVjd1FWbDNRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZIV1VGaWQwSXhR?=
- =?utf-8?B?VWMwUVZwQlFubEJTR3RCV0hkQ2QwRkhSVUZqWjBJd1FVYzBRVnBSUW5sQlNF?=
- =?utf-8?B?MUJXSGRDTVVGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVG?=
- =?utf-8?B?QlduZENNRUZJVFVGWWQwSjNRVWhKUVdKM1FtdEJTRlZCV1hkQ01FRkdPRUZr?=
- =?utf-8?B?UVVKNVFVZEZRV0ZSUW5WQlIydEJZbWRDYmtGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJR?=
- =?utf-8?B?VUZCUVVvMFFVRkJRbnBCUjBWQllrRkNiRUZJVFVGWWQwSm9RVWROUVZsM1Fu?=
- =?utf-8?B?WkJTRlZCWW1kQ01FRkdPRUZqUVVKelFVZEZRV0puUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVoTlFWbFJRbk5CUjFWQlkzZENaa0ZJ?=
- =?utf-8?B?UlVGa1VVSjJRVWhSUVZwUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmpkMEoxUVVoQlFX?=
- =?utf-8?B?TjNRbVpCUjNkQllWRkNha0ZIVlVGaVowSjZRVWRWUVZoM1FqQkJSMVZCWTJk?=
- =?utf-8?B?Q2RFRkdPRUZOVVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlNqUkJRVUZD?=
- =?utf-8?B?ZWtGSE5FRmpRVUo2UVVZNFFXSkJRbkJCUjAxQldsRkNkVUZJVFVGYVVVSm1R?=
- =?utf-8?B?VWhSUVZwUlFubEJSekJCV0hkQ2VrRklVVUZrVVVKclFVZFZRV0puUWpCQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVVZCUVVGQlFVRkJRVUZCWjBGQlFV?=
- =?utf-8?B?RkJRVzVuUVVGQlNGbEJXbmRDWmtGSGMwRmFVVUkxUVVoalFXSjNRbmxCUjFG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGUlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlEwRkJRVUZCUVVFOUlpOCtQQzl0WlhSaFBnPT0=?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e5b175f-138c-4ba9-da70-08d6f62bc75a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB3595;
-x-ms-traffictypediagnostic: DM6PR12MB3595:
-x-microsoft-antispam-prvs: <DM6PR12MB359590AB77BFB89F47872F2ADAE70@DM6PR12MB3595.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39860400002)(366004)(136003)(346002)(199004)(189003)(8936002)(102836004)(81166006)(7736002)(81156014)(25786009)(4326008)(76116006)(66946007)(73956011)(66556008)(64756008)(305945005)(33656002)(14454004)(8676002)(66446008)(66476007)(229853002)(86362001)(53936002)(6246003)(66066001)(68736007)(9686003)(6116002)(486006)(5660300002)(476003)(446003)(11346002)(3846002)(2906002)(54906003)(110136005)(74316002)(6436002)(71190400001)(55016002)(6636002)(478600001)(186003)(7696005)(316002)(256004)(4744005)(53546011)(26005)(52536014)(71200400001)(6506007)(76176011)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3595;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZPlp9VFZE2sOOvDLHI6EOWZoN3ndi8c/48iXKgQVmJFF7CY26vMMNJD+cL0EJ0fm3i5Mte8b455Z7oo7XXNg7L0Oc5ht0PNBkyGZOU3BjBVNW+VFv8eCAY4VbuDNBQs5yNiqnDFAPgdZNMDYvX3HNKXrZp3fUjNRrXnU/M3NarYV7MYXii1h5MNN/ta/CABfBVlT3pIu4dRsAtYlY56woGqH4Tqsse95bcPamDfPPxo5x2NEQYA6ZFOxC6Kfw9P1i1EaK0ZhiFZw2OEX9eKscnCuLIJpHUhqGYU3k6JOQnGvOk/KUY7Rm786a2GH7nPgPEAVCmGFZpTLgueETaD6B77FRMeCMvgOdlRC7GrFNIYofBuKPw+n7wHz7vfkVdNHwwf9eJPIitT/uiLGX1uTFD7WYKA68HFHwHuQHMzFbh8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 21 Jun 2019 05:37:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:53634 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfFUJhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:37:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68334142F;
+        Fri, 21 Jun 2019 02:37:14 -0700 (PDT)
+Received: from [10.37.13.79] (unknown [10.37.13.79])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ED413F246;
+        Fri, 21 Jun 2019 02:37:12 -0700 (PDT)
+Subject: Re: [PATCHv2 2/2] coresight: Abort probe if cpus are not available
+To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, david.brown@linaro.org,
+        mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+ <65050e4cb2b0433f3cb9b1ca0bf6ec49d0751086.1561054498.git.saiprakash.ranjan@codeaurora.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <d6e6a32e-4e15-5bc8-42f9-6cfe72fc0910@arm.com>
+Date:   Fri, 21 Jun 2019 10:40:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e5b175f-138c-4ba9-da70-08d6f62bc75a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 09:35:20.6771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gustavo@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3595
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <65050e4cb2b0433f3cb9b1ca0bf6ec49d0751086.1561054498.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgMTA6MToxLCBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRi
-LmRlPiB3cm90ZToNCg0KPiBPbiBGcmksIEp1biAyMSwgMjAxOSBhdCAxMDo1MyBBTSBHdXN0YXZv
-IFBpbWVudGVsDQo+IDxHdXN0YXZvLlBpbWVudGVsQHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+IA0K
-PiA+ID4NCj4gPiA+ICBzdGF0aWMgc3RydWN0IGRlbnRyeSAgICAgICAgICAgICAgICAgICAgICAg
-ICAqYmFzZV9kaXI7DQo+ID4gPiAgc3RhdGljIHN0cnVjdCBkd19lZG1hICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAqZHc7DQo+ID4gPiAtc3RhdGljIHN0cnVjdCBkd19lZG1hX3YwX3Jl
-Z3MgICAgICAgICAgICAgICAgICAgICAgICAqcmVnczsNCj4gPiA+ICtzdGF0aWMgc3RydWN0IGR3
-X2VkbWFfdjBfcmVncyAgICAgICAgICAgICAgICAgICAgICAgIF9faW9tZW0gKnJlZ3M7DQo+ID4N
-Cj4gPiBTaG91bGRuJ3QgdGhlIF9faW9tZW0gYmUgbmV4dCB0byBkd19lZG1hX3YwX3JlZ3MgaW5z
-dGVhZCBvZiB0aGUgdmFyaWFibGUNCj4gPiBuYW1lPyBJIHNhdyBvdGhlciBkcml2ZXJzIHB1dHRp
-bmcgdGhlIF9faW9tZW0gbmV4dCB0byB0aGUgdmFyaWFibGUgdHlwZSwNCj4gPiB0aGVyZWZvcmUg
-SSBhc3N1bWUgaXQncyB0aGUgdHlwaWNhbCBjb2Rpbmcgc3R5bGUuDQo+IA0KPiBZZXMsIHRoYXQg
-c2VlbXMgbW9yZSBjb21tb24gaW5kZWVkLiBEbyB5b3Ugd2FudCB0byBmaXggdXANCj4gYm90aCBw
-YXRjaGVzIHlvdXJzZWxmIHdoZW4geW91IGFwcGx5IHRoZW0gb3Igc2hvdWxkIEkgc2VuZCBhIG5l
-dyB2ZXJzaW9uPw0KDQpJZiB5b3UgY291bGQgZG8gdGhhdCwgaXQgd2lsbCBiZSBncmVhdC4NClRo
-YW5rcy4NCg0KPiANCj4gICAgICAgICAgQXJuZA0KDQoNCg==
+On 06/20/2019 07:31 PM, Sai Prakash Ranjan wrote:
+> Currently coresight etm and cpu-debug will go ahead with
+> the probe even when corresponding cpus are not available
+> and error out later in the probe path. In such cases, it
+> is better to abort the probe earlier.
+> 
+> Without this, setting *nosmp* will throw below errors:
+> 
+>   [    5.910622] coresight-cpu-debug 850000.debug: Coresight debug-CPU0 initialized
+>   [    5.914266] coresight-cpu-debug 852000.debug: CPU1 debug arch init failed
+>   [    5.921474] coresight-cpu-debug 854000.debug: CPU2 debug arch init failed
+>   [    5.928328] coresight-cpu-debug 856000.debug: CPU3 debug arch init failed
+>   [    5.935330] coresight etm0: CPU0: ETM v4.0 initialized
+>   [    5.941875] coresight-etm4x 85d000.etm: ETM arch init failed
+>   [    5.946794] coresight-etm4x: probe of 85d000.etm failed with error -22
+>   [    5.952707] coresight-etm4x 85e000.etm: ETM arch init failed
+>   [    5.958945] coresight-etm4x: probe of 85e000.etm failed with error -22
+>   [    5.964853] coresight-etm4x 85f000.etm: ETM arch init failed
+>   [    5.971096] coresight-etm4x: probe of 85f000.etm failed with error -22
+
+That is expected. What else do you expect ?
+
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-platform.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 8b03fa573684..3f4559596c6b 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -168,6 +168,9 @@ static int of_coresight_get_cpu(struct device *dev)
+>   	cpu = of_cpu_node_to_id(dn);
+>   	of_node_put(dn);
+>   
+> +	if (num_online_cpus() <= cpu)
+> +		return -ENODEV;
+
+That is a pointless and terribly wrong check. What if you have only 2
+online CPUs (CPU0 and CPU4) and you were processing the ETM for CPU4 ?
+
+More over you should simply let the driver handle a case where the CPU
+is not online. May be the driver could register a hotplug notifier and
+bring itself up when the CPU comes online.
+
+So, please drop this patch.
+
+Kind regards
+Suzuki
