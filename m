@@ -2,172 +2,151 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F23C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6304BC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4502089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FC221530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jBK/W4RP"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="t5CJ7LUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfFUJV6 (ORCPT
+        id S1726385AbfFUJXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:21:58 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4549 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUJV5 (ORCPT
+        Fri, 21 Jun 2019 05:23:51 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.4]:16095 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbfFUJXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:21:57 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0ca1b40000>; Fri, 21 Jun 2019 02:21:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 21 Jun 2019 02:21:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 21 Jun 2019 02:21:56 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
- 2019 09:21:56 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Jun
- 2019 09:21:55 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 21 Jun 2019 09:21:55 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0ca1b10000>; Fri, 21 Jun 2019 02:21:55 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
-        <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V5 3/3] PCI: dwc: Export APIs to support .remove() implementation
-Date:   Fri, 21 Jun 2019 14:51:27 +0530
-Message-ID: <20190621092127.17930-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621092127.17930-1-vidyas@nvidia.com>
-References: <20190621092127.17930-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 21 Jun 2019 05:23:50 -0400
+Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-west-1.aws.symcld.net id 87/50-04913-222AC0D5; Fri, 21 Jun 2019 09:23:46 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJJsWRWlGSWpSXmKPExsWSoc9nrqu0iCf
+  WYMZ3QYsvc0+xWHy61s1ocf/rUUaLy7vmsFlsffmOyWLvofmMFn3n3C1WnpjF7MDhMe3AbHaP
+  9zda2T1md8xk9bhzbQ+bx7OF61k8Tp56wuLxeZNcAHsUa2ZeUn5FAmvGr7ubmQpusFa8nNHG2
+  sB4n6WLkYuDReAEs8TBG+eZQRwhgYlMElOn32SHcO4zSrRen8PUxcjJwSZgKDHvzXtGEFtEQE
+  Wic/1/FhCbWeA9s8Tko6ldjBwcwgIOEt0TyyFKHCUW9NxggrCNJN5N7QRrZRFQlTh0/CMriM0
+  rECtxqf02K8SudkaJCV9OsYEkOAVMJdYe+w5mMwrISnxpXM0MsUtc4taT+WBDJQQEJJbsOc8M
+  YYtKvHz8jxWiPl6iff9bdoi4jsTZ608YIWwliWU3ZrFC2LISl+Z3Q8V9JfY+62MCOUJC4BajR
+  PflJ1BDtSTeT54ENUhK4sTFo1DNORIbbq1hg7DVJKas/wRVLyPxb9dUZohBy9gkXh74DFYkJJ
+  As8WHuWahBchKreh+yQBRdYJa43jWBfQKj9iwk30HYOhILdn9ig7C1JZYtfM08CxxkghInZz5
+  hWcDIsorRIqkoMz2jJDcxM0fX0MBA19DQSNfQ0gSITfUSq3QT9VJLdctTi0t0DfUSy4v1iitz
+  k3NS9PJSSzYxAtNbSsGhwzsYpxx4rXeIUZKDSUmU9xQLT6wQX1J+SmVGYnFGfFFpTmrxIUYZD
+  g4lCd7MhUA5waLU9NSKtMwcYKqFSUtw8CiJ8FYvAErzFhck5hZnpkOkTjEac0x4OXcRM8fN90
+  sWMQux5OXnpUqJ83KATBIAKc0ozYMbBMsBlxhlpYR5GRkYGIR4ClKLcjNLUOVfMYpzMCoJ874
+  FWciTmVcCt+8V0ClMQKcsmM0FckpJIkJKqoHp/Jov/3lybHdWVlyW2HbrTM2fKTXpPkoL9kXr
+  cl6bFynt2Cw2eZVcodG23e8C2Z/oRMbMWWrHb2fZefXtTu9Vi66+y/Pj2/lEwWX/qV/nbO6Kh
+  Fy57Z/UdUhywr3CpzN1LM6cmfHnqsGv7KuRO5N8L3h09mhwhIsKLj3uWKcV52Zz78xsld+uTp
+  w/gxr4vhlt3vz2t4vH8S0zPzyatdDsCkP0p8OTJq6x3iZkmtZqWNwb8CvyVeHW0vIqnkCTZUx
+  Kpa/r86al8VVWvHzp6dR0NkRHLOLwOn+Gn0sXa/5axZOQsvOSzrqTVmcLLM7+2c9Y3Rm5vX/u
+  vjvfLF9ezblZu+Xi6z28ZhH/g8Re8qSdUmIpzkg01GIuKk4EAEl2jo58BAAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-15.tower-268.messagelabs.com!1561109025!1167171!1
+X-Originating-IP: [104.47.14.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.9; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 11508 invoked from network); 21 Jun 2019 09:23:46 -0000
+Received: from mail-vi1eur04lp2055.outbound.protection.outlook.com (HELO EUR04-VI1-obe.outbound.protection.outlook.com) (104.47.14.55)
+  by server-15.tower-268.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 21 Jun 2019 09:23:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector2-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QPd4q7bNp6p3xRzRXQqgSPvCVCtxUK/NBYgb8OPPSOM=;
+ b=t5CJ7LUsmHrorHz4Zq8/muAPKcGZMNCSImkrL+6cAEUPZ83hhnGy1vH+e9RGujhC+RV4qe9mg5hgm0AJomQMvo66DdXVHA7tn7+soIwAtoR8xPaBKWPSYTEfkcOQWRcMXjS+U1uiF2Fl9mqjal2Bu1IVBoJdtCnjntxC+/8NrZo=
+Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM (20.177.113.222) by
+ AM6PR10MB2328.EURPRD10.PROD.OUTLOOK.COM (20.177.116.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 21 Jun 2019 09:23:44 +0000
+Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4561:9d63:48fa:a882]) by AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4561:9d63:48fa:a882%7]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 09:23:44 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "peda@axentia.se" <peda@axentia.se>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [PATCH] mfd: da9063: occupy second I2C address, too
+Thread-Topic: [PATCH] mfd: da9063: occupy second I2C address, too
+Thread-Index: AQHVJ0mFTYYovliAiEq8ojZ9DyPua6aly35Q
+Date:   Fri, 21 Jun 2019 09:23:44 +0000
+Message-ID: <AM6PR10MB218134CDB4ECB0A9534B6B96FEE70@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+References: <AM6PR10MB218184C8F2206024C6CB77EAFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+ <20190620092116.y7aqun6jjjn4mgow@katana>
+In-Reply-To: <20190620092116.y7aqun6jjjn4mgow@katana>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 292a6a9e-1580-4429-333d-08d6f62a283e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR10MB2328;
+x-ms-traffictypediagnostic: AM6PR10MB2328:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM6PR10MB2328FA1411730120783AEC72F5E70@AM6PR10MB2328.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(39850400004)(376002)(346002)(189003)(199004)(5660300002)(6116002)(3846002)(8936002)(52536014)(14454004)(14444005)(71190400001)(4326008)(256004)(71200400001)(5024004)(54906003)(86362001)(229853002)(74316002)(81156014)(81166006)(966005)(8676002)(4744005)(73956011)(76116006)(7736002)(6436002)(316002)(66446008)(64756008)(66556008)(66476007)(305945005)(66946007)(53936002)(476003)(99286004)(107886003)(486006)(55016002)(6306002)(9686003)(102836004)(26005)(76176011)(7696005)(2906002)(6506007)(53546011)(186003)(25786009)(6916009)(66066001)(33656002)(478600001)(11346002)(446003)(6246003)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2328;H:AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: k3Pv5IRdsTC8ikpuEAUKEafOcOXcnX5SFvWy90QCrU1VBz/L9L5hucpeF9R/LTBtiw542z1aJ3res/X/kIcj/+bMSBmDHy1/OoeiDWzKm1LMGwtRMBOPqeRfp+SmXTWbJxVxCr1OqBn+6vlREkdg+qzunD16IcPMSCvNhsPwO9AeqGlc73Zwgficf9V/tcYaEUJq+CbFKJ8AbCXBwPTMcNqwwSwOKWXY2tghLEQcQC36rSUT17q0lYtG+526KgSMT7glWW4uhc3hW/EC1DkKTsEfdza3mUYAbQgfXDW0XHe6Q+D7Ey1KLlUkq6plmmy0v/Ewt38qfa7K68KGOT3PfVGOWqb9BynVW399fmfeT+oiX4yBj2En6rjChwXYzSUv/ccDlBFYaDzSYm6PzIT/sPl93m4ZRaEkIN6Z7zC+1/I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561108916; bh=FYvdzaOFVr+ym70x/EMdYSOq8J8rrVBpAoEJx3pKPlI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=jBK/W4RPh2mDanVQ6hDD7KJZdwQQ8tVllvwMPdHu1c1pFn/1O9fnmbnHuCDBbk8EH
-         MCINnwoLn0ei+ETFs5yg8CDz4yxFe1oYkr0POABti82VIqEhQHTKu5Xh/NSv4Rgqo5
-         E63TvGyK4b+kOXUxvXyQEeQe2ZgqMN6oZxc2OYyef4hstWhgG4kqxRYUeXrAwQyN2/
-         gOSsZfUiI7R0kKL37sBe/qeM070OOwq3yqnvaXCMH4i/4da07/2irbNd4As2ym6yGT
-         Zukx3osLIUGwA99eTI2cAtsO2nJeLnXNcupEwsRJwSFH/0svtnqpb1IH8tBDZT+vcF
-         C8qGvLb+sdI0Q==
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292a6a9e-1580-4429-333d-08d6f62a283e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 09:23:44.2768
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: stephen.twiss@diasemi.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export all configuration space access APIs and also other APIs to
-support host controller drivers of DesignWare core based implementations
-while adding support for .remove() hook to build their respective drivers
-as modules
+Hi Wolfram,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes from v4:
-* Removed __ (underscore) from dw_pcie_{write/read}_dbi API names
+On 20 June 2019 10:21, Wolfram Sang wrote:
+> Subject: Re: [PATCH] mfd: da9063: occupy second I2C address, too
+>=20
+> > Is this a safety clause? What I mean is, shouldn't the hardware design =
+make
+> > sure there are not two devices located on the same I2C bus with the sam=
+e slave
+> > address?
+>=20
+> It is more about preventing userspace to accidently access this address,
+> and thus the registers behind it.
 
-Changes from v3:
-* Exported only __dw_pcie_{read/write}_dbi() APIs instead of
-  dw_pcie_read{l/w/b}_dbi & dw_pcie_write{l/w/b}_dbi APIs.
+For what it's worth, maybe consider adding a dev_warn attached to the retur=
+n
+of devm_i2c_new_dummy_device?
 
-Changes from v2:
-* Rebased on top of linux-next top of the tree branch
+Regards,
+Steve
 
-Changes from v1:
-* s/Designware/DesignWare
+My apologies again for accidentally splitting your original e-mail thread o=
+n this:
+- https://lore.kernel.org/lkml/20190619171806.30116-1-wsa+renesas@sang-engi=
+neering.com/
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
- drivers/pci/controller/dwc/pcie-designware.c      | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d069e4290180..f93252d0da5b 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -311,6 +311,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
- 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
- 			    upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
- int dw_pcie_host_init(struct pcie_port *pp)
- {
-@@ -495,6 +496,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dw_pcie_free_msi(pp);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_init);
- 
- void dw_pcie_host_deinit(struct pcie_port *pp)
- {
-@@ -503,6 +505,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
- 	if (pci_msi_enabled() && !pp->ops->msi_host_init)
- 		dw_pcie_free_msi(pp);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
- 
- static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				     u32 devfn, int where, int size, u32 *val,
-@@ -695,3 +698,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 5d22028d854e..a6504295ac58 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -34,6 +34,7 @@ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read);
- 
- int dw_pcie_write(void __iomem *addr, int size, u32 val)
- {
-@@ -51,6 +52,7 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write);
- 
- u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 		     size_t size)
-@@ -67,6 +69,7 @@ u32 dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 
- 	return val;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read_dbi);
- 
- void dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 		       size_t size, u32 val)
-@@ -82,6 +85,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 	if (ret)
- 		dev_err(pci->dev, "Write DBI address failed\n");
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write_dbi);
- 
- u32 dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 		      size_t size)
--- 
-2.17.1
 
