@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C15C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73590C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F3C21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A0921537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfFUJx0 (ORCPT
+        id S1726906AbfFUJxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:53:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:55296 "EHLO foss.arm.com"
+        Fri, 21 Jun 2019 05:53:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:55374 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfFUJxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:53:24 -0400
+        id S1726885AbfFUJxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:53:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFAE414F6;
-        Fri, 21 Jun 2019 02:53:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88B871500;
+        Fri, 21 Jun 2019 02:53:29 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6648F3F246;
-        Fri, 21 Jun 2019 02:53:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F37303F246;
+        Fri, 21 Jun 2019 02:53:26 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -45,9 +45,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Huw Davies <huw@codeweavers.com>,
         Shijith Thotton <sthotton@marvell.com>,
         Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v7 06/25] arm64: compat: Add missing syscall numbers
-Date:   Fri, 21 Jun 2019 10:52:33 +0100
-Message-Id: <20190621095252.32307-7-vincenzo.frascino@arm.com>
+Subject: [PATCH v7 08/25] arm64: compat: Generate asm offsets for signals
+Date:   Fri, 21 Jun 2019 10:52:35 +0100
+Message-Id: <20190621095252.32307-9-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190621095252.32307-1-vincenzo.frascino@arm.com>
 References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
@@ -58,39 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vDSO requires gettimeofday and clock_gettime syscalls to implement the
-fallback mechanism.
+Update asm-offsets for arm64 to generate the correct offsets for
+compat signals.
 
-Add the missing syscall numbers to unistd.h for arm64.
+They will be useful for the implementation of the compat sigreturn
+trampolines in vDSO context.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Tested-by: Shijith Thotton <sthotton@marvell.com>
 Tested-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm64/include/asm/unistd.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/kernel/asm-offsets.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 70e6882853c0..81cc05acccc9 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -33,8 +33,13 @@
- #define __NR_compat_exit		1
- #define __NR_compat_read		3
- #define __NR_compat_write		4
-+#define __NR_compat_gettimeofday	78
- #define __NR_compat_sigreturn		119
- #define __NR_compat_rt_sigreturn	173
-+#define __NR_compat_clock_getres	247
-+#define __NR_compat_clock_gettime	263
-+#define __NR_compat_clock_gettime64	403
-+#define __NR_compat_clock_getres_time64	406
- 
- /*
-  * The following SVCs are ARM private.
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 9e4b7ccbab2f..c0d8b9f40022 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -30,6 +30,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/thread_info.h>
+ #include <asm/memory.h>
++#include <asm/signal32.h>
+ #include <asm/smp_plat.h>
+ #include <asm/suspend.h>
+ #include <linux/kbuild.h>
+@@ -77,6 +78,11 @@ int main(void)
+   DEFINE(S_STACKFRAME,		offsetof(struct pt_regs, stackframe));
+   DEFINE(S_FRAME_SIZE,		sizeof(struct pt_regs));
+   BLANK();
++#ifdef CONFIG_COMPAT
++  DEFINE(COMPAT_SIGFRAME_REGS_OFFSET,		offsetof(struct compat_sigframe, uc.uc_mcontext.arm_r0));
++  DEFINE(COMPAT_RT_SIGFRAME_REGS_OFFSET,	offsetof(struct compat_rt_sigframe, sig.uc.uc_mcontext.arm_r0));
++  BLANK();
++#endif
+   DEFINE(MM_CONTEXT_ID,		offsetof(struct mm_struct, context.id.counter));
+   BLANK();
+   DEFINE(VMA_VM_MM,		offsetof(struct vm_area_struct, vm_mm));
 -- 
 2.21.0
 
