@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C720C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595EBC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44025205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB95205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="nZ6xt4gB"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="xsjryigW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfFUPFq (ORCPT
+        id S1726434AbfFUPFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:05:46 -0400
+        Fri, 21 Jun 2019 11:05:52 -0400
 Received: from frisell.zx2c4.com ([192.95.5.64]:40599 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfFUPFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:05:45 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c2a1c366;
-        Fri, 21 Jun 2019 14:32:19 +0000 (UTC)
+        id S1726002AbfFUPFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 11:05:52 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 651ff04c;
+        Fri, 21 Jun 2019 14:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
         :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=BCgOtPxwBhFl9ERxKMkR8S0mK
-        lU=; b=nZ6xt4gB2O/bPt4oGCvRZJWbqW63sjiaDsP3WvxX/ZfCdRRYvFjllZONb
-        KIBUN3CuXIlEDEorEGJ9MeWYmVbb/lfydMhfXAXA5XsCXVdJXCiX34z9i88IuUll
-        2fBpGon9WP4jD+nWVP3nM5tm8TNVSui/Fuzl1c/DDLMQgtoWqa7q90p7vRySXNgI
-        vJDgFC+xlI5dEDfZR32RIWnHM8hm4p8yFItyrmh+6nMYUGR7u7deoNqhFXbfecaD
-        f9bCv+d1SNMSkIKmTAMOI5Yd8QxBfsCQjXIbp9aFVBU89euoNuGrmqShkf9ifK1H
-        QR+3OXvUa9LHrDLEYuucVhqtMtYhQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 591e8a04 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Fri, 21 Jun 2019 14:32:18 +0000 (UTC)
+        :content-transfer-encoding; s=mail; bh=wgxcqaEpc5Cj5n/ndmwgTvDT9
+        vE=; b=xsjryigWlVcK7sXgiP7ABxtgCzBywMndAJEObIT0im2mXSZoVUElKWONH
+        Relzk/vH/vyxoq8a43Fn6zMCXaq4X5tpMGh+/uJAKo+k3Ec1aRMOtvZaHGMaxQ2b
+        mXTR+rtwjWjjQlXN7MCmfxY1IHAJgpujOXtSTZjMSeXznVjZXwFNPcBpeYElL6s2
+        VJSAxUmJfJvwn10BGF3Tv6W9NdhM/lrYcaHeZ+t4Q37IZtmlMTCoWDdntiohZtZw
+        JFStW3qhNpmUSCP9PFk12DjiVXdYhfm+LSXsfkjhYwd9dKYlNMKA4fcjOoqZFftE
+        rKUR3ylQS8MUtfRfvoUQQs9eXfodg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 83a3c10e (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Fri, 21 Jun 2019 14:32:25 +0000 (UTC)
 From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v3 2/4] timekeeping: use proper ktime_add when adding nsecs in coarse offset
-Date:   Fri, 21 Jun 2019 17:05:19 +0200
-Message-Id: <20190621150521.17687-2-Jason@zx2c4.com>
+Subject: [PATCH v3 3/4] timekeeping: add missing _ns functions for coarse accessors
+Date:   Fri, 21 Jun 2019 17:05:20 +0200
+Message-Id: <20190621150521.17687-3-Jason@zx2c4.com>
 In-Reply-To: <20190621150521.17687-1-Jason@zx2c4.com>
 References: <20190621150521.17687-1-Jason@zx2c4.com>
 MIME-Version: 1.0
@@ -52,32 +52,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While this doesn't actually amount to a real difference, since the macro
-evaluates to the same thing, every place else operates on ktime_t using
-these functions, so let's not break the pattern.
+This further unifies the accessors for the fast and coarse functions, so
+that the same types of functions are available for each. There was also
+a bit of confusion with the documentation, which prior advertised a
+function that has never existed. Finally, the vanilla ktime_get_coarse()
+was omitted from the API originally, so this fills this oversight.
 
-Fixes: e3ff9c3678b4 ("timekeeping: Repair ktime_get_coarse*() granularity")
 Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/time/timekeeping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/core-api/timekeeping.rst | 10 +++++++---
+ include/linux/timekeeping.h            | 27 ++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 4c97c9c8c217..db0081a14b90 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -817,7 +817,7 @@ ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
+diff --git a/Documentation/core-api/timekeeping.rst b/Documentation/core-api/timekeeping.rst
+index 47b41e948459..0d4019fcaa87 100644
+--- a/Documentation/core-api/timekeeping.rst
++++ b/Documentation/core-api/timekeeping.rst
+@@ -99,16 +99,20 @@ Coarse and fast access
  
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ Some additional variants exist for more specialized cases:
  
--	return base + nsecs;
-+	return ktime_add_ns(base, nsecs);
+-.. c:function:: ktime_t ktime_get_coarse_boottime( void )
++.. c:function:: ktime_t ktime_get_coarse( void )
++		ktime_t ktime_get_coarse_boottime( void )
+ 		ktime_t ktime_get_coarse_real( void )
+ 		ktime_t ktime_get_coarse_clocktai( void )
+-		ktime_t ktime_get_coarse_raw( void )
++
++.. c:function:: u64 ktime_get_coarse_ns( void )
++		u64 ktime_get_boot_coarse_ns( void )
++		u64 ktime_get_real_coarse_ns( void )
++		u64 ktime_get_tai_coarse_ns( void )
+ 
+ .. c:function:: void ktime_get_coarse_ts64( struct timespec64 * )
+ 		void ktime_get_coarse_boottime_ts64( struct timespec64 * )
+ 		void ktime_get_coarse_real_ts64( struct timespec64 * )
+ 		void ktime_get_coarse_clocktai_ts64( struct timespec64 * )
+-		void ktime_get_coarse_raw_ts64( struct timespec64 * )
+ 
+ 	These are quicker than the non-coarse versions, but less accurate,
+ 	corresponding to CLOCK_MONONOTNIC_COARSE and CLOCK_REALTIME_COARSE
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index c5d360779fab..3df8e63c704b 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -113,6 +113,33 @@ static inline ktime_t ktime_get_coarse_clocktai(void)
+ 	return ktime_get_coarse_with_offset(TK_OFFS_TAI);
  }
- EXPORT_SYMBOL_GPL(ktime_get_coarse_with_offset);
  
++static inline ktime_t ktime_get_coarse(void)
++{
++	struct timespec64 ts;
++	ktime_get_coarse_ts64(&ts);
++	return timespec64_to_ktime(ts);
++}
++
++static inline u64 ktime_get_coarse_ns(void)
++{
++	return ktime_to_ns(ktime_get_coarse());
++}
++
++static inline u64 ktime_get_real_coarse_ns(void)
++{
++	return ktime_to_ns(ktime_get_coarse_real());
++}
++
++static inline u64 ktime_get_boot_coarse_ns(void)
++{
++	return ktime_to_ns(ktime_get_coarse_boottime());
++}
++
++static inline u64 ktime_get_tai_coarse_ns(void)
++{
++	return ktime_to_ns(ktime_get_coarse_clocktai());
++}
++
+ /**
+  * ktime_mono_to_real - Convert monotonic time to clock realtime
+  */
 -- 
 2.21.0
 
