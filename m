@@ -2,134 +2,107 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AC5C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9322C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972D920644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8262089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 14:48:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="D4yrvom4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfFUOrW (ORCPT
+        id S1726166AbfFUOsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 10:47:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:33752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfFUOrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 10:47:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBBA528;
-        Fri, 21 Jun 2019 07:47:20 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82AD93F575;
-        Fri, 21 Jun 2019 07:47:18 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 15:47:16 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v10 11/16] sched/fair: uclamp: Add uclamp support to
- energy_compute()
-Message-ID: <20190621144716.2322iylanmvwja5c@e110439-lin>
-References: <20190621084217.8167-1-patrick.bellasi@arm.com>
- <20190621084217.8167-12-patrick.bellasi@arm.com>
- <20190621140128.GL3436@hirez.programming.kicks-ass.net>
+        Fri, 21 Jun 2019 10:48:30 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:53632 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725985AbfFUOsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 10:48:30 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LEaLlN015682;
+        Fri, 21 Jun 2019 16:48:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Cwjx+P0CLYAdoYvZhhXI5cxvFwVJTxiGieG4J4UmpYM=;
+ b=D4yrvom4rj/3v+ROxpc8HD5FCEK1xn5s7k5AoHJvDpDfMzChQN1t2oYo+ijPW8wjWZtt
+ cwrU3ENjtAV5ilpUTGdqG4o81CI4Kdza1PBvtfvNPqH1SNayDubffSVMG5/t3nJHRsyW
+ vyDeauZqheg6mkEblmNSJ+9FQkmDumOB1BZnE3f/AqyZC6V7jbmQ3o+H8Pd2G0K0w/FI
+ FwaCcTjpzJn+ylT4ITt9eu3aQ0x//9suO9SxoGwdZpGOiII+oSCT64KCRamutk8IbYVl
+ e2K4PPeYBUmjM45XJSTeI2DIJT7ZOQeI/e8HLqyI2qBEKVqW7FD7ffbrMbKHb7Jcltms CQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2t7813qtbw-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 21 Jun 2019 16:48:14 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7807D31;
+        Fri, 21 Jun 2019 14:48:13 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4A4E92BC9;
+        Fri, 21 Jun 2019 14:48:13 +0000 (GMT)
+Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Jun 2019 16:48:12
+ +0200
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <marek.vasut@gmail.com>, <vigneshr@ti.com>
+CC:     <bbrezillon@kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] mtd: rawnand: stm32_fmc2: increase DMA completion timeouts
+Date:   Fri, 21 Jun 2019 16:48:00 +0200
+Message-ID: <1561128480-14531-1-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621140128.GL3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_10:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-Jun 16:01, Peter Zijlstra wrote:
-> On Fri, Jun 21, 2019 at 09:42:12AM +0100, Patrick Bellasi wrote:
-> 
-> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> > index ce2da8b9ff8c..f81e8930ff19 100644
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -2322,7 +2322,6 @@ static inline unsigned long capacity_orig_of(int cpu)
-> >  }
-> >  #endif
-> >  
-> > -#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-> >  /**
-> >   * enum schedutil_type - CPU utilization type
-> >   * @FREQUENCY_UTIL:	Utilization used to select frequency
-> > @@ -2338,15 +2337,11 @@ enum schedutil_type {
-> >  	ENERGY_UTIL,
-> >  };
-> >  
-> > -unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
-> > -				  unsigned long max, enum schedutil_type type);
-> > -
-> > -static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
-> > -{
-> > -	unsigned long max = arch_scale_cpu_capacity(NULL, cpu);
-> 
-> That conflicts with the patch I have removing that NULL argument, fixed
-> it up.
+When the system is overloaded, DMA data transfer completion occurs after
+100ms. Increase the timeouts to let it the time to complete.
 
-Ok, I notice only know you have this:
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+---
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-   commit 119fd437f412 ("sched/topology: Remove unused sd param from arch_scale_cpu_capacity()")
-
-from Vincent on your queue. :/
-
-
-> > +#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-> >  
-> > -	return schedutil_freq_util(cpu, cfs, max, ENERGY_UTIL);
-> > -}
-> > +unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
-> > +				 unsigned long max, enum schedutil_type type,
-> > +				 struct task_struct *p);
-> >  
-> >  static inline unsigned long cpu_bw_dl(struct rq *rq)
-> >  {
-> > @@ -2375,11 +2370,8 @@ static inline unsigned long cpu_util_rt(struct rq *rq)
-> >  	return READ_ONCE(rq->avg_rt.util_avg);
-> >  }
-> >  #else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
-> > -static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
-> > -{
-> > -	return cfs;
-> > -}
-> > -#endif
-> > +#define schedutil_cpu_util(cpu, util_cfs, max, type, p) 0
-> 
-> Was there a good reason for this to be a macro and not an inline
-> function?
-
-Mmm... not really, apart perhaps saving some lines.
-
-I notice sometimes we use macros (e.g. perf_domain_span), but it's
-certainly not the most common pattern.
-
-> I've changed it, if it explodes in 0day, it's all my fault ;-)
-
-Sure, I guess if 0day explodes will not be for that change. :)
-
-
+diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+index 4aabea2..c7f7c6f 100644
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -981,7 +981,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
+ 
+ 	/* Wait DMA data transfer completion */
+ 	if (!wait_for_completion_timeout(&fmc2->dma_data_complete,
+-					 msecs_to_jiffies(100))) {
++					 msecs_to_jiffies(500))) {
+ 		dev_err(fmc2->dev, "data DMA timeout\n");
+ 		dmaengine_terminate_all(dma_ch);
+ 		ret = -ETIMEDOUT;
+@@ -990,7 +990,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
+ 	/* Wait DMA ECC transfer completion */
+ 	if (!write_data && !raw) {
+ 		if (!wait_for_completion_timeout(&fmc2->dma_ecc_complete,
+-						 msecs_to_jiffies(100))) {
++						 msecs_to_jiffies(500))) {
+ 			dev_err(fmc2->dev, "ECC DMA timeout\n");
+ 			dmaengine_terminate_all(fmc2->dma_ecc_ch);
+ 			ret = -ETIMEDOUT;
 -- 
-#include <best/regards.h>
+1.9.1
 
-Patrick Bellasi
