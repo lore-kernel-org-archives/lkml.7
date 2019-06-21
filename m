@@ -2,91 +2,129 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9582C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94074C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811322064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pinc-software.de header.i=@pinc-software.de header.b="HDGKV1yS"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC7B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfFUSoZ (ORCPT
+        id S1726246AbfFUSrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:44:25 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:16899 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFUSoY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:44:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1561142662;
-        s=strato-dkim-0002; d=pinc-software.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=UipmIdlTqQ9PzhNLIRvIbIptfED4ilmnLRnrv6Son8s=;
-        b=HDGKV1ySewXaPCd28lY71x5VWYgwg0myuryAJuG12bQEm7ry4r0LD9Aso2k39bOsM/
-        MbAtu1UFW0SiWYzUmOk8KyRyQQUeFyKdCVl7YX/oQueobxKfFcSuIimymlEpVnJXadXP
-        Ha56t3yw8BvZGRPaVYms7PhYZo7wEbNQ/4fM8jntYd54gw3Va/oa5tkpMDjhKvI+/SfJ
-        sG0IAL6V2CHhBheQw0kdFqcVRH64Qy/+cDcsfkRJBFc29luYR/TatNOVK65qpUeakKM7
-        lGpqVM2OkBeeqgXLOlJ54h8iEx1dzlEGZf08ql/oU19hhiEcFgt882553FYtUFGZI0xM
-        z/wQ==
-X-RZG-AUTH: ":LXQBeUSIa/ZoedDIRs9YOPxY4/Y41LMYtYgA+S704F0fcsNycI1rqp7htm44FTK51uMij61Yqhw="
-X-RZG-CLASS-ID: mo00
-Received: from localhost
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id z087d6v5LIiMRc9
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 21 Jun 2019 20:44:22 +0200 (CEST)
-From:   =?UTF-8?q?Axel=20D=C3=B6rfler?= <axeld@pinc-software.de>
-To:     Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Axel=20D=C3=B6rfler?= <axeld@pinc-software.de>
-Subject: [PATCH RESEND] befs: Removed incorrect check
-Date:   Fri, 21 Jun 2019 20:44:18 +0200
-Message-Id: <20190621184418.15614-1-axeld@pinc-software.de>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Jun 2019 14:47:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726066AbfFUSrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 14:47:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 03377AEE0;
+        Fri, 21 Jun 2019 18:47:06 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] xen/events: fix binding user event channels to cpus
+Date:   Fri, 21 Jun 2019 20:47:03 +0200
+Message-Id: <20190621184703.17108-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The relation between ag_shift and blocks_per_ag is a bit more complex,
-and also depends on the fs block size.
-Since blocks_per_ag is not even being used, simply omit the check.
+When binding an interdomain event channel to a vcpu via
+IOCTL_EVTCHN_BIND_INTERDOMAIN not only the event channel needs to be
+bound, but the affinity of the associated IRQi must be changed, too.
+Otherwise the IRQ and the event channel won't be moved to another vcpu
+in case the original vcpu they were bound to is going offline.
 
-Signed-off-by: Axel Dörfler <axeld@pinc-software.de>
+Cc: <stable@vger.kernel.org> # 4.13
+Fixes: c48f64ab472389df ("xen-evtchn: Bind dyn evtchn:qemu-dm interrupt to next online VCPU")
+Signed-off-by: Juergen Gross <jgross@suse.com>
 ---
- fs/befs/super.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/xen/events/events_base.c | 12 ++++++++++--
+ drivers/xen/evtchn.c             |  2 +-
+ include/xen/events.h             |  3 ++-
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/fs/befs/super.c b/fs/befs/super.c
-index 7c50025c99d8..29fa37557656 100644
---- a/fs/befs/super.c
-+++ b/fs/befs/super.c
-@@ -99,13 +99,6 @@ befs_check_sb(struct super_block *sb)
- 		return BEFS_ERR;
- 	}
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index ff9b51055b14..e718c8fea18b 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1294,7 +1294,7 @@ void rebind_evtchn_irq(int evtchn, int irq)
+ }
  
--
--	/* ag_shift also encodes the same information as blocks_per_ag in a
--	 * different way, non-fatal consistency check
--	 */
--	if ((1 << befs_sb->ag_shift) != befs_sb->blocks_per_ag)
--		befs_error(sb, "ag_shift disagrees with blocks_per_ag.");
--
- 	if (befs_sb->log_start != befs_sb->log_end ||
- 	    befs_sb->flags == BEFS_DIRTY) {
- 		befs_error(sb, "Filesystem not clean! There are blocks in the "
+ /* Rebind an evtchn so that it gets delivered to a specific cpu */
+-int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
++static int xen_rebind_evtchn_to_cpu(int evtchn, unsigned int tcpu)
+ {
+ 	struct evtchn_bind_vcpu bind_vcpu;
+ 	int masked;
+@@ -1328,7 +1328,6 @@ int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(xen_rebind_evtchn_to_cpu);
+ 
+ static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
+ 			    bool force)
+@@ -1342,6 +1341,15 @@ static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
+ 	return ret;
+ }
+ 
++/* To be called with desc->lock held. */
++int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu)
++{
++	struct irq_data *d = irq_desc_get_irq_data(desc);
++
++	return set_affinity_irq(d, cpumask_of(tcpu), false);
++}
++EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
++
+ static void enable_dynirq(struct irq_data *data)
+ {
+ 	int evtchn = evtchn_from_irq(data->irq);
+diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
+index f341b016672f..052b55a14ebc 100644
+--- a/drivers/xen/evtchn.c
++++ b/drivers/xen/evtchn.c
+@@ -447,7 +447,7 @@ static void evtchn_bind_interdom_next_vcpu(int evtchn)
+ 	this_cpu_write(bind_last_selected_cpu, selected_cpu);
+ 
+ 	/* unmask expects irqs to be disabled */
+-	xen_rebind_evtchn_to_cpu(evtchn, selected_cpu);
++	xen_set_affinity_evtchn(desc, selected_cpu);
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ }
+ 
+diff --git a/include/xen/events.h b/include/xen/events.h
+index a48897199975..c0e6a0598397 100644
+--- a/include/xen/events.h
++++ b/include/xen/events.h
+@@ -3,6 +3,7 @@
+ #define _XEN_EVENTS_H
+ 
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #ifdef CONFIG_PCI_MSI
+ #include <linux/msi.h>
+ #endif
+@@ -59,7 +60,7 @@ void evtchn_put(unsigned int evtchn);
+ 
+ void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector);
+ void rebind_evtchn_irq(int evtchn, int irq);
+-int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu);
++int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu);
+ 
+ static inline void notify_remote_via_evtchn(int port)
+ {
 -- 
-2.17.1
+2.16.4
 
