@@ -2,248 +2,160 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579D7C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97132C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0600F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60310208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 11:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hF0fu2tq"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="A0sR4TbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFULSe (ORCPT
+        id S1726699AbfFULSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 07:18:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34630 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfFULSe (ORCPT
+        Fri, 21 Jun 2019 07:18:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53729 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfFULSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 07:18:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a128so4423681oib.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 04:18:34 -0700 (PDT)
+        Fri, 21 Jun 2019 07:18:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x15so5969140wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 04:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kozscljqOAuZVylplHql1ErpLz3+SlWxMHv746HmhFE=;
-        b=hF0fu2tqeK0iOX7iwKWEp4A52s4WIW0NaCMgteCQqRFUZMo1wXBp1IIXyOyu8bCGyA
-         4IhWnT3s90Zh4umA5mht5ZwFTgMVCO9Tn7h0Efp2mxIFQNUvA2JNok4e6u3JL7a+zwms
-         tIR404sw2yeVtKKv1K3m+wk1y7JOdBL/ifyBc=
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NabQZDyF6ofZk8run8ReROPDDNPPhXEMVOy6Fc5LD2A=;
+        b=A0sR4TbA5sn9q6BPXeU1kL9L2rZYmfUq90m2Sf0mR6201SQWimJDCuq975mx4xdPMX
+         NIoPXdOUBPw4EZ7mzDrd3p6sFLm6s9pSSW0e9mgtMc6rXQQeYIR2dgyZkoRof3qM35LP
+         5eRLvNwhvTbC4pcagAYYGBlOnLcU2RDd7TiNKmhSHyHAkTsmrA1crtabpPFcBBqxhzvV
+         X/tnH8Qcgl8EZ6/5uaWL4eJKnqQ5xekFKeIMDSPucn3iqtUXmJC8cwg5FfZultGJuxFJ
+         3svqrNjQJA7RZodeSacxMWBKE99m5lY+xX5GPKzuGK4aii45lI+GSO4URvxn0IXqiwZm
+         mw5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kozscljqOAuZVylplHql1ErpLz3+SlWxMHv746HmhFE=;
-        b=fmDqPy8apcTrYV7IsCpVOMppElWSfMAsEOrj+W8zwqrsxNwVku5CLXyJjAzTI4/597
-         +5sqvxkt0za1Jn5GXruWucePe9E91HUZEnozLeXCka3M02a3nDApFtpl8Hh897zRYaBE
-         34/xzzrx0bAtTtJNXt8FPjdRt0ApySdoalR3OZHd3SqvTTW7UMkx50wUSaz5C7A8YS0f
-         ++oh3nfchvUAqN3NNvpu7AJF3d1ywkHhZQWi5R/v9capFW1z6Qy4ukWMSoZrFADe2CU5
-         TYRQg8OM66K+rP05omDi0HCNP+MBaROc/6VEgpYzrbj7LopVVCbPuDTyDrBhRIXUswv8
-         hvhA==
-X-Gm-Message-State: APjAAAXLwrpUcIahlg/+Aau6UooJwlenD/v3u7kdcLivY5l4N8E0DGUR
-        0CWDGc7j0HoAV4sVEPnQO400siL0ewLFfdiEc6vOhw==
-X-Google-Smtp-Source: APXvYqwAcZ+YtYERXU3A9m8Kkl7qBd9vfWbAQWQivghXZGPM45EoVmCAjvyfMhrQGixbJy2r8I6Ir3BcINgB6BE8sqM=
-X-Received: by 2002:aca:b104:: with SMTP id a4mr2353971oif.14.1561115913495;
- Fri, 21 Jun 2019 04:18:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NabQZDyF6ofZk8run8ReROPDDNPPhXEMVOy6Fc5LD2A=;
+        b=L/j+u2rKz+ux3COr+X6vCypO45iyq/kqc5pZNiUPohd44cPq3UzKSObtT47IKXP3T6
+         U4GIMOYetMAV3GxYbT+wJnJqqb+2B1sIr9sc9ztHtNRAEHLkNx78CAW1k5h6Vx4NeEB5
+         6LjHs7HdNoa0tZFq0DdFJt6bPVhq84YeG/WZUqyxVncgFT/tuFb7/hBpLp75gh2A0wHq
+         3dQrbn8lVS868aO8JD7xKxZE+iU0VHWFNGIqDXBQUtFm6IaP+WV7P4qYUE5quziH0Pxo
+         WkujG+EwG3F+tk6x09W8MN0Ck3Wh+UKzkWbeCHoYjdEPCqhgQDwJNW4jGgStD1dhXROn
+         x+xA==
+X-Gm-Message-State: APjAAAUTRoWxjuORyAhPyA8vAFzoHfj6ZSXvYrxbbvDMJPSca8BwENde
+        dgprxipXkT+IczBQNy5J8vReSQ==
+X-Google-Smtp-Source: APXvYqzLoKsLczgYAoe7ayG3xoBLZkEIoT8eLSCvDDxUbIs9XKe0M+GRht7p9R+HZi2Sd7kHDL7H8w==
+X-Received: by 2002:a1c:a7ca:: with SMTP id q193mr4122227wme.150.1561115923826;
+        Fri, 21 Jun 2019 04:18:43 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id a84sm2327897wmf.29.2019.06.21.04.18.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 04:18:43 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 13:18:41 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Message-ID: <20190621111839.v5yqlws6iw7mx4aa@brauner.io>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
+ <20190620184451.GA28543@roeck-us.net>
+ <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+ <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190620103524.GF17204@e110455-lin.cambridge.arm.com>
- <CAPM=9tx9n7eAiHakdp+A8twco1GbKs5sy3=kJL6tH_SoYsLG1g@mail.gmail.com> <20190621095349.GI17204@e110455-lin.cambridge.arm.com>
-In-Reply-To: <20190621095349.GI17204@e110455-lin.cambridge.arm.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 21 Jun 2019 13:18:17 +0200
-Message-ID: <CAKMK7uHK1t_ts67=x+PwmBRBSYoB=aY+bSxSC6H1M1g6M1GbxA@mail.gmail.com>
-Subject: Re: [GIT PULL] mali-dp and komeda patches for drm-next
-To:     Liviu Dudau <Liviu.Dudau@arm.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        MaliDP Maintainers <malidp@foss.arm.com>,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:53 AM Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->
-> On Fri, Jun 21, 2019 at 01:54:11PM +1000, Dave Airlie wrote:
-> > On Thu, 20 Jun 2019 at 20:35, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > >
-> > > Hi DRM maintainers,
-> > >
-> > > Picking up pace on the upstreaming of Komeda driver, with quite a lot
-> > > of new features added this time. On top of that we have the small
-> > > cleanups and improved usage of the debugfs functions. Please pull!
+On Fri, Jun 21, 2019 at 11:37:50AM +0200, Arnd Bergmann wrote:
+> On Fri, Jun 21, 2019 at 12:10 AM Christian Brauner <christian@brauner.io> wrote:
+> > On Thu, Jun 20, 2019 at 11:44:51AM -0700, Guenter Roeck wrote:
+> > > On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
 > >
-> > It looks like you rebased this at the last moment, please don't do
-> > that, don't rebase just because you can.
->
-> Yes, sorry again, I was trying to be up-to-date with drm-next so as to fi=
-gure
-> out if there are any conflicts before sending the pull request.
-
-Testing for conflicts is good, but don't do that with a rebase. Instead.
-1. create throw-away branch, starting at the commit you want to send a
-pull request for
-2. merge latest drm-next, look at conflicts, test in CI
-3. once happy, send pull request, _unchanged_, with maybe a note about
-any conflicts or how to resolve them.
-
-Ime (and that's also why Linus insists on this) rebasing just breaks
-patches too often, and then you might end up with an unbisectable
-range for some reason. Yes merge commits also break sometimes, but
-then we at least the chance to record why we thought the conflict
-resolution was correct in a commit message, so there's some record
-about what went wrong.
-
-For drm-intel we do that automatically with the drm-tip integration tree.
--Daniel
-
-> > The reason I noticed is because
-> > dim: 344f00e4d7d6 ("drm/komeda: Make Komeda interrupts shareable"):
-> > author Signed-off-by missing.
->
-> Huh, I've missed the fact that Ayan has updated his S-o-b line, I'll have=
- a
-> chat with him to get his author updated as well.
->
-> > dim: 1885a6d946f5 ("drm/komeda: fix 32-bit
-> > komeda_crtc_update_clock_ratio"): SHA1 in fixes line not found:
-> > dim:     a962091227ed ("drm/komeda: Add engine clock requirement check
-> > for the downscaling")
-> > dim: ERROR: issues in commits detected, aborting
+> > clone3() was placed under __ARCH_WANT_SYS_CLONE. Most architectures
+> > simply define __ARCH_WANT_SYS_CLONE and are done with it.
+> > Some however, such as nios2 and h8300 don't define it but instead
+> > provide a sys_clone stub of their own because of architectural
+> > requirements (or tweaks) and they are mostly written in assembly. (That
+> > should be left to arch maintainers for sys_clone3.)
 > >
-> > so clearly rebasing the fixed commit broke stuff, you should probably
-> > squash fixes if you are rebasing.
+> > The build failures were on my radar already. I hadn't yet replied
+> > since I haven't pushed the fixup below.
+> > The solution is to define __ARCH_WANT_SYS_CLONE3 and add a
+> > cond_syscall(clone3) so we catch all architectures that do not yet
+> > provide clone3 with a ENOSYS until maintainers have added it.
 > >
-> > Please resend with above fixed, and refrain from misc rebases in future=
-.
->
-> They are now fixed, sorry about the noise.
->
-> Best regards,
-> Liviu
->
->
-> The following changes since commit 52d2d44eee8091e740d0d275df1311fb8373c9=
-a9:
->
->   Merge v5.2-rc5 into drm-next (2019-06-19 12:07:29 +0200)
->
-> are available in the Git repository at:
->
->   git://linux-arm.org/linux-ld.git for-upstream/mali-dp
->
-> for you to fetch changes up to 2cfb1981dd0d9505b59868a7f7591746f51794b0:
->
->   drm/komeda: Make Komeda interrupts shareable (2019-06-21 10:47:15 +0100=
-)
->
-> ----------------------------------------------------------------
-> Arnd Bergmann (1):
->       drm/komeda: fix 32-bit komeda_crtc_update_clock_ratio
->
-> Ayan Halder (1):
->       drm/komeda: Make Komeda interrupts shareable
->
-> Greg Kroah-Hartman (2):
->       komeda: no need to check return value of debugfs_create functions
->       malidp: no need to check return value of debugfs_create functions
->
-> Liviu Dudau (1):
->       arm/komeda: Convert dp_wait_cond() to return an error code.
->
-> Lowry Li (Arm Technology China) (10):
->       drm/komeda: Creates plane alpha and blend mode properties
->       drm/komeda: Clear enable bit in CU_INPUTx_CONTROL
->       drm/komeda: Add rotation support on Komeda driver
->       drm/komeda: Adds limitation check for AFBC wide block not support R=
-ot90
->       drm/komeda: Update HW up-sampling on D71
->       drm/komeda: Enable color-encoding (YUV format) support
->       drm/komeda: Adds SMMU support
->       dt/bindings: drm/komeda: Adds SMMU support for D71 devicetree
->       drm/komeda: Adds zorder support
->       drm/komeda: Add slave pipeline support
->
-> james qian wang (Arm Technology China) (21):
->       drm/komeda: Add writeback support
->       drm/komeda: Added AFBC support for komeda driver
->       drm/komeda: Attach scaler to drm as private object
->       drm/komeda: Add the initial scaler support for CORE
->       drm/komeda: Implement D71 scaler support
->       drm/komeda: Add writeback scaling support
->       drm/komeda: Add engine clock requirement check for the downscaling
->       drm/komeda: Add image enhancement support
->       drm/komeda: Add komeda_fb_check_src_coords
->       drm/komeda: Add format support for Y0L2, P010, YUV420_8/10BIT
->       drm/komeda: Unify mclk/pclk/pipeline->aclk to one MCLK
->       drm/komeda: Rename main engine clk name "mclk" to "aclk"
->       dt/bindings: drm/komeda: Unify mclk/pclk/pipeline->aclk to one ACLK
->       drm/komeda: Add component komeda_merger
->       drm/komeda: Add split support for scaler
->       drm/komeda: Add layer split support
->       drm/komeda: Refine function to_d71_input_id
->       drm/komeda: Accept null writeback configurations for writeback
->       drm/komeda: Add new component komeda_splitter
->       drm/komeda: Enable writeback split support
->       drm/komeda: Correct printk format specifier for "size_t"
->
->  .../devicetree/bindings/display/arm,komeda.txt     |  23 +-
->  drivers/gpu/drm/arm/display/include/malidp_io.h    |   7 +
->  drivers/gpu/drm/arm/display/include/malidp_utils.h |   5 +-
->  drivers/gpu/drm/arm/display/komeda/Makefile        |   2 +
->  .../gpu/drm/arm/display/komeda/d71/d71_component.c | 582 +++++++++++++++=
-++-
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   | 142 +++--
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h   |   2 +
->  .../gpu/drm/arm/display/komeda/komeda_color_mgmt.c |  67 ++
->  .../gpu/drm/arm/display/komeda/komeda_color_mgmt.h |  17 +
->  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   | 154 ++++-
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c    |  59 +-
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.h    |  13 +-
->  .../drm/arm/display/komeda/komeda_format_caps.c    |  58 ++
->  .../drm/arm/display/komeda/komeda_format_caps.h    |  24 +-
->  .../drm/arm/display/komeda/komeda_framebuffer.c    | 175 +++++-
->  .../drm/arm/display/komeda/komeda_framebuffer.h    |  13 +-
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.c    | 130 +++-
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.h    |  71 ++-
->  .../gpu/drm/arm/display/komeda/komeda_pipeline.c   |  66 +-
->  .../gpu/drm/arm/display/komeda/komeda_pipeline.h   | 111 +++-
->  .../drm/arm/display/komeda/komeda_pipeline_state.c | 679 +++++++++++++++=
-+++++-
->  drivers/gpu/drm/arm/display/komeda/komeda_plane.c  | 191 +++++-
->  .../drm/arm/display/komeda/komeda_private_obj.c    | 154 +++++
->  .../drm/arm/display/komeda/komeda_wb_connector.c   | 199 ++++++
->  drivers/gpu/drm/arm/malidp_drv.c                   |  11 +-
->  25 files changed, 2728 insertions(+), 227 deletions(-)
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.=
-c
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.=
-h
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_wb_connecto=
-r.c
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
+> > diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
+> > index 7a39e77984ef..aa35aa5d68dc 100644
+> > --- a/arch/arm/include/asm/unistd.h
+> > +++ b/arch/arm/include/asm/unistd.h
+> > @@ -40,6 +40,7 @@
+> >  #define __ARCH_WANT_SYS_FORK
+> >  #define __ARCH_WANT_SYS_VFORK
+> >  #define __ARCH_WANT_SYS_CLONE
+> > +#define __ARCH_WANT_SYS_CLONE3
+> 
+> I never really liked having __ARCH_WANT_SYS_CLONE here
+> because it was the only one that a new architecture needed to
+> set: all the other __ARCH_WANT_* are for system calls that
+> are already superseded by newer ones, so a new architecture
+> would start out with an empty list.
+> 
+> Since __ARCH_WANT_SYS_CLONE3 replaces
+> __ARCH_WANT_SYS_CLONE for new architectures, how about
+> leaving __ARCH_WANT_SYS_CLONE untouched but instead
+
+__ARCH_WANT_SYS_CLONE is left untouched. :)
+
+> coming up with the reverse for clone3 and mark the architectures
+> that specifically don't want it (if any)?
+
+Afaict, your suggestion is more or less the same thing what is done
+here. So I'm not sure it buys us anything apart from future
+architectures not needing to set __ARCH_WANT_SYS_CLONE3.
+
+I expect the macro above to be only here temporarily until all arches
+have caught up and we're sure that they don't require assembly stubs
+(cf. [1]). A decision I'd leave to the maintainers (since even for
+nios2 we were kind of on the fence what exactly the sys_clone stub was
+supposed to do).
+
+But I'm happy to take a patch from you if it's equally or more simple
+than this one right here.
+
+In any case, linux-next should be fine on all arches with this fixup
+now.
+
+Christian
 
 
+[1]: Architectures such as nios2 or h8300 simply take the asm-generic
+     syscall definitions and generate their syscall table from it. But
+     since they don't define __ARCH_WANT_SYS_CLONE the build would fail
+     complaining about sys_clone3 missing. The reason this doesn't
+     happen for legacy clone is that nios2 and h8300 provide assembly
+     stubs for sys_clone but they don't for sys_clone3.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
