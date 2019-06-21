@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF80C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C19C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7802083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228D4208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfFUHFv (ORCPT
+        id S1726194AbfFUHFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:05:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:38570 "EHLO inva021.nxp.com"
+        Fri, 21 Jun 2019 03:05:42 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44032 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfFUHFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:05:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2296A200911;
-        Fri, 21 Jun 2019 09:05:44 +0200 (CEST)
+        id S1726030AbfFUHFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:05:42 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CCCA01A0056;
+        Fri, 21 Jun 2019 09:05:39 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E309D200902;
-        Fri, 21 Jun 2019 09:05:33 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 95EDF1A01AC;
+        Fri, 21 Jun 2019 09:05:29 +0200 (CEST)
 Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 67799402DF;
-        Fri, 21 Jun 2019 15:05:21 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8157A402CF;
+        Fri, 21 Jun 2019 15:05:17 +0800 (SGT)
 From:   Anson.Huang@nxp.com
 To:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -39,9 +39,9 @@ To:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 4/4] arm64: dts: imx8mm: Add system counter node
-Date:   Fri, 21 Jun 2019 15:07:20 +0800
-Message-Id: <20190621070720.12395-4-Anson.Huang@nxp.com>
+Subject: [PATCH 2/4] dt-bindings: clock: imx8mm: Add system counter clock
+Date:   Fri, 21 Jun 2019 15:07:18 +0800
+Message-Id: <20190621070720.12395-2-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190621070720.12395-1-Anson.Huang@nxp.com>
 References: <20190621070720.12395-1-Anson.Huang@nxp.com>
@@ -53,34 +53,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+Add i.MX8MM system counter clock macro definition.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 232a741..f606efa 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -510,6 +510,15 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk IMX8MM_CLK_SYS_CTR>;
-+				clock-names = "per";
-+			};
- 		};
+diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings/clock/imx8mm-clock.h
+index 07e6c68..a8c2124 100644
+--- a/include/dt-bindings/clock/imx8mm-clock.h
++++ b/include/dt-bindings/clock/imx8mm-clock.h
+@@ -248,6 +248,8 @@
+ #define IMX8MM_CLK_SNVS_ROOT			228
+ #define IMX8MM_CLK_GIC				229
  
- 		aips3: bus@30800000 {
+-#define IMX8MM_CLK_END				230
++#define IMX8MM_CLK_SYS_CTR			230
++
++#define IMX8MM_CLK_END				231
+ 
+ #endif
 -- 
 2.7.4
 
