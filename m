@@ -2,80 +2,175 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11843C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1494C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4562089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750F72089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfFUHxX (ORCPT
+        id S1726321AbfFUHyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:53:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36112 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726027AbfFUHxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:53:23 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9EFF5BE07A469CE25F30;
-        Fri, 21 Jun 2019 15:53:17 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
- 2019 15:53:08 +0800
-Subject: Re: [PATCH v2 2/8] staging: erofs: add compacted compression indexes
- support
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>
-References: <20190620160719.240682-1-gaoxiang25@huawei.com>
- <20190620160719.240682-3-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <4274208b-63bc-6dfd-a2c8-a94d2fa5c8d7@huawei.com>
-Date:   Fri, 21 Jun 2019 15:53:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 21 Jun 2019 03:54:05 -0400
+Received: from mail2.tencent.com ([163.177.67.195]:51935 "EHLO
+        mail2.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfFUHyE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:54:04 -0400
+Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
+        by mail2.tencent.com (Postfix) with ESMTP id 3743D8E797;
+        Fri, 21 Jun 2019 15:47:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.22.120.143) by
+ EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 21 Jun 2019 15:47:18 +0800
+From:   <xiaoggchen@tencent.com>
+To:     <jasperwang@tencent.com>, <heddchen@tencent.com>
+CC:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tj@kernel.org>,
+        <lizefan@huawei.com>, <hannes@cmpxchg.org>,
+        <cgroups@vger.kernel.org>, chen xiaoguang <xiaoggchen@tencent.com>
+Subject: [PATCH 0/5] BT scheduling class
+Date:   Fri, 21 Jun 2019 15:45:52 +0800
+Message-ID: <1561103157-11246-1-git-send-email-xiaoggchen@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20190620160719.240682-3-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [10.22.120.143]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/21 0:07, Gao Xiang wrote:
-> This patch aims at compacted compression indexes:
->  1) cleanup z_erofs_map_blocks_iter and move into zmap.c;
->  2) add compacted 4/2B decoding support.
-> 
-> On kirin980 platform, sequential read is increased about
-> 6% (725MiB/s -> 770MiB/s) on enwik9 dataset if compacted 2B
-> feature is enabled.
-> 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+From: chen xiaoguang <xiaoggchen@tencent.com>
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+This patch set introduces a new scheduler, we name it BT scheduler
+for the moment.
 
-> +static int vle_legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-> +					     unsigned long lcn)
-> +{
-> +	struct inode *const inode = m->inode;
-> +	struct erofs_vnode *const vi = EROFS_V(inode);
-> +	const erofs_off_t ibase = iloc(EROFS_I_SB(inode), vi->nid);
-> +	const erofs_off_t pos = Z_EROFS_VLE_EXTENT_ALIGN(ibase +
-> +							 vi->inode_isize +
-> +							 vi->xattr_isize) +
-> +		16 + lcn * sizeof(struct z_erofs_vle_decompressed_index);
+First let me introduce the background why we add a new scheduler.
 
-use macro instead of raw number?
+We have two scenarios in our business:
 
-Thanks,
+Scenario 1:
+Server application need to response to 10 million requests in one minute
+and we must achieve to at least 99.99% successful response to the requests
+to keep user experience.
+
+First only server application exists in the system and the success
+rate is 99.998% and the average cpu use is only 25%.
+To improve the cpu use we run some other applications which are not time
+critical tasks in the system. Cgroup's share mechanism is used to restrict
+the cpu usage for these kinds of tasks. But there are nearly 5000 requests
+in one minute that cannot be handled in time by the server and the success
+rate is only 99.94%. Then the BT scheduler is used for the other
+applications. After test we found that at most 400 requests failed in one
+minute and the success rate are 99.996%. The cpu use increased to 70%.
+
+Test results:
+------------------------------------------------------------------------
+                     | failure counts/m |success rate  |cpu utilization|
+------------------------------------------------------------------------
+server load(CFS)     | 200              | 99.998%      | 25%           |
+------------------------------------------------------------------------
+server load(CFS +    | 5000             | 99.95%       | 55%           |
+cgroup.shares=65536) |                  |              |               |
+other load(CFS +     |                  |              |               |
+cgroup.shares=2)     |                  |              |               |
+------------------------------------------------------------------------
+server load(CFS)     | 200-400          | 99.996%      | 70%           |
+other load(BT)       |                  |              |               |
+------------------------------------------------------------------------
+
+Scenario 2:
+A service program receives 2000 requests per minute and the average latency
+per request is 115 milliseconds. Then we add some other tasks into the
+system to share the cpu with the service program. While the other tasks use
+the CFS scheduler the average latency increased to 138 milliseconds.
+Also dozens of failures increased at the same time.
+A server program usually depends on several modules which depend on
+additional other modules and so on. So if the latency increased several
+milliseconds for one module then the whole latency for the service program
+will be amplified times.
+
+Then we use the BT scheduler for the other tasks the average latency
+is 122 milliseconds but the failures keep the same. 
+
+Test results:
+-----------------------------------------------------------------------
+                    | failure counts/m | AVG latency(milliseconds)    |
+-----------------------------------------------------------------------
+server load(CFS)    |                  | 115                          |
+-----------------------------------------------------------------------
+server load(CFS)+   | increase 30-50   | 138                          |
+other load(CFS)     |                  |                              |
+-----------------------------------------------------------------------
+server load(CFS)+   | no change        | 122                          |
+other load(BT)      |                  |                              |
+-----------------------------------------------------------------------
+
+From the above two cases we know that tasks with BT scheduler will not
+interfere the normal tasks and will run in cpu spare time. It can be
+preempted by normal tasks on demand.
+
+We have millions of servers in our company, so it is very important for
+us to improve the cpu use to reduce the costs.
+
+The goal of BT scheduler is to improve the cpu use while do not interfere
+the normal tasks.
+
+BT is the abbreviation of batch and we will change the name when we find
+a more suitable word.
+
+Tasks with BT schedule class are usually cpu-bound and run in background
+and will be preempted by normal tasks such as tasks with CFS schedule class
+at any time.
+
+This patch set is just the basic schedule class of BT scheduler.
+We will send the complete patches after we finish the full test.
+
+The BT scheduler is similar with the CFS scheduler. We also use the
+rb-tree as the run queue to save the runnable tasks. And the vruntime 
+concept is also used in the BT scheduler. And the priority of BT scheduler
+is from 140 to 179. So now the schedulers in the kernel are as follows:
+deadline, RT, CFS, BT and idle.
+
+We can restrict the usage percent of tasks with BT scheduler in per cpu
+granularity. We also optimized the load balance algorithm by taking 
+cpu's ability of running BT tasks and the waiting times in the run
+queue of BT tasks into account. We also add cgroup support for BT
+scheduling class.
+
+chen xiaoguang (5):
+  sched/BT: add BT scheduling entity
+  sched/BT: implement the BT scheduling class
+  sched/BT: extend the priority for BT scheduling class
+  sched/BT: account the cpu time for BT scheduling class
+  sched/BT: add debug information for BT scheduling class
+
+ fs/proc/base.c                 |    3 +-
+ include/linux/ioprio.h         |    2 +-
+ include/linux/sched.h          |   18 +
+ include/linux/sched/bt.h       |   30 ++
+ include/linux/sched/prio.h     |    5 +-
+ include/uapi/linux/sched.h     |    1 +
+ init/init_task.c               |    6 +-
+ kernel/delayacct.c             |    2 +-
+ kernel/exit.c                  |    3 +-
+ kernel/sched/Makefile          |    2 +-
+ kernel/sched/bt.c              | 1040 ++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c            |   55 ++-
+ kernel/sched/cputime.c         |   33 +-
+ kernel/sched/debug.c           |   37 ++
+ kernel/sched/fair.c            |   31 +-
+ kernel/sched/loadavg.c         |    5 +-
+ kernel/sched/sched.h           |   40 ++
+ kernel/time/posix-cpu-timers.c |    2 +-
+ 18 files changed, 1272 insertions(+), 43 deletions(-)
+ create mode 100644 include/linux/sched/bt.h
+ create mode 100644 kernel/sched/bt.c
+
+-- 
+1.8.3.1
+
