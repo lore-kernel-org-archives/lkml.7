@@ -2,55 +2,63 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABFBC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9820216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672DC21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561110890;
+	bh=YxTzR19num6Uu7rdZtU6p08r3wKQbzxjPWJxi0JiuPM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XHTpj74gvq6hEDms9txLYLBYdYvu2dnp15wYUKuSoVRF24/IVTf286er19kign4av
+	 8h6zXkFvSrjcfQ1AXChtnPZpO7LdO0wtdz8HcrNDP3NhJQHyILCxV21YpPUDR2S6tB
+	 /5cl9FL/y5pWc8jZShs3DT30NNJfN3qqws19wA7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfFUJyn (ORCPT
+        id S1727257AbfFUJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:54:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:55606 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfFUJxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:53:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 135F5147A;
-        Fri, 21 Jun 2019 02:53:49 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CDD83F246;
-        Fri, 21 Jun 2019 02:53:46 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v7 15/25] arm64: Add vDSO compat support
-Date:   Fri, 21 Jun 2019 10:52:42 +0100
-Message-Id: <20190621095252.32307-16-vincenzo.frascino@arm.com>
+        Fri, 21 Jun 2019 05:54:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37802 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfFUJyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wI0EAuMFs+aVQKSucBM2sTBK5ECXZZNvaUXFQdbT4O4=; b=JTpScT0W9/QGxBnSHrK8kC9QS
+        aYRHK2SzsuZ0aEBEd2JXakX09pxNeNmdMLQwDXfKgKiNJ4sgL5+sSOi+wxCfxv93JrmGLykMlB3TF
+        qR/u7xEOqs6xi+eg8aYmgmQynikRZ8Qwkz8sjspygzR9VY9tSEzcGDMCDkgfI1cc8CK5tZT32gv06
+        +XJyPBGucyAXyP+jIVVkNn8TzjvzNkSQ06cJmJNyKscyIrYuyn02iI6lmbCX/S5eK2P+Dzh44ZcCE
+        neX1lft7VJqjm9F+0rbes8JjHwZVQud+d1CfOFWSm/FbV6llKbqFm8wT2FUfbqpWDO1PzWsTNFAv0
+        r8D9/bm8g==;
+Received: from [177.97.20.138] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1heGFa-0004le-Q7; Fri, 21 Jun 2019 09:54:30 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1heGFX-0004dt-D3; Fri, 21 Jun 2019 06:54:27 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH] ABI: sysfs-driver-mlxreg-io: fix the what fields
+Date:   Fri, 21 Jun 2019 06:54:25 -0300
+Message-Id: <4cd2ece080041d8545cc2f3e86cb1ff7c8a91f5b.1561110859.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190621095252.32307-1-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,97 +66,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vDSO compat support to the arm64 building system.
+The author of this file should be given an award for creativity:
+the What: fields on this file technically fulfills the description
+at README. Yet, the way it is, it can't be parsed on a script,
+and if someone would try to do something like:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Tested-by: Shijith Thotton <sthotton@marvell.com>
-Tested-by: Andre Przywara <andre.przywara@arm.com>
+	grep hwmon*/jtag_enable
+
+It wouldn't find anything.
+
+Fix the What fields in a way that it can be parseable by a
+script and other search tools.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- arch/arm64/Kconfig         |  1 +
- arch/arm64/Makefile        | 23 +++++++++++++++++++++--
- arch/arm64/kernel/Makefile |  6 +++++-
- 3 files changed, 27 insertions(+), 3 deletions(-)
+ .../ABI/stable/sysfs-driver-mlxreg-io         | 45 ++++++++-----------
+ 1 file changed, 19 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 952c9f8cf3b8..f5eb592b8579 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -108,6 +108,7 @@ config ARM64
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_GETTIMEOFDAY
-+	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
- 	select HANDLE_DOMAIN_IRQ
- 	select HARDIRQS_SW_RESEND
- 	select HAVE_PCI
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index b025304bde46..4db50d4b2476 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -49,9 +49,25 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
-   endif
- endif
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index 156319fc5b80..3544968f43cc 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -1,5 +1,4 @@
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							asic_health
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
  
--KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
-+ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
-+  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
-+
-+  ifeq ($(CONFIG_CC_IS_CLANG), y)
-+    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
-+  else ifeq ($(CROSS_COMPILE_COMPAT),)
-+    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
-+  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
-+    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
-+  else
-+    export CROSS_COMPILE_COMPAT
-+    export CONFIG_COMPAT_VDSO := y
-+    compat_vdso := -DCONFIG_COMPAT_VDSO=1
-+  endif
-+endif
-+
-+KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst) $(compat_vdso)
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
--KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
-+KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst) $(compat_vdso)
+ Date:		June 2018
+ KernelVersion:	4.19
+@@ -9,9 +8,8 @@ Description:	This file shows ASIC health status. The possible values are:
  
- KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
- KBUILD_AFLAGS	+= $(call cc-option,-mabi=lp64)
-@@ -163,6 +179,9 @@ ifeq ($(KBUILD_EXTMOD),)
- prepare: vdso_prepare
- vdso_prepare: prepare0
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
-+	$(if $(CONFIG_COMPAT_VDSO),$(Q)$(MAKE) \
-+		$(build)=arch/arm64/kernel/vdso32  \
-+		include/generated/vdso32-offsets.h)
- endif
+ 		The files are read only.
  
- define archhelp
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 9e7dcb2c31c7..478491f07b4f 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -28,7 +28,10 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
- 	$(call if_changed,objcopy)
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							cpld1_version
+-							cpld2_version
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld1_version
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld2_version
+ Date:		June 2018
+ KernelVersion:	4.19
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -20,8 +18,7 @@ Description:	These files show with which CPLD versions have been burned
  
- obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
--					   sigreturn32.o sys_compat.o
-+					   sys_compat.o
-+ifneq ($(CONFIG_COMPAT_VDSO), y)
-+obj-$(CONFIG_COMPAT)			+= sigreturn32.o
-+endif
- obj-$(CONFIG_KUSER_HELPERS)		+= kuser32.o
- obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o entry-ftrace.o
- obj-$(CONFIG_MODULES)			+= module.o
-@@ -62,6 +65,7 @@ obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
- obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
+ 		The files are read only.
  
- obj-y					+= vdso/ probes/
-+obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
- head-y					:= head.o
- extra-y					+= $(head-y) vmlinux.lds
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							fan_dir
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
  
+ Date:		December 2018
+ KernelVersion:	5.0
+@@ -32,8 +29,7 @@ Description:	This file shows the system fans direction:
+ 
+ 		The files are read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							jtag_enable
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
+ 
+ Date:		November 2018
+ KernelVersion:	5.0
+@@ -43,8 +39,7 @@ Description:	These files show with which CPLD versions have been burned
+ 
+ 		The files are read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							jtag_enable
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
+ 
+ Date:		November 2018
+ KernelVersion:	5.0
+@@ -87,16 +82,15 @@ Description:	These files allow asserting system power cycling, switching
+ 
+ 		The files are write only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-							reset_aux_pwr_or_ref
+-							reset_asic_thermal
+-							reset_hotswap_or_halt
+-							reset_hotswap_or_wd
+-							reset_fw_reset
+-							reset_long_pb
+-							reset_main_pwr_fail
+-							reset_short_pb
+-							reset_sw_reset
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_aux_pwr_or_ref
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_asic_thermal
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_halt
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_hotswap_or_wd
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_fw_reset
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_long_pb
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_main_pwr_fail
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_short_pb
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sw_reset
+ Date:		June 2018
+ KernelVersion:	4.19
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -110,11 +104,10 @@ Description:	These files show the system reset cause, as following: power
+ 
+ 		The files are read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
+-						reset_comex_pwr_fail
+-						reset_from_comex
+-						reset_system
+-						reset_voltmon_upgrade_fail
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_pwr_fail
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_comex
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
+ 
+ Date:		November 2018
+ KernelVersion:	5.0
 -- 
 2.21.0
 
