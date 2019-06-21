@@ -2,247 +2,200 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2777C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AFFC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771D020B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561101718;
-	bh=BEm/q++STfaV62as0+wcSgtLxmizISkWXiUqnVMMcA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KeZoTafXhAKLYWcSNeEQoNNwuetLEeXRQQOzDfAxyu3etbJLhPRnHQdlTAvRJWZu3
-	 ZIGhgnGozQFppXMwZiAegsWFuVSbPHjPk7qGmJbwigYDDj1Xed3YbwHlect2V8H0rg
-	 zKi7zOxitw9gYHsLYXUfBSnd5obtk+dAfyfAOtsE=
+	by mail.kernel.org (Postfix) with ESMTP id 105E1208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 07:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfFUHV5 (ORCPT
+        id S1726230AbfFUHXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 03:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
+        Fri, 21 Jun 2019 03:23:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45358 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfFUHV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 03:21:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726025AbfFUHXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 03:23:50 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A1A206E0;
-        Fri, 21 Jun 2019 07:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561101715;
-        bh=BEm/q++STfaV62as0+wcSgtLxmizISkWXiUqnVMMcA8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TWKaDNQi0vZQLYHOjm5oSwQZDBExUBu0mcyVTTIIuKM2dcRnN/k5wl3PN+CJ0PYTa
-         3/PkfR0ytMUNdyjY8JcoS9yasedMvXB5336kHhrolzA41NbVrRIfXH2fEM2jCQMx0f
-         HSxIHzcVBegtI8YwRWqMAJ0jKObS+aICiRmMc3M0=
-Date:   Fri, 21 Jun 2019 09:21:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190621072152.GA21300@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
- <20190619125135.GG25248@localhost>
- <20190619105633.7f7315a5@coco.lan>
- <20190619150207.GA19346@kroah.com>
- <20190619131408.26b45c3b@coco.lan>
- <20190620112749.5e3fb4e9@coco.lan>
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E9833082AE5;
+        Fri, 21 Jun 2019 07:23:42 +0000 (UTC)
+Received: from [10.36.117.46] (ovpn-117-46.ams2.redhat.com [10.36.117.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CF4319722;
+        Fri, 21 Jun 2019 07:23:37 +0000 (UTC)
+Subject: Re: [PATCH] mm/sparsemem: Cleanup 'section number' data types
+To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
+Cc:     Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+References: <156107543656.1329419.11505835211949439815.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <68b71c3a-6fbd-ce39-2699-09c85212d9f5@redhat.com>
+Date:   Fri, 21 Jun 2019 09:23:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620112749.5e3fb4e9@coco.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <156107543656.1329419.11505835211949439815.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 21 Jun 2019 07:23:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:27:49AM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 19 Jun 2019 13:14:08 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+On 21.06.19 02:06, Dan Williams wrote:
+> David points out that there is a mixture of 'int' and 'unsigned long'
+> usage for section number data types. Update the memory hotplug path to
+> use 'unsigned long' consistently for section numbers.
 > 
-> > Em Wed, 19 Jun 2019 17:02:07 +0200
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
-> > 
-> > > On Wed, Jun 19, 2019 at 10:56:33AM -0300, Mauro Carvalho Chehab wrote:  
-> > > > Hi Johan,
-> > > > 
-> > > > Em Wed, 19 Jun 2019 14:51:35 +0200
-> > > > Johan Hovold <johan@kernel.org> escreveu:
-> > > >     
-> > > > > On Thu, Jun 13, 2019 at 11:04:10PM -0300, Mauro Carvalho Chehab wrote:    
-> > > > > > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> > > > > > 
-> > > > > > When parsing via script, it is important to know if the script
-> > > > > > should consider a description as a literal block that should
-> > > > > > be displayed as-is, or if the description can be considered
-> > > > > > as a normal text.
-> > > > > > 
-> > > > > > Change descriptions to ensure that the preceding line of a table
-> > > > > > ends with a colon. That makes easy to identify the need of a
-> > > > > > literal block.      
-> > > > > 
-> > > > > In the cover letter you say that the first four patches of this series,
-> > > > > including this one, "fix some ABI descriptions that are violating the
-> > > > > syntax described at Documentation/ABI/README". This seems a bit harsh,
-> > > > > given that it's you that is now *introducing* a new syntax requirement
-> > > > > to assist your script.    
-> > > > 
-> > > > Yeah, what's there at the cover letter doesn't apply to this specific
-> > > > patch. The thing is that I wrote this series a lot of time ago (2016/17).
-> > > > 
-> > > > I revived those per a request at KS ML, as we still need to expose the
-> > > > ABI content on some book that will be used by userspace people.
-> > > > 
-> > > > So, I just rebased it on the top of curent Kernel, add a cover letter
-> > > > with the things I remembered and re-sent.
-> > > > 
-> > > > In the specific case of this patch, the ":" there actually makes sense
-> > > > for someone that it is reading it as a text file, and it is an easy
-> > > > hack to make it parse better.
-> > > >     
-> > > > > Specifically, this new requirement isn't documented anywhere AFAICT, so
-> > > > > how will anyone adding new ABI descriptions learn about it?    
-> > > > 
-> > > > Yeah, either that or provide an alternative to "Description" tag, to be
-> > > > used with more complex ABI descriptions.
-> > > > 
-> > > > One of the things that occurred to me, back on 2017, is that we should
-> > > > have a way to to specify that an specific ABI description would have
-> > > > a rich format. Something like:
-> > > > 
-> > > > What:		/sys/bus/usb/devices/<busnum>-<devnum>:<config num>.<interface num>/<hid-bus>:<vendor-id>:<product-id>.<num>/pyra/roccatpyra<minor>/actual_cpi
-> > > > Date:		August 2010
-> > > > Contact:	Stefan Achatz <erazor_de@users.sourceforge.net>
-> > > > RST-Description:
-> > > > 		It is possible to switch the cpi setting of the mouse with the
-> > > > 		press of a button.
-> > > > 		When read, this file returns the raw number of the actual cpi
-> > > > 		setting reported by the mouse. This number has to be further
-> > > > 		processed to receive the real dpi value:
-> > > > 
-> > > > 		===== =====
-> > > > 		VALUE DPI
-> > > > 		===== =====
-> > > > 		1     400
-> > > > 		2     800
-> > > > 		4     1600
-> > > > 		===== =====
-> > > > 
-> > > > With that, the script will know that the description contents will be using
-> > > > the ReST markup, and parse it accordingly. Right now, what it does, instead,
-> > > > is to place the description on a code-block, e. g. it will produce this
-> > > > output for the description:
-> > > > 
-> > > > ::
-> > > > 
-> > > > 		It is possible to switch the cpi setting of the mouse with the
-> > > > 		press of a button.
-> > > > 		When read, this file returns the raw number of the actual cpi
-> > > > 		setting reported by the mouse. This number has to be further
-> > > > 		processed to receive the real dpi value:
-> > > > 
-> > > > 		VALUE DPI
-> > > > 		1     400
-> > > > 		2     800
-> > > > 		4     1600
-> > > > 
-> > > > 
-> > > > Greg, 
-> > > > 
-> > > > what do you think?    
-> > > 
-> > > I don't know when "Description" and "RST-Description" would be used.
-> > > Why not just parse "Description" like rst text and if things are "messy"
-> > > we fix them up as found, like you did with the ":" here?  It doesn't
-> > > have to be complex, we can always fix them up after-the-fact if new
-> > > stuff gets added that doesn't quite parse properly.
-> > > 
-> > > Just like we do for most kernel-doc formatting :)  
-> > 
-> > Works for me. Yet, I guess I tried that, back on 2017. 
-> > 
-> > If I'm not mistaken, the initial patchset to solve the broken things 
-> > won't be small, and will be require a lot of attention in order to
-> > identify what's broken and where.
-> > 
-> > Btw, one thing is to pass at ReST validation. Another thing is to
-> > produce something that people can read. 
-> > 
-> > Right now, the pertinent logic at the script I wrote (scripts/get_abi.pl)
-> > is here:
-> > 
-> >                 if (!($desc =~ /^\s*$/)) {
-> >                         if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-> >                                 # put everything inside a code block
-> >                                 $desc =~ s/\n/\n /g;
-> > 
-> >                                 print "::\n\n";
-> >                                 print " $desc\n\n";
-> >                         } else {
-> >                                 # Escape any special chars from description
-> >                                 $desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-> > 
-> >                                 print "$desc\n\n";
-> >                         }
-> >                 }
-> > 
-> > If it discovers something weird enough, it just places everything
-> > into a comment block. Otherwise, it assumes that it is a plain
-> > text and that any special characters should be escaped.
-> > 
-> > If the above block is replaced by a simple:
-> > 
-> > 		print "$desc\n\n";
-> > 
-> > The description content will be handled as a ReST file.
-> > 
-> > I don't have any time right now to do this change and to handle the
-> > warnings that will start to popup.
-> > 
-> > Btw, a single replace there is enough to show the amount of problems that
-> > it will rise, as it will basically break Sphinx build with:
-> > 
-> > 	reading sources... [  1%] admin-guide/abi-testing
-> > 	reST markup error:
-> > 	get_abi.pl rest --dir $srctree/Documentation/ABI/testing:45261: (SEVERE/4) Missing matching underline for section title overline.
-> > 	
-> > 	==========================
-> > 	PCIe Device AER statistics
-> > 	These attributes show up under all the devices that are AER capable. These
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Reported-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Hi Andrew,
 > 
-> To be clear here: the problem with the above is that ReST has zero
-> tolerance and actually behaves like a crash, if it receives something like:
+> This patch belatedly fixes up David's review feedback about moving over
+> to 'unsigned long' for section numbers. Let me know if you want me to
+> respin the full series, or if you'll just apply / fold this patch on
+> top.
 > 
->    ==========================
->    PCIe Device AER statistics
->    ==========================
+>  mm/memory_hotplug.c |   10 +++++-----
+>  mm/sparse.c         |    8 ++++----
+>  2 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> For it to work, it has to have zero spaces before ===..=== line, e. g.:
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4e8e65954f31..92bc44a73fc5 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -288,8 +288,8 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+>  int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>  		struct mhp_restrictions *restrictions)
+>  {
+> -	unsigned long i;
+> -	int start_sec, end_sec, err;
+> +	int err;
+> +	unsigned long nr, start_sec, end_sec;
+>  	struct vmem_altmap *altmap = restrictions->altmap;
+>  
+>  	if (altmap) {
+> @@ -310,7 +310,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>  
+>  	start_sec = pfn_to_section_nr(pfn);
+>  	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+> -	for (i = start_sec; i <= end_sec; i++) {
+> +	for (nr = start_sec; nr <= end_sec; nr++) {
+>  		unsigned long pfns;
+>  
+>  		pfns = min(nr_pages, PAGES_PER_SECTION
+> @@ -541,7 +541,7 @@ void __remove_pages(struct zone *zone, unsigned long pfn,
+>  		    unsigned long nr_pages, struct vmem_altmap *altmap)
+>  {
+>  	unsigned long map_offset = 0;
+> -	int i, start_sec, end_sec;
+> +	unsigned long nr, start_sec, end_sec;
+>  
+>  	if (altmap)
+>  		map_offset = vmem_altmap_offset(altmap);
+> @@ -553,7 +553,7 @@ void __remove_pages(struct zone *zone, unsigned long pfn,
+>  
+>  	start_sec = pfn_to_section_nr(pfn);
+>  	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+> -	for (i = start_sec; i <= end_sec; i++) {
+> +	for (nr = start_sec; nr <= end_sec; nr++) {
+>  		unsigned long pfns;
+>  
+>  		cond_resched();
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index b77ca21a27a4..6c4eab2b2bb0 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -229,21 +229,21 @@ void subsection_mask_set(unsigned long *map, unsigned long pfn,
+>  void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+>  {
+>  	int end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+> -	int i, start_sec = pfn_to_section_nr(pfn);
+> +	unsigned long nr, start_sec = pfn_to_section_nr(pfn);
+>  
+>  	if (!nr_pages)
+>  		return;
+>  
+> -	for (i = start_sec; i <= end_sec; i++) {
+> +	for (nr = start_sec; nr <= end_sec; nr++) {
+>  		struct mem_section *ms;
+>  		unsigned long pfns;
+>  
+>  		pfns = min(nr_pages, PAGES_PER_SECTION
+>  				- (pfn & ~PAGE_SECTION_MASK));
+> -		ms = __nr_to_section(i);
+> +		ms = __nr_to_section(nr);
+>  		subsection_mask_set(ms->usage->subsection_map, pfn, pfns);
+>  
+> -		pr_debug("%s: sec: %d pfns: %ld set(%d, %d)\n", __func__, i,
+> +		pr_debug("%s: sec: %d pfns: %ld set(%d, %d)\n", __func__, nr,
+>  				pfns, subsection_map_index(pfn),
+>  				subsection_map_index(pfn + pfns - 1));
+>  
 > 
-> ==========================
-> PCIe Device AER statistics
-> ==========================
-> 
-> Ok, maybe we could try to teach the parser a way to identify the initial
-> spacing of the first description line and remove that amount of 
-> spaces/tabs for the following lines, but it may require some heuristics.
 
-Or we can clean this type of thing up by hand :)
+Thanks Dan!
 
-Let's see how bad this gets, the documentation in these files should not
-be very complex as they _should_ only be one-value-per-file, but as you
-have shown in this very example, that rule is violated :(
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-thanks,
+-- 
 
-greg k-h
+Thanks,
+
+David / dhildenb
