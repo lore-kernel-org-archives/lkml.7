@@ -2,155 +2,177 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C80C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 02:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A55C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 02:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7537020675
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 02:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2B82070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 02:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="WN5tpYUj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NP3m09Pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfFUCOr (ORCPT
+        id S1726200AbfFUCSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 22:14:47 -0400
-Received: from onstation.org ([52.200.56.107]:56560 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFUCOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 22:14:46 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id D81933E9C9;
-        Fri, 21 Jun 2019 02:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1561083285;
-        bh=UMl+xDCel/ZpC8ltYDruApT4MS7N+u7XvaUpzvn6c5E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WN5tpYUjwkiOYyVBf/SFE9Yc8fRGfKwU9KMrtjMpDvNAyMVxoiSe9KN1sCvlD5UCk
-         YtMlsZQhOuPzLda11cqC2TZBgsbNFWFDHaEozfq1XpxBcDofSE6ok5X730teBjDO71
-         ahj3CZcZLeSD1T0q1kPeCTuqSizp4EJwFFlxtipc=
-Date:   Thu, 20 Jun 2019 22:14:44 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem
- property
-Message-ID: <20190621021444.GA13972@onstation.org>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-3-masneyb@onstation.org>
- <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
- <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
+        Thu, 20 Jun 2019 22:18:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46429 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfFUCSj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 22:18:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v24so4483315ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 19:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dTHPPGOwBa2FwhZr/ABNXZ8z65KGobDyyMuTtBj4fGY=;
+        b=NP3m09PdLpDP7GTWWKWTx/AXHOWapsHVodgAXmFiSzcTk8VDI3pPk8sUEyMCwtq4h9
+         OSnYDqui8WtcCdwDjkUJV0gY7cHEwL0qUw5DMLZtP6kK4yj68AaFSpz+gZCRO/Fi0eZx
+         +PdbF2UQACqlpL+lNWGSrkND+sb90IwpgARI9F8gCW7KeUo0lE3wCAvQd1SZtOhp/XIC
+         lIcP5fBtMJwrvADOjimBW/e0toSfOFiHkVCLJDxtiEAm+5FVZAkaomjxGkmjcil3l3e3
+         rnZA9WhhbQItLYm0ndYzhXIlB55PvU81AoW6YeZ3+xvXoZphPnTe97pc/QwneAcI0A0L
+         E4Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dTHPPGOwBa2FwhZr/ABNXZ8z65KGobDyyMuTtBj4fGY=;
+        b=QR4sO2NMv98kb6jMlcWsoBLx7LLfW1oRQuo1xy0tWyxx8gz9eXfY7PhBkkER7hudqM
+         YLGNvBBBuDeSsmb4NV6m0khDsNhp3xqpkjpPvtF+2WMk3kc5rPDnGwl0vUFj00ieLNtu
+         IW7QIKtQvSBr5EfphiHKXIpqYbRt79Nwv4nZ3Uxnu6H6EqaQPjgefD6TimuV4yNQLeow
+         TmJP0EvqsM0FTtPSRs5nNC9slKlOmOKaZvEUcs/ItKyFfAcc644NqolMSupr6sigp1yW
+         VhewdwZOtY9jFXVIem50SZoG9r5pXBfWFjXyavUsYpkYNwpCkV4wxpp2M0CmALAxScNS
+         ly8A==
+X-Gm-Message-State: APjAAAU+yGIL76rim7J2NfBX+uRedLPuOEiqB679NeyezSD6LjdsmfV5
+        h260U6cF7SCwzPCddEeFBjdN7VJxg8/CEA0G329vWQ==
+X-Google-Smtp-Source: APXvYqzouJwCr7psc+7u/bTqPqXAvLl4AsG+Q4VFOuozxFshhjP4aZNTQXTfoNwoctR4jMhX1Qze7PQGdpPmVUFpRug=
+X-Received: by 2002:a2e:824d:: with SMTP id j13mr70202386ljh.137.1561083516657;
+ Thu, 20 Jun 2019 19:18:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
+References: <20190620174351.964339809@linuxfoundation.org>
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 21 Jun 2019 07:48:25 +0530
+Message-ID: <CA+G9fYtGi8iaw=Uiuvtju92z7NHWf+AiFO2aF9egOORptiy98w@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/117] 4.9.183-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 01:21:20PM -0700, Rob Clark wrote:
-> On Wed, Jun 19, 2019 at 1:17 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-> > > must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-> > > optional ocmem property to the Adreno Graphics Management Unit bindings.
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > index 90af5b0a56a9..c746b95e95d4 100644
-> > > --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > @@ -31,6 +31,10 @@ Required properties:
-> > >  - iommus: phandle to the adreno iommu
-> > >  - operating-points-v2: phandle to the OPP operating points
-> > >
-> > > +Optional properties:
-> > > +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> > > +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
-> >
-> > We already have a couple of similar properties. Lets standardize on
-> > 'sram' as that is what TI already uses.
-> >
-> > Also, is the whole OCMEM allocated to the GMU? If not you should have
-> > child nodes to subdivide the memory.
-> >
-> 
-> iirc, downstream a large chunk of OCMEM is statically allocated for
-> GPU.. the remainder is dynamically allocated for different use-cases.
-> The upstream driver Brian is proposing only handles the static
-> allocation case
+On Thu, 20 Jun 2019 at 23:33, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.183 release.
+> There are 117 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.183-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-It appears that the GPU expects to use a specific region of ocmem,
-specifically starting at 0. The freedreno driver allocates 1MB of
-ocmem on the Nexus 5 starting at ocmem address 0. As a test, I
-changed the starting address to 0.5MB and kmscube shows only half the
-cube, and four wide black bars across the screen:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-https://www.flickr.com/photos/masneyb/48100534381/
+Summary
+------------------------------------------------------------------------
 
-> (and I don't think we have upstream support for the various audio and
-> video use-cases that used dynamic OCMEM allocation downstream)
+kernel: 4.9.183-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: b2977e94f62a4008b6cc418f3af3c1a04ddb8ce3
+git describe: v4.9.182-118-gb2977e94f62a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.182-118-gb2977e94f62a
 
-That's my understanding as well.
 
-> Although maybe we should still have a child node to separate the
-> statically and dynamically allocated parts?  I'm not sure what would
-> make the most sense..
+No regressions (compared to build v4.9.182)
 
-Given that the GPU is expecting a fixed address in ocmem, perhaps it
-makes sense to have the child node. How about this based on the
-sram/sram.txt bindings?
+No fixes (compared to build v4.9.182)
 
-  ocmem: ocmem@fdd00000 {
-    compatible = "qcom,msm8974-ocmem";
 
-    reg = <0xfdd00000 0x2000>, <0xfec00000 0x180000>;
-    reg-names = "ctrl", "mem";
+Ran 23588 total tests in the following environments and test suites.
 
-    clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>, <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-    clock-names = "core", "iface";
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
-    gmu-sram@0 {
-      reg = <0x0 0x100000>;
-      pool;
-    };
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* prep-tmp-disk
 
-    misc-sram@0 {
-      reg = <0x100000 0x080000>;
-      export;
-    };
-  };
-
-I marked the misc pool as export since I've seen in the downstream ocmem
-sources a reference to their closed libsensors that runs in userspace.
-
-Looking at the sram bindings led me to the genalloc API
-(Documentation/core-api/genalloc.rst). I wonder if this is the way that
-this should be done?
-
-Brian
+--=20
+Linaro LKFT
+https://lkft.linaro.org
