@@ -2,96 +2,87 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA5AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2ABC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896212070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237D72070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 21:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfFUVWv (ORCPT
+        id S1726257AbfFUV0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 17:22:51 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41911 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUVWu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 17:22:50 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 129BFFF806;
-        Fri, 21 Jun 2019 21:22:46 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 23:22:46 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: DT for 5.3
-Message-ID: <20190621212246.GA30172@piout.net>
+        Fri, 21 Jun 2019 17:26:44 -0400
+Received: from sauhun.de ([88.99.104.3]:56260 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfFUV0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 17:26:42 -0400
+Received: from localhost (p5486CF54.dip0.t-ipconnect.de [84.134.207.84])
+        by pokefinder.org (Postfix) with ESMTPSA id A7B3E2C077A;
+        Fri, 21 Jun 2019 23:26:40 +0200 (CEST)
+Date:   Fri, 21 Jun 2019 23:26:40 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bitan Biswas <bbiswas@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+Message-ID: <20190621212640.GF950@kunai>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vA66WO2vHvL/CRSR"
 Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, Olof,
 
-Still very few updates. It is mostly about removing DTC warnings by
-switching the sckc to the proper bindings and converting the atmel
-bindings to json-schema.
+--vA66WO2vHvL/CRSR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+On Tue, Jun 18, 2019 at 04:09:42AM -0700, Bitan Biswas wrote:
+> The usage of BUG() macro is generally discouraged in kernel, unless
+> it's a problem that results in a physical damage or loss of data.
+> This patch removes unnecessary BUG() macros and replaces the rest
+> with warning.
+>=20
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+Applied to for-next, thanks!
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.3-dt
+--vA66WO2vHvL/CRSR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-for you to fetch changes up to 271839b0a819cbb76ef3ce5c7237d6cb624b3eba:
+-----BEGIN PGP SIGNATURE-----
 
-  dt-bindings: arm: Convert Atmel board/soc bindings to json-schema (2019-06-20 11:13:52 +0200)
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0NS5AACgkQFA3kzBSg
+KbZGAQ/+POOwqL1aPhZCqfwAJ5oAN9IH0Mf/A2wreDZee1OnVZFXd51w3hlSweSD
+NlqQuCl42kk06T1F1epfCCh7n1jsLliF9WbvVfY8eXsjXQ4BR0HELwMF8ZAJ321S
+0qQhVG36klBTu2uj/4iR5J2i+4k0xQA/REMG8gyeY6yfaOucfx+9Mlk6oMyk82c8
+QUNhuHjWEyabSmTMnMXN2UYGi38OzjydkolrDu3rFc0AtyiqF8h7bAa9Yz7p4SZi
+hP+/JpZUpzoldhiCLnfPautGYB3r8lrPV9qBMDiKgsEg64RQHzRGdCMZkIT66fwa
+c2fJcuMdV3JPEO1COYCOKhi8VLt3t51+U3lqZiik+OyEyTBcLQzdLdzzp87Z9nE+
+M/J2QFqBeI5CpcghbluwJinfbGOG/7jc5hDnJ250G8J43HE2AKJre2cGIbNaOsNi
++UHZvP3B12nrhIwAeLCyvdwLKczHO9ZIT9GaQBPox8siWiXWVYqLa+ZD10Z8G1qx
+7sIEvgYykkX2oy82LbwByA7OGivv8atiN/ReB3SHMGGeY3nWcKneDdk3zkW8KYX7
+4YAI7HPFqqbcFTODJiDi3pnmJo16/a1FBKnjCM6FShMjGTObe45ysMzhBAT+aRrU
+Z2/a823reAyjrSU/k3NELeyqcCbdCxMQbiLbiWFXCHmTg1Jrupo=
+=abNm
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-AT91 DT for 5.3
-
- - switch to new sckc bindings
- - convert soc bindings to json-schema
-
-----------------------------------------------------------------
-Alexandre Belloni (5):
-      ARM: dts: at91sam9261ek: remove unused chosen nodes
-      ARM: dts: at91: at91sam9x5: switch to new sckc bindings
-      ARM: dts: at91: at91sam9g45: switch to new sckc bindings
-      ARM: dts: at91: at91sam9rl: switch to new sckc bindings
-      ARM: dts: at91: sama5d3: switch to new sckc bindings
-
-Rob Herring (1):
-      dt-bindings: arm: Convert Atmel board/soc bindings to json-schema
-
- .../devicetree/bindings/arm/atmel-at91.txt         |  73 -----------
- .../devicetree/bindings/arm/atmel-at91.yaml        | 134 +++++++++++++++++++++
- arch/arm/boot/dts/at91-wb50n.dtsi                  |   2 +-
- arch/arm/boot/dts/at91sam9261ek.dts                |   8 --
- arch/arm/boot/dts/at91sam9g45.dtsi                 |  25 +---
- arch/arm/boot/dts/at91sam9rl.dtsi                  |  25 +---
- arch/arm/boot/dts/at91sam9x5.dtsi                  |  23 +---
- arch/arm/boot/dts/sama5d3.dtsi                     |  27 +----
- 8 files changed, 148 insertions(+), 169 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.yaml
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--vA66WO2vHvL/CRSR--
