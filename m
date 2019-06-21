@@ -2,108 +2,128 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83302C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6CDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312882089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B9C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cutYK3bz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njXISLkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfFUXMI (ORCPT
+        id S1726129AbfFUXQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:12:08 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37960 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfFUXMH (ORCPT
+        Fri, 21 Jun 2019 19:16:56 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:36106 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFUXQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:12:07 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so7347874ljg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 16:12:06 -0700 (PDT)
+        Fri, 21 Jun 2019 19:16:55 -0400
+Received: by mail-pg1-f202.google.com with SMTP id s4so4949643pgr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 16:16:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z7H6a9bx7122AU0Rz3Jd1mJYrH5GHmxQkIx46qhAJi8=;
-        b=cutYK3bz4LqR37UCsAWgVrci6+untrhnnylnM73QR5W5hmgHX6RyqMYhVDD29TVCly
-         sX0Z55mTs6Ar1kP7gF5rxfOBxzyWpJMjoTTmaJHgiN5q/KCrz8fpGkQeRiU4RjbIWx66
-         Izlz54YQatpYGfjVwfAESk9b6zdhQZPnGvOuw=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9PdGwLy1mM/ZLJdwl5NFEAnMyG/HeH/hHEoctq0zwqU=;
+        b=njXISLkrndmcqBcLnF/JExTh5XBHtoCPItkFCRI61ScX25wAdiXZdicB/6JIicdQN/
+         CyjrBb1sw5Uc7mE0RjmQewkyS6XmeN7okIeCI0UWIZfkHDZpG2C4PZKVFaG802B/B7KG
+         p6HrcEup8pXj3PHgBq5FoWhFGaYKkyz081ngycm6GlJIluk8LgG3yl6udKvbTEBqAQ1S
+         RKYaFJqkc4t9sg4CjkKBu3NjLGrtxdUioV4euZ6Q3kOclJo1L4S04s6njUlUIqKpiSGW
+         uUDEHYQnMQJPMzEFQrXgcFu1c0xPQznjCJV/gIrVFnRfF9CX0ZwcNczzZ9x69mQodbk9
+         t/5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z7H6a9bx7122AU0Rz3Jd1mJYrH5GHmxQkIx46qhAJi8=;
-        b=ix8Wwwo+azU1IgYS3o5eG5nUsPh6AIPtRY3gw5tXRRy0OdKU11rfBMizj8uO9fcTrY
-         WWrtA4UYrB7Ms54KUqr/F2IFhKkoIoAPEfuCxXKIwLfrmzZFq8Jt/dP1iaCZyAbrEe3J
-         wye8bDc+1v+4bhHI8Zr9dIL5l8irwPya5G8WL0Gnsv/kDR0Yv0fwIBY+zgnicZwawtxW
-         uy67nfudF0WEa5lrU0HfwVi0Uj4F6A74v9Qw1vDl51d061rKjd+wgFe9JIoBlYYZybwr
-         pIqvUKHyH53qBKFtQt6jU9mk8F3F3+D55elD/e4/sONeVVV/uiL4ZvJ3Hr7YR89nrtna
-         P5FA==
-X-Gm-Message-State: APjAAAU+iYTe8O6ihkfSPXI9gQx+iuWmRVU4Y8YAHA+/4ywWjJdNpvCG
-        33EMVvVFMMGTHBrCN+rf93t/hA==
-X-Google-Smtp-Source: APXvYqyi2cFSju4ncj1izri5C0oMMkaIf3pK1nj+jYikYd0Fh4dqBETKIZZckDh2PwRyArjkBz1TqA==
-X-Received: by 2002:a2e:96c3:: with SMTP id d3mr12335414ljj.68.1561158725211;
-        Fri, 21 Jun 2019 16:12:05 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-113-204.cgn.fibianet.dk. [5.186.113.204])
-        by smtp.gmail.com with ESMTPSA id w28sm579398ljd.12.2019.06.21.16.12.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 16:12:03 -0700 (PDT)
-Subject: Re: [PATCH 5/5] lib/list_sort: Optimize number of calls to comparison
- function
-To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        daniel.wagner@siemens.com, dchinner@redhat.com,
-        don.mullis@gmail.com, geert@linux-m68k.org, st5pub@yandex.ru
-References: <cover.1552097842.git.lkml@sdf.org>
- <b36187f091acc1b3a8fc1fc3e9dbb6eca56231a9.1552097842.git.lkml@sdf.org>
- <dd8924c1-07a9-4317-bfa8-23271b138a62@rasmusvillemoes.dk>
- <201903140158.x2E1wgFQ018649@sdf.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ee4312b3-ed26-2a78-de26-1907c38a5e4b@rasmusvillemoes.dk>
-Date:   Sat, 22 Jun 2019 01:12:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <201903140158.x2E1wgFQ018649@sdf.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9PdGwLy1mM/ZLJdwl5NFEAnMyG/HeH/hHEoctq0zwqU=;
+        b=fcQYXu9ruC79/QkcQgjZI6cs3mSFBUfnaXrd9jiIN6AT9dPr/nGW+QHmYTkwhIXMPx
+         7XVVBVHLbMoXPJRkIpXVXMU223Kh8M96aeSZw+8Pq9xGkSGT/6zoV+fKJGgPzyIYUkQM
+         4oW3QGM+IKbLtIm+vWvpkWaAlyT+JHBsekLSEMgPBhW3sbxPQrrjgv5Y6+UpsKCghcp8
+         k4Octsv4h9NXTBJ8PEp3by2ioXYVgmKrfjDyCJxD3AFAyBV/UtFWgm6chL7nc3k31PNR
+         Hj3o7fx4RsKxzEoy6J6B+g8NJGqsCx7nconEqum/uYqdLwlFTX/Tjr03F2jgkq3rNS6z
+         r0Yw==
+X-Gm-Message-State: APjAAAXvE5icZM3LhGxjgbGhODaRkXfOYpxMqYtHKGeI/RIx1N2yAjrp
+        Qg1VPA6bPlefejEO/H9KVq6L+gCUY47N
+X-Google-Smtp-Source: APXvYqw3R8uRDdGAiWcWKoTtbaC0NhEW8qdXMhY61IxaPC3W/Z/bPMYvTiz0gPiA8JFU9JhxWn2sq4RYIZ0H
+X-Received: by 2002:a65:404a:: with SMTP id h10mr21335826pgp.262.1561159014649;
+ Fri, 21 Jun 2019 16:16:54 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 16:16:44 -0700
+Message-Id: <20190621231650.32073-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [RFC PATCH 0/6] bpf: add BPF_MAP_DUMP command to access more
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 02.58, George Spelvin wrote:
-> On Thu, 14 Mar 2019 at 00:28:16 +0100, Rasmus Villemoes wrote:
+This introduces a new command to retrieve a variable number of entries
+from a bpf map.
 
->> Similarly one could do a SORT_SIMPLE_CMP() for when sorting an array of
->> structs according to a single numeric member. That sort is not stable,
->> so the comparison functions would have to do a full -1,0,1 return, of
->> course, but we'd still avoid indirect calls.
-> 
-> Actually, while some sorts (notably fat-pivot quicksort) require
-> a 3-way return to avoid O(n^2) performance, heapsort is just fine
-> with a boolean return value. 
+This new command can be executed from the existing BPF syscall as follows:
 
-Hi George
+err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
+using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
+attr->dump.buf_len
+returns zero or negative error, and populates buf and buf_len on
+succees
 
-So I tried starting to implement this, and the timing results look
-promising. However, currently I'm doing
+This implementation is wrapping the existing bpf methods:
+map_get_next_key and map_lookup_elem
+the results show that even with a 1-elem_size buffer, it runs ~40 faster
+than the current implementation, improvements of ~85% are reported when
+the buffer size is increased, although, after the buffer size is around
+5% of the total number of entries there's no huge difference in increasing
+it.
 
-  (*(u32*)ka > *(u32*)kb) - (*(u32*)ka < *(u32*)kb);
+Tested:
+Tried different size buffers to handle case where the bulk is bigger, or
+the elements to retrieve are less than the existing ones, all runs read
+a map of 100K entries. Below are the results(in ns) from the different
+runs:
 
-in my do_cmp. Both existing invocations of the comparison function in
-sort.c compare its return value >= 0, which is always true if I just
-return the boolean (*(u32*)ka > *(u32*)kb). So it seems the algorithm
-would have to be changed to allow the cmp function to return a bool.
-Perhaps it's as simple as changing the two >= to >, but can I get you to
-check that that would be ok? (Quick testing seems to suggest so, but
-it's possible there are some corner cases where it would break.)
+buf_len_1:       55528939 entry-by-entry: 97244981 improvement 42.897887%
+buf_len_2:       34425779 entry-by-entry: 88863122 improvement 61.259769%
+buf_len_230:     11700316 entry-by-entry: 88753301 improvement 86.817036%
+buf_len_5000:    11615290 entry-by-entry: 88362637 improvement 86.854976%
+buf_len_73000:   12083976 entry-by-entry: 89956483 improvement 86.566865%
+buf_len_100000:  12638913 entry-by-entry: 89642303 improvement 85.900727%
+buf_len_234567:  11873964 entry-by-entry: 89080077 improvement 86.670461%
 
-Thanks,
-Rasmus
+Suggested-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+
+Brian Vazquez (6):
+  bpf: add bpf_map_value_size and bp_map_copy_value helper functions
+  bpf: add BPF_MAP_DUMP command to access more than one entry per call
+  bpf: keep bpf.h in sync with tools/
+  libbpf: support BPF_MAP_DUMP command
+  selftests/bpf: test BPF_MAP_DUMP command on a bpf hashmap
+  selftests/bpf: add test to measure performance of BPF_MAP_DUMP
+
+ include/uapi/linux/bpf.h                |   9 +
+ kernel/bpf/syscall.c                    | 242 ++++++++++++++++++------
+ tools/include/uapi/linux/bpf.h          |   9 +
+ tools/lib/bpf/bpf.c                     |  28 +++
+ tools/lib/bpf/bpf.h                     |   4 +
+ tools/lib/bpf/libbpf.map                |   2 +
+ tools/testing/selftests/bpf/test_maps.c | 141 +++++++++++++-
+ 7 files changed, 372 insertions(+), 63 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
