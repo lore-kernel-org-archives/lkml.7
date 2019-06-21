@@ -2,138 +2,203 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B5EC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A761FC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E38A21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B87208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="U3s/yHg0";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kGUuYYiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfFUQ1G (ORCPT
+        id S1726070AbfFUQbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:27:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:50445 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfFUQ1G (ORCPT
+        Fri, 21 Jun 2019 12:31:50 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33160 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726002AbfFUQbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:27:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id m26so11310287ioh.17
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:27:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=h+SI/Am0w+9xpzpMcK0TGxc+SX3xzBYxFkvA+riSWrA=;
-        b=ilFZ43LRJz76a49g7XCdnUfewrfrZdxV+mw1T9y+oyslAH2/xE8qcmTdmWBofpv5Jb
-         xVuSfz9tbz2nc+AFTR9R4DULSfhD2Amgu7xnlMUKgVWg8fA5NTPHjlh3Py83t2LkuCM/
-         OySspaakvaFnSIIBLRUAfVSpRxaDGj0d4XfvriKw7stnoFhu8EC0h+9BY0d3mUQhn3wN
-         Mfv5ZaMbX7aPgmk3L4X22/Ko/HP0UN/nlcyRFzhfZYHYJLWKkwVfywWiSvhSThlpo6op
-         I+E0kEv/f7+YtsRm9ENf6nEh06Gd9evbMKm2mjIR6+51lWuOzE5exQrzmL1RF/v3vSG9
-         yDXA==
-X-Gm-Message-State: APjAAAVivWvmDcJxC4RDuBlWWfZN7ykR0CaGBFM2U8mCwbnHcDg03uIQ
-        GWFafkUJeF6FCLwBhVLpn4T0LiBPXMcMITCCxbo+Zjwn53eq
-X-Google-Smtp-Source: APXvYqwUx48ytk5pymdQ+l0hKlkof637MQHUQYXEPpgcT4xE0tb93h5ZehYaKcCc5x6i1/J5+QRDvg4F6hxkyMo2nSv0LBDkBo5M
+        Fri, 21 Jun 2019 12:31:50 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5LGO01k004531;
+        Fri, 21 Jun 2019 09:30:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=0qTXnWbgZ2y9IbGAMibal2DIgS8gvxNT+41nZ2D/Dl8=;
+ b=U3s/yHg0hh7rWogH1ptMe3FO1h4BlINB0Ys7tPmYe6mmuo5mQsICNYTEcSqpGiNTtoy8
+ Z2aXPvznL789zUex0QMn0BK0a4pU25PrbvGm4MaD4/xjy1YPZ4qLBLtr5k521yiI1fHg
+ XUmA49IcGVzDhTjTgFHaPhb5IYD346yA8/c= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2t8y020wee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 21 Jun 2019 09:30:07 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 21 Jun 2019 09:30:06 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 21 Jun 2019 09:30:06 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 21 Jun 2019 09:30:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0qTXnWbgZ2y9IbGAMibal2DIgS8gvxNT+41nZ2D/Dl8=;
+ b=kGUuYYiTvo77BSwYIgm4jCvXPfn8v9Dp438QG8utOgAWcJpVDH8lvrdG+H2pEyfkBqyhe9PV3UXdaQAIp3nP8CiPXSAyTMNxgE9g99h2IbZ1jtMIqzmDvltkNCI4J+jNRspZbGHqGaYw8ODAAIR/WajGepRZKxB18uLI1dMA/No=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1616.namprd15.prod.outlook.com (10.175.142.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Fri, 21 Jun 2019 16:30:04 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.014; Fri, 21 Jun 2019
+ 16:30:04 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "Kernel Team" <Kernel-team@fb.com>
+Subject: Re: [PATCH v4 5/5] uprobe: collapse THP pmd after removing all
+ uprobes
+Thread-Topic: [PATCH v4 5/5] uprobe: collapse THP pmd after removing all
+ uprobes
+Thread-Index: AQHVIhGkBNxZAI1nUkK1d2OfbYvmTqamGxWAgAAIBYCAAAVYgIAAAncAgAAuG4A=
+Date:   Fri, 21 Jun 2019 16:30:04 +0000
+Message-ID: <707D52CA-E782-4C9A-AC66-75938C8E3358@fb.com>
+References: <20190613175747.1964753-1-songliubraving@fb.com>
+ <20190613175747.1964753-6-songliubraving@fb.com>
+ <20190621124823.ziyyx3aagnkobs2n@box>
+ <B72B62C9-78EE-4440-86CA-590D3977BDB1@fb.com>
+ <20190621133613.xnzpdlicqvjklrze@box>
+ <4B58B3B3-10CB-4593-8BEC-1CEF41F856A1@fb.com>
+In-Reply-To: <4B58B3B3-10CB-4593-8BEC-1CEF41F856A1@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::1:e314]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 637ab245-7cc0-476e-1212-08d6f665b71d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1616;
+x-ms-traffictypediagnostic: MWHPR15MB1616:
+x-microsoft-antispam-prvs: <MWHPR15MB16166E627F6BB6978AEA180EB3E70@MWHPR15MB1616.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(366004)(346002)(136003)(199004)(189003)(5660300002)(76116006)(73956011)(256004)(50226002)(6246003)(54906003)(6916009)(33656002)(102836004)(186003)(76176011)(53546011)(6506007)(478600001)(25786009)(66946007)(486006)(4326008)(66556008)(66446008)(64756008)(66476007)(2906002)(7736002)(57306001)(81156014)(14454004)(46003)(81166006)(99286004)(316002)(476003)(8676002)(53936002)(6512007)(6486002)(6116002)(36756003)(2616005)(11346002)(229853002)(71200400001)(71190400001)(6436002)(68736007)(446003)(86362001)(8936002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1616;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aQa6KhLL3tB5eksbA19jSs8upkISddY089JT1IO6zWnJlvIip9I1FMsDjUnVAOdG8LluV5BRIBl2eDqRXy/HEc5yyOwZNFkxFDF2D3VkYJUMp4vqTj4xXAOx0xV0dL3sNlP9Hm9M4V4R8M9zj3jfTOb1FeZmLubnyefbEsjlpwqWO0bbOyWU9y+Ges4Wyhfyxv66xSPku8WrbrGpUODwQaDEAhHV2W1wS6cgndnW6nithhAygoVQhAtAs7DMTN3j3LlZC2/DoX20ixRVQ/OsYfUXaIidUlaNd/P/aotdEwSF/g+t/QypzFe40CeEm91mD6L2jyvKVw+dW5k2p272T5nN+h2MzaaBe7IrpagF8CzX8c8SETdJ/eFP7/6tW0UxfZ7ZpCyweUiC+8cdoI+JNNe0ckd77J2uMOl6hrOpYCA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <274FD60A5325DD41BC5BD6A652FD3B91@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8209:: with SMTP id l9mr1896385iom.303.1561134425860;
- Fri, 21 Jun 2019 09:27:05 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 09:27:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e672c6058bd7ee45@google.com>
-Subject: KASAN: slab-out-of-bounds Write in validate_chain
-From:   syzbot <syzbot+8893700724999566d6a9@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, cai@lca.pw, crecklin@redhat.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 637ab245-7cc0-476e-1212-08d6f665b71d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 16:30:04.1697
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1616
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=706 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210132
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16894709a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-dashboard link: https://syzkaller.appspot.com/bug?extid=8893700724999566d6a9
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167098b2a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8893700724999566d6a9@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in check_prev_add  
-kernel/locking/lockdep.c:2298 [inline]
-BUG: KASAN: slab-out-of-bounds in check_prevs_add  
-kernel/locking/lockdep.c:2418 [inline]
-BUG: KASAN: slab-out-of-bounds in validate_chain+0x1a35/0x84f0  
-kernel/locking/lockdep.c:2800
-Write of size 8 at addr ffff88807aeb00d0 by task syz-executor.5/8425
-
-CPU: 0 PID: 8425 Comm: syz-executor.5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-
-Allocated by task 2062228080:
-usercopy: Kernel memory overwrite attempt detected to SLAB  
-object 'kmalloc-4k' (offset 4112, size 1)!
-------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:102!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8425 Comm: syz-executor.5 Not tainted 5.2.0-rc5+ #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:usercopy_abort+0x8d/0x90 mm/usercopy.c:90
-Code: 84 5e 88 48 0f 44 de 48 c7 c7 7e a3 5d 88 4c 89 ce 4c 89 d1 4d 89 d8  
-49 89 c1 31 c0 41 57 41 56 53 e8 3a 92 a8 ff 48 83 c4 18 <0f> 0b 90 55 48  
-89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 30 41 89
-RSP: 0018:ffff88807aeaf648 EFLAGS: 00010086
-RAX: 0000000000000068 RBX: ffffffff885e841b RCX: defe62446f204b00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffff88807aeaf660 R08: ffffffff817fec49 R09: ffffed1015d444c6
-R10: ffffed1015d444c6 R11: 1ffff11015d444c5 R12: ffff88807aeaf7d1
-R13: 0000000000000200 R14: 0000000000001010 R15: 0000000000000001
-FS:  0000555556495940(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffff8adaea30 CR3: 00000000a0d73000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-Modules linked in:
----[ end trace e8702886173758cd ]---
-RIP: 0010:usercopy_abort+0x8d/0x90 mm/usercopy.c:90
-Code: 84 5e 88 48 0f 44 de 48 c7 c7 7e a3 5d 88 4c 89 ce 4c 89 d1 4d 89 d8  
-49 89 c1 31 c0 41 57 41 56 53 e8 3a 92 a8 ff 48 83 c4 18 <0f> 0b 90 55 48  
-89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 30 41 89
-RSP: 0018:ffff88807aeaf648 EFLAGS: 00010086
-RAX: 0000000000000068 RBX: ffffffff885e841b RCX: defe62446f204b00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffff88807aeaf660 R08: ffffffff817fec49 R09: ffffed1015d444c6
-R10: ffffed1015d444c6 R11: 1ffff11015d444c5 R12: ffff88807aeaf7d1
-R13: 0000000000000200 R14: 0000000000001010 R15: 0000000000000001
-FS:  0000555556495940(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffff8adaea30 CR3: 00000000a0d73000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> On Jun 21, 2019, at 6:45 AM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+>=20
+>=20
+>> On Jun 21, 2019, at 6:36 AM, Kirill A. Shutemov <kirill@shutemov.name> w=
+rote:
+>>=20
+>> On Fri, Jun 21, 2019 at 01:17:05PM +0000, Song Liu wrote:
+>>>=20
+>>>=20
+>>>> On Jun 21, 2019, at 5:48 AM, Kirill A. Shutemov <kirill@shutemov.name>=
+ wrote:
+>>>>=20
+>>>> On Thu, Jun 13, 2019 at 10:57:47AM -0700, Song Liu wrote:
+>>>>> After all uprobes are removed from the huge page (with PTE pgtable), =
+it
+>>>>> is possible to collapse the pmd and benefit from THP again. This patc=
+h
+>>>>> does the collapse.
+>>>>>=20
+>>>>> An issue on earlier version was discovered by kbuild test robot.
+>>>>>=20
+>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>>>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>>>>> ---
+>>>>> include/linux/huge_mm.h |  7 +++++
+>>>>> kernel/events/uprobes.c |  5 ++-
+>>>>> mm/huge_memory.c        | 69 ++++++++++++++++++++++++++++++++++++++++=
++
+>>>>=20
+>>>> I still sync it's duplication of khugepaged functinallity. We need to =
+fix
+>>>> khugepaged to handle SCAN_PAGE_COMPOUND and probably refactor the code=
+ to
+>>>> be able to call for collapse of particular range if we have all locks
+>>>> taken (as we do in uprobe case).
+>>>>=20
+>>>=20
+>>> I see the point now. I misunderstood it for a while.=20
+>>>=20
+>>> If we add this to khugepaged, it will have some conflicts with my other=
+=20
+>>> patchset. How about we move the functionality to khugepaged after these
+>>> two sets get in?=20
+>>=20
+>> Is the last patch of the patchset essential? I think this part can be do=
+ne
+>> a bit later in a proper way, no?
+>=20
+> Technically, we need this patch to regroup pmd mapped page, and thus get=
+=20
+> the performance benefit after the uprobe is detached.=20
+>=20
+> On the other hand, if we get the first 4 patches of the this set and the=
+=20
+> other set in soonish. I will work on improving this patch right after tha=
+t..
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Actually, it might be pretty easy. We can just call try_collapse_huge_pmd()=
+=20
+in khugepaged.c (in khugepaged_scan_shmem() or khugepaged_scan_file() after=
+=20
+my other set).=20
+
+Let me fold that in and send v5.=20
+
+Thanks,
+Song
+
+
