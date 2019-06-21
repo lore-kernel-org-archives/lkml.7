@@ -2,145 +2,106 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8FBC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62A0C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1DF7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XK3OmDbi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="axloNVl8"
+	by mail.kernel.org (Postfix) with ESMTP id 9992F21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfFUKbf (ORCPT
+        id S1726617AbfFUKdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:31:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52876 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFUKbf (ORCPT
+        Fri, 21 Jun 2019 06:33:09 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:35984 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfFUKdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:31:35 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6E9C161706; Fri, 21 Jun 2019 10:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561113093;
-        bh=83saP5agyCLRXJFITOAnGb07C5NHBmkBg6UjpUVttgY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XK3OmDbiGqcrSHWfrgYDgdZeDeTuKusvrdvOqek9PdlK9A+QPGfIW/dfyqG1zeWol
-         6+/dwqOnMXgnLcJUwInGC4TOKQI1qUS/kUvbq0q7YHinqrBkWphjckGyXJPzPs3J1Q
-         GsE6SQzsXDJFTq0cQWyfYE0wBBAnDgGaF5hmQT0c=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17BFC60A97;
-        Fri, 21 Jun 2019 10:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561113091;
-        bh=83saP5agyCLRXJFITOAnGb07C5NHBmkBg6UjpUVttgY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=axloNVl89+yy34mWOOy+ow2feDwzdwCo3bq5O8XkPeD0V00sUYEE7FdmvD27I7bKy
-         GrWorYJktFH3kn4yPv4yaKpZPt4GJ/pqGJu8ZKIiqbJQ3t8Hsc7Tm6Y2ZLR2vUGyxR
-         1GJ+wioETU4/lFl9rSksdTUGen1YpAYl49oBLyto=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17BFC60A97
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv2 2/2] coresight: Abort probe if cpus are not available
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mathieu.poirier@linaro.org, leo.yan@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        david.brown@linaro.org, mark.rutland@arm.com
-Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
- <65050e4cb2b0433f3cb9b1ca0bf6ec49d0751086.1561054498.git.saiprakash.ranjan@codeaurora.org>
- <d6e6a32e-4e15-5bc8-42f9-6cfe72fc0910@arm.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <01e1758f-7574-7735-f129-f072f93aeca6@codeaurora.org>
-Date:   Fri, 21 Jun 2019 16:01:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <d6e6a32e-4e15-5bc8-42f9-6cfe72fc0910@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Jun 2019 06:33:08 -0400
+Received: from tony.xie?rock-chips.com (unknown [192.168.167.192])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 86781568C5;
+        Fri, 21 Jun 2019 18:33:04 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P14435T140356020590336S1561113180405822_;
+        Fri, 21 Jun 2019 18:33:03 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <088971abcfd62b37d88279f7980530e4>
+X-RL-SENDER: tony.xie@rock-chips.com
+X-SENDER: xxx@rock-chips.com
+X-LOGIN-NAME: tony.xie@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Tony Xie <tony.xie@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
+        xsf@rock-chips.com, zhangqing@rock-chips.com,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com
+Subject: [PATCH v10 1/6] mfd: rk808: remove the id_table
+Date:   Fri, 21 Jun 2019 06:32:53 -0400
+Message-Id: <20190621103258.8154-2-tony.xie@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190621103258.8154-1-tony.xie@rock-chips.com>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+Remove the id_table because it's not used.
 
-On 6/21/2019 3:10 PM, Suzuki K Poulose wrote:
-> On 06/20/2019 07:31 PM, Sai Prakash Ranjan wrote:
->> Currently coresight etm and cpu-debug will go ahead with
->> the probe even when corresponding cpus are not available
->> and error out later in the probe path. In such cases, it
->> is better to abort the probe earlier.
->>
->> Without this, setting *nosmp* will throw below errors:
->>
->>   [    5.910622] coresight-cpu-debug 850000.debug: Coresight 
->> debug-CPU0 initialized
->>   [    5.914266] coresight-cpu-debug 852000.debug: CPU1 debug arch 
->> init failed
->>   [    5.921474] coresight-cpu-debug 854000.debug: CPU2 debug arch 
->> init failed
->>   [    5.928328] coresight-cpu-debug 856000.debug: CPU3 debug arch 
->> init failed
->>   [    5.935330] coresight etm0: CPU0: ETM v4.0 initialized
->>   [    5.941875] coresight-etm4x 85d000.etm: ETM arch init failed
->>   [    5.946794] coresight-etm4x: probe of 85d000.etm failed with 
->> error -22
->>   [    5.952707] coresight-etm4x 85e000.etm: ETM arch init failed
->>   [    5.958945] coresight-etm4x: probe of 85e000.etm failed with 
->> error -22
->>   [    5.964853] coresight-etm4x 85f000.etm: ETM arch init failed
->>   [    5.971096] coresight-etm4x: probe of 85f000.etm failed with 
->> error -22
-> 
-> That is expected. What else do you expect ?
-> 
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>   drivers/hwtracing/coresight/coresight-platform.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
->> b/drivers/hwtracing/coresight/coresight-platform.c
->> index 8b03fa573684..3f4559596c6b 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -168,6 +168,9 @@ static int of_coresight_get_cpu(struct device *dev)
->>       cpu = of_cpu_node_to_id(dn);
->>       of_node_put(dn);
->> +    if (num_online_cpus() <= cpu)
->> +        return -ENODEV;
-> 
-> That is a pointless and terribly wrong check. What if you have only 2
-> online CPUs (CPU0 and CPU4) and you were processing the ETM for CPU4 ?
->
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+---
+ drivers/mfd/rk808.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Sorry, I did not consider such cases.
-
-> More over you should simply let the driver handle a case where the CPU
-> is not online. May be the driver could register a hotplug notifier and
-> bring itself up when the CPU comes online.
-> 
-> So, please drop this patch.
-> 
-
-Sure I will drop this patch.
-
-Thanks,
-Sai
-
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 216fbf6adec9..94377782d208 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -568,14 +568,6 @@ static int rk808_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static const struct i2c_device_id rk808_ids[] = {
+-	{ "rk805" },
+-	{ "rk808" },
+-	{ "rk818" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(i2c, rk808_ids);
+-
+ static struct i2c_driver rk808_i2c_driver = {
+ 	.driver = {
+ 		.name = "rk808",
+@@ -583,7 +575,6 @@ static struct i2c_driver rk808_i2c_driver = {
+ 	},
+ 	.probe    = rk808_probe,
+ 	.remove   = rk808_remove,
+-	.id_table = rk808_ids,
+ };
+ 
+ module_i2c_driver(rk808_i2c_driver);
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
+
+
