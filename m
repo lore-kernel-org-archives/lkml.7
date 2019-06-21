@@ -2,142 +2,131 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16041C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F1C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EBA2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C782083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 05:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbfFUFdc (ORCPT
+        id S1726229AbfFUFge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 01:33:32 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:54597 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfFUFdc (ORCPT
+        Fri, 21 Jun 2019 01:36:34 -0400
+Received: from smtprelay0194.hostedemail.com ([216.40.44.194]:52181 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726030AbfFUFge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 01:33:32 -0400
-X-Originating-IP: 85.23.31.57
-Received: from windsurf (85-23-31-57.bb.dnainternet.fi [85.23.31.57])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0C874FF805;
-        Fri, 21 Jun 2019 05:33:23 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 07:33:18 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Kirkwood PCI Express and bridges
-Message-ID: <20190621073318.3bcd940e@windsurf>
-In-Reply-To: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
-References: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 21 Jun 2019 01:36:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 63F0D182CED2A;
+        Fri, 21 Jun 2019 05:36:32 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crow71_38f2c0aecdf16
+X-Filterd-Recvd-Size: 3741
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Jun 2019 05:36:31 +0000 (UTC)
+Message-ID: <df3a7ca31d2002ca447ab062f5b5e32ced9bec85.camel@perches.com>
+Subject: [PATCH] powerpc/powernv: Rename pe_level_printk to pe_printk and
+ embed KERN_LEVEL in format
+From:   Joe Perches <joe@perches.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Jun 2019 22:36:29 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chris,
+Remove the separate KERN_<LEVEL> from each pe_level_printk and
+instead add the KERN_<LEVEL> to the format.
 
-On Fri, 21 Jun 2019 04:03:27 +0000
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+pfix in pe_level_printk could also be used uninitialized so
+add a new else and set pfx to the hex value of pe->flags.
 
-> I'm in the process of updating the kernel version used on our products 
-> from 4.4 -> 5.1.
-> 
-> We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvell 
-> Switch ASIC. The Switch ASIC presents as multiple PCI devices.
-> 
-> The hardware setup looks like this
->                                         __________
-> [ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |
->                                  +---  |  Switch  |
->                                  +---  |          |
->                                  +---  |__________|
-> 
-> On the 4.4 based kernel things are fine
-> 
-> [root@awplus flash]# lspci -t
-> -[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0
->                                             +-03.0-[04]----00.0
->                                             +-04.0-[05]----00.0
->                                             \-05.0-[06]----00.0
-> 
-> But on the 5.1 based kernel things get a little weird
-> 
-> [root@awplus flash]# lspci -t
-> -[0000:00]---01.0-[01-06]--+-00.0-[02-06]--
->                             +-01.0
->                             +-02.0-[02-06]--
->                             +-03.0-[02-06]--
->                             +-04.0-[02-06]--
->                             +-05.0-[02-06]--
->                             +-06.0-[02-06]--
->                             +-07.0-[02-06]--
->                             +-08.0-[02-06]--
->                             +-09.0-[02-06]--
->                             +-0a.0-[02-06]--
->                             +-0b.0-[02-06]--
->                             +-0c.0-[02-06]--
->                             +-0d.0-[02-06]--
->                             +-0e.0-[02-06]--
->                             +-0f.0-[02-06]--
->                             +-10.0-[02-06]--
->                             +-11.0-[02-06]--
->                             +-12.0-[02-06]--
->                             +-13.0-[02-06]--
->                             +-14.0-[02-06]--
->                             +-15.0-[02-06]--
->                             +-16.0-[02-06]--
->                             +-17.0-[02-06]--
->                             +-18.0-[02-06]--
->                             +-19.0-[02-06]--
->                             +-1a.0-[02-06]--
->                             +-1b.0-[02-06]--
->                             +-1c.0-[02-06]--
->                             +-1d.0-[02-06]--
->                             +-1e.0-[02-06]--
->                             \-1f.0-[02-06]--+-02.0-[03]----00.0
->                                             +-03.0-[04]----00.0
->                                             +-04.0-[05]----00.0
->                                             \-05.0-[06]----00.0
-> 
-> 
-> I'll start bisecting to see where things started going wrong. I just 
-> wondered if this rings any bells for anyone.
+Rename pe_level_printk to pe_printk and update the pe_<level>
+macros.
 
-I am almost sure that the culprit is
-1f08673eef1236f7d02d93fcf596bb8531ef0d12 ("PCI: mvebu: Convert to PCI
-emulated bridge config space").
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 14 ++++++++++++--
+ arch/powerpc/platforms/powernv/pci.h      | 11 +++++------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-I still think it makes sense to share the bridge emulation code between
-the mvebu and aardvark drivers, but this sharing has required making
-the code very different, with lots of subtle differences in behavior in
-how registers are emulated.
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 10cc42b9e541..60fc36ae626a 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -50,15 +50,23 @@
+ static const char * const pnv_phb_names[] = { "IODA1", "IODA2", "NPU_NVLINK",
+ 					      "NPU_OCAPI" };
+ 
+-void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+-			    const char *fmt, ...)
++void pe_printk(const struct pnv_ioda_pe *pe, const char *fmt, ...)
+ {
+ 	struct va_format vaf;
+ 	va_list args;
+ 	char pfix[32];
++	char level[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
+ 
+ 	va_start(args, fmt);
+ 
++	while (printk_get_level(fmt)) {
++		size_t size = printk_skip_level(fmt) - fmt;
++
++		memcpy(level, fmt,  size);
++		level[size] = '\0';
++		fmt += size;
++	}
++
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
+ 
+@@ -74,6 +82,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+ 			(pe->rid & 0xff00) >> 8,
+ 			PCI_SLOT(pe->rid), PCI_FUNC(pe->rid));
+ #endif /* CONFIG_PCI_IOV*/
++	else
++		sprintf(pfix, "(flags: 0x%lx)", pe->flags);
+ 
+ 	printk("%spci %s: [PE# %.2x] %pV",
+ 	       level, pfix, pe->pe_number, &vaf);
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index be26ab3d99e0..870b21f55b3f 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -205,15 +205,14 @@ extern unsigned long pnv_pci_ioda2_get_table_size(__u32 page_shift,
+ 		__u64 window_size, __u32 levels);
+ extern int pnv_eeh_post_init(void);
+ 
+-__printf(3, 4)
+-extern void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+-			    const char *fmt, ...);
++__printf(2, 3)
++extern void pe_printk(const struct pnv_ioda_pe *pe, const char *fmt, ...);
+ #define pe_err(pe, fmt, ...)					\
+-	pe_level_printk(pe, KERN_ERR, fmt, ##__VA_ARGS__)
++	pe_printk(pe, KERN_ERR fmt, ##__VA_ARGS__)
+ #define pe_warn(pe, fmt, ...)					\
+-	pe_level_printk(pe, KERN_WARNING, fmt, ##__VA_ARGS__)
++	pe_printk(pe, KERN_WARNING fmt, ##__VA_ARGS__)
+ #define pe_info(pe, fmt, ...)					\
+-	pe_level_printk(pe, KERN_INFO, fmt, ##__VA_ARGS__)
++	pe_printk(pe, KERN_INFO fmt, ##__VA_ARGS__)
+ 
+ /* Nvlink functions */
+ extern void pnv_npu_try_dma_set_bypass(struct pci_dev *gpdev, bool bypass);
 
-Unfortunately, I don't have access to one of these complicated PCI
-setup with a HW switch on the way, so I couldn't test this kind of
-setups.
 
-Do you mind helping with figuring out what the issues are ? That would
-be really nice.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
