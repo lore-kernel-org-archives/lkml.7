@@ -2,99 +2,154 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B107BC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940EFC48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D1421707
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1E920673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 15:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5u5XAIr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ielkvWlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFUPpr (ORCPT
+        id S1726340AbfFUPt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 11:45:47 -0400
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:39333 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfFUPpq (ORCPT
+        Fri, 21 Jun 2019 11:49:27 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44204 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfFUPt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 11:45:46 -0400
-Received: by mail-lf1-f52.google.com with SMTP id p24so5420694lfo.6;
-        Fri, 21 Jun 2019 08:45:45 -0700 (PDT)
+        Fri, 21 Jun 2019 11:49:27 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so10688207edr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 08:49:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4fJ2PnraFqUF/JKW5XviEksJ6k/ji8A1pgBHcnkA8+E=;
-        b=M5u5XAIr4/a9W+EOhbLJumvb8itBVqTB2Ji867d06wxMEN0K/uPSTFU/b9ZGKcMIXY
-         YRP8sdd2tIHI53RrppKMThlzKXbPhv3tDlXKQy4i4reEDjcB51u8wPcitp6atGhZi/rp
-         oWErBg+ya6fRSw2bFlVMMSSfLLqaB5b4ZMvmnvORkkyKOIEjIiFTazSIxpnxwGATssBR
-         WG/WBqOrG1IFzN37qTZlimvtfgbxvmJXPnTrWTk0x2YuuRbWP5K0lzrW73l6aM0uWp5p
-         H612FyjZgTBnT5tPGNXyAb31CJkAfoC7M64QEN1VMuTYjWU38OUd+IGzGTbsuR1jm8hB
-         4L7A==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=urFcwKCOqXsZhsF5Qjs/RceQdsW1nEHCAXTfADLNqxU=;
+        b=ielkvWlTL0ttOEF6UkQ2aRv8QOg5eo2l1cwqbFchmDdczzyt1yp6/+Bk4VEkLiQH8o
+         U5WipBNtan5McZWNxE98M/PsPKEocjgjUhOp0NmFqET9YqV46O1NzStnGng8buN3F1Lt
+         JB8mZ+PmxSllHtucPLQj838mqAuDs6n4NKpA8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4fJ2PnraFqUF/JKW5XviEksJ6k/ji8A1pgBHcnkA8+E=;
-        b=uRrwQnMRn9Wx5u+2JAf90e9W5KSRj5E0s1CXYvEsBvoGc/sbFtn6WW3yLFQD11O9hg
-         1loF5fcCPqIwWRkoHdN8BJZbDhwQ5vtZOtsv+m7TpFgSHPSQ6z66eF7W/MPWKIUlUCRp
-         RdnqAV/9lgQNRvXcerhdTSxWKS1XfIwNm8aIfKZ03TgkXJsCB4EZ+pMWBdQ1cPcW29jo
-         tGZK8BHioAYlCtCcV2WvzCzKKpEAHkTEgXZ/199tVP6kJwptuGH/7yqdTfurxGiCimEO
-         5Hpll19CgUM9OGi1Vv3mM9r4iQCCI0dKCEI9Y89gWCEw/7Qw/1gXV9Is3ZnJuUtvdE/z
-         a9Pg==
-X-Gm-Message-State: APjAAAVuVCLjagJ3yZVpDMNydSSEViN3avNwOTuNoXVs9rVWtxbA5Ej8
-        y11nHnMtaQc0cS/np/utFtawjgIr6YSq5YI1M00=
-X-Google-Smtp-Source: APXvYqz6D7hHywj9tjfdpfWvZgBxWUEM8p1b8MpTAcYzk1K50zC1HX6fCm6UtxOlAeLLvSEWoWzUM8ZiXDxjqeKAWlY=
-X-Received: by 2002:a19:6e41:: with SMTP id q1mr61718401lfk.20.1561131944203;
- Fri, 21 Jun 2019 08:45:44 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=urFcwKCOqXsZhsF5Qjs/RceQdsW1nEHCAXTfADLNqxU=;
+        b=pHoYSHUs6Seu78I95PeRgtDf5w6uM8ddCPTLd0M/Vd9lodBDBD5wBAmWoVfGY4LM0V
+         lHQTYMA7VVp4LwaCuqLnwMsB9Zmr4k3+/MkoUWfyL6JXJtQrHyU5+sUXI/DQ26zwNuFZ
+         VwXcaNxbQ6AUWPwINYpmoOI2WTjn14PcsABbeSlEqWg/kxs9l4XDoKLaWebMzyGxJguE
+         eN+02cJr0to0NTnZ7ohxlzBxXQau5oDdyjGnxw2Zr5OoFdHRDL/1INj52Ku0RzJyi4Nr
+         TkMKRj74TPdhsx/9AW67x3/wwcKBxUIWXtFqU1s0+sUZr0TbJfD2Ca5DnhzUlh22/3e7
+         5BIw==
+X-Gm-Message-State: APjAAAXt9JiYM2Qjy8DkvoP7wnYBelqA9VDr8Yy+gtG/BBoqLaHMQb2C
+        VVxooifomX/utmxjUg7NZmSQcQ7fS74=
+X-Google-Smtp-Source: APXvYqz5U9SAoGOPhwyuOMIVZmwVpEK1glb2QXE2/hXQ0Pcs/rm8eZCcsNfwYVlJyv50y+baFiVliw==
+X-Received: by 2002:a05:6402:1801:: with SMTP id g1mr54351512edy.262.1561132165340;
+        Fri, 21 Jun 2019 08:49:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id f36sm930355ede.47.2019.06.21.08.49.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 08:49:24 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:49:17 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: linux-next: Fixes tags need some work in the drm-fixes tree
+Message-ID: <20190621154917.GG12905@phenom.ffwll.local>
+Mail-Followup-To: Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+References: <20190621214125.6fb68eee@canb.auug.org.au>
+ <1561121145.3149.7.camel@pengutronix.de>
 MIME-Version: 1.0
-References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
- <1561037428-13855-2-git-send-email-robert.chiras@nxp.com> <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
- <1561126587.9328.76.camel@nxp.com>
-In-Reply-To: <1561126587.9328.76.camel@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 21 Jun 2019 12:46:02 -0300
-Message-ID: <CAOMZO5D+7msAxc99KFi=OWCNeBSxKXtJ8O=J7U+YE6v=xz3cAg@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support
- for Raydium RM67191 panel
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561121145.3149.7.camel@pengutronix.de>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On Fri, Jun 21, 2019 at 02:45:45PM +0200, Philipp Zabel wrote:
+> On Fri, 2019-06-21 at 21:41 +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > In commit
+> > 
+> >   912bbf7e9ca4 ("gpu: ipu-v3: image-convert: Fix image downsize coefficients")
+> > 
+> > Fixes tag
+> > 
+> >   Fixes: 70b9b6b3bcb21 ("gpu: ipu-v3: image-convert: calculate per-tile
+> > 
+> > has these problem(s):
+> > 
+> >   - Please don't split Fixes tags across more than one line
+> > 
+> > In commit
+> > 
+> >   bca4d70cf1b8 ("gpu: ipu-v3: image-convert: Fix input bytesperline for packed formats")
+> > 
+> > Fixes tag
+> > 
+> >   Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
+> > 
+> > has these problem(s):
+> > 
+> >   - Please don't split Fixes tags across more than one line
+> > 
+> > In commit
+> > 
+> >   ff391ecd65a1 ("gpu: ipu-v3: image-convert: Fix input bytesperline width/height align")
+> > 
+> > Fixes tag
+> > 
+> >   Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
+> > 
+> > has these problem(s):
+> > 
+> >   - Please don't split Fixes tags across more than one line
+> > 
+> 
+> I was under the impression that dim would have found those, but I only
+> just realized that "dim checkpatch" doesn't actually do any additional
+> checks beyond scripts/checkpatch.pl. Fixes tags are checked only as a
+> part of "dim push". I wonder if this could be changed [1].
+> 
+> [1] https://gitlab.freedesktop.org/drm/maintainer-tools/merge_requests/5
 
-On Fri, Jun 21, 2019 at 11:16 AM Robert Chiras <robert.chiras@nxp.com> wrote:
+Officially we don't yet take pull requests (could try to change that, but
+last time around it got nacked by Jani). Can you pls submit to dim-tools@
+as patch?
 
-> From what I've seen in the schematics, the power lines on the DSI port
-> on all the i.MX8 cores are coming from a PMIC providing power for all
-> the peripherals. Since I didn't find a way to cut the power on a single
-> peripheral (like DSI, for example) it doesn't make sense for power-
-> supply property. For now, at least.
+Also, would be nice to run all the same checks we run at dim push time,
+not just checking for Fixes tags.
+-Daniel
 
-This panel driver is not supposed to only work with i.MX8 NXP reference boards.
+> 
+> regards
+> Philipp
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-The dt-bindings should be as accurate as possible from day one, so
-describing the power-supply is important.
-
-Please look at the panel datasheet and describe the required power
-supplies accordingly.
-
-Thanks
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
