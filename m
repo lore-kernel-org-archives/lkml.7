@@ -2,215 +2,454 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9212C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38C5C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92CC2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4602084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 10:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfFUKlR (ORCPT
+        id S1726589AbfFUKmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 06:41:17 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:50854 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfFUKlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 06:41:17 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 88F26206B9;
-        Fri, 21 Jun 2019 12:41:14 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 6B85920687;
-        Fri, 21 Jun 2019 12:41:14 +0200 (CEST)
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
- <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
- <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
- <alpine.LNX.2.21.1906181107240.287@nippy.intranet>
- <017cf3cf-ecd8-19c2-3bbd-7e7c28042c3c@free.fr>
- <f8339103-5b45-b72d-9f87-fd4dd7b3081e@interlog.com>
- <f1f98ab0-399a-6c12-073d-ee8ad47d5588@free.fr>
- <48912bc0-8c79-408d-7ed2-c127b99b8bcc@interlog.com>
- <e04e14b7-e1ee-c0c1-9e6d-2628d2c873a9@free.fr>
- <alpine.LNX.2.21.1906210942560.131@nippy.intranet>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <5d9d0851-f864-6d78-7e7d-9d018bea5704@free.fr>
-Date:   Fri, 21 Jun 2019 12:41:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 21 Jun 2019 06:42:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19055 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726250AbfFUKmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 06:42:24 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 735FE667646B6A95163A;
+        Fri, 21 Jun 2019 18:42:20 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
+ 2019 18:42:12 +0800
+Subject: Re: [PATCH v2 5/8] staging: erofs: introduce generic decompression
+ backend
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>
+References: <20190620160719.240682-1-gaoxiang25@huawei.com>
+ <20190620160719.240682-6-gaoxiang25@huawei.com>
+ <4e3a822e-1c18-122e-9eb1-c4eaf0204e63@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <348e6203-b1be-1579-dbe9-cbf1a906af6f@huawei.com>
+Date:   Fri, 21 Jun 2019 18:42:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.21.1906210942560.131@nippy.intranet>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <4e3a822e-1c18-122e-9eb1-c4eaf0204e63@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Jun 21 12:41:14 2019 +0200 (CEST)
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2019 01:43, Finn Thain wrote:
+Hi Chao,
 
-> On Thu, 20 Jun 2019, Marc Gonzalez wrote:
+On 2019/6/21 17:46, Chao Yu wrote:
+> On 2019/6/21 0:07, Gao Xiang wrote:
+>> This patch adds a new generic decompression framework
+>> in order to replace the old LZ4-specific decompression code.
+>>
+>> Even though LZ4 is still the only supported algorithm, yet
+>> it is more cleaner and easy to integrate new algorithm than
+>> the old almost hard-coded decompression backend.
+>>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>> ---
+>>  drivers/staging/erofs/Makefile       |   2 +-
+>>  drivers/staging/erofs/compress.h     |  21 ++
+>>  drivers/staging/erofs/decompressor.c | 307 +++++++++++++++++++++++++++
+>>  3 files changed, 329 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/staging/erofs/decompressor.c
+>>
+>> diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
+>> index 84b412c7a991..adeb5d6e2668 100644
+>> --- a/drivers/staging/erofs/Makefile
+>> +++ b/drivers/staging/erofs/Makefile
+>> @@ -9,5 +9,5 @@ obj-$(CONFIG_EROFS_FS) += erofs.o
+>>  ccflags-y += -I $(srctree)/$(src)/include
+>>  erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+>>  erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+>> -erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o
+>> +erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o decompressor.o
+>>  
+>> diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
+>> index 1dcfc3b35118..ebeccb1f4eae 100644
+>> --- a/drivers/staging/erofs/compress.h
+>> +++ b/drivers/staging/erofs/compress.h
+>> @@ -9,6 +9,24 @@
+>>  #ifndef __EROFS_FS_COMPRESS_H
+>>  #define __EROFS_FS_COMPRESS_H
+>>  
+>> +#include "internal.h"
+>> +
+>> +enum {
+>> +	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
+>> +	Z_EROFS_COMPRESSION_RUNTIME_MAX
+>> +};
+>> +
+>> +struct z_erofs_decompress_req {
+>> +	struct page **in, **out;
+>> +
+>> +	unsigned short pageofs_out;
+>> +	unsigned int inputsize, outputsize;
+>> +
+>> +	/* indicate the algorithm will be used for decompression */
+>> +	unsigned int alg;
+>> +	bool inplace_io, partial_decoding;
+>> +};
+>> +
+>>  /*
+>>   * - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
+>>   * used to mark temporary allocated pages from other
+>> @@ -36,5 +54,8 @@ static inline bool z_erofs_put_stagingpage(struct list_head *pagepool,
+>>  	return true;
+>>  }
+>>  
+>> +int z_erofs_decompress(struct z_erofs_decompress_req *rq,
+>> +		       struct list_head *pagepool);
+>> +
+>>  #endif
+>>  
+>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+>> new file mode 100644
+>> index 000000000000..c68d17b579e0
+>> --- /dev/null
+>> +++ b/drivers/staging/erofs/decompressor.c
+>> @@ -0,0 +1,307 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * linux/drivers/staging/erofs/decompressor.c
+>> + *
+>> + * Copyright (C) 2019 HUAWEI, Inc.
+>> + *             http://www.huawei.com/
+>> + * Created by Gao Xiang <gaoxiang25@huawei.com>
+>> + */
+>> +#include "compress.h"
+>> +#include <linux/lz4.h>
+>> +
+>> +#ifndef LZ4_DISTANCE_MAX	/* history window size */
+>> +#define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
+>> +#endif
+>> +
+>> +#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
+>> +
+>> +struct z_erofs_decompressor {
+>> +	/*
+>> +	 * if destpages have sparsed pages, fill them with bounce pages.
+>> +	 * it also check whether destpages indicate continuous physical memory.
+>> +	 */
+>> +	int (*prepare_destpages)(struct z_erofs_decompress_req *rq,
+>> +				 struct list_head *pagepool);
+>> +	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out);
+>> +	char *name;
+>> +};
+>> +
+>> +static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>> +				 struct list_head *pagepool)
+>> +{
+>> +	const unsigned int nr =
+>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>> +	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
+>> +	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>> +					  BITS_PER_LONG)] = { 0 };
+>> +	void *kaddr = NULL;
+>> +	unsigned int i, j, k;
+>> +
+>> +	for (i = 0; i < nr; ++i) {
+>> +		struct page *const page = rq->out[i];
+>> +
+>> +		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
+>> +		if (availables[j])
+>> +			__set_bit(j, unused);
+>> +
+>> +		if (page) {
+>> +			if (kaddr) {
+>> +				if (kaddr + PAGE_SIZE == page_address(page))
+>> +					kaddr += PAGE_SIZE;
+>> +				else
+>> +					kaddr = NULL;
+>> +			} else if (!i) {
+>> +				kaddr = page_address(page);
+>> +			}
+>> +			continue;
+>> +		}
+>> +		kaddr = NULL;
+>> +
+>> +		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
+>> +		if (k < LZ4_MAX_DISTANCE_PAGES) {
+>> +			j = k;
+>> +			get_page(availables[j]);
+>> +		} else {
+>> +			DBG_BUGON(availables[j]);
+>> +
+>> +			if (!list_empty(pagepool)) {
+>> +				availables[j] = lru_to_page(pagepool);
+>> +				list_del(&availables[j]->lru);
+>> +				DBG_BUGON(page_ref_count(availables[j]) != 1);
+>> +			} else {
+>> +				availables[j] = alloc_pages(GFP_KERNEL, 0);
+>> +				if (!availables[j])
+>> +					return -ENOMEM;
+>> +			}
+>> +			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
 > 
->> How likely is it that distro kernels would *not* enable CHR_DEV_SG?
->> (Distros tend to enable everything, and then some.)
+> Could we use __stagingpage_alloc() instead opened codes, there is something
+> different in between them though.
+
+It was written "on propose" since the problem is that currently __stagingpage_alloc()
+will allocate all pages in GFP_NOFAIL case, but memory allocation failure is accepted
+here, therefore I open code to aim at introducing new decompression backend.
+
+I will submit another patch after this series to clean up all staging page allocation
+cases later, which was already on my scheduling list. :)
+
+Thanks,
+Gao Xiang
+
 > 
-> How likely is it that embedded developers would *not* disable CHR_DEV_SG?
-> They tend to disable everything, and then enable only what they need.
-
-I don't see where you're going with this line of reasoning?
-
-Below is my current (as of next-20190612) defconfig.
-
-Notice the options marked as "not set". These are options that are
-enabled by default (and which I've disabled).
-
-Everyone thinks "their" option is critical (and it is, *to them*) but, in fact,
-few really are -- universally. When an option is enabled by default, it does not
-show up in defconfigs that want the option, and shows up as disabled in defconfigs
-that don't want it.
-
-Ideally, options would show as enabled in defconfigs that want the option,
-and not show in defconfigs that don't.
-
-I'm currently trying to change "enabled by default" for the following options:
-# CONFIG_SCSI_PROC_FS is not set
-# CONFIG_LCD_CLASS_DEVICE is not set
-# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-# CONFIG_COMMON_CLK_XGENE is not set
-# CONFIG_QCOM_A53PLL is not set
-# CONFIG_QCOM_CLK_APCS_MSM8916 is not set
-
-I guess SCSI_PROC_FS might be the more useful to me, as it might help
-debugging USB drive issues? In any event, I would rather have it show
-up explicitly in my defconfig, to remind me I've selected it.
-
-As for a few other "default on" options in my defconfig...
-
-- SWAP I guess goes all the way back to Linux 2.0 on x86
-
-- EFI is enabled by default because "big" arm64 systems rely on it.
-But that's not true of smaller arm64 systems, based on DT.
-
-- Not sure about the IOSCHED algorithms.
-
-- IPV6 makes sense, to push for broader adoption
-
-TODO: look into HW_RANDOM and CRYPTO_HW
-
-
-# CONFIG_SWAP is not set
-CONFIG_NO_HZ_IDLE=y
-CONFIG_HIGH_RES_TIMERS=y
-CONFIG_PREEMPT=y
-CONFIG_LOG_BUF_SHIFT=20
-CONFIG_BLK_DEV_INITRD=y
-CONFIG_ARCH_QCOM=y
-CONFIG_CMDLINE="ignore_loglevel nosmp"
-# CONFIG_EFI is not set
-# CONFIG_SUSPEND is not set
-CONFIG_PM=y
-CONFIG_CPU_IDLE=y
-CONFIG_ARM_CPUIDLE=y
-CONFIG_MODULES=y
-CONFIG_MODULE_UNLOAD=y
-# CONFIG_MQ_IOSCHED_DEADLINE is not set
-# CONFIG_MQ_IOSCHED_KYBER is not set
-CONFIG_NET=y
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_INET=y
-# CONFIG_IPV6 is not set
-# CONFIG_WIRELESS is not set
-CONFIG_PCI=y
-CONFIG_PCIEPORTBUS=y
-CONFIG_PCIE_QCOM=y
-CONFIG_DEVTMPFS=y
-CONFIG_DEVTMPFS_MOUNT=y
-CONFIG_SCSI=y
-# CONFIG_SCSI_PROC_FS is not set
-CONFIG_BLK_DEV_SD=y
-CONFIG_SCSI_UFSHCD=y
-CONFIG_SCSI_UFSHCD_PLATFORM=y
-CONFIG_SCSI_UFS_QCOM=y
-CONFIG_NETDEVICES=y
-CONFIG_ATL1C=y
-# CONFIG_WLAN is not set
-# CONFIG_INPUT_KEYBOARD is not set
-# CONFIG_INPUT_MOUSE is not set
-# CONFIG_SERIO_SERPORT is not set
-CONFIG_VT_HW_CONSOLE_BINDING=y
-CONFIG_LEGACY_PTY_COUNT=16
-CONFIG_SERIAL_8250=y
-CONFIG_SERIAL_MSM=y
-CONFIG_SERIAL_MSM_CONSOLE=y
-CONFIG_SERIAL_DEV_BUS=y
-# CONFIG_HW_RANDOM is not set
-CONFIG_I2C=y
-CONFIG_I2C_CHARDEV=y
-CONFIG_I2C_QUP=y
-CONFIG_SPMI=y
-CONFIG_PINCTRL_MSM8998=y
-CONFIG_THERMAL=y
-CONFIG_QCOM_TSENS=y
-CONFIG_REGULATOR=y
-CONFIG_REGULATOR_FIXED_VOLTAGE=y
-CONFIG_REGULATOR_QCOM_SMD_RPM=y
-# CONFIG_LCD_CLASS_DEVICE is not set
-# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-CONFIG_SOUND=y
-CONFIG_SND=y
-CONFIG_SND_SOC=y
-CONFIG_SND_SOC_WCD9335=y
-# CONFIG_HID is not set
-# CONFIG_USB_HID is not set
-CONFIG_USB=y
-# CONFIG_USB_PCI is not set
-CONFIG_USB_XHCI_HCD=y
-CONFIG_USB_STORAGE=y
-CONFIG_USB_DWC3=y
-# CONFIG_COMMON_CLK_XGENE is not set
-CONFIG_COMMON_CLK_QCOM=y
-# CONFIG_QCOM_A53PLL is not set
-# CONFIG_QCOM_CLK_APCS_MSM8916 is not set
-CONFIG_QCOM_CLK_SMD_RPM=y
-CONFIG_MSM_GCC_8998=y
-CONFIG_HWSPINLOCK=y
-CONFIG_HWSPINLOCK_QCOM=y
-CONFIG_MAILBOX=y
-CONFIG_QCOM_APCS_IPC=y
-CONFIG_ARM_SMMU=y
-CONFIG_RPMSG_QCOM_GLINK_RPM=y
-CONFIG_RPMSG_QCOM_GLINK_SMEM=y
-CONFIG_RPMSG_QCOM_SMD=y
-CONFIG_RPMSG_VIRTIO=y
-CONFIG_QCOM_COMMAND_DB=y
-CONFIG_QCOM_SMEM=y
-CONFIG_QCOM_SMD_RPM=y
-CONFIG_IIO=y
-CONFIG_PHY_QCOM_QMP=y
-CONFIG_PHY_QCOM_QUSB2=y
-CONFIG_NVMEM=y
-CONFIG_QCOM_QFPROM=y
-CONFIG_SLIMBUS=y
-CONFIG_SLIM_QCOM_CTRL=y
-CONFIG_INTERCONNECT=y
-CONFIG_INTERCONNECT_QCOM=y
-CONFIG_TMPFS=y
-# CONFIG_CRYPTO_HW is not set
-CONFIG_DEBUG_FS=y
-CONFIG_MAGIC_SYSRQ=y
-CONFIG_DEBUG_KERNEL=y
-CONFIG_STACKTRACE=y
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+>> +		}
+>> +		rq->out[i] = availables[j];
+>> +		__clear_bit(j, unused);
+>> +	}
+>> +	return kaddr ? 1 : 0;
+>> +}
+>> +
+>> +static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
+>> +				       u8 *src, unsigned int pageofs_in)
+>> +{
+>> +	/*
+>> +	 * if in-place decompression is ongoing, those decompressed
+>> +	 * pages should be copied in order to avoid being overlapped.
+>> +	 */
+>> +	struct page **in = rq->in;
+>> +	u8 *const tmp = erofs_get_pcpubuf(0);
+>> +	u8 *tmpp = tmp;
+>> +	unsigned int inlen = rq->inputsize - pageofs_in;
+>> +	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
+>> +
+>> +	while (tmpp < tmp + inlen) {
+>> +		if (!src)
+>> +			src = kmap_atomic(*in);
+>> +		memcpy(tmpp, src + pageofs_in, count);
+>> +		kunmap_atomic(src);
+>> +		src = NULL;
+>> +		tmpp += count;
+>> +		pageofs_in = 0;
+>> +		count = PAGE_SIZE;
+>> +		++in;
+>> +	}
+>> +	return tmp;
+>> +}
+>> +
+>> +static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+>> +{
+>> +	unsigned int inputmargin, inlen;
+>> +	u8 *src;
+>> +	bool copied;
+>> +	int ret;
+>> +
+>> +	if (rq->inputsize > PAGE_SIZE)
+>> +		return -ENOTSUPP;
+>> +
+>> +	src = kmap_atomic(*rq->in);
+>> +	inputmargin = 0;
+>> +	while (!src[inputmargin & ~PAGE_MASK])
+>> +		if (!(++inputmargin & ~PAGE_MASK))
+>> +			break;
+>> +
+>> +	if (inputmargin >= rq->inputsize) {
+>> +		kunmap_atomic(src);
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	copied = false;
+>> +	inlen = rq->inputsize - inputmargin;
+>> +	if (rq->inplace_io) {
+>> +		src = generic_copy_inplace_data(rq, src, inputmargin);
+>> +		inputmargin = 0;
+>> +		copied = true;
+>> +	}
+>> +
+>> +	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+>> +					  inlen, rq->outputsize,
+>> +					  rq->outputsize);
+>> +	if (ret < 0) {
+>> +		errln("%s, failed to decompress, in[%p, %u, %u] out[%p, %u]",
+>> +		      __func__, src + inputmargin, inlen, inputmargin,
+>> +		      out, rq->outputsize);
+>> +		WARN_ON(1);
+>> +		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
+>> +			       16, 1, src + inputmargin, inlen, true);
+>> +		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
+>> +			       16, 1, out, rq->outputsize, true);
+>> +		ret = -EIO;
+>> +	}
+>> +
+>> +	if (copied)
+>> +		erofs_put_pcpubuf(src);
+>> +	else
+>> +		kunmap_atomic(src);
+>> +	return ret;
+>> +}
+>> +
+>> +static struct z_erofs_decompressor decompressors[] = {
+>> +	[Z_EROFS_COMPRESSION_SHIFTED] = {
+>> +		.name = "shifted"
+>> +	},
+>> +	[Z_EROFS_COMPRESSION_LZ4] = {
+>> +		.prepare_destpages = lz4_prepare_destpages,
+>> +		.decompress = lz4_decompress,
+>> +		.name = "lz4"
+>> +	},
+>> +};
+>> +
+>> +static void copy_from_pcpubuf(struct page **out, const char *dst,
+>> +			      unsigned short pageofs_out,
+>> +			      unsigned int outputsize)
+>> +{
+>> +	const char *end = dst + outputsize;
+>> +	const unsigned int righthalf = PAGE_SIZE - pageofs_out;
+>> +	const char *cur = dst - pageofs_out;
+>> +
+>> +	while (cur < end) {
+>> +		struct page *const page = *out++;
+>> +
+>> +		if (page) {
+>> +			char *buf = kmap_atomic(page);
+>> +
+>> +			if (cur >= dst) {
+>> +				memcpy(buf, cur, min_t(uint, PAGE_SIZE,
+>> +						       end - cur));
+>> +			} else {
+>> +				memcpy(buf + pageofs_out, cur + pageofs_out,
+>> +				       min_t(uint, righthalf, end - cur));
+>> +			}
+>> +			kunmap_atomic(buf);
+>> +		}
+>> +		cur += PAGE_SIZE;
+>> +	}
+>> +}
+>> +
+>> +static int decompress_generic(struct z_erofs_decompress_req *rq,
+>> +			      struct list_head *pagepool)
+>> +{
+>> +	const unsigned int nrpages_out =
+>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>> +	const struct z_erofs_decompressor *alg = decompressors + rq->alg;
+>> +	unsigned int dst_maptype;
+>> +	void *dst;
+>> +	int ret;
+>> +
+>> +	if (nrpages_out == 1 && !rq->inplace_io) {
+>> +		DBG_BUGON(!*rq->out);
+>> +		dst = kmap_atomic(*rq->out);
+>> +		dst_maptype = 0;
+>> +		goto dstmap_out;
+>> +	}
+>> +
+>> +	/*
+>> +	 * For the case of small output size (especially much less
+>> +	 * than PAGE_SIZE), memcpy the decompressed data rather than
+>> +	 * compressed data is preferred.
+>> +	 */
+>> +	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
+>> +		dst = erofs_get_pcpubuf(0);
+>> +
+>> +		rq->inplace_io = false;
+>> +		ret = alg->decompress(rq, dst);
+>> +		if (!ret)
+>> +			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
+>> +					  rq->outputsize);
+>> +
+>> +		erofs_put_pcpubuf(dst);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = alg->prepare_destpages(rq, pagepool);
+>> +	if (ret < 0) {
+>> +		return ret;
+>> +	} else if (ret) {
+>> +		dst = page_address(*rq->out);
+>> +		dst_maptype = 1;
+>> +		goto dstmap_out;
+>> +	}
+>> +
+>> +	dst = erofs_vmap(rq->out, nrpages_out);
+>> +	if (!dst)
+>> +		return -ENOMEM;
+>> +	dst_maptype = 2;
+>> +
+>> +dstmap_out:
+>> +	ret = alg->decompress(rq, dst + rq->pageofs_out);
+>> +
+>> +	if (!dst_maptype)
+>> +		kunmap_atomic(dst);
+>> +	else if (dst_maptype == 2)
+>> +		erofs_vunmap(dst, nrpages_out);
+>> +	return ret;
+>> +}
+>> +
+>> +static int shifted_decompress(const struct z_erofs_decompress_req *rq,
+>> +			      struct list_head *pagepool)
+>> +{
+>> +	const unsigned int nrpages_out =
+>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>> +	const unsigned int righthalf = PAGE_SIZE - rq->pageofs_out;
+>> +	unsigned char *src, *dst;
+>> +
+>> +	if (nrpages_out > 2) {
+>> +		DBG_BUGON(1);
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	if (rq->out[0] == *rq->in) {
+>> +		DBG_BUGON(nrpages_out != 1);
+>> +		return 0;
+>> +	}
+>> +
+>> +	src = kmap_atomic(*rq->in);
+>> +	if (!rq->out[0]) {
+>> +		dst = NULL;
+>> +	} else {
+>> +		dst = kmap_atomic(rq->out[0]);
+>> +		memcpy(dst + rq->pageofs_out, src, righthalf);
+>> +	}
+>> +
+>> +	if (rq->out[1] == *rq->in) {
+>> +		memmove(src, src + righthalf, rq->pageofs_out);
+>> +	} else if (nrpages_out == 2) {
+>> +		if (dst)
+>> +			kunmap_atomic(dst);
+>> +		DBG_BUGON(!rq->out[1]);
+>> +		dst = kmap_atomic(rq->out[1]);
+>> +		memcpy(dst, src + righthalf, rq->pageofs_out);
+>> +	}
+>> +	if (dst)
+>> +		kunmap_atomic(dst);
+>> +	kunmap_atomic(src);
+>> +	return 0;
+>> +}
+>> +
+>> +int z_erofs_decompress(struct z_erofs_decompress_req *rq,
+>> +		       struct list_head *pagepool)
+>> +{
+>> +	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED)
+>> +		return shifted_decompress(rq, pagepool);
+>> +	return decompress_generic(rq, pagepool);
+>> +}
+>> +
+>>
