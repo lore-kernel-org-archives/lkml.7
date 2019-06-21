@@ -2,77 +2,101 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74DDC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2E1C48BE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E3D205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC91F205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 19:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8tes+em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfFUT5W convert rfc822-to-8bit (ORCPT
+        id S1726148AbfFUT70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 15:57:22 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:63966 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725992AbfFUT5V (ORCPT
+        Fri, 21 Jun 2019 15:59:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55153 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfFUT70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 15:57:21 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16983672-1500050 
-        for multiple; Fri, 21 Jun 2019 20:56:15 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 21 Jun 2019 15:59:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g135so7319510wme.4;
+        Fri, 21 Jun 2019 12:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rrgP+tN7q+KdQueUxlF4aRY0BkMcXUVAckmsuIhwpT0=;
+        b=L8tes+emvST9pmj/IRzX9+hojeOq4GZDIGhXxywVATI8gFUF36BSHIDNOPx7EIFvlg
+         Dqe2ZBXumHdHNB1+AaiBqOA2ciM0EzKSuqJHmqrR4CY5zxj6myfpVBLFs6HNNVHzuJ/1
+         nhMcwOfXVXk1CSdtsVbkKXKgFp1yssRB/NXBEV/sbWRH0Q58Q/2V8sNWgQyyq00gNLee
+         R7uLrPpIAr8oMpiNVuhE+zjJn6CY+v2PDedNHna3YUOukRp4NOqOualC7fuoGOqHVCqx
+         iH80DV2EdO8Fwg7g5PpHdcs0d4hG6uqbt8HgPDt6BbL37SL9c1CIx0hSkPA+0C12TLn/
+         tLMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rrgP+tN7q+KdQueUxlF4aRY0BkMcXUVAckmsuIhwpT0=;
+        b=YfTFUWBlurPB21AnPQS1yRWZHjlIzJcnJAG7tEtiuagqZKSPzHHkVlhtbGHaOTn4Zw
+         kaQPZo3m5PwymEv4PMXx/cphMVmrhMMOuWJKaXPEjsh0FnW+JD7UXPWdTlK2b7hQlXAb
+         7DIjf8xPv+4UZXR6n4IYs3elIJAomAyk03jwg5Gp2QZstTLFWe0xybTVIwHhYSXngby/
+         HTlqseS20/46ph5DJVHiECFPi5pX5aZ7A9rjPCEC2zzu/H4Ve7lhVluHGeJzjwfg9THl
+         4ONZ5P6vFvVjzshdwzn780I4oMjqu4fvZifjf+Cpwi9teOrnxQffW/srqj4EP2+HHWTy
+         A7Qw==
+X-Gm-Message-State: APjAAAWJekkrbYi/PRy02wNYGCjoFuj/RfMEwbgsTmH6/Yl7WOFKzKKB
+        PqUjkvoBa8TzO5sYYUv27sA=
+X-Google-Smtp-Source: APXvYqxBKJ3IjnD6wDUtMi2m6hREJvgcNdbUZ0ji3JRi+mfPQSCt2CnZ9Or3TiA5SwO0YHSVt46P6g==
+X-Received: by 2002:a1c:a654:: with SMTP id p81mr4872126wme.36.1561147163961;
+        Fri, 21 Jun 2019 12:59:23 -0700 (PDT)
+Received: from debian64.daheim (pD9E297F7.dip0.t-ipconnect.de. [217.226.151.247])
+        by smtp.gmail.com with ESMTPSA id g19sm2198006wmg.10.2019.06.21.12.59.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 12:59:23 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hePgw-0006iD-KX; Fri, 21 Jun 2019 21:59:22 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] usb: xhci: add firmware loader for uPD720201 and uPD720202 w/o ROM
+Date:   Fri, 21 Jun 2019 21:59:22 +0200
+Message-ID: <1897697.zOhlaAKarQ@debian64>
+In-Reply-To: <20190621085913.8722-2-vkoul@kernel.org>
+References: <20190621085913.8722-1-vkoul@kernel.org> <20190621085913.8722-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Thomas Gleixner <tglx@linutronix.de>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <alpine.DEB.2.21.1906212130230.5503@nanos.tec.linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <CAHk-=whEQPvLpDbx+WR4Q4jf2FxXjf_zTX3uLy_6ZzHtgTV4LA@mail.gmail.com>
- <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
- <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
- <156097197830.664.13418742301997062555@skylake-alporthouse-com>
- <CAHk-=wjoeZ9_aiu+642ur=iGhGjfBQhRPURxX9Py+-B6coctXw@mail.gmail.com>
- <alpine.DEB.2.21.1906211725200.5503@nanos.tec.linutronix.de>
- <156114224132.2401.13297188928702045223@skylake-alporthouse-com>
- <alpine.DEB.2.21.1906212130230.5503@nanos.tec.linutronix.de>
-Message-ID: <156114697311.2401.13492363493607545412@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: NMI hardlock stacktrace deadlock [was Re: Linux 5.2-rc5]
-Date:   Fri, 21 Jun 2019 20:56:13 +0100
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Thomas Gleixner (2019-06-21 20:33:36)
-> On Fri, 21 Jun 2019, Chris Wilson wrote:
-> 
-> > Quoting Thomas Gleixner (2019-06-21 16:30:52)
-> > > Chris, do you have the actual NMI lockup detector splats somewhere?
-> > 
-> > Sorry, I'm having a hard time reproducing this at will now. The test
-> > case depends on the right timing of the wrong event to cause the GPU to
-> > hang.
-> > 
-> > From memory, I got the
-> >       "Watchdog detected hard LOCKUP on cpu foo"
-> > followed by the register dump and then nothing. At which point I had to
-> > power cycle the machine.
-> 
-> Hmm. Do you have a serial log of that incident?
+On Friday, June 21, 2019 10:59:09 AM CEST Vinod Koul wrote:
+> +	/*
+> +	 * The Firmware's Data Format is describe in
+> +	 * "6.3 Data Format" R19UH0078EJ0500 Rev.5.00 page 124
+> +	 */
+> +
+> +	/* "Each row is 8 bytes". => firmware size must be a multiple of 8. */
+> +	if (length % 8 != 0)
+> +		dev_warn(&dev->dev, "firmware size is not a multiple of 8.");
 
-I use netconsole. I think Tomi has a serial console for most things
-available, but not permanently hooked up. And I didn't have it in a tee
-as it was late, with the lockup an annoyance to the bug I was trying
-to solve. I'll keep trying to recreate that bug as once I do have that
-recipe, it should be possible to bisect. I can check with Tomi on Monday
-if he can pull a machine out of the farm and see how it locked up.
--Chris
+It doesn't look like this holds true for the newer K2026090.mem which
+arguably fixes a lot of bugs over K2013080.mem. I think we should remove
+this check and message.
+
+Cheers,
+Christian
+
+
