@@ -2,152 +2,207 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CAEC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009D8C48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E0C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12D82089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 06:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gCdtSYmD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLX52EUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFUGEA (ORCPT
+        id S1726135AbfFUGGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 02:04:00 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44904 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfFUGD7 (ORCPT
+        Fri, 21 Jun 2019 02:06:12 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34971 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfFUGGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 02:03:59 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5L63e1g052776;
-        Fri, 21 Jun 2019 01:03:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561097020;
-        bh=knqPMcLBSbI4UYjJA4Jgm6wkFZPBA7qaJCNQVhq+O70=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gCdtSYmDm4ZMnVIobxAtOLMTCGHTDfqFxUgNSjDZy585rz1he7q0BtY4Hdyx0pOUS
-         9kMlwROgfH0I9C78iynctb1A8yA47yI0dGFpKjnCUjF4s/uSLUtqVAymLAQdbv7e7B
-         DYa3yL1HxnusHwKeW9YiQPuSvYLuLFESWu+mpmLI=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5L63eQK115551
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 01:03:40 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
- Jun 2019 01:03:40 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 21 Jun 2019 01:03:40 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5L63ZjE121278;
-        Fri, 21 Jun 2019 01:03:36 -0500
-Subject: Re: [PATCH v5 1/3] mtd: spi-nor: add support for is25wp256
-To:     Sagar Kadam <sagar.kadam@sifive.com>
-CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
- <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com>
- <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
- <CAARK3H=O=h1VDgOMxs_0ThcisrH=2tzpW5pQqt0O9oYs=MFFVw@mail.gmail.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <93b9c5fd-8f59-96d7-5e40-2b9d540965dd@ti.com>
-Date:   Fri, 21 Jun 2019 11:34:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Jun 2019 02:06:11 -0400
+Received: by mail-lf1-f68.google.com with SMTP id a25so4153946lfg.2;
+        Thu, 20 Jun 2019 23:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Us9SZtnCz2EeCOZyrZ0mXxBCzbiC8YyMbRyNWhRn56g=;
+        b=tLX52EUmCyDejuOuDkuAEPyovndrLyf0ijKLR6SPpuRb3sb6hnGQdb+HD/ARLuLfLi
+         ClCuyehKswfIpeltF4uWj4v/c1+97vTolsFMEO17bQ1Xr4e/gZ1R1v3TdCsh3WMPq70b
+         YXfgtZ66wLWC4zK30oop5lFe1fxDDGe0tizlNGxmxToa0APE/uQIhvD8iY0KXKOwHhcc
+         ekZdgKE3fT0fNONZQDUE+tZAgKS7DW+IPq3SqyXLkigM5j9ctVQtK2QX20LPecTeSwuN
+         Ie5w4oHn8TFpYiosGMgP2ptqGPWV6HNCK//yehcaLRZ9IYWI6MDXtIumlDVkXZsVDiCG
+         gcpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Us9SZtnCz2EeCOZyrZ0mXxBCzbiC8YyMbRyNWhRn56g=;
+        b=MwhtVhg7LW7kRyvtmPSyEw51yeC0vnbPQ+6eAGCJLnS+lcc21URXeCQsm9rXBr2F1c
+         N0Ugj//PJy8JHmmUUahh/Ppn/E2iiKuIMhPGPL4qz86aFG1Zra8r90T0p1e7vT5GyLQh
+         hHpRftgNzHywJS6Y0DSI1WVQhRe1JSq6OUcBvSIfM4ZOQ5RWb3awN5NqlMfG7eNr4tt8
+         QQKDvotTnJw2o7MNzIhjC3nf8k4+Eurqp1bD30e+OntOtCWGKvUH5FHIHqTnSW8b2N5v
+         QrPFcKlnScDCpmd/jaHusHVVAwfsMlTe1qGJRo0hxhpNXoQJLw3aSksxP+4xIHEEbSmi
+         jLNg==
+X-Gm-Message-State: APjAAAWqgOL/UjdjwVZsIJTZPTjCjJsl0kOoSdH9YBjy6aguhhHU64NQ
+        bkOdaK2b5I4oJn8PET8GbCE=
+X-Google-Smtp-Source: APXvYqyXGrLpmpW5po6mgKNT0oWg8gLE/EdeyuiyQ5xXvv9xF1YrGzwdJP3pK7NPmBQ0oOTWIkRbTw==
+X-Received: by 2002:ac2:5922:: with SMTP id v2mr66821749lfi.180.1561097168921;
+        Thu, 20 Jun 2019 23:06:08 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id g5sm245935ljj.69.2019.06.20.23.06.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 23:06:08 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 09:06:01 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
+Message-ID: <20190621060600.eb6yrh4z42s7dh7z@mobilestation>
+References: <20190614063341.1672-1-fancer.lancer@gmail.com>
+ <20190620174002.tgayzon7dc5d57fh@pburton-laptop>
 MIME-Version: 1.0
-In-Reply-To: <CAARK3H=O=h1VDgOMxs_0ThcisrH=2tzpW5pQqt0O9oYs=MFFVw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620174002.tgayzon7dc5d57fh@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Paul,
 
-On 17/06/19 8:48 PM, Sagar Kadam wrote:
-> Hello Vignesh,
+On Thu, Jun 20, 2019 at 05:40:04PM +0000, Paul Burton wrote:
+> Hi Serge,
 > 
-> Thanks for your review comments.
+> On Fri, Jun 14, 2019 at 09:33:42AM +0300, Serge Semin wrote:
+> > There are some generic drivers in the kernel, which make use of the
+> > q-accessors or their derivatives. While at current asm/io.h the accessors
+> > are defined, their implementation is only applicable either for 64bit
+> > systems, or for systems with cpu_has_64bits flag set. Obviously there
+> > are MIPS systems which are neither of these, but still need to have
+> > those drivers supported. In this case the solution is to define some
+> > generic versions of the q-accessors, but with a limitation to be
+> > non-atomic. Such accessors are defined in the
+> > io-64-nonatomic-{hi-lo,lo-hi}.h file. The drivers which utilize the
+> > q-suffixed IO-methods are supposed to include the header file, so
+> > in case if these accessors aren't defined for the platform, the generic
+> > non-atomic versions are utilized. Currently the MIPS-specific asm/io.h
+> > file provides the q-accessors for any MIPS system even for ones, which
+> > in fact don't support them and raise BUG() in case if any of them is
+> > called. Due to this the generic versions of the accessors are never
+> > used while an attempt to call the IO-methods causes the kernel BUG().
+> > In order to fix this we need to define the q-accessors only for
+> > the MIPS systems, which actually support them, and don't define them
+> > otherwise, so to let the corresponding drivers to use the non-atomic
+> > q-suffixed accessors.
+> > 
+> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Vadim V. Vlasov <vadim.vlasov@t-platforms.ru>
+> > ---
+> >  arch/mips/include/asm/io.h | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
 > 
-> On Sun, Jun 16, 2019 at 6:14 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
->>
->> Hi,
->>
->> On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
->> [...]
->>
->>> @@ -4129,7 +4137,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->>>       if (ret)
->>>               return ret;
->>>
->>> -     if (nor->addr_width) {
->>> +     if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
->>>               /* already configured from SFDP */
->>
->> Hmm, why would you want to ignore addr_width that's read from SFDP table?
+> So this seems pretty reasonable. Build testing all our defconfigs only
+> showed up one issue for decstation_defconfig & decstation_r4k_defconfig:
 > 
-> The SFDP table for ISSI device considered here, has addr_width set to
-> 3 byte, and the flash considered
-> here is 32MB. With 3 byte address width we won't be able to access
-> flash memories higher address range.
-
-Is it specific to a particular ISSI part as indicated here[1]? If so,
-please submit solution agreed there i.e. use spi_nor_fixups callback
-
-[1]https://patchwork.ozlabs.org/patch/1056049/
-
-> Hence I have ignored the addr width from SFDP.  I have verified that
-> with 3 byte address width, the
-> flascp util fails while verifying the written data.  Please let me
-> know your views on this?
+>   drivers/net/fddi/defza.c: In function 'fza_reads':
+>   drivers/net/fddi/defza.c:88:17: error: implicit declaration of
+>     function 'readq_relaxed'; did you mean 'readw_relaxed'?
+>     [-Werror=implicit-function-declaration]
+>    #define readq_u readq_relaxed
+>                    ^~~~~~~~~~~~~
+>   drivers/net/fddi/defza.c:126:13: note: in expansion of macro 'readq_u'
+>       *dst++ = readq_u(src++);
+>                ^~~~~~~
+>   drivers/net/fddi/defza.c: In function 'fza_writes':
+>   drivers/net/fddi/defza.c:92:18: error: implicit declaration of
+>     function 'writeq_relaxed'; did you mean 'writel_relaxed'?
+>     [-Werror=implicit-function-declaration]
+>    #define writeq_u writeq_relaxed
+>                     ^~~~~~~~~~~~~~
+>   drivers/net/fddi/defza.c:151:4: note: in expansion of macro 'writeq_u'
+>       writeq_u(*src++, dst++);
+>       ^~~~~~~~
+>     CC      net/core/scm.o
+>   cc1: some warnings being treated as errors
+>   make[4]: *** [scripts/Makefile.build:279: drivers/net/fddi/defza.o] Error 1
 > 
-If this affects multiple ISSI parts then:
-Instead of checking for mfr code, look for SNOR_F_4B_OPCODES flag in
-flash_info struct of the device and let it take precedence over SFDP in
-case size is over 16MB
 
-Regards
-Vignesh
+Thanks for review and testing this for each target. I see you and Maciej already
+agreed regarding the solution, and you even sent the fixup. So I don't have
+to send the v2 patch.)
 
-> BR,
-> Sagar Kadam
+Regards,
+-Sergey
+
+> These uses of readq_relaxed & writeq_relaxed are both conditional upon
+> sizeof(unsigned long) == 8, ie. upon CONFIG_64BIT=y so they're not going
+> to present a runtime issue but we need to provide some implementation of
+> the *q accessors to keep the compiler happy.
 > 
->> Regards
->> Vignesh
->>
->>
->>>       } else if (info->addr_width) {
->>>               nor->addr_width = info->addr_width;
->>> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
->>> index b3d360b..ff13297 100644
->>> --- a/include/linux/mtd/spi-nor.h
->>> +++ b/include/linux/mtd/spi-nor.h
->>> @@ -19,6 +19,7 @@
->>>  #define SNOR_MFR_ATMEL               CFI_MFR_ATMEL
->>>  #define SNOR_MFR_GIGADEVICE  0xc8
->>>  #define SNOR_MFR_INTEL               CFI_MFR_INTEL
->>> +#define SNOR_MFR_ISSI                0x9d            /* ISSI */
->>>  #define SNOR_MFR_ST          CFI_MFR_ST      /* ST Micro */
->>>  #define SNOR_MFR_MICRON              CFI_MFR_MICRON  /* Micron */
->>>  #define SNOR_MFR_MACRONIX    CFI_MFR_MACRONIX
->>>
+> I see a few options:
+> 
+> 1) We could just have defza.c include <io-64-nonatomic-lo-hi.h> to get
+>    the appropriate declarations, which should then get optimized away by
+>    the compiler anyway & never actually be used.
+> 
+> 2) We could have defza.h #define its readq_u & writeq_u macros
+>    differently for CONFIG_32BIT=y kernels, perhaps using
+>    __compiletime_error to catch any bogus use of them.
+> 
+> 3) We could do the same in a generic header, though if nobody else has
+>    needed it so far & this is the only place we need it then maybe it's
+>    not worth it.
+> 
+> So I'm thinking option 2 might be best, as below. Having said that I
+> don't mind option 1 either - it's simple. Maciej do you have any
+> preference?
+> 
 
--- 
-Regards
-Vignesh
+> Thanks,
+>     Paul
+> 
+> ---
+> diff --git a/drivers/net/fddi/defza.c b/drivers/net/fddi/defza.c
+> index c5cae8e74dc4..85d6a7f22fe7 100644
+> --- a/drivers/net/fddi/defza.c
+> +++ b/drivers/net/fddi/defza.c
+> @@ -85,11 +85,21 @@ static u8 hw_addr_beacon[8] = { 0x01, 0x80, 0xc2, 0x00, 0x01, 0x00 };
+>   */
+>  #define readw_u readw_relaxed
+>  #define readl_u readl_relaxed
+> -#define readq_u readq_relaxed
+>  
+>  #define writew_u writew_relaxed
+>  #define writel_u writel_relaxed
+> -#define writeq_u writeq_relaxed
+> +
+> +#ifdef CONFIG_32BIT
+> +extern u64 defza_readq_u(const void *ptr)
+> +	__compiletime_error("readq_u should not be used by 32b kernels");
+> +extern void defza_writeq_u(u64 val, void *ptr)
+> +	__compiletime_error("writeq_u should not be used by 32b kernels");
+> +# define readq_u defza_readq_u
+> +# define writeq_u defza_writeq_u
+> +#else
+> +# define readq_u readq_relaxed
+> +# define writeq_u writeq_relaxed
+> +#endif
+>  
+>  static inline struct sk_buff *fza_alloc_skb_irq(struct net_device *dev,
+>  						unsigned int length)
+> 
