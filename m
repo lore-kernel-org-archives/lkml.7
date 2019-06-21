@@ -2,136 +2,156 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88761C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974CBC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACC0206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561161295;
-	bh=qNcY7zdYYAwH6EQq5T5DZ4AHuUfGHxfuKenL+lf1Tfs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QycfNKg+Wi8wmPJllIV1unXLuw+HxUMcCsBlq4D6ssIXxV4phh6i1t1FBV8TegyNb
-	 9dLqVIf9I3wZJMBkysYwePiEsbV6ImDbplcjXQ87348FbOQ4Ay4bBtTdIlIDTvvsYy
-	 evE7p8SH1R44gOtPirZPjot7r/TntpDMZTyVOv3g=
+	by mail.kernel.org (Postfix) with ESMTP id 7162420821
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfFUXyy (ORCPT
+        id S1726202AbfFUXzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:54:54 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41362 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUXyx (ORCPT
+        Fri, 21 Jun 2019 19:55:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48776 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbfFUXzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:54:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 136so6174964lfa.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 16:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RQK18XIcxlXIt/29Bx6Bkf5h9dlomFFNrBoRe9o+KJ0=;
-        b=gfe2/07nsLCM4qgKuiUO65QDBttbOccAQdNobA1xekF618PiPqAOIqOMIh8gbpJTZV
-         uPaKagNO+30GqS3DntMCpxfQNNhBi1W39Mco86uNkkAa9mUMLcAm9zaySloDE+th7C/e
-         aIu8CN9p5Lve08uiZ2QGlvPXn128PcPU1POzY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RQK18XIcxlXIt/29Bx6Bkf5h9dlomFFNrBoRe9o+KJ0=;
-        b=bAwCqIJISHH5lAwUz4gGD6yhDMIfM1cDRGLGusUy+8wT80Gn2Sga70/YjB+0SaUTKT
-         a2rPGrhetSefm86UkGQo2vNnTMLjgRBX+vKGpodJGfVswFU6/kVPKXWIN+gwRATfo9+m
-         RzxDnXuTH2jXU28mGT9mCCz3CMaaumZnjRlJ7t8Bih4h1L+MzAFVEiP65rp+8vXDQfM2
-         DFNtKS4YaQu4gkFr/vc4oL4Gj+x0hfyV7ed3+PZNwEIBk0O9kbB9p8U0G7DD5vCNCwu/
-         zvd0VNa1XelYyO3wvn/gcNrkUTivVdTwjxRHal9CU1jql0XVxoIorVnuESJSLfPdfztW
-         GD8w==
-X-Gm-Message-State: APjAAAXOI8TCZCUvNIvjQNMrAVocTjcFm1URezoTi57zyfM/fCQp6rXT
-        QO6bhQCbowXKFtPINzAKD7ONRWq4PWs=
-X-Google-Smtp-Source: APXvYqwIAsCcbY7+fHpj8U8NHU7XyWK9gTDturqGMkCJ33bkg4uEmg2UNS3ckBi1jT8MarXdboKd3Q==
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr4667274lfu.141.1561161291102;
-        Fri, 21 Jun 2019 16:54:51 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id r2sm567783lfi.51.2019.06.21.16.54.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 16:54:50 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id p17so7439275ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 16:54:50 -0700 (PDT)
-X-Received: by 2002:a2e:9ec9:: with SMTP id h9mr35965670ljk.90.1561161290001;
- Fri, 21 Jun 2019 16:54:50 -0700 (PDT)
+        Fri, 21 Jun 2019 19:55:24 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNpkXB089236;
+        Fri, 21 Jun 2019 19:54:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t94whgmbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 19:54:40 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNqFEX093738;
+        Fri, 21 Jun 2019 19:54:40 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t94whgmb1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 19:54:40 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5LNj2XO007339;
+        Fri, 21 Jun 2019 23:54:39 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01dal.us.ibm.com with ESMTP id 2t8hrnygx3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 23:54:39 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LNscP339846354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 23:54:38 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B414B205F;
+        Fri, 21 Jun 2019 23:54:38 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D356B2064;
+        Fri, 21 Jun 2019 23:54:38 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jun 2019 23:54:38 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A736816C2FA6; Fri, 21 Jun 2019 16:54:39 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 16:54:39 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
+Message-ID: <20190621235439.GJ26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190621084129.GA6827@andrea>
+ <Pine.LNX.4.44L0.1906211023040.1471-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <a624ec85-ea21-c72e-f997-06273d9b9f9e@valvesoftware.com>
- <20190621214139.GA31034@kroah.com> <CAHk-=wgXoBMWdBahuQR9e75ri6oeVBBjoVEnk0rN1QXfSKK2Eg@mail.gmail.com>
- <CANn89iL5+x3n9H9v4O6y39W=jvQs=uuXbzOvN5mBbcj0t+wdeg@mail.gmail.com>
-In-Reply-To: <CANn89iL5+x3n9H9v4O6y39W=jvQs=uuXbzOvN5mBbcj0t+wdeg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Jun 2019 16:54:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjZ=8VSjWuqeG6JJv4dQfK6M0Jgckq5-6=SJa25aku-vQ@mail.gmail.com>
-Message-ID: <CAHk-=wjZ=8VSjWuqeG6JJv4dQfK6M0Jgckq5-6=SJa25aku-vQ@mail.gmail.com>
-Subject: Re: Steam is broken on new kernels
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1906211023040.1471-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric is talking about this patch, I think:
+On Fri, Jun 21, 2019 at 10:25:23AM -0400, Alan Stern wrote:
+> On Fri, 21 Jun 2019, Andrea Parri wrote:
+> 
+> > On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
+> > > Herbert Xu recently reported a problem concerning RCU and compiler
+> > > barriers.  In the course of discussing the problem, he put forth a
+> > > litmus test which illustrated a serious defect in the Linux Kernel
+> > > Memory Model's data-race-detection code.
+> > > 
+> > > The defect was that the LKMM assumed visibility and executes-before
+> > > ordering of plain accesses had to be mediated by marked accesses.  In
+> > > Herbert's litmus test this wasn't so, and the LKMM claimed the litmus
+> > > test was allowed and contained a data race although neither is true.
+> > > 
+> > > In fact, plain accesses can be ordered by fences even in the absence
+> > > of marked accesses.  In most cases this doesn't matter, because most
+> > > fences only order accesses within a single thread.  But the rcu-fence
+> > > relation is different; it can order (and induce visibility between)
+> > > accesses in different threads -- events which otherwise might be
+> > > concurrent.  This makes it relevant to data-race detection.
+> > > 
+> > > This patch makes two changes to the memory model to incorporate the
+> > > new insight:
+> > > 
+> > > 	If a store is separated by a fence from another access,
+> > > 	the store is necessarily visible to the other access (as
+> > > 	reflected in the ww-vis and wr-vis relations).  Similarly,
+> > > 	if a load is separated by a fence from another access then
+> > > 	the load necessarily executes before the other access (as
+> > > 	reflected in the rw-xbstar relation).
+> > > 
+> > > 	If a store is separated by a strong fence from a marked access
+> > > 	then it is necessarily visible to any access that executes
+> > > 	after the marked access (as reflected in the ww-vis and wr-vis
+> > > 	relations).
+> > > 
+> > > With these changes, the LKMM gives the desired result for Herbert's
+> > > litmus test and other related ones.
+> > > 
+> > > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+> > > Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+> > 
+> > For the entire series:
+> > 
+> > Acked-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> > 
+> > Two nits, but up to Paul AFAIAC:
+> > 
+> >  - This is a first time for "tools: memory-model:" in Subject; we were
+> >    kind of converging to "tools/memory-model:"...
+> 
+> Yeah, sure.  That's the sort of detail I have a hard time remembering.
+> 
+> >  - The report preceded the patch; we might as well reflect this in the
+> >    order of the tags.
+> 
+> Either way is okay with me.
 
-   https://patchwork.ozlabs.org/patch/1120222/
+I applied Andrea's acks and edited as called out above, thank you both!
 
-I guess I'll ask people on the github thread to test that too.
-
-                  Linus
-
-On Fri, Jun 21, 2019 at 3:38 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> Please look at my recent patch.
->  Sorry I am travelling....
->
-> On Fri, Jun 21, 2019, 6:19 PM Linus Torvalds <torvalds@linux-foundation.org> wrote:
->>
->> On Fri, Jun 21, 2019 at 2:41 PM Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->> >
->> > What specific commit caused the breakage?
->>
->> Both on reddit and on github there seems to be confusion about whether
->> it's a problem or not. Some people have it working with the exact same
->> kernel that breaks for others.
->>
->> And then some people seem to say it works intermittently for them,
->> which seems to indicate a timing issue.
->>
->> Looking at the SACK patches (assuming it's one of them), I'd suspect
->> the "tcp: tcp_fragment() should apply sane memory limits".
->>
->> Eric, that one does
->>
->>        if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
->>                NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
->>                return -ENOMEM;
->>        }
->>
->> but I think it's *normal* for "sk_wmem_queued >> 1" to be around the
->> same size as sk_sndbuf. So if there is some fragmentation, and we add
->> more skb's to it, that would seem to trigger fairly easily.
->> Particularly since this is all in "truesize" units, which can be a lot
->> bigger than the packets themselves.
->>
->> I don't know the code, so I may be out to lunch and barking up
->> completely the wrong tree, but that particular check does seem like it
->> might trigger much more easily than I think the code _intended_ it to
->> trigger?
->>
->> Pierre-Loup - do you guys have a test-case inside of valve? Or is this
->> purely "we see some people with problems"?
->>
->>                Linus
+						Thanx, Paul
