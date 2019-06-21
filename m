@@ -2,204 +2,118 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24FBC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4CCC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993992075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:15:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Aq2iSoDM"
+	by mail.kernel.org (Postfix) with ESMTP id DA02E2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 18:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561140954;
+	bh=m/351uf6f+xII+VVUN2ikTwwino/yqG6h04qzv8XvNU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dpHvtWv5SSbzyTcEk5kWOwtf1c3qvuVFrJ33RCKg6+1A28eGA70lwZOzreN7aIz01
+	 2WEbgP9LIRc1lv525I6s4z95J3pS5mT/Ma8Ix/LnT8uxe5ZN6Zu3XGnaJda63QLTPZ
+	 1sJ7DqkyPExaj+a4gFo9npx9G77k50MbM6Yf8nYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfFUSOL (ORCPT
+        id S1726442AbfFUSPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 14:14:11 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50828 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfFUSOI (ORCPT
+        Fri, 21 Jun 2019 14:15:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54268 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfFUSPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 14:14:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDQsF044218;
-        Fri, 21 Jun 2019 13:13:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561140806;
-        bh=7hmbqQrhwZwcY5ClrYYCYdMGokX9azLb6R6Ur266pac=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Aq2iSoDMJkIIwxP+IOvjtFfpFnIIqKdayvLO/bvVWgVXq5fcqMUmTJSSXxr6qQGjU
-         2XYRKNoOy+gAh2lFIuMJlVkeyGu05Bptfmy6rV6WaheLfhIbGKU2e7D03RnDnfFWOf
-         pooRBchb8h6f0DO0VDTF9d0NjK5PWxdmwVsERGtk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5LIDQ1R002627
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 13:13:26 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 21
- Jun 2019 13:13:26 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 21 Jun 2019 13:13:25 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5LIDOq7028950;
-        Fri, 21 Jun 2019 13:13:25 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH v4 net-next 01/11] net: ethernet: ti: cpsw: allow untagged traffic on host port
-Date:   Fri, 21 Jun 2019 21:13:04 +0300
-Message-ID: <20190621181314.20778-2-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190621181314.20778-1-grygorii.strashko@ti.com>
-References: <20190621181314.20778-1-grygorii.strashko@ti.com>
+        Fri, 21 Jun 2019 14:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=f2eFDUHxfpk3L5xJF7JT/XdkW1wgZp9A0zgcFsNmNKc=; b=harH6TPsjRc+zwJ3ZFspzNKAX
+        sjb+vCO7wAzsaAg1gmsBs9unAc0ySDHWTA6VS0V58/wp6+fc9PtN1AP7KX+0BmSFlQTGiJMW3dunW
+        OoHtSV9eFcvDbEoR/HRHyVnWXwp46aPaUBqflrsCvUwbsurlY9o0j3u6MMXP5MLBdZe9pGqv1FuUh
+        1n4gEkxRDguwJ+wka8Eq8zd+Ro4XaQiF/4APVz0HMVntfL1PZ+RlFV/wUFDA8YvKHf74ncmJw7d0v
+        CpucNXp/FfRSMdQPuHxHhMjzxcwSjPiYl83D0oaGaTpcrWMcuGQqRBw44u0OvRqccSBD4jkCA0NXK
+        AflaE09Mw==;
+Received: from [177.97.20.138] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1heO4m-0002tw-Pn; Fri, 21 Jun 2019 18:15:53 +0000
+Date:   Fri, 21 Jun 2019 15:15:48 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v2 00/22] Add ABI and features docs to the Kernel
+ documentation
+Message-ID: <20190621151548.074d9d60@coco.lan>
+In-Reply-To: <20190621150445.GA11015@kroah.com>
+References: <cover.1561050806.git.mchehab+samsung@kernel.org>
+        <20190621150445.GA11015@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now untagged vlan traffic is not support on Host P0 port. This patch adds
-in ALE context bitmap of VLANs for which Host P0 port bit set in Force
-Untagged Packet Egress bitmask in VLANs ALE entries, and adds corresponding
-check in VLAN incapsulation header parsing function cpsw_rx_vlan_encap().
+Em Fri, 21 Jun 2019 17:04:45 +0200
+Greg KH <greg@kroah.com> escreveu:
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c     | 17 ++++++++---------
- drivers/net/ethernet/ti/cpsw_ale.c | 21 ++++++++++++++++++++-
- drivers/net/ethernet/ti/cpsw_ale.h |  5 +++++
- 3 files changed, 33 insertions(+), 10 deletions(-)
+> On Thu, Jun 20, 2019 at 02:22:52PM -0300, Mauro Carvalho Chehab wrote:
+> > This is a rebased version of the scripts with parse
+> > Documentation/ABI and Documentation/feature files
+> > and produce a ReST output. Those scripts are added to the
+> > Kernel building system, in order to output their contents
+> > inside the Kernel documentation.
+> > 
+> > Please notice that, as discussed, I added support at get_abi.pl
+> > to handle ABI files as if they're compatible with ReST. Right
+> > now, this feature can't be enabled for normal builds, as it will
+> > cause Sphinx crashes. After getting the offending ABI files fixed,
+> > a single line change will be enough to make it default.
+> > 
+> > a version "0" was sent back on 2017.  
+> 
+> Ok, I added the first chunk of these patches to my tree, that add the
+> get_abi.pl file to the tree.  I didn't touch the others that touched the
+> documentation build or other scripts just yet, as I wanted to get others
+> to agree with them before accepting them.
+> 
+> Or we can just wait until after 5.3-rc1 is out and then the rest can go
+> through the documentation tree.
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 7bdd287074fc..fe3b3b89931b 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -381,17 +381,16 @@ static void cpsw_rx_vlan_encap(struct sk_buff *skb)
- 	/* Ignore vid 0 and pass packet as is */
- 	if (!vid)
- 		return;
--	/* Ignore default vlans in dual mac mode */
--	if (cpsw->data.dual_emac &&
--	    vid == cpsw->slaves[priv->emac_port].port_vlan)
--		return;
- 
--	prio = (rx_vlan_encap_hdr >>
--		CPSW_RX_VLAN_ENCAP_HDR_PRIO_SHIFT) &
--		CPSW_RX_VLAN_ENCAP_HDR_PRIO_MSK;
-+	/* Untag P0 packets if set for vlan */
-+	if (!cpsw_ale_get_vlan_p0_untag(cpsw->ale, vid)) {
-+		prio = (rx_vlan_encap_hdr >>
-+			CPSW_RX_VLAN_ENCAP_HDR_PRIO_SHIFT) &
-+			CPSW_RX_VLAN_ENCAP_HDR_PRIO_MSK;
- 
--	vtag = (prio << VLAN_PRIO_SHIFT) | vid;
--	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vtag);
-+		vtag = (prio << VLAN_PRIO_SHIFT) | vid;
-+		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vtag);
-+	}
- 
- 	/* strip vlan tag for VLAN-tagged packet */
- 	if (pkt_type == CPSW_RX_VLAN_ENCAP_HDR_PKT_VLAN_TAG) {
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 84025dcc78d5..23e7714ebee7 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -5,6 +5,8 @@
-  * Copyright (C) 2012 Texas Instruments
-  *
-  */
-+#include <linux/bitmap.h>
-+#include <linux/if_vlan.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -415,6 +417,17 @@ static void cpsw_ale_set_vlan_mcast(struct cpsw_ale *ale, u32 *ale_entry,
- 	writel(unreg_mcast, ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
- }
- 
-+void cpsw_ale_set_vlan_untag(struct cpsw_ale *ale, u32 *ale_entry,
-+			     u16 vid, int untag_mask)
-+{
-+	cpsw_ale_set_vlan_untag_force(ale_entry,
-+				      untag_mask, ale->vlan_field_bits);
-+	if (untag_mask & ALE_PORT_HOST)
-+		bitmap_set(ale->p0_untag_vid_mask, vid, 1);
-+	else
-+		bitmap_clear(ale->p0_untag_vid_mask, vid, 1);
-+}
-+
- int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 		      int reg_mcast, int unreg_mcast)
- {
-@@ -427,8 +440,8 @@ int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 
- 	cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_VLAN);
- 	cpsw_ale_set_vlan_id(ale_entry, vid);
-+	cpsw_ale_set_vlan_untag(ale, ale_entry, vid, untag);
- 
--	cpsw_ale_set_vlan_untag_force(ale_entry, untag, ale->vlan_field_bits);
- 	if (!ale->params.nu_switch_ale) {
- 		cpsw_ale_set_vlan_reg_mcast(ale_entry, reg_mcast,
- 					    ale->vlan_field_bits);
-@@ -460,6 +473,7 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
- 		return -ENOENT;
- 
- 	cpsw_ale_read(ale, idx, ale_entry);
-+	cpsw_ale_set_vlan_untag(ale, ale_entry, vid, 0);
- 
- 	if (port_mask)
- 		cpsw_ale_set_vlan_member_list(ale_entry, port_mask,
-@@ -791,6 +805,11 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 	if (!ale)
- 		return NULL;
- 
-+	ale->p0_untag_vid_mask =
-+		devm_kmalloc_array(params->dev, BITS_TO_LONGS(VLAN_N_VID),
-+				   sizeof(unsigned long),
-+				   GFP_KERNEL);
-+
- 	ale->params = *params;
- 	ale->ageout = ale->params.ale_ageout * HZ;
- 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 370df254eb12..93d6d56d12f4 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -35,6 +35,7 @@ struct cpsw_ale {
- 	u32			port_mask_bits;
- 	u32			port_num_bits;
- 	u32			vlan_field_bits;
-+	unsigned long		*p0_untag_vid_mask;
- };
- 
- enum cpsw_ale_control {
-@@ -115,4 +116,8 @@ int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
- 			 int control, int value);
- void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data);
- 
-+static inline int cpsw_ale_get_vlan_p0_untag(struct cpsw_ale *ale, u16 vid)
-+{
-+	return test_bit(vid, ale->p0_untag_vid_mask);
-+}
- #endif
--- 
-2.17.1
+Ok.
 
+Whatever works best for you and Jon.
+
+I'm keeping a tree with the remaining patches on the top of
+driver-core-next at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=abi_patches_v4.2
+
+I'll rebase it on the top of yours as new patches get merged there, or if
+I develop more patches related to it (I may try to fix the ReST issues with
+the files at ABI/testing if I have some spare time).
+
+Note that it contains the RFC patches for parsing ABI files as-is,
+with ReST markups on them, if needed.
+
+If you want to pick the hole thing including the RFC ones, there's one patch 
+there with probably needs to be either split and/or submitted to ABI file authors:
+
+	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=abi_patches_v4.2&id=58f73907d21f1c93038196c42dab65be969f4104
+
+Thanks,
+Mauro
