@@ -4,154 +4,192 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC0C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB52DC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03EA2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF97B21530
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 13:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PAE6OEZ8"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="WiMV9WZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFUNHo (ORCPT
+        id S1726906AbfFUNHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 09:07:44 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33800 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfFUNHk (ORCPT
+        Fri, 21 Jun 2019 09:07:35 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40389 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfFUNHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:07:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so10073708edb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:07:40 -0700 (PDT)
+        Fri, 21 Jun 2019 09:07:33 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so5897433ljh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 06:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/K0/kvf7+EWXr6rQfoz7UxMfktgW7/4j5Pgej3x77XM=;
-        b=PAE6OEZ8NC/qeGpE32S7WnaYR8nyncYe408Jq0CgpSEX5qzdvqxgDZs5ZCZwf9z2M/
-         MfmA07u7v2Dcvj6N9Gc4vkUdsz3EIDYCqEMeeoBYxLeIb/y9bGSed3H8d9o3PlC4Ytxn
-         oA+VlnKMSsS7quvovP4p8aKwmbYWhZkd0zTnk3u9Du+67+nLBJwp5bknGKkUG+ONwhjz
-         tkTJX8Bq4oIKNeZVi+bbrVcdMW8Y1t9Y67TTb0mrmwBheAxfAtMwJDljsYfa7Ogu0jLk
-         RAaOEsejUFYQQpQXuZEuxRWQuaGtNp10HL9BRM8wQxljKfSAywRlF4E5te+9lTIG2AOz
-         S/QQ==
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yP4hCZ6yL3D/UZqgqC/Ov+Z6vjll5loZko6056/cetY=;
+        b=WiMV9WZtz6n4ISyy7pUtYCnGw26um/pfnCPW0IUhTrj5WLELiUwQzTzG1Ps+Fm34sU
+         niM84VraxJjxEYv4lANQu3cYxfRtxumRLPBQhauTyA3CnBL4peWd+iHPQtOun7Vq50zL
+         HNHQiBxrBvNYVwNdhOGm90h2gZQDczlnARy2Q53GRYk/CeAka+BWLGtHypDgvFyVfhri
+         lTPNVcm6BwJSShquC+A8X9br/R1xmVZkUNVve76ifd960/mo4rMXML0R/zeJGhy+vvhd
+         T1yWVku6ySVz5E63YpGfCMcCgCDAfB92y09Sw+3UECBT3fmJSiSVa5pI9at0YCp0c5rI
+         Zzlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/K0/kvf7+EWXr6rQfoz7UxMfktgW7/4j5Pgej3x77XM=;
-        b=f/C5O0ws7jCiGzJ6lPAzeC/d7ejCmcz8+GX39n7aY+Ik67j/b71dfkjpZp5dtUP3+I
-         xHTDHeM+vOfnEgxIhRXYPE/cXW19Z/mRQ6h3/evAQGvtGcpy3EORgrx2JjMXZUwEVvyc
-         1mrU0fREaOPlP8cGcUeC73hVK/45AgiXZdNDRff6rCmeuWU52Gx3nWuFhen8vjN4V+HY
-         xyzdT1b6iMjhbHlXv0FOhCUsKlUFHO5Lkq9gUFnqLbw+D4X1RyoqBjyhf/M2g4UU+G1v
-         5fxcKHAglPpb18KpWONOehHx0mkC4amDmoEVhvirizQdcjjXrg4spRXoIGyGeJiWql+Z
-         hBmQ==
-X-Gm-Message-State: APjAAAU1UlTjo52T+6IbFr7dAoUw1u/KXNB0mWcYZfxPkQAM4n60qxYK
-        zhMCNYhm8rA11nXNjt8YvaCKrw==
-X-Google-Smtp-Source: APXvYqwSIu9UphVAwE3sOjCJhhXK/jVAbMQD+iKQGW5Qdf6dAWE8bX5wKC8SIAJa13mOWwqqReekHg==
-X-Received: by 2002:a50:913c:: with SMTP id e57mr95497578eda.257.1561122459409;
-        Fri, 21 Jun 2019 06:07:39 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e12sm813636edb.72.2019.06.21.06.07.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 06:07:38 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C59BE10289C; Fri, 21 Jun 2019 16:07:40 +0300 (+03)
-Date:   Fri, 21 Jun 2019 16:07:40 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org
-Subject: Re: [PATCH v5 6/6] mm,thp: avoid writes to file with THP in pagecache
-Message-ID: <20190621130740.ehobvjjj7gjiazjw@box>
-References: <20190620205348.3980213-1-songliubraving@fb.com>
- <20190620205348.3980213-7-songliubraving@fb.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yP4hCZ6yL3D/UZqgqC/Ov+Z6vjll5loZko6056/cetY=;
+        b=Zj84zIug6w3LFiSaB4F39baM2TZFD0d2lFyBVf+S+XjqEInkMP4WbCCzpjm0mZ7oAO
+         FwWkglvHWHIJm7Yl2EevXiEcdLMGgJ/LLTvzT3KdSdqEJjdjqY/pD1oAHwM5ijLL8agB
+         YV55L6SvJcFl0VSg/kWmDngC/Dq9FYoQVhZvrtz2mo3CBu4HpqfwcDVt/9YI3wBIKp5D
+         nJE7jgyqQZEiw06AHjfWF1FclRqs5Y0OsrXBeTqEiZb67riPNogBpPkMAJrNxf2TXjoJ
+         GX+6sRwcqW8Wi/QuB2g8IZqOqvYLgJAfClZna1gpb5GJEmOTXKxIklVI325tY8EfndAe
+         XM4g==
+X-Gm-Message-State: APjAAAVIt4Vygp0/+0BWhob68HTQezBe76nnFY39VjTiN+P3xqQKvTXL
+        Nrxe+mQ9npbPNAj+A9SlqUNDpg==
+X-Google-Smtp-Source: APXvYqz0iDNEIsEABaU1xi7aYwfBGvl2BdjDcs2x8HZgfccJp7p8AirvIqLaeTE1wbjQW06IpIgp+g==
+X-Received: by 2002:a2e:900c:: with SMTP id h12mr3609956ljg.197.1561122451127;
+        Fri, 21 Jun 2019 06:07:31 -0700 (PDT)
+Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.gmail.com with ESMTPSA id r2sm387100lfi.51.2019.06.21.06.07.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 06:07:30 -0700 (PDT)
+From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
+To:     axboe@fb.com, hch@lst.de, damien.lemoal@wdc.com,
+        chaitanya.kulkarni@wdc.com, dmitry.fomichev@wdc.com,
+        ajay.joshi@wdc.com, aravind.ramesh@wdc.com,
+        martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
+        agk@redhat.com, snitzer@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, dm-devel@redhat.com,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
+Subject: [PATCH 2/4] null_blk: add zone open, close, and finish support
+Date:   Fri, 21 Jun 2019 15:07:09 +0200
+Message-Id: <20190621130711.21986-3-mb@lightnvm.io>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190621130711.21986-1-mb@lightnvm.io>
+References: <20190621130711.21986-1-mb@lightnvm.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620205348.3980213-7-songliubraving@fb.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 01:53:48PM -0700, Song Liu wrote:
-> In previous patch, an application could put part of its text section in
-> THP via madvise(). These THPs will be protected from writes when the
-> application is still running (TXTBSY). However, after the application
-> exits, the file is available for writes.
-> 
-> This patch avoids writes to file THP by dropping page cache for the file
-> when the file is open for write. A new counter nr_thps is added to struct
-> address_space. In do_last(), if the file is open for write and nr_thps
-> is non-zero, we drop page cache for the whole file.
-> 
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  fs/inode.c         |  3 +++
->  fs/namei.c         | 22 +++++++++++++++++++++-
->  include/linux/fs.h | 31 +++++++++++++++++++++++++++++++
->  mm/filemap.c       |  1 +
->  mm/khugepaged.c    |  4 +++-
->  5 files changed, 59 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index df6542ec3b88..518113a4e219 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -181,6 +181,9 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
->  	mapping->flags = 0;
->  	mapping->wb_err = 0;
->  	atomic_set(&mapping->i_mmap_writable, 0);
-> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-> +	atomic_set(&mapping->nr_thps, 0);
-> +#endif
->  	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
->  	mapping->private_data = NULL;
->  	mapping->writeback_index = 0;
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 20831c2fbb34..de64f24b58e9 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -3249,6 +3249,22 @@ static int lookup_open(struct nameidata *nd, struct path *path,
->  	return error;
->  }
->  
-> +/*
-> + * The file is open for write, so it is not mmapped with VM_DENYWRITE. If
-> + * it still has THP in page cache, drop the whole file from pagecache
-> + * before processing writes. This helps us avoid handling write back of
-> + * THP for now.
-> + */
-> +static inline void release_file_thp(struct file *file)
-> +{
-> +#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-> +	struct inode *inode = file_inode(file);
-> +
-> +	if (inode_is_open_for_write(inode) && filemap_nr_thps(inode->i_mapping))
-> +		truncate_pagecache(inode, 0);
-> +#endif
-> +}
-> +
->  /*
->   * Handle the last step of open()
->   */
-> @@ -3418,7 +3434,11 @@ static int do_last(struct nameidata *nd,
->  		goto out;
->  opened:
->  	error = ima_file_check(file, op->acc_mode);
-> -	if (!error && will_truncate)
-> +	if (error)
-> +		goto out;
-> +
-> +	release_file_thp(file);
+From: Ajay Joshi <ajay.joshi@wdc.com>
 
-What protects against re-fill the file with THP in parallel?
+Implement REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH
+support to allow explicit control of zone states.
 
+Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>
+Signed-off-by: Matias Bjørling <matias.bjorling@wdc.com>
+---
+ drivers/block/null_blk.h       |  4 ++--
+ drivers/block/null_blk_main.c  | 13 ++++++++++---
+ drivers/block/null_blk_zoned.c | 33 ++++++++++++++++++++++++++++++---
+ 3 files changed, 42 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h
+index 34b22d6523ba..62ef65cb0f3e 100644
+--- a/drivers/block/null_blk.h
++++ b/drivers/block/null_blk.h
+@@ -93,7 +93,7 @@ int null_zone_report(struct gendisk *disk, sector_t sector,
+ 		     gfp_t gfp_mask);
+ void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 			unsigned int nr_sectors);
+-void null_zone_reset(struct nullb_cmd *cmd, sector_t sector);
++void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sector);
+ #else
+ static inline int null_zone_init(struct nullb_device *dev)
+ {
+@@ -111,6 +111,6 @@ static inline void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 				   unsigned int nr_sectors)
+ {
+ }
+-static inline void null_zone_reset(struct nullb_cmd *cmd, sector_t sector) {}
++static inline void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sector) {}
+ #endif /* CONFIG_BLK_DEV_ZONED */
+ #endif /* __NULL_BLK_H */
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 447d635c79a2..5058fb980c9c 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1209,10 +1209,17 @@ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
+ 			nr_sectors = blk_rq_sectors(cmd->rq);
+ 		}
+ 
+-		if (op == REQ_OP_WRITE)
++		switch (op) {
++		case REQ_OP_WRITE:
+ 			null_zone_write(cmd, sector, nr_sectors);
+-		else if (op == REQ_OP_ZONE_RESET)
+-			null_zone_reset(cmd, sector);
++			break;
++		case REQ_OP_ZONE_RESET:
++		case REQ_OP_ZONE_OPEN:
++		case REQ_OP_ZONE_CLOSE:
++		case REQ_OP_ZONE_FINISH:
++			null_zone_mgmt_op(cmd, sector);
++			break;
++		}
+ 	}
+ out:
+ 	/* Complete IO by inline, softirq or timer */
+diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
+index fca0c97ff1aa..47d956b2e148 100644
+--- a/drivers/block/null_blk_zoned.c
++++ b/drivers/block/null_blk_zoned.c
+@@ -121,17 +121,44 @@ void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 	}
+ }
+ 
+-void null_zone_reset(struct nullb_cmd *cmd, sector_t sector)
++void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sector)
+ {
+ 	struct nullb_device *dev = cmd->nq->dev;
+ 	unsigned int zno = null_zone_no(dev, sector);
+ 	struct blk_zone *zone = &dev->zones[zno];
++	enum req_opf op = req_op(cmd->rq);
+ 
+ 	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL) {
+ 		cmd->error = BLK_STS_IOERR;
+ 		return;
+ 	}
+ 
+-	zone->cond = BLK_ZONE_COND_EMPTY;
+-	zone->wp = zone->start;
++	switch (op) {
++	case REQ_OP_ZONE_RESET:
++		zone->cond = BLK_ZONE_COND_EMPTY;
++		zone->wp = zone->start;
++		return;
++	case REQ_OP_ZONE_OPEN:
++		if (zone->cond == BLK_ZONE_COND_FULL) {
++			cmd->error = BLK_STS_IOERR;
++			return;
++		}
++		zone->cond = BLK_ZONE_COND_EXP_OPEN;
++		return;
++	case REQ_OP_ZONE_CLOSE:
++		if (zone->cond == BLK_ZONE_COND_FULL) {
++			cmd->error = BLK_STS_IOERR;
++			return;
++		}
++		zone->cond = BLK_ZONE_COND_CLOSED;
++		return;
++	case REQ_OP_ZONE_FINISH:
++		zone->cond = BLK_ZONE_COND_FULL;
++		zone->wp = zone->start + zone->len;
++		return;
++	default:
++		/* Invalid zone condition */
++		cmd->error = BLK_STS_IOERR;
++		return;
++	}
+ }
 -- 
- Kirill A. Shutemov
+2.19.1
+
