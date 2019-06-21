@@ -2,124 +2,101 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A717AC43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67CDC43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A9720673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D9420673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 09:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHmDc21h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfFUJpS (ORCPT
+        id S1726232AbfFUJqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 05:45:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:54754 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfFUJpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:45:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D939142F;
-        Fri, 21 Jun 2019 02:45:16 -0700 (PDT)
-Received: from [10.37.13.79] (unknown [10.37.13.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A6DC3F246;
-        Fri, 21 Jun 2019 02:45:14 -0700 (PDT)
-Subject: Re: [PATCHv2 1/2] coresight: Do not default to CPU0 for missing CPU
- phandle
-To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, david.brown@linaro.org,
-        mark.rutland@arm.com
-Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
- <92a33fa58c77206b338220427e92dabbd1d197f7.1561054498.git.saiprakash.ranjan@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <4176442c-feb8-5245-2b27-afcdb9a6247c@arm.com>
-Date:   Fri, 21 Jun 2019 10:48:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 21 Jun 2019 05:46:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42102 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbfFUJqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:46:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l19so3097768pgh.9;
+        Fri, 21 Jun 2019 02:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SDb6fS66l3rIdgOP+xeGdS65KBD4+SVxzLqxETJy540=;
+        b=tHmDc21h4z8FGOySimqA/JJA0jud8SB83BSGl90MQpJLk4bLP7R/QKQw+45dqU88s4
+         WXXo8j36RcJwF3JJucdQVOhwR2NBs2/0pAWugp39yqS0XTOAWHZb5Okwv6I6KFUp9Ltj
+         nMqVlI190DQ5Kfk48bAD1spf0Ql3q1ZKCBs2SHguekVAFRslfHLsjYmfxMNj9/Zobwc1
+         0g9p7aUWGtwDhilimS6/rZffSJ+VjltLI0yGx3LN/YtkeFPnu7oCrqn5Yr+pLsoVcdgM
+         FzR+n6gqpNcZk6Uhbu0q9W+qWXwhJ3aVN//CwEocRUsuuURi3ELhdAqTF4iypNAsrBYm
+         uROQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SDb6fS66l3rIdgOP+xeGdS65KBD4+SVxzLqxETJy540=;
+        b=aoDRtoIMkmZH+cwIlACaQS+oNmW267xNOPsffpcMwRb0x1vcuuo8AAXksy9yIuXYk0
+         DtXj8/srT2kK2sgWXbKOrJG0ER9KJuHVG3NICMvbaUpWa5VkZelWVQBAwbFi4dU7ueGF
+         ObF1t6Q4xly/7vV5mAPyveBKv236jJ4hGTJ6UgFkbygKzsjspbx4Ccxk8UQ0VjSrugJY
+         xkf2WL01w9XDPXuAuz3tMyobyNvj74L7hrTZz7EAhJsuj+6VZeD/muP2hWB0x9ZMG/QB
+         BHFOC+0gGuzGDDV6m9h+mGgZG0iu3fs4lKmEUKv80HGx/Gn03as6j97k2B3OFpiAydBH
+         t+rA==
+X-Gm-Message-State: APjAAAXLIhtAUJL+HPXqUryB4TPSQ6aNnGIbJxP2QrkHJTOm2w76x4Ev
+        w6scMjr+dWHA0X7cB4A4VNedmsn+5eGOmQ==
+X-Google-Smtp-Source: APXvYqzYDIumDjcuNF+spxLeWY+sn/VYIJJTKdnueD12yLGO0ruD7QUv9wfI2q5NeSuiyLopssoMJg==
+X-Received: by 2002:a65:50cb:: with SMTP id s11mr17411630pgp.371.1561110406990;
+        Fri, 21 Jun 2019 02:46:46 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:913:88b1:ac7e:774f:a03c:dcac])
+        by smtp.googlemail.com with ESMTPSA id u2sm2147746pjv.9.2019.06.21.02.46.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 02:46:46 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions instead of private duplicates
+Date:   Fri, 21 Jun 2019 15:16:04 +0530
+Message-Id: <20190621094607.15011-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <92a33fa58c77206b338220427e92dabbd1d197f7.1561054498.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+This patch series removes the private duplicates of PCI definitions in
+favour of generic definitions defined in pci_regs.h.
 
+This driver only uses some of the generic PCI definitons,
+which are included from pci_regs.h and thier private versions
+are removed from skfbi.h with all other private defines.
 
-On 06/20/2019 07:31 PM, Sai Prakash Ranjan wrote:
-> Coresight platform support assumes that a missing "cpu" phandle
-> defaults to CPU0. This could be problematic and unnecessarily binds
-> components to CPU0, where they may not be. Let us make the DT binding
-> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
-> affinity information.
-> 
-> Also in coresight etm and cpu-debug drivers, abort the probe
-> for such cases.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+The skfbi.h defines PCI_REV_ID and other private defines with different
+names, these are renamed to Generic PCI names to make them
+compatible with defines in pci_regs.h.
 
-Please drop this tag for now.
+All unused defines are removed from skfbi.h.
 
-> ---
->   Documentation/devicetree/bindings/arm/coresight.txt |  2 +-
->   drivers/hwtracing/coresight/coresight-cpu-debug.c   |  3 +++
->   drivers/hwtracing/coresight/coresight-etm3x.c       |  3 +++
->   drivers/hwtracing/coresight/coresight-etm4x.c       |  3 +++
->   drivers/hwtracing/coresight/coresight-platform.c    | 10 +++++-----
->   5 files changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 8a88ddebc1a2..c4659ba9457d 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -88,7 +88,7 @@ its hardware characteristcs.
->   	  registers via co-processor 14.
->   
->   	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
-> -	  source is considered to belong to CPU0.
-> +	  affinity is set to invalid.
->   
+Puranjay Mohan (3):
+  net: fddi: skfp: Rename local PCI defines to match generic PCI defines
+  net: fddi: skfp: Include generic PCI definitions
+  net: fddi: skfp: Remove unused private PCI definitions
 
-Please move this from the "Optional properties". It is not "Optional"
-anymore with this change. Please make sure it is evident that this
-is mandatory. Also please fix the bindings document for cpu-debug.txt.
+ drivers/net/fddi/skfp/drvfbi.c  |  3 +-
+ drivers/net/fddi/skfp/h/skfbi.h | 80 +--------------------------------
+ 2 files changed, 4 insertions(+), 79 deletions(-)
 
+-- 
+2.21.0
 
->   * Optional property for TMC:
->   
-
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 3c5ceda8db24..8b03fa573684 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
->   	struct device_node *dn;
->   
->   	if (!dev->of_node)
-> -		return 0;
-> +		return -ENODEV;
-> +
->   	dn = of_parse_phandle(dev->of_node, "cpu", 0);
-> -	/* Affinity defaults to CPU0 */
->   	if (!dn)
-> -		return 0;
-> +		return -ENODEV;
-> +
->   	cpu = of_cpu_node_to_id(dn);
->   	of_node_put(dn);
->   
-
-Please fix the acpi_coresight_get_cpu() for ACPI.
-
-Rest looks fine to me.
-
-Suzuki
