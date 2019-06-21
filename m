@@ -2,96 +2,117 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC60C48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD56C43613
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404D920665
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38E52070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 16:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bz6R5+e8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vkm8kqto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfFUQpQ (ORCPT
+        id S1726151AbfFUQtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 12:45:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45729 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFUQpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 12:45:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z19so688206pgl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 09:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6grt7dPTqDbEVmXKN5u88sLrQRXBDwvxKFqm7PTXnXE=;
-        b=Bz6R5+e8ki5nOnHq6gQ25tqZI+/LG7ye4y5UOh7ShxcbAcqcB+IoqDQfqUYKw1ecm3
-         Dx+6nQRtvhRCqR+iCrB/P2MQSPBOvwfRrR8/JF7kceIDWBLrYdbt2ZpRNXIXrrlDcyx1
-         vM2a+pIWBhuYpUekQMCkO6XCX+Qb0zOj10pD1MxzPgzP35miFM6VsXun5gReifYNSABN
-         KpiHq1q6X87bsnybzC0sfKoFTf+Az2qv3jooGW53ip60V5ufFdxNWAGXHpnVFLZBIe6b
-         SSVwFQbN9GHmaSyYmS/oQej3TosPd2dZ1s9eKHH352/NPXtau0Gp78qDCxX0RuDM0wD5
-         q5cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6grt7dPTqDbEVmXKN5u88sLrQRXBDwvxKFqm7PTXnXE=;
-        b=JS3WHXn412yAjIqDfn3GncALKqD06bEpsU926uo/tipOvgU3E7YRFix7khnilW1LW/
-         dqPpb7nrzxjrLPTumG4s75kB6M/JBpj15/RngW5FFF3V21s/n2pK/O7kajwAA/qKP5+I
-         BInYQWMA1Uw6XVjd7AqwWq2ah30M+X6cHFAKjDOFppfPzzg8ACl77Yo3rg46QICw548/
-         619ue7/SadWPcX/C/aItXw44ZJrbqVogpa7E3Khyu0nDrMzia+o5OHX/Ou+ub5P0a3QD
-         MH33ag7uJj1rNN/A0URQfbnRKze400LaGUxhMU5sQaLGjfZx5b6KHc+JhyNgc0MUYRjo
-         /BiQ==
-X-Gm-Message-State: APjAAAXPao/gT6UspHtYsCfAcOLjbCuNuYfpTDwGkAdFdtZtDwChzrHH
-        XT+4yxJmI4Vei61Jc3UPqNc=
-X-Google-Smtp-Source: APXvYqzbQQ06Q+VkjbL0j62tbBy6iEA/Ket6kvE7FKAdbKQ+XXS3UFz53fT7QKn187xEMgLUhrwWGg==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr7966696pjq.114.1561135515066;
-        Fri, 21 Jun 2019 09:45:15 -0700 (PDT)
-Received: from localhost.localdomain ([157.45.2.115])
-        by smtp.gmail.com with ESMTPSA id z13sm2974783pfa.123.2019.06.21.09.45.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 09:45:14 -0700 (PDT)
-From:   Harshavardhan Unnibhavi <hvubfoss@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     Harshavardhan Unnibhavi <hvubfoss@gmail.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: soc_mt9v022: replace symbolic permission with octal permission
-Date:   Fri, 21 Jun 2019 22:14:53 +0530
-Message-Id: <20190621164453.5075-1-hvubfoss@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Jun 2019 12:49:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47820 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfFUQtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 12:49:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=P71o6R9PwKrxfUlkCzThaAEbYlO5haANQ4Qx+hoNZ6s=; b=vkm8kqtoslv3JIikaTIBorlbNH
+        s88aHYfIZiSu8Iii2S8nQ6MYb1TCC1gZzo2J9oJ+pcto5nZNRyAlbFNKPNqXuNMX4uS+ZLqNRJNUx
+        Pw48ymqe6jF+YDuGxPHtBN6EDChwUDieXpmGsG1Epj6zOsfoE4hAABWRKgxb5GFI8WgI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1heMjM-0007Ft-HQ; Fri, 21 Jun 2019 18:49:40 +0200
+Date:   Fri, 21 Jun 2019 18:49:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        netdev@vger.kernel.org, alexandru.marginean@nxp.com,
+        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190621164940.GL31306@lunn.ch>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolved following checkpatch issue:
-WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider
-using octal permissions '0444'.
+On Fri, Jun 21, 2019 at 06:38:50PM +0300, Claudiu Manoil wrote:
+> The switch device features 6 ports, 4 with external links
+> and 2 internally facing to the ls1028a SoC and connected via
+> fixed links to 2 internal enetc ethernet controller ports.
 
-Signed-off-by: Harshavardhan Unnibhavi <hvubfoss@gmail.com>
----
- drivers/staging/media/soc_camera/soc_mt9v022.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Claudiu
 
-diff --git a/drivers/staging/media/soc_camera/soc_mt9v022.c b/drivers/staging/media/soc_camera/soc_mt9v022.c
-index e7e0d3d29499..f73f5460663c 100644
---- a/drivers/staging/media/soc_camera/soc_mt9v022.c
-+++ b/drivers/staging/media/soc_camera/soc_mt9v022.c
-@@ -25,7 +25,7 @@
-  */
- 
- static char *sensor_type;
--module_param(sensor_type, charp, S_IRUGO);
-+module_param(sensor_type, charp, 0444);
- MODULE_PARM_DESC(sensor_type, "Sensor type: \"colour\" or \"monochrome\"");
- 
- /* mt9v022 selected register addresses */
--- 
-2.17.1
+> +			switch@0,5 {
+> +				compatible = "mscc,felix-switch";
+> +				reg = <0x000500 0 0 0 0>;
+> +
+> +				ethernet-ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					/* external ports */
+> +					switch_port0: port@0 {
+> +						reg = <0>;
+> +					};
+> +					switch_port1: port@1 {
+> +						reg = <1>;
+> +					};
+> +					switch_port2: port@2 {
+> +						reg = <2>;
+> +					};
+> +					switch_port3: port@3 {
+> +						reg = <3>;
+> +					};
+> +					/* internal to-cpu ports */
+> +					port@4 {
+> +						reg = <4>;
+> +						fixed-link {
+> +							speed = <1000>;
+> +							full-duplex;
+> +						};
+> +					};
+> +					port@5 {
+> +						reg = <5>;
+> +						fixed-link {
+> +							speed = <1000>;
+> +							full-duplex;
+> +						};
+> +					};
+> +				};
+> +			};
+
+This sounds like a DSA setup, where you have SoC ports connected to
+the switch. With DSA, the CPU ports of the switch are special. We
+don't create netdev's for them, the binding explicitly list which SoC
+interface they are bound to, etc.
+
+What model are you using here? I'm just trying to understand the setup
+to ensure it is consistent with the swichdev model.
+
+   Thanks
+	Andrew
 
