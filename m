@@ -2,128 +2,89 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D27C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A72C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357AB206B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E114B206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561225578;
-	bh=2fYPgtkDKK/kg8Wi0hW6VOGHSXxbomeiZ8BHHs+zuLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Zv0SKlESNPXc5YeG8orALa+WA502OxSuiiNpQf4v1ThJHao8B3PVQ9NsJKHOWEcue
-	 zvopSro+uLx8BciW42kcp4k6CryYrsSzqtb7URa6URf+z7nnqxrWIfGGn6EvQ0sSMc
-	 FuPg6AVyayC7vR3fdvlMISyhoqbt8YvgRszscTrw=
+	s=default; t=1561225673;
+	bh=V/RLUJH09qAbd2bJqQLaZXbqxwUt1qxz0k6bjV3TOPI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DpQ/gA6kNRE0m9lRVnOwJOD2LNaB30ZWfm2QxczPst2N33AOpRaxnxTjZBjMc8nxm
+	 V5GZVJgxE6N3ypRQNuEdhuG9Y45epCZQjgsfbBCO6/7b53ZT1x0e229SOK5FR0rsDF
+	 Cv3g6cEBNisT0AZa3kijlgKDdmnwSGBcRqqs8ofM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfFVRqO (ORCPT
+        id S1726396AbfFVRrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 13:46:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46494 "EHLO
+        Sat, 22 Jun 2019 13:47:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46540 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfFVRqO (ORCPT
+        with ESMTP id S1726276AbfFVRrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 13:46:14 -0400
+        Sat, 22 Jun 2019 13:47:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=60xhp6+spwceUSgQlTZCaiG+QVWO6xAU7FfyK/vAN3I=; b=oZjCdq+aOYjrAf52L1dFiPYI3
-        2gk3jiuUylbGyGZVzOMi0QOW3M3gLO/yX4lFyAvdtD+X65QZqEcBw0PesQ3HYXQrousfJ1GxR/TsW
-        tGCawfIFudlTfNa9MTafpRdpB/NqCEM1auqW1KD8237APvpTwG3xXFizOpGtQZqVgIXfdpvqWgvSG
-        /A0Nh1OUMjZiXqOO4cepbYSgS0nDo2TS8haLDFh/bCw59RFA0XAQOW/Jbnb/OdW9Ewgpa1sScXjxQ
-        5yYuGuvy+fze++xJzCZkXxUvxU4pfPMRDiurPQc+fHj4IrFioHHT8zq0RbQBu4bBviaRzN+95tvSM
-        L3BRhR29w==;
-Received: from [179.95.45.115] (helo=coco.lan)
+         bh=mW9Wc/CU/UJbAQZ138GmClrxJfe6OfdsVjDCEUqxJpo=; b=Bp5CXpqL1F1hcSOGQAGMR20qc
+        PHBWx5xsmYiHuhui86o634LyAwhnVUzq+3tVYMuCkpICz/3cvBjsYO2dmaxh3+Z9hu+o+ZSPZY0BY
+        Ix3/Gt+lBsTNf9B7hT5FT0sY9n5U76y8ow0zbYo+kYN14wGNne/dMZnIAVvBx7Pnnynt265TzT6o/
+        mIfAb+yKTwRbgJb0//S/ZUU4NXivCWDPV+3G1om4wQ6+MafGNJTXwr6kbzqsg773x5RV6Dy5q77oU
+        q9ffjmlPsCPxRidCz2hSztLzDT+aA2e0JxWdVzaL4eDzqKyhrf9sPrQLQUGSstrTHvr/d0nTQh5h4
+        /AkLg/Z0A==;
+Received: from [179.95.45.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hek5d-000394-Jd; Sat, 22 Jun 2019 17:46:13 +0000
-Date:   Sat, 22 Jun 2019 14:46:10 -0300
+        id 1hek7C-0003CJ-F2; Sat, 22 Jun 2019 17:47:50 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hek79-0001S1-58; Sat, 22 Jun 2019 14:47:47 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190622144610.26b7d99c@coco.lan>
-In-Reply-To: <20190622084346.28c7c748@lwn.net>
-References: <20190621235159.6992-1-corbet@lwn.net>
-        <20190621235159.6992-2-corbet@lwn.net>
-        <20190621220046.3de30d9d@coco.lan>
-        <20190622084346.28c7c748@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH] docs: zh_CN: submitting-drivers.rst: Remove a duplicated Documentation/
+Date:   Sat, 22 Jun 2019 14:47:46 -0300
+Message-Id: <47f81418930438d1deab8da1307bcd89ba9afd91.1561225663.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, 22 Jun 2019 08:43:46 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Somehow, this file ended with Documentation/ twice.
 
-> On Fri, 21 Jun 2019 22:00:46 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > > +#
-> > > +# The DVB docs create references for these basic system calls, leading
-> > > +# to lots of confusing links.  So just don't link them.
-> > > +#
-> > > +Skipfuncs = [ 'open', 'close', 'write' ]    
-> > 
-> > and yeah, of course, if there's something weird, it has to be at
-> > the media docs :-)
-> > 
-> > Btw, if I'm not mistaken, we do the same for ioctl.  
-> 
-> So that's actually interesting.  In, for example,
-> Documentation/media/uapi/v4l/func-ioctl.rst, you see something that looks
-> like this:
-> 
-> > .. c:function:: int ioctl( int fd, int request, void *argp )
-> >     :name: v4l2-ioctl  
-> 
-> Some digging around didn't turn up any documentation for :name:, but it
-> seems to prevent ioctl() from going into the list of functions that can be
-> cross-referenced. 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/translations/zh_CN/process/submitting-drivers.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It took me a while to discover this way to be able to re-define the
-name of a symbol at the C domain, but I'm pretty sure I read this
-somewhere at the Sphinx docs (or perhaps on some bug track or Stack
-Overflow).
+diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+index 72c6cd935821..72f4f45c98de 100644
+--- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
++++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+@@ -22,7 +22,7 @@
+ 兴趣的是显卡驱动程序，你也许应该访问 XFree86 项目(http://www.xfree86.org/)
+ 和／或 X.org 项目 (http://x.org)。
+ 
+-另请参阅 Documentation/Documentation/translations/zh_CN/process/submitting-patches.rst 文档。
++另请参阅 Documentation/translations/zh_CN/process/submitting-patches.rst 文档。
+ 
+ 
+ 分配设备号
+-- 
+2.21.0
 
-I don't remember exactly where I get it, but I guess it is related to
-this:
-
-	http://docutils.sourceforge.net/docs/howto/rst-roles.html
-
-> I wonder if the same should be done for the others?
-
-Sure.
-
-> I think that would be better than putting a special-case hack into the
-> toolchain.
-
-Agreed. As you're doing this, if you prefer, feel free to send the
-patches to media docs. Otherwise, I'll seek for some time next week.
-
-> 
-> > I'm wandering if this could also handle the Documentation/* auto-replace.  
-> 
-> I think it's the obvious place for it, yes.  Let's make sure I haven't
-> badly broken anything with the existing change first, though :)
-
-Yeah, sure. Just wanted to place the code at the same thread. There are
-some tricks that need to be done in order to handle the relative paths.
-It took me a lot more time to get it right than adding the replacing Regex :-)
-
-(That reminds I should post a patch to one place where we have a
-Documentation/Documentation typo)
-
-Thanks,
-Mauro
