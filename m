@@ -7,57 +7,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1CC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C6BC4646B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACDD20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B6F20820
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561222789;
-	bh=pxvytKFestq2TcDz4jnN42GQeOz4ldzQ6V/m5HuFo2A=;
+	s=default; t=1561223836;
+	bh=PaLa3Sc1NDz1LEUlevWQAzTMu0D1pVMZfRfoUUFwnl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C61LhbTNwbkozQOTLXWQAi3GgevoCxQl6HCuY0vy7kB+6CQ3lMJ9F86MMW8V6cmkD
-	 sYmuZHhbvaYhn431kyw+ho3BNds5ocUC1icg7JXgpsMOI7BvT3fXzztOm62Xj4jict
-	 i09xuWlzowyYsKLcep+VwcyVroszNjf8yI3kpubg=
+	b=S18DS2IniaqVxR2ixdXybecVkRoSV38Cn54C6M4EY0nD0dQqEbXj6F3szGVQb5I9Z
+	 sDXr6joz1rzFAfsfzvYUaNCGfhx2R3jp7nGOmg0l02Wfw7TSsZlEQv9dnRj7zcYLYB
+	 uJlzgx3JgAcaTiawKg8UiNtF/NFWjxivYoRhVDyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfFVQ7s (ORCPT
+        id S1726454AbfFVRRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 12:59:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42806 "EHLO
+        Sat, 22 Jun 2019 13:17:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43804 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfFVQ67 (ORCPT
+        with ESMTP id S1726338AbfFVRRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 12:58:59 -0400
+        Sat, 22 Jun 2019 13:17:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LPewfwcxR+4Yksi9PvbYmBTtfzvnLhTfEY4M7qiXJJw=; b=n1HdsECKGW/EqJ504qit88qkeN
-        9OclllUIQap0OeizoFdMZnUWMLMP+jUpzC/ryS19B5fcnCP0AaPh7DN37mIlcGxaWUUOa9D8ZpjDP
-        lx5IV9zAC6BeGv0REraNpc2/zfA+WY5/sTuBD1MbKsA+V6QyRI3HO3WDBjsQYoau5FVO5yZGM43FM
-        vR+N2JBmVgxV9FEl1sWwuxK8DurDWwfTFSGaBOefAGkfJoXeqAINApFiGwR1qkNnulhceN10nIHDQ
-        qg+EHLvA3EozwoUTS9jksIxHcmONmRTQeHsgGBr9EzePd8qrFQZLZ6O42MF7ap5YTaAv6drvHwYLP
-        ikt583Bw==;
+        bh=/fqpHAt8CSw6pch/Pj9aN8ynFTK0mhOoYKSJDMULvgk=; b=nv6Rgic/hNzrSqAfC5jG/edRyV
+        4P/pbbAa1vt7C0pHqlJX8W1Ah8H3uc/h9DBk+p1xxfVfN6W4KmUTd6OozGjHHustnZ7QBZSmoEOC3
+        YWwJYVK70iimup4E5UV4GNWCx37q2oLeKwqcIeEc8KekTGpeeH4ilob3RMuuMI59E5zzuPbWbAkAT
+        u5Q0NIQCgeu68pM2J8JWhcFJZ8xdB0RlEuDCJ1wwjrigvJ4LDGSxMG+BPSZUB+tY7ZcN7cwekT15I
+        bSfP6x1LbXeWDL64mCMmhQLg61fTGxZrVDW6kiNhTGyYmspTEy7zRsaCXskq+uaRskp3XI1ycNuwG
+        Fj2qRlrA==;
 Received: from [179.95.45.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hejLu-00054k-Fm; Sat, 22 Jun 2019 16:58:58 +0000
+        id 1hejdX-0002tf-Sn; Sat, 22 Jun 2019 17:17:11 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hejLr-0000v9-Qf; Sat, 22 Jun 2019 13:58:55 -0300
+        id 1hejdV-00014X-7Z; Sat, 22 Jun 2019 14:17:09 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         gregkh@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] scripts/get_abi.pl: change script to allow parsing in ReST mode
-Date:   Sat, 22 Jun 2019 13:58:42 -0300
-Message-Id: <13487012631a4543dc1aca13f17722699c9edcce.1561221403.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [PATCH 4/4] docs: admin-guide, x86: add a features list
+Date:   Sat, 22 Jun 2019 14:17:07 -0300
+Message-Id: <bb4a41b13f37d20836ca7eb0e392f1fbfc641534.1561222784.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561221403.git.mchehab+samsung@kernel.org>
-References: <cover.1561221403.git.mchehab+samsung@kernel.org>
+In-Reply-To: <cover.1561222784.git.mchehab+samsung@kernel.org>
+References: <cover.1561222784.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,150 +67,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, several ABI files won't parse as ReST, as they
-contain severe violations to the spec, with makes the script
-to crash.
-
-So, the code has a sanity logic with escapes bad code and
-cleans tags that can cause Sphinx to crash.
-
-Add support for disabling this mode.
-
-Right now, as enabling rst-mode causes crash, it is disabled
-by default.
+Add a feature list matrix at the admin-guide and a x86-specific
+feature list to the respective Kernel books.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_abi.pl | 74 ++++++++++++++++++++++++++++++----------------
- 1 file changed, 48 insertions(+), 26 deletions(-)
+ Documentation/admin-guide/features.rst | 3 +++
+ Documentation/admin-guide/index.rst    | 1 +
+ Documentation/conf.py                  | 2 +-
+ Documentation/x86/features.rst         | 3 +++
+ Documentation/x86/index.rst            | 1 +
+ 5 files changed, 9 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/features.rst
+ create mode 100644 Documentation/x86/features.rst
 
-diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index c738cb795514..107672cdacb3 100755
---- a/scripts/get_abi.pl
-+++ b/scripts/get_abi.pl
-@@ -12,8 +12,14 @@ my $man;
- my $debug;
- my $prefix="Documentation/ABI";
- 
-+#
-+# If true, assumes that the description is formatted with ReST
-+#
-+my $description_is_rst = 0;
+diff --git a/Documentation/admin-guide/features.rst b/Documentation/admin-guide/features.rst
+new file mode 100644
+index 000000000000..8c167082a84f
+--- /dev/null
++++ b/Documentation/admin-guide/features.rst
+@@ -0,0 +1,3 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- GetOptions(
- 	"debug|d+" => \$debug,
-+	"rst-source!" => \$description_is_rst,
- 	"dir=s" => \$prefix,
- 	'help|?' => \$help,
- 	man => \$man
-@@ -137,14 +143,15 @@ sub parse_abi {
- 					next;
- 				}
- 				if ($tag eq "description") {
--					next if ($content =~ m/^\s*$/);
--					if ($content =~ m/^(\s*)(.*)/) {
--						my $new_content = $2;
--						$space = $new_tag . $sep . $1;
--						while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
--						$space =~ s/./ /g;
--						$data{$what}->{$tag} .= "$new_content\n";
-+					# Preserve initial spaces for the first line
-+					$content = ' ' x length($new_tag) . $sep . $content;
-+					$content =~ s,^(\s*):,$1 ,;
-+					if ($content =~ m/^(\s*)(.*)$/) {
-+						$space = $1;
-+						$content = $2;
- 					}
-+					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					$data{$what}->{$tag} .= $content;
- 				} else {
- 					$data{$what}->{$tag} = $content;
- 				}
-@@ -160,11 +167,15 @@ sub parse_abi {
++.. kernel-feat:: $srctree/Documentation/features
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 20c3020fd73c..14c8464f6ca9 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -17,6 +17,7 @@ etc.
+    kernel-parameters
+    devices
+    abi
++   features
  
- 		if ($tag eq "description") {
- 			if (!$data{$what}->{description}) {
--				next if (m/^\s*\n/);
-+				s/^($space)//;
- 				if (m/^(\s*)(.*)/) {
--					$space = $1;
--					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
--					$data{$what}->{$tag} .= "$2\n";
-+					my $sp = $1;
-+					while ($sp =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					my $content = "$sp$2";
+ This section describes CPU vulnerabilities and their mitigations.
+ 
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 598256fb5c98..a0ef76ce5615 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -34,7 +34,7 @@ needs_sphinx = '1.3'
+ # Add any Sphinx extension module names here, as strings. They can be
+ # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+ # ones.
+-extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi']
++extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi', 'kernel_feat']
+ 
+ # The name of the math extension changed on Sphinx 1.4
+ if (major == 1 and minor > 3) or (major > 1):
+diff --git a/Documentation/x86/features.rst b/Documentation/x86/features.rst
+new file mode 100644
+index 000000000000..b663f15053ce
+--- /dev/null
++++ b/Documentation/x86/features.rst
+@@ -0,0 +1,3 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+					$content =~ s/^($space)//;
-+
-+					$data{$what}->{$tag} .= "$content";
- 				}
- 			} else {
- 				my $content = $_;
-@@ -274,23 +285,27 @@ sub output_rest {
- 		print "Defined on file :ref:`$file <$fileref>`\n\n" if ($type ne "File");
- 
- 		my $desc = $data{$what}->{description};
--		$desc =~ s/^\s+//;
--
--		# Remove title markups from the description, as they won't work
--		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
- 
- 		if (!($desc =~ /^\s*$/)) {
--			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
--				# put everything inside a code block
--				$desc =~ s/\n/\n /g;
--
--				print "::\n\n";
--				print " $desc\n\n";
--			} else {
--				# Escape any special chars from description
--				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
--
-+			if ($description_is_rst) {
- 				print "$desc\n\n";
-+			} else {
-+				$desc =~ s/^\s+//;
-+
-+				# Remove title markups from the description, as they won't work
-+				$desc =~ s/\n[\-\*\=\^\~]+\n/\n\n/g;
-+
-+				if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-+					# put everything inside a code block
-+					$desc =~ s/\n/\n /g;
-+
-+					print "::\n\n";
-+					print " $desc\n\n";
-+				} else {
-+					# Escape any special chars from description
-+					$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-+					print "$desc\n\n";
-+				}
- 			}
- 		} else {
- 			print "DESCRIPTION MISSING for $what\n\n" if (!$data{$what}->{is_file});
-@@ -382,7 +397,7 @@ abi_book.pl - parse the Linux ABI files and produce a ReST book.
- 
- =head1 SYNOPSIS
- 
--B<abi_book.pl> [--debug] [--man] [--help] [--dir=<dir>] <COMAND> [<ARGUMENT>]
-+B<abi_book.pl> [--debug] [--man] [--help] --[(no-)rst-source] [--dir=<dir>] <COMAND> [<ARGUMENT>]
- 
- Where <COMMAND> can be:
- 
-@@ -405,6 +420,13 @@ B<validate>              - validate the ABI contents
- Changes the location of the ABI search. By default, it uses
- the Documentation/ABI directory.
- 
-+=item B<--rst-source> and B<--no-rst-source>
-+
-+The input file may be using ReST syntax or not. Those two options allow
-+selecting between a rst-compliant source ABI (--rst-source), or a
-+plain text that may be violating ReST spec, so it requres some escaping
-+logic (--no-rst-source).
-+
- =item B<--debug>
- 
- Put the script in verbose mode, useful for debugging. Can be called multiple
++.. kernel-feat:: $srctree/Documentation/features x86
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index ae36fc5fc649..ed42c8c9154d 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -29,3 +29,4 @@ x86-specific Documentation
+    usb-legacy-support
+    i386/index
+    x86_64/index
++   features
 -- 
 2.21.0
 
