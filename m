@@ -2,152 +2,92 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CD4C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED0C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3A620675
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E712084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PnBlJaxJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/D+kKMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfFVPU1 (ORCPT
+        id S1726343AbfFVPXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 11:20:27 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15570 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfFVPU1 (ORCPT
+        Sat, 22 Jun 2019 11:23:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46277 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfFVPXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 11:20:27 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0e473b0000>; Sat, 22 Jun 2019 08:20:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 22 Jun 2019 08:20:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 22 Jun 2019 08:20:26 -0700
-Received: from [10.25.72.60] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 22 Jun
- 2019 15:01:17 +0000
-Subject: Re: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20190621111000.23216-1-vidyas@nvidia.com>
- <20190621111000.23216-2-vidyas@nvidia.com>
- <PSXP216MB0662399C169A6D944E7C6A8FAAE60@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <625ef12e-8986-b935-0b1b-a437c518ac29@nvidia.com>
-Date:   Sat, 22 Jun 2019 20:31:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <PSXP216MB0662399C169A6D944E7C6A8FAAE60@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561216828; bh=Gg6ynwqt5s5qIc9zttRBjajJzrIC+hXVHXW78gtZT6k=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PnBlJaxJsQ2pdKDVSaXmZGLzacmfrdQdr7t8F8ZPGkdCZm/JejAkrFB5QeSG2dYU0
-         YsEyn/gy0z7d7uaYZ0TZ+nS95PBixeswFeTgGt5BaCevNhG7nTnNtZcs4mncXqyMU8
-         JUspGrgl7+nRB/dnTZbUfi0h3u0lK39N6KlRubcW2UzC3P7WlN8f2qqFHOevUo6jO6
-         CCpc51oJXo5LSS7dEsDGjfQP80JOlzX88YkGmcMl9tgFm85pFvlgEXNQfu71492FLW
-         sB4+9Va81TiVBA/pP8LSqMAikiblnf6iCKIIr8V+SOBeb5QFR1auzPSFA0fXhmn0D2
-         n7wmVXzek6pnA==
+        Sat, 22 Jun 2019 11:23:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 81so5055416pfy.13
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 08:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=64rfDwm6z7J4Eoudftbx7Yfz/GS48slNahoFEbbSYSE=;
+        b=Z/D+kKMAPiM4pEcdUvCNl5F7O3CiZW2+XmJ2as8DlefeTMFa0yFNJhqUTQn/PtIevr
+         2ZZ7i7nZIc9OIdLxISeALY4bNAiRDPxlVusMksKmeIZGaomsmGDBurrc0x6gpktsiOQD
+         O8GBmFIZXbtpABoX0q0gpe5bQ8rcJz5oUlcHijBKF8Hd1gcSXizUQbTIOz/2J/EuP2yi
+         tQ1FtX4sDXevE8ByGVS5grPjTmEZ+R15l4XmoHe81bXSiOu0/PqqU4H5/uFo+P9oh8t7
+         e82YskjeLArnAAc9Iu+Lwek2fyCh4BJKtTiZAKaEDao6JwyDoPu907wLn+r7vu06FYs+
+         kHZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=64rfDwm6z7J4Eoudftbx7Yfz/GS48slNahoFEbbSYSE=;
+        b=eX/lpbFHQLYKPUJUzZ7dqIQP0NzDeUw3kavV1NR2vBBRqFVBsmfDSEwpiaWXiy5A5T
+         aiQ8XrcgNhKxf+QERRQbqmTiM/7FLx14boPcTe8hHjDKk/2uCyufS0xA4o73mRjnCAcM
+         Zit0EkYsbiRmPH5efeLjrydKtUfBxRaKqzeQ2Fn7OeGZsH7qOt2GPhBdEgSbUV4oTLH/
+         AdzRbsVaiKVDuvbuHPLGd8NofIALGFv7N6yyxAjf1UEzMJayCbddGhX531UR2tHoIvnO
+         3zdFiKchTj3ge5DWu2fCaoMWJd75Uvb1WUzulQ4h6w7t/3MsDgASlMFAuR6Klmlt+Dro
+         9CGA==
+X-Gm-Message-State: APjAAAWoFO6GhOop55xl4zEa/bAaMVhstbO0yL4tFtVC2vz0Cg+OAR4X
+        3/hg6ngBIs5nOYzMIoWO/H0=
+X-Google-Smtp-Source: APXvYqytvQnckoLSzsyVUDjnEMPO07TkPNcRcqkfFHTQs/ML7iouJlHa6Nwq3nmlLLp9664WpvLU4A==
+X-Received: by 2002:a63:63c1:: with SMTP id x184mr17894625pgb.213.1561217021616;
+        Sat, 22 Jun 2019 08:23:41 -0700 (PDT)
+Received: from localhost.localdomain (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
+        by smtp.gmail.com with ESMTPSA id l44sm12496777pje.29.2019.06.22.08.23.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 22 Jun 2019 08:23:40 -0700 (PDT)
+From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>
+Subject: [PATCH 0/2] Modify functions return type to void
+Date:   Sat, 22 Jun 2019 08:23:06 -0700
+Message-Id: <cover.1561215416.git.shobhitkukreti@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/2019 10:56 AM, Jingoo Han wrote:
-> On 6/21/19, 8:10 PM, Vidya Sagar wrote:
->>
->> Cleanup DBI read and write APIs by removing "__" (underscore) from their
->> names as there are no no-underscore versions and the underscore versions
->> are already doing what no-underscore versions typically do. It also removes
->> passing dbi/dbi2 base address as one of the arguments as the same can be
->> derived with in read and write APIs.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes from v5:
->> * Removed passing base address as one of the arguments as the same can be derived within
->>    the API itself.
->> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
-> 
-> Unlike previous patches (v1~v5), you modified ATU read/write APIs from v6.
-> Why do you change ATU read/write APIs to call dw_pcie_{write/read}() API???
-> It is not clean-up, but function change. Please add the reason to the commit message.
-> 
-> Best regards,
-> Jingoo Han
-Reason is that, now dbi/dbi2 APIs don't take base address offset as one of the input arguments
-instead, those APIs derive that inside the API itself. So, for ATU read/write DBI read/write
-APIs can be used directly and hence I called dw_pcie_{write/read}() API directly. But, taking a
-second look at it, it may work for Tegra, but, may not for other implementations where accessing
-DBI space is not a simple read/write to DBI base + offset. Let me address address that too in
-next patch.
+This patchset modifies two function return types to void.
+The return values of the function are never checked and they always return success.
+This resolves coccicheck Unneeded variable warnings
 
-Thanks,
-Vidya Sagar
+PATCH[1/2] : This patch modifies return type of function loadparam() to void. 
 
-> 
->>
->> Changes from v4:
->> * This is a new patch in this series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 28 ++++++-------
->>   drivers/pci/controller/dwc/pcie-designware.h | 43 ++++++++++++--------
->>   2 files changed, 37 insertions(+), 34 deletions(-)
-> 
-> .....
-> 
->>   static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
->>   {
->> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
->> +	int ret;
->> +
->> +	ret = dw_pcie_write(pci->atu_base + reg, 0x4, val);
->> +	if (ret)
->> +		dev_err(pci->dev, "write ATU address failed\n");
->>   }
->>   
->>   static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
->>   {
->> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
->> +	int ret;
->> +	u32 val;
->> +
->> +	ret = dw_pcie_read(pci->atu_base + reg, 0x4, &val);
->> +	if (ret)
->> +		dev_err(pci->dev, "Read ATU address failed\n");
->> +
->> +	return val;
->>   }
->>   
->>   static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
->> -- 
->> 2.17.1
-> 
+PATCH[2/2] : This patch modifies return type of rtw_reset_drv_sw() to void.
+
+Shobhit Kukreti (2):
+  staging: rtl8723bs: os_dep: Modify return type of function
+    loadparam(..)     to void
+  staging: rtl8723bs: os_dep: Modify return type of function    
+    rtw_reset_drv_sw() to void.
+
+ drivers/staging/rtl8723bs/include/osdep_intf.h | 2 +-
+ drivers/staging/rtl8723bs/os_dep/os_intfs.c    | 8 ++------
+ 2 files changed, 3 insertions(+), 7 deletions(-)
+
+-- 
+2.7.4
 
