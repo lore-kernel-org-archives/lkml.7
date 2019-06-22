@@ -2,98 +2,127 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22093C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414C8C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70CF2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561181785;
-	bh=pLFF0EY/HMExegjJOupe98BltiW+Ao+KTrBvZD/O2WY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TFQRmKA/KOcPTn+D/Pz/AUTJKNhbaAU3xjpQ05SUXFBpzsAqEp457LnZPoCalb3qB
-	 yXAWZEC6kO/XCqxaH3dcHSLjUJWymaAJYJ1rRwmUS6siEkdh/zZ6XXohFvX3FamcrE
-	 6rKz9wB8JHmXv9Pw3IGXJJk5A+YxL4iIfAJzm5Kg=
+	by mail.kernel.org (Postfix) with ESMTP id 1884C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:40:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vfztd4Br"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfFVFgU (ORCPT
+        id S1726125AbfFVFkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:36:20 -0400
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:38388 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfFVFgU (ORCPT
+        Sat, 22 Jun 2019 01:40:32 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:55098 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFVFkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:36:20 -0400
-Received: by mail-lf1-f54.google.com with SMTP id b11so6492173lfa.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 22:36:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=acDGavsv+ifpDNzWCcEhjWjA5mBlJO3plfymnjZRfNs=;
-        b=dS5T3+7C4pF3gau9qTu/iefZDi1XDNRzah4/GgUuE//TX37Nuo4NA+ux/SDCemgRdv
-         OEXVvYEWSbtntmd85CyF2jE/sG2nJ7QNU9zCy9FWV7YaJnsboe8m46r5/JENLynhdtVw
-         rVWwqWw9rWJCe75ubH1RRODEbCl+uM2asliTk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=acDGavsv+ifpDNzWCcEhjWjA5mBlJO3plfymnjZRfNs=;
-        b=ih46679fqre1qeJBb8eNafABYr8XxS5gqpZW3j+c7fC+fc64qvESHy5Zud9WGojMcX
-         hdzZ4xdFQiMNEBwLKUK24qnxyr0No/QQaorxEf2ojz2AAUKgbSF4KH6SDqojMJMT0dnd
-         opHh8twioz06jKPh/2SmriZ25MMugV1YBZOP8oU6SFTBOOwb9a4+BAtQWLbnUOpB+3NY
-         VACnnUe33QwAvpqQXG7fdLmkWw39GJO/uqnmHdp61nzrWFZcj/BnDPxvDto0FojM6x2j
-         Mdxqw3Kqx208yRThiPdFsRAOkeeR74sN3ALBlDUEYO6oFgjnlrEgfVzQJnrIjyMhD+lN
-         EcQQ==
-X-Gm-Message-State: APjAAAXsSmV+8DDQ4SnwVLjN/tQs4i3rkyJL5lOwILEI6AQ8xTINzYvK
-        VwMUqbxF5vQotxlJRmYNZD5LyBehQC4=
-X-Google-Smtp-Source: APXvYqy/t5BhbVe2+qi2JUuD25+9Dv3SjgriMKJpGZ9Qy0E7pc2WRlNfOVk1xVJyUoHDN+RvpR3dgA==
-X-Received: by 2002:a05:6512:15a:: with SMTP id m26mr26447581lfo.71.1561181777822;
-        Fri, 21 Jun 2019 22:36:17 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id z30sm721549lfj.63.2019.06.21.22.36.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 22:36:17 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id s21so7795855lji.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 22:36:16 -0700 (PDT)
-X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr5685402ljj.156.1561181776658;
- Fri, 21 Jun 2019 22:36:16 -0700 (PDT)
+        Sat, 22 Jun 2019 01:40:32 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x5M5eC9L014968;
+        Sat, 22 Jun 2019 14:40:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5M5eC9L014968
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561182013;
+        bh=JxBG390b3AdnCwZiQOKsk1HAVj5lXZJFRQcpOMWwHbY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vfztd4BrukAdjcSvvO2e/ZaIiyZ9mx12XbkLTV+W2nuoyC48frSlNAvAwwbP73Vyr
+         Tn+tVvlKIzCwwccAQjVD1cg72WyVKXSwN1+zOr7lOr0xep66UxomKkozXKaAAqJ+CV
+         SfVa4bLXejWLmgX1RRFqEBQRb5vCW/M+iBtN1UirSWuQ9L3Xh33Fs3k5t2oCFMw6Ld
+         Z7kiY+Xf7S5QA3YRLzTg1M2Ye9HAaaVOTunAB6PxPorlGZDFETkls1kQhr8wgHXtMf
+         YjfN2RgtEjH09lnD0+PgldC7gF8hrf52UOZ7yY1R/DkdUlmXGwi5iBOm4amb4+aKnQ
+         LTT74SXqb15DQ==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id v18so3739081uad.12;
+        Fri, 21 Jun 2019 22:40:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAUuZhCGgH9XL0FGqr+jjF6Fh1RUhfsTRGXzsgdXdgTZS4cMprPS
+        afVQByBwbpOU9AaM+w1rJfdhJIl9V7gAVvOKBM4=
+X-Google-Smtp-Source: APXvYqzlKgWISF72/2l3BCTzXtxOrbxlLww7I4OL4+Gvksq0C26omqpvWWFe0eb5vghy8UgM0iBbJXyRxsNhrZQR8a0=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr48367542uag.40.1561182012133;
+ Fri, 21 Jun 2019 22:40:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190621.212137.1249209897243384684.davem@davemloft.net> <156118140484.25946.9601116477028790363.pr-tracker-bot@kernel.org>
-In-Reply-To: <156118140484.25946.9601116477028790363.pr-tracker-bot@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Jun 2019 22:36:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
-Message-ID: <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
-Subject: Re: [GIT] Networking
-To:     pr-tracker-bot@kernel.org
-Cc:     David Miller <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+ <20190604101409.2078-16-yamada.masahiro@socionext.com> <CAK8P3a08f25WYP5r57JHPcZWieS2+07=_qTphLosS4M2w8F0Zw@mail.gmail.com>
+ <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
+In-Reply-To: <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 22 Jun 2019 14:39:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATi1kX_j9-7CoT24hohgTCQB1dSc9j8DNdmjnmEg1-kRg@mail.gmail.com>
+Message-ID: <CAK7LNATi1kX_j9-7CoT24hohgTCQB1dSc9j8DNdmjnmEg1-kRg@mail.gmail.com>
+Subject: Re: [PATCH 15/15] kbuild: compile test UAPI headers to ensure they
+ are self-contained
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Palmer Dabbelt <palmer@sifive.com>, bpf@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Albert Ou <aou@eecs.berkeley.edu>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:30 PM <pr-tracker-bot@kernel.org> wrote:
+On Sat, Jun 22, 2019 at 2:12 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> The pull request you sent on Fri, 21 Jun 2019 21:21:37 -0400 (EDT):
+> On Sat, Jun 22, 2019 at 4:05 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Tue, Jun 4, 2019 at 12:16 PM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -1363,7 +1363,7 @@ CLEAN_DIRS  +=3D $(MODVERDIR) include/ksym
+> > >  CLEAN_FILES +=3D modules.builtin.modinfo
+> > >
+> > >  # Directories & files removed with 'make mrproper'
+> > > -MRPROPER_DIRS  +=3D include/config usr/include include/generated    =
+      \
+> > > +MRPROPER_DIRS  +=3D include/config include/generated          \
+> > >                   arch/$(SRCARCH)/include/generated .tmp_objdiff
+> > >  MRPROPER_FILES +=3D .config .config.old .version \
+> > >                   Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS=
+ GSYMS \
+> >
+> > This change seems to have caused a minor regression:
+> >
+> > $ make clean ; make clean
+> > find: =E2=80=98*=E2=80=99: No such file or directory
 >
-> > (unable to parse the git remote)
+> Hmm, I cannot reproduce this.
+>
+> I checked the latest linux-next.
+>
+>
+> masahiro@grover:~/ref/linux-next$ git describe
+> next-20190621
+> masahiro@grover:~/ref/linux-next$ make clean; make clean
+> masahiro@grover:~/ref/linux-next$
+>
+>
 
-This "unable to parse the git remote" is apparently because the pull
-request had an extraneous ':' in the remote description
+Ah, now I was able to reproduce it.
 
-  git://git.kernel.org:/pub/scm/linux/kernel/git/davem/net.git
-                     ^^^
+Will fix it soon. Thanks.
 
-which seems to have confused the pr-tracker-bot.
 
-               Linus
+
+--=20
+Best Regards
+Masahiro Yamada
