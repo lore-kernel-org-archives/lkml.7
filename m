@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C6BC4646B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E74C43613
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B6F20820
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E4A20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561223836;
-	bh=PaLa3Sc1NDz1LEUlevWQAzTMu0D1pVMZfRfoUUFwnl4=;
+	s=default; t=1561223835;
+	bh=pPdwJ3GnFnyO5Hq/BuiViCRoBB/e+KG4OtyofDzPXeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S18DS2IniaqVxR2ixdXybecVkRoSV38Cn54C6M4EY0nD0dQqEbXj6F3szGVQb5I9Z
-	 sDXr6joz1rzFAfsfzvYUaNCGfhx2R3jp7nGOmg0l02Wfw7TSsZlEQv9dnRj7zcYLYB
-	 uJlzgx3JgAcaTiawKg8UiNtF/NFWjxivYoRhVDyw=
+	b=HL68ofc8IkHOOf0wKA5VMVa1zDsu55YpxhcOiDHm8o95/ZHk24qLFYACjf2sYvjbz
+	 0FeIWtlMSSFjdX7yRoyfOiLuasokYYyEGFZS2HEQLSB9hu2E2mbA1m++OmtAVymvzA
+	 QpgqceH60jrNgjctHT0BgoUgstYrXk/w1zm3RpoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFVRRO (ORCPT
+        id S1726414AbfFVRRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 13:17:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43804 "EHLO
+        Sat, 22 Jun 2019 13:17:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43796 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfFVRRM (ORCPT
+        with ESMTP id S1726317AbfFVRRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Jun 2019 13:17:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/fqpHAt8CSw6pch/Pj9aN8ynFTK0mhOoYKSJDMULvgk=; b=nv6Rgic/hNzrSqAfC5jG/edRyV
-        4P/pbbAa1vt7C0pHqlJX8W1Ah8H3uc/h9DBk+p1xxfVfN6W4KmUTd6OozGjHHustnZ7QBZSmoEOC3
-        YWwJYVK70iimup4E5UV4GNWCx37q2oLeKwqcIeEc8KekTGpeeH4ilob3RMuuMI59E5zzuPbWbAkAT
-        u5Q0NIQCgeu68pM2J8JWhcFJZ8xdB0RlEuDCJ1wwjrigvJ4LDGSxMG+BPSZUB+tY7ZcN7cwekT15I
-        bSfP6x1LbXeWDL64mCMmhQLg61fTGxZrVDW6kiNhTGyYmspTEy7zRsaCXskq+uaRskp3XI1ycNuwG
-        Fj2qRlrA==;
+        bh=0lowo67jUcjW6gtI8vv9NQmn3mxBn6HmDf49u8xK9FM=; b=gtWh1AqGk22ZXFnO3Pzmbac8a+
+        D1hG+xC5QZWzO0nQn6Ah0e+iPMXNVMjHk1z2QEOhH7DTvlbOKP1JWq6oD5vNbQ4cWvp9k7oFU7tUb
+        i+uH9ZfHjJt1fFL7MtE5cpJ4Wd1Fm2luukS7YMGgos3q9e4XptdrMk+tK7EbaSiV9qhxzpd8tdruA
+        sp7nHtaEJ7ZuOxg9W0jJ1pst7xyhAHWDuyp6WSEdnrITVKm5zejJBww36L1HTlRYCJzK4ymEKqgL9
+        3cHCoYdSnKuw1olAgrJhnD6MEij2QzNvxd1cJ1aYTYj2JKxVYpH8onVUH8VlywKCkKo4BwJkIKHVW
+        6hPyDo/w==;
 Received: from [179.95.45.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hejdX-0002tf-Sn; Sat, 22 Jun 2019 17:17:11 +0000
+        id 1hejdX-0002th-SO; Sat, 22 Jun 2019 17:17:12 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hejdV-00014X-7Z; Sat, 22 Jun 2019 14:17:09 -0300
+        id 1hejdV-00014G-5A; Sat, 22 Jun 2019 14:17:09 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         gregkh@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [PATCH 4/4] docs: admin-guide, x86: add a features list
-Date:   Sat, 22 Jun 2019 14:17:07 -0300
-Message-Id: <bb4a41b13f37d20836ca7eb0e392f1fbfc641534.1561222784.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] scripts/get_feat.pl: add a script to handle Documentation/features
+Date:   Sat, 22 Jun 2019 14:17:04 -0300
+Message-Id: <28fcf7e92d337b9486da16017ea8ebd2944dc261.1561222784.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561222784.git.mchehab+samsung@kernel.org>
 References: <cover.1561222784.git.mchehab+samsung@kernel.org>
@@ -67,72 +65,501 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a feature list matrix at the admin-guide and a x86-specific
-feature list to the respective Kernel books.
+The Documentation/features contains a set of parseable files.
+It is not worth converting them to ReST format, as they're
+useful the way it is. It is, however, interesting to parse
+them and produce output on different formats:
+
+1) Output the contents of a feature in ReST format;
+
+2) Output what features a given architecture supports;
+
+3) Output a matrix with features x architectures.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/admin-guide/features.rst | 3 +++
- Documentation/admin-guide/index.rst    | 1 +
- Documentation/conf.py                  | 2 +-
- Documentation/x86/features.rst         | 3 +++
- Documentation/x86/index.rst            | 1 +
- 5 files changed, 9 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/admin-guide/features.rst
- create mode 100644 Documentation/x86/features.rst
+ scripts/get_feat.pl | 472 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 472 insertions(+)
+ create mode 100755 scripts/get_feat.pl
 
-diff --git a/Documentation/admin-guide/features.rst b/Documentation/admin-guide/features.rst
-new file mode 100644
-index 000000000000..8c167082a84f
+diff --git a/scripts/get_feat.pl b/scripts/get_feat.pl
+new file mode 100755
+index 000000000000..401cbc820caa
 --- /dev/null
-+++ b/Documentation/admin-guide/features.rst
-@@ -0,0 +1,3 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/scripts/get_feat.pl
+@@ -0,0 +1,472 @@
++#!/usr/bin/perl
++# SPDX-License-Identifier: GPL-2.0
 +
-+.. kernel-feat:: $srctree/Documentation/features
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 20c3020fd73c..14c8464f6ca9 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -17,6 +17,7 @@ etc.
-    kernel-parameters
-    devices
-    abi
-+   features
- 
- This section describes CPU vulnerabilities and their mitigations.
- 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 598256fb5c98..a0ef76ce5615 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -34,7 +34,7 @@ needs_sphinx = '1.3'
- # Add any Sphinx extension module names here, as strings. They can be
- # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
- # ones.
--extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi']
-+extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi', 'kernel_feat']
- 
- # The name of the math extension changed on Sphinx 1.4
- if (major == 1 and minor > 3) or (major > 1):
-diff --git a/Documentation/x86/features.rst b/Documentation/x86/features.rst
-new file mode 100644
-index 000000000000..b663f15053ce
---- /dev/null
-+++ b/Documentation/x86/features.rst
-@@ -0,0 +1,3 @@
-+.. SPDX-License-Identifier: GPL-2.0
++use strict;
++use Pod::Usage;
++use Getopt::Long;
++use File::Find;
++use Fcntl ':mode';
 +
-+.. kernel-feat:: $srctree/Documentation/features x86
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index ae36fc5fc649..ed42c8c9154d 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -29,3 +29,4 @@ x86-specific Documentation
-    usb-legacy-support
-    i386/index
-    x86_64/index
-+   features
++my $help;
++my $man;
++my $debug;
++my $arch;
++my $feat;
++my $prefix="Documentation/features";
++
++GetOptions(
++	"debug|d+" => \$debug,
++	"dir=s" => \$prefix,
++	'help|?' => \$help,
++	'arch=s' => \$arch,
++	'feat=s' => \$feat,
++	man => \$man
++) or pod2usage(2);
++
++pod2usage(1) if $help;
++pod2usage(-exitstatus => 0, -verbose => 2) if $man;
++
++pod2usage(2) if (scalar @ARGV < 1 || @ARGV > 2);
++
++my ($cmd, $arg) = @ARGV;
++
++pod2usage(2) if ($cmd ne "current" && $cmd ne "rest" && $cmd ne "validate");
++
++require Data::Dumper if ($debug);
++
++my %data;
++my %archs;
++
++#
++# Displays an error message, printing file name and line
++#
++sub parse_error($$$$) {
++	my ($file, $ln, $msg, $data) = @_;
++
++	$data =~ s/\s+$/\n/;
++
++	print STDERR "Warning: file $file#$ln:\n\t$msg";
++
++	if ($data ne "") {
++		print STDERR ". Line\n\t\t$data";
++	} else {
++	    print STDERR "\n";
++	}
++}
++
++#
++# Parse a features file, storing its contents at %data
++#
++
++my $h_name = "Feature";
++my $h_kconfig = "Kconfig";
++my $h_description = "Description";
++my $h_subsys = "Subsystem";
++my $h_status = "Status";
++my $h_arch = "Architecture";
++
++my $max_size_name = length($h_name);
++my $max_size_kconfig = length($h_kconfig);
++my $max_size_description = length($h_description);
++my $max_size_subsys = length($h_subsys);
++my $max_size_status = length($h_status);
++my $max_size_arch = length($h_arch);
++
++sub parse_feat {
++	my $file = $File::Find::name;
++
++	my $mode = (stat($file))[2];
++	return if ($mode & S_IFDIR);
++	return if ($file =~ m,($prefix)/arch-support.txt,);
++	return if (!($file =~ m,arch-support.txt$,));
++
++	my $subsys = "";
++	$subsys = $2 if ( m,.*($prefix)/([^/]+).*,);
++
++	if (length($subsys) > $max_size_subsys) {
++		$max_size_subsys = length($subsys);
++	}
++
++	my $name;
++	my $kconfig;
++	my $description;
++	my $comments = "";
++	my $last_status;
++	my $ln;
++	my %arch_table;
++
++	print STDERR "Opening $file\n" if ($debug > 1);
++	open IN, $file;
++
++	while(<IN>) {
++		$ln++;
++
++		if (m/^\#\s+Feature\s+name:\s*(.*\S)/) {
++			$name = $1;
++			if (length($name) > $max_size_name) {
++				$max_size_name = length($name);
++			}
++			next;
++		}
++		if (m/^\#\s+Kconfig:\s*(.*\S)/) {
++			$kconfig = $1;
++			if (length($kconfig) > $max_size_kconfig) {
++				$max_size_kconfig = length($kconfig);
++			}
++			next;
++		}
++		if (m/^\#\s+description:\s*(.*\S)/) {
++			$description = $1;
++			if (length($description) > $max_size_description) {
++				$max_size_description = length($description);
++			}
++			next;
++		}
++		next if (m/^\\s*$/);
++		next if (m/^\s*\-+\s*$/);
++		next if (m/^\s*\|\s*arch\s*\|\s*status\s*\|\s*$/);
++
++		if (m/^\#\s*(.*)/) {
++			$comments .= "$1\n";
++			next;
++		}
++		if (m/^\s*\|\s*(\S+):\s*\|\s*(\S+)\s*\|\s*$/) {
++			my $a = $1;
++			my $status = $2;
++
++			if (length($status) > $max_size_status) {
++				$max_size_status = length($status);
++			}
++			if (length($a) > $max_size_arch) {
++				$max_size_arch = length($a);
++			}
++
++			$archs{$a} = 1;
++			$arch_table{$a} = $status;
++			next;
++		}
++
++		#Everything else is an error
++		parse_error($file, $ln, "line is invalid", $_);
++	}
++	close IN;
++
++	if (!$name) {
++		parse_error($file, $ln, "Feature name not found", "");
++		return;
++	}
++
++	parse_error($file, $ln, "Subsystem not found", "") if (!$subsys);
++	parse_error($file, $ln, "Kconfig not found", "") if (!$kconfig);
++	parse_error($file, $ln, "Description not found", "") if (!$description);
++
++	if (!%arch_table) {
++		parse_error($file, $ln, "Architecture table not found", "");
++		return;
++	}
++
++	$data{$name}->{where} = $file;
++	$data{$name}->{subsys} = $subsys;
++	$data{$name}->{kconfig} = $kconfig;
++	$data{$name}->{description} = $description;
++	$data{$name}->{comments} = $comments;
++	$data{$name}->{table} = \%arch_table;
++}
++
++#
++# Output feature(s) for a given architecture
++#
++sub output_arch_table {
++	my $title = "Feature status on $arch architecture";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++	printf "%-${max_size_subsys}s  ", $h_subsys;
++	printf "%-${max_size_name}s  ", $h_name;
++	printf "%-${max_size_kconfig}s  ", $h_kconfig;
++	printf "%-${max_size_status}s  ", $h_status;
++	printf "%-${max_size_description}s\n", $h_description;
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++
++	foreach my $name (sort {
++				($data{$a}->{subsys} cmp $data{$b}->{subsys}) ||
++				($data{$a}->{name} cmp $data{$b}->{name})
++			       } keys %data) {
++		next if ($feat && $name ne $feat);
++
++		my %arch_table = %{$data{$name}->{table}};
++		printf "%-${max_size_subsys}s  ", $data{$name}->{subsys};
++		printf "%-${max_size_name}s  ", $name;
++		printf "%-${max_size_kconfig}s  ", $data{$name}->{kconfig};
++		printf "%-${max_size_status}s  ", $arch_table{$arch};
++		printf "%-${max_size_description}s\n", $data{$name}->{description};
++	}
++
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++}
++
++#
++# Output a feature on all architectures
++#
++sub output_feature {
++	my $title = "Feature $feat";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	print ":Subsystem: $data{$feat}->{subsys} \n" if ($data{$feat}->{subsys});
++	print ":Kconfig: $data{$feat}->{kconfig} \n" if ($data{$feat}->{kconfig});
++
++	my $desc = $data{$feat}->{description};
++	$desc =~ s/^([a-z])/\U$1/;
++	$desc =~ s/\.?\s*//;
++	print "\n$desc.\n\n";
++
++	my $com = $data{$feat}->{comments};
++	$com =~ s/^\s+//;
++	$com =~ s/\s+$//;
++	if ($com) {
++		print "Comments\n";
++		print "--------\n\n";
++		print "$com\n\n";
++	}
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++
++	printf "%-${max_size_arch}s  ", $h_arch;
++	printf "%-${max_size_status}s", $h_status . "\n";
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++
++	my %arch_table = %{$data{$feat}->{table}};
++	foreach my $arch (sort keys %arch_table) {
++		printf "%-${max_size_arch}s  ", $arch;
++		printf "%-${max_size_status}s\n", $arch_table{$arch};
++	}
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++}
++
++#
++# Output all features for all architectures
++#
++
++sub matrix_lines {
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++
++	foreach my $arch (sort keys %archs) {
++		my $len = $max_size_status;
++
++		$len = length($arch) if ($len < length($arch));
++
++		print "=" x $len;
++		print "  ";
++	}
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++}
++
++sub output_matrix {
++
++	my $title = "Feature List (feature x architecture)";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	matrix_lines;
++
++	printf "%-${max_size_subsys}s  ", $h_subsys;
++	printf "%-${max_size_name}s  ", $h_name;
++
++	foreach my $arch (sort keys %archs) {
++		printf "%-${max_size_status}s  ", $arch;
++	}
++	printf "%-${max_size_kconfig}s  ", $h_kconfig;
++	printf "%-${max_size_description}s\n", $h_description;
++
++	matrix_lines;
++
++	foreach my $name (sort {
++				($data{$a}->{subsys} cmp $data{$b}->{subsys}) ||
++				($data{$a}->{name} cmp $data{$b}->{name})
++			       } keys %data) {
++		printf "%-${max_size_subsys}s  ", $data{$name}->{subsys};
++		printf "%-${max_size_name}s  ", $name;
++
++		my %arch_table = %{$data{$name}->{table}};
++
++		foreach my $arch (sort keys %arch_table) {
++			my $len = $max_size_status;
++
++			$len = length($arch) if ($len < length($arch));
++
++			printf "%-${len}s  ", $arch_table{$arch};
++		}
++		printf "%-${max_size_kconfig}s  ", $data{$name}->{kconfig};
++		printf "%-${max_size_description}s\n", $data{$name}->{description};
++	}
++
++	matrix_lines;
++}
++
++
++#
++# Parses all feature files located at $prefix dir
++#
++find({wanted =>\&parse_feat, no_chdir => 1}, $prefix);
++
++print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
++
++#
++# Handles the command
++#
++if ($cmd eq "current") {
++	$arch = qx(uname -m | sed 's/x86_64/x86/' | sed 's/i386/x86/');
++	$arch =~s/\s+$//;
++}
++
++if ($cmd ne "validate") {
++	if ($arch) {
++		output_arch_table;
++	} elsif ($feat) {
++		output_feature;
++	} else {
++		output_matrix;
++	}
++}
++
++__END__
++
++=head1 NAME
++
++get_feat.pl - parse the Linux Feature files and produce a ReST book.
++
++=head1 SYNOPSIS
++
++B<get_feat.pl> [--debug] [--man] [--help] [--dir=<dir>]
++	       [--arch=<arch>] [--feat=<feature>] <COMAND> [<ARGUMENT>]
++
++Where <COMMAND> can be:
++
++=over 8
++
++B<current>               - output features for this machine's architecture
++
++B<rest>                  - output features in ReST markup language
++
++B<validate>              - validate the feature contents
++
++=back
++
++=head1 OPTIONS
++
++=over 8
++
++=item B<--arch>
++
++Output features for an specific architecture, optionally filtering for
++a single specific feature.
++
++=item B<--feat>
++
++Output features for a single specific architecture.
++
++=item B<--dir>
++
++Changes the location of the Feature files. By default, it uses
++the Documentation/features directory.
++
++=item B<--debug>
++
++Put the script in verbose mode, useful for debugging. Can be called multiple
++times, to increase verbosity.
++
++=item B<--help>
++
++Prints a brief help message and exits.
++
++=item B<--man>
++
++Prints the manual page and exits.
++
++=back
++
++=head1 DESCRIPTION
++
++Parse the Linux feature files from Documentation/features (by default),
++optionally producing results at ReST format.
++
++It supports output data per architecture, per feature or a
++feature x arch matrix.
++
++When used with B<rest> command, it will use either one of the tree formats:
++
++If neither B<--arch> or B<--feature> arguments are used, it will output a
++matrix with features per architecture.
++
++If B<--arch> argument is used, it will output the features availability for
++a given architecture.
++
++If B<--feat> argument is used, it will output the content of the feature
++file using ReStructured Text markup.
++
++=head1 BUGS
++
++Report bugs to Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
++
++=head1 COPYRIGHT
++
++Copyright (c) 2019 by Mauro Carvalho Chehab <mchehab+samsung@kernel.org>.
++
++License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
++
++This is free software: you are free to change and redistribute it.
++There is NO WARRANTY, to the extent permitted by law.
++
++=cut
 -- 
 2.21.0
 
