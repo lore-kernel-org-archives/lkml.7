@@ -2,251 +2,150 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4986EC48BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E40C48BE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292CD2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7666A2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfFVAUc (ORCPT
+        id S1726159AbfFVA0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:20:32 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44504 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726141AbfFVAU0 (ORCPT
+        Fri, 21 Jun 2019 20:26:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbfFVA0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:20:26 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TUrY3xA_1561162815;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUrY3xA_1561162815)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 22 Jun 2019 08:20:23 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     vbabka@suse.cz, mhocko@kernel.org, mgorman@techsingularity.net,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v2 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
-Date:   Sat, 22 Jun 2019 08:20:09 +0800
-Message-Id: <1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 21 Jun 2019 20:26:12 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5M0MKTQ088575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 20:26:11 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t95vuq6ek-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 20:26:10 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 22 Jun 2019 01:26:09 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 22 Jun 2019 01:26:05 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5M0Q4pD48890310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Jun 2019 00:26:04 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1AE5B2066;
+        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B45B1B205F;
+        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 405CC16C1D2E; Fri, 21 Jun 2019 17:26:06 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:26:06 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
+ disabled the same
+Reply-To: paulmck@linux.ibm.com
+References: <20190619011908.25026-1-swood@redhat.com>
+ <20190619011908.25026-4-swood@redhat.com>
+ <20190620211005.GW26519@linux.ibm.com>
+ <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
+ <20190620222505.GB26519@linux.ibm.com>
+ <5d24d1243849d9f8f6884348e1ceafcc3b7314fd.camel@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d24d1243849d9f8f6884348e1ceafcc3b7314fd.camel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062200-0064-0000-0000-000003F14F3E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011305; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01221412; UDB=6.00642601; IPR=6.01002550;
+ MB=3.00027415; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-22 00:26:08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062200-0065-0000-0000-00003DFB814F
+Message-Id: <20190622002606.GL26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906220002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running syzkaller internally, we ran into the below bug on 4.9.x
-kernel:
+On Thu, Jun 20, 2019 at 06:08:19PM -0500, Scott Wood wrote:
+> On Thu, 2019-06-20 at 15:25 -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 20, 2019 at 04:59:30PM -0500, Scott Wood wrote:
+> > > On Thu, 2019-06-20 at 14:10 -0700, Paul E. McKenney wrote:
+> > > > On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
+> > > > > [Note: Just before posting this I noticed that the invoke_rcu_core
+> > > > > stuff
+> > > > >  is part of the latest RCU pull request, and it has a patch that
+> > > > >  addresses this in a more complicated way that appears to deal with
+> > > > > the
+> > > > >  bare irq-disabled sequence as well.
+> > > > 
+> > > > Far easier to deal with it than to debug the lack of it.  ;-)
+> > > > 
+> > > > >  Assuming we need/want to support such sequences, is the
+> > > > >  invoke_rcu_core() call actually going to result in scheduling any
+> > > > >  sooner?  resched_curr() just does the same setting of need_resched
+> > > > >  when it's the same cpu.
+> > > > > ]
+> > > > 
+> > > > Yes, invoke_rcu_core() can in some cases invoke the scheduler sooner.
+> > > > Setting the CPU-local bits might not have effect until the next
+> > > > interrupt.
+> > > 
+> > > Maybe I'm missing something, but I don't see how (in the non-use_softirq
+> > > case).  It just calls wake_up_process(), which in resched_curr() will
+> > > set
+> > > need_resched but not do an IPI-to-self.
+> > 
+> > The common non-rt case will be use_softirq.  Or are you referring
+> > specifically to this block of code in current -rcu?
+> > 
+> > 		} else if (exp && irqs_were_disabled && !use_softirq &&
+> > 			   !t->rcu_read_unlock_special.b.deferred_qs) {
+> > 			// Safe to awaken and we get no help from enabling
+> > 			// irqs, unlike bh/preempt.
+> > 			invoke_rcu_core();
+> 
+> Yes, that one.  If that block is removed the else path should be sufficient,
+> now that an IPI-to-self has been added.
 
-kernel BUG at mm/huge_memory.c:2124!
-invalid opcode: 0000 [#1] SMP KASAN
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-Modules linked in:
-CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-task: ffff880067b34900 task.stack: ffff880068998000
-RIP: 0010:[<ffffffff81895d6b>]  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-RSP: 0018:ffff88006899f980  EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffffea00018f1700 RCX: 0000000000000000
-RDX: 1ffffd400031e2e7 RSI: 0000000000000001 RDI: ffffea00018f1738
-RBP: ffff88006899f9e8 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: fffffbfff0d8b13e R12: ffffea00018f1400
-R13: ffffea00018f1400 R14: ffffea00018f1720 R15: ffffea00018f1401
-FS:  00007fa333996740(0000) GS:ffff88006c600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000040 CR3: 0000000066b9c000 CR4: 00000000000606f0
-Stack:
- 0000000000000246 ffff880067b34900 0000000000000000 ffff88007ffdc000
- 0000000000000000 ffff88006899f9e8 ffffffff812b4015 ffff880064c64e18
- ffffea00018f1401 dffffc0000000000 ffffea00018f1700 0000000020ffd000
-Call Trace:
- [<ffffffff818490f1>] split_huge_page include/linux/huge_mm.h:100 [inline]
- [<ffffffff818490f1>] queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
- [<ffffffff817ed0da>] walk_pmd_range mm/pagewalk.c:50 [inline]
- [<ffffffff817ed0da>] walk_pud_range mm/pagewalk.c:90 [inline]
- [<ffffffff817ed0da>] walk_pgd_range mm/pagewalk.c:116 [inline]
- [<ffffffff817ed0da>] __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
- [<ffffffff817edb94>] walk_page_range+0x154/0x370 mm/pagewalk.c:285
- [<ffffffff81844515>] queue_pages_range+0x115/0x150 mm/mempolicy.c:694
- [<ffffffff8184f493>] do_mbind mm/mempolicy.c:1241 [inline]
- [<ffffffff8184f493>] SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
- [<ffffffff81850146>] SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
- [<ffffffff810097e2>] do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
- [<ffffffff82ff6f93>] entry_SYSCALL_64_after_swapgs+0x5d/0xdb
-Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
-RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
- RSP <ffff88006899f980>
+I will give it a try and let you know what happens.
 
-with the below test:
+> Also, shouldn't the IPI-to-self be conditioned on irqs_were_disabled? 
+> Besides that being the problem the IPI was meant to address, if irqs are
+> enabled the IPI is likely to happen before preempt is re-enabled and thus it
+> won't accomplish anything.
 
----8<---
+Plus if preempt is disabled, the later preempt_enable() will check
+(ditto for local_bh_enable()).  Unless the preempt_enable() is instead
+a preempt_enable_no_resched(), of course.  :-/
 
-uint64_t r[1] = {0xffffffffffffffff};
-
-int main(void)
-{
-	syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-				intptr_t res = 0;
-	res = syscall(__NR_socket, 0x11, 3, 0x300);
-	if (res != -1)
-		r[0] = res;
-*(uint32_t*)0x20000040 = 0x10000;
-*(uint32_t*)0x20000044 = 1;
-*(uint32_t*)0x20000048 = 0xc520;
-*(uint32_t*)0x2000004c = 1;
-	syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
-	syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
-*(uint64_t*)0x20000340 = 2;
-	syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340,
-0x45d4, 3);
-	return 0;
-}
-
----8<---
-
-Actually the test does:
-
-mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
-socket(AF_PACKET, SOCK_RAW, 768)        = 3
-setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
-mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
-mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
-
-The setsockopt() would allocate compound pages (16 pages in this test)
-for packet tx ring, then the mmap() would call packet_mmap() to map the
-pages into the user address space specified by the mmap() call.
-
-When calling mbind(), it would scan the vma to queue the pages for
-migration to the new node.  It would split any huge page since 4.9
-doesn't support THP migration, however, the packet tx ring compound
-pages are not THP and even not movable.  So, the above bug is triggered.
-
-However, the later kernel is not hit by this issue due to the
-commit d44d363f65780f2ac2 ("mm: don't assume anonymous pages have
-SwapBacked flag"), which just removes the PageSwapBacked check for a
-different reason.
-
-But, there is a deeper issue.  According to the semantic of mbind(), it
-should return -EIO if MPOL_MF_MOVE or MPOL_MF_MOVE_ALL was specified and
-MPOL_MF_STRICT was also specified, but the kernel was unable to move
-all existing pages in the range.  The tx ring of the packet socket is
-definitely not movable, however, mbind() returns success for this case.
-
-Although the most socket file associates with non-movable pages, but XDP
-may have movable pages from gup.  So, it sounds not fine to just check
-the underlying file type of vma in vma_migratable().
-
-Change migrate_page_add() to check if the page is movable or not, if it
-is unmovable, just return -EIO.  But do not abort pte walk immediately,
-since there may be pages off LRU temporarily.  We should migrate other
-pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
-paged could not be not moved, then return -EIO for mbind() eventually.
-
-With this change the above test would return -EIO as expected.
-
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/mempolicy.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index b50039c..45d3d6e 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -403,7 +403,7 @@ void mpol_rebind_mm(struct mm_struct *mm, nodemask_t *new)
- 	},
- };
- 
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags);
- 
- struct queue_pages {
-@@ -465,12 +465,11 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 	flags = qp->flags;
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--		if (!vma_migratable(walk->vma)) {
-+		if (!vma_migratable(walk->vma) ||
-+		    migrate_page_add(page, qp->pagelist, flags)) {
- 			ret = 2;
- 			goto unlock;
- 		}
--
--		migrate_page_add(page, qp->pagelist, flags);
- 	} else
- 		ret = -EIO;
- unlock:
-@@ -540,7 +539,14 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 				has_unmovable |= true;
- 				break;
- 			}
--			migrate_page_add(page, qp->pagelist, flags);
-+
-+			/*
-+			 * Do not abort immediately since there may be
-+			 * temporary off LRU pages in the range.  Still
-+			 * need migrate other LRU pages.
-+			 */
-+			if (migrate_page_add(page, qp->pagelist, flags))
-+				has_unmovable |= true;
- 		} else
- 			break;
- 	}
-@@ -969,10 +975,21 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
- /*
-  * page migration, thp tail pages can be passed.
-  */
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
- {
- 	struct page *head = compound_head(page);
-+
-+	/*
-+	 * Non-movable page may reach here.  And, there may be
-+	 * temporaty off LRU pages or non-LRU movable pages.
-+	 * Treat them as unmovable pages since they can't be
-+	 * isolated, so they can't be moved at the moment.  It
-+	 * should return -EIO for this case too.
-+	 */
-+	if (!PageLRU(head) && (flags & MPOL_MF_STRICT))
-+		return -EIO;
-+
- 	/*
- 	 * Avoid migrating a page that is shared with others.
- 	 */
-@@ -984,6 +1001,8 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
- 				hpage_nr_pages(head));
- 		}
- 	}
-+
-+	return 0;
- }
- 
- /* page allocation callback for NUMA node migration */
-@@ -1186,9 +1205,10 @@ static struct page *new_page(struct page *page, unsigned long start)
- }
- #else
- 
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
- {
-+	return -EIO;
- }
- 
- int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
--- 
-1.8.3.1
+							Thanx, Paul
 
