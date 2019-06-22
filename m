@@ -2,137 +2,159 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD8BC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E20C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE6B2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F122075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="qO3usaG5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZ4LSzTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfFVF0A (ORCPT
+        id S1726151AbfFVF05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:26:00 -0400
-Received: from mail-eopbgr30125.outbound.protection.outlook.com ([40.107.3.125]:41647
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725994AbfFVFZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:25:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=32wnNkw7gbxeyA/7yXc8NQjKn5VCXdVIE4VgPB1NjOQ=;
- b=qO3usaG5AjyNUxcaRBjIjT60X0DIepVfA8L6GgJJC7t9OsGKd6zYO7kS7VYSGZ1s2+eds/oWZnWYJVuWQx6h4059/jkQd/gMpO8lzzYVJygJYpvukaU/rlrt55e14MhI6SYqqZznAEgcca/ljvxxxfRgAKRCrtxgYfFI1D7Sdvg=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Sat, 22 Jun 2019 05:25:54 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1987.014; Sat, 22 Jun 2019
- 05:25:54 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH v2 13/28] drivers: Introduce
- class_find_device_by_of_node() helper
-Thread-Topic: [PATCH v2 13/28] drivers: Introduce
- class_find_device_by_of_node() helper
-Thread-Index: AQHVItpTYJEjQBlMB0GJ7sFY1WhfUKanMC4A
-Date:   Sat, 22 Jun 2019 05:25:54 +0000
-Message-ID: <325e46fd-a480-78ed-81fd-55e993fbc06f@axentia.se>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-14-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1560534863-15115-14-git-send-email-suzuki.poulose@arm.com>
-Accept-Language: en-US, sv-SE
+        Sat, 22 Jun 2019 01:26:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38970 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfFVF04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 01:26:56 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so4611585pfe.6;
+        Fri, 21 Jun 2019 22:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=sZRv/LGTOOe6faTsydAViDQ1bUDA3iC8uWlW5RBxb6c=;
+        b=TZ4LSzTa16KC9/e+viKoUd3imXJ1pD/yBNnq5o1E+qoOUgO076Lt8bRUg2ZawwL4/+
+         SxCk1s2dvBjMmigN+QgvNQTeeTMFoon+W6vbDmXa9RjYkHyDFsu6VgMxPiDceMLHlO2W
+         Rdy41rG8BWbTHkWIi0Bh0dRC5c3+6vk0/T8vmLFTFVgygydzPNm92yC+X3wCo/gto90W
+         oag0DhWywOi2ZqEMw5Tn4lOQFyVVAN5TdpueK/gCKxNtjm9vlSo68wTTIHGJvMGANtRg
+         7xiYknlaj5DvOyxeYoHSC9LxzLnXoTHyfGga/6mgjxl88Jy8mK0NA9zfdWUk0bNhEW1M
+         8h4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=sZRv/LGTOOe6faTsydAViDQ1bUDA3iC8uWlW5RBxb6c=;
+        b=RqUl7uS/zkowKLnYiyrPsH0roSJ4NBZvQtyNVXLd3Gp90moxM3WUs16hSc5ABdl0v3
+         n5+YVd4zICAAtW8T7FMMgk+rk6NOdx/4TkHQI6hA+KH5LfD4fKiHaVfoiV+mymODjt74
+         i/uyqaethTFjduCH5qIQD8uI3bv3xAAJXLJ78bTF0bPQLT8xNH+0+ITGGbaqRlUnSov1
+         eOluc7mVXumKIA458rhCfobXPiYuVJen6SnRnHDpDR0qKWabl6fk5qdDHYeKOaeEhGB9
+         EIia14SFmaq91qiROiPsMACA+yqQTni6eeT+Qci2tq+/QN2gJrAosQM/0RIu/3HW4KVL
+         8hrA==
+X-Gm-Message-State: APjAAAU95Ga/B+DBn6epfHziYGJpGiz4LDmtuun/rMiw5s7EgmghCxHT
+        ByS2dyL9xLFsCa8ovCvI/w4=
+X-Google-Smtp-Source: APXvYqwhL0puArWz+Be/LkkHlaM8fRnUEobz7A4LCH1hwBouqeqhcIaOxqotozGxHd0WWonkbBHE1g==
+X-Received: by 2002:a17:90a:af8b:: with SMTP id w11mr11158769pjq.135.1561181215708;
+        Fri, 21 Jun 2019 22:26:55 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id f2sm3735439pgs.83.2019.06.21.22.26.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 22:26:54 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "kishon@ti.com" <kishon@ti.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
+Thread-Topic: [PATCH V6 2/3] PCI: dwc: Cleanup DBI read and write APIs
+Thread-Index: AQHVKCHtRnCtljKhvUCAapB/SWoPlqanJefh
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Sat, 22 Jun 2019 05:26:49 +0000
+Message-ID: <PSXP216MB0662399C169A6D944E7C6A8FAAE60@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <20190621111000.23216-1-vidyas@nvidia.com>
+ <20190621111000.23216-2-vidyas@nvidia.com>
+In-Reply-To: <20190621111000.23216-2-vidyas@nvidia.com>
+Accept-Language: ko-KR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0902CA0002.eurprd09.prod.outlook.com
- (2603:10a6:3:e5::12) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b8575a67-eb67-4308-802a-08d6f6d218e1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3435;
-x-ms-traffictypediagnostic: DB3PR0202MB3435:
-x-microsoft-antispam-prvs: <DB3PR0202MB343555CF2184E7784AD47CA4BCE60@DB3PR0202MB3435.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0076F48C8A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(136003)(396003)(39830400003)(199004)(189003)(26005)(186003)(64756008)(66476007)(66446008)(66556008)(65956001)(66066001)(508600001)(7736002)(65806001)(66946007)(476003)(81166006)(256004)(71190400001)(74482002)(305945005)(71200400001)(81156014)(446003)(5660300002)(73956011)(14454004)(31686004)(8936002)(68736007)(486006)(11346002)(8676002)(2616005)(2906002)(110136005)(65826007)(86362001)(229853002)(316002)(6246003)(54906003)(58126008)(64126003)(6486002)(31696002)(52116002)(53936002)(2501003)(99286004)(36756003)(25786009)(4326008)(6116002)(102836004)(7416002)(76176011)(6512007)(386003)(6506007)(53546011)(3846002)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Zl9nFeLPNU5i+NEdHUYXGicvNuEwdrVCoV2STaMiNxE5dAeInW+s6GIHTkMduBk+BG/13uPW+LkkMz+f3S3S9PvWUQRTEUH4YhVJ3ZKDuqAkEB8S2xFS16JS8+PYy8yV4R80OVTMxctT9iHBfDQ8nZYUPt92/7MOdxDA95yC1ONAz8JenkFlfNMhee1iFTZYVwVhDCiZZE+yAqMMZ0N80VyJqGgWzyGUrqt5n7yJyrDynKzk1sRhRqsFjRkzvp+a0ps7Xk2sDYZDeAHFJrjSJY9moDlZUi85WFLZxd3CftludPd15eU1zapVjyPUMEEPIzu5qH44bixmWkRTJ1xQnPXk+NGF4sV1NyssaxANRHEHF5P7gXCPCBtRAT0sUTY9FjOUswuYFJmvfwyWuJ84FD6qQGMWTn+NOHetk+ClVWQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1DFDE098696CA146A51B62B2EAEDE154@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8575a67-eb67-4308-802a-08d6f6d218e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 05:25:54.3268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0xNCAxOTo1NCwgU3V6dWtpIEsgUG91bG9zZSB3cm90ZToNCj4gQWRkIGEgd3Jh
-cHBlciB0byBjbGFzc19maW5kX2RldmljZSgpIHRvIHNlYXJjaCBmb3IgYSBkZXZpY2UNCj4gYnkg
-dGhlIG9mX25vZGUgcG9pbnRlciwgcmV1c2luZyB0aGUgZ2VuZXJpYyBtYXRjaCBmdW5jdGlvbi4N
-Cj4gQWxzbyBjb252ZXJ0IHRoZSBleGlzdGluZyB1c2VycyB0byBtYWtlIHVzZSBvZiB0aGUgbmV3
-IGhlbHBlci4NCj4gDQo+IENjOiBBbGFuIFR1bGwgPGF0dWxsQGtlcm5lbC5vcmc+DQo+IENjOiBN
-b3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+DQo+IENjOiBsaW51eC1mcGdhQHZnZXIua2Vy
-bmVsLm9yZw0KPiBDYzogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4NCj4gQ2M6IE1hcmsg
-QnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCj4gQ2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFp
-bmVsbGlAZ21haWwuY29tPg0KPiBDYzogSGVpbmVyIEthbGx3ZWl0IDxoa2FsbHdlaXQxQGdtYWls
-LmNvbT4NCj4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KPiBD
-YzogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPiBDYzogTGlhbSBHaXJkd29vZCA8bGdp
-cmR3b29kQGdtYWlsLmNvbT4NCj4gQ2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc+DQo+IENjOiAiUmFmYWVsIEouIFd5c29ja2kiIDxyYWZhZWxAa2VybmVs
-Lm9yZz4NCj4gQ2M6IEppcmkgU2xhYnkgPGpzbGFieUBzdXNlLmNvbT4NCj4gQWNrZWQtYnk6IE1h
-cmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCj4gUmV2aWV3ZWQtYnk6IEFuZHJldyBMdW5u
-IDxhbmRyZXdAbHVubi5jaD4NCj4gUmV2aWV3ZWQtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50
-aWEuc2U+DQoNCldob29vYSEgSSByZXZpZXdlZCBvbmx5IHRoZSBkcml2ZXJzL211eC9jb3JlLmMg
-Y2hhbmdlcyB3aGVuIHRoaXMgd2FzIGRvbmUNCmluIGEgc2VyaWVzIG9mIG11Y2ggc21hbGxlciBw
-YXRjaGVzLiBUaGlzIHRhZyBtYWtlcyBpdCBzZWVtIGFzIGlmIEkgaGF2ZQ0KcmV2aWV3ZWQgdGhl
-IHdob2xlIHRoaW5nLCB3aGljaCBJIGhhZCBub3QgZG9uZSB3aGVuIHlvdSBhZGRlZCB0aGlzIHRh
-ZyBvdXQNCm9mIHRoZSBibHVlLg0KDQpOb3csIHRoaXMgc3R1ZmYgaXMgdHJpdmlhbCBhbmQgYnkg
-bm93IEkgaGF2ZSBsb29rZWQgYXQgdGhlIG90aGVyIGZpbGVzDQphbmQgaXQgYWxsIHNlZW1zIHNp
-bXBsZSBlbm91Z2guIFNvLCB5b3UgY2FuIGtlZXAgdGhlIHRhZywgYnV0IGl0IGlzIE5PVA0Kb2sg
-dG8gaGFuZGxlIHRhZ3MgbGlrZSB5b3UgaGF2ZSBkb25lIGhlcmUuDQoNCkNoZWVycywNClBldGVy
-DQoNCj4gU2lnbmVkLW9mZi1ieTogU3V6dWtpIEsgUG91bG9zZSA8c3V6dWtpLnBvdWxvc2VAYXJt
-LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2ZwZ2EvZnBnYS1icmlkZ2UuYyAgICAgICB8ICA4ICst
-LS0tLS0tDQo+ICBkcml2ZXJzL2ZwZ2EvZnBnYS1tZ3IuYyAgICAgICAgICB8ICA4ICstLS0tLS0t
-DQo+ICBkcml2ZXJzL211eC9jb3JlLmMgICAgICAgICAgICAgICB8ICA3ICstLS0tLS0NCj4gIGRy
-aXZlcnMvbmV0L3BoeS9tZGlvX2J1cy5jICAgICAgIHwgIDkgKy0tLS0tLS0tDQo+ICBkcml2ZXJz
-L3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuYyB8ICA3ICstLS0tLS0NCj4gIGRyaXZlcnMvc3BpL3Nw
-aS5jICAgICAgICAgICAgICAgIHwgMTEgKystLS0tLS0tLS0NCj4gIGluY2x1ZGUvbGludXgvZGV2
-aWNlLmggICAgICAgICAgIHwgMTIgKysrKysrKysrKysrDQo+ICA3IGZpbGVzIGNoYW5nZWQsIDE5
-IGluc2VydGlvbnMoKyksIDQzIGRlbGV0aW9ucygtKQ0K
+On 6/21/19, 8:10 PM, Vidya Sagar wrote:
+>=20
+> Cleanup DBI read and write APIs by removing "__" (underscore) from their
+> names as there are no no-underscore versions and the underscore versions
+> are already doing what no-underscore versions typically do. It also remov=
+es
+> passing dbi/dbi2 base address as one of the arguments as the same can be
+> derived with in read and write APIs.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from v5:
+> * Removed passing base address as one of the arguments as the same can be=
+ derived within
+>   the API itself.
+> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
+
+Unlike previous patches (v1~v5), you modified ATU read/write APIs from v6.
+Why do you change ATU read/write APIs to call dw_pcie_{write/read}() API???
+It is not clean-up, but function change. Please add the reason to the commi=
+t message.
+
+Best regards,
+Jingoo Han
+
+>
+> Changes from v4:
+> * This is a new patch in this series
+>
+>  drivers/pci/controller/dwc/pcie-designware.c | 28 ++++++-------
+>  drivers/pci/controller/dwc/pcie-designware.h | 43 ++++++++++++--------
+>  2 files changed, 37 insertions(+), 34 deletions(-)
+
+.....
+
+>  static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 =
+val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
+> +	int ret;
+> +
+> +	ret =3D dw_pcie_write(pci->atu_base + reg, 0x4, val);
+> +	if (ret)
+> +		dev_err(pci->dev, "write ATU address failed\n");
+>  }
+> =20
+>  static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret =3D dw_pcie_read(pci->atu_base + reg, 0x4, &val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Read ATU address failed\n");
+> +
+> +	return val;
+>  }
+> =20
+>  static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
+> --=20
+> 2.17.1
+
