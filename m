@@ -2,103 +2,101 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5230C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2574EC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80C6208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561192421;
-	bh=of5tv1lk+Pdmx0ar/vak5HcBEM6lCMPJCV89NlP50P4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y2sltsBfUoeI1TJ08luUpEOHa8em9MOHTMuRBomrbNMD0ZA1T3wUeWF+dphpVvicV
-	 8TMVzk+M2U9bJEojugM/btGyJ2cBQUeb17epw/WOisMR1MYYsBRRXZRXtO/peP0pTz
-	 dhhVch+FnAmU8OS85Z08wa7P6bTCL6apLL8z9vjg=
+	by mail.kernel.org (Postfix) with ESMTP id 02CF320665
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfFVIdh (ORCPT
+        id S1726315AbfFVIeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
+        Sat, 22 Jun 2019 04:34:05 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:36032 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfFVIdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:33:36 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F263520665;
-        Sat, 22 Jun 2019 08:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561192415;
-        bh=of5tv1lk+Pdmx0ar/vak5HcBEM6lCMPJCV89NlP50P4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=w8y+1uPpC2lrIj7R3ZRkGiIQA8Y6k14CMVDTr5DjROuWqLTTUZjy7zq0vkulHnQB6
-         6h5tQON+e8ugiuqYDVCRuaGAJoaNL4VtwhUWqx+r8QjXF6va6eca0kVIqYpILH3oMw
-         58ZZ9vD6s54DBjysGUomvb3pJhaDVodmZns/E6hE=
-Date:   Sat, 22 Jun 2019 09:33:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Message-ID: <20190622093325.77539301@archlinux>
-In-Reply-To: <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com>
-        <20190621121344.24917-4-mircea.caprioru@analog.com>
-        <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726100AbfFVIeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:34:04 -0400
+Received: from p508fd9dc.dip0.t-ipconnect.de ([80.143.217.220] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hebTB-0004tX-Q4; Sat, 22 Jun 2019 10:33:57 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker board
+Date:   Sat, 22 Jun 2019 10:33:57 +0200
+Message-ID: <1871177.hjLhdHVgcu@phil>
+In-Reply-To: <20190621180017.29646-1-katsuhiro@katsuster.net>
+References: <20190621180017.29646-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 08:31:14 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+Hi,
 
-> On Fri, Jun 21, 2019 at 6:15 AM Mircea Caprioru
-> <mircea.caprioru@analog.com> wrote:
-> >
-> > Convert AD7124 bindings documentation to YAML format.
-> >
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > ---
-> >
-> > Changelog v2:
-> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> > - added regex for a range from 0 to 15
-> > - added minimum and maximum constraints for reg property
-> > - set type and range of values for adi,reference-select property
-> > - used items for diff-channels property
-> > - set bipolar, adi,buffered-positive and negative to type: boolean
-> >
-> >  .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
+Am Freitag, 21. Juni 2019, 20:00:17 CEST schrieb Katsuhiro Suzuki:
+> This patch adds missing mdio and ethernet PHY nodes for rk3328 ASUS
+> tinker board.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-The result is presumably good but the structure of the patch is not
-as straight forward as it should be.  As the changelog makes clear we
-aren't just doing a conversion here.  It is a mixture of conversion
-and new properties.  Please break the patch in two to reflect that.
-First convert the existing binding, then add the new properties.
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-That will make it easier for people to see what is new.
+just for my understanding, which problem does this solve?
+Normally the gmac can establish connections just fine on
+the rk3288 by probing the phy in the automatic way.
 
-Thanks,
+And I also don't see any additional properties like phy
+interrupt line below.
 
-Jonathan
+
+Thanks
+Heiko
+
+> ---
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index 293576869546..3190817e8d5d 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -117,6 +117,7 @@
+>  	assigned-clocks = <&cru SCLK_MAC>;
+>  	assigned-clock-parents = <&ext_gmac>;
+>  	clock_in_out = "input";
+> +	phy-handle = <&phy0>;
+>  	phy-mode = "rgmii";
+>  	phy-supply = <&vcc33_lan>;
+>  	pinctrl-names = "default";
+> @@ -127,6 +128,17 @@
+>  	tx_delay = <0x30>;
+>  	rx_delay = <0x10>;
+>  	status = "ok";
+> +
+> +	mdio0 {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			reg = <0>;
+> +		};
+> +	};
+>  };
+>  
+>  &gpu {
+> 
+
+
 
 
