@@ -2,149 +2,150 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F867C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C295AC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D919A20656
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974FC20881
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UL4Qk25h"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TkB3WEMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfFVAGI (ORCPT
+        id S1726546AbfFVAGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:06:08 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:52039 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfFVAE5 (ORCPT
+        Fri, 21 Jun 2019 20:06:12 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55968 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726678AbfFVAGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:04:57 -0400
-Received: by mail-pf1-f202.google.com with SMTP id 145so5302271pfv.18
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=vG+Ky1xMciAt56WQw2EjTPdmD541F+3aHNW5aR09cZM=;
-        b=UL4Qk25hc3SNUo5XrSqPPvfC8ObTMPlrZFg4JcxukENDqlnfup3f9RtnrkiwHcxOQy
-         +CX3ihK97Qg38Ne2dRLsC03qRKG63yC8UfLws2djrH8nyLWGoz9EnjOIu7rh8v1Wzyu2
-         /m5932Iq9XT+iN6P0dpcU6tlmMNrWuQEgFtEdAXz36MufIe2TmZfNtd1Ly1f3GhlLVIF
-         OSk80xD/ELnXzf7ZMFPRQUyPJDpkxWOTnQrNocZhtWH043t2QGiQVvXzAGZB0uyzSd7l
-         nVv1uzBdGuaWozCwN4byv7d/DDbzNdPbmHEM5gcxtro0RsRDzsCA1ioy64MXtW42aBMa
-         GGiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=vG+Ky1xMciAt56WQw2EjTPdmD541F+3aHNW5aR09cZM=;
-        b=GF0eqb99lGqPQbTTHDO3+QDtLEagiYAGSf49WeJ5s3qh1h32y1SB08+T5+0KjNu/JU
-         4vbuPzYCJu4yeaUpx29GOVOKFqDlfbUwb3lsRhPGfUb00mdg+aF0aNn/spMAewXL9ORy
-         fYt+2wCxSxCxhNDgFHImsu2S+SBExVbuV9YW9ELtdOc4WEiiKwVvLj59unR+yAkfb3pM
-         tHPdu/I77E7AhU0nbpPAtDJ+Ildpubyy1tDEpOLC3Iz2KtDMwJ+CdaZUTZNh1utI6W/v
-         T9KikzgPa9UA+FWsknceNxv/Q4TW3YDuegAJPgb2S8/BV0b6Bgi801rXHOk0lHXTvpKj
-         bZmg==
-X-Gm-Message-State: APjAAAWa2a8UJ10BHTP9m02fwS6PodRH0gm5661/DcMJO/kbmJqCKttX
-        Iqvoaw47um23nnIiVprgYRrCvZdR6EaUO/+C24WUNw==
-X-Google-Smtp-Source: APXvYqw9j0ee4KLPs7be3t2v3Y+G+7aChaH5PGSdJ0kCmluEfWlXs0wvCI8+XwhzwD3dbhB6c+Ee3GhBlLOvdYQe+AiRuA==
-X-Received: by 2002:a65:50c3:: with SMTP id s3mr20935624pgp.177.1561161897008;
- Fri, 21 Jun 2019 17:04:57 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:03:51 -0700
-In-Reply-To: <20190622000358.19895-1-matthewgarrett@google.com>
-Message-Id: <20190622000358.19895-23-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190622000358.19895-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V34 22/29] Lock down tracing and perf kprobes when in
- confidentiality mode
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Jun 2019 20:06:10 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNt1fl005696
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:06:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=n2snFM7QmmPTPpShlBhEnsGKC2i2/uKCmCMTseCu52k=;
+ b=TkB3WEMksGPkiSgJMtbOi5nd60Vn9LkBFGWBLqllbfRHKqjMvyN9xgpjLMSBxiNsT59u
+ xXSjznVWMZNCtWyTtBnc2LUl/YYmfYW56N4xJiuIsFr+y6Qe5ZFFAOb3Jro0mEberPQs
+ hJx7W5AQaf95gqEbevnn2c0lR2ZmiRAx+Bc= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t90mjj1eg-17
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:06:09 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 21 Jun 2019 17:05:27 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 1BB8B62E2D56; Fri, 21 Jun 2019 17:05:27 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
+        <akpm@linux-foundation.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v6 4/6] khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
+Date:   Fri, 21 Jun 2019 17:05:10 -0700
+Message-ID: <20190622000512.923867-5-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190622000512.923867-1-songliubraving@fb.com>
+References: <20190622000512.923867-1-songliubraving@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=566 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210182
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Next patch will add khugepaged support of non-shmem files. This patch
+renames these two functions to reflect the new functionality:
 
-Disallow the creation of perf and ftrace kprobes when the kernel is
-locked down in confidentiality mode by preventing their registration.
-This prevents kprobes from being used to access kernel memory to steal
-crypto data, but continues to allow the use of kprobes from signed
-modules.
+    collapse_shmem()        =>  collapse_file()
+    khugepaged_scan_shmem() =>  khugepaged_scan_file()
 
-Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: davem@davemloft.net
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- include/linux/security.h     | 1 +
- kernel/trace/trace_kprobe.c  | 5 +++++
- security/lockdown/lockdown.c | 1 +
- 3 files changed, 7 insertions(+)
+ mm/khugepaged.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 3875f6df2ecc..e6e3e2403474 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -96,6 +96,7 @@ enum lockdown_reason {
- 	LOCKDOWN_MMIOTRACE,
- 	LOCKDOWN_INTEGRITY_MAX,
- 	LOCKDOWN_KCORE,
-+	LOCKDOWN_KPROBES,
- 	LOCKDOWN_CONFIDENTIALITY_MAX,
- };
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 0f7419938008..dde8e45552b3 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1287,7 +1287,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ }
  
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 5d5129b05df7..5a76a0f79d48 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -11,6 +11,7 @@
- #include <linux/uaccess.h>
- #include <linux/rculist.h>
- #include <linux/error-injection.h>
-+#include <linux/security.h>
- 
- #include "trace_dynevent.h"
- #include "trace_kprobe_selftest.h"
-@@ -415,6 +416,10 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
+ /**
+- * collapse_shmem - collapse small tmpfs/shmem pages into huge one.
++ * collapse_file - collapse small tmpfs/shmem pages into huge one.
+  *
+  * Basic scheme is simple, details are more complex:
+  *  - allocate and lock a new huge page;
+@@ -1304,10 +1304,11 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+  *    + restore gaps in the page cache;
+  *    + unlock and free huge page;
+  */
+-static void collapse_shmem(struct mm_struct *mm,
++static void collapse_file(struct vm_area_struct *vma,
+ 		struct address_space *mapping, pgoff_t start,
+ 		struct page **hpage, int node)
  {
- 	int i, ret;
++	struct mm_struct *mm = vma->vm_mm;
+ 	gfp_t gfp;
+ 	struct page *new_page;
+ 	struct mem_cgroup *memcg;
+@@ -1563,7 +1564,7 @@ static void collapse_shmem(struct mm_struct *mm,
+ 	/* TODO: tracepoints */
+ }
  
-+	ret = security_locked_down(LOCKDOWN_KPROBES);
-+	if (ret)
-+		return ret;
-+
- 	if (trace_probe_is_registered(&tk->tp))
- 		return -EINVAL;
+-static void khugepaged_scan_shmem(struct mm_struct *mm,
++static void khugepaged_scan_file(struct vm_area_struct *vma,
+ 		struct address_space *mapping,
+ 		pgoff_t start, struct page **hpage)
+ {
+@@ -1631,14 +1632,14 @@ static void khugepaged_scan_shmem(struct mm_struct *mm,
+ 			result = SCAN_EXCEED_NONE_PTE;
+ 		} else {
+ 			node = khugepaged_find_target_node();
+-			collapse_shmem(mm, mapping, start, hpage, node);
++			collapse_file(vma, mapping, start, hpage, node);
+ 		}
+ 	}
  
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 4c9b324dfc55..5a08c17f224d 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -32,6 +32,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
- 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
- 	[LOCKDOWN_KCORE] = "/proc/kcore access",
-+	[LOCKDOWN_KPROBES] = "use of kprobes",
- 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
- };
- 
+ 	/* TODO: tracepoints */
+ }
+ #else
+-static void khugepaged_scan_shmem(struct mm_struct *mm,
++static void khugepaged_scan_file(struct vm_area_struct *vma,
+ 		struct address_space *mapping,
+ 		pgoff_t start, struct page **hpage)
+ {
+@@ -1722,7 +1723,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages,
+ 				file = get_file(vma->vm_file);
+ 				up_read(&mm->mmap_sem);
+ 				ret = 1;
+-				khugepaged_scan_shmem(mm, file->f_mapping,
++				khugepaged_scan_file(vma, file->f_mapping,
+ 						pgoff, hpage);
+ 				fput(file);
+ 			} else {
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.17.1
 
