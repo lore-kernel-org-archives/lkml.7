@@ -2,115 +2,96 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95EBC48BE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD27C4646B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E552208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TzR6Wru1"
+	by mail.kernel.org (Postfix) with ESMTP id 9CD0C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfFUX5G (ORCPT
+        id S1726289AbfFUX5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:57:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48302 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUX5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:57:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNsGrX052403;
-        Fri, 21 Jun 2019 23:56:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=cAdDQjLmw3paRsCYayAMtBFRH59fRNc4vYLBHuqjsSA=;
- b=TzR6Wru1xSjTTRJAS5YLkE/BrGnsLOB3oXc++TPNZTilrEotX+w/PXZSlo2GmgalFn6q
- EFIn2g7OnCMHKiU/KYZQjoVVDHvaifoE42AmpxsuNL7wnDmrtZhKVTyFzOJI7etrK4kK
- KEBGejr346UOlFcuSkyuDnIO/5wd6UqT/S/KQGVF+NHJ5J7mmhYyVd5c2jc+HbQbg3wB
- wa4pvaZQ8fS5HuyXYBN1pV+PfgLDpbPcaxs+KsA+sgcG7mAhRxGd5p97mdMZnG6Ft3yd
- IEh9EmQpStxpaanEvQR/EobOi//ZfTjzIl0oWYndnxgPHklvyg0k1RPOB0QGCH15ATwX mw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t7809rsvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:56:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNtFqW105530;
-        Fri, 21 Jun 2019 23:56:27 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2t77ypet01-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 23:56:27 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNuRFa107024;
-        Fri, 21 Jun 2019 23:56:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2t77ypesyw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:56:27 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LNuGUs018756;
-        Fri, 21 Jun 2019 23:56:16 GMT
-Received: from localhost (/10.159.131.214)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 16:56:16 -0700
-Subject: [PATCH v2 0/4] vfs: clean up SETFLAGS and FSSETXATTR option
- processing
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        darrick.wong@oracle.com, shaggy@kernel.org,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk
-Cc:     cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Date:   Fri, 21 Jun 2019 16:56:07 -0700
-Message-ID: <156116136742.1664814.17093419199766834123.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 21 Jun 2019 19:57:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48779 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfFUX5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:57:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 16:57:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,402,1557212400"; 
+   d="scan'208";a="359022880"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2019 16:57:21 -0700
+From:   Megha Dey <megha.dey@linux.intel.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com, megha.dey@intel.com,
+        Megha Dey <megha.dey@linux.intel.com>
+Subject: [RFC V1 RESEND 0/6] Introduce dynamic allocation/freeing of MSI-X vectors
+Date:   Fri, 21 Jun 2019 17:19:32 -0700
+Message-Id: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=851 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210182
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Currently, MSI-X vector enabling and allocation for a PCIe device is
+static i.e. a device driver gets only one chance to enable a specific
+number of MSI-X vectors, usually during device probe. Also, in many
+cases, drivers usually reserve more than required number of vectors
+anticipating their use, which unnecessarily blocks resources that
+could have been made available to other devices. Lastly, there is no
+way for drivers to reserve more vectors, if the MSI-x has already been
+enabled for that device.
+ 
+Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
+deferring MSI-X allocation to post probe phase, where actual demand
+information is available.
+ 
+This patchset enables the dynamic allocation/de-allocation of MSI-X
+vectors by introducing 2 new APIs:
+pci_alloc_irq_vectors_dyn() and pci_free_irq_vectors_grp():
 
-The FS_IOC_SETFLAGS and FS_IOC_FSSETXATTR ioctls were promoted from ext4
-and XFS, respectively, into the VFS.  However, we didn't promote any of
-the parameter checking code from those filesystems, which lead to a mess
-where each filesystem open-codes whatever parameter checks they want and
-the behavior across filesystems is no longer consistent.
+We have had requests from some of the NIC/RDMA users who have lots of
+interrupt resources and would like to allocate them on demand,
+instead of using an all or none approach.
 
-Therefore, create some generic checking functions in the VFS and remove
-all the open-coded pieces in each filesystem.  This preserves the
-current behavior where a filesystem can choose to ignore fields it
-doesn't understand.
+The APIs are fairly well tested (multiple allocations/deallocations),
+but we have no early adopters yet. Hence, sending this series as an
+RFC for review and comments.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+The patches are based out of Linux 5.2-rc5.
 
-This has been lightly tested with fstests.  Enjoy!
-Comments and questions are, as always, welcome.
+Megha Dey (6):
+  PCI/MSI: New structures/macros for dynamic MSI-X allocation
+  PCI/MSI: Dynamic allocation of MSI-X vectors by group
+  x86: Introduce the dynamic teardown function
+  PCI/MSI: Introduce new structure to manage MSI-x entries
+  PCI/MSI: Free MSI-X resources by group
+  Documentation: PCI/MSI: Document dynamic MSI-X infrastructure
 
---D
+ Documentation/PCI/MSI-HOWTO.txt |  38 +++++
+ arch/x86/include/asm/x86_init.h |   1 +
+ arch/x86/kernel/x86_init.c      |   6 +
+ drivers/pci/msi.c               | 363 +++++++++++++++++++++++++++++++++++++---
+ drivers/pci/probe.c             |   9 +
+ include/linux/device.h          |   3 +
+ include/linux/msi.h             |  13 ++
+ include/linux/pci.h             |  61 +++++++
+ kernel/irq/msi.c                |  34 +++-
+ 9 files changed, 497 insertions(+), 31 deletions(-)
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=file-ioctl-cleanups
+-- 
+2.7.4
+
