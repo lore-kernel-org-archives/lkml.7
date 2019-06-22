@@ -2,108 +2,101 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8D1C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D984C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700D9206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561192763;
-	bh=qAXXbtnQBFmUgmRyzc4VkIcs13YQ55kQtiIfHKdMQAM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DMw5mT8exOJ3O5kEVEPy4pKe9Tfdk1P7XGS+xrPpgmSuWGm+H7OLYDm++vFC9SXu6
-	 GcwK/mU5P0U65+D44Tc1j12hVklRxnuL/z1ih7vV1wngzdkNSTbxqvEZ9RwXMc8bJW
-	 XGX7nEoFfplJ2dy1AnP7mNvaGEgjtx2fGlf3ppBg=
+	by mail.kernel.org (Postfix) with ESMTP id 54A15206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CUlLr2tG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfFVIjW (ORCPT
+        id S1726334AbfFVIlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:39:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfFVIjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:39:21 -0400
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77EC215EA;
-        Sat, 22 Jun 2019 08:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561192761;
-        bh=qAXXbtnQBFmUgmRyzc4VkIcs13YQ55kQtiIfHKdMQAM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nAiN3KHHuh3GDHGSYzoKQ0szWAcLEKSJR8fj6S3Puih9WsIT+QnfcZDq5/yl+I0Zb
-         TvVPIQYXNyxtSLhya0XjYCjcjb611p7Sc97ZU7oZtE2AkYFQH0TZ1gFUub9Eqic/Ty
-         BfdpaFciV4AdK/dyKmpoAR24cWyCdvkq9q16UJu0=
-Received: by mail-lj1-f175.google.com with SMTP id m23so7983634lje.12;
-        Sat, 22 Jun 2019 01:39:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAVW/d4nQC74I5efjL4wWnGxn44Qrcriu4na50vcSOzKOB4PBVQ7
-        A9Re5FdfNgAcxbWiFZASiRxUWF7F2n/57Oy1eGc=
-X-Google-Smtp-Source: APXvYqxyRGkjOqMwnY3GOZOxtp7YuotqZNdcuHXzNI9tdgx7yO5ll/x9xEcbo852e3cgrZMCREphrlRE46xebyBF2zI=
-X-Received: by 2002:a2e:50e:: with SMTP id 14mr56971315ljf.5.1561192759012;
- Sat, 22 Jun 2019 01:39:19 -0700 (PDT)
+        Sat, 22 Jun 2019 04:41:51 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55234 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfFVIlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z4WJJP5DXJ7hj7JoKOiyJJMScqHInpMDGDpMUQM5v0M=; b=CUlLr2tGCqd56vUpqT/WdZug4
+        62dnN40+dbxJRgl4EHdbPabQp2/4HbfAf3r6nVcoejaYChcKJ/JKVxp5TChfef3aeSOidNAqHoQj7
+        +cGKdTQh25O93haLSjfDGXapVDxZvjoyrfBJwlciC8QdLjUxXnK2HAEeB1mwY8mSGznrwiY1rWgVp
+        /PuS2WgcsWAsifGBnQ2joHJ+rAz/GJZ753pELEjf8X8iAO+LpNDXBvFD1hkkTQTAAMiAas2cvxK8V
+        FDQ/vY8pAaWQdQ4TBnx0PgNnWTrgDFR/ynDGjiyD5xGLi1RlRdEmNV/VK/NHyVjykFl/xHVxyCSn5
+        UvcQzmc+Q==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58974)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hebaf-0002PZ-L0; Sat, 22 Jun 2019 09:41:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hebab-00040E-GV; Sat, 22 Jun 2019 09:41:37 +0100
+Date:   Sat, 22 Jun 2019 09:41:37 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v3 0/5] net: macb: cover letter
+Message-ID: <20190622084137.sdszvzzhs2wbav77@shell.armlinux.org.uk>
+References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+ <20190621131611.GB21188@lunn.ch>
+ <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190621180208.25361-1-krzk@kernel.org> <20190621180208.25361-7-krzk@kernel.org>
- <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
-In-Reply-To: <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sat, 22 Jun 2019 10:39:07 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
-Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] arm64: defconfig: Enable Panfrost driver
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joseph Kogut <joseph.kogut@gmail.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 at 22:15, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Fri, Jun 21, 2019 at 11:04 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Sat, Jun 22, 2019 at 03:18:42AM +0000, Parshuram Raju Thombare wrote:
+> Hi Andrew,
+> 
+> >On Fri, Jun 21, 2019 at 09:33:57AM +0100, Parshuram Thombare wrote:
+> >> Hello !
+> >>
+> >> 2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
+> >>    This patch add support for SGMII mode.
 > >
-> > Enable support for Mali GPU with Panfrost driver, e.g. for Exynos5433
-> > and Exynos7 (having Mali T760).
+> >Hi Parshuram
 > >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  arch/arm64/configs/defconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 6b4f5cf23324..972b17239f13 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -517,6 +517,7 @@ CONFIG_DRM_HISI_HIBMC=m
-> >  CONFIG_DRM_HISI_KIRIN=m
-> >  CONFIG_DRM_MESON=m
-> >  CONFIG_DRM_PL111=m
-> > +CONFIG_DRM_PANFROST=m
->
-> It makes sense to enable lima for arm64 defconfig as well since it's
-> used on number of 64-bit Allwinner SoCs.
+> >What PHYs are using to test this? You mention TI PHY DP83867, but that seems to
+> >be a plain old 10/100/1000 RGMII PHY.
+> It is DP83867ISRGZ on VCU118 board. This PHY supports SGMII but driver
+> dp83867 doesn't seems to support it, that was the reason previous patch
+> set has patch trying to configure PHY in SGMII mode from PCI wrapper driver.
 
-I wasn't aware that some of ARMv8 SoCs still use Utgard. In such case
-it makes sense indeed, I will send a follow up.
+There are several versions of the dp83867 phy supporting various
+interface modes.  It seems the driver has been written for the
+DP83867IR and DP83867CR family, presumably TI data sheet SNLS484E.
+The DP83867E/IS/CS is covered by a separate data sheet, SNLS504B.
 
-Thanks for feedback!
+Please note that this PHY does not support 2.5G operation in any
+mode.
 
-Krzysztof
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
