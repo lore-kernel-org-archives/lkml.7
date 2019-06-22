@@ -2,121 +2,145 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0614C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D05C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8064120843
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULCKOc6O"
+	by mail.kernel.org (Postfix) with ESMTP id 2343F2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561183319;
+	bh=J4nwTNf4TIc77OEmvYy2wd0rsAPfND411jSD0FcgEwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vnLYa8cNS0ExhWKCJ0QSbh3fSbpMl4x6z7+hgjUsJwlAkDf8rggv4iPYwhCkd0cRF
+	 u9fH49QWsnIIvvl/fYcYiwVTjjWBxpLMXl31h5Dec+ts9rtGTMnKZdUgkJTYLUOcQi
+	 AtzH910i+n51bWP0L+LLqLB5iV17odbDbFyNXXDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfFVFoH (ORCPT
+        id S1726079AbfFVGBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:44:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42796 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfFVFoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:44:07 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so4338385pgh.9;
-        Fri, 21 Jun 2019 22:44:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NWS4f+aR6LO6iXUHr6HD4me4LkyrGwLq4KbFdEdeA6c=;
-        b=ULCKOc6OtZqjLETG5AND4K3JctUd3iKXZPNNT2E0muNoUNAA9yxkl3s01HndlEUcEv
-         bnxzvmijdiRM1wm/AYc5BgudSln6kCDuNzZvWHicF8D8tL/kQU15XKLlJirX2XKu4RkD
-         yq3Pxk4d0jKq4HtCSyqto/FRl3hFItwvNmfWYbJYZujgTLY5I0msV5B/5AUZc94yO2pe
-         rDy1g2xk3sDw0lM9jcgpTF1cOar/9rj34kuMov8LEYggEYtYzZwnODZ6ycfvgPU9V9iE
-         0/YNnvfZCQKlD/McuQ40dqUKTnWVkXubzGwFR12jXy4GUIsjqzH5PDkkJYVEX8lLRma9
-         3cmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NWS4f+aR6LO6iXUHr6HD4me4LkyrGwLq4KbFdEdeA6c=;
-        b=skjdCaNFXBOVPiBgeYrVMEyqBp/cilgYeE2xyAaEFsbc9kg4OiAVB1fyGHN93qYUZv
-         T8dbnJFugHlbZ6/0JK22z35wgnoemIu82ctggRLevtuynn6817RCgV2N7nsXaLWTgwPG
-         L1ovqYvtvR/mB8iYk9Q3GWvLzCeszYAUf7sc3/y4q75KMJI7sJ7HtokVeay/IrBJvLLA
-         l7G0R5OMIvcNmSFLuf5SCJNNkagwLLwrfQ1wN8GvnPtgqvhFIDEYqh+n0vKsGMFfAdNO
-         UFEBY4PHHkvvbfW2vnc1l5heewQhoUAaU0zouXNSeGlY1w4D78e4LlUOUk99NZKMiptJ
-         O2aw==
-X-Gm-Message-State: APjAAAWTKXNBWrndpoQBvuKWvxhb/BG748taTSQCRERt5HzCT0Ronc+q
-        mC8JjRRFSbP8nlueS2nWr74=
-X-Google-Smtp-Source: APXvYqy44LRkDO3jBpFKRB2NBMTaoymaDYjBhrhVQpMK53mfBq31Cyq1LzAcH5uU0qmHOEHjbCCYmQ==
-X-Received: by 2002:a63:d60c:: with SMTP id q12mr21757037pgg.176.1561182246687;
-        Fri, 21 Jun 2019 22:44:06 -0700 (PDT)
-Received: from Gentoo ([103.231.91.74])
-        by smtp.gmail.com with ESMTPSA id a3sm6753566pfi.63.2019.06.21.22.44.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 22:44:05 -0700 (PDT)
-Date:   Sat, 22 Jun 2019 11:13:47 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     pr-tracker-bot@kernel.org, David Miller <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT] Networking
-Message-ID: <20190622054347.GA27816@Gentoo>
-References: <20190621.212137.1249209897243384684.davem@davemloft.net>
- <156118140484.25946.9601116477028790363.pr-tracker-bot@kernel.org>
- <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
+        Sat, 22 Jun 2019 02:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfFVGBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 02:01:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 442002070B;
+        Sat, 22 Jun 2019 06:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561183299;
+        bh=J4nwTNf4TIc77OEmvYy2wd0rsAPfND411jSD0FcgEwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uGFNm22Dllq5iqArZAVGhwDzlZNbmVJOLcw3Q9yawbOQKMjih0GV7VZhFwNePb0hn
+         inZi6PMD9sbUtc8/bl/LH9ZqUPohCCSW4Lhx5xf+2KpTa54EyGd26OZI2JA5pk2DH1
+         ImnCX/JHnz0tV2ynOLdB9QwAUkfALEY8Ohf0bJIA=
+Date:   Sat, 22 Jun 2019 08:01:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dragan Cvetic <draganc@xilinx.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
+Message-ID: <20190622060135.GB26200@kroah.com>
+References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+ <20190621141553.GA16650@kroah.com>
+ <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 05:49:45PM +0000, Dragan Cvetic wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Friday 21 June 2019 15:16
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
+> > 
+> > On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
+> > > This patchset is adding the full Soft Decision Forward Error
+> > > Correction (SD-FEC) driver implementation, driver DT binding and
+> > > driver documentation.
+> > >
+> > > Forward Error Correction (FEC) codes such as Low Density Parity
+> > > Check (LDPC) and turbo codes provide a means to control errors in
+> > > data transmissions over unreliable or noisy communication
+> > > channels. The SD-FEC Integrated Block is an optimized block for
+> > > soft-decision decoding of these codes. Fixed turbo codes are
+> > > supported directly, whereas custom and standardized LDPC codes
+> > > are supported through the ability to specify the parity check
+> > > matrix through an AXI4-Lite bus or using the optional programmable
+> > > (PL)-based support logic. For the further information see
+> > > https://www.xilinx.com/support/documentation/ip_documentation/
+> > > sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
+> > >
+> > > This driver is a platform device driver which supports SDFEC16
+> > > (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
+> > > Turbo code decoding. LDPC codes can be specified on
+> > > a codeword-by-codeword basis, also a custom LDPC code can be used.
+> > >
+> > > The SD-FEC driver exposes a char device interface and supports
+> > > file operations: open(), close(), poll() and ioctl(). The driver
+> > > allows only one usage of the device, open() limits the number of
+> > > driver instances. The driver also utilize Common Clock Framework
+> > > (CCF).
+> > >
+> > > The control and monitoring is supported over ioctl system call.
+> > > The features supported by ioctl():
+> > > - enable or disable data pipes to/from device
+> > > - configure the FEC algorithm parameters
+> > > - set the order of data
+> > > - provide a control of a SDFEC bypass option
+> > > - activates/deactivates SD-FEC
+> > > - collect and provide statistical data
+> > > - enable/disable interrupt mode
+> > 
+> > Is there any userspace tool that talks to this device using these custom
+> > ioctls yet?
+> > 
+> Tools no, but could be the customer who is using the driver.
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+I don't understand this.  Who has written code to talk to these
+special ioctls from userspace?  Is there a pointer to that code
+anywhere?
 
-ROFL ....bots gets confused ...we are blurring the boundaries Linus...:)
+> > Doing a one-off ioctl api is always a risky thing, you are pretty much
+> > just creating brand new system calls for one piece of hardware.
+> > 
+> 
+> Why is that wrong and what is the risk?
 
-On 22:36 Fri 21 Jun , Linus Torvalds wrote:
->On Fri, Jun 21, 2019 at 10:30 PM <pr-tracker-bot@kernel.org> wrote:
->>
->> The pull request you sent on Fri, 21 Jun 2019 21:21:37 -0400 (EDT):
->>
->> > (unable to parse the git remote)
->
->This "unable to parse the git remote" is apparently because the pull
->request had an extraneous ':' in the remote description
->
->  git://git.kernel.org:/pub/scm/linux/kernel/git/davem/net.git
->                     ^^^
->
->which seems to have confused the pr-tracker-bot.
->
->               Linus
+You now have custom syscalls for one specfic piece of hardware that you
+now have to maintain working properly for the next 40+ years.  You have
+to make sure those calls are correct and that this is the correct api to
+talk to this hardware.
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
+> What would you propose?
+> Definitely, I have to read about this.
 
------BEGIN PGP SIGNATURE-----
+What is this hardware and what is it used for?  Who will be talking to
+it from userspace?  What userspace workload uses it?  What tools need to
+talk to it?  Where is the code that uses these new apis?
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0NwA8ACgkQsjqdtxFL
-KRWQpggAulPoFvWzafYH4jgSKEhcIJQhnfnU+aBviuV9tu5Bz/qaBKeHEO7Anwa6
-8X+PTQSfdS/vhugNI/R1x7le1pkW4XfA7VYUGNNnSx1ortPByx+nf1gmNPh9mrFW
-ThXq+x8Ii8AI8zTHzha7W2KoT/g+OkjagVGL+9TP7eIQCxn6CCU5HJ9jjGi8xjkj
-BAZtZ54gD3wOFN/2tbRVz5+z25lD8AGwpho7m4/wI96MOrNLm3wXX12dNrUrkygC
-pa7gPcAwl3R6lIkSrNBPAhpSuyh3QP8KY1XoBPfE1N9BYJj2fmfBTDl7vHgh7HL/
-CjrigEK2r/wwZe+YXqNu34sbk4eS1Q==
-=2ky6
------END PGP SIGNATURE-----
+thanks,
 
---PNTmBPCT7hxwcZjr--
+greg k-h
