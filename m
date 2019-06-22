@@ -2,134 +2,151 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860BCC48BE7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54477C48BE7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA2E20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyuwsRFt"
+	by mail.kernel.org (Postfix) with ESMTP id 2E73B20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfFVJvS (ORCPT
+        id S1726310AbfFVJzR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 05:51:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42554 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVJvR (ORCPT
+        Sat, 22 Jun 2019 05:55:17 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:50825 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFVJzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 05:51:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so4159112plb.9;
-        Sat, 22 Jun 2019 02:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1P66UpgJ5K7fl5+fwU1y4c7FLmguZ7f7FGIScoMeTN0=;
-        b=eyuwsRFtT8/bTEXjqGFen2w0mvTkhPXkt0NPqkK2XODvyHH28jOVa4Sp/94RE/cqni
-         Nv9rzbkBzN312cFTtaB5O0dcdsu0QjLN7xzpMqWYEBDwLgB4i1U2A5B6cqbF+U3I+i9r
-         HpxF015kcJ2MHT49sqXoE1a8rq1zGwvq0D2EgrTcyatk0iMU60TGtKFYfkR0f1vPJtR/
-         1q69RjtxHuKyDJpKAAMBdnvNEStjFNBCULPh/V9hXfFMHTEg2MjbX/7Jnw2gElcCzTWH
-         kgugAeyVK6V6l6ZO4jJb0PKXtZz06jDkc5duYEgY7QnXBgvuOx5IDKiBL2ZNpw8AaGxn
-         83LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1P66UpgJ5K7fl5+fwU1y4c7FLmguZ7f7FGIScoMeTN0=;
-        b=MrHnTSsN+Y8nTWmV9Zl19rS0mwZGTuZWEPnDQkYqOhGUGLlO0t7KHgcpeokWD6b1+7
-         q8825uDWKbfWQ1NejqUtbmG04Vuw7z66mCi6OQcs1DuFAQ3QONWDWfPUpOZCF/S0a9qH
-         j7izmhwDGIC6FiZz4xrQhO+ZzBlRqIAWoMq/D74hvNEkNUQ7wYJ5oX1jHyEp5eO+sPv/
-         b0oB8lELMvQx9yg9dSymalLp/d+p629nKeJAwqwf+FWVRjTZ9aOHwPWOIXxFzH732IrZ
-         5z0BiufBP2rjq4OrXxDUt+zXKWbfiFiekiPxbIyuJ73keadZpQNHt8fMtYhT6UbMgytt
-         pXCg==
-X-Gm-Message-State: APjAAAXa4uZjNeQDDM9x3Id3rZMwE7XY9AE0eCgKMdQTkcnXQHKso/PZ
-        QyBjoC1Bldp67o+XM2S2qwnp1mm9XGPiEw==
-X-Google-Smtp-Source: APXvYqxPdxYf3A7iMzMmRPqRD2I+7L/rG2UjIOR9CKvWk7Og1dQ8gm9I/IK3qvF9/SWsCY94DZAVfg==
-X-Received: by 2002:a17:902:a607:: with SMTP id u7mr131720784plq.43.1561197077155;
-        Sat, 22 Jun 2019 02:51:17 -0700 (PDT)
-Received: from ArchLinux ([103.231.90.170])
-        by smtp.gmail.com with ESMTPSA id b17sm6580043pgk.85.2019.06.22.02.51.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 22 Jun 2019 02:51:16 -0700 (PDT)
-Date:   Sat, 22 Jun 2019 15:20:57 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.1.14
-Message-ID: <20190622095057.GB10809@ArchLinux>
-References: <20190622094743.GA12599@kroah.com>
+        Sat, 22 Jun 2019 05:55:16 -0400
+Received: from [192.168.1.162] ([37.4.249.111]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MG9wg-1hoT1Z3SrE-00GYeg; Sat, 22 Jun 2019 11:54:49 +0200
+Subject: Re: [PATCH v4 0/7] cpufreq support for Raspberry Pi
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org, mbrugger@suse.de,
+        viresh.kumar@linaro.org, rjw@rjwysocki.net, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+References: <20190612182500.4097-1-nsaenzjulienne@suse.de>
+ <6a9e1450-80ad-a13c-59d2-d0b39f25f67e@gmail.com>
+ <7acfd967-0a82-5429-4eed-8b802e6620f5@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <d8b20179-45ef-479a-47dc-390a4a2dfddf@i2se.com>
+Date:   Sat, 22 Jun 2019 11:54:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
-Content-Disposition: inline
-In-Reply-To: <20190622094743.GA12599@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <7acfd967-0a82-5429-4eed-8b802e6620f5@i2se.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Provags-ID: V03:K1:kNVNWkAjuEb7vVPkGdiQQKKmCJU8LtLX0sh+gtr0KzMusrY4L1K
+ WyeiwBUxZtVlmhaLqVUZkU865SX7UDf78Q+0dQ2L2wKmqwMhCSPNpqlYL7GHgb4CSrkewru
+ EkvEVQlUmXu0zESbj+3YvSykrgtvGogfULKzeWL/31pQ+iqSakaY4pcTVvqcgOip1ViKSo3
+ HJQZUEPr/2G+/NI2n1SDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4OBIfy33c0Q=:sW/r3Ga/IfW0VsTiAv6ve/
+ xYL0+TlPU1HSAZaE3jL9vbAvIpe0zwOOlJUtIKra2OkwV6r73fLvbKw3M6BHtwVqXlVyrjGeO
+ +UGUtSbTWXOtRXPnV1TnSqs04JnRZyInCYqN08opCGsy11/3imhIoo/UsL3glMUYr+djkOTQi
+ yJB7udc+6zSEIhj8Tc+/Q2pD7ooWYuhN/rMqjDRk0oAyLPhPWNhrDfQ5TSC6NXhrmR/F1g03Z
+ fQMzSyuPyveUuXiSh1hRcQQt2rGm4P7nnD2RPlFjDNqwrLd8rMRFXEOf9JTo4cEdoNwQeVuOA
+ NC/owZOW0/KmiOC/vUhFqTmef4ELCMs6wsbR8dKJbRJavzc68CPq8MqQjlUvuzRzkm3RxmXq6
+ KMQsOhGkacGoZLGaVE1WmrkNoe+hHXWK8SnD/iMJJsK5K4spmAaepIVLM5tEwuTEBYAAgyUF8
+ GB6nFPs1fGqEWKxIIU98MJWJCMXOFEocqMB0U+r0E9BR24Tc+mz16SDLtXpXhPT8jkCaDFjDG
+ Kkruupffgf4kkX1QURUS6CEr44W677rCEcORWszvZg/zBo7mSTcQFW0vKK3/RtgNeP6Wtxp56
+ 4z740VPg0lfNVXuLGMiJIb90WsHn0hypWcWjAO2XcU1rnAKQGhoycfhLAx3MDiuJGjSfoFYiu
+ wEx6rXbBV/sTIzdUR8K2Cfd7EUwisqJ5nuJNQ1cAZBBUa59j+AKk1v3xBAmZBetuM4gngObs1
+ FVJO94Ics+gfHODofTZvPoWntmJ2UBmNTlx/Q1q5HYycMxGDdfg/b2Aum+4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
+hi Mike,
 
---rJwd6BRFiFCcLxzm
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-
-
-
-
-Important fix. Thanks, man! :)
-
-On 11:47 Sat 22 Jun , Greg KH wrote:
->I'm announcing the release of the 5.1.14 kernel.
+Am 13.06.19 um 06:31 schrieb Stefan Wahren:
+> Hi Florian,
+> hi Stephen,
 >
->All users of the 5.1 kernel series must upgrade.
+> Am 13.06.19 um 05:31 schrieb Florian Fainelli:
+>> On 6/12/2019 11:24 AM, Nicolas Saenz Julienne wrote:
+>>> Hi all,
+>>> this aims at adding cpufreq support to the Raspberry Pi family of
+>>> boards.
+>>>
+>>> The series first factors out 'pllb' from clk-bcm2385 and creates a new
+>>> clk driver that operates it over RPi's firmware interface[1]. We are
+>>> forced to do so as the firmware 'owns' the pll and we're not allowed to
+>>> change through the register interface directly as we might race with the
+>>> over-temperature and under-voltage protections provided by the firmware.
+>>>
+>>> Next it creates a minimal cpufreq driver that populates the CPU's opp
+>>> table, and registers cpufreq-dt. Which is needed as the firmware
+>>> controls the max and min frequencies available.
+>>>
+>>> This was tested on a RPi3b+ and RPI2b, both using multi_v7_defconfig and
+>>> arm64's defconfig.
+>> How do we go about merging this? Stefan, will you pick up patch 3, 6 and
+>> 7 and submit them for 5.3/5.4? Viresh has already picked up patch 4.
+> is it possible to let patches 1,2, 3 and 5 go via clk-tree?
 >
->The updated 5.1.y git tree can be found at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.1.y
->and can be browsed at the normal kernel.org git web browser:
->	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+> I would take care of 6 and 7.
 >
->thanks,
->
->greg k-h
->
->------------
->
-> Makefile              |    2 +-
-> net/ipv4/tcp_output.c |    3 ++-
-> 2 files changed, 3 insertions(+), 2 deletions(-)
->
->Eric Dumazet (1):
->      tcp: refine memory limit test in tcp_fragment()
->
->Greg Kroah-Hartman (1):
->      Linux 5.1.14
->
+> Stefan
+are you fine with the series, since Viresh already picked up patch 4?
+
+are you okay with my suggestion above?
+
+Stefan
 
 
-
---rJwd6BRFiFCcLxzm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0N+gEACgkQsjqdtxFL
-KRXW2Af+Mukm6cZH8Qthae1SROxaY2Wv9WTdEZo3hZGC3HCCuqmKdyxQ8Wm+huao
-IWqEpxRssBrZHOC/uFAb1vMqdN94GP4knCucELS3gYTX++G7Z2Mg2DYjv/xY0+dT
-+e0xXfv0rsDpOrUUsJZ3r6WYJdP/4vybu0GqMAurd4F7eYamHam1Z30OKMhcVBlw
-znyPNB0Ct7rLxhQ3zv2MuzEr/V6mzw/ucQ3u3hqCQ8rcgLr1vlbakqoU/IAGhg8y
-WIS71eqkHYwOy/W/OQvq94l3KlMZMy9itGt6knfQz1YOCslb1YEaLVcM0wGYm+Xo
-baqkJ/fm5G548FAP4QyuLL7r9ea0IQ==
-=TErr
------END PGP SIGNATURE-----
-
---rJwd6BRFiFCcLxzm--
