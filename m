@@ -7,118 +7,194 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F6C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C84C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE1421670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACBF2089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 09:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561193668;
-	bh=kQuDG9P7GT4mBpe49vCLPobIP/JxzGZ+/TGdxu04U3c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ax5yz8JFidDV22CoB3nMKxRkT+i/4vOqsXMoVTKZ4sEFKXKB3k1fih8yDfTelh/w5
-	 VA6NJaLmIei/OSl6mCTEqCOUl9EX03TUertiwbnNx6X26nPJp9Rv5TOzN0m1il893V
-	 +p/fWwjVCt45YLAEJ/J7TJiKuLOSjHR0dhVmi/j0=
+	s=default; t=1561194118;
+	bh=slTO2zLq2ufIYO3y3EFV/+5ngNVWnhZU35MaCgNodks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uk3acTnHr5fazaj78UJKt6Tq2CuwliXSFV6fbMZmdWmZayzHAgrRIsEt4Qa6rRnca
+	 nT6Kyg67tCMUDxkvdp0TYXbZgiRzCwSv3e057xx9lRiKPgq9NSVtzI0yVlIYWj9i5X
+	 M1DghWvWNbQFghWaTgqfy9dvOJDGhCWr/UtUZvq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfFVIy1 (ORCPT
+        id S1726334AbfFVJB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfFVIy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:54:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F572089C;
-        Sat, 22 Jun 2019 08:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561193666;
-        bh=kQuDG9P7GT4mBpe49vCLPobIP/JxzGZ+/TGdxu04U3c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FkjpFNKLhMZSkqbIbQHJb6MlZ7kZL7Sob2q1ys/Yitf0vK0EH29nI/0JdrsIJyOxq
-         l0NZJTBfaqpNGdYcRmQbW4spXcClXUKS4CiY0tR4SThvEqCAyHqrxZv1lRzdm+7NLh
-         re7feAzwa3vEVUu1Ozzpy0x13+D9r7ISm23albYo=
-Date:   Sat, 22 Jun 2019 09:54:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] iio: cros_ec: Add sign vector in core for
- backward compatibility
-Message-ID: <20190622095421.6b4e38e9@archlinux>
-In-Reply-To: <20190621024106.158589-2-gwendal@chromium.org>
-References: <20190621024106.158589-1-gwendal@chromium.org>
-        <20190621024106.158589-2-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 22 Jun 2019 05:01:57 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46442 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfFVJB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 05:01:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so8639845ote.13;
+        Sat, 22 Jun 2019 02:01:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Am4zNsdjshHM90JZDzFjZuL0ON4HFAuYzga2LSkhurU=;
+        b=UBIW+RBcEg0qQ1QY+1EPmrh2kYSmClrFI2v2mHHyxEyEDYfTyD7myhbjX45SFAFWEr
+         5g1KBLUsXQWgec+1OJNbNlWVN05icc0Xe+VfSTi1A91jlmz8GOZHSzkNbVIZjM6X47GB
+         3qI9S7yXxbb0A7tWYK1xpEcgIX1JUIEngLXTFzhenTL4szhQo7ABAQTzfnJvT3mHJdk2
+         exweCgqiz7i2RLEVs7dwaQCXPJhF6w7tNk9otlflP+Yfqr/TLl6DNF8IId+/I2lDhnyD
+         TuWvkeYrDLUp4HIfqlwxr/ff0fDo/YR8qsudJtcPBNdEgHqIXKUxYlZw5tqwqkNkoitw
+         X5iQ==
+X-Gm-Message-State: APjAAAVjMVfP1FD8ybcU9hovrfU/cvBowka5GdyN+fA/Y8sBOM+txM6o
+        0X21H3q3lXJs7k+lPsg6GUn/jyH8bogD0ZUFtCE=
+X-Google-Smtp-Source: APXvYqwdxb7u3LZKydtaWtFS50RQkYKAv2KRBoAKm2g76GJd1iOJ+Trs5tf78028BvvvjXrT7G0dVz7TZ/OOLIi/h68=
+X-Received: by 2002:a9d:5d15:: with SMTP id b21mr14204964oti.262.1561194115936;
+ Sat, 22 Jun 2019 02:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190621151725.20414-1-thierry.reding@gmail.com>
+In-Reply-To: <20190621151725.20414-1-thierry.reding@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 22 Jun 2019 11:01:44 +0200
+Message-ID: <CAJZ5v0iZ9Y3eAMe-kODqiXYzycb7MtxtzMbs_qgwcjhYUJ2geQ@mail.gmail.com>
+Subject: Re: [PATCH v3] driver: core: Allow subsystems to continue deferring probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 19:41:05 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+On Fri, Jun 21, 2019 at 5:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
+>
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
+>
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
+>
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
+>
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-> To allow cros_ec iio core library to be used with legacy device, add a
-> vector to rotate sensor data if necessary: legacy devices are not
-> reporting data in HTML5/Android sensor referential.
-> 
-> On veyron minnie, check chrome detect tablet mode and rotate
-> screen in tablet mode.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-I'm guessing that you have a whole pile of code that isn't using
-the mounting_matrix ABI and hence need the 'fixup' in kernel?
+Overall
 
-Otherwise this is fine, but I'd like to wait for Doug to have another
-look if he wants to (and ideally give a reviewed-by)
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Anyone else's input also welcome of course.
-
-Jonathan
+with one nit below.
 
 > ---
->  drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 4 ++++
->  include/linux/iio/common/cros_ec_sensors_core.h           | 1 +
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 719a0df5aeeb..e8a4d78659c8 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -66,6 +66,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  		}
->  		state->type = state->resp->info.type;
->  		state->loc = state->resp->info.location;
+> Changes in v3:
+> - add new function rather than extend the existing function with flags
+>
+> Changes in v2:
+> - pass persist flag via flags parameter to make the function call easier
+>   to understand
+>
+>  drivers/base/dd.c            | 55 ++++++++++++++++++++++++++++++------
+>  drivers/pinctrl/devicetree.c |  7 ++---
+>  include/linux/device.h       |  1 +
+>  3 files changed, 51 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 0df9b4461766..994a90747420 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -235,6 +235,19 @@ static int __init deferred_probe_timeout_setup(char *str)
+>  }
+>  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>
+> +static int __driver_deferred_probe_check_state(struct device *dev)
+> +{
+> +       if (!initcalls_done)
+> +               return -EPROBE_DEFER;
 > +
-> +		/* Set sign vector, only used for backward compatibility. */
-> +		memset(state->sign, 1, CROS_EC_SENSOR_MAX_AXIS);
->  	}
->  
->  	return 0;
-> @@ -254,6 +257,7 @@ static int cros_ec_sensors_read_data_unsafe(struct iio_dev *indio_dev,
->  		if (ret < 0)
->  			return ret;
->  
-> +		*data *= st->sign[i];
->  		data++;
->  	}
->  
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index ce16445411ac..a1c85ad4df91 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -71,6 +71,7 @@ struct cros_ec_sensors_core_state {
->  	enum motionsensor_location loc;
->  
->  	s16 calib[CROS_EC_SENSOR_MAX_AXIS];
-> +	s8 sign[CROS_EC_SENSOR_MAX_AXIS];
->  
->  	u8 samples[CROS_EC_SAMPLE_SIZE];
->  
+> +       if (!deferred_probe_timeout) {
+> +               dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> +               return -ETIMEDOUT;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+> @@ -248,14 +261,40 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>   */
+>  int driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -       if (initcalls_done) {
+> -               if (!deferred_probe_timeout) {
+> -                       dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> -                       return -ETIMEDOUT;
+> -               }
+> -               dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> -               return -ENODEV;
+> -       }
+> +       int ret;
+> +
+> +       ret = __driver_deferred_probe_check_state(dev);
+> +       if (ret < 0)
 
+The function returning this valie doesn't return positive numbers, so
+it "if (ret)" would be sufficient here (and below).
+
+> +               return ret;
+> +
+> +       dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> +
+> +       return -ENODEV;
+> +}
+> +
+> +/**
+> + * driver_deferred_probe_check_state_continue() - check deferred probe state
+> + * @dev: device to check
+> + *
+> + * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
+> + * -EPROBE_DEFER otherwise.
+> + *
+> + * Drivers or subsystems can opt-in to calling this function instead of
+> + * directly returning -EPROBE_DEFER.
+> + *
+> + * This is similar to driver_deferred_probe_check_state(), but it allows the
+> + * subsystem to keep deferring probe after built-in drivers have had a chance
+> + * to probe. One scenario where that is useful is if built-in drivers rely on
+> + * resources that are provided by modular drivers.
+> + */
+> +int driver_deferred_probe_check_state_continue(struct device *dev)
+> +{
+> +       int ret;
+> +
+> +       ret = __driver_deferred_probe_check_state(dev);
+> +       if (ret < 0)
+> +               return ret;
+> +
+>         return -EPROBE_DEFER;
+>  }
