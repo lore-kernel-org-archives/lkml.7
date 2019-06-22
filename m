@@ -2,125 +2,127 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD2EC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA03EC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974F42089E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB5C2089E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yyqeq5Rk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbfFVHoN (ORCPT
+        id S1726290AbfFVHv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 03:44:13 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:43337 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726092AbfFVHoN (ORCPT
+        Sat, 22 Jun 2019 03:51:27 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:25247 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfFVHv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 03:44:13 -0400
-Received: from [IPv6:2001:983:e9a7:1:c087:883d:6305:97f] ([IPv6:2001:983:e9a7:1:c087:883d:6305:97f])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id eaguhVBDg7KeZeagwhQqlg; Sat, 22 Jun 2019 09:44:10 +0200
-Subject: Re: [PATCH] media: atmel: atmel-isc: fix i386 build error
-To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sakari.ailus@iki.fi
-References: <1560928828-31471-1-git-send-email-eugen.hristev@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <26c3aae1-c385-fa13-8baa-82a011f7b243@xs4all.nl>
-Date:   Sat, 22 Jun 2019 09:44:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 22 Jun 2019 03:51:27 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5M7p1Gc023090;
+        Sat, 22 Jun 2019 16:51:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5M7p1Gc023090
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561189861;
+        bh=AxOOpqcv/SGmTAp3xuWI78Dh70kU7xGGs2JUaZ37XQ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yyqeq5RkHhk7pGOVYXUOgx6o2hMziYdwPWXA6mhEsWVd22gXy78H/g8qW6kMzC0pe
+         iMsy+4lcjBzOP8A5DM7pw3bXmuTw4ycz21ICxkZtoD2u+t1U8JwhmUwprNrr52WmOK
+         3I7ylBuT2zL4C10EI/fgJoBV+Q8X5DbxjI75Uq4Bv/MP/2/+Y+G2q8VOjT1ffg9T47
+         Gfywh3eyLAI3a6zp07NYtm5vtN9JAT8XT8woRXTDwZCcV50Pe5nTbuEsfv/e8GVvSm
+         l1FgUwb4NKlYiB5qd/F4YyqSQZzdP51J0f//eEvoVMUO++EQNV8axiLCi5d6KcK/wT
+         1sEUrF8JGayRw==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: fix a warning in double cleaning of separate build directory
+Date:   Sat, 22 Jun 2019 16:51:00 +0900
+Message-Id: <20190622075100.17990-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1560928828-31471-1-git-send-email-eugen.hristev@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfG4wOSwZ9jtKh3iwxbJ24OF7fIMGc6xRcRI+oeh9cz8bAIix89ngRNyoLd9xOqxH+Ssq9npO5Sudu/x+mEBeAhkapSZRGOitLBe234aMh1/+poMUDVCD
- qQkshVWi+mun8Y1a1vD3m300wWjuNSonvcfa8E86PGgN5JHHU6HGf2zHilz+gRAGt353BAjN2zY0Aw00snhe/NieWILEB1oD39kmTAL2v93Ow2P/p3axXSs1
- DNsj1B8K1RHvfjbVLJ/O2OfKJ4TO2CqxjPYvbamHzyommFHA7xtoWrgzgJd0GoadYf5dtCfLrQNTeTj8YSM0Qmp+6JZdrkWWZzZVlSFY0KR236z4MCqLMM6Z
- BSJmrz34jk3MX1MfOiu1wWvvIgFxB9G+jwOXL/Fnlfl/R4lLsH+zjsLvrAAihNpY15BYrd660sW31NHSPJjcpnW5iuB3zA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 9:24 AM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> ld: drivers/media/platform/atmel/atmel-isc-base.o:(.bss+0x0): multiple definition of `debug'; arch/x86/entry/entry_32.o:(.entry.text+0x21ac): first defined here
-> 
-> Changed module parameters to static.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> 
-> Hello Hans,
-> 
-> Sorry for this, it looks like i386 has a stray weird 'debug' symbol which
-> causes an error.
-> I changed the module parameters of the atmel-isc to 'static' but now they
-> cannot be accessed in the other module files.
-> Will have to create a get function to be used in the other files if needed
-> later. Any other way to make a symbol static to current module and not
-> current file ? It would be useful for other config variables as well.
-> I was not sure if you want to squash this over the faulty patch or add it
-> as a separate patch.
-> If you want me to squash it let me know and I will come up with a squashed
-> new version.
-> 
-> Thanks,
-> Eugen
-> 
->  drivers/media/platform/atmel/atmel-isc-base.c | 4 ++--
->  drivers/media/platform/atmel/atmel-isc.h      | 4 ----
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/atmel/atmel-isc-base.c b/drivers/media/platform/atmel/atmel-isc-base.c
-> index eb1f5d4..c1c776b 100644
-> --- a/drivers/media/platform/atmel/atmel-isc-base.c
-> +++ b/drivers/media/platform/atmel/atmel-isc-base.c
-> @@ -35,11 +35,11 @@
->  #include "atmel-isc-regs.h"
->  #include "atmel-isc.h"
->  
-> -unsigned int debug;
-> +static unsigned int debug;
->  module_param(debug, int, 0644);
+Since commit b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure
+they are self-contained"), 'make clean' in a row for the separate output
+directory emits a warning.
 
-You can also use module_param_named, or use dev_dbg as Sakari suggested.
+$ make -s O=foo allmodconfig; cd foo; make usr/; make clean; make clean
+  [ snip ]
+  CLEAN   .
+  CLEAN   usr/include/asm usr/include/asm-generic usr/include/drm usr/include/linux usr/include/misc usr/include/mtd usr/include/rdma usr/include/scsi usr/include/sound usr/include/video usr/include/xen
+  CLEAN   usr
+  CLEAN   arch/x86/tools
+  CLEAN   .tmp_versions
+find: ‘*’: No such file or directory
+find: ‘*’: No such file or directory
 
-In any case, I've added this patch to my pull request since it's urgent to
-fix this issue.
+In the second 'make clean', $(objtree)/usr/include exists, but it
+contains nothing, then the 'find' command warns 'No such file or
+directory'.
 
-Regards,
+I replaced the nasty 'find' with $(wildcard ...).
 
-	Hans
+[Note]
+I wish I could write the code more simply, like this:
 
->  MODULE_PARM_DESC(debug, "debug level (0-2)");
->  
-> -unsigned int sensor_preferred = 1;
-> +static unsigned int sensor_preferred = 1;
->  module_param(sensor_preferred, uint, 0644);
->  MODULE_PARM_DESC(sensor_preferred,
->  		 "Sensor is preferred to output the specified format (1-on 0-off), default 1");
-> diff --git a/drivers/media/platform/atmel/atmel-isc.h b/drivers/media/platform/atmel/atmel-isc.h
-> index f5f5932..bfaed2f 100644
-> --- a/drivers/media/platform/atmel/atmel-isc.h
-> +++ b/drivers/media/platform/atmel/atmel-isc.h
-> @@ -230,10 +230,6 @@ struct isc_device {
->  
->  #define ATMEL_ISC_NAME "atmel-isc"
->  
-> -/* module parameters */
-> -extern unsigned int debug;
-> -extern unsigned int sensor_preferred;
-> -
->  extern struct isc_format formats_list[];
->  extern const struct isc_format controller_formats[];
->  extern const u32 isc_gamma_table[GAMMA_MAX + 1][GAMMA_ENTRIES];
-> 
+clean-dirs = $(patsubst $(obj)/%/,%,$(wildcard $(obj)/*/))
+
+I did not do that due to the bug of GNU Make <= 4.2.1
+
+$(wildcard $(obj)/*/) should match to only directories since it has
+a trailing slash, but actually matches to regular files too.
+
+This bug was fixed by:
+
+| commit b7acb10e86dc8f5fdf2a2bbd87e1059c315e31d6
+| Author: spagoveanu@gmail.com <spagoveanu@gmail.com>
+| Date:   Wed Jun 20 02:03:48 2018 +0300
+|
+|    * src/dir.c: Preserve glob d_type field
+
+For GNU Make <= 4.2.1, clean-dirs would end up with containing
+'usr/include/Makefile'. This would be harmless because Makefile.clean
+would search for the non-existing 'usr/include/usr/include/Makefile',
+then it would be filtered out by $(wildcard ...).
+
+However, I'd rather try my best to avoid buggy code.
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-contained")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ usr/include/Makefile | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 7091e8b5a608..343abba96205 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -128,5 +128,8 @@ endif
+ # Use '=' instead of ':=' to avoid $(shell ...) evaluation when cleaning
+ header-test-y = $(filter-out $(no-header-test), $(all-uapi-headers))
+ 
+-# Use '=' instead of ':=' to avoid $(shell ...) evaluation when building
+-clean-dirs = $(shell cd $(obj) 2>/dev/null && find * -maxdepth 0 -type d)
++# Use '=' instead of ':=' to avoid $(wildcard ...) evaluation when building
++#
++# For GNU Make 4.2.1, $(wildcard $(obj)/*/) matches to not only directories
++# but also regular files. Use $(filter %/, ...) just in case.
++clean-dirs = $(patsubst $(obj)/%/,%,$(filter %/, $(wildcard $(obj)/*/)))
+-- 
+2.17.1
 
