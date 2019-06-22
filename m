@@ -2,179 +2,276 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19F1C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC49C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B622084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5801220673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/U6ztiW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mdDnDSfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfFVX2i (ORCPT
+        id S1726408AbfFVXg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 19:28:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39993 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfFVX2i (ORCPT
+        Sat, 22 Jun 2019 19:36:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40812 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfFVXg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 19:28:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so15646386eds.7;
-        Sat, 22 Jun 2019 16:28:36 -0700 (PDT)
+        Sat, 22 Jun 2019 19:36:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so4795564pla.7
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 16:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OvdGvB+gsBI8ix8GBbVgoDhcwK+AHVAdtlmUns+BMLk=;
-        b=l/U6ztiWvim6OPcpsFWv+8/nGMbNqRUP5HKW49NEuFiQ/2hm5kLZ4LOKVe4Dj9kDLL
-         h4stuhYillm96itObs7iUJZP+sT2TCufg4Cy9p25mhyv6xk4YFzCeWHzshYvdTM8syLa
-         XYDbgwvCQeZu1v0+Tf5TFOCIPu5oOP2Q9Z8BPZ8kuhFuBc9wZ4J6AgH/ubHeiOsmjlnK
-         2vm3QYGxJaVtJCyuCKlORFWR7xKSgmDUFAailHSENSEr0KXCUDn+AOsswOX+362EHKpm
-         DyjZE3VP2vqTXGZV7DJwj3grRVINabDTJQsScoIEKyoY5yJYNXK/JoU80CGqQRw3VJNU
-         Jquw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=U+5+2Qh/0QhRiiupiu6zSUwgYpKyCd0X95gaOjYABfk=;
+        b=mdDnDSfmcYlWmUo92BUO0QQMxLUdJRK+3Kaz+JtuuRPjWgWZB6ElP9F/+FjeJtOFrM
+         dkuW7RLVIYzmgKjAu3oFlXbyHhVCxnKvwYaCW2v/mrdNdl8984BxeaylqA7/FQqP/yld
+         m5ZPCcFQsWRJVY9fSW6tCqwZ1D9DaTsLLY/Zo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OvdGvB+gsBI8ix8GBbVgoDhcwK+AHVAdtlmUns+BMLk=;
-        b=KMN0zcxTfUqLq5DvtWt8+6aMj+KhuiX/udzLcs0SELBHNeucHtbcjZQFXV5rTy0PCg
-         6HNRRJVlsIw5dPoAY0DDNQpZhx6DHOldHwyUzXjfTHQPZFza17gPE/q7UKmh9Cqyhgtd
-         1orzl9Xbf0r/+ghUuSskIDJvdAiWr3jDE/xEK74c5Wd+LKcwq0x6PF+qhIZ4ug+bVSWZ
-         lpB4XZNPz7EL8AZUPDP+/PD0MnXM1ju3oMe+PubyTj52evUd14iJSJuB2Mxvs28XNbtt
-         QM6u+ZgC3ItI8Vfx6iXVrzAi7rE4pXpf28FGlVrawuov7BjxX7AUbF+qH3Nt+Fxu2iKr
-         BsJA==
-X-Gm-Message-State: APjAAAWUSOZ7MtlWaU4IW501gNJMNNfp52tABxS4wU9AdvJN4GbqhNUC
-        W/rdek0LXe40qOQf7oxxAyKbnC+hirotQA8gicfnhOx1
-X-Google-Smtp-Source: APXvYqwFLKK+g33AoATUdqVfqMxrjCm4EjDKVf4RHDoYPxn6MRppHUMZNpsmcSWHp1P/TWzfaasoZ54TfRUwqU9nxlo=
-X-Received: by 2002:a50:9468:: with SMTP id q37mr26168041eda.163.1561246115698;
- Sat, 22 Jun 2019 16:28:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U+5+2Qh/0QhRiiupiu6zSUwgYpKyCd0X95gaOjYABfk=;
+        b=NVohSQ7n7YfxMlEWhf0BvNt4gHdN1TDuxp9zDuTueC3Vps7FNslEr/wVGb1IvlkFu6
+         zevG58HcHdyDyrg8qj1jMzrEfDLKhhK3hkVVKU+9uYwOj/iSxdMNd5E47JWkp92/+4NW
+         +q63Uk/WWSzR/CwrUWgHj2YlwzRgigyMpvfzMDqEUtUP+zKK9rI0HImER4Iu2qmH3Uoa
+         LnGlteXMGhAy/7SbMtdDyElSQOpiLuYo5ksuUMYS2rADewNMETvb6OSalh6hvgMWA5Dx
+         F8vOQUS58sXWvlBXp3jgdG9Vm7oelEiFM9QHanMORz6Zd69rMQKeObNh0PBXxJR8EfyO
+         UwNw==
+X-Gm-Message-State: APjAAAXCbb7cFrjKjhBsum2HYRk5RDu0VWGCBRBMrDzrIFCVAsOhur8i
+        2O8FOeIJHlYP1RN/9i5EEXYAqPKGOWY=
+X-Google-Smtp-Source: APXvYqwvZ24Ee6HPTmlNABz/Lo+TOB6eOulnrTmw9hNkLKLAX7SruGI6kaIgYYVsN4QaOJ8pRVF5uQ==
+X-Received: by 2002:a17:902:8d95:: with SMTP id v21mr117342042plo.225.1561246618166;
+        Sat, 22 Jun 2019 16:36:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h4sm6190875pji.24.2019.06.22.16.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Jun 2019 16:36:56 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 16:36:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V34 01/29] security: Support early LSMs
+Message-ID: <201906221636.AABF971@keescook>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-2-matthewgarrett@google.com>
 MIME-Version: 1.0
-References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-3-masneyb@onstation.org>
- <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
- <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com> <20190621021444.GA13972@onstation.org>
-In-Reply-To: <20190621021444.GA13972@onstation.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 22 Jun 2019 16:28:20 -0700
-Message-ID: <CAF6AEGuVKtAu60kLYNKOsy3=hT0FDbJ5vvEJE6gFLAodpU5MGA@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190622000358.19895-2-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 7:14 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Wed, Jun 19, 2019 at 01:21:20PM -0700, Rob Clark wrote:
-> > On Wed, Jun 19, 2019 at 1:17 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > >
-> > > > Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-> > > > must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-> > > > optional ocmem property to the Adreno Graphics Management Unit bindings.
-> > > >
-> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > > index 90af5b0a56a9..c746b95e95d4 100644
-> > > > --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > > > @@ -31,6 +31,10 @@ Required properties:
-> > > >  - iommus: phandle to the adreno iommu
-> > > >  - operating-points-v2: phandle to the OPP operating points
-> > > >
-> > > > +Optional properties:
-> > > > +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> > > > +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
-> > >
-> > > We already have a couple of similar properties. Lets standardize on
-> > > 'sram' as that is what TI already uses.
-> > >
-> > > Also, is the whole OCMEM allocated to the GMU? If not you should have
-> > > child nodes to subdivide the memory.
-> > >
-> >
-> > iirc, downstream a large chunk of OCMEM is statically allocated for
-> > GPU.. the remainder is dynamically allocated for different use-cases.
-> > The upstream driver Brian is proposing only handles the static
-> > allocation case
->
-> It appears that the GPU expects to use a specific region of ocmem,
-> specifically starting at 0. The freedreno driver allocates 1MB of
-> ocmem on the Nexus 5 starting at ocmem address 0. As a test, I
-> changed the starting address to 0.5MB and kmscube shows only half the
-> cube, and four wide black bars across the screen:
->
-> https://www.flickr.com/photos/masneyb/48100534381/
->
-> > (and I don't think we have upstream support for the various audio and
-> > video use-cases that used dynamic OCMEM allocation downstream)
->
-> That's my understanding as well.
->
-> > Although maybe we should still have a child node to separate the
-> > statically and dynamically allocated parts?  I'm not sure what would
-> > make the most sense..
->
-> Given that the GPU is expecting a fixed address in ocmem, perhaps it
-> makes sense to have the child node. How about this based on the
-> sram/sram.txt bindings?
->
->   ocmem: ocmem@fdd00000 {
->     compatible = "qcom,msm8974-ocmem";
->
->     reg = <0xfdd00000 0x2000>, <0xfec00000 0x180000>;
->     reg-names = "ctrl", "mem";
->
->     clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>, <&mmcc OCMEMCX_OCMEMNOC_CLK>;
->     clock-names = "core", "iface";
->
->     gmu-sram@0 {
->       reg = <0x0 0x100000>;
->       pool;
->     };
->
->     misc-sram@0 {
->       reg = <0x100000 0x080000>;
->       export;
->     };
->   };
->
-> I marked the misc pool as export since I've seen in the downstream ocmem
-> sources a reference to their closed libsensors that runs in userspace.
->
-> Looking at the sram bindings led me to the genalloc API
-> (Documentation/core-api/genalloc.rst). I wonder if this is the way that
-> this should be done?
+On Fri, Jun 21, 2019 at 05:03:30PM -0700, Matthew Garrett wrote:
+> The lockdown module is intended to allow for kernels to be locked down
+> early in boot - sufficiently early that we don't have the ability to
+> kmalloc() yet. Add support for early initialisation of some LSMs, and
+> then add them to the list of names when we do full initialisation later.
+> Early LSMs are initialised in link order and cannot be overridden via
+> boot parameters, and cannot make use of kmalloc() (since the allocator
+> isn't initialised yet).
+> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
 
-won't claim to be a dt expert, but this seems somewhat sane..  maybe
-drop the export until a use-case comes along for that.. or even the
-entire second child node?  I guess that comes down to what robher and
-others prefer, I can't really speculate too much about the non-gpu
-use-cases for ocmem (or if they'll ever be upstream)
+Acked-by: Kees Cook <keescook@chromium.org>
 
-BR,
--R
+-Kees
+
+> ---
+>  include/asm-generic/vmlinux.lds.h |  8 ++++-
+>  include/linux/lsm_hooks.h         |  6 ++++
+>  include/linux/security.h          |  1 +
+>  init/main.c                       |  1 +
+>  security/security.c               | 50 ++++++++++++++++++++++++++-----
+>  5 files changed, 57 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index f8f6f04c4453..e1963352fdb6 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -208,8 +208,13 @@
+>  			__start_lsm_info = .;				\
+>  			KEEP(*(.lsm_info.init))				\
+>  			__end_lsm_info = .;
+> +#define EARLY_LSM_TABLE()	. = ALIGN(8);				\
+> +			__start_early_lsm_info = .;			\
+> +			KEEP(*(.early_lsm_info.init))			\
+> +			__end_early_lsm_info = .;
+>  #else
+>  #define LSM_TABLE()
+> +#define EARLY_LSM_TABLE()
+>  #endif
+>  
+>  #define ___OF_TABLE(cfg, name)	_OF_TABLE_##cfg(name)
+> @@ -610,7 +615,8 @@
+>  	ACPI_PROBE_TABLE(irqchip)					\
+>  	ACPI_PROBE_TABLE(timer)						\
+>  	EARLYCON_TABLE()						\
+> -	LSM_TABLE()
+> +	LSM_TABLE()							\
+> +	EARLY_LSM_TABLE()
+>  
+>  #define INIT_TEXT							\
+>  	*(.init.text .init.text.*)					\
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index a240a3fc5fc4..66fd1eac7a32 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -2085,12 +2085,18 @@ struct lsm_info {
+>  };
+>  
+>  extern struct lsm_info __start_lsm_info[], __end_lsm_info[];
+> +extern struct lsm_info __start_early_lsm_info[], __end_early_lsm_info[];
+>  
+>  #define DEFINE_LSM(lsm)							\
+>  	static struct lsm_info __lsm_##lsm				\
+>  		__used __section(.lsm_info.init)			\
+>  		__aligned(sizeof(unsigned long))
+>  
+> +#define DEFINE_EARLY_LSM(lsm)						\
+> +	static struct lsm_info __early_lsm_##lsm			\
+> +		__used __section(.early_lsm_info.init)			\
+> +		__aligned(sizeof(unsigned long))
+> +
+>  #ifdef CONFIG_SECURITY_SELINUX_DISABLE
+>  /*
+>   * Assuring the safety of deleting a security module is up to
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 49f2685324b0..1bb6fb2f1523 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -194,6 +194,7 @@ int unregister_lsm_notifier(struct notifier_block *nb);
+>  
+>  /* prototypes */
+>  extern int security_init(void);
+> +extern int early_security_init(void);
+>  
+>  /* Security operations */
+>  int security_binder_set_context_mgr(struct task_struct *mgr);
+> diff --git a/init/main.c b/init/main.c
+> index 598e278b46f7..f3faeb89c75f 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -563,6 +563,7 @@ asmlinkage __visible void __init start_kernel(void)
+>  	boot_cpu_init();
+>  	page_address_init();
+>  	pr_notice("%s", linux_banner);
+> +	early_security_init();
+>  	setup_arch(&command_line);
+>  	/*
+>  	 * Set up the the initial canary and entropy after arch
+> diff --git a/security/security.c b/security/security.c
+> index 23cbb1a295a3..487e1f3eb2df 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -37,6 +37,7 @@
+>  
+>  /* How many LSMs were built into the kernel? */
+>  #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
+> +#define EARLY_LSM_COUNT (__end_early_lsm_info - __start_early_lsm_info)
+>  
+>  struct security_hook_heads security_hook_heads __lsm_ro_after_init;
+>  static ATOMIC_NOTIFIER_HEAD(lsm_notifier_chain);
+> @@ -281,6 +282,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>  static void __init lsm_early_cred(struct cred *cred);
+>  static void __init lsm_early_task(struct task_struct *task);
+>  
+> +static int lsm_append(const char *new, char **result);
+> +
+>  static void __init ordered_lsm_init(void)
+>  {
+>  	struct lsm_info **lsm;
+> @@ -327,6 +330,26 @@ static void __init ordered_lsm_init(void)
+>  	kfree(ordered_lsms);
+>  }
+>  
+> +int __init early_security_init(void)
+> +{
+> +	int i;
+> +	struct hlist_head *list = (struct hlist_head *) &security_hook_heads;
+> +	struct lsm_info *lsm;
+> +
+> +	for (i = 0; i < sizeof(security_hook_heads) / sizeof(struct hlist_head);
+> +	     i++)
+> +		INIT_HLIST_HEAD(&list[i]);
+> +
+> +	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +		if (!lsm->enabled)
+> +			lsm->enabled = &lsm_enabled_true;
+> +		prepare_lsm(lsm);
+> +		initialize_lsm(lsm);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * security_init - initializes the security framework
+>   *
+> @@ -334,14 +357,18 @@ static void __init ordered_lsm_init(void)
+>   */
+>  int __init security_init(void)
+>  {
+> -	int i;
+> -	struct hlist_head *list = (struct hlist_head *) &security_hook_heads;
+> +	struct lsm_info *lsm;
+>  
+>  	pr_info("Security Framework initializing\n");
+>  
+> -	for (i = 0; i < sizeof(security_hook_heads) / sizeof(struct hlist_head);
+> -	     i++)
+> -		INIT_HLIST_HEAD(&list[i]);
+> +	/*
+> +	 * Append the names of the early LSM modules now that kmalloc() is
+> +	 * available
+> +	 */
+> +	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +		if (lsm->enabled)
+> +			lsm_append(lsm->name, &lsm_names);
+> +	}
+>  
+>  	/* Load LSMs in specified order. */
+>  	ordered_lsm_init();
+> @@ -388,7 +415,7 @@ static bool match_last_lsm(const char *list, const char *lsm)
+>  	return !strcmp(last, lsm);
+>  }
+>  
+> -static int lsm_append(char *new, char **result)
+> +static int lsm_append(const char *new, char **result)
+>  {
+>  	char *cp;
+>  
+> @@ -426,8 +453,15 @@ void __init security_add_hooks(struct security_hook_list *hooks, int count,
+>  		hooks[i].lsm = lsm;
+>  		hlist_add_tail_rcu(&hooks[i].list, hooks[i].head);
+>  	}
+> -	if (lsm_append(lsm, &lsm_names) < 0)
+> -		panic("%s - Cannot get early memory.\n", __func__);
+> +
+> +	/*
+> +	 * Don't try to append during early_security_init(), we'll come back
+> +	 * and fix this up afterwards.
+> +	 */
+> +	if (slab_is_available()) {
+> +		if (lsm_append(lsm, &lsm_names) < 0)
+> +			panic("%s - Cannot get early memory.\n", __func__);
+> +	}
+>  }
+>  
+>  int call_lsm_notifier(enum lsm_event event, void *data)
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
+-- 
+Kees Cook
