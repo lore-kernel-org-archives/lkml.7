@@ -2,110 +2,103 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA304C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CA7C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C36820665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YFtefH2Q"
+	by mail.kernel.org (Postfix) with ESMTP id B2D75206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561198881;
+	bh=/paa7kvaPmOyIrjhNNZO/7HFK/SfqGzkYzeDRlWqYOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PzwdzkhVw+9AHjeOOh85Y3ze1E6aTXe4B86nGHcBPyVsryiP3INKhrf00z9oFCuAq
+	 xB7nfvonhU3JNUXrNjDagYS/2GjzeXSyt3HXvISUb/Ic8E46XXl9LCwdA3n33fF49+
+	 R7jiks6bWuL3w5kQMPlhf+yW0sn+KDux2O9rslOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfFVKTV (ORCPT
+        id S1726313AbfFVKVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 06:19:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37619 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVKTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 06:19:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5MAJ7A32099253
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 22 Jun 2019 03:19:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5MAJ7A32099253
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561198748;
-        bh=UsSfDraEfVSFnWVAI9t0yLd4ILT3GbhHYLOpmImqmWU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YFtefH2QdIuyr0tUlln5LE48x56KpmOIu1REQZfEQ4E0n7dAFgM+c537oP/1GGMXu
-         hLgiVDvsJvUpFSTBNFd2GNJ6TOcDVa1PAhjx9uv/7/UE/ASCYgWWwPM2r0/BOe120M
-         Z9xPRXbvZZEqhkTivD9iaqdj6jFZ9LC8Y+VGTMWIi1ZWl3sgTr8TNJvfD2/8PGD/hb
-         /MaubbW0PJLi7AE7SkrnvyCXIiD1xXlfRm0qh2CjKXjz7ewMSu5AUsVxAwX2ApyvYS
-         HeVJ5s4ypKDVsqEKP+/m9i4zJhUcaasY7vpjzUscJ88JfPjSLqsQY2vOuRbGpiki7H
-         Urz3bTSVgUxcg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5MAJ7X72099250;
-        Sat, 22 Jun 2019 03:19:07 -0700
-Date:   Sat, 22 Jun 2019 03:19:07 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Colin Ian King <tipbot@zytor.com>
-Message-ID: <tip-ea136a112d89bade596314a1ae49f748902f4727@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, bp@alien8.de,
-        colin.king@canonical.com, tglx@linutronix.de, mingo@kernel.org
-Reply-To: bp@alien8.de, mingo@kernel.org, tglx@linutronix.de,
-          colin.king@canonical.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190619181446.13635-1-colin.king@canonical.com>
-References: <20190619181446.13635-1-colin.king@canonical.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/apic: Fix integer overflow on 10 bit left
- shift of cpu_khz
-Git-Commit-ID: ea136a112d89bade596314a1ae49f748902f4727
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 22 Jun 2019 06:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbfFVKVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 06:21:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAF6920665;
+        Sat, 22 Jun 2019 10:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561198879;
+        bh=/paa7kvaPmOyIrjhNNZO/7HFK/SfqGzkYzeDRlWqYOE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Hd/tm98DmDXjjyGHJoHemXX/phFy5c5kjBDmdoQsZjNtdhXJFgv0a/Y39BdJAVrPy
+         aAcX1/6CrlVE0sKDgg7ZDyN82IcrKklKvCQjvDUXCX6G/1igjyE2Fc35qEsm0U5gbf
+         Pe7S/rsL8WMLE4nY9j6uew6h98D2VCWV0r/NBLRg=
+Date:   Sat, 22 Jun 2019 11:21:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     kernel@collabora.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] docs: iio: add precision about
+ sampling_frequency_available
+Message-ID: <20190622112114.78a58440@archlinux>
+In-Reply-To: <0c5b7e1f7996e8c1c5f6787cbb9fb58986be1f17.1560848479.git.fabien.lahoudere@collabora.com>
+References: <cover.1560848479.git.fabien.lahoudere@collabora.com>
+        <0c5b7e1f7996e8c1c5f6787cbb9fb58986be1f17.1560848479.git.fabien.lahoudere@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ea136a112d89bade596314a1ae49f748902f4727
-Gitweb:     https://git.kernel.org/tip/ea136a112d89bade596314a1ae49f748902f4727
-Author:     Colin Ian King <colin.king@canonical.com>
-AuthorDate: Wed, 19 Jun 2019 19:14:46 +0100
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 11:59:31 +0200
+On Tue, 18 Jun 2019 11:06:39 +0200
+Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 
-x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
+> The documentation give some exemple on what format can be expected
+> from sampling_frequency_available sysfs attribute
+> 
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+It seems I already applied this one, though probably haven't sent
+a pull request for it to Greg yet.
 
-The left shift of unsigned int cpu_khz will overflow for large values of
-cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
-For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
+Please drop it from your v4 posting as otherwise I'll get confused
+(again).
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
+Thanks,
 
----
- arch/x86/kernel/apic/apic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jonathan
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 177aa8ef2afa..85be316665b4 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1464,7 +1464,8 @@ static void apic_pending_intr_clear(void)
- 		if (queued) {
- 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
- 				ntsc = rdtsc();
--				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-+				max_loops = (long long)cpu_khz << 10;
-+				max_loops -= ntsc - tsc;
- 			} else {
- 				max_loops--;
- 			}
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 6aef7dbbde44..680451695422 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -61,8 +61,11 @@ What:		/sys/bus/iio/devices/triggerX/sampling_frequency_available
+>  KernelVersion:	2.6.35
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> -		When the internal sampling clock can only take a small
+> -		discrete set of values, this file lists those available.
+> +		When the internal sampling clock can only take a specific set of
+> +		frequencies, we can specify the available values with:
+> +		- a small discrete set of values like "0 2 4 6 8"
+> +		- a range with minimum, step and maximum frequencies like
+> +		  "[min step max]"
+>  
+>  What:		/sys/bus/iio/devices/iio:deviceX/oversampling_ratio
+>  KernelVersion:	2.6.38
+
