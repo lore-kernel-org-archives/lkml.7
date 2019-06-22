@@ -2,155 +2,118 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A80C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F7C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7120C20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F2B206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DLHR74rk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiJ/mrz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfFVMbR (ORCPT
+        id S1726317AbfFVMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 08:31:17 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:30710 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVMbR (ORCPT
+        Sat, 22 Jun 2019 08:45:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45286 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFVMp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 08:31:17 -0400
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x5MCV1Q7016356;
-        Sat, 22 Jun 2019 21:31:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5MCV1Q7016356
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561206662;
-        bh=m54BvUSyNYNL33mmnHMDkq+76aAFKf+BJdGvxLc/WI4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DLHR74rkAqZP3/MBBqZOM/tf+80ugRExZHoXIcUs8aFU5MwfvTFb9w+LUXwbrjihB
-         q/xpGGtf6lpk+A2VoHUdvR8SLJDP5/DPGXuLVriD94CBDCH8218GW06mg40rByqkRn
-         T33cCAiX23UXjydM3flMYDV2+gMZde4kPAQUXmRUgdJvrkOuPXWeDWCaRx7LkdpvU6
-         D1jENLTUNzdTwqT8YpVRWTNl5RwCNzZoezg5CHvf3XZFt/NeVu/MvSPZ5Ax+f5W+f+
-         Pq4BQCfOL0IddvlfurF/4Hea9T+jVbfKRjPSFju1HON8ah4S0DXMr8ZDq5CLKxVTUD
-         ZakkBFHU9jL8g==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id k1so1874647vkb.2;
-        Sat, 22 Jun 2019 05:31:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAXEd20zln68DmBpScqaVZWu7hbClEFng2Luv4Dnv5ElP9qeJE7S
-        XdxvvQc5DEX5htyhSFQA+mUtetlQiHOgmByUxUU=
-X-Google-Smtp-Source: APXvYqyBMcX4VGPYKX3tfLIsaz7wkVCv1WB8vYa4Pvt6tJ+QqY3hMQYIWuARG2vUmbyjhfd7TSYdbMhHiQvJhvZdy/E=
-X-Received: by 2002:a1f:728b:: with SMTP id n133mr15338535vkc.84.1561206660594;
- Sat, 22 Jun 2019 05:31:00 -0700 (PDT)
+        Sat, 22 Jun 2019 08:45:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m23so8323978lje.12;
+        Sat, 22 Jun 2019 05:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=heSL+WGM2GJyAS9s3sd10GubIAAtqQkB37FZimio9Js=;
+        b=iiJ/mrz0Ki4ETv7y4D7UGRvIfRyLK+k9lZEUke1CeRaQXfnjTXKh+FALbAm7a1GNga
+         nKlPQJssp4H6lss9iFQWvgdTK2r3bdhp794Wy9oZjb5Tkv7RAKckbKF5K8pW5zfgehYO
+         a592Qpf3jr8t2cAKBujmsFGrBs32ivGwVrkJHnJCKWPe/G9j/il71zKX+v1Um158U2dt
+         9rN/aZxxkNDUzLzN7W2GbwzYo2CqFMkw0qua9XGfEI1+Dd6HXa1ibhXQbQiUXcgCMIT1
+         uHOd30M7e+a0+SvjPGKVd+HOh1TSVeFSJt0JH1W8wdAx83Eb4QckGgDfZdNkqEJOYumE
+         Kmig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=heSL+WGM2GJyAS9s3sd10GubIAAtqQkB37FZimio9Js=;
+        b=jyLC4cVAqXRkN/9q//ADqDtUuhq2+9Fob4hSKVMhsIoa4lpP3Em4N8dnYoblho2nmf
+         MuE1vUDTJWb1yAbhV+sv3lWcQegGJU59J151NyvsVBAgoBCyLLmE+ckaZHQZdmSpmhw5
+         QbPPx0W6JLZyzB8fEg/DrUyHHcr8Fkm6WIZCN6rXJ9EE5yGRuBU3RrqXvo45tvtjck/1
+         /uVJ2zVKZkSyCElqd7gIbvfZzmcAzNYqMsUklJqG1HOQXefpNdTzKElzLyYslQPbkyf7
+         KQCu1TL6G28WiBlEZqPaOCTwjetYzJWNaCy7t8513qJXPjyEb6HOpHDvEpH7MqniXdNw
+         Ff2w==
+X-Gm-Message-State: APjAAAXyYUMg2wXOd4dOY9Eh8NGbKswRN9P8cTQJR21k92K2sh3WdxdG
+        b6z/Ekg7+aM8EhBq2pCI8ptz5GAvDzrGMpDHlfY=
+X-Google-Smtp-Source: APXvYqwwzzLrOT6ulKtoJYJeUAopmAZ1Nc3CneWEwq5i7tKYFCRvciG0FPHiFXwOijwZdfIVaOQreuMbdrbbc7lIu2Y=
+X-Received: by 2002:a2e:8945:: with SMTP id b5mr35106486ljk.93.1561207526078;
+ Sat, 22 Jun 2019 05:45:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190621163931.19397-1-yamada.masahiro@socionext.com> <20190621175134.GB16409@ravnborg.org>
-In-Reply-To: <20190621175134.GB16409@ravnborg.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 22 Jun 2019 21:30:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
-Message-ID: <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: compile-test global headers to ensure they are self-contained
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Sat, 22 Jun 2019 21:44:49 +0900
+Message-ID: <CAGTfZH0EMos5AaLxeONDOd6_tyt5=Gt7s_Sam930H=6mf9rRiQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+To:     =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Hi,
 
-On Sat, Jun 22, 2019 at 2:51 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+I applied this series to extcon-testing branch.
+If there are no build problem for few days, I'll move them to
+extcon-next branch.
+
+Best Regards,
+Chanwoo Choi
+
+2019=EB=85=84 6=EC=9B=94 21=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 8:14, P=
+awe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=
+=91=EC=84=B1:
 >
-> Hi Masahiro.
+> This small patchset adds support for Fairchild Semiconductor FSA9480
+> microUSB switch.
 >
-> On Sat, Jun 22, 2019 at 01:39:31AM +0900, Masahiro Yamada wrote:
-> > Make as many headers self-contained as possible so that they can be
-> > included without relying on a specific include order.
-> It is very nice finally to get some infrastructure to validate header
-> files.
+> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> but it can be found also on other Samsung Aries (s5pv210) based devices.
 >
-> But to avoid too many conflicts while including more and more headers
-> that are selfcontained we really need something that is more
-> distributed.
-> So for example all header files in include/drm/* could be in one
-> Makefile, incl. sub-directories, but the same Makefile would not include
-> the files in include/soc/
+> Tomasz Figa (2):
+>   dt-bindings: extcon: Add support for fsa9480 switch
+>   extcon: Add fsa9480 extcon driver
 >
-> If you just show how ot do it, others can follow-up with the
-> relevant directories.
-
-
-At first, I tried to split Makefile per directory,
-and add header-test-y one by one.
-
-I think you expect they look like this:
-
-
-include/Makefile:
-
-subdir-y += drm
-subdir-y += linux
-subdir-y += media
-
-
-include/drm/Makefile:
-
-header-test-y += drm_cache.h
-header-test-y += drm_file.h
-header-test-y += drm_util.h
-...
-
-
-include/linux/Makefile:
-
-header-test-y += io.h
-header-test-y += list.h
-header-test-y += kernel.h
-header-test-y += types.h
-...
-
-
-
-This is a straightforward way,
-but I see some disadvantages.
-
-Currently, there are more than 4000 headers
-under include/.
-
-So, to cover (almost) all of them, we must
-list out 4000 entries.
-
-When somebody adds a new header,
-he will be very likely to forget to add
-header-test-y for it.
-So, newly added headers will always
-fall off the coverage.
-
-
-So, I am trying to take an opposite approach.
-
-Add all headers in include/ by wildcard, then
-filter-out one that cannot be self-contained.
-
-In my analysis, 70% of headers are already conf-contained.
-After some fixups, 95% of headers can become self-contained.
-
-At this moment, the wildcard only covers some directories
-or patterns, but my plan is to extend the wildcard gradually.
-
-
-Please feel free to suggest alternative ideas.
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Changes from v1:
+>   - Added newline at end of dt-bindings file
+>   - Removed interrupt-parent from dt-bindings file
+>   - Added Acked-by to dt-bindings patch
+>   - Remove license sentences from driver
+>   - Remove custom sysfs entries and manual switch code
+>   - Switch to using regmap api
+>
+>  .../bindings/extcon/extcon-fsa9480.txt        |  19 +
+>  drivers/extcon/Kconfig                        |  12 +
+>  drivers/extcon/Makefile                       |   1 +
+>  drivers/extcon/extcon-fsa9480.c               | 395 ++++++++++++++++++
+>  4 files changed, 427 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa94=
+80.txt
+>  create mode 100644 drivers/extcon/extcon-fsa9480.c
+>
+> --
+> 2.17.1
+>
