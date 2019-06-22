@@ -2,105 +2,104 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2053C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F24C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7622620881
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AAD208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q06PmHHA"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DdeLBro7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfFVAFY (ORCPT
+        id S1727058AbfFVAF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:05:24 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:45982 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfFVAFP (ORCPT
+        Fri, 21 Jun 2019 20:05:29 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60368 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727016AbfFVAFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:05:15 -0400
-Received: by mail-yb1-f201.google.com with SMTP id y3so7443174ybg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=fQS0pxsoBetP2Nwdi98OVtp/cm2t8DN7nKB4q9h9T/o=;
-        b=q06PmHHAEtmmhXeJ3zAcK/RQZC6ZOveSxcl6UVi4p4GE4munOy8zjRT6zd5POah6m8
-         qUUGJT6DOt1SF18EDdympILS6nRbXGXb3RoIhCMm/FJICtGrII721ONnz4vNcVZoP3Nu
-         hiBh1dO7UkO1UVwF7JVcG0M8U6LUF7EAdCFqvrUGuxFqqF2cNBcbR+bwQPjgdsvzuYOb
-         SD2HjQOo2EMZX0FY8ScuXYx2/5Tbldc/k5ukwSjy+86A6zZ1Xx7vF235sNZkl9Zjspqg
-         BR8l3GCC4UH309ET+8MSJ4q0v7EDB51cTRUQo97fEIsDvlr5RsmrLleDNXJVE2xEbdzF
-         aw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=fQS0pxsoBetP2Nwdi98OVtp/cm2t8DN7nKB4q9h9T/o=;
-        b=s285AFn4RYfV9H6uqt7Hit5uho3B+uS/9VshbSAvVvaa3seW/uQh5yAE3IFlAvdZiV
-         RJyZYN3G6nm9X3ulT6idE1IPaMggGR8PMkJzQtoqz0odyB/ACoobH3yk+buKa5LLuKhU
-         IPYi3TlCdJUDr+nEUdL9RdJdSp6CWMDPZ3pg7C3ptB3Nh0ZgQU6C0C6fOOBUc6Zdftwj
-         N6yew1XmU0M2PPf8yN3S6MdW+7X/TZbkFLBa/FBLMiZGZdWuLkgU1PCjTekguIfaxtB0
-         X8w8xIO59vYyMC4F7crOazkVDM5iGyGHI1U5NXi6NPk6wOMtCWZUup6oPlF0nGzNWyPy
-         uqpA==
-X-Gm-Message-State: APjAAAX4RF+B3bjzOjc4cunFP6ZcZcB9RBXPVUIg4jGdWHp/jkqV8Fs7
-        uv/GTTafqjBcT6Rksh8qJcOwH50VJ5Q7mFF3GppjWg==
-X-Google-Smtp-Source: APXvYqx0rJT/xsCfnjxZK3RmGHU80HzrJAKBuZfKmF8O1USWU2O+1jjIPs2JgaewKUvGu1xDrRZPouAlEqHIaNui4XSXmg==
-X-Received: by 2002:a81:a8e:: with SMTP id 136mr50270319ywk.301.1561161914742;
- Fri, 21 Jun 2019 17:05:14 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:03:58 -0700
-In-Reply-To: <20190622000358.19895-1-matthewgarrett@google.com>
-Message-Id: <20190622000358.19895-30-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190622000358.19895-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V34 29/29] lockdown: Print current->comm in restriction messages
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Jun 2019 20:05:25 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNsnii019120
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:05:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=z7orUW1w2AFawDH57ZTLvYALJSDsMI3HPUuppHQ+jCM=;
+ b=DdeLBro7s+f3+XblTN5J2RqMc3lasE1XneaauOlUUJsvJ+FD5czrEBrNSIlbbBbJqB0C
+ Xvbqhjd+VA6KrWHpNpNqJVVrAzGovUeRD7emQV4nfjOF7BrUvA7MljybdOirg2QNVR+G
+ cFzngT+bC7hG7ORgGbaPjxyd0LOMQE4p5cg= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t91rg1qm8-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:05:24 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 21 Jun 2019 17:05:23 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id A946E62E2D56; Fri, 21 Jun 2019 17:05:22 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
+        <akpm@linux-foundation.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v6 2/6] filemap: update offset check in filemap_fault()
+Date:   Fri, 21 Jun 2019 17:05:08 -0700
+Message-ID: <20190622000512.923867-3-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190622000512.923867-1-songliubraving@fb.com>
+References: <20190622000512.923867-1-songliubraving@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210182
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print the content of current->comm in messages generated by lockdown to
-indicate a restriction that was hit.  This makes it a bit easier to find
-out what caused the message.
+With THP, current check of offset:
 
-The message now patterned something like:
+    VM_BUG_ON_PAGE(page->index != offset, page);
 
-        Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
+is no longer accurate. Update it to:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Garrett <mjg59@google.com>
+    VM_BUG_ON_PAGE(page_to_pgoff(page) != offset, page);
+
+Acked-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- security/lockdown/lockdown.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 98f9ee0026d5..9ca6f442fbc7 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -83,8 +83,8 @@ static int lockdown_is_locked_down(enum lockdown_reason what)
- {	
- 	if ((kernel_locked_down >= what)) {
- 		if (lockdown_reasons[what])
--			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
--				  lockdown_reasons[what]);
-+			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-+				  current->comm, lockdown_reasons[what]);
- 		return -EPERM;
+diff --git a/mm/filemap.c b/mm/filemap.c
+index f5b79a43946d..5f072a113535 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2522,7 +2522,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+ 		put_page(page);
+ 		goto retry_find;
  	}
+-	VM_BUG_ON_PAGE(page->index != offset, page);
++	VM_BUG_ON_PAGE(page_to_pgoff(page) != offset, page);
  
+ 	/*
+ 	 * We have a locked page in the page cache, now we need to check
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.17.1
 
