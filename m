@@ -2,88 +2,141 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2E3C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F296C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7539B20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53278208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRilaimF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfFVSBX (ORCPT
+        id S1726439AbfFVSCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 14:01:23 -0400
-Received: from smtprelay0029.hostedemail.com ([216.40.44.29]:43104 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbfFVSBW (ORCPT
+        Sat, 22 Jun 2019 14:02:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44136 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVSCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 14:01:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 26E81100E86C2;
-        Sat, 22 Jun 2019 18:01:21 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: patch81_45b8c85498e5e
-X-Filterd-Recvd-Size: 2250
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 22 Jun 2019 18:01:19 +0000 (UTC)
-Message-ID: <7ec724a310a710e6415320ff530daba0e1d30505.camel@perches.com>
-Subject: Re: [tip:x86/cpu] x86/cpu: Create Zhaoxin processors architecture
- support file
-From:   Joe Perches <joe@perches.com>
-To:     HerryYang@zhaoxin.com, CooperYan@zhaoxin.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, lenb@kernel.org,
-        gregkh@linuxfoundation.org, QiyuanWang@zhaoxin.com,
-        mingo@kernel.org, DavidWang@zhaoxin.com, tglx@linutronix.de,
-        rjw@rjwysocki.net, TonyWWang-oc@zhaoxin.com,
-        linux-tip-commits@vger.kernel.org
-Date:   Sat, 22 Jun 2019 11:01:17 -0700
-In-Reply-To: <tip-761fdd5e3327db6c646a09bab5ad48cd42680cd2@git.kernel.org>
-References: <01042674b2f741b2aed1f797359bdffb@zhaoxin.com>
-         <tip-761fdd5e3327db6c646a09bab5ad48cd42680cd2@git.kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 22 Jun 2019 14:02:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r16so9553398wrl.11;
+        Sat, 22 Jun 2019 11:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=MvdVlfsCZCzoiO3dWaS7svRVtEzJywqCcVUPGHCcDEY=;
+        b=sRilaimFeaePIYvUwtlO1PJMAd7GYlH/2BTb3QuVFlcXeebELLDg49wv+7OV/8s353
+         2ix06k0Vj/SkuFx5HkmQ2iu4KpaVsy0yRQGztD4WrEVP5IENxBnKBn1yAQikMz/IY1gW
+         rz3EM5F7XA4NuzDE6aXSWaQ1VjRY/ipjHzBI6GleCLN8LLYpmIow2dZkBY2fK9X2yoWF
+         PdvH8NNebh274GufOsmCvHqDn5dU/BBti+LvvxujmK5TIX92VIDaIu3BRWtf2a0JUJx5
+         cXoykUUfB7HRzYXUkArpvOEt5GZsQijFbXFNB6Nf+yl6ppbcfsgTgiFkpWF3JQXkfk2n
+         402Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=MvdVlfsCZCzoiO3dWaS7svRVtEzJywqCcVUPGHCcDEY=;
+        b=PzhWnwJDBfjem/oOpqjheusToiCgQ+d63onyFijfQppw5hzjbekv7jh0UpvdshVD1Q
+         b/hst7HMdWqCQAcUhbdj+NaqcHSrAWm6x1i2PECzvX8RxnnT0SkVo4Fcly7gfMuLhbFx
+         jzSKgc6d+11brDBc+FH5dnUE18ntOFodeCxvCTGOrriCrLHqStAhmUFpHQMMk72OPcwT
+         VceD3YzUs5wZ0gMttfE3zP7afVjiRbPEgvX95HWmGgqgG6eyeqZPwgOJprJOMfozAMoI
+         wRo2F5C589hv3ciiHkCEpxkFEHQy8v58twf+kpL7LKjxja9p7SmHoz/Xbrm/Ky4TU22x
+         ASQA==
+X-Gm-Message-State: APjAAAWaAlFlYhqn5gMqwN9jQGuW2pQDX9hNTSsv4D5DXHA5tzcKNj+u
+        AqvkRA81NiCNy2ntxRTcbSESHdVPNvRMGA==
+X-Google-Smtp-Source: APXvYqyndRWSOXsFEF0LcRNbc+VXO2mtyNTfcHVkaia8QxZAkUMLjqJhHL7pGbiMghjIHQMBNiYgHg==
+X-Received: by 2002:adf:82e7:: with SMTP id 94mr8603119wrc.95.1561226542020;
+        Sat, 22 Jun 2019 11:02:22 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id q15sm4621055wrr.19.2019.06.22.11.02.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 22 Jun 2019 11:02:20 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: =?iso-8859-1?Q?d=5Flookup:_Unable_to_handle_kernel_paging_request?=
+Date:   Sat, 22 Jun 2019 20:02:19 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <cd84de0e-909e-4117-a20a-6cde42079267@gmail.com>
+In-Reply-To: <20190619170940.GG17978@ZenIV.linux.org.uk>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+ <20190522135331.GM17978@ZenIV.linux.org.uk>
+ <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+ <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
+ <20190618183548.GB17978@ZenIV.linux.org.uk>
+ <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
+ <20190619162802.GF17978@ZenIV.linux.org.uk>
+ <bc774f6b-711e-4a20-ad85-c282f9761392@gmail.com>
+ <20190619170940.GG17978@ZenIV.linux.org.uk>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-22 at 03:16 -0700, tip-bot for Tony W Wang-oc wrote:
-> Commit-ID:  761fdd5e3327db6c646a09bab5ad48cd42680cd2
-> Gitweb:     https://git.kernel.org/tip/761fdd5e3327db6c646a09bab5ad48cd42680cd2
-> Author:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-> AuthorDate: Tue, 18 Jun 2019 08:37:05 +0000
-> Committer:  Thomas Gleixner <tglx@linutronix.de>
-> CommitDate: Sat, 22 Jun 2019 11:45:57 +0200
-> 
-> x86/cpu: Create Zhaoxin processors architecture support file
-> 
-[]
-> diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-[]
-> +static void init_zhaoxin_cap(struct cpuinfo_x86 *c)
-> +{
-> +	u32  lo, hi;
-> +
-> +	/* Test for Extended Feature Flags presence */
-> +	if (cpuid_eax(0xC0000000) >= 0xC0000001) {
-> +		u32 tmp = cpuid_edx(0xC0000001);
-> +
-> +		/* Enable ACE unit, if present and disabled */
-> +		if ((tmp & (ACE_PRESENT | ACE_ENABLED)) == ACE_PRESENT) {
+Hi Al,
+i think have a hint of what is going on.
+With the last kernel built with your sentinels at hlist_bl_*lock
+it is very easy to reproduce the issue.
+In fact it is so unstable that i had to connect a serial port
+in order to save the kernel trace.
+Unfortunately all the traces are at different addresses and
+your sentinel did not trigger.
 
-trivia:
+Now i am writing this email from that same buggy kernel, which is
+v5.2-rc5-224-gbed3c0d84e7e.
 
-Perhaps this is more intelligible for humans to read
-and it deduplicates the comment as:
+The difference is that I changed the bootloader.
+Before was booting 5.1.12 and kexec into this one.
+Now booting from u-boot into this one.
+I will continue booting with u-boot for some time to be sure it is
+stable and confirm this is the cause.
 
-		if ((tmp & ACE_PRESENT) && !(tmp & ACE_ENABLED))
+In case it is, who is the most probable offender?
+the kernel before kexec or the kernel after?
 
-The compiler produces the same object code.
+The original report was sent to you because you appeared as the maintainer
+of fs/dcache.c, which appeared on the trace. Should this be redirected
+somewhere else now?
 
+Regards,
+  Vicen=C3=A7.
+
+On Wednesday, June 19, 2019 7:09:40 PM CEST, Al Viro wrote:
+> On Wed, Jun 19, 2019 at 06:51:51PM +0200, Vicente Bergas wrote:
+>
+>>> What's your config, BTW?  SMP and DEBUG_SPINLOCK, specifically...
+>>=20
+>> Hi Al,
+>> here it is:
+>> https://paste.debian.net/1088517
+>
+> Aha...  So LIST_BL_LOCKMASK is 1 there (same as on distro builds)...
+>
+> Hell knows - how about
+> static inline void hlist_bl_lock(struct hlist_bl_head *b)
+> {
+> =09BUG_ON(((u32)READ_ONCE(*b)&~LIST_BL_LOCKMASK) =3D=3D 0x01000000);
+>         bit_spin_lock(0, (unsigned long *)b);
+> }
+>
+> and
+>
+> static inline void hlist_bl_unlock(struct hlist_bl_head *b)
+> {
+>         __bit_spin_unlock(0, (unsigned long *)b);
+> =09BUG_ON(((u32)READ_ONCE(*b)&~LIST_BL_LOCKMASK) =3D=3D 0x01000000);
+> }
+>
+> to see if we can narrow down where that happens?
 
