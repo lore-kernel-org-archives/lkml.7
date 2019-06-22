@@ -2,285 +2,155 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79749C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A80C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4433E20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7120C20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 12:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="TPezhZpc"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DLHR74rk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFVMVy (ORCPT
+        id S1726313AbfFVMbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 08:21:54 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:42082 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVMVy (ORCPT
+        Sat, 22 Jun 2019 08:31:17 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:30710 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFVMbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 08:21:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561206110; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AcJP+F7zzArO1aHbhKRqb5EiXnIEhX3CopkWcQGeA34=;
-        b=TPezhZpcdABh8N8LO4bNhWS4FIx9TmAYvj4yeuCLdDs4ojk8C6DROwldqNUr6UMdyEp6DU
-        jnWIJpi2MEG6s+1gbFGf+EJBKyfre3Dd2oCgG1tsgpwx2XPT+3qKyXU5earohHgPNcQhrW
-        HF1bdoxRNHp9UwrpXry4jky/iuSPLiY=
-Date:   Sat, 22 Jun 2019 14:21:42 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
-Message-Id: <1561206102.1777.2@crapouillou.net>
-In-Reply-To: <20190521145141.9813-5-paul@crapouillou.net>
-References: <20190521145141.9813-1-paul@crapouillou.net>
-        <20190521145141.9813-5-paul@crapouillou.net>
+        Sat, 22 Jun 2019 08:31:17 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x5MCV1Q7016356;
+        Sat, 22 Jun 2019 21:31:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5MCV1Q7016356
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561206662;
+        bh=m54BvUSyNYNL33mmnHMDkq+76aAFKf+BJdGvxLc/WI4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DLHR74rkAqZP3/MBBqZOM/tf+80ugRExZHoXIcUs8aFU5MwfvTFb9w+LUXwbrjihB
+         q/xpGGtf6lpk+A2VoHUdvR8SLJDP5/DPGXuLVriD94CBDCH8218GW06mg40rByqkRn
+         T33cCAiX23UXjydM3flMYDV2+gMZde4kPAQUXmRUgdJvrkOuPXWeDWCaRx7LkdpvU6
+         D1jENLTUNzdTwqT8YpVRWTNl5RwCNzZoezg5CHvf3XZFt/NeVu/MvSPZ5Ax+f5W+f+
+         Pq4BQCfOL0IddvlfurF/4Hea9T+jVbfKRjPSFju1HON8ah4S0DXMr8ZDq5CLKxVTUD
+         ZakkBFHU9jL8g==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id k1so1874647vkb.2;
+        Sat, 22 Jun 2019 05:31:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXEd20zln68DmBpScqaVZWu7hbClEFng2Luv4Dnv5ElP9qeJE7S
+        XdxvvQc5DEX5htyhSFQA+mUtetlQiHOgmByUxUU=
+X-Google-Smtp-Source: APXvYqyBMcX4VGPYKX3tfLIsaz7wkVCv1WB8vYa4Pvt6tJ+QqY3hMQYIWuARG2vUmbyjhfd7TSYdbMhHiQvJhvZdy/E=
+X-Received: by 2002:a1f:728b:: with SMTP id n133mr15338535vkc.84.1561206660594;
+ Sat, 22 Jun 2019 05:31:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190621163931.19397-1-yamada.masahiro@socionext.com> <20190621175134.GB16409@ravnborg.org>
+In-Reply-To: <20190621175134.GB16409@ravnborg.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 22 Jun 2019 21:30:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
+Message-ID: <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: compile-test global headers to ensure they are self-contained
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Sam,
 
-I'll make a V13 of this patchset on top of -rc6, any feedback
-for this MFD driver? It's been already one month.
+On Sat, Jun 22, 2019 at 2:51 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Masahiro.
+>
+> On Sat, Jun 22, 2019 at 01:39:31AM +0900, Masahiro Yamada wrote:
+> > Make as many headers self-contained as possible so that they can be
+> > included without relying on a specific include order.
+> It is very nice finally to get some infrastructure to validate header
+> files.
+>
+> But to avoid too many conflicts while including more and more headers
+> that are selfcontained we really need something that is more
+> distributed.
+> So for example all header files in include/drm/* could be in one
+> Makefile, incl. sub-directories, but the same Makefile would not include
+> the files in include/soc/
+>
+> If you just show how ot do it, others can follow-up with the
+> relevant directories.
 
-Thanks,
--Paul
+
+At first, I tried to split Makefile per directory,
+and add header-test-y one by one.
+
+I think you expect they look like this:
+
+
+include/Makefile:
+
+subdir-y += drm
+subdir-y += linux
+subdir-y += media
+
+
+include/drm/Makefile:
+
+header-test-y += drm_cache.h
+header-test-y += drm_file.h
+header-test-y += drm_util.h
+...
+
+
+include/linux/Makefile:
+
+header-test-y += io.h
+header-test-y += list.h
+header-test-y += kernel.h
+header-test-y += types.h
+...
 
 
 
-Le mar. 21 mai 2019 =E0 16:51, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> This driver will provide a regmap that can be retrieved very early in
-> the boot process through the API function ingenic_tcu_get_regmap().
->=20
-> Additionally, it will call devm_of_platform_populate() so that all the
-> children devices will be probed.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->=20
-> Notes:
->     v12: New patch
->=20
->  drivers/mfd/Kconfig             |   8 +++
->  drivers/mfd/Makefile            |   1 +
->  drivers/mfd/ingenic-tcu.c       | 113=20
-> ++++++++++++++++++++++++++++++++
->  include/linux/mfd/ingenic-tcu.h |   8 +++
->  4 files changed, 130 insertions(+)
->  create mode 100644 drivers/mfd/ingenic-tcu.c
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 294d9567cc71..a13544474e05 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -494,6 +494,14 @@ config HTC_I2CPLD
->  	  This device provides input and output GPIOs through an I2C
->  	  interface to one or more sub-chips.
->=20
-> +config INGENIC_TCU
-> +	bool "Ingenic Timer/Counter Unit (TCU) support"
-> +	depends on MIPS || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  Say yes here to support the Timer/Counter Unit (TCU) IP present
-> +	  in the JZ47xx SoCs from Ingenic.
-> +
->  config MFD_INTEL_QUARK_I2C_GPIO
->  	tristate "Intel Quark MFD I2C GPIO"
->  	depends on PCI
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 52b1a90ff515..fb89e131ae98 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -180,6 +180,7 @@ obj-$(CONFIG_AB8500_CORE)	+=3D ab8500-core.o=20
-> ab8500-sysctrl.o
->  obj-$(CONFIG_MFD_TIMBERDALE)    +=3D timberdale.o
->  obj-$(CONFIG_PMIC_ADP5520)	+=3D adp5520.o
->  obj-$(CONFIG_MFD_KEMPLD)	+=3D kempld-core.o
-> +obj-$(CONFIG_INGENIC_TCU)	+=3D ingenic-tcu.o
->  obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+=3D intel_quark_i2c_gpio.o
->  obj-$(CONFIG_LPC_SCH)		+=3D lpc_sch.o
->  obj-$(CONFIG_LPC_ICH)		+=3D lpc_ich.o
-> diff --git a/drivers/mfd/ingenic-tcu.c b/drivers/mfd/ingenic-tcu.c
-> new file mode 100644
-> index 000000000000..6c1d5e4310c1
-> --- /dev/null
-> +++ b/drivers/mfd/ingenic-tcu.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * JZ47xx SoCs TCU MFD driver
-> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/mfd/ingenic-tcu.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct ingenic_soc_info {
-> +	unsigned int num_channels;
-> +};
-> +
-> +static struct regmap *tcu_regmap __initdata;
-> +
-> +static const struct regmap_config ingenic_tcu_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.val_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.max_register =3D TCU_REG_OST_CNTHBUF,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4740_soc_info =3D {
-> +	.num_channels =3D 8,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4725b_soc_info =3D {
-> +	.num_channels =3D 6,
-> +};
-> +
-> +static const struct of_device_id ingenic_tcu_of_match[] =3D {
-> +	{ .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_info, },
-> +	{ .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_info, }=
-,
-> +	{ .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4740_soc_info, },
-> +	{ }
-> +};
-> +
-> +static struct regmap * __init ingenic_tcu_create_regmap(struct=20
-> device_node *np)
-> +{
-> +	struct resource res;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +
-> +	if (!of_match_node(ingenic_tcu_of_match, np))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	base =3D of_io_request_and_map(np, 0, "TCU");
-> +	if (IS_ERR(base))
-> +		return ERR_PTR(PTR_ERR(base));
-> +
-> +	map =3D regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
-> +	if (IS_ERR(map))
-> +		goto err_iounmap;
-> +
-> +	return map;
-> +
-> +err_iounmap:
-> +	iounmap(base);
-> +	of_address_to_resource(np, 0, &res);
-> +	release_mem_region(res.start, resource_size(&res));
-> +
-> +	return map;
-> +}
-> +
-> +static int __init ingenic_tcu_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *map =3D ingenic_tcu_get_regmap(pdev->dev.of_node);
-> +
-> +	platform_set_drvdata(pdev, map);
-> +
-> +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
-> +
-> +	return devm_of_platform_populate(&pdev->dev);
-> +}
-> +
-> +static struct platform_driver ingenic_tcu_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ingenic-tcu",
-> +		.of_match_table =3D ingenic_tcu_of_match,
-> +	},
-> +};
-> +
-> +static int __init ingenic_tcu_platform_init(void)
-> +{
-> +	return platform_driver_probe(&ingenic_tcu_driver,
-> +				     ingenic_tcu_probe);
-> +}
-> +subsys_initcall(ingenic_tcu_platform_init);
-> +
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np)
-> +{
-> +	if (!tcu_regmap)
-> +		tcu_regmap =3D ingenic_tcu_create_regmap(np);
-> +
-> +	return tcu_regmap;
-> +}
-> +
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
-> channel)
-> +{
-> +	const struct ingenic_soc_info *soc =3D=20
-> device_get_match_data(dev->parent);
-> +
-> +	/* Enable all TCU channels for PWM use by default except channels=20
-> 0/1 */
-> +	u32 pwm_channels_mask =3D GENMASK(soc->num_channels - 1, 2);
-> +
-> +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
-> +				 &pwm_channels_mask);
-> +
-> +	return !!(pwm_channels_mask & BIT(channel));
-> +}
-> +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
-> diff --git a/include/linux/mfd/ingenic-tcu.h=20
-> b/include/linux/mfd/ingenic-tcu.h
-> index 2083fa20821d..21df23916cd2 100644
-> --- a/include/linux/mfd/ingenic-tcu.h
-> +++ b/include/linux/mfd/ingenic-tcu.h
-> @@ -6,6 +6,11 @@
->  #define __LINUX_MFD_INGENIC_TCU_H_
->=20
->  #include <linux/bitops.h>
-> +#include <linux/init.h>
-> +
-> +struct device;
-> +struct device_node;
-> +struct regmap;
->=20
->  #define TCU_REG_WDT_TDR		0x00
->  #define TCU_REG_WDT_TCER	0x04
-> @@ -53,4 +58,7 @@
->  #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
->  #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
->=20
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node=20
-> *np);
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
-> channel);
-> +
->  #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
-> --
-> 2.21.0.593.g511ec345e18
->=20
+This is a straightforward way,
+but I see some disadvantages.
 
-=
+Currently, there are more than 4000 headers
+under include/.
 
+So, to cover (almost) all of them, we must
+list out 4000 entries.
+
+When somebody adds a new header,
+he will be very likely to forget to add
+header-test-y for it.
+So, newly added headers will always
+fall off the coverage.
+
+
+So, I am trying to take an opposite approach.
+
+Add all headers in include/ by wildcard, then
+filter-out one that cannot be self-contained.
+
+In my analysis, 70% of headers are already conf-contained.
+After some fixups, 95% of headers can become self-contained.
+
+At this moment, the wildcard only covers some directories
+or patterns, but my plan is to extend the wildcard gradually.
+
+
+Please feel free to suggest alternative ideas.
+
+
+-- 
+Best Regards
+Masahiro Yamada
