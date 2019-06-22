@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B5C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A98AC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FEF20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B93720665
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="njV5NTe7"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JZIFNKan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfFVKKh (ORCPT
+        id S1726370AbfFVKLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 06:10:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49303 "EHLO
+        Sat, 22 Jun 2019 06:11:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44759 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVKKh (ORCPT
+        with ESMTP id S1726112AbfFVKLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 06:10:37 -0400
+        Sat, 22 Jun 2019 06:11:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5MAATB92097280
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5MA941n2096933
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 22 Jun 2019 03:10:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5MAATB92097280
+        Sat, 22 Jun 2019 03:09:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5MA941n2096933
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561198230;
-        bh=gTND2DBZeseQSs7ocwQbubb7EY7qtmdUKccOBH4D3xk=;
+        s=2019061801; t=1561198145;
+        bh=KZRV5lP8eqWytYnhcJQxfNWwkoF2Xm+rM4UWfgSESHU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=njV5NTe7XmclNk0L0J5bAvcT/JizlNVZazZZxyMkdVcc5dRMl9PWRc/Rro67EodBu
-         4aA3p3//h9XBMfdlmb1m6edndnTlc4n6n9tJFrCxReuDlNhKOonkvRqMS9i0h1l/SA
-         cnIs6409ShrH8Bqz0ezfUUuOSAEcMhKHgfBbugPG9tHAX+6qPzvyVVnzuSH4WAb/tE
-         W/klWZUr3XXfl/+xVy2tq6e94js2aw1sWn1DTPRDny//MZ1o8qtv85fP0v4v0baTfH
-         Tb2l68gL2R7mhx0hF4xRviGdnUWjMJCvo5SgunmLlDfpAERrT/2wJPAJvBohB9HXS8
-         N3iSF1Wolvriw==
+        b=JZIFNKanimrqB1/J5DyQGdBsA+ijyR1NaLKJLoVZsEo4jI+ouT3GUmZT625Za8/F5
+         z/GDMUTwFwBIWZ5RizzveG6EyAZJtjVHM0tO5j1MPIirgdMYhcGkmloo2tSPIovCyo
+         6bCsdkmprJ97cTlS+YhBFNBYdLspfv7eLhFKyM1HsUVnnIhut86jTH/LetcYgi9QaJ
+         9H1Z4qLQlxG1Mn/pEns2RM7OHw4SVuyOEa7nITFGUe6WkJfQWu667H3QBILt05WXyS
+         4m1Qgq+BdLiQQVFn7SsJzVDJ0/vi/T87Bve2jGvKj1T2ga989H0K5su0XyeppY4Ctn
+         cSCLy788XkNLA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5MAATp22097277;
-        Sat, 22 Jun 2019 03:10:29 -0700
-Date:   Sat, 22 Jun 2019 03:10:29 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5MA94qC2096928;
+        Sat, 22 Jun 2019 03:09:04 -0700
+Date:   Sat, 22 Jun 2019 03:09:04 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   "tip-bot for Chang S. Bae" <tipbot@zytor.com>
-Message-ID: <tip-79e1932fa3cedd731ddbd6af111fe4db8ca109ae@git.kernel.org>
-Cc:     luto@kernel.org, ravi.v.shankar@intel.com,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ak@linux.intel.com,
-        chang.seok.bae@intel.com, tglx@linutronix.de
-Reply-To: luto@kernel.org, ravi.v.shankar@intel.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, ak@linux.intel.com,
-          dave.hansen@linux.intel.com, mingo@kernel.org,
-          tglx@linutronix.de, chang.seok.bae@intel.com
-In-Reply-To: <1557309753-24073-12-git-send-email-chang.seok.bae@intel.com>
-References: <1557309753-24073-12-git-send-email-chang.seok.bae@intel.com>
+Message-ID: <tip-f60a83df4593c5e03e746ded66d8b436c4ad6e41@git.kernel.org>
+Cc:     hpa@zytor.com, luto@kernel.org, mingo@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        ravi.v.shankar@intel.com, ak@linux.intel.com,
+        chang.seok.bae@intel.com
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+          mingo@kernel.org, luto@kernel.org, chang.seok.bae@intel.com,
+          ak@linux.intel.com, ravi.v.shankar@intel.com
+In-Reply-To: <1557309753-24073-9-git-send-email-chang.seok.bae@intel.com>
+References: <1557309753-24073-9-git-send-email-chang.seok.bae@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/entry/64: Introduce the FIND_PERCPU_BASE macro
-Git-Commit-ID: 79e1932fa3cedd731ddbd6af111fe4db8ca109ae
+Subject: [tip:x86/cpu] x86/process/64: Use FSGSBASE instructions on thread
+ copy and ptrace
+Git-Commit-ID: f60a83df4593c5e03e746ded66d8b436c4ad6e41
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,115 +71,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  79e1932fa3cedd731ddbd6af111fe4db8ca109ae
-Gitweb:     https://git.kernel.org/tip/79e1932fa3cedd731ddbd6af111fe4db8ca109ae
+Commit-ID:  f60a83df4593c5e03e746ded66d8b436c4ad6e41
+Gitweb:     https://git.kernel.org/tip/f60a83df4593c5e03e746ded66d8b436c4ad6e41
 Author:     Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate: Wed, 8 May 2019 03:02:26 -0700
+AuthorDate: Wed, 8 May 2019 03:02:23 -0700
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 11:38:54 +0200
+CommitDate: Sat, 22 Jun 2019 11:38:53 +0200
 
-x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+x86/process/64: Use FSGSBASE instructions on thread copy and ptrace
 
-GSBASE is used to find per-CPU data in the kernel. But when GSBASE is
-unknown, the per-CPU base can be found from the per_cpu_offset table with a
-CPU NR.  The CPU NR is extracted from the limit field of the CPUNODE entry
-in GDT, or by the RDPID instruction. This is a prerequisite for using
-FSGSBASE in the low level entry code.
+When FSGSBASE is enabled, copying threads and reading fsbase and gsbase
+using ptrace must read the actual values.
 
-Also, add the GAS-compatible RDPID macro as binutils 2.21 do not support
-it. Support is added in version 2.27.
+When copying a thread, use save_fsgs() and copy the saved values.  For
+ptrace, the bases must be read from memory regardless of the selector if
+FSGSBASE is enabled.
 
-[ tglx: Massaged changelog ]
+[ tglx: Invoke __rdgsbase_inactive() with interrupts disabled ]
+[ luto: Massage changelog ]
 
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/1557309753-24073-12-git-send-email-chang.seok.bae@intel.com
+Cc: H. Peter Anvin <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/1557309753-24073-9-git-send-email-chang.seok.bae@intel.com
 
 ---
- arch/x86/entry/calling.h    | 34 ++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/inst.h | 15 +++++++++++++++
- 2 files changed, 49 insertions(+)
+ arch/x86/kernel/process_64.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index efb0d1b1f15f..9a524360ae2e 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -6,6 +6,7 @@
- #include <asm/percpu.h>
- #include <asm/asm-offsets.h>
- #include <asm/processor-flags.h>
-+#include <asm/inst.h>
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 59013f480b86..8f239091c15d 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -245,13 +245,17 @@ static __always_inline void save_fsgs(struct task_struct *task)
+ 	savesegment(fs, task->thread.fsindex);
+ 	savesegment(gs, task->thread.gsindex);
+ 	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
++		unsigned long flags;
++
+ 		/*
+ 		 * If FSGSBASE is enabled, we can't make any useful guesses
+ 		 * about the base, and user code expects us to save the current
+ 		 * value.  Fortunately, reading the base directly is efficient.
+ 		 */
+ 		task->thread.fsbase = rdfsbase();
++		local_irq_save(flags);
+ 		task->thread.gsbase = __rdgsbase_inactive();
++		local_irq_restore(flags);
+ 	} else {
+ 		save_base_legacy(task, task->thread.fsindex, FS);
+ 		save_base_legacy(task, task->thread.gsindex, GS);
+@@ -433,7 +437,8 @@ unsigned long x86_fsbase_read_task(struct task_struct *task)
  
- /*
+ 	if (task == current)
+ 		fsbase = x86_fsbase_read_cpu();
+-	else if (task->thread.fsindex == 0)
++	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
++		 (task->thread.fsindex == 0))
+ 		fsbase = task->thread.fsbase;
+ 	else
+ 		fsbase = x86_fsgsbase_read_task(task, task->thread.fsindex);
+@@ -447,7 +452,8 @@ unsigned long x86_gsbase_read_task(struct task_struct *task)
  
-@@ -345,6 +346,39 @@ For 32-bit we have the following conventions - kernel is built with
- #endif
- .endm
+ 	if (task == current)
+ 		gsbase = x86_gsbase_read_cpu_inactive();
+-	else if (task->thread.gsindex == 0)
++	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
++		 (task->thread.gsindex == 0))
+ 		gsbase = task->thread.gsbase;
+ 	else
+ 		gsbase = x86_fsgsbase_read_task(task, task->thread.gsindex);
+@@ -487,10 +493,11 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+ 	p->thread.sp = (unsigned long) fork_frame;
+ 	p->thread.io_bitmap_ptr = NULL;
  
-+#ifdef CONFIG_SMP
-+
-+/*
-+ * CPU/node NR is loaded from the limit (size) field of a special segment
-+ * descriptor entry in GDT.
-+ */
-+.macro LOAD_CPU_AND_NODE_SEG_LIMIT reg:req
-+	movq	$__CPUNODE_SEG, \reg
-+	lsl	\reg, \reg
-+.endm
-+
-+/*
-+ * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
-+ * We normally use %gs for accessing per-CPU data, but we are setting up
-+ * %gs here and obviously can not use %gs itself to access per-CPU data.
-+ */
-+.macro GET_PERCPU_BASE reg:req
-+	ALTERNATIVE \
-+		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
-+		"RDPID	\reg", \
-+		X86_FEATURE_RDPID
-+	andq	$VDSO_CPUNODE_MASK, \reg
-+	movq	__per_cpu_offset(, \reg, 8), \reg
-+.endm
-+
-+#else
-+
-+.macro GET_PERCPU_BASE reg:req
-+	movq	pcpu_unit_offsets(%rip), \reg
-+.endm
-+
-+#endif /* CONFIG_SMP */
-+
- /*
-  * This does 'call enter_from_user_mode' unless we can avoid it based on
-  * kernel config or using the static jump infrastructure.
-diff --git a/arch/x86/include/asm/inst.h b/arch/x86/include/asm/inst.h
-index f5a796da07f8..d063841a17e3 100644
---- a/arch/x86/include/asm/inst.h
-+++ b/arch/x86/include/asm/inst.h
-@@ -306,6 +306,21 @@
- 	.endif
- 	MODRM 0xc0 movq_r64_xmm_opd1 movq_r64_xmm_opd2
- 	.endm
-+
-+.macro RDPID opd
-+	REG_TYPE rdpid_opd_type \opd
-+	.if rdpid_opd_type == REG_TYPE_R64
-+	R64_NUM rdpid_opd \opd
-+	.else
-+	R32_NUM rdpid_opd \opd
-+	.endif
-+	.byte 0xf3
-+	.if rdpid_opd > 7
-+	PFX_REX rdpid_opd 0
-+	.endif
-+	.byte 0x0f, 0xc7
-+	MODRM 0xc0 rdpid_opd 0x7
-+.endm
- #endif
- 
- #endif
+-	savesegment(gs, p->thread.gsindex);
+-	p->thread.gsbase = p->thread.gsindex ? 0 : me->thread.gsbase;
+-	savesegment(fs, p->thread.fsindex);
+-	p->thread.fsbase = p->thread.fsindex ? 0 : me->thread.fsbase;
++	save_fsgs(me);
++	p->thread.fsindex = me->thread.fsindex;
++	p->thread.fsbase = me->thread.fsbase;
++	p->thread.gsindex = me->thread.gsindex;
++	p->thread.gsbase = me->thread.gsbase;
+ 	savesegment(es, p->thread.es);
+ 	savesegment(ds, p->thread.ds);
+ 	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
