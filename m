@@ -2,110 +2,132 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB6AC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2959C48BE7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196352070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B51C20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:10:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqTqJkmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfFVNGl (ORCPT
+        id S1726328AbfFVNKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 09:06:41 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:44203 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbfFVNGk (ORCPT
+        Sat, 22 Jun 2019 09:10:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44396 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVNKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 09:06:40 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 555F220020;
-        Sat, 22 Jun 2019 15:06:37 +0200 (CEST)
-Date:   Sat, 22 Jun 2019 15:06:36 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] kbuild: compile-test global headers to ensure they are
- self-contained
-Message-ID: <20190622130635.GA24262@ravnborg.org>
-References: <20190621163931.19397-1-yamada.masahiro@socionext.com>
- <20190621175134.GB16409@ravnborg.org>
- <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
+        Sat, 22 Jun 2019 09:10:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k18so8390894ljc.11;
+        Sat, 22 Jun 2019 06:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=JKJ7NdLuEooMFWo6LA3qa+n1zarZyBvo2gr/w64oEhU=;
+        b=cqTqJkmkzCJZgmZraBOEPTF4KFzVDxCz/wKOmehscUGO3xmmVvpoNvDfAFfDtJgdhd
+         6afLLU5VEDA0WzPYHeGc4SvNbWt3fkZewR/vK/epUG5aLa2FgLUtBnVfgEVhS/NTRHxI
+         UEoOyERmH5DWxyHzaKLt3jEMin17d7R3511BrX9Eqn0nmV5iwOQF9H05uRovkUpYp+iq
+         A3bmmp9lvnD3+eLNnWbGwR2/OHfhFpTGaaLu1yqWgZWJDaiGzIwpoQFs6x+itvhLI5hd
+         dR3x0ahsaq2djScI0cbXG0kavaXkRXWyd0AwH6eeQ5plXpsjrdy0lzTyF9Li3tVTTXOh
+         42/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=JKJ7NdLuEooMFWo6LA3qa+n1zarZyBvo2gr/w64oEhU=;
+        b=kSCJJ1YzA70yUS4pE2YIgn7JA0GVaXE52yLcDjDapqT/Kf4TacENQm551egLUqnT6W
+         Li1CDuTwY73jorFbQ1qpND5HazITD7ici9ZfZ6eizzXie1FSwkxP0wPzJaMPxx7z3ekR
+         vFgxyco9PPz+pWHnuxrfU5/bWx1vB/u/X8p5dUmlOLCEnOQqPKC9jDCypWLS5FbqHCL7
+         dKPFBCQI6BYwMsSxe9Q7v2qGSX96e89KVQ92uqwHGM2N6spsTAzv1qSVCxZZMDtV4QpI
+         rw9SjNM18i/3PWoTxruREbyVpKfTDrlqKbAso+tx22GaAnJkV0mIgeW4Anu4s0ts58wu
+         OOPA==
+X-Gm-Message-State: APjAAAUVeshEkWuR29o6XVQ7pfKBIp84k9hy7hyr9qhyJXO5JJ9bEb/F
+        6jvi7dOBuf71Iit7CWNjqyv32n6wCtnmQi5wFgk=
+X-Google-Smtp-Source: APXvYqynjFLmTvY2JnFGiymi/s20MlB0RGAJBCuFJ20xD8lz5r0YsMLTewzKzTDqvog/w8S1ySij9keN4DPpz60sff4=
+X-Received: by 2002:a2e:8945:: with SMTP id b5mr35153457ljk.93.1561209044837;
+ Sat, 22 Jun 2019 06:10:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNATz1iuG0Moab60gMSbVU8PJAmrLn27K8HK_1zQ0qeh26w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=_h6k6vx1-o-evQNg5jYA:9 a=CjuIK1q_8ugA:10
+References: <CGME20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50@eucas1p2.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-10-l.luba@partner.samsung.com>
+In-Reply-To: <20190614095309.24100-10-l.luba@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Sat, 22 Jun 2019 22:10:08 +0900
+Message-ID: <CAGTfZH35X0zE2LhGWJJp2xZNNk1ew7zNMoMqL+eZ5rcBFcPvew@mail.gmail.com>
+Subject: Re: [PATCH v10 09/13] drivers: devfreq: events: add Exynos PPMU new events
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, keescook@chromium.org,
+        Tony Lindgren <tony@atomide.com>, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro
+Hi,
 
-> At first, I tried to split Makefile per directory,
-> and add header-test-y one by one.
-> 
-> I think you expect they look like this:
-> 
-> 
-> include/Makefile:
-> 
-> subdir-y += drm
-> subdir-y += linux
-> subdir-y += media
+2019=EB=85=84 6=EC=9B=94 14=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 6:54, L=
+ukasz Luba <l.luba@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+>
+> Define new performance events supported by Exynos5422 SoC counters.
+> The counters are built-in in Dynamic Memory Controller and provide
+> information regarding memory utilization.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/devfreq/event/exynos-ppmu.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/=
+exynos-ppmu.c
+> index c2ea94957501..ce658c262c27 100644
+> --- a/drivers/devfreq/event/exynos-ppmu.c
+> +++ b/drivers/devfreq/event/exynos-ppmu.c
+> @@ -89,6 +89,12 @@ static struct __exynos_ppmu_events {
+>         PPMU_EVENT(d1-cpu),
+>         PPMU_EVENT(d1-general),
+>         PPMU_EVENT(d1-rt),
+> +
+> +       /* For Exynos5422 SoC */
+> +       PPMU_EVENT(dmc0_0),
+> +       PPMU_EVENT(dmc0_1),
+> +       PPMU_EVENT(dmc1_0),
+> +       PPMU_EVENT(dmc1_1),
+>  };
+>
+>  static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
+> --
+> 2.17.1
+>
 
-So far we agree.
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-> include/drm/Makefile:
-> 
-> header-test-y += drm_cache.h
-> header-test-y += drm_file.h
-> header-test-y += drm_util.h
-> ...
-On this level it would be better to do:
-header-test-y += $(call find_all_header_files)
-
-# drm files that are not self-contained
-header-test-n += drm_legacy.h
-
-Likewise for all subdirs below include/
-and include/linux should maybe be split up a little too.
-Maybe include/uapi/ would need to be slipt a little.
-
-Then we have a manageable number of Makefiles.
-New header files are automatically checked and
-we have a list of files to fix.
-If for example drm/ have too much failures to a start
-then we can add that directory to the higler level Makefile later.
-
-The above is more or less what you already started,
-but the difference is that we have it pushed down one or two
-directories.
-
-The header-test-n logic could be moved to the generic part,
-and a helper could be made to find all header files.
-Then the Makefiles would be more or less trival, with all the
-Kbuild magic hidden away.
-
-> In my analysis, 70% of headers are already conf-contained.
-> After some fixups, 95% of headers can become self-contained.
-
-Sounds good. And we do not want 100%, but close...
-
-	Sam
+--=20
+Best Regards,
+Chanwoo Choi
