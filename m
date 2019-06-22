@@ -2,114 +2,94 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71278C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E069C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B17E20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B751208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfFVHVA (ORCPT
+        id S1726141AbfFVHXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 03:21:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18663 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726070AbfFVHVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 03:21:00 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 66B90551CB76559889A1;
-        Sat, 22 Jun 2019 15:20:55 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 22 Jun 2019
- 15:20:50 +0800
-Subject: Re: [PATCH -next] drm/amdgpu: remove set but not used variables 'ret'
-To:     Julia Lawall <julia.lawall@lip6.fr>
-References: <20190622030314.169640-1-maowenan@huawei.com>
- <alpine.DEB.2.21.1906220801210.3253@hadrien>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <kernel-janitors@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <1a3b6f23-21cb-5931-b8fd-e8dd43e5cf2d@huawei.com>
-Date:   Sat, 22 Jun 2019 15:20:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sat, 22 Jun 2019 03:23:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57509 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfFVHXE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 03:23:04 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1heaL9-0003VY-9L; Sat, 22 Jun 2019 09:21:35 +0200
+Date:   Sat, 22 Jun 2019 09:21:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Jacob Pan <jacob.jun.pan@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Wincy Van <fanwenyi0529@gmail.com>,
+        Ashok Raj <ashok.raj@intel.com>, x86 <x86@kernel.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Juergen Gross <jgross@suse.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
+ remampping table entry for watchdog
+In-Reply-To: <20190621235541.GA25773@ranerica-svr.sc.intel.com>
+Message-ID: <alpine.DEB.2.21.1906220920270.5503@nanos.tec.linutronix.de>
+References: <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de> <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
+ <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de> <20190619084316.71ce5477@jacob-builder> <alpine.DEB.2.21.1906211732330.5503@nanos.tec.linutronix.de> <20190621103126.585ca6d3@jacob-builder> <20190621113938.1679f329@jacob-builder>
+ <alpine.DEB.2.21.1906212201400.5503@nanos.tec.linutronix.de> <20190621235541.GA25773@ranerica-svr.sc.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906220801210.3253@hadrien>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 21 Jun 2019, Ricardo Neri wrote:
+> On Fri, Jun 21, 2019 at 10:05:01PM +0200, Thomas Gleixner wrote:
+> > On Fri, 21 Jun 2019, Jacob Pan wrote:
+> > > > 
+> > > I looked at the code again, seems the per cpu HPET code already taken
+> > > care of HPET MSI management. Why can't we use IR-HPET-MSI chip and
+> > > domain to allocate and set affinity etc.?
+> > > Most APIC timer has ARAT not enough per cpu HPET, so per cpu HPET is
+> > > not used mostly.
+> > 
+> > Sure, we can use that, but that does not allow to move the affinity from
+> > NMI context either. Same issue with the IOMMU as with the other hack.
+> 
+> If I understand Thomas' point correctly, the problem is having to take
+> lock in NMI context to update the IRTE for the HPET; both as in my hack
+> and in the generic irq code. The problem is worse when using the generic
+> irq code as there are several layers and several locks that need to be
+> handled.
 
+It does not matter how many locks are involved. One is enough to wedge the
+machine.
 
-On 2019/6/22 14:02, Julia Lawall wrote:
-> 
-> 
-> On Sat, 22 Jun 2019, Mao Wenan wrote:
-> 
->> Fixes gcc '-Wunused-but-set-variable' warning:
->>
->> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
->> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->>   int ret = 0;
->>       ^
->>
->> It is never used since introduction in 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> index 0e6dba9..0bf4dd9 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> @@ -246,12 +246,10 @@ static int init_pmu_by_type(struct amdgpu_device *adev,
->>  /* init amdgpu_pmu */
->>  int amdgpu_pmu_init(struct amdgpu_device *adev)
->>  {
->> -	int ret = 0;
->> -
->>  	switch (adev->asic_type) {
->>  	case CHIP_VEGA20:
->>  		/* init df */
->> -		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
->> +		init_pmu_by_type(adev, df_v3_6_attr_groups,
->>  				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
->>  				       DF_V3_6_MAX_COUNTERS);
-> 
-> Maybe it would be better to use ret?
-> 
-> If knowing whether the call has failed is really useless, then maybe the
-> return type should be void?
+Thanks,
 
-right.
+	tglx
 
-amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
-which will use the return value.
-amdgpu_device_init()
-	r = amdgpu_pmu_init(adev);
-
-
-thanks, I will send v2.
-> 
-> julia
-> 
-> 
->>
->> --
->> 2.7.4
->>
->>
-> 
 
