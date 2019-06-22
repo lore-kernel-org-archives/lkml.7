@@ -2,62 +2,60 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C17FC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4D3C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0A02089E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C2A215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 16:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561222742;
-	bh=y3uaJKfnZusBbzIYjjrBA5cDn6wIZRA2h1/E4QkZcv0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18r+IMlFlYpeNA7T5mkfmhGVfi9ALzjP7mt88y8b+j8x7+57NhY17ssvIndviSFo4
-	 TfY0Fs6sATI+hH0gtJaRTgyeYu7A5UtGFLZguws99mv2lDZDEjkeuWdkbyLuexR9sz
-	 QbVnuViWH7CynuNPYAQ1yycduq4KWsvIGRMf4b9U=
+	s=default; t=1561222744;
+	bh=cVTZv2mBRqo0/m//JNa/bl7jZvshs64wS8/qI0xdSco=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=t5wG6plEDZ5PQS/YlPMW7po/23O/N88xpcP1f1IPBtbCAfA8Xc8BZXwTZbMOrTKaX
+	 nPg8cEPHNXhogWS48GsH8DQHwHpnvZzaIInav5meC+Q3d7gP0vSxU0NCcBG824PZp8
+	 4alZ2X49coidfe/E8LZbjM4p2SL34qX3GcGubvO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfFVQ7B (ORCPT
+        id S1726521AbfFVQ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 12:59:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42768 "EHLO
+        Sat, 22 Jun 2019 12:59:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42784 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfFVQ67 (ORCPT
+        with ESMTP id S1726326AbfFVQ67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Jun 2019 12:58:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WNiRsq7voQTs7B1oPyVixDdCGhlnrWKg3Vv2Nss1FD8=; b=Hh+aXUXStJvJezZXWhBGcYfd0r
-        RZzU1nKWIDB2k1NorMcMyJ9E8+fNfC/rPVRBv0h/KDTnEpvFIMDA5sRFkNLCYgffUYvT6MM5lmnPY
-        +W8M2Pzalbs6/COiXrr/yyharw6eReLEFbFEVBq+CK9bv5NrWrJHK+oY6JcFXvyeLCURWhbwQ1WHS
-        eEoea5TIdtI5z47zvjRqpUcJ/khe2Bo78RyBMXWkPOBY4492CsrijE1sUA6leq0sDlLtC1jmcWSIa
-        0KAh+uEXfw2IgdWYhZeg37SRBV1IBDR2nJxfNK35yKCEE3KJKvzi8fer0HpCaVfSpoAVE33dmEd5E
-        MMn4venA==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nqhxUWeu7PVWFSTsz/lHoY/3ToIX8DIdYUQ0uB/39IY=; b=qmHCcjUSr7SUV3SnjknFIfxRO
+        sLeAlifLvqZamTKw9Cqx6nL2ij8aEWvuUfDzfUX2OJ1R7qW6fISUbuTqoR5p6pGk6FHm8CccO4U5o
+        vPjNjOXn+0Wi5UV587mlfUsnOTT4Hfu+VYAI3+u0ZCeuoHm5u6LD91KGiq+5o7ib9X2o9YZed6jbB
+        VvDqvMP9wL9im0rTGru4gewNKCZQTPjowVywK3g7hTI/t3xQm8CIctWSoZCZH5BhqACXFbVpGCA39
+        HIOc3nFhEf8z96niR/hELEoh5pGS9pt6ys2xsnEQgtTjCebw1z30RUEZCpWVJtNM1nB2LyrAzHleI
+        EVipl0PFA==;
 Received: from [179.95.45.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hejLu-00054p-Gq; Sat, 22 Jun 2019 16:58:58 +0000
+        id 1hejLu-00054m-H4; Sat, 22 Jun 2019 16:58:58 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hejLr-0000vU-Un; Sat, 22 Jun 2019 13:58:55 -0300
+        id 1hejLr-0000v6-Pk; Sat, 22 Jun 2019 13:58:55 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         gregkh@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/12] docs: kernel_abi.py: fix UTF-8 support
-Date:   Sat, 22 Jun 2019 13:58:47 -0300
-Message-Id: <0428053efffd316e64a4eb97766e071044a8be5e.1561221403.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 00/12] Add the ABI documentation to the admin guide
+Date:   Sat, 22 Jun 2019 13:58:41 -0300
+Message-Id: <cover.1561221403.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561221403.git.mchehab+samsung@kernel.org>
-References: <cover.1561221403.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,72 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parser breaks with UTF-8 characters with Sphinx 1.4.
+Hi Greg/Jon,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/sphinx/kernel_abi.py | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+That's the rebased patches with add the ABI documentation to the
+admin-guide. It is rebased on the top of driver-core/driver-core-next,
+and it can work both on the "old" mode, where the scripts will
+avoid codes that would cause troubles for ReST, or at the new mode,
+with parses the description to the ReST output untouched.
 
-diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-index 32ce90775d96..0f3e51e67e8d 100644
---- a/Documentation/sphinx/kernel_abi.py
-+++ b/Documentation/sphinx/kernel_abi.py
-@@ -1,4 +1,5 @@
--# -*- coding: utf-8; mode: python -*-
-+# coding=utf-8
-+#
- u"""
-     kernel-abi
-     ~~~~~~~~~~
-@@ -28,6 +29,7 @@ u"""
- 
- """
- 
-+import codecs
- import sys
- import os
- from os import path
-@@ -43,14 +45,6 @@ from docutils.utils.error_reporting import ErrorString
- 
- __version__  = '1.0'
- 
--# We can't assume that six is installed
--PY3 = sys.version_info[0] == 3
--PY2 = sys.version_info[0] == 2
--if PY3:
--    # pylint: disable=C0103, W0622
--    unicode     = str
--    basestring  = str
--
- def setup(app):
- 
-     app.add_directive("kernel-abi", KernelCmd)
-@@ -115,12 +109,12 @@ class KernelCmd(Directive):
-                 cmd
-                 , stdout = subprocess.PIPE
-                 , stderr = subprocess.PIPE
--                , universal_newlines = True
-                 , **kwargs
-             )
-             out, err = proc.communicate()
--            if err:
--                self.warn(err)
-+
-+            out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
-+
-             if proc.returncode != 0:
-                 raise self.severe(
-                     u"command '%s' failed with return code %d"
-@@ -129,7 +123,7 @@ class KernelCmd(Directive):
-         except OSError as exc:
-             raise self.severe(u"problems with '%s' directive: %s."
-                               % (self.name, ErrorString(exc)))
--        return unicode(out)
-+        return out
- 
-     def nestedParse(self, lines, fname):
-         content = ViewList()
+Patches 1 to 3 improves the get_abi.pl for it to parse ReST format,
+and to report where the errors/warnings occur at the ABI file.
+
+Patch 4 is implements support for a Sphinx log facility (info). 
+
+Patches 5 to 10 adds the new kernel ABI extension, making it ready
+to parse files in ether "normal" or "rst-source" mode.
+
+Patch 11 addresses a Sphinx issue, with is there since old vesions,
+but it gets worse on Sphins 2.0: basically, the ReST parser is lazy:
+if it receives too much stuff, it silently ignores the end of the content.
+So, the extension needs to split the content on small chunks.
+
+IMO, it is safe to apply patches 1 to 11 via Greg's tree. The only
+potential conflict would be at patch 4, but looking at docs-next,
+I don't see any changes at Documentation/scripts/kernelog.py.
+
+Patch 12 actually enables everything. 
+
+If Patch 12 gets merged via Greg's tree, it may rise a single-line
+trivial conflict with docs-next, as it will be adding kernel_abi to the 
+list of extensions at Documentation/conf.py, and Jon is likely
+adding another extension. too.
+
+So, it could be wise postpone patch 12 to be merged after both 
+trees got merged upstream.
+
+Patch 12 adds ABI with ReST-scaping code. I'll submit soon a
+second version for the RFC patches with turns it to "clean" mode.
+
+The entire ABI series (plus Documentation/features) is at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=abi_patches_v4.2
+
+And the ReST output (with Sphinx 2.0 - with IMO provides a nicer
+output) is at:
+
+	https://www.infradead.org/~mchehab/rst_features/admin-guide/abi.html
+
+
+Mauro Carvalho Chehab (12):
+  scripts/get_abi.pl: change script to allow parsing in ReST mode
+  scripts/get_abi.pl: fix parsing on ReST mode
+  scripts/get_abi.pl: Allow optionally record from where a line came
+    from
+  docs: kernellog.py: add support for info()
+  docs: kernel_abi.py: add a script to parse ABI documentation
+  docs: kernel_abi.py: fix UTF-8 support
+  docs: kernel_abi.py: make it compatible with Sphinx 1.7+
+  docs: kernel_abi.py: Update copyrights
+  docs: kernel_abi.py: add a SPDX header file
+  docs: kernel_abi.py: use --enable-lineno for get_abi.pl
+  docs: kernel_abi.py: Handle with a lazy Sphinx parser
+  docs: add ABI documentation to the admin-guide book
+
+ Documentation/admin-guide/abi-obsolete.rst |  10 ++
+ Documentation/admin-guide/abi-removed.rst  |   4 +
+ Documentation/admin-guide/abi-stable.rst   |  13 ++
+ Documentation/admin-guide/abi-testing.rst  |  19 +++
+ Documentation/admin-guide/abi.rst          |  11 ++
+ Documentation/admin-guide/index.rst        |   1 +
+ Documentation/conf.py                      |   2 +-
+ Documentation/sphinx/kernel_abi.py         | 189 +++++++++++++++++++++
+ Documentation/sphinx/kernellog.py          |   6 +-
+ scripts/get_abi.pl                         | 104 ++++++++----
+ 10 files changed, 325 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/admin-guide/abi-obsolete.rst
+ create mode 100644 Documentation/admin-guide/abi-removed.rst
+ create mode 100644 Documentation/admin-guide/abi-stable.rst
+ create mode 100644 Documentation/admin-guide/abi-testing.rst
+ create mode 100644 Documentation/admin-guide/abi.rst
+ create mode 100644 Documentation/sphinx/kernel_abi.py
+
 -- 
 2.21.0
+
 
