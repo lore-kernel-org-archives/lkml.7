@@ -2,104 +2,169 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA221C4646C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C6AC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B757E20881
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DE420821
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="L7yPW+eo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dvw6+h32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfFVBnE (ORCPT
+        id S1726224AbfFVBzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 21:43:04 -0400
-Received: from onstation.org ([52.200.56.107]:32872 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfFVBnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 21:43:04 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 3E58D3E9C9;
-        Sat, 22 Jun 2019 01:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1561167783;
-        bh=IzpR3342Zo9qt7/5FY4YZ3EhlrbdqIdBDC4xYGEgV/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L7yPW+eol25pVIHxkWQyPNS4TRH6ITU3pzqmxKec/mnVuMtC19eJTijdX55303oHj
-         aoKQBSmVKw0/SXQkYhSaWobhcMwFTuEIufBrUlpplgcFjk+JBWL7HoSjXGNZ7vFQzK
-         xcFCjvFcaK4RdaZCa837DJQ1UqkoeYmp9/+PlXa0=
-Date:   Fri, 21 Jun 2019 21:43:02 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-arm-msm@vger.kernel.org,
-        ~martijnbraam/pmos-upstream@lists.sr.ht,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
+        Fri, 21 Jun 2019 21:55:11 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44157 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFVBzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 21:55:10 -0400
+Received: by mail-vs1-f68.google.com with SMTP id v129so5057510vsb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 18:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rJNwQ3mLV8c2DQL6zapl2FGuDETRbFo/82UxBr+AH6A=;
+        b=dvw6+h32jWORvo7jMZPESQgSthDbn7z03u9GLjsid38O6nYq1at3dkhVnc+MFLAUfy
+         XMWuL+lGSbdU4YUp+4DzaZDxDYW6Z8e8x/6ETdnfog16NJl7DmSRta5asKt5t2HKHSPo
+         iLp6MEOb/l0yLyh0JhQe7+EJtudxCM2ivTJ3c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rJNwQ3mLV8c2DQL6zapl2FGuDETRbFo/82UxBr+AH6A=;
+        b=uLIRVdCsE/CKd3Px3GHCnBX2UTSZuxlOQz4TPq0S54Qq5Y4BkoIbGVsGOzl8NqHWE4
+         nrp+gS9l3CerIeWBJ9pdek9/QBvP95S5CcXrmam9asU/wsI7cv5ZzNNQvX5BgCZQ/DFF
+         kc7o6/XxJl4P6jwHthECMOU2cG8hX7AKtq5GDum/LtRLMAe1wTOndegDwVJfQ4PWzAzi
+         /Q9DaKniqmsJQz3I6xa5NvqrkomRNz+6UZYeDMu2zuNBFv41a3sCsa1ieKcl7qxFB/0j
+         3xv/GNT5Ahy1ruWVQNYIl/AsCgEGzj59uMVXKZG8/GfDgc95D67SWQirGS6sgHxDplil
+         3L9A==
+X-Gm-Message-State: APjAAAWcl3ZWXm2n7ScI/xyrqcVwsF/otw8Js2Rs91dXo0Yz9NuqzhHz
+        mQph2V2LQ65kfofFqlINoxxFoZXQ959+ITtH7Mxakpgq7sMPsg==
+X-Google-Smtp-Source: APXvYqxIUQ4BIsLDa7mjdOr3DxZ0fEYbaLvNVTh2X5FXEq12gxCyd4wyEmkfrQB7bvfwwvie1eNDWlSCYOg/Tnvc+qM=
+X-Received: by 2002:a67:7d13:: with SMTP id y19mr57281881vsc.232.1561168509102;
+ Fri, 21 Jun 2019 18:55:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org> <20190611085722.GX21222@phenom.ffwll.local>
+ <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com> <20190621091928.GA11839@ulmo>
+In-Reply-To: <20190621091928.GA11839@ulmo>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Fri, 21 Jun 2019 18:54:57 -0700
+Message-ID: <CAGAzgsqkJnc4jESSVMtYEQ4=DhmLVKbo_8CTk9cwH0j+55ZuTw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
-Message-ID: <20190622014302.GA20947@onstation.org>
-References: <20190620225824.2845-1-luca@z3ntu.xyz>
- <20190621000122.GA13036@onstation.org>
- <4607058.UzJteFJyig@g550jk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4607058.UzJteFJyig@g550jk>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:25:17PM +0200, Luca Weiss wrote:
-> On Freitag, 21. Juni 2019 02:01:22 CEST you wrote:
-> > I think that it makes sense to put this snippet in qcom-msm8974.dtsi
-> > with a status of disabled, and then enable it in
-> > qcom-msm8974-fairphone-fp2.dts like so:
-> > 
-> > imem@fe805000 {
-> > 	status = "ok";
-> > };
-> 
-> Do you want me to put the whole node in the the dtsi file? Even though these 
-> values are the same, there are also custom vendor-specified values for specific 
-> phones.
+On Fri, Jun 21, 2019 at 2:19 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Tue, Jun 11, 2019 at 05:25:47PM -0700, dbasehore . wrote:
+> > On Tue, Jun 11, 2019 at 1:57 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > >
+> > > On Mon, Jun 10, 2019 at 09:03:48PM -0700, Derek Basehore wrote:
+> > > > This adds the attach/detach callbacks. These are for setting up
+> > > > internal state for the connector/panel pair that can't be done at
+> > > > probe (since the connector doesn't exist) and which don't need to be
+> > > > repeatedly done for every get/modes, prepare, or enable callback.
+> > > > Values such as the panel orientation, and display size can be filled
+> > > > in for the connector.
+> > > >
+> > > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > > ---
+> > > >  drivers/gpu/drm/drm_panel.c | 14 ++++++++++++++
+> > > >  include/drm/drm_panel.h     |  4 ++++
+> > > >  2 files changed, 18 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> > > > index 3b689ce4a51a..72f67678d9d5 100644
+> > > > --- a/drivers/gpu/drm/drm_panel.c
+> > > > +++ b/drivers/gpu/drm/drm_panel.c
+> > > > @@ -104,12 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
+> > > >   */
+> > > >  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
+> > > >  {
+> > > > +     int ret;
+> > > > +
+> > > >       if (panel->connector)
+> > > >               return -EBUSY;
+> > > >
+> > > >       panel->connector = connector;
+> > > >       panel->drm = connector->dev;
+> > > >
+> > > > +     if (panel->funcs->attach) {
+> > > > +             ret = panel->funcs->attach(panel);
+> > > > +             if (ret < 0) {
+> > > > +                     panel->connector = NULL;
+> > > > +                     panel->drm = NULL;
+> > > > +                     return ret;
+> > > > +             }
+> > > > +     }
+> > >
+> > > Why can't we just implement this in the drm helpers for everyone, by e.g.
+> > > storing a dt node in drm_panel? Feels a bit overkill to have these new
+> > > hooks here.
+> > >
+> > > Also, my understanding is that this dt stuff is supposed to be
+> > > standardized, so this should work.
+> >
+> > So do you want all of this information added to the drm_panel struct?
+> > If we do that, we don't necessarily even need the drm helper function.
+> > We could just copy the values over here in the drm_panel_attach
+> > function (and clear them in drm_panel_detach).
+>
+> Yeah, I think we should have all this extra information in the struct
+> drm_panel. However, I think we need to more carefully split things such
+> that the DT parsing happens at panel probe time. That way we can catch
+> errors in DT, or missing entries/resources when we can still do
+> something about it.
 
-mach-msm in the downstream hammerhead sources has those addresses:
-https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/mach-msm/restart.c#L271
-This lead me to think that it applies to other msm8974-based systems as
-well.
+For now, I'll just put width, height, bpc, orientation, bus_flags, and
+bus_formats in the drm_panel struct. Those are pretty consistently set
+from either get_modes or prepare. The other thing those all have in
+common is that the values don't change.
 
-I tried your device tree snippet on the Nexus 5 and it reboots the phone
-for me.
+We could just add an entire drm_display_info struct inside drm_panel,
+but I don't know if we can just copy that over or set a pointer
+without breaking something else, since some of the values in the
+drm_display_info struct are not set by the panel (but maybe set by
+something else).
 
-/ # ./reboot-mode normal
-[   85.088556] reboot: Restarting system with command 'normal'
+>
+> If we start parsing DT and encounter failures, it's going to be very
+> confusing if that's at panel attach time where code will usually just
+> assume that everything is already validated and can't fail anymore.
+>
+> Thierry
 
-The recovery and bootloader modes reboot the phone but into normal mode.
-Oddly, the bootloader shows different power on reasons after the
-"welcome to hammerhead bootloader" message.
-
-normal = [10] Power on reason 20001
-recovery = [10] Power on reason 1
-bootloader = [10] Power on reason 20001
-
-> On the Linux kernel side, it has bootloader (0x77665500), recovery 
-> (0x77665502), rtc (0x77665503), oem-* (0x6f656d00 | somevalue), edl (some 
-> other addresses), and the else statements writes the 0x77665501 value in my 
-> patch.
-
-The downstream hammerhead sources have the oem-*, and emergency download
-modes (edl) listed as well.
-
-I'm not sure on your other questions.
-
-Brian
+Thanks for the review
