@@ -2,59 +2,64 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E914C48BE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF24C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E873120645
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180172168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NfLabKRB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gwulcSEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfFVAey (ORCPT
+        id S1726381AbfFVAe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:34:54 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:49019 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfFVAey (ORCPT
+        Fri, 21 Jun 2019 20:34:58 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:47177 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbfFVAe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:34:54 -0400
-Received: by mail-vk1-f202.google.com with SMTP id f184so3066496vkd.15
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:34:53 -0700 (PDT)
+        Fri, 21 Jun 2019 20:34:57 -0400
+Received: by mail-vk1-f201.google.com with SMTP id a2so3068951vkg.14
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:34:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=KfmaNk0Eu1BHVI+WPNp421IderZkjqwVQ/bXD2IsfF8=;
-        b=NfLabKRBPTogQTjXkgamtEim4i76vkVJwx83MWI3SCzeuWvF9TwwKaNDvMPurCPAjR
-         +talnPvE7Lku2Pcox/DE0vrSCLDWOWksEpLBWnTeyFb+m2DUXjNsclsDPld122aYvVoh
-         P91Yed+76BhBWM7O3oOPV25IDxHfWP0qfh+npG1V856TUCIRmN4sXt63vLOTVt2JyTBr
-         ymMAmaPC9t+TnkfT4CAl5fd36UWAd/JKKxHHkZJXq3uOFuW2JbGF2oiP8wVxO2VHZTvj
-         jShcAjhAr4uQj7HtBG6/PFiaOAJJIbM9PG7kfaeTuUl1SBnkI/Dd2KqWgpbypE/RXAIu
-         QmsA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=diT5j67eq/c/BsDoIxqIkGMzy6KvSDn7bQJLbufPm+c=;
+        b=gwulcSEH8dOdXkARw/cWbDR+p8ks9AaHOrso90YTxOcu3ZhBY6OTJ2q8Qgjkx6F2pU
+         aKXt7HBMIMq2v9JgCWAMJfcSzqcYaMSimcOOybm2+PzXjoTN3S6V8vweB1K+VrNVuQnq
+         HOT5/C0X51K+41Mfm+DJ+AA0N0fg1MKDuTPsJ+akOv+eaRlKlmo2XDUOKZAhOndwo//U
+         HHBviqAW/VRLrmHPTR2qPjmB2NiFKIG+sAuk2m5uSwxuGg9+q2wUDicraebKvydsSyGj
+         HV4szT6Eo/vIQIjrZugzSdJPIh/BZLCM9j6MFYqdHiGNjRHKJHdlvkNIMH4JsoUoL17f
+         SkmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=KfmaNk0Eu1BHVI+WPNp421IderZkjqwVQ/bXD2IsfF8=;
-        b=TzutOVcfBEYDV0Vho++7s75Rxt3Ao8JW+biScuHGdpHXr3Cuu29L/sZLa825sT27Lo
-         JQXiP0nS1VnmJYZPa7BfzwpfrRwkBNAcLSU89M5sRyrO8tvIek5iGLwdeUo8RfOmLCZy
-         u9xuRIAakJj3z1c5krNzx5epSzb25Q9G/zJ5lLhtLpB/DpGlQ0xHikNohjZ7o87OLfSC
-         GaA6f9nBBOiEDJUfVNeU+HuERlRHZFoWeyGAUQY1oQEFGUcJtN4bCNKi0Pn0RpSBcfWx
-         e1zLYPy6fB5JuwIS0V6LnJ7MLpNaOhVumNtIVNLpdRVQVWXHpw7dPfdiPm6ZsbuKBM+0
-         kN3A==
-X-Gm-Message-State: APjAAAV6vHc0fLZD6PwkIQzBAiCZJhRhcsjVGBVjfacSIw84VkJgUXn+
-        pDuvgsYkPOuGxeBFM1DvuFqzMOVS3WTZcNc=
-X-Google-Smtp-Source: APXvYqxI0kCH/VP1Tj1BapDK721tlVshuyp1M7qa5xUpC1IcNzSxjKfvyULOjetXxfShkRYS5JKc0oVN8dcjsKo=
-X-Received: by 2002:a1f:2b07:: with SMTP id r7mr30702582vkr.65.1561163693358;
- Fri, 21 Jun 2019 17:34:53 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:34:45 -0700
-Message-Id: <20190622003449.33707-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=diT5j67eq/c/BsDoIxqIkGMzy6KvSDn7bQJLbufPm+c=;
+        b=K688OlV5WZg83hRXY+cTKr+NRccUn6oQy4R3VDihUrHrwxAcmdLjOlcqj660MZAU8p
+         2ESI3RfCennieqDIsy+YMNfjwxqeNsn7d7PfZsjdtTlfwlv8OK52ELNdDlYN6ADkKReJ
+         5Bf1o+6wjcREMAb+oQl4mT9zg9ubs87t1YyXrgw2FUxqhIcgojUf+zNy1n5BrAMaw8B4
+         5FFcL6irJaTAzJSZfQQXk5decsupyp9cQXFML1s2lt9XUTHIxmJV6pjjZsOKOIoQ9dog
+         yEluKSWMj7nNiQ1ZlJxRkzy+wdoisq7B6MLu34bWLPguBXYF9/ngr5HC9Yi2UMCqjVdn
+         SOzQ==
+X-Gm-Message-State: APjAAAXuPNJAjSUvc6cLTxWB4Sf5qZW3NTpAHSFKRHGGUDck28M/btwq
+        5Cwh3qBsCuZ4ASwxGW+29vmvXC4kY+Rusko=
+X-Google-Smtp-Source: APXvYqwyrBBBbzxUpFGw4I6kygyR7FpMpsJ6pewvPbKv6gEArXJ7XqY7SOep1hfkAGVXj+jU0V7vS+0IQWgjhJo=
+X-Received: by 2002:a1f:b20d:: with SMTP id b13mr10556131vkf.75.1561163696586;
+ Fri, 21 Jun 2019 17:34:56 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:34:46 -0700
+In-Reply-To: <20190622003449.33707-1-saravanak@google.com>
+Message-Id: <20190622003449.33707-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20190622003449.33707-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
+Subject: [PATCH v1 1/3] OPP: Allow required-opps even if the device doesn't
+ have power-domains
 From:   Saravana Kannan <saravanak@google.com>
 To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
@@ -70,36 +75,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devfreq passive governor scales the frequency of a "child" device
-based on the current frequency of a "parent" device (not parent/child in
-the sense of device hierarchy). As of today, the passive governor
-requires one of the following to work correctly:
-1. The parent and child device have the same number of frequencies
-2. The child device driver passes a mapping function to translate from
-   parent frequency to child frequency.
+A Device-A can have a (minimum) performance requirement on another
+Device-B to be able to function correctly. This performance requirement
+on Device-B can also change based on the current performance level of
+Device-A.
 
-When (1) is not true, (2) is the only option right now. But often times,
-all that is required is a simple mapping from parent's frequency to
-child's frequency.
+The existing required-opps feature fits well to describe this need. So,
+instead of limiting required-opps to point to only PM-domain devices,
+allow it to point to any device.
 
-Since OPPs already support pointing to other "required-opps", add
-support for using that to map from parent device frequency to child
-device frequency. That way, every child device driver doesn't have to
-implement a separate mapping function anytime (1) isn't true.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/opp/core.c |  2 +-
+ drivers/opp/of.c   | 14 --------------
+ 2 files changed, 1 insertion(+), 15 deletions(-)
 
--Saravana
-
-Saravana Kannan (3):
-  OPP: Allow required-opps even if the device doesn't have power-domains
-  OPP: Add function to look up required OPP's for a given OPP
-  PM / devfreq: Add required OPPs support to passive governor
-
- drivers/devfreq/governor_passive.c | 25 +++++++++++--
- drivers/opp/core.c                 | 56 +++++++++++++++++++++++++++++-
- drivers/opp/of.c                   | 14 --------
- include/linux/pm_opp.h             | 11 ++++++
- 4 files changed, 89 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 0e7703fe733f..74c7bdc6f463 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -710,7 +710,7 @@ static int _set_required_opps(struct device *dev,
+ 		return 0;
+ 
+ 	/* Single genpd case */
+-	if (!genpd_virt_devs) {
++	if (!genpd_virt_devs && required_opp_tables[0]->is_genpd) {
+ 		pstate = opp->required_opps[0]->pstate;
+ 		ret = dev_pm_genpd_set_performance_state(dev, pstate);
+ 		if (ret) {
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index c10c782d15aa..7c8336e94aff 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -195,9 +195,6 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+ 	 */
+ 	count_pd = of_count_phandle_with_args(dev->of_node, "power-domains",
+ 					      "#power-domain-cells");
+-	if (!count_pd)
+-		goto put_np;
+-
+ 	if (count_pd > 1) {
+ 		genpd_virt_devs = kcalloc(count, sizeof(*genpd_virt_devs),
+ 					GFP_KERNEL);
+@@ -226,17 +223,6 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+ 
+ 		if (IS_ERR(required_opp_tables[i]))
+ 			goto free_required_tables;
+-
+-		/*
+-		 * We only support genpd's OPPs in the "required-opps" for now,
+-		 * as we don't know how much about other cases. Error out if the
+-		 * required OPP doesn't belong to a genpd.
+-		 */
+-		if (!required_opp_tables[i]->is_genpd) {
+-			dev_err(dev, "required-opp doesn't belong to genpd: %pOF\n",
+-				required_np);
+-			goto free_required_tables;
+-		}
+ 	}
+ 
+ 	goto put_np;
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
