@@ -2,150 +2,202 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E40C48BE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4E6C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7666A2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8159720645
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Qrs+9teS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbfFVA0M (ORCPT
+        id S1726315AbfFVAdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:26:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32720 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726080AbfFVA0M (ORCPT
+        Fri, 21 Jun 2019 20:33:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45393 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfFVAda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:26:12 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5M0MKTQ088575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 20:26:11 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t95vuq6ek-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 20:26:10 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 22 Jun 2019 01:26:09 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 22 Jun 2019 01:26:05 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5M0Q4pD48890310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Jun 2019 00:26:04 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1AE5B2066;
-        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B45B1B205F;
-        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 22 Jun 2019 00:26:04 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 405CC16C1D2E; Fri, 21 Jun 2019 17:26:06 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:26:06 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
- disabled the same
-Reply-To: paulmck@linux.ibm.com
-References: <20190619011908.25026-1-swood@redhat.com>
- <20190619011908.25026-4-swood@redhat.com>
- <20190620211005.GW26519@linux.ibm.com>
- <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
- <20190620222505.GB26519@linux.ibm.com>
- <5d24d1243849d9f8f6884348e1ceafcc3b7314fd.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d24d1243849d9f8f6884348e1ceafcc3b7314fd.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062200-0064-0000-0000-000003F14F3E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011305; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01221412; UDB=6.00642601; IPR=6.01002550;
- MB=3.00027415; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-22 00:26:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062200-0065-0000-0000-00003DFB814F
-Message-Id: <20190622002606.GL26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906220002
+        Fri, 21 Jun 2019 20:33:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id e3so5219175ioc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NHLr//yQH3FibWWGf0VOdOavz2CGejgKb89IUY1MXFo=;
+        b=Qrs+9teS7UTpNo2fGNSwnTnrhefMfzdW8D6HsbxK6k6IJ3rUcPChijTddejlho5w0k
+         lNhWWeMdKb7GSy5o9Wt/kZH6YUAlxG5bwjlHgjlqtwbYNjFgmSFrDySBkOH8VYiLFVog
+         BUPhcxeEr/MaJIiquLdplXElopUWHZT3bPTFr3cfFG7EfzGovHA9gRfEwdKuPQO5UqZu
+         MKDfFUcB5ltI9K145I5ktm68luneLChPyFgiorD4CMrNLC4j2MXFJEY6M7RjX9h3ctgo
+         48HG7QRrtcb37BD1k09Gw1yi3BKlSuxuaYLYXCYNDTE0B/XoRndnGTAMYA4ERncr/HxK
+         dazA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NHLr//yQH3FibWWGf0VOdOavz2CGejgKb89IUY1MXFo=;
+        b=lRnaD+jwD0YEGUbRoLhtOa9KrE99H7t+BxvO6vDr20grj+mGGzBNTmX7qtoG7a9EXB
+         ATK9B8XPPR+exWObYKzo0RObZ22ciVFql8sgf2HY1xIJaTZ/SRnIVqtx+2BJqYfwljVe
+         E5nLZxFksoC/VhSTceOTuCojpvNYKlZzh+lXI/8W0nNByMUKJN4EXmQ1kDXc1Vbeo/qn
+         WXRpF71VHl5UB1s3vneapGTIXy1dJuowyDKFXQQXOrISkhzPxE928/m0cZL1aVOVBemm
+         4TyIr46PLAQiq2GkjitosKvor9QvQVz8j+nhn5MpgQbN0K4u0+ZBs+rE1k8QfXCWpeqW
+         2cHQ==
+X-Gm-Message-State: APjAAAXysRjgK8uVcL5xynyNb6ObKNGQExrZcc7ZQvAWWNZnEYrKPsUF
+        A+QjcAmKCMzJ5P2P1b8pLFGssg==
+X-Google-Smtp-Source: APXvYqxKicFVJ7wXzGl2bB4xCk/+YuG5c3I5NfchOVDHv5Um/Mjq2VFrSa7LjeWfHs1Nqhg56Sd1pQ==
+X-Received: by 2002:a5d:9c46:: with SMTP id 6mr3383520iof.6.1561163609280;
+        Fri, 21 Jun 2019 17:33:29 -0700 (PDT)
+Received: from [192.168.1.196] ([216.160.37.230])
+        by smtp.gmail.com with ESMTPSA id q13sm4895543ioh.36.2019.06.21.17.33.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 17:33:28 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
+In-Reply-To: <43da99709709d2a480b78f25356cda9255205372.camel@wdc.com>
+Date:   Fri, 21 Jun 2019 19:33:27 -0500
+Cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "yash.shah@sifive.com" <yash.shah@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <A3E7D245-ABFA-4D81-87D6-3F6983AA3A93@sifive.com>
+References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
+ <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
+ <18c7992607dd1fed062bd295ac0738a759eff078.camel@wdc.com>
+ <CAF5mof3QB8C7VjOyEvCsf9NEDkJhV3cBO5sBD+8z-GrWrnrAyg@mail.gmail.com>
+ <3f91c8032e113a19dcec10ca71b017af1427ef7e.camel@wdc.com>
+ <43da99709709d2a480b78f25356cda9255205372.camel@wdc.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 06:08:19PM -0500, Scott Wood wrote:
-> On Thu, 2019-06-20 at 15:25 -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 20, 2019 at 04:59:30PM -0500, Scott Wood wrote:
-> > > On Thu, 2019-06-20 at 14:10 -0700, Paul E. McKenney wrote:
-> > > > On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
-> > > > > [Note: Just before posting this I noticed that the invoke_rcu_core
-> > > > > stuff
-> > > > >  is part of the latest RCU pull request, and it has a patch that
-> > > > >  addresses this in a more complicated way that appears to deal with
-> > > > > the
-> > > > >  bare irq-disabled sequence as well.
-> > > > 
-> > > > Far easier to deal with it than to debug the lack of it.  ;-)
-> > > > 
-> > > > >  Assuming we need/want to support such sequences, is the
-> > > > >  invoke_rcu_core() call actually going to result in scheduling any
-> > > > >  sooner?  resched_curr() just does the same setting of need_resched
-> > > > >  when it's the same cpu.
-> > > > > ]
-> > > > 
-> > > > Yes, invoke_rcu_core() can in some cases invoke the scheduler sooner.
-> > > > Setting the CPU-local bits might not have effect until the next
-> > > > interrupt.
-> > > 
-> > > Maybe I'm missing something, but I don't see how (in the non-use_softirq
-> > > case).  It just calls wake_up_process(), which in resched_curr() will
-> > > set
-> > > need_resched but not do an IPI-to-self.
-> > 
-> > The common non-rt case will be use_softirq.  Or are you referring
-> > specifically to this block of code in current -rcu?
-> > 
-> > 		} else if (exp && irqs_were_disabled && !use_softirq &&
-> > 			   !t->rcu_read_unlock_special.b.deferred_qs) {
-> > 			// Safe to awaken and we get no help from enabling
-> > 			// irqs, unlike bh/preempt.
-> > 			invoke_rcu_core();
+
+
+> On Jun 21, 2019, at 4:59 PM, Atish Patra <Atish.Patra@wdc.com> wrote:
 > 
-> Yes, that one.  If that block is removed the else path should be sufficient,
-> now that an IPI-to-self has been added.
+> On Fri, 2019-06-21 at 14:46 -0700, Atish Patra wrote:
+>> On Fri, 2019-06-21 at 14:18 -0500, Troy Benjegerdes wrote:
+>>> Can you post the fsbl and other images you used to boot/test this?
+>>> 
+>> 
+> 
+> Resending it without the attachment. Obviously, the mail did not go
+> through with the binary blob attached :( :(. My bad.
+> 
+> Let me know if you still want me to share the binary with you. I will
+> probably share it via some other method.
 
-I will give it a try and let you know what happens.
+The bl came through as it was sent direct to me, and I can deal with
+the tftp config manually. I have a kernel image, but not the boot.scr.uimg
+that it looks like you are using. Is that from Yocto?
 
-> Also, shouldn't the IPI-to-self be conditioned on irqs_were_disabled? 
-> Besides that being the problem the IPI was meant to address, if irqs are
-> enabled the IPI is likely to happen before preempt is re-enabled and thus it
-> won't accomplish anything.
-
-Plus if preempt is disabled, the later preempt_enable() will check
-(ditto for local_bh_enable()).  Unless the preempt_enable() is instead
-a preempt_enable_no_resched(), of course.  :-/
-
-							Thanx, Paul
+> 
+>> I have not changed fsbl. It's the default one came with the board.
+>> Here are the heads of OpenSBI + U-Boot + Linux repo.
+>> 
+>> OpenSBI: cd2dfdc870ed (master)
+>> U-boot: 77f6e2dd0551 + Anup's patch series (v4)
+>> https://github.com/atishp04/u-boot/tree/unleashed_working
+>> 
+>> Linux: bed3c0d84e7e + Yash's Macb Series + this patch
+>> https://github.com/atishp04/linux/tree/5.2-rc6-pre
+>> 
+>> I have also attached the OpenSBI + U-boot binary as well. But this is
+>> pre-configured with my tftpboot server. You need to change that.
+>> 
+>>> I keep running into various failures when I build from source and I
+>>> want to rule out potential hardware issues related to clock and/or
+>>> ddr initialization
+>>> 
+>>> On Fri, Jun 21, 2019, 2:14 PM Atish Patra <Atish.Patra@wdc.com>
+>>> wrote:
+>>>> On Fri, 2019-06-21 at 16:23 +0530, Yash Shah wrote:
+>>>>> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver
+>>>> added
+>>>>> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>>>>> ---
+>>>>> arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 16
+>>>>> ++++++++++++++++
+>>>>> arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9
+>>>> +++++++++
+>>>>> 2 files changed, 25 insertions(+)
+>>>>> 
+>>>>> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>>>>> b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>>>>> index 4e8fbde..c53b4ea 100644
+>>>>> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>>>>> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>>>>> @@ -225,5 +225,21 @@
+>>>>>                      #address-cells = <1>;
+>>>>>                      #size-cells = <0>;
+>>>>>              };
+>>>>> +             eth0: ethernet@10090000 {
+>>>>> +                     compatible = "sifive,fu540-macb";
+>>>>> +                     interrupt-parent = <&plic0>;
+>>>>> +                     interrupts = <53>;
+>>>>> +                     reg = <0x0 0x10090000 0x0 0x2000
+>>>>> +                            0x0 0x100a0000 0x0 0x1000>;
+>>>>> +                     reg-names = "control";
+>>>>> +                     status = "disabled";
+>>>>> +                     local-mac-address = [00 00 00 00 00 00];
+>>>>> +                     clock-names = "pclk", "hclk";
+>>>>> +                     clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+>>>>> +                              <&prci PRCI_CLK_GEMGXLPLL>;
+>>>>> +                     #address-cells = <1>;
+>>>>> +                     #size-cells = <0>;
+>>>>> +             };
+>>>>> +
+>>>>>      };
+>>>>> };
+>>>>> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-
+>>>>> a00.dts
+>>>>> b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>>>>> index 4da8870..d783bf2 100644
+>>>>> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>>>>> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>>>>> @@ -63,3 +63,12 @@
+>>>>>              disable-wp;
+>>>>>      };
+>>>>> };
+>>>>> +
+>>>>> +&eth0 {
+>>>>> +     status = "okay";
+>>>>> +     phy-mode = "gmii";
+>>>>> +     phy-handle = <&phy1>;
+>>>>> +     phy1: ethernet-phy@0 {
+>>>>> +             reg = <0>;
+>>>>> +     };
+>>>>> +};
+>>>> 
+>>>> Thanks. I am able to boot Unleashed with networking enabled with
+>>>> this
+>>>> patch.
+>>>> 
+>>>> FWIW, 
+>>>> Tested-by: Atish Patra <atish.patra@wdc.com>
+>>>> 
+>>>> Regards,
+>>>> Atish
+>>>> _______________________________________________
+>>>> linux-riscv mailing list
+>>>> linux-riscv@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
