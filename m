@@ -2,199 +2,243 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4C6C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D12C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA972075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561165253;
-	bh=gW83MqmQ4vYm32CNGU0mHcs2vIp5/i8Athw9vKKHmd4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y6T2u4TdIaoIjii4KqcBsW2DsYWx3ha9cRvhNeeG717MrzAJKow9n56NK2yXqnsQM
-	 Vd80UmAIeqE7TCozB7yoRZSuNbonAMFk9Y1icl+Mr2+JOZbCsR1Tvwv7+zBkh8QKJZ
-	 QDPNqm3DVzRzDXApcT5yQF393LRcw3lXtIKR4V3k=
+	by mail.kernel.org (Postfix) with ESMTP id C72952075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0d0D49h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfFVBAw (ORCPT
+        id S1726395AbfFVBAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 21:00:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43690 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfFVBAv (ORCPT
+        Fri, 21 Jun 2019 21:00:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40855 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfFVBAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 21:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DU48MQ9NZfd+dSFfhOVoqXBfrwMyOEsLPRg6YgjyGVI=; b=jhnuriO1MsaxnCd+jswIlYNwI
-        Z9eslOz5YY12SaOn2HmpCg3Jjl4UqJjNP2k5zUwZj75rfZRq1UVKMCePjopb2cwljbOaARcLctBH2
-        DIViKJ99NFy4w6DrFV48ErW/6qj3bFpd76z3SGTnEIo21MxhAkxSSsWIR4TFBoqJNpUYtEb0IXG+D
-        SipccnLUPJWlru8gtR60doHGE3X6te2sdU8mH+2QFM0faKrN5FxXIyOD93P4cWRoUk20PsX9gxkRk
-        m6RXGIxb7Zv/W9PlhqvMCVq5bNNdFiha/aT2g+TXkua+ML2H1KbQeWS7EYw4BlLxENbiqa2rYWzr3
-        8paKyQXWA==;
-Received: from [177.97.20.138] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1heUOg-00055M-PZ; Sat, 22 Jun 2019 01:00:51 +0000
-Date:   Fri, 21 Jun 2019 22:00:46 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190621220046.3de30d9d@coco.lan>
-In-Reply-To: <20190621235159.6992-2-corbet@lwn.net>
-References: <20190621235159.6992-1-corbet@lwn.net>
-        <20190621235159.6992-2-corbet@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 21 Jun 2019 21:00:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so4404123pfp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 18:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pn4/IgcE/a3A9HRsf8YysVQmDOFkLMRirlv4eJOCAEY=;
+        b=r0d0D49hNJck2jmBOZ7hKq1EyIQm5VIsrCLXNfWA/zqw7JUB/PFT9/TEg3f9m8Exka
+         4OB4CLnAA+t7ZyRfMqNWActJqwB4eElCzw9OwOGul12RrF6Xah0/adQB3rDPYCiKwGSb
+         1cQfwLiJupuJHVE6kDeqU7eCLKZrrozRyUdaq1BAJ5w/IyIufGa6roBqLtZxSQ3wQLl8
+         cBD+npmSvsH7CB96WJOcXSzHxVdpszLog3BtkM+9yhp75ZfrhE2bcktgSWTAXvuCSrTY
+         kUvb5BfS0a52N4OmjgywAeDaICRhfTcMxYZ0cxZGqUP9umwcIynczzP5GVJDJnjw5aRm
+         2oGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pn4/IgcE/a3A9HRsf8YysVQmDOFkLMRirlv4eJOCAEY=;
+        b=QMGMQ3gG7PY+yUCNVTJE0X5gf5KHyPXuyyk8F9KYhdzOo3fmf3BI3Idu+f6cOxymOb
+         08pYrOKZogt6bZV6aPALK6KvfUE8FoX1U62ZuASQcGDpf68QZiay8k5R1KX5G+Q3J9G3
+         FULbEhJ/XYe5jgFjoYZpOYx1ZX9XKQXvWRtfejueQAqCSg491R3Gt6dPP2sprR5peuXm
+         cv1YIwBn1KI0/i5dZaWc+Utr9rEllHHCxg3sLq+xot6K2ZiCdkRt4D4NNbf6kTsj56wE
+         /ZT4EYV1oj0zfVRBfVxdxPxNf8cOF60zhUzQZBpiBImhTO8r1GcD/yr+p7vTyiqZHaTw
+         M3gw==
+X-Gm-Message-State: APjAAAX2aEQSsQD7kUs1k8q0ausXDJp60TcYvhCV9PQ4UINqQEFDrGcn
+        XzJG+V+n/eDYs5tuHgCoomuIVYsjyJmMJP8/3Eco+w==
+X-Google-Smtp-Source: APXvYqwOxize9xmrZ2ApT7No74w3onQmjRsjgozaiDJFMKpG33Vqht+PxeXD1e0v4vbFE+q+E/bORwyHwGlVO6g99RY=
+X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr10190000pjo.131.1561164883594;
+ Fri, 21 Jun 2019 17:54:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com> <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
+ <20190621181342.GA17166@mit.edu> <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
+In-Reply-To: <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 21 Jun 2019 17:54:31 -0700
+Message-ID: <CAFd5g46W1u+6JKLW0WX9uicK5utvJe9tvq4YBsCkghuo0rCmng@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 21 Jun 2019 17:51:57 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+On Fri, Jun 21, 2019 at 12:21 PM shuah <shuah@kernel.org> wrote:
+>
+> On 6/21/19 12:13 PM, Theodore Ts'o wrote:
+> > On Fri, Jun 21, 2019 at 08:59:48AM -0600, shuah wrote:
+> >>>> ### But wait! Doesn't kselftest support in kernel testing?!
+> >>>>
+> >>>> ....
+> >>
+> >> I think I commented on this before. I agree with the statement that
+> >> there is no overlap between Kselftest and KUnit. I would like see this
+> >> removed. Kselftest module support supports use-cases KUnit won't be able
+> >> to. I can build an kernel with Kselftest test modules and use it in the
+> >> filed to load and run tests if I need to debug a problem and get data
+> >> from a system. I can't do that with KUnit.
 
-> Rather than fill our text files with :c:func:`function()` syntax, just do
-> the markup via a hook into the sphinx build process.
+Sure, I think this point has been brought up a number of times before.
+Maybe I didn't write this section well because, like Frank said, it
+comes across as being critical of the Kselftest module support; that
+wasn't my intention. I was speaking from the perspective that
+Kselftest module support is just a feature of Kselftest, and not a
+full framework like KUnit is (obviously Kselftest itself *is* a
+framework, but a very small part of it is not).
 
+It was obvious to me what Kselftest module support was intended for,
+and it is not intended to cover the use case that KUnit is targeting.
 
-Didn't test it, but it sounds a way nicer than the past version!
+> >> In my mind, I am not viewing this as which is better. Kselftest and
+> >> KUnit both have their place in the kernel development process. It isn't
+> >> productive and/or necessary to comparing Kselftest and KUnit without a
+> >> good understanding of the problem spaces for each of these.
 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> ---
->  Documentation/conf.py              |  3 +-
->  Documentation/sphinx/automarkup.py | 80 ++++++++++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/sphinx/automarkup.py
-> 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index 7ace3f8852bd..a502baecbb85 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -34,7 +34,8 @@ needs_sphinx = '1.3'
->  # Add any Sphinx extension module names here, as strings. They can be
->  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
->  # ones.
-> -extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig']
-> +extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
-> +              'kfigure', 'sphinx.ext.ifconfig', 'automarkup']
->  
->  # The name of the math extension changed on Sphinx 1.4
->  if (major == 1 and minor > 3) or (major > 1):
-> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-> new file mode 100644
-> index 000000000000..14b09b5d145e
-> --- /dev/null
-> +++ b/Documentation/sphinx/automarkup.py
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019 Jonathan Corbet <corbet@lwn.net>
-> +#
-> +# Apply kernel-specific tweaks after the initial document processing
-> +# has been done.
-> +#
-> +from docutils import nodes
-> +from sphinx import addnodes
-> +import re
-> +
-> +#
-> +# Regex nastiness.  Of course.
-> +# Try to identify "function()" that's not already marked up some
-> +# other way.  Sphinx doesn't like a lot of stuff right after a
-> +# :c:func: block (i.e. ":c:func:`mmap()`s" flakes out), so the last
-> +# bit tries to restrict matches to things that won't create trouble.
-> +#
-> +RE_function = re.compile(r'([\w_][\w\d_]+\(\))')
-> +
-> +#
-> +# The DVB docs create references for these basic system calls, leading
-> +# to lots of confusing links.  So just don't link them.
-> +#
-> +Skipfuncs = [ 'open', 'close', 'write' ]
+Again, I didn't mean to draw a comparison of which is better than the
+other. I was just trying to point out that Kselftest module support
+doesn't make sense as a stand alone unit testing framework, or really
+a framework of any kind, despite how it might actually be used.
 
-and yeah, of course, if there's something weird, it has to be at
-the media docs :-)
+> >> I would strongly recommend not making reference to Kselftest and talk
+> >> about what KUnit offers.
 
-Btw, if I'm not mistaken, we do the same for ioctl.
+I can see your point. It seems that both you and Frank seem to think
+that I drew a comparison between Kselftest and KUnit, which was
+unintended. I probably should have spent more time editing this
+section, but I can see the point of drawing the comparison itself
+might invite this confusion.
 
+> > Shuah,
+> >
+> > Just to recall the history, this section of the FAQ was added to rebut
+> > the ***very*** strong statements that Frank made that there was
+> > overlap between Kselftest and Kunit, and that having too many ways for
+> > kernel developers to do the identical thing was harmful (he said it
+> > was too much of a burden on a kernel developer) --- and this was an
+> > argument for not including Kunit in the upstream kernel.
 
-I'm wandering if this could also handle the Documentation/* auto-replace.
+I don't think he was actually advocating that we don't include KUnit,
+maybe playing devil's advocate; nevertheless, at the end, Frank seemed
+to agree that there were valuable things that KUnit offered. I thought
+he just wanted to make the point that I hadn't made the distinction
+sufficiently clear in the cover letter, and other reviewers might get
+confused in the future as well.
 
-The patch snipped I did (against your past version is enclosed).
+Additionally, it does look like people were trying to use Kselftest
+module support to cover some things which really were trying to be
+unit tests. I know this isn't really intended - everything looks like
+a nail when you only have a hammer, which I think Frank was pointing
+out furthers the above confusion.
 
+In anycase, it sounds like I have, if anything, only made the
+discussion even more confusing by adding this section; sorry about
+that.
 
-diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-index 39c8f4d5af82..60dad596c790 100644
---- a/Documentation/sphinx/automarkup.py
-+++ b/Documentation/sphinx/automarkup.py
-@@ -9,6 +9,7 @@
- from __future__ import print_function
- import re
- import sphinx
-+#import sys		# Just for debug
- 
- #
- # Regex nastiness.  Of course.
-@@ -31,10 +32,26 @@ RE_literal = re.compile(r'^(\s*)(.*::\s*|\.\.\s+code-block::.*)$')
- #
- RE_whitesp = re.compile(r'^(\s*)')
- 
-+#
-+# Get a documentation reference
-+#
-+RE_doc_links = re.compile(r'\bDocumentation/([\w\d\-\_\/]+)\.rst\b')
-+
-+#
-+# Doc link false-positives
-+#
-+RE_false_doc_links = re.compile(r':ref:`\s*Documentation/[\w\d\-\_\/]+\.rst')
-+
- def MangleFile(app, docname, text):
-     ret = [ ]
-     previous = ''
-     literal = False
-+
-+    rel_dir = ''
-+
-+    for depth in range(0, docname.count('/')):
-+        rel_dir += "../"
-+
-     for line in text[0].split('\n'):
-         #
-         # See if we might be ending a literal block, as denoted by
-@@ -63,7 +80,18 @@ def MangleFile(app, docname, text):
-         # Normal line - perform substitutions.
-         #
-         else:
--            ret.append(RE_function.sub(r'\1:c:func:`\2`\3', line))
-+#            new_line = RE_function.sub(r'\1:c:func:`\2`\3', line)
-+            new_line = line
-+
-+            if not RE_false_doc_links.search(new_line):
-+                new_line = RE_doc_links.sub(r':doc:`' + rel_dir + r'\1`', new_line)
-+
-+ #           # Just for debug - should be removed on production
-+ #           if new_line != line:
-+ #               print ("===>" + new_line, file=sys.stderr)
-+
-+            ret.append(new_line)
-+
-         #
-         # Might we be starting a literal block?  If so make note of
-         # the fact.
+> > If we're past that objection, then perhaps this section can be
+> > dropped, but there's a very good reason why it was there.  I wouldn't
+> > Brendan to be accused of ignoring feedback from those who reviewed his
+> > patches.   :-)
+> >
+>
+> Agreed. I understand that this FAQ probably was needed at one time and
+> Brendan added it to address the concerns.
 
+I don't want to speak for Frank, but I don't think it was an objection
+to KUnit itself, but rather an objection to not sufficiently
+addressing the point about how they differ.
 
-Thanks,
-Mauro
+> I think at some point we do need to have a document that outlines when
+> to KUnit and when to use Kselftest modules. I think one concern people
+> have is that if KUnit is perceived as a  replacement for Ksefltest
+> module, Kselftest module will be ignored leaving users without the
+> ability to build and run with Kselftest modules and load them on a need
+> basis to gather data on a systems that aren't dedicated strictly for
+> testing.
+
+I absolutely agree! I posed a suggestion here[1], which after I just
+now searched for a link, I realize for some reason it didn't seem like
+it reached a number of the mailing lists that I sent it to, so I
+should probably resend it.
+
+Anyway, a summary of what I suggested: We should start off by better
+organizing Documentation/dev-tools/ and create a landing page that
+groups the dev-tools by function according to what person is likely to
+use them and for what. Eventually and specifically for Kselftest and
+KUnit, I would like to have a testing guide for the kernel that
+explains what testing procedure should look like and what to use and
+when.
+
+> I am trying to move the conversation forward from KUnit vs. Kselftest
+> modules discussion to which problem areas each one addresses keeping
+> in mind that it is not about which is better. Kselftest and KUnit both
+> have their place in the kernel development process. We just have to be
+> clear on usage as we write tests for each.
+
+I think that is the right long term approach. I think a good place to
+start, like I suggested above, is cleaning up
+Documentation/dev-tools/, but I think that belongs in a (probably
+several) follow-up patchset.
+
+Frank, I believe your objection was mostly related to how KUnit is
+presented specifically in the cover letter, and doesn't necessarily
+deal with the intended use case. So I don't think that doing this,
+especially doing this later, really addresses your concern. I don't
+want to belabor the issue, but I would also rather not put words in
+your mouth, what are your thoughts on the above?
+
+I think my main concern moving forward on this point is that I am not
+sure that I can address the debate that this section covers in a way
+that is both sufficiently concise for a cover letter, but also doesn't
+invite more potential confusion. My inclination at this point is to
+drop it since I think the set of reviewers for this patchset has at
+this point become fixed, and it seems that it will likely cause more
+confusion rather than reduce it; also, I don't really think this will
+be an issue for end users, especially once we have proper
+documentation in place. Alternatively, I guess I could maybe address
+the point elsewhere and refer to it in the cover letter? Or maybe just
+put it at the end of the cover letter?
+
+[1] https://www.mail-archive.com/kgdb-bugreport@lists.sourceforge.net/msg05059.html
