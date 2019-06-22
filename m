@@ -2,101 +2,85 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D984C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0220C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A15206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CUlLr2tG"
+	by mail.kernel.org (Postfix) with ESMTP id 789AF2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561193337;
+	bh=+jJMhm50tZhIKwXwnTVQfJQxfk46YzI7SOYvUv3LD+Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Tq6G4N3pC08b16Ra4XGezblKuGePNSLu2pPkmrPNOR7wib90tYRze8MFfjCnV4/e6
+	 sAaydG+UXA/TIq88LK+4RpZqzGjNoFZ0MsvQodA/nXUu+qdVBsjv38VG/wLn+troFw
+	 dJVl+ZU0e5oNvd4ETp+M1Bb4QHMf4DyftF9CvAsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFVIlv (ORCPT
+        id S1726320AbfFVIsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:41:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:55234 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfFVIlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:41:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z4WJJP5DXJ7hj7JoKOiyJJMScqHInpMDGDpMUQM5v0M=; b=CUlLr2tGCqd56vUpqT/WdZug4
-        62dnN40+dbxJRgl4EHdbPabQp2/4HbfAf3r6nVcoejaYChcKJ/JKVxp5TChfef3aeSOidNAqHoQj7
-        +cGKdTQh25O93haLSjfDGXapVDxZvjoyrfBJwlciC8QdLjUxXnK2HAEeB1mwY8mSGznrwiY1rWgVp
-        /PuS2WgcsWAsifGBnQ2joHJ+rAz/GJZ753pELEjf8X8iAO+LpNDXBvFD1hkkTQTAAMiAas2cvxK8V
-        FDQ/vY8pAaWQdQ4TBnx0PgNnWTrgDFR/ynDGjiyD5xGLi1RlRdEmNV/VK/NHyVjykFl/xHVxyCSn5
-        UvcQzmc+Q==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58974)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hebaf-0002PZ-L0; Sat, 22 Jun 2019 09:41:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hebab-00040E-GV; Sat, 22 Jun 2019 09:41:37 +0100
-Date:   Sat, 22 Jun 2019 09:41:37 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        Sat, 22 Jun 2019 04:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbfFVIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:48:55 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50AE3206BA;
+        Sat, 22 Jun 2019 08:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561193334;
+        bh=+jJMhm50tZhIKwXwnTVQfJQxfk46YzI7SOYvUv3LD+Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MABH9LOMcHbPiIs0fsfkNsPq4u+tZACIETiJwdl0x3xUDB5I5HJpovmcMx4cFXqGt
+         Az9RWUVVM2ZRR+j4vKMYUd7rmG0tz2JboL0FTo25RJY4d2zg7YX8onRIVVs88RjJ85
+         AcaVXJaidqyh7YuAich6puxyN4u20sIo1LYO/cV0=
+Date:   Sat, 22 Jun 2019 09:48:50 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Tomasz Duszynski <tduszyns@gmail.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v3 0/5] net: macb: cover letter
-Message-ID: <20190622084137.sdszvzzhs2wbav77@shell.armlinux.org.uk>
-References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
- <20190621131611.GB21188@lunn.ch>
- <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: sps30: convert bindings
+ to yaml
+Message-ID: <20190622094850.6d0bea9e@archlinux>
+In-Reply-To: <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
+References: <20190620195011.30942-1-tduszyns@gmail.com>
+        <20190620195011.30942-2-tduszyns@gmail.com>
+        <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 03:18:42AM +0000, Parshuram Raju Thombare wrote:
-> Hi Andrew,
+On Thu, 20 Jun 2019 15:21:47 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Thu, Jun 20, 2019 at 1:52 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
+> >
+> > Convert existing device tree bindings to yaml.
+> >
+> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+> > ---
+> >  .../bindings/iio/chemical/sensirion,sps30.txt | 12 ------
+> >  .../iio/chemical/sensirion,sps30.yaml         | 39 +++++++++++++++++++
+> >  2 files changed, 39 insertions(+), 12 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml  
 > 
-> >On Fri, Jun 21, 2019 at 09:33:57AM +0100, Parshuram Thombare wrote:
-> >> Hello !
-> >>
-> >> 2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
-> >>    This patch add support for SGMII mode.
-> >
-> >Hi Parshuram
-> >
-> >What PHYs are using to test this? You mention TI PHY DP83867, but that seems to
-> >be a plain old 10/100/1000 RGMII PHY.
-> It is DP83867ISRGZ on VCU118 board. This PHY supports SGMII but driver
-> dp83867 doesn't seems to support it, that was the reason previous patch
-> set has patch trying to configure PHY in SGMII mode from PCI wrapper driver.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-There are several versions of the dp83867 phy supporting various
-interface modes.  It seems the driver has been written for the
-DP83867IR and DP83867CR family, presumably TI data sheet SNLS484E.
-The DP83867E/IS/CS is covered by a separate data sheet, SNLS504B.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Please note that this PHY does not support 2.5G operation in any
-mode.
+Thanks,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Jonathan
