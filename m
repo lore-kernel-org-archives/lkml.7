@@ -2,191 +2,263 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F03C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BEEC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB352075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B6B20821
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="WjE0UV2z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DA26xxig";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="B9d4mcvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFVBEm (ORCPT
+        id S1726360AbfFVBMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 21:04:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38928 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfFVBEm (ORCPT
+        Fri, 21 Jun 2019 21:12:46 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:1674 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfFVBMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 21:04:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 196so4143152pgc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 18:04:41 -0700 (PDT)
+        Fri, 21 Jun 2019 21:12:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561165966; x=1592701966;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=NLHnRUAICa0FhahH+V46y5+LcvaLpnih2HyNGbeR1qs=;
+  b=DA26xxiggSO2lUc1YixqxeKvpxnmHWE7gd6pyRvwZLgxgZqshybXSAl4
+   bAdr+c/0NCnWUm5JZTS+lNRCkEoXMUIxoVBbyhbBOJS6zzT3MHTci8ZlX
+   AcCC4UyNP38QlulRjT6c/ZwA+fhL5yh+TlQki4j8dFMeEu6D7icuupL16
+   gSXcplgOVugo1fFsDoc4jb0tOc9JS3NkIN90a2Xwtjt/WGfPuzmaVOc9Y
+   8aWTE6Y0uVFpXE7whH/ZU5klTT8pLysvKalZPkCggp9Gy6twX6qwzEKwN
+   FbVcXRgMJn2TNRFH37ltcOX0zDiu9Q/iognL2dcln30AZBY6gCltNIYRd
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.63,402,1557158400"; 
+   d="scan'208";a="112835979"
+Received: from mail-by2nam01lp2058.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.58])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2019 09:12:45 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=GfizAMGSCO2YDH0saSeDriLC3WuBj3aonCixX8hvm+M=;
-        b=WjE0UV2zFRzt+OwF5oLL6YtpYoOZvtc1PCDVPa6t6K+AwAxebcFBGTwvu0jFojzJFt
-         uXMdlRxqk9OEjOWC1GmwYKunk9GjEt8hWVgDfbX5ZAb7dZXYzsBdG1NfPuhMBBGpZ1IR
-         Qd3j8PePYowCqtIwRkeDXdIRU2kh/BX10Ya7o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GfizAMGSCO2YDH0saSeDriLC3WuBj3aonCixX8hvm+M=;
-        b=WfUC+gtSSOwCOkGK9eTtQ1I0nIO+w5TU8vjogBOnEw8RH+LqQ4pQRF73LMSkPnNEVG
-         wmorncua1pPbiIiMhEiZhnGp2jje/eYwT5KYTVlEEkyPJ4TUis1SzPQJJpc2LOSjhepS
-         yGm1Z20lKbx0c0RxvbYTctdekVRHK+AkqXvTL96fNlSBqoJ6R8En1qfZSxGRWIMwelqi
-         B5AWUxekQEe1kTzPEYyWmiMQJh55HFv6+COxU8IC4q6qh4+XzFPBWaOA7m7wi1hDf30r
-         rZ3sJBO4bsTF8RPk7Vy6dxpb+m7aA+fgdlJaWwoL06fagrE/R7MfMxB5nMt3kElyQXta
-         SiXQ==
-X-Gm-Message-State: APjAAAWmywBCaxeAg/Ovam1D9exlmVSx9wfWatPg2HVtUDWllWv8bZrL
-        ROFOj7PB3zFDeQW41BDjxslerg==
-X-Google-Smtp-Source: APXvYqxZCTGfZsPDZqVX7ZBMfh8KlIfIG/U6ZDitvqNpfZviVk1euhZK0v3XmyusRjcBbpkndQUnsg==
-X-Received: by 2002:a63:db05:: with SMTP id e5mr21195210pgg.121.1561165481427;
-        Fri, 21 Jun 2019 18:04:41 -0700 (PDT)
-Received: from luke-XPS-13 (cpe-66-75-255-136.san.res.rr.com. [66.75.255.136])
-        by smtp.gmail.com with ESMTPSA id s24sm3814436pfh.133.2019.06.21.18.04.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 18:04:40 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 18:04:38 -0700
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-To:     hverkuil@xs4all.nl
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [Linux-kernel-mentees] [PATCH v4 RESEND] Media: Radio: Change
- devm_k*alloc to k*alloc
-Message-ID: <20190622010438.GA10125@luke-XPS-13>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qe6jjccL4+LyXSrabG25wFwU63+PIZScOJFrCFU+kMc=;
+ b=B9d4mcvmLfqUtIPXSWkh5Vqi3YPsjJgBPka5oVIYb9K/mXl6ltKzIjJPfmIoJ34o469EfucfVphF6MWhILMi951BsL+5IFkh86VJ699LmxhVB9v+e5+8yfKqFeMdKka6CzSQwsZGd/kkjEX/NOtxpZspBabBShIptx/+upHEFt8=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB4135.namprd04.prod.outlook.com (20.176.250.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Sat, 22 Jun 2019 01:12:43 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::e94e:8ead:40b1:fae6]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::e94e:8ead:40b1:fae6%7]) with mapi id 15.20.1987.014; Sat, 22 Jun 2019
+ 01:12:43 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "snitzer@redhat.com" <snitzer@redhat.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>
+Subject: Re: [PATCH 3/4] scsi: sd_zbc: add zone open, close, and finish
+ support
+Thread-Topic: [PATCH 3/4] scsi: sd_zbc: add zone open, close, and finish
+ support
+Thread-Index: AQHVKDJQ1kFjoU4TbESp3h1U0NgG7w==
+Date:   Sat, 22 Jun 2019 01:12:43 +0000
+Message-ID: <BYAPR04MB58164B645ED9BE7FA861BE33E7E60@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190621130711.21986-1-mb@lightnvm.io>
+ <20190621130711.21986-4-mb@lightnvm.io>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9cff6e2c-0d9f-49a9-3f5c-08d6f6aebae4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4135;
+x-ms-traffictypediagnostic: BYAPR04MB4135:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <BYAPR04MB41355E36EF64FB5340AB51A4E7E60@BYAPR04MB4135.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0076F48C8A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(136003)(366004)(346002)(376002)(199004)(189003)(14454004)(81166006)(14444005)(26005)(256004)(3846002)(25786009)(6116002)(53936002)(71200400001)(446003)(71190400001)(476003)(486006)(66946007)(55016002)(186003)(66574012)(7696005)(74316002)(6506007)(81156014)(8676002)(5660300002)(9686003)(64756008)(66476007)(66446008)(53546011)(66556008)(102836004)(99286004)(76116006)(73956011)(229853002)(91956017)(8936002)(305945005)(76176011)(7736002)(52536014)(6436002)(4326008)(33656002)(66066001)(6246003)(72206003)(2201001)(2501003)(86362001)(478600001)(2906002)(110136005)(316002)(7416002)(68736007)(54906003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4135;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: j38CHE9hygDH9tfDmk9uAStDzmSF6H0w8zidOSOAeCuOzV2iIFfrjBii6/KWxUrORBu1dgaObz8+wuyeoY+OEJ9wDGgkiqri9pdiYqdkmA6pAdRVURQ6z+Zuj7aK3IIk716yzw+oSNtgt47GAdEh0qFrmAb4FsUBrvhYy2YMWqsinxSRcdhKSYEZXSyVhiKSfi8J2AsK2PQkCJxh+gGCsRI3I4YUuxkVUuq4/Wi1uZXgxxqjcLTCOR/kCB73iVFohDysRD/M12Luro/X08UzoF0RO7dK2pCgmQLMQ08ZVZaDzDHIi2nd7+6qOZ3+QIqhLJchm575ble9PjhC05cqJlXV8XiFi1FUq5/Esc0iXRzdOWCIt50S3FrDx9ViIWeqb8KOLFmmt7B3vc1bH8SizFSeCLaMHh6rc2sWpOk8bOU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cff6e2c-0d9f-49a9-3f5c-08d6f6aebae4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 01:12:43.8707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change devm_k*alloc to k*alloc to manually allocate memory 
-
-The manual allocation and freeing of memory is necessary because when
-the USB radio is disconnected, the memory associated with devm_k*alloc
-is freed. Meaning if we still have unresolved references to the radio
-device, then we get use-after-free errors. 
-
-This patch fixes this by manually allocating memory, and freeing it in 
-the v4l2.release callback that gets called when the last radio device
-exits. 
-
-Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
----
-Changes in RESEND: 
-+ Added reported-and-tested-by tag
-+ Further updated description
-- Removed whitespace in patch description
-Changes in v4:
-- Removed whitespace to fix checkpatch.pl errors
-Changes in v3:
-+ Update release method in v2 for v4l2.release callback 
-+ Assign v4l2.release callback to release method
-- Remove vdev.release callback used in v2
-Changes in v2:
-+ Create raremono_device_release method
-+ Assign vdev.release to release method
-+ Added gotos for better memory cleanup
-- Removed incorrect kfrees in usb_release in v1
-Changes in v1: 
-+ Added k*allocs to raremono_device struct, and buffs
-+ Added kfrees on error conditions in usb_probe
-+ Added kfrees in usb_release
-- Removed devm_k*allocs
-
- drivers/media/radio/radio-raremono.c | 31 +++++++++++++++++++++-------
- 1 file changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/media/radio/radio-raremono.c b/drivers/media/radio/radio-raremono.c
-index 5e782b3c2fa9..a5b12372eccb 100644
---- a/drivers/media/radio/radio-raremono.c
-+++ b/drivers/media/radio/radio-raremono.c
-@@ -271,6 +271,15 @@ static int vidioc_g_frequency(struct file *file, void *priv,
- 	return 0;
- }
- 
-+static void raremono_device_release(struct v4l2_device *v4l2_dev)
-+{
-+	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
-+
-+	kfree(radio->buffer);
-+	kfree(radio);
-+}
-+
-+
- /* File system interface */
- static const struct v4l2_file_operations usb_raremono_fops = {
- 	.owner		= THIS_MODULE,
-@@ -295,12 +304,14 @@ static int usb_raremono_probe(struct usb_interface *intf,
- 	struct raremono_device *radio;
- 	int retval = 0;
- 
--	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
--	if (radio)
--		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
--
--	if (!radio || !radio->buffer)
-+	radio = kzalloc(sizeof(struct raremono_device), GFP_KERNEL);
-+	if (!radio)
-+		return -ENOMEM;
-+	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
-+	if (!radio->buffer) {
-+		kfree(radio);
- 		return -ENOMEM;
-+	}
- 
- 	radio->usbdev = interface_to_usbdev(intf);
- 	radio->intf = intf;
-@@ -324,7 +335,8 @@ static int usb_raremono_probe(struct usb_interface *intf,
- 	if (retval != 3 ||
- 	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
- 		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
--		return -ENODEV;
-+		retval = -ENODEV;
-+		goto free_mem;
- 	}
- 
- 	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
-@@ -333,7 +345,7 @@ static int usb_raremono_probe(struct usb_interface *intf,
- 	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
- 	if (retval < 0) {
- 		dev_err(&intf->dev, "couldn't register v4l2_device\n");
--		return retval;
-+		goto free_mem;
- 	}
- 
- 	mutex_init(&radio->lock);
-@@ -345,6 +357,7 @@ static int usb_raremono_probe(struct usb_interface *intf,
- 	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
- 	radio->vdev.lock = &radio->lock;
- 	radio->vdev.release = video_device_release_empty;
-+	radio->v4l2_dev.release = raremono_device_release;
- 
- 	usb_set_intfdata(intf, &radio->v4l2_dev);
- 
-@@ -360,6 +373,10 @@ static int usb_raremono_probe(struct usb_interface *intf,
- 	}
- 	dev_err(&intf->dev, "could not register video device\n");
- 	v4l2_device_unregister(&radio->v4l2_dev);
-+
-+free_mem:
-+	kfree(radio->buffer);
-+	kfree(radio);
- 	return retval;
- }
- 
--- 
-2.20.1
-
+On 2019/06/21 22:07, Matias Bj=F8rling wrote:=0A=
+> From: Ajay Joshi <ajay.joshi@wdc.com>=0A=
+> =0A=
+> Implement REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH=0A=
+> support to allow explicit control of zone states.=0A=
+> =0A=
+> Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>=0A=
+> ---=0A=
+>  drivers/scsi/sd.c     | 15 ++++++++++++++-=0A=
+>  drivers/scsi/sd.h     |  6 ++++--=0A=
+>  drivers/scsi/sd_zbc.c | 18 +++++++++++++-----=0A=
+>  3 files changed, 31 insertions(+), 8 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c=0A=
+> index a3406bd62391..89f955a01d44 100644=0A=
+> --- a/drivers/scsi/sd.c=0A=
+> +++ b/drivers/scsi/sd.c=0A=
+> @@ -1292,7 +1292,17 @@ static blk_status_t sd_init_command(struct scsi_cm=
+nd *cmd)=0A=
+>  	case REQ_OP_WRITE:=0A=
+>  		return sd_setup_read_write_cmnd(cmd);=0A=
+>  	case REQ_OP_ZONE_RESET:=0A=
+> -		return sd_zbc_setup_reset_cmnd(cmd);=0A=
+> +		return sd_zbc_setup_zone_mgmt_op_cmnd(cmd,=0A=
+> +					ZO_RESET_WRITE_POINTER);=0A=
+> +	case REQ_OP_ZONE_OPEN:=0A=
+> +		return sd_zbc_setup_zone_mgmt_op_cmnd(cmd,=0A=
+> +					ZO_OPEN_ZONE);=0A=
+> +	case REQ_OP_ZONE_CLOSE:=0A=
+> +		return sd_zbc_setup_zone_mgmt_op_cmnd(cmd,=0A=
+> +					ZO_CLOSE_ZONE);=0A=
+> +	case REQ_OP_ZONE_FINISH:=0A=
+> +		return sd_zbc_setup_zone_mgmt_op_cmnd(cmd,=0A=
+> +					ZO_FINISH_ZONE);=0A=
+>  	default:=0A=
+>  		WARN_ON_ONCE(1);=0A=
+>  		return BLK_STS_NOTSUPP;=0A=
+> @@ -1958,6 +1968,9 @@ static int sd_done(struct scsi_cmnd *SCpnt)=0A=
+>  	case REQ_OP_WRITE_ZEROES:=0A=
+>  	case REQ_OP_WRITE_SAME:=0A=
+>  	case REQ_OP_ZONE_RESET:=0A=
+> +	case REQ_OP_ZONE_OPEN:=0A=
+> +	case REQ_OP_ZONE_CLOSE:=0A=
+> +	case REQ_OP_ZONE_FINISH:=0A=
+>  		if (!result) {=0A=
+>  			good_bytes =3D blk_rq_bytes(req);=0A=
+>  			scsi_set_resid(SCpnt, 0);=0A=
+> diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h=0A=
+> index 5796ace76225..9a20633caefa 100644=0A=
+> --- a/drivers/scsi/sd.h=0A=
+> +++ b/drivers/scsi/sd.h=0A=
+> @@ -209,7 +209,8 @@ static inline int sd_is_zoned(struct scsi_disk *sdkp)=
+=0A=
+>  =0A=
+>  extern int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buff=
+er);=0A=
+>  extern void sd_zbc_print_zones(struct scsi_disk *sdkp);=0A=
+> -extern blk_status_t sd_zbc_setup_reset_cmnd(struct scsi_cmnd *cmd);=0A=
+> +extern blk_status_t sd_zbc_setup_zone_mgmt_op_cmnd(struct scsi_cmnd *cmd=
+,=0A=
+> +						   unsigned char op);=0A=
+=0A=
+In ZBC specs, open, close, finish and reset command are all ZBC_OUT (94h)=
+=0A=
+commands with a different servie action. So may be renaming this function t=
+o=0A=
+sd_zbc_setup_zbc_out_cmnd() is better.=0A=
+=0A=
+>  extern void sd_zbc_complete(struct scsi_cmnd *cmd, unsigned int good_byt=
+es,=0A=
+>  			    struct scsi_sense_hdr *sshdr);=0A=
+>  extern int sd_zbc_report_zones(struct gendisk *disk, sector_t sector,=0A=
+> @@ -226,7 +227,8 @@ static inline int sd_zbc_read_zones(struct scsi_disk =
+*sdkp,=0A=
+>  =0A=
+>  static inline void sd_zbc_print_zones(struct scsi_disk *sdkp) {}=0A=
+>  =0A=
+> -static inline blk_status_t sd_zbc_setup_reset_cmnd(struct scsi_cmnd *cmd=
+)=0A=
+> +static inline blk_status_t sd_zbc_setup_zone_mgmt_op_cmnd(struct scsi_cm=
+nd *cmd,=0A=
+> +							  unsigned char op)=0A=
+>  {=0A=
+>  	return BLK_STS_TARGET;=0A=
+>  }=0A=
+> diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c=0A=
+> index 7334024b64f1..41020db5353a 100644=0A=
+> --- a/drivers/scsi/sd_zbc.c=0A=
+> +++ b/drivers/scsi/sd_zbc.c=0A=
+> @@ -168,12 +168,17 @@ static inline sector_t sd_zbc_zone_sectors(struct s=
+csi_disk *sdkp)=0A=
+>  }=0A=
+>  =0A=
+>  /**=0A=
+> - * sd_zbc_setup_reset_cmnd - Prepare a RESET WRITE POINTER scsi command.=
+=0A=
+> - * @cmd: the command to setup=0A=
+> + * sd_zbc_setup_zone_mgmt_op_cmnd - Prepare a zone ZBC_OUT command. The=
+=0A=
+> + *                                  operations can be RESET WRITE POINTE=
+R,=0A=
+> + *                                  OPEN, CLOSE or FINISH.=0A=
+> + * @cmd: The command to setup=0A=
+> + * @op: Operation to be performed=0A=
+>   *=0A=
+> - * Called from sd_init_command() for a REQ_OP_ZONE_RESET request.=0A=
+> + * Called from sd_init_command() for REQ_OP_ZONE_RESET, REQ_OP_ZONE_OPEN=
+,=0A=
+> + * REQ_OP_ZONE_CLOSE or REQ_OP_ZONE_FINISH requests.=0A=
+>   */=0A=
+> -blk_status_t sd_zbc_setup_reset_cmnd(struct scsi_cmnd *cmd)=0A=
+> +blk_status_t sd_zbc_setup_zone_mgmt_op_cmnd(struct scsi_cmnd *cmd,=0A=
+> +					    unsigned char op)=0A=
+>  {=0A=
+>  	struct request *rq =3D cmd->request;=0A=
+>  	struct scsi_disk *sdkp =3D scsi_disk(rq->rq_disk);=0A=
+> @@ -194,7 +199,7 @@ blk_status_t sd_zbc_setup_reset_cmnd(struct scsi_cmnd=
+ *cmd)=0A=
+>  	cmd->cmd_len =3D 16;=0A=
+>  	memset(cmd->cmnd, 0, cmd->cmd_len);=0A=
+>  	cmd->cmnd[0] =3D ZBC_OUT;=0A=
+> -	cmd->cmnd[1] =3D ZO_RESET_WRITE_POINTER;=0A=
+> +	cmd->cmnd[1] =3D op;=0A=
+>  	put_unaligned_be64(block, &cmd->cmnd[2]);=0A=
+>  =0A=
+>  	rq->timeout =3D SD_TIMEOUT;=0A=
+> @@ -222,6 +227,9 @@ void sd_zbc_complete(struct scsi_cmnd *cmd, unsigned =
+int good_bytes,=0A=
+>  =0A=
+>  	switch (req_op(rq)) {=0A=
+>  	case REQ_OP_ZONE_RESET:=0A=
+> +	case REQ_OP_ZONE_OPEN:=0A=
+> +	case REQ_OP_ZONE_CLOSE:=0A=
+> +	case REQ_OP_ZONE_FINISH:=0A=
+>  =0A=
+>  		if (result &&=0A=
+>  		    sshdr->sense_key =3D=3D ILLEGAL_REQUEST &&=0A=
+=0A=
+The comment after this code references only the reset operation. So it need=
+s to=0A=
+be updated. The same comment applies to all operations as they all have the=
+ same=0A=
+error return behavior.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
