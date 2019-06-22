@@ -2,127 +2,149 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27761C48BE7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174B3C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27D920675
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0sidvWU"
+	by mail.kernel.org (Postfix) with ESMTP id EA5912070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 15:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfFVPPB (ORCPT
+        id S1726405AbfFVPP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 11:15:01 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46926 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfFVPO7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 11:14:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so9287086wrw.13
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 08:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GfBi8EfFM0kdy6LN/pUSdo1EwlShROfv4a9we6saYeo=;
-        b=X0sidvWUWWQqRq0eSjJL99cNcG56y3R9742cvNj5qWJl6QdEDtLUBPOtYWw02i3i19
-         NBiupLMrC/Kn0RZJmheBZ2UmdGfwbMLPQ2VVhsiLW/XZAtOqYBGyxTvGAJ7Od7KhJeqH
-         jcDGcWJf1sw8Z9SqiSDb1bbS1ZoYKQfZ0X+bDfJ15zBofdWbCoKFyL5Gbn/S1p+cc9g5
-         6lucuUvjEGcpZ1XZS36PN+DqaCGFcE60ZLfJeicoGtf9UIZq05MUWS0mE59P22Xstgnu
-         ShedeaUFMvxgyRXOF2PwxNIp7rGGAX+kBcJGOQ/hTvZk8k3q98CBsxb4BcUwlHSSB1Us
-         sS5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GfBi8EfFM0kdy6LN/pUSdo1EwlShROfv4a9we6saYeo=;
-        b=gZKTx/SEB2q8QS8eexYvjVSg/vkv0UdAw+Z9qNmv/tWwfXD0z6LE+5mSQxZeFPabTa
-         3hRe1xcDZGmOJIH8kFQoS+1H0NaSPhOZroImZnbuodFCu5sNjbh2JLX16NPKV6FewKQJ
-         1fbvgAFzYt+lQxngVAQ0DHcUdtQ8X9duOGYyCcg5SYVOl80q6WKKq5SnEj6mCMUl7Bak
-         1Bo95h7xLWsJO/c+esK5Q1lhaP7srmx3fM1E0VeWR+nYzl3pQpYAyGmbE7+iYStj01uo
-         kj3yhzO3QwnaIEMl/ZBlZEmFx1ZUZtTXNRs5UrEnr8ePzFCrIcQAdQnOiW3FttEz/TFW
-         S8Ew==
-X-Gm-Message-State: APjAAAWO/0eEaAQdxDoJpoo6akq7Vnj02aUY3yD8gr/gVBski3fZMFKN
-        Mkn0cdt10rKl5fpo/IAL1Lw=
-X-Google-Smtp-Source: APXvYqwTD9bh2HXTD+nm7yp3Im0xb+/Nc4c+Wkr0M5w5PgHnM0k/EqVCFiybiLEgRoql9EQ04KOvCw==
-X-Received: by 2002:a05:6000:11cc:: with SMTP id i12mr3600173wrx.243.1561216497768;
-        Sat, 22 Jun 2019 08:14:57 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id o126sm7099847wmo.1.2019.06.22.08.14.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 22 Jun 2019 08:14:57 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 2/2] staging: rtl8188eu: remove hal_init_macaddr()
-Date:   Sat, 22 Jun 2019 17:14:49 +0200
-Message-Id: <20190622151449.32095-2-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190622151449.32095-1-straube.linux@gmail.com>
-References: <20190622151449.32095-1-straube.linux@gmail.com>
+        Sat, 22 Jun 2019 11:15:27 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38070 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFVPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 11:15:27 -0400
+Received: from p508fd9dc.dip0.t-ipconnect.de ([80.143.217.220] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hehjc-00064g-TU; Sat, 22 Jun 2019 17:15:20 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker board
+Date:   Sat, 22 Jun 2019 17:15:20 +0200
+Message-ID: <1891431.W4duSCi9rW@phil>
+In-Reply-To: <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
+References: <20190621180017.29646-1-katsuhiro@katsuster.net> <1871177.hjLhdHVgcu@phil> <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function hal_init_macaddr() just calls rtw_hal_set_hwreg().
-Use rtw_hal_set_hwreg() directly and remove hal_init_macaddr().
+Hi Katsuhiro,
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/hal/hal_com.c     | 6 ------
- drivers/staging/rtl8188eu/hal/usb_halinit.c | 3 ++-
- drivers/staging/rtl8188eu/include/hal_com.h | 1 -
- 3 files changed, 2 insertions(+), 8 deletions(-)
+Am Samstag, 22. Juni 2019, 16:50:10 CEST schrieb Katsuhiro Suzuki:
+> Current linux-next on my environment, 'ifconfig eth0 up' does not
+> work correctly with following message...
+> 
+> -----
+> root@linaro-alip:~# ifconfig eth0 up
+> [  105.028916] rk_gmac-dwmac ff290000.ethernet eth0: stmmac_open: Cannot 
+> attach to PHY (error: -19)
+> SIOCSIFFLAGS: No such device
+> -----
+> 
+> I checked drivers/net/ethernet/stmicro/stmmac/stmmac_main.c and found
+> stmmac_init_phy() is going to fail if ethernet device node does not
+> have following property:
+>    - phy-handle
+>    - phy
+>    - phy-device
+> 
+> I salvaged old version of linux-next kernel (5.2.0-rc1-20190523),
+> network device of my Tinker Board worked correctly if use it.
+>
+> I have not bisect commit of root cause yet... Is it better to bisect
+> and find problem instead of sending this patch?
 
-diff --git a/drivers/staging/rtl8188eu/hal/hal_com.c b/drivers/staging/rtl8188eu/hal/hal_com.c
-index ff481fbd074c..95f1b1431373 100644
---- a/drivers/staging/rtl8188eu/hal/hal_com.c
-+++ b/drivers/staging/rtl8188eu/hal/hal_com.c
-@@ -283,9 +283,3 @@ bool hal_mapping_out_pipe(struct adapter *adapter, u8 numoutpipe)
- 	}
- 	return result;
- }
--
--void hal_init_macaddr(struct adapter *adapter)
--{
--	rtw_hal_set_hwreg(adapter, HW_VAR_MAC_ADDR,
--			  adapter->eeprompriv.mac_addr);
--}
-diff --git a/drivers/staging/rtl8188eu/hal/usb_halinit.c b/drivers/staging/rtl8188eu/hal/usb_halinit.c
-index 69008accb015..ac5552050752 100644
---- a/drivers/staging/rtl8188eu/hal/usb_halinit.c
-+++ b/drivers/staging/rtl8188eu/hal/usb_halinit.c
-@@ -746,7 +746,8 @@ u32 rtl8188eu_hal_init(struct adapter *Adapter)
- 	_InitDriverInfoSize(Adapter, DRVINFO_SZ);
- 
- 	_InitInterrupt(Adapter);
--	hal_init_macaddr(Adapter);/* set mac_address */
-+	rtw_hal_set_hwreg(Adapter, HW_VAR_MAC_ADDR,
-+			  Adapter->eeprompriv.mac_addr);
- 	_InitNetworkType(Adapter);/* set msr */
- 	_InitWMACSetting(Adapter);
- 	_InitAdaptiveCtrl(Adapter);
-diff --git a/drivers/staging/rtl8188eu/include/hal_com.h b/drivers/staging/rtl8188eu/include/hal_com.h
-index 2f7bdade40a5..93cbbe7ba1fd 100644
---- a/drivers/staging/rtl8188eu/include/hal_com.h
-+++ b/drivers/staging/rtl8188eu/include/hal_com.h
-@@ -148,5 +148,4 @@ void hal_set_brate_cfg(u8 *brates, u16 *rate_cfg);
- 
- bool hal_mapping_out_pipe(struct adapter *adapter, u8 numoutpipe);
- 
--void hal_init_macaddr(struct adapter *adapter);
- #endif /* __HAL_COMMON_H__ */
--- 
-2.22.0
+That is clearly a regression (even recent) a newer kernel should
+not break old devicetrees and the mdio subnode creating a
+mdio bus is already marked as optional.
+
+So this will likely affect a lot more boards than the tinker board.
+
+So if you can find the time you could try to find the offending
+commit first, so that ideally the network maintainers can fix that
+up.
+
+
+Thanks
+Heiko
+
+> On 2019/06/22 17:33, Heiko Stuebner wrote:
+> > Hi,
+> > 
+> > Am Freitag, 21. Juni 2019, 20:00:17 CEST schrieb Katsuhiro Suzuki:
+> >> This patch adds missing mdio and ethernet PHY nodes for rk3328 ASUS
+> >> tinker board.
+> >>
+> >> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> > 
+> > just for my understanding, which problem does this solve?
+> > Normally the gmac can establish connections just fine on
+> > the rk3288 by probing the phy in the automatic way.
+> > 
+> > And I also don't see any additional properties like phy
+> > interrupt line below.
+> > 
+> > 
+> > Thanks
+> > Heiko
+> > 
+> >> ---
+> >>   arch/arm/boot/dts/rk3288-tinker.dtsi | 12 ++++++++++++
+> >>   1 file changed, 12 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> >> index 293576869546..3190817e8d5d 100644
+> >> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> >> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> >> @@ -117,6 +117,7 @@
+> >>   	assigned-clocks = <&cru SCLK_MAC>;
+> >>   	assigned-clock-parents = <&ext_gmac>;
+> >>   	clock_in_out = "input";
+> >> +	phy-handle = <&phy0>;
+> >>   	phy-mode = "rgmii";
+> >>   	phy-supply = <&vcc33_lan>;
+> >>   	pinctrl-names = "default";
+> >> @@ -127,6 +128,17 @@
+> >>   	tx_delay = <0x30>;
+> >>   	rx_delay = <0x10>;
+> >>   	status = "ok";
+> >> +
+> >> +	mdio0 {
+> >> +		compatible = "snps,dwmac-mdio";
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +
+> >> +		phy0: ethernet-phy@0 {
+> >> +			compatible = "ethernet-phy-ieee802.3-c22";
+> >> +			reg = <0>;
+> >> +		};
+> >> +	};
+> >>   };
+> >>   
+> >>   &gpu {
+> >>
+> > 
+> > 
+> > 
+> > 
+> > 
+> 
+> 
+
+
+
 
