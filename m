@@ -2,163 +2,261 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F221C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0692DC48BE7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1387620657
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56F420657
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="CE5P4Vew"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV4ftO1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfFVLta (ORCPT
+        id S1726350AbfFVLuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 07:49:30 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:29268 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVLt3 (ORCPT
+        Sat, 22 Jun 2019 07:50:39 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44301 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFVLui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 07:49:29 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,404,1557212400"; 
-   d="scan'208";a="37969140"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2019 04:49:28 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 22 Jun 2019 04:49:26 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sat, 22 Jun 2019 04:49:26 -0700
+        Sat, 22 Jun 2019 07:50:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so8275771ljc.11;
+        Sat, 22 Jun 2019 04:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGMzP4NIhKHYOQskA5N/aQBSc8PRYGkAM7AV7HMVgTA=;
- b=CE5P4Vew1V9icQ3C0kVcuXaNJZ4hYPa81I3OtXu0m6Y6ykXuJ9Otgb29/P0/keufftay2qDdv0/zA1PE9EYeR1r6vUHBMZCyr33GyU+0cDJg7SJWpmVUlYjidnr2UfxKuvCZkuuycGsYZOb2xkEPKszr/ZkYwe5w16bDA1U/HPc=
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
- BN6PR11MB1489.namprd11.prod.outlook.com (10.172.22.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Sat, 22 Jun 2019 11:49:26 +0000
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1987.017; Sat, 22 Jun 2019
- 11:49:26 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <liu.xiang6@zte.com.cn>, <linux-mtd@lists.infradead.org>
-CC:     <bbrezillon@kernel.org>, <richard@nod.at>,
-        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
-        <liuxiang_1999@126.com>, <computersforpeace@gmail.com>,
-        <dwmw2@infradead.org>, <nagasure@xilinx.com>, <vigneshr@ti.com>
-Subject: Re: [PATCH v3] mtd: spi-nor: fix nor->addr_width when its value
- configured from SFDP does not match the actual width
-Thread-Topic: [PATCH v3] mtd: spi-nor: fix nor->addr_width when its value
- configured from SFDP does not match the actual width
-Thread-Index: AQHU55VmKdhoFdZiLUGlGE6PYVpZk6aoEd+A
-Date:   Sat, 22 Jun 2019 11:49:25 +0000
-Message-ID: <5ffc9e32-ff69-9819-7bfd-ad9f793bb629@microchip.com>
-References: <1554018157-10860-1-git-send-email-liu.xiang6@zte.com.cn>
-In-Reply-To: <1554018157-10860-1-git-send-email-liu.xiang6@zte.com.cn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1P195CA0010.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:800:d0::20) To BN6PR11MB1842.namprd11.prod.outlook.com
- (2603:10b6:404:101::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.127.138.199]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66b1799c-ef32-402f-78f9-08d6f707acb1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR11MB1489;
-x-ms-traffictypediagnostic: BN6PR11MB1489:
-x-microsoft-antispam-prvs: <BN6PR11MB14899215CA39D616AD987004F0E60@BN6PR11MB1489.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0076F48C8A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(31686004)(8936002)(68736007)(52116002)(25786009)(186003)(6486002)(7736002)(76176011)(2906002)(305945005)(81166006)(54906003)(72206003)(110136005)(71200400001)(81156014)(8676002)(71190400001)(486006)(14454004)(2501003)(478600001)(476003)(11346002)(99286004)(36756003)(6116002)(2616005)(3846002)(446003)(53546011)(6506007)(53936002)(31696002)(386003)(256004)(86362001)(316002)(14444005)(6512007)(26005)(6246003)(5660300002)(73956011)(66446008)(4326008)(7416002)(66946007)(6436002)(66066001)(102836004)(229853002)(64756008)(66556008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1489;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8gxXBSRGsc1knDZNI4QcvRwVhHF5T6+x+QlxH5TSj5zGmlarszO8H5mF3+nqYvQsuRoE3enoLUDOOuPfPk1znQ8hwe0nmuBJCh7FEVJdwLYY59G+3nTl77JOm6ZOYWJAQEJivm9VaIlrb7O8L4Sdk3+RARa7TNvQYXfiUOwnxcGTKYMl/0m1O6yR+T6EewBIjNVSfDYZxIRwV0aPV40sJ0tuPQYh9ETxjuGSPA1C0hw3OUZgWC/lvzRxzPJD0JAKZmmy4mD8aNuQgSEcDDbl357O/b+I+eG/ktJd210A6Ky1EqdGeaRpOYyo+1luzHULi7oZEoa97EOcUxTdnDfulePRsbsz0GAmuolZFKKrkpaNC9FFU4NxBDx3OcOxGDoIx9NPp/BBQNOhqoENgiXFbZNpTf0F3IsrIflVFMDsPDQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C823C2096139CB458DB5A047284C88F3@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=iNYX1eIR5m+yLL18gPgDNNyxPpPG7BFo26Nr+JmNscw=;
+        b=FV4ftO1pfUvNlMpsH2sh1SK0iWMhaHK2SU+5VOS0YxyWiNZ70Tx1g8SCp/dtoI+oZA
+         3z+JoNm8DJPWR/o07/Kd30GNGAwjXerSDUz7abmn86f3A27eLhMysYt4RXQG7LaAkBn4
+         QrIV2jZs1zfrzZ5iJJ/23ulPaMAjSUMCIruH+l5eCsllZxSuLtanFE2Np+9SrNaqNlaZ
+         Sd4rwUpGqEnjNx36AC6nMaB8r8sqwdadB0pJ9XWsDMmJrs1WmEm02z9ZIErLz+Qpi0VH
+         GhxRHeDoblmkn0ZFIYo98GfX2M7Ca0842peXapnMFM9aQT2czs2ksilEBQdYsYGUmjAy
+         D00Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=iNYX1eIR5m+yLL18gPgDNNyxPpPG7BFo26Nr+JmNscw=;
+        b=NcCUw8j4Zs9/Ei/ww/9wDPsQ2SEFNYepxDJ98MkBwdRxzWyDajcRmo+1INdtbqTlM7
+         9PnxhmXiq1lpF1gmWu5yP7It1bv06L2s6ifz1QRthIzrSZ4V2kMm1L7cH4aDVyn7fHyw
+         0UPGCSYX7M5Ymmhvd79qo0zkf2hgiyEx/i4p3hWSfe8z1Jxj/xvzDTgWNpfj60RqzUlx
+         M+3tb0VZc5Sg61OTpJ6ib8bk1wdA7dxwbpondYpagD1i+CL5AkKaKxp84RSvxw7x2Syb
+         jSIYnpnVAFpKp3bM1XhJBYsX37KoeNjebctjNUUDIuEnUcNuYx2eBx+qG8Elk+FH6SIp
+         ueGg==
+X-Gm-Message-State: APjAAAUp2nypeFblYDaCXNhPfGhcLVbdUEeosF0uyRQwkGAqlZWTDwTy
+        kfu006ThCOKUcQTVa/vo3CvxzTuuZEOJfSRrpoY=
+X-Google-Smtp-Source: APXvYqyrU2tMldAVtXb0sta7z06ngrSEsWKZOUOF6rybBfWi+li5n48iifNHhaxeT8Tnx19UGDfiNu0tPoxtfzYJqXo=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr39505617ljw.13.1561204235917;
+ Sat, 22 Jun 2019 04:50:35 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66b1799c-ef32-402f-78f9-08d6f707acb1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 11:49:25.7430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1489
+References: <20190622003449.33707-1-saravanak@google.com> <20190622003449.33707-3-saravanak@google.com>
+In-Reply-To: <20190622003449.33707-3-saravanak@google.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Sat, 22 Jun 2019 20:49:59 +0900
+Message-ID: <CAGTfZH18SQXj_2TpUf7iQPzWrZ5RP8-OCb_t6fp7qhuutGWz5A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] OPP: Add function to look up required OPP's for a
+ given OPP
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kernel-team@android.com,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIExpdSwNCg0KT24gMDMvMzEvMjAxOSAxMDo0MiBBTSwgTGl1IFhpYW5nIHdyb3RlOg0KDQo+
-IFNvbWUgaXMyNWxwMjU2IGdldCBCRlBUX0RXT1JEMV9BRERSRVNTX0JZVEVTXzNfT05MWSBmcm9t
-IEJGUFQgdGFibGUgZm9yDQo+IGFkZHJlc3Mgd2lkdGguIEJ1dCBpbiBhY3R1YWwgZmFjdCB0aGUg
-Zmxhc2ggY2FuIHN1cHBvcnQgNC1ieXRlIGFkZHJlc3MuDQo+IFNvIHdlIHNob3VsZCBmaXggaXQu
-DQoNCkl0J3MgYmV0dGVyIHRvIGJlIGltcGVyYXRpdmUuIFN1YnN0aXR1dGUgIlNvIHdlIHNob3Vs
-ZCBmaXggaXQiIHdpdGggc29tZXRoaW5nDQpsaWtlICJVc2UgYSBwb3N0IGJmcHQgZml4dXAgaG9v
-ayB0byBvdmVyd3JpdGUgdGhlIGFkZHJlc3Mgd2lkdGggYWR2ZXJ0aXNlZCBieQ0KdGhlIEJGUFQi
-Lg0KDQo+DQoNCldlJ2xsIG5lZWQgYSBmaXhlcyB0YWcgaGVyZS4+IFN1Z2dlc3RlZC1ieTogQm9y
-aXMgQnJlemlsbG9uIDxiYnJlemlsbG9uQGtlcm5lbC5vcmc+DQo+IFN1Z2dlc3RlZC1ieTogVmln
-bmVzaCBSYWdoYXZlbmRyYSA8dmlnbmVzaHJAdGkuY29tPg0KDQpXaGVuPyBJZiB0aGV5IGRpZG4n
-dCBleHBsaWNpdGx5IHN1Z2dlc3RlZCB0aGlzIGFwcHJvYWNoLCBsZXRzIGRyb3AgdGhlIFMtYiB0
-YWdzLg0KDQo+IFNpZ25lZC1vZmYtYnk6IExpdSBYaWFuZyA8bGl1LnhpYW5nNkB6dGUuY29tLmNu
-Pg0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4gdjM6DQo+ICBhZGQgYSBmaXh1cCBmb3IgaXMyNWxw
-MjU2IHRvIHNvbHZlIHRoZSBhZGRyZXNzIHdpZHRoIHByb2JsZW0uDQo+IA0KPiAgZHJpdmVycy9t
-dGQvc3BpLW5vci9zcGktbm9yLmMgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKystDQo+ICAx
-IGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIGIvZHJpdmVycy9tdGQvc3Bp
-LW5vci9zcGktbm9yLmMNCj4gaW5kZXggNmUxM2JiZC4uZDI1MmE2NiAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5v
-ci9zcGktbm9yLmMNCj4gQEAgLTE2ODIsNiArMTY4MiwyOCBAQCBzdGF0aWMgaW50IHNyMl9iaXQ3
-X3F1YWRfZW5hYmxlKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+ICAJCS5mbGFncyA9IFNQSV9OT1Jf
-Tk9fRlIgfCBTUElfUzNBTiwNCj4gIA0KPiAgc3RhdGljIGludA0KPiAraXMyNWxwMjU2X3Bvc3Rf
-YmZwdF9maXh1cHMoc3RydWN0IHNwaV9ub3IgKm5vciwNCj4gKwkJCSAgIGNvbnN0IHN0cnVjdCBz
-ZmRwX3BhcmFtZXRlcl9oZWFkZXIgKmJmcHRfaGVhZGVyLA0KPiArCQkJICAgY29uc3Qgc3RydWN0
-IHNmZHBfYmZwdCAqYmZwdCwNCj4gKwkJCSAgIHN0cnVjdCBzcGlfbm9yX2ZsYXNoX3BhcmFtZXRl
-ciAqcGFyYW1zKQ0KPiArew0KPiArCS8qDQo+ICsJICogSVMyNUxQMjU2IHN1cHBvcnRzIDRCIG9w
-Y29kZXMuDQo+ICsJICogVW5mb3J0dW5hdGVseSwgc29tZSBkZXZpY2VzIGdldCBCRlBUX0RXT1JE
-MV9BRERSRVNTX0JZVEVTXzNfT05MWQ0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4gd2hp
-Y2ggZGV2aWNlcywgZGlkIHlvdSBnZXQgYSBsaXN0IGZyb20gaXNzaT8NCg0KPiArCSAqIGZyb20g
-QkZQVCB0YWJsZSBmb3IgYWRkcmVzcyB3aWR0aC4gV2Ugc2hvdWxkIGZpeCBpdC4NCg0KSG93IGFi
-b3V0ICJJUzI1TFAyNTYgc3VwcG9ydHMgNEIgb3Bjb2RlcywgYnV0IHRoZSBCRlBUIGFkdmVydGlz
-ZXMgYQ0KQkZQVF9EV09SRDFfQUREUkVTU19CWVRFU18zX09OTFkgYWRkcmVzcyB3aWR0aC4gT3Zl
-cndyaXRlIHRoZSBhZGRyZXNzIHdpZHRoDQphZHZlcnRpc2VkIGJ5IHRoZSBCRlBULiINCg0KPiAr
-CSAqLw0KPiArCWlmICgoYmZwdC0+ZHdvcmRzW0JGUFRfRFdPUkQoMSldICYgQkZQVF9EV09SRDFf
-QUREUkVTU19CWVRFU19NQVNLKSA9PQ0KPiArCQlCRlBUX0RXT1JEMV9BRERSRVNTX0JZVEVTXzNf
-T05MWSkNCj4gKwkJbm9yLT5hZGRyX3dpZHRoID0gNDsNCj4gKw0KPiArCXJldHVybiAwOw0KPiAr
-fQ0KPiArDQo+ICtzdGF0aWMgc3RydWN0IHNwaV9ub3JfZml4dXBzIGlzMjVscDI1Nl9maXh1cHMg
-PSB7DQoNCk5hZ2Egd2lsbCB1c2UgImlzMjVscDI1Nl9maXh1cHMiIGZvciB0aGUgaXMyNXdwMjU2
-IHRvbywgYnV0IGl0J3Mgbm90IHRoZSBjYXNlIHRvDQpjaGFuZ2UgdGhlIG5hbWUgeWV0LiBBbGwg
-Z29vZCBoZXJlLg0KDQpJIHJlYWxseSB3YW50IHRvIGhhdmUgdGhpcyBpbiBuZXh0LCBjYW4gSSBo
-YXZlIGFuIHVwZGF0ZSBpbiB0aGUgbmV4dCBmZXcgZGF5cz8NCg0KQ2hlZXJzLA0KdGENCg==
+Hi,
+
+Absolutely, I like this approach. I think that it is necessary to make
+the connection
+between frequencies of devices. But, I have a question on below.
+
+2019=EB=85=84 6=EC=9B=94 22=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 9:35, S=
+aravana Kannan <saravanak@google.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> Add a function that allows looking up required OPPs given a source OPP
+> table, destination OPP table and the source OPP.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h | 11 +++++++++
+>  2 files changed, 65 insertions(+)
+>
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 74c7bdc6f463..4f7870bffbf8 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1830,6 +1830,60 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_tabl=
+e *opp_table,
+>                 dev_err(virt_dev, "Failed to find required device entry\n=
+");
+>  }
+>
+> +/**
+> + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
+> + * @src_table: OPP table which has dst_table as one of its required OPP =
+table.
+> + * @dst_table: Required OPP table of the src_table.
+> + * @pstate: OPP of the src_table.
+> + *
+> + * This function returns the OPP (present in @dst_table) pointed out by =
+the
+> + * "required-opps" property of the OPP (present in @src_table).
+> + *
+> + * The callers are required to call dev_pm_opp_put() for the returned OP=
+P after
+> + * use.
+> + *
+> + * Return: destination table OPP on success, otherwise NULL on errors.
+> + */
+> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> +                                       struct opp_table *dst_table,
+> +                                       struct dev_pm_opp *src_opp)
+> +{
+> +       struct dev_pm_opp *opp, *dest_opp =3D NULL;
+> +       int i;
+> +
+> +       if (!src_table || !dst_table || !src_opp)
+> +               return NULL;
+> +
+> +       for (i =3D 0; i < src_table->required_opp_count; i++) {
+> +               if (src_table->required_opp_tables[i]->np =3D=3D dst_tabl=
+e->np)
+> +                       break;
+> +       }
+> +
+> +       if (unlikely(i =3D=3D src_table->required_opp_count)) {
+> +               pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
+> +                      __func__, src_table, dst_table);
+> +               return NULL;
+> +       }
+> +
+> +       mutex_lock(&src_table->lock);
+> +
+> +       list_for_each_entry(opp, &src_table->opp_list, node) {
+> +               if (opp =3D=3D src_opp) {
+> +                       dest_opp =3D opp->required_opps[i];
+
+Correct me if I am wrong. This patch assume that 'i' index is same on betwe=
+en
+[1] and [2]. But in order to guarantee this assumption, all OPP entries
+in the same opp_table have to have the same number of 'required-opps' prope=
+rties
+and keep the sequence among 'required-opps' entries.
+
+[1] src_table->required_opp_tables[i]->np
+[2] opp->required_opps[I];
+
+For example, three OPP entries in the 'parent_bus_opp'
+have the different sequence of 'required-opps' and the different
+number of 'required-opps'. Is it no problem?
+
+parent_bus_opp: opp_table {
+    compatible =3D "operating-points-v2";
+
+    opp2 {
+        opp-hz =3D /bits/ 64 <200000>;
+        required-opps =3D <&child_bus_a_opp2>, <&child_bus_b_opp2>,
+<&child_bus_c_opp2>;
+    };
+
+    opp1 {
+        opp-hz =3D /bits/ 64 <200000>;
+        // change the sequence between child_bus_b_opp2  and child_bus_c_op=
+p2
+        required-opps =3D <&child_bus_a_opp2>, <&child_bus_c_opp2>,
+<&child_bus_b_opp2>
+    };
+
+    opp0 {
+        opp-hz =3D /bits/ 64 <200000>;
+        // missing 'child_bus_a_opp2'
+        required-opps =3D <&child_bus_c_opp2>, <&child_bus_b_opp2>
+    };
+
+}
+
+
+
+> +                       dev_pm_opp_get(dest_opp);
+> +                       goto unlock;
+> +               }
+> +       }
+> +
+> +       pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src=
+_table,
+> +              dst_table);
+> +
+> +unlock:
+> +       mutex_unlock(&src_table->lock);
+> +
+> +       return dest_opp;
+> +}
+> +
+>  /**
+>   * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for=
+ src_table.
+>   * @src_table: OPP table which has dst_table as one of its required OPP =
+table.
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index b150fe97ce5a..bc5c68bdfc8d 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -134,6 +134,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_=
+table *opp_table);
+>  struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, stru=
+ct device *virt_dev, int index);
+>  void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table, struct d=
+evice *virt_dev);
+>  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, stru=
+ct opp_table *dst_table, unsigned int pstate);
+> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> +                                       struct opp_table *dst_table,
+> +                                       struct dev_pm_opp *src_opp);
+>  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+>  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpu=
+mask *cpumask);
+>  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *=
+cpumask);
+> @@ -307,6 +310,14 @@ static inline int dev_pm_opp_xlate_performance_state=
+(struct opp_table *src_table
+>         return -ENOTSUPP;
+>  }
+>
+> +static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
+> +                                               struct opp_table *src_tab=
+le,
+> +                                               struct opp_table *dst_tab=
+le,
+> +                                               struct dev_pm_opp *src_op=
+p)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long =
+target_freq)
+>  {
+>         return -ENOTSUPP;
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
+
+
+--=20
+Best Regards,
+Chanwoo Choi
