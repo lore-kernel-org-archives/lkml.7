@@ -6,145 +6,104 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ED3C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8D1C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBC2206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700D9206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561192639;
-	bh=Qave1uiIHG7H7yaasUAl2lDHR8dGS+/aVwXhP0yLXBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QZgN+RHcqPoQePIPDI6s3vkwHEZVY9RAoyDYi7z76KBbG+ANR4o2iW1Ti84R9lsnk
-	 A6tjV8MkV65RvRtckGdkKOZamv6FOeRRHHzmFWaAuWApfvM9bz0T/zAeQ3PBOUsL9m
-	 a9VJwJLDSgJ5Pfon0/+d16KRrRHhJ2ETdEnTQ9co=
+	s=default; t=1561192763;
+	bh=qAXXbtnQBFmUgmRyzc4VkIcs13YQ55kQtiIfHKdMQAM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DMw5mT8exOJ3O5kEVEPy4pKe9Tfdk1P7XGS+xrPpgmSuWGm+H7OLYDm++vFC9SXu6
+	 GcwK/mU5P0U65+D44Tc1j12hVklRxnuL/z1ih7vV1wngzdkNSTbxqvEZ9RwXMc8bJW
+	 XGX7nEoFfplJ2dy1AnP7mNvaGEgjtx2fGlf3ppBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfFVIhS (ORCPT
+        id S1726339AbfFVIjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54382 "EHLO mail.kernel.org"
+        Sat, 22 Jun 2019 04:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfFVIhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:37:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726278AbfFVIjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:39:21 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D58B420665;
-        Sat, 22 Jun 2019 08:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77EC215EA;
+        Sat, 22 Jun 2019 08:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561192636;
-        bh=Qave1uiIHG7H7yaasUAl2lDHR8dGS+/aVwXhP0yLXBM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hEpulM4/3NqkFbAUadswm5mn913jIg4gw/9/4lFrrqBL5wYIrHZIaW3H+qxb9Im3g
-         oMAVQs4HYEgcNd8232IjRrQsE6029QmapZlDtRbCIXr0do6tHYl1sGG1cx4gOiShIC
-         o7igLV8/gOEn9fX+xwK+9sIVsmH7ZnDyqJ2jzJkc=
-Date:   Sat, 22 Jun 2019 09:37:11 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 2/4] iio: adc: ad7124: Add buffered input support
-Message-ID: <20190622093654.61e31fc5@archlinux>
-In-Reply-To: <20190621121344.24917-2-mircea.caprioru@analog.com>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com>
-        <20190621121344.24917-2-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1561192761;
+        bh=qAXXbtnQBFmUgmRyzc4VkIcs13YQ55kQtiIfHKdMQAM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nAiN3KHHuh3GDHGSYzoKQ0szWAcLEKSJR8fj6S3Puih9WsIT+QnfcZDq5/yl+I0Zb
+         TvVPIQYXNyxtSLhya0XjYCjcjb611p7Sc97ZU7oZtE2AkYFQH0TZ1gFUub9Eqic/Ty
+         BfdpaFciV4AdK/dyKmpoAR24cWyCdvkq9q16UJu0=
+Received: by mail-lj1-f175.google.com with SMTP id m23so7983634lje.12;
+        Sat, 22 Jun 2019 01:39:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAVW/d4nQC74I5efjL4wWnGxn44Qrcriu4na50vcSOzKOB4PBVQ7
+        A9Re5FdfNgAcxbWiFZASiRxUWF7F2n/57Oy1eGc=
+X-Google-Smtp-Source: APXvYqxyRGkjOqMwnY3GOZOxtp7YuotqZNdcuHXzNI9tdgx7yO5ll/x9xEcbo852e3cgrZMCREphrlRE46xebyBF2zI=
+X-Received: by 2002:a2e:50e:: with SMTP id 14mr56971315ljf.5.1561192759012;
+ Sat, 22 Jun 2019 01:39:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190621180208.25361-1-krzk@kernel.org> <20190621180208.25361-7-krzk@kernel.org>
+ <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
+In-Reply-To: <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Sat, 22 Jun 2019 10:39:07 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
+Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] arm64: defconfig: Enable Panfrost driver
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Joseph Kogut <joseph.kogut@gmail.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 15:13:42 +0300
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+On Fri, 21 Jun 2019 at 22:15, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 11:04 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Enable support for Mali GPU with Panfrost driver, e.g. for Exynos5433
+> > and Exynos7 (having Mali T760).
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 6b4f5cf23324..972b17239f13 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -517,6 +517,7 @@ CONFIG_DRM_HISI_HIBMC=m
+> >  CONFIG_DRM_HISI_KIRIN=m
+> >  CONFIG_DRM_MESON=m
+> >  CONFIG_DRM_PL111=m
+> > +CONFIG_DRM_PANFROST=m
+>
+> It makes sense to enable lima for arm64 defconfig as well since it's
+> used on number of 64-bit Allwinner SoCs.
 
-> This patch adds the option to enable the buffered mode for positive and
-> negative inputs. Each option can be enabled independently.
-> 
-> In buffered mode, the input channel feeds into a high impedance input stage
-> of the buffer amplifier. Therefore, the input can tolerate significant
-> source impedances and is tailored for direct connection to external
-> resistive type sensors such as strain gages or RTDs.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Hi Mircea,
+I wasn't aware that some of ARMv8 SoCs still use Utgard. In such case
+it makes sense indeed, I will send a follow up.
 
-This (and the other 2) looks good to me, but I won't
-pick them up until the binding patch is split up.  That
-way we won't end up with the driver being out of sync with
-the binding docs, even for a brief time.
+Thanks for feedback!
 
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> Changelog v2:
-> - nothing changed here
-> 
->  drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index 810234db9c0d..ab52c5e9ecb1 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -61,6 +61,8 @@
->  #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
->  #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
->  #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
-> +#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
-> +#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
->  
->  /* AD7124_FILTER_X */
->  #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
-> @@ -108,6 +110,8 @@ struct ad7124_chip_info {
->  struct ad7124_channel_config {
->  	enum ad7124_ref_sel refsel;
->  	bool bipolar;
-> +	bool buf_positive;
-> +	bool buf_negative;
->  	unsigned int ain;
->  	unsigned int vref_mv;
->  	unsigned int pga_bits;
-> @@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  		else
->  			st->channel_config[channel].refsel = tmp;
->  
-> +		st->channel_config[channel].buf_positive =
-> +			of_property_read_bool(child, "adi,buffered-positive");
-> +		st->channel_config[channel].buf_negative =
-> +			of_property_read_bool(child, "adi,buffered-negative");
-> +
->  		*chan = ad7124_channel_template;
->  		chan->address = channel;
->  		chan->scan_index = channel;
-> @@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  static int ad7124_setup(struct ad7124_state *st)
->  {
->  	unsigned int val, fclk, power_mode;
-> -	int i, ret;
-> +	int i, ret, tmp;
->  
->  	fclk = clk_get_rate(st->mclk);
->  	if (!fclk)
-> @@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
->  		if (ret < 0)
->  			return ret;
->  
-> +		tmp = (st->channel_config[i].buf_positive << 1)  +
-> +			st->channel_config[i].buf_negative;
-> +
->  		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
-> -		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
-> +		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
-> +		      AD7124_CONFIG_IN_BUFF(tmp);
->  		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
->  		if (ret < 0)
->  			return ret;
-
+Krzysztof
