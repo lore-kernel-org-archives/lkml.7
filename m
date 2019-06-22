@@ -2,128 +2,151 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C391C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABB5C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F9B2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28F72070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+Qc6kFz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F8I13xTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfFVX63 (ORCPT
+        id S1726557AbfFVX7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 19:58:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36890 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfFVX61 (ORCPT
+        Sat, 22 Jun 2019 19:59:22 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43738 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfFVX7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 19:58:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 145so5117874pgh.4;
-        Sat, 22 Jun 2019 16:58:26 -0700 (PDT)
+        Sat, 22 Jun 2019 19:59:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so5417623pfg.10
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 16:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lZUHpH2M+Wyx1Nixzo+rxEWVRPouZAupWhJLtRBuER4=;
-        b=J+Qc6kFzXV9b/IP8VxIZb1nSUz8aJcZTeIw+r3UN1METyQW9w7rkYFTtp56KtdH7lH
-         dv/f1e3OsdYTzUCOYAxPRRqAjAC1WERCoOVmaNwhVLBRsK2w7s0aC2H/PgTASU1glaGb
-         doSeUQo478cuImKQX8AO4FRa/K2aLaIJ0gS9Bv78EaX/zEG3Ym0uJr2cwoKXzdFFtrzU
-         ZSgYf9VmyhFjW73xz4JOErU0I+RjjDjFEGbmd2VXVoBnegagFdnA0UTeT4vJ+VbVZDKs
-         Z8fuUo2uN4rQp1lI+W6KG521AyDCqpM+RDjnfFau9GmlvmL1E1o0tglE0OS9MbhmQUeI
-         EIsQ==
+         :content-disposition:in-reply-to;
+        bh=Am+xsKrCSgqUDTnEarlPfGUv+iV9mXgrux7mgCCSlTE=;
+        b=F8I13xTrwM4qgJZ1AlQrosD+/dfL+k4I2BJY5EwJJA+V0o/F4JxRpPGagXK9/2IVqc
+         tVdO/fP0tNnP1OTDV6AAHYpD3L4hjjSex1yKEnFJU9WGvBCye6SuBL31SaMoMmV8zOR5
+         K/fDvVu8JN62Z0d68189BG2IJWum90YlEuK10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lZUHpH2M+Wyx1Nixzo+rxEWVRPouZAupWhJLtRBuER4=;
-        b=LfqLtCe0GbHkm6UGfZKwymUrXcyMSFNIKqKIuEzeWN1BiIfwK0X9TawpY6KpBHl1k0
-         SfRBE3LCJu3wbAQzhtDlCKKsqI0KtsbGpZFqUFLyOyyWoEXO1fI6uTcMKvo1HvmoMeT4
-         Ot/6sbHlToDqVrvru2By5zom4IpmMYrp6RgXDmWHd8JcHhcjnjBKqQUTNZXb8E+LF3zH
-         0tD/RjUuMQnYCmxbQV6wxtk+uAlx4aVeGzCE5apxtFsmeFMspEKCYAozP5dSXiXqn0NJ
-         K9Oe0E9V0lULdpdu8RFJwLJpnMQ9nMGFHhzhIJdSosywtrvEQ4ez0EzEDkvJZHD/U5NF
-         B4WA==
-X-Gm-Message-State: APjAAAVmVhXTwGjA0sAKU7NO8VJhQxZLI4vMIPVmg/wpXVrrwG2Fizdb
-        /v56Qfnumy4RI874kGHORzQ=
-X-Google-Smtp-Source: APXvYqyjw3Hl7M5bTbfpARaC/m/3jkVGHllSCS84kbpa2Q8bhzRaDSNMWuamR84mgLSgh3AETTooUQ==
-X-Received: by 2002:a17:90a:2224:: with SMTP id c33mr15573423pje.22.1561247906433;
-        Sat, 22 Jun 2019 16:58:26 -0700 (PDT)
-Received: from icarus ([2001:268:c145:c721:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id o74sm10340916pfg.91.2019.06.22.16.58.19
+         :mime-version:content-disposition:in-reply-to;
+        bh=Am+xsKrCSgqUDTnEarlPfGUv+iV9mXgrux7mgCCSlTE=;
+        b=MUwMibhobCEHBSs1YEjSHoGkbFcLlDX3+mGyKUJ1n1mH5RN/4TMqrC/v8/1xIUO5ei
+         wcrNRlCrNWz/CrxN/mSnCNguP2FvE2yAf3PDCk9Zh3W1r/EgPF5GZBtDFF+kk7a3qWni
+         hnEkEEGO5mMrYKj3raYqD+jO6K9ShCVQ/gF6jxJGwjN5V07Rr7BNnu66aBSgEtb8B6qv
+         fUy2j4TmCMfAaAcKzqgoUgmxzDelExT21ZvseGFVaHEMfpg/J0Ju9lJ5L+dVcUR6OUsX
+         hVAW42cH8s4F+YM/waUQ6sKKt/U4fD7rsJuWL0mW++G2z7PiqrJXeOkVGXNcoy+5p10y
+         yDIw==
+X-Gm-Message-State: APjAAAWGio31UCFdzW7g1N+r+9LR1UtbvFQk6jHnQUKr7R9iKVZtdWH3
+        dUBZA/YcvT54xGFHO+gAiPa9fw==
+X-Google-Smtp-Source: APXvYqzRty+ShHpjNBV2fMnyvurZIkHD4W+vGwEmlsY4ebQoVc0BGnR0v4wv1ckSQ6Mscefn44QkYQ==
+X-Received: by 2002:a63:c10d:: with SMTP id w13mr25197902pgf.28.1561247960107;
+        Sat, 22 Jun 2019 16:59:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c9sm7343653pfn.3.2019.06.22.16.59.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Jun 2019 16:58:25 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 08:58:03 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Wan ZongShun <mcuos.com@gmail.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] watchdog: convert remaining drivers to use SPDX license
- identifier
-Message-ID: <20190622235803.GA3286@icarus>
-References: <1561048126-27578-1-git-send-email-linux@roeck-us.net>
+        Sat, 22 Jun 2019 16:59:19 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 16:59:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
+        David Howells <dhowells@redhat.com>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V34 14/29] ACPI: Limit access to custom_method when the
+ kernel is locked down
+Message-ID: <201906221659.B618D83@keescook>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-15-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1561048126-27578-1-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190622000358.19895-15-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:28:46AM -0700, Guenter Roeck wrote:
-> This gets rid of the unnecessary license boilerplate, and avoids
-> having to deal with individual patches one by one.
+On Fri, Jun 21, 2019 at 05:03:43PM -0700, Matthew Garrett wrote:
+> From: Matthew Garrett <mjg59@srcf.ucam.org>
 > 
-> No functional changes.
+> custom_method effectively allows arbitrary access to system memory, making
+> it possible for an attacker to circumvent restrictions on module loading.
+> Disable it if the kernel is locked down.
 > 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Note: Several drivers include a paragraph such as
-> 
-> "Neither <name> nor <company> admit liability nor
->  provide warranty for any of this software. This material is
->  provided "AS-IS" and at no charge."
-> 
-> Presumably this is covered by the GPL license. However, since I am not
-> an attorney, I am not sure, and I opted for leaving such paragraphs in
-> place.
-[...]
->  drivers/watchdog/ebc-c384_wdt.c        |  9 ---------
-[...]
-> diff --git a/drivers/watchdog/ebc-c384_wdt.c b/drivers/watchdog/ebc-c384_wdt.c
-> index c176f59fea28..8ef4b0df3855 100644
-> --- a/drivers/watchdog/ebc-c384_wdt.c
-> +++ b/drivers/watchdog/ebc-c384_wdt.c
-> @@ -2,15 +2,6 @@
->  /*
->   * Watchdog timer driver for the WinSystems EBC-C384
->   * Copyright (C) 2016 William Breathitt Gray
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License, version 2, as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful, but
-> - * WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> - * General Public License for more details.
->   */
->  #include <linux/device.h>
->  #include <linux/dmi.h>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: linux-acpi@vger.kernel.org
+> ---
+>  drivers/acpi/custom_method.c | 6 ++++++
+>  include/linux/security.h     | 1 +
+>  security/lockdown/lockdown.c | 1 +
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+> index aa972dc5cb7e..6e56f9f43492 100644
+> --- a/drivers/acpi/custom_method.c
+> +++ b/drivers/acpi/custom_method.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/acpi.h>
+> +#include <linux/security.h>
+>  
+>  #include "internal.h"
+>  
+> @@ -28,6 +29,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+>  
+>  	struct acpi_table_header table;
+>  	acpi_status status;
+> +	int ret;
+> +
+> +	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
+> +	if (ret)
+> +		return ret;
+>  
+>  	if (!(*ppos)) {
+>  		/* parse the table header to get the table length */
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 30bc6f058926..cc2b5ee4cadd 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -89,6 +89,7 @@ enum lockdown_reason {
+>  	LOCKDOWN_PCI_ACCESS,
+>  	LOCKDOWN_IOPORT,
+>  	LOCKDOWN_MSR,
+> +	LOCKDOWN_ACPI_TABLES,
+>  	LOCKDOWN_INTEGRITY_MAX,
+>  	LOCKDOWN_CONFIDENTIALITY_MAX,
+>  };
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index 297a065e6261..1725224f0024 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>  	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+>  	[LOCKDOWN_IOPORT] = "raw io port access",
+>  	[LOCKDOWN_MSR] = "raw MSR access",
+> +	[LOCKDOWN_ACPI_TABLES] = "modified ACPI tables",
+>  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+>  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+>  };
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
+-- 
+Kees Cook
