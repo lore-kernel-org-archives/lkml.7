@@ -2,116 +2,130 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53856C48BDF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA5C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7F52089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA992089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="gPbICuPI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fYHP5aN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbfFVGak (ORCPT
+        id S1726121AbfFVGfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 02:30:40 -0400
-Received: from mail-eopbgr810074.outbound.protection.outlook.com ([40.107.81.74]:22432
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbfFVGaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 02:30:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/mjjC/lNp+jP0bTVidSvkZh8wfK69ohbkAcNlboC2oc=;
- b=gPbICuPI5YinXzLONwbI3J0LdoNQ1Ungag95yphiGGecDHDN9ElXUyh8RdjG0lCW52jamZoaheWCeBrSzukVzpuYhEcP3trtdl7EQmyGAHgMJmugzOtkVUyMGWf4XPtqneUJyXZ0Yl6Hje0ElSEh6A+LIq22j1cb1QpR6aZcDAA=
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
- MN2PR05MB6350.namprd05.prod.outlook.com (20.178.245.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.12; Sat, 22 Jun 2019 06:30:37 +0000
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f4b2:4f83:7076:ffbf]) by MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f4b2:4f83:7076:ffbf%6]) with mapi id 15.20.2008.007; Sat, 22 Jun 2019
- 06:30:37 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Michal Hocko <mhocko@kernel.org>
-CC:     "Stable tree ," <stable@vger.kernel.org>,
-        "Jason Gunthorpe ," <jgg@mellanox.com>,
-        "linux-mm@kvack.org, LKML ," <linux-kernel@vger.kernel.org>,
-        "Andrea Arcangeli ," <aarcange@redhat.com>,
-        "Jann Horn ," <jannh@google.com>,
-        "Oleg Nesterov ," <oleg@redhat.com>,
-        "Peter Xu ," <peterx@redhat.com>,
-        "Mike Rapoport ," <rppt@linux.ibm.com>,
-        "Michal Hocko ," <mhocko@suse.com>,
-        "Andrew Morton ," <akpm@linux-foundation.org>,
-        "Linus Torvalds ," <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH stable-4.4 v3] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Thread-Topic: [PATCH stable-4.4 v3] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Thread-Index: AQHVKMP9M9AlE9hN9EW8WcihMlSxEQ==
-Date:   Sat, 22 Jun 2019 06:30:37 +0000
-Message-ID: <66C05D07-4075-400D-832C-C82120C93922@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=akaher@vmware.com; 
-x-originating-ip: [27.59.36.41]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 68b8202c-7700-4c83-8b13-08d6f6db236a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6350;
-x-ms-traffictypediagnostic: MN2PR05MB6350:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR05MB6350093010401C8AF7619526BBE60@MN2PR05MB6350.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 0076F48C8A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(366004)(376002)(136003)(199004)(189003)(66946007)(66476007)(2616005)(91956017)(76116006)(6306002)(102836004)(64756008)(66556008)(71190400001)(73956011)(36756003)(26005)(6116002)(66446008)(5660300002)(71200400001)(86362001)(6506007)(68736007)(256004)(4744005)(53936002)(8936002)(6486002)(3846002)(966005)(14454004)(486006)(478600001)(54906003)(2906002)(476003)(229853002)(110136005)(7416002)(25786009)(81156014)(6246003)(186003)(7736002)(316002)(6512007)(33656002)(66066001)(81166006)(6436002)(305945005)(99286004)(8676002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6350;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3VBpGso3BboRzbtKYP5TEO9BAz7cqNEXk0+snzHOBKvBu2YdTQTRm2QT7B8FetVsG0VuEZxu0KYsegcUlSmvVUi9QGtCw/+husVrsH1t0pRM1gfwnfkakkct8knNJtMwYfqjKERuDfqKDhL3tCkuSIcMjF2yr0jYNexPkJnhVaUcgzRMIPnCuc1xvkmiZN4HZ8VXzomr4BLTgKWQ8X3VXDi5lhgBRKgQVzzLxgEWHbiwc3emVH7bwesbC0fMUWIjRZFuDor1IO3jYc0fFW/aufv1yNW2Y9hhpqp7Is7n/JnV865ARGDg3B5axfah/dDknt/3kuxMzwCkJ7n4wVXuqSJr4J2YUIso2punOOHc0Xi6ytXl58h7PyoQdoJWRb1S9MPkCD69y5AcuJ4S+h59FmllFRaN0v1hGVgzAlaJyrU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9227D5D87AF62438B0DFFFEE128F82D@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 22 Jun 2019 02:35:05 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58093 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfFVGfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 02:35:04 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5M6YR342004025
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 21 Jun 2019 23:34:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5M6YR342004025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561185268;
+        bh=pcMGjiiWCf1Ng72/I5EZEfSiHaR7bTWOWx0eqpYmlWs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=fYHP5aN4yaOf+2TU3mkqUkCtUDAd/cR7AQyPzwW1IgQrRZJacQPq/XOhU4nVaTc4y
+         100471g9h1SV2gKlLz1nd+5V3mmt1Cb3/HlTlefDWVoYGG1W8QtZmn3wFLAKF74DOw
+         XRn01yRHMiKgBsi72uG6Aj5IageHwHTIhGg4ThGRFk7tAZf81anAHiEbwK6apsms1Y
+         dOy5Q69SYLcR2KqG4ook2mZBBW7AmRKrBFWf5sA2fgylxuJRSNyMdmkhjK0fJlpVD0
+         VzlNFF4vV9+pe9feQvDO2mk7VWha1XekfNUssom6lhWhKYW9clM0xnSiL7K7tmr6KN
+         bTUTjmdbKvEEw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5M6YRdx2004017;
+        Fri, 21 Jun 2019 23:34:27 -0700
+Date:   Fri, 21 Jun 2019 23:34:27 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Raphael Gault <tipbot@zytor.com>
+Message-ID: <tip-010e3e8fc12b1c13ce19821a11d8930226ebb4b6@git.kernel.org>
+Cc:     mark.rutland@arm.com, raphael.gault@arm.com, hpa@zytor.com,
+        acme@redhat.com, tglx@linutronix.de, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        mingo@kernel.org, peterz@infradead.org
+Reply-To: raphael.gault@arm.com, mark.rutland@arm.com, will.deacon@arm.com,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          tglx@linutronix.de, hpa@zytor.com, catalin.marinas@arm.com,
+          peterz@infradead.org, mingo@kernel.org
+In-Reply-To: <20190611125315.18736-2-raphael.gault@arm.com>
+References: <20190611125315.18736-2-raphael.gault@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf tests arm64: Compile tests unconditionally
+Git-Commit-ID: 010e3e8fc12b1c13ce19821a11d8930226ebb4b6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68b8202c-7700-4c83-8b13-08d6f6db236a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 06:30:37.0330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: akaher@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6350
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIE1vbiwgSnVuIDE3LCAyMDE5IGF0IDA4OjU4OjI0QU0gKzAyMDAsIE1pY2hhbCBIb2Nr
-byB3cm90ZToNCj4gPiBGcm9tOiBBbmRyZWEgQXJjYW5nZWxpIDxhYXJjYW5nZUByZWRoYXQuY29t
-Pg0KPiA+IA0KPiA+IFVwc3RyZWFtIDA0ZjU4NjZlNDFmYjcwNjkwZTI4Mzk3NDg3ZDhiZDhlZWE3
-ZDcxMmEgY29tbWl0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhbCBIb2NrbyA8bWhv
-Y2tvQHN1c2UuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMgICAg
-ICAgICAgfCAgNiArKysrKysNCj4gPiAgZHJpdmVycy9pbmZpbmliYW5kL2h3L21seDQvbWFpbi5j
-IHwgIDMgKysrDQo+ID4gIGZzL3Byb2MvdGFza19tbXUuYyAgICAgICAgICAgICAgICB8IDE4ICsr
-KysrKysrKysrKysrKysrKw0KPiA+ICBmcy91c2VyZmF1bHRmZC5jICAgICAgICAgICAgICAgICAg
-fCAxMCArKysrKysrKy0tDQo+ID4gIGluY2x1ZGUvbGludXgvbW0uaCAgICAgICAgICAgICAgICB8
-IDIxICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBtbS9tbWFwLmMgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgNyArKysrKystDQo+ID4gIDYgZmlsZXMgY2hhbmdlZCwgNjIgaW5zZXJ0aW9u
-cygrKSwgMyBkZWxldGlvbnMoLSkNCj4NCj4gSSd2ZSBxdWV1ZWQgdGhpcyB1cCBub3csIGFzIGl0
-IGxvb2tzIGxpa2UgZXZlcnlvbmUgYWdyZWVzIHdpdGggaXQuICBXaGF0DQo+IGFib3V0IGEgNC45
-LnkgYmFja3BvcnQ/DQoNCkdyZWcsIGl0J3MgaGVyZSBwbGVhc2UgcmV2aWV3Lg0KaHR0cHM6Ly9s
-b3JlLmtlcm5lbC5vcmcvc3RhYmxlLzE1NjEyMDg1MzktMjk2ODItMS1naXQtc2VuZC1lbWFpbC1h
-a2FoZXJAdm13YXJlLmNvbS9ULyNtNTNlYWY2ZTY4N2NiMjdlNDYzOTUxNzNhYTc0YTg1YzJjY2I1
-YzE5MA0KDQpNaWNoYWwsIHBhdGNoZWQgZm9yIGJpbmRlciBjb2RlIFRoYW5rcywgd291bGQgeW91
-IGxpa2UgdG8gc3VnZ2VzdCANCmlmIG1tZ2V0X3N0aWxsX3ZhbGlkIGNoZWNrIHJlcXVpcmUgYW55
-d2hlcmUgZm9yIGtodWdlcGFnZWQgY29kZS4NCg0KPiB0aGFua3MsDQo+IGdyZWcgay1oDQoNCg0K
+Commit-ID:  010e3e8fc12b1c13ce19821a11d8930226ebb4b6
+Gitweb:     https://git.kernel.org/tip/010e3e8fc12b1c13ce19821a11d8930226ebb4b6
+Author:     Raphael Gault <raphael.gault@arm.com>
+AuthorDate: Tue, 11 Jun 2019 13:53:09 +0100
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 17 Jun 2019 15:57:16 -0300
+
+perf tests arm64: Compile tests unconditionally
+
+In order to subsequently add more tests for the arm64 architecture we
+compile the tests target for arm64 systematically.
+
+Further explanation provided by Mark Rutland:
+
+Given prior questions regarding this commit, it's probably worth
+spelling things out more explicitly, e.g.
+
+  Currently we only build the arm64/tests directory if
+  CONFIG_DWARF_UNWIND is selected, which is fine as the only test we
+  have is arm64/tests/dwarf-unwind.o.
+
+  So that we can add more tests to the test directory, let's
+  unconditionally build the directory, but conditionally build
+  dwarf-unwind.o depending on CONFIG_DWARF_UNWIND.
+
+  There should be no functional change as a result of this patch.
+
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190611125315.18736-2-raphael.gault@arm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/arm64/Build       | 2 +-
+ tools/perf/arch/arm64/tests/Build | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
+index 36222e64bbf7..a7dd46a5b678 100644
+--- a/tools/perf/arch/arm64/Build
++++ b/tools/perf/arch/arm64/Build
+@@ -1,2 +1,2 @@
+ perf-y += util/
+-perf-$(CONFIG_DWARF_UNWIND) += tests/
++perf-y += tests/
+diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
+index 41707fea74b3..a61c06bdb757 100644
+--- a/tools/perf/arch/arm64/tests/Build
++++ b/tools/perf/arch/arm64/tests/Build
+@@ -1,4 +1,4 @@
+ perf-y += regs_load.o
+-perf-y += dwarf-unwind.o
++perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+ perf-y += arch-tests.o
