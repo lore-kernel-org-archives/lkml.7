@@ -2,124 +2,302 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B5FC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C615DC48BE7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F91206B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qgov9Ks7"
+	by mail.kernel.org (Postfix) with ESMTP id 9D8622075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfFVKVp (ORCPT
+        id S1726293AbfFVKYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 06:21:45 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:60647 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVKVo (ORCPT
+        Sat, 22 Jun 2019 06:24:07 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:50990 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfFVKYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 06:21:44 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,404,1557212400"; 
-   d="scan'208";a="40026521"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2019 03:21:43 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 22 Jun 2019 03:21:46 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sat, 22 Jun 2019 03:21:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BqQrbkWQZcZCXZMqKKTKSZUnlNi00dn9nuTS7YkGrXc=;
- b=qgov9Ks7VQh59+gwgLjuwvNG96Q0XNg2Vuv9l5LHJHnTRD42Igh8B3E8ra/e+7HnXxlTbLceu6lNMl6S7ASyjAixtgZC1i8JK21whDAMzkwBUsw2TGzWRTMPv0yZjbNJewzDka/v4E6bZOPppk8rlpS0toKbFouqqSdSZDCm9Xw=
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
- BN6PR11MB1651.namprd11.prod.outlook.com (10.172.23.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Sat, 22 Jun 2019 10:21:41 +0000
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1987.017; Sat, 22 Jun 2019
- 10:21:41 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <dinguyen@kernel.org>, <linux-mtd@lists.infradead.org>
-CC:     <marex@denx.de>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <bbrezillon@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <tien.fong.chee@intel.com>
-Subject: Re: [PATCHv6 2/2] mtd: spi-nor: cadence-quadspi: add reset control
-Thread-Topic: [PATCHv6 2/2] mtd: spi-nor: cadence-quadspi: add reset control
-Thread-Index: AQHVIdur3cT5P1lXJ0SybjCFjOpNoKanhNEA
-Date:   Sat, 22 Jun 2019 10:21:41 +0000
-Message-ID: <08cde9f6-6687-94df-b4fb-7fde2d9a1478@microchip.com>
-References: <20190613113138.8280-1-dinguyen@kernel.org>
- <20190613113138.8280-2-dinguyen@kernel.org>
-In-Reply-To: <20190613113138.8280-2-dinguyen@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR10CA0088.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:28::17) To BN6PR11MB1842.namprd11.prod.outlook.com
- (2603:10b6:404:101::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.127.138.199]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 42d248cc-92a7-4b97-678b-08d6f6fb6b19
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1651;
-x-ms-traffictypediagnostic: BN6PR11MB1651:
-x-microsoft-antispam-prvs: <BN6PR11MB1651104E1FC6B9248B23F6F4F0E60@BN6PR11MB1651.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0076F48C8A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(346002)(366004)(396003)(199004)(189003)(110136005)(31696002)(99286004)(31686004)(8936002)(54906003)(6436002)(2501003)(229853002)(186003)(256004)(36756003)(68736007)(81166006)(86362001)(316002)(102836004)(4326008)(76176011)(6512007)(52116002)(81156014)(8676002)(71190400001)(6486002)(71200400001)(386003)(6506007)(53546011)(25786009)(305945005)(486006)(7736002)(446003)(53936002)(6246003)(14454004)(11346002)(5660300002)(2906002)(478600001)(72206003)(73956011)(66446008)(64756008)(66556008)(66946007)(66476007)(3846002)(6116002)(476003)(2616005)(558084003)(66066001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1651;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YGd2czd2nYGwyaDCfb8NsZ/1F4bDUEB6wGAhBhC2NLgBtuY4g3bexNrRJKvM13H1lYK/wXpT065+O6Wl/Ph+vOUKeYDvxKpiNVMKzqk8Cv5l/z1doVAvDOt5EY/++kPQIKmNORGe2Gp/+rTF+Qjd2XsblefKvDUrJBSnkUQ5HdBYre+chgQ5L1Qd3gpZWYFw68YMnMymsAsh0PGIW7QlW2fDlD9cbsV/DiIibQRFlVWTTRF+U82qtSYPDKPDLGezTVTPTOr+SJX6L/Xr0TRq4OopujaYhd6s9vNb3cOX1+Ms8Imzs3dIKirsgGdRAB42Ux3BMV2nFghizFfh1+KWbKej8RNCeTV0QZ+Icg8imREygMYLKh1+s+M26/eayuPSQnvekKirSsw5bumUj+8WOrcX9AS9hT+tfI/ChaoeeEw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1C32387A3F293140B057ED18583EAEA8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 22 Jun 2019 06:24:06 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id EB21C9E74F4;
+        Sat, 22 Jun 2019 11:24:03 +0100 (BST)
+Date:   Sat, 22 Jun 2019 11:24:02 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     kernel@collabora.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/8] iio: common: cros_ec_sensors: move registration
+ to core
+Message-ID: <20190622112402.38cf358e@archlinux>
+In-Reply-To: <20190622111308.524a2c75@archlinux>
+References: <cover.1560848479.git.fabien.lahoudere@collabora.com>
+        <2edb6d26030dbde1952bc1b25b6ca666233adfac.1560848479.git.fabien.lahoudere@collabora.com>
+        <20190622111308.524a2c75@archlinux>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42d248cc-92a7-4b97-678b-08d6f6fb6b19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 10:21:41.7238
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1651
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERpbmgsDQoNCk9uIDA2LzEzLzIwMTkgMDI6MzEgUE0sIERpbmggTmd1eWVuIHdyb3RlOg0K
-PiArCXN0cnVjdCByZXNldF9jb250cm9sICpyc3RjOw0KPiArCXN0cnVjdCByZXNldF9jb250cm9s
-ICpyc3RjX29jcDsNCg0KSSdsbCBhZGQgdGhlc2Ugb24gYSBzaW5nbGUgbGluZSB3aGVuIGFwcGx5
-aW5nLiBUaGUgcGF0Y2ggaXMgZ29vZCwgSSdtIHdhaXRpbmcNCmZvciBSb2IgdG8gcmV2aWV3IHRo
-ZSBiaW5kaW5ncy4NCg0KVGhhbmtzLA0KdGENCg==
+On Sat, 22 Jun 2019 11:13:08 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
+
+> On Tue, 18 Jun 2019 11:06:34 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+> 
+> > In order to simplify derivated drivers from cros_ec_sensors_core,
+> > a new core function is created to registered IIO stricture.
+> > 
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>  
+> This one looks good to me.
+> I'll pick it up once the minor stuff in other patches is sorted.
+
+Sorry, I confused a couple of patches as held some of these back
+in my queue to see how you used them later.
+
+This one I'm actually unconvinced by.  It's a 'cleanup'
+that adds code and hides what is going on. I was expecting to find
+more stuff being added to the resulting function later in the series.
+I didn't find any, but may have missed something.
+
+So not keen on this one patch in the series!
+
+thanks,
+
+Jonathan
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  .../common/cros_ec_sensors/cros_ec_sensors.c  |  9 +-
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 97 ++++++++++++-------
+> >  drivers/iio/light/cros_ec_light_prox.c        |  7 +-
+> >  drivers/iio/pressure/cros_ec_baro.c           |  7 +-
+> >  .../linux/iio/common/cros_ec_sensors_core.h   | 16 ++-
+> >  5 files changed, 72 insertions(+), 64 deletions(-)
+> > 
+> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > index 897dc83a3355..c4bee9265246 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > @@ -14,7 +14,7 @@
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/kfifo_buf.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> > -#include <linux/iio/triggered_buffer.h>
+> > +
+> >  #include <linux/kernel.h>
+> >  #include <linux/mfd/cros_ec.h>
+> >  #include <linux/mfd/cros_ec_commands.h>
+> > @@ -233,12 +233,7 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+> >  	else
+> >  		state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+> >  
+> > -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > -			cros_ec_sensors_capture, NULL);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> > -	return devm_iio_device_register(dev, indio_dev);
+> > +	return cros_ec_sensors_core_register(pdev, indio_dev);
+> >  }
+> >  
+> >  static const struct platform_device_id cros_ec_sensors_ids[] = {
+> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index e5181e007dd7..3880849c5cca 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/kfifo_buf.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> > +#include <linux/iio/triggered_buffer.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/mfd/cros_ec.h>
+> >  #include <linux/mfd/cros_ec_commands.h>
+> > @@ -95,6 +96,67 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
+> >  
+> > +/**
+> > + * cros_ec_sensors_capture() - the trigger handler function
+> > + * @irq:	the interrupt number.
+> > + * @p:		a pointer to the poll function.
+> > + *
+> > + * On a trigger event occurring, if the pollfunc is attached then this
+> > + * handler is called as a threaded interrupt (and hence may sleep). It
+> > + * is responsible for grabbing data from the device and pushing it into
+> > + * the associated buffer.
+> > + *
+> > + * Return: IRQ_HANDLED
+> > + */
+> > +static irqreturn_t cros_ec_sensors_capture(int irq, void *p)
+> > +{
+> > +	struct iio_poll_func *pf = p;
+> > +	struct iio_dev *indio_dev = pf->indio_dev;
+> > +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> > +	int ret;
+> > +
+> > +	mutex_lock(&st->cmd_lock);
+> > +
+> > +	/* Clear capture data. */
+> > +	memset(st->samples, 0, indio_dev->scan_bytes);
+> > +
+> > +	/* Read data based on which channels are enabled in scan mask. */
+> > +	ret = st->read_ec_sensors_data(indio_dev,
+> > +				       *indio_dev->active_scan_mask,
+> > +				       (s16 *)st->samples);
+> > +	if (ret < 0)
+> > +		goto done;
+> > +
+> > +	iio_push_to_buffers_with_timestamp(indio_dev, st->samples,
+> > +					   iio_get_time_ns(indio_dev));
+> > +
+> > +done:
+> > +	/*
+> > +	 * Tell the core we are done with this trigger and ready for the
+> > +	 * next one.
+> > +	 */
+> > +	iio_trigger_notify_done(indio_dev->trig);
+> > +
+> > +	mutex_unlock(&st->cmd_lock);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +int cros_ec_sensors_core_register(struct platform_device *pdev,
+> > +				  struct iio_dev *indio_dev)
+> > +{
+> > +	int ret;
+> > +	struct device *dev = &pdev->dev;
+> > +
+> > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > +					      cros_ec_sensors_capture, NULL);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return devm_iio_device_register(dev, indio_dev);
+> > +}
+> > +EXPORT_SYMBOL_GPL(cros_ec_sensors_core_register);
+> > +
+> >  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+> >  				 u16 opt_length)
+> >  {
+> > @@ -380,41 +442,6 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_cmd);
+> >  
+> > -irqreturn_t cros_ec_sensors_capture(int irq, void *p)
+> > -{
+> > -	struct iio_poll_func *pf = p;
+> > -	struct iio_dev *indio_dev = pf->indio_dev;
+> > -	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> > -	int ret;
+> > -
+> > -	mutex_lock(&st->cmd_lock);
+> > -
+> > -	/* Clear capture data. */
+> > -	memset(st->samples, 0, indio_dev->scan_bytes);
+> > -
+> > -	/* Read data based on which channels are enabled in scan mask. */
+> > -	ret = st->read_ec_sensors_data(indio_dev,
+> > -				       *(indio_dev->active_scan_mask),
+> > -				       (s16 *)st->samples);
+> > -	if (ret < 0)
+> > -		goto done;
+> > -
+> > -	iio_push_to_buffers_with_timestamp(indio_dev, st->samples,
+> > -					   iio_get_time_ns(indio_dev));
+> > -
+> > -done:
+> > -	/*
+> > -	 * Tell the core we are done with this trigger and ready for the
+> > -	 * next one.
+> > -	 */
+> > -	iio_trigger_notify_done(indio_dev->trig);
+> > -
+> > -	mutex_unlock(&st->cmd_lock);
+> > -
+> > -	return IRQ_HANDLED;
+> > -}
+> > -EXPORT_SYMBOL_GPL(cros_ec_sensors_capture);
+> > -
+> >  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+> >  			  struct iio_chan_spec const *chan,
+> >  			  int *val, int *val2, long mask)
+> > diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> > index 32ea5afd495f..682dc19c2bf3 100644> --- a/drivers/iio/light/cros_ec_light_prox.c
+> > +++ b/drivers/iio/light/cros_ec_light_prox.c
+> > @@ -215,12 +215,7 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+> >  
+> >  	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+> >  
+> > -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > -					      cros_ec_sensors_capture, NULL);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> > -	return devm_iio_device_register(dev, indio_dev);
+> > +	return cros_ec_sensors_core_register(pdev, indio_dev);
+> >  }
+> >  
+> >  static const struct platform_device_id cros_ec_light_prox_ids[] = {
+> > diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+> > index 8718036d74d2..9d3745bc2fba 100644
+> > --- a/drivers/iio/pressure/cros_ec_baro.c
+> > +++ b/drivers/iio/pressure/cros_ec_baro.c
+> > @@ -152,12 +152,7 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+> >  
+> >  	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+> >  
+> > -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > -					      cros_ec_sensors_capture, NULL);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> > -	return devm_iio_device_register(dev, indio_dev);
+> > +	return cros_ec_sensors_core_register(pdev, indio_dev);
+> >  }
+> >  
+> >  static const struct platform_device_id cros_ec_baro_ids[] = {
+> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> > index 485c649b421f..60f40d253f4a 100644
+> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > @@ -116,18 +116,14 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      bool physical_device);
+> >  
+> >  /**
+> > - * cros_ec_sensors_capture() - the trigger handler function
+> > - * @irq:	the interrupt number.
+> > - * @p:		a pointer to the poll function.
+> > - *
+> > - * On a trigger event occurring, if the pollfunc is attached then this
+> > - * handler is called as a threaded interrupt (and hence may sleep). It
+> > - * is responsible for grabbing data from the device and pushing it into
+> > - * the associated buffer.
+> > + * cros_ec_sensors_core_register() - registration of the core structure
+> > + * @pdev:		platform device created for the sensors
+> > + * @indio_dev:		iio device structure of the device
+> >   *
+> > - * Return: IRQ_HANDLED
+> > + * Return: 0 on success, -errno on failure.
+> >   */
+> > -irqreturn_t cros_ec_sensors_capture(int irq, void *p);
+> > +int cros_ec_sensors_core_register(struct platform_device *pdev,
+> > +				  struct iio_dev *indio_dev);
+> >  
+> >  /**
+> >   * cros_ec_core_channel_init() - initialize channel  
+> 
+
