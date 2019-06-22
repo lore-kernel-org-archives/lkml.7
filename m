@@ -6,55 +6,37 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E069C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D407DC48BDF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B751208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B523E2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfFVHXE (ORCPT
+        id S1726114AbfFVH2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 03:23:04 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57509 "EHLO
+        Sat, 22 Jun 2019 03:28:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57515 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfFVHXE (ORCPT
+        with ESMTP id S1726070AbfFVH2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 03:23:04 -0400
+        Sat, 22 Jun 2019 03:28:22 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1heaL9-0003VY-9L; Sat, 22 Jun 2019 09:21:35 +0200
-Date:   Sat, 22 Jun 2019 09:21:33 +0200 (CEST)
+        id 1heaRd-0003tp-O9; Sat, 22 Jun 2019 09:28:17 +0200
+Date:   Sat, 22 Jun 2019 09:28:16 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Jacob Pan <jacob.jun.pan@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Ashok Raj <ashok.raj@intel.com>, x86 <x86@kernel.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Juergen Gross <jgross@suse.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-In-Reply-To: <20190621235541.GA25773@ranerica-svr.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1906220920270.5503@nanos.tec.linutronix.de>
-References: <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de> <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
- <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de> <20190619084316.71ce5477@jacob-builder> <alpine.DEB.2.21.1906211732330.5503@nanos.tec.linutronix.de> <20190621103126.585ca6d3@jacob-builder> <20190621113938.1679f329@jacob-builder>
- <alpine.DEB.2.21.1906212201400.5503@nanos.tec.linutronix.de> <20190621235541.GA25773@ranerica-svr.sc.intel.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+cc:     Cheng Jian <cj.chengjian@huawei.com>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, jpoimboe@redhat.com,
+        mingo@redhat.com, huawei.libin@huawei.com, xiexiuqi@huawei.com,
+        yangyingliang@huawei.com, bobo.shaobowang@huawei.com
+Subject: Re: [PATCH] Revert "x86/module: Detect and skip invalid
+ relocations"
+In-Reply-To: <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
+Message-ID: <alpine.DEB.2.21.1906220927460.5503@nanos.tec.linutronix.de>
+References: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com> <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,30 +48,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Ricardo Neri wrote:
-> On Fri, Jun 21, 2019 at 10:05:01PM +0200, Thomas Gleixner wrote:
-> > On Fri, 21 Jun 2019, Jacob Pan wrote:
-> > > > 
-> > > I looked at the code again, seems the per cpu HPET code already taken
-> > > care of HPET MSI management. Why can't we use IR-HPET-MSI chip and
-> > > domain to allocate and set affinity etc.?
-> > > Most APIC timer has ARAT not enough per cpu HPET, so per cpu HPET is
-> > > not used mostly.
-> > 
-> > Sure, we can use that, but that does not allow to move the affinity from
-> > NMI context either. Same issue with the IOMMU as with the other hack.
-> 
-> If I understand Thomas' point correctly, the problem is having to take
-> lock in NMI context to update the IRTE for the HPET; both as in my hack
-> and in the generic irq code. The problem is worse when using the generic
-> irq code as there are several layers and several locks that need to be
-> handled.
+Miroslav,
 
-It does not matter how many locks are involved. One is enough to wedge the
-machine.
+On Thu, 20 Jun 2019, Miroslav Benes wrote:
+> On Thu, 20 Jun 2019, Cheng Jian wrote:
+> 
+> > This reverts commit eda9cec4c9a12208a6f69fbe68f72a6311d50032.
+> > 
+> > Since commit (eda9cec4c9a1 'x86/module: Detect and skip invalid
+> > relocations') add some sanity check in apply_relocate_add, borke
+> > re-insmod a kernel module which has been patched before,
+> > 
+> > The relocation informations of the livepatch module have been
+> > overwritten since first patched, so if we rmmod and insmod the
+> > kernel module, these values are not zero anymore, when
+> > klp_module_coming doing, and that commit marks them as invalid
+> > invalid_relocation.
+> > 
+> > Then the following error occurs:
+> > 
+> > 	module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc (____ptrval____), val ffffffffc000236c
+> > 	livepatch: failed to initialize patch 'livepatch_0001_test' for module 'test' (-8)
+> > 	livepatch: patch 'livepatch_0001_test' failed for module 'test', refusing to load module 'test'
+> 
+> Oh yeah. First reported here 20180602161151.apuhs2dygsexmcg2@treble (LP ML 
+> only and there is no archive on lore.kernel.org yet. Sorry about that.). I 
+> posted v1 here 
+> https://lore.kernel.org/lkml/20180607092949.1706-1-mbenes@suse.cz/ and 
+> even started to work on v2 in March with arch-specific nullifying, but 
+> then I got sidetracked again. I'll move it up my todo list a bit.
+
+so we need to revert it for now, right?
 
 Thanks,
 
 	tglx
-
-
