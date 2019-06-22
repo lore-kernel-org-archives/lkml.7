@@ -2,96 +2,97 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD73AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56671C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F89B20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C1A20665
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HKbBtXbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfFVN1z (ORCPT
+        id S1726311AbfFVNkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 09:27:55 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57814 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFVN1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 09:27:54 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1heg3T-0006S2-TU; Sat, 22 Jun 2019 15:27:44 +0200
-Date:   Sat, 22 Jun 2019 15:27:42 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Octavio Alvarez <octallk1@alvarezp.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiang Biao <jiang.biao2@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Nicolai Stange <nstange@suse.de>
-Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
-In-Reply-To: <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
-Message-ID: <alpine.DEB.2.21.1906221523340.5503@nanos.tec.linutronix.de>
-References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org> <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org> <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de> <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 22 Jun 2019 09:40:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:41703 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfFVNkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 09:40:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45WGsK6CHkz9s00;
+        Sat, 22 Jun 2019 23:40:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561210838;
+        bh=lZ/keDuHXUg14R9OMotOzR7qvsuAlNsrI1rmNIM1Ecg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HKbBtXbMyf0DBxRSlYo/bJd2kIWMsEx7mqs4J6m8cQCbSYnYcam1icfZArUEnIATd
+         6tkibYuvbQzv+SWSOwXVZZqTnlCVqIHi76rZoNsZLm/pSD1P7PRrpfECBcXEluYoAa
+         rO/ueiIVE8YieM7RCtFSztPxM0WWfRwQXX+NVk9+T5XvAEi2FCEl5v26ppkRw2OnXt
+         l7caZ0/1/gUcinv6NXYYFd4Fuz7JwNb+/4w17ylPm4X25C9z2JJjp+i7SbS0/B/4pl
+         M/p0xYRaA+/9h5ClgzF7d5hg6sbD85VBSIlul79nxHkxu7vseNpC+8Vb8vAhW23OzS
+         tWEAB6xEkHtmg==
+Date:   Sat, 22 Jun 2019 23:40:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: linux-next: Fixes tag needs some work in the pci tree
+Message-ID: <20190622234029.21fe1f27@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/EFPf+vZLkc3DLRAx3sAk+26"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Octavio,
+--Sig_/EFPf+vZLkc3DLRAx3sAk+26
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 19 Jun 2019, Octavio Alvarez wrote:
-> On 6/13/19 3:45 PM, Thomas Gleixner wrote:
-> > Can you please provide the content of /proc/interrupts with the driver
-> > loaded and working after boot (don't hibernate) for the following kernels:
-> > 
-> 
-> $ cat linux-master-after-boot.txt
->            CPU0       CPU1       CPU2       CPU3
+Hi all,
 
->  27:          1          0          0          0   PCI-MSI 3145728-edge eth0
+In commit
 
-> >    Linus upstream + revert
-> 
-> $ cat linux-master-reverted-after-boot.txt
->            CPU0       CPU1       CPU2       CPU3
+  46c1bfcfcd87 ("PCI: xilinx-nwl: Fix Multi MSI data programming")
 
->  27:          1          0          0          0   PCI-MSI 3145728-edge eth0
- 
-> Meanwhile, here it is for 4.9, which is the latest Debian-provided kernel and
-> worked:
-> 
-> $ cat linux-4.9-after-boot.txt
->            CPU0       CPU1       CPU2       CPU3
+Fixes tag
 
->  24:          1          0          0          0   PCI-MSI 3145728-edge eth0
- 
-> I will keep trying 4.14, unless you say otherwise.
+  Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
 
-It would be interesting though I don't expect too much data.
+has these problem(s):
 
-So all of the above use PCI/MSI. That's at least a data point. I need to
-stare into that driver again to figure out why this might make a
-difference, but right now I'm lost.
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
 
-Thanks,
+Please do not split Fixes tags across more than one line.
 
-	tglx
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/EFPf+vZLkc3DLRAx3sAk+26
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0OL80ACgkQAVBC80lX
+0GwVgQf+JqGiL66mbnQ6aPjk76UOBQgdadiyQwW4kXv+Mqp8As2hJdkNf/p7wssX
+hE+xeno3lW5BkIBzDjCuIOQfZhmIJKolZsqAt8BB7jpeCNCFJQ5y1CtlJM2Y/8Ac
+8FXNCWESWGQyMwCmTKPPXH2N5Sfb6Lqf502GvUbUlTw19oXKZE70VvtxzWBg1w6o
+80fwmzi9+ALv4QwEWIrORG8VjyQstJbXbMRy0yObco1ReXaVbstdt1oYDWX7m5E9
+pb5rUMtJfhxrRPT/4rligPO2SLN/fZWbHn2l+H8NGpN6nEjRgWwEU25dhLD7cN3I
+16lFIXKx5tBcuTtdMFPo4ShBbsd+Cg==
+=r9MJ
+-----END PGP SIGNATURE-----
+
+--Sig_/EFPf+vZLkc3DLRAx3sAk+26--
