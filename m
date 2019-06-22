@@ -2,97 +2,63 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56671C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F70C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C1A20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HKbBtXbM"
+	by mail.kernel.org (Postfix) with ESMTP id 45C8120665
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 13:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfFVNkm (ORCPT
+        id S1726351AbfFVNmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 09:40:42 -0400
-Received: from ozlabs.org ([203.11.71.1]:41703 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfFVNkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 09:40:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45WGsK6CHkz9s00;
-        Sat, 22 Jun 2019 23:40:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561210838;
-        bh=lZ/keDuHXUg14R9OMotOzR7qvsuAlNsrI1rmNIM1Ecg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HKbBtXbMyf0DBxRSlYo/bJd2kIWMsEx7mqs4J6m8cQCbSYnYcam1icfZArUEnIATd
-         6tkibYuvbQzv+SWSOwXVZZqTnlCVqIHi76rZoNsZLm/pSD1P7PRrpfECBcXEluYoAa
-         rO/ueiIVE8YieM7RCtFSztPxM0WWfRwQXX+NVk9+T5XvAEi2FCEl5v26ppkRw2OnXt
-         l7caZ0/1/gUcinv6NXYYFd4Fuz7JwNb+/4w17ylPm4X25C9z2JJjp+i7SbS0/B/4pl
-         M/p0xYRaA+/9h5ClgzF7d5hg6sbD85VBSIlul79nxHkxu7vseNpC+8Vb8vAhW23OzS
-         tWEAB6xEkHtmg==
-Date:   Sat, 22 Jun 2019 23:40:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: linux-next: Fixes tag needs some work in the pci tree
-Message-ID: <20190622234029.21fe1f27@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/EFPf+vZLkc3DLRAx3sAk+26"; protocol="application/pgp-signature"
+        Sat, 22 Jun 2019 09:42:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:54336 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVNmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 09:42:32 -0400
+Received: from localhost (unknown [8.46.76.25])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D3E6115394EED;
+        Sat, 22 Jun 2019 06:42:22 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 09:42:12 -0400 (EDT)
+Message-Id: <20190622.094212.1667441284428813985.davem@davemloft.net>
+To:     poros@redhat.com
+Cc:     netdev@vger.kernel.org, sathya.perla@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, linux-kernel@vger.kernel.org,
+        ivecera@redhat.com
+Subject: Re: [PATCH v2 net] be2net: fix link failure after ethtool offline
+ test
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190619122942.15497-1-poros@redhat.com>
+References: <20190619122942.15497-1-poros@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 22 Jun 2019 06:42:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EFPf+vZLkc3DLRAx3sAk+26
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Petr Oros <poros@redhat.com>
+Date: Wed, 19 Jun 2019 14:29:42 +0200
 
-Hi all,
+> Certain cards in conjunction with certain switches need a little more
+> time for link setup that results in ethtool link test failure after
+> offline test. Patch adds a loop that waits for a link setup finish.
+> 
+> Changes in v2:
+> - added fixes header
+> 
+> Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
+> Signed-off-by: Petr Oros <poros@redhat.com>
 
-In commit
-
-  46c1bfcfcd87 ("PCI: xilinx-nwl: Fix Multi MSI data programming")
-
-Fixes tag
-
-  Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags across more than one line.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EFPf+vZLkc3DLRAx3sAk+26
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0OL80ACgkQAVBC80lX
-0GwVgQf+JqGiL66mbnQ6aPjk76UOBQgdadiyQwW4kXv+Mqp8As2hJdkNf/p7wssX
-hE+xeno3lW5BkIBzDjCuIOQfZhmIJKolZsqAt8BB7jpeCNCFJQ5y1CtlJM2Y/8Ac
-8FXNCWESWGQyMwCmTKPPXH2N5Sfb6Lqf502GvUbUlTw19oXKZE70VvtxzWBg1w6o
-80fwmzi9+ALv4QwEWIrORG8VjyQstJbXbMRy0yObco1ReXaVbstdt1oYDWX7m5E9
-pb5rUMtJfhxrRPT/4rligPO2SLN/fZWbHn2l+H8NGpN6nEjRgWwEU25dhLD7cN3I
-16lFIXKx5tBcuTtdMFPo4ShBbsd+Cg==
-=r9MJ
------END PGP SIGNATURE-----
-
---Sig_/EFPf+vZLkc3DLRAx3sAk+26--
+Applied, thanks.
