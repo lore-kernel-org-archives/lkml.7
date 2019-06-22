@@ -2,80 +2,85 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434E2C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DDC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B1520665
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B9C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 17:55:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T/Ak48u3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfFVRyu (ORCPT
+        id S1726476AbfFVRzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 13:54:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33369 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfFVRyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 13:54:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id u13so313623iop.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 10:54:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=6dq/P/oYxkiMxIGaVnr0C8AyZeCqmInR54AoEj7GHlw=;
-        b=ubvS5qCBaBNK6Y56OAqSKLsMi4yU+vej1cwKSlDXK/C1xUQZ196ui1I/MJQ6jD5huh
-         Qdl08CCyMIV3m/lyz+0Vp+hZAoN/BdcWxYttbQacSwpnKsDVGA3/xEwwD8AUnoFg3iSx
-         /qWnLstlse4V6KhoWj+UaIDYaW2lVNp+bfKCoBttTc/ABAICevOq6glVPcz1UAk7vIJD
-         zOZ7AiWVKhr93+n0i0dyS3UMVZt+D9nJJnZWB8Hzzbe1TzamvIGoBw2SAIqMZxinvoEp
-         o4CfVRgozvvcg4FIyZR9Gi2+nY2THBZuUWv1Oy/EgS1yRkPKuVpW03XI2qchDiKWZphQ
-         oQ9w==
-X-Gm-Message-State: APjAAAUv6NI18QpAD2aEav84rz0b5z25FdnpSwMQ8z0yI955u80OzD2i
-        anNKo/nGUGIch0pPEoxm9i2rfHKIiKqBUai6hY88/yOc
-X-Google-Smtp-Source: APXvYqwfmzYepjt1UbzLYFgHLWIfcJCq+inBEB6bo0prCEsx2fgq7+ahunjMK+n9xsBA7YDAJUXByReW7I6jXX83kdc=
-X-Received: by 2002:a5d:9dc7:: with SMTP id 7mr32293713ioo.237.1561226089232;
- Sat, 22 Jun 2019 10:54:49 -0700 (PDT)
+        Sat, 22 Jun 2019 13:55:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49228 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbfFVRzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 13:55:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mFFGkaI0iidPz6D6ZS4fu8dpqoCBpKXPSU6kWYWGKoA=; b=T/Ak48u3jVqwCPZX7scFXH1Lko
+        zV6l5OAc4BpmDF9HEJ9ZhX3XIoiSrCgnfv5hgmeB1F7USdvhsYqQvh9w7X5KHovLTRHPyzLzbEH7x
+        GY1iJGAcIiWeIoI501iO3vNwRWqdKgjoNlAEXQOm4lPTO1D9SsnR0HQzWqqomEi/q7fw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hekEG-0003Ea-Vr; Sat, 22 Jun 2019 19:55:08 +0200
+Date:   Sat, 22 Jun 2019 19:55:08 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Jose Abreu <joabreu@synopsys.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker
+ board
+Message-ID: <20190622175508.GE8497@lunn.ch>
+References: <20190621180017.29646-1-katsuhiro@katsuster.net>
+ <1871177.hjLhdHVgcu@phil>
+ <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
 MIME-Version: 1.0
-References: <CA+hQ2+j-8HoWK_fpJkvKRv22WMLEU_6ym0--tSz-jEMN+NPtcg@mail.gmail.com>
-In-Reply-To: <CA+hQ2+j-8HoWK_fpJkvKRv22WMLEU_6ym0--tSz-jEMN+NPtcg@mail.gmail.com>
-From:   Luigi Rizzo <rizzo@iet.unipi.it>
-Date:   Sat, 22 Jun 2019 10:54:36 -0700
-Message-ID: <CA+hQ2+hMjpifq4ef1u4pfvXvgjCp4G7qMSE=GciHarVGrXC3pg@mail.gmail.com>
-Subject: Q: incorrect llist_empty() call in flush_smp_call_function_queue ?
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-flush_smp_call_function_queue() starts with the code below.
-My impression is that the !llist_empty(head) term below is wrong
-and should be replaced by !entry
+On Sat, Jun 22, 2019 at 11:50:10PM +0900, Katsuhiro Suzuki wrote:
+> Hello,
 
-llist_del_all(head) is  xchg(&head->first, NULL) so it leaves the list empty,
-the only chance that !llist_empty(head) is true is when a new element is
-added between llist_del_add and the test of the condition, whereas judging
-from the comment the intent seems to be that the warning should be printed
-also when there are previous elements.
+Hi Katsuhiro
 
-static void flush_smp_call_function_queue(bool warn_cpu_offline)
-{
-        ...
-        head = this_cpu_ptr(&call_single_queue);
-        entry = llist_del_all(head);
-        entry = llist_reverse_order(entry);
+Please also report this to netdev, and the stmmac maintainers.
 
-        /* There shouldn't be any pending callbacks on an offline CPU. */
-        if (unlikely(warn_cpu_offline && !cpu_online(smp_processor_id()) &&
-                     !warned && !llist_empty(head))) {
-                warned = true;
-                WARN(1, "IPI on offline CPU %d\n", smp_processor_id());
+./scripts/get_maintainer.pl -f drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+Giuseppe Cavallaro <peppe.cavallaro@st.com> (supporter:STMMAC ETHERNET DRIVER)
+Alexandre Torgue <alexandre.torgue@st.com> (supporter:STMMAC ETHERNET DRIVER)
+Jose Abreu <joabreu@synopsys.com> (supporter:STMMAC ETHERNET DRIVER)
+"David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS)
+Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 ARCHITECTURE)
+netdev@vger.kernel.org (open list:STMMAC ETHERNET DRIVER)
+linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE)
+linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
+linux-kernel@vger.kernel.org (open list)
 
---
+> I have not bisect commit of root cause yet... Is it better to bisect
+> and find problem instead of sending this patch?
 
-cheers
-luigi
+My guess is that it is one of these three which broken it:
+
+74371272f97f net: stmmac: Convert to phylink and remove phylib logic
+eeef2f6b9f6e net: stmmac: Start adding phylink support
+9ad372fc5aaf net: stmmac: Prepare to convert to phylink
+
+	     Andrew
