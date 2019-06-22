@@ -2,125 +2,123 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB4C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F6C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E46D208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/p1qP5U"
+	by mail.kernel.org (Postfix) with ESMTP id AFE1421670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561193668;
+	bh=kQuDG9P7GT4mBpe49vCLPobIP/JxzGZ+/TGdxu04U3c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ax5yz8JFidDV22CoB3nMKxRkT+i/4vOqsXMoVTKZ4sEFKXKB3k1fih8yDfTelh/w5
+	 VA6NJaLmIei/OSl6mCTEqCOUl9EX03TUertiwbnNx6X26nPJp9Rv5TOzN0m1il893V
+	 +p/fWwjVCt45YLAEJ/J7TJiKuLOSjHR0dhVmi/j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFVIvX (ORCPT
+        id S1726350AbfFVIy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:51:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45516 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfFVIvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:51:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so8687554wre.12
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 01:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qiN85MY5YnTwB3nQ80pJ/FSY8JMCGoluMGY1yE5pzt8=;
-        b=H/p1qP5UKrqbgx62rex5GvcEiP0tumRfLfdHFtTeGXRVnhy+Bc0wSAjxZkpJI2kT6U
-         vQUfAVCPe9SfCqgFiRYWiEmlDFWx07zJylvpNpmMiWu8esFrF0nsSylVV71EWkolD9xQ
-         S6t6QfIx1p643HMzcCMzaomCgLCtYVoT4th99SnrRo5wcclGgqXgD2Mkx7M81nBh7D8c
-         FHSNPRsklt3XRZV1fmkYW6h+38Z1j8NhVaQ1GreT6T/aI81iqlGF30NUrqPj0xQozNpg
-         HEyFXAK7Eufqhn0jAVrL7bYli/+XrGKo5PABFeIFVThkD2OuAz7cbiOlxuXxWaFMaFBO
-         ZJyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qiN85MY5YnTwB3nQ80pJ/FSY8JMCGoluMGY1yE5pzt8=;
-        b=UqUxfZxJ3LDSVbBMYTj+zDaUIRJxBertwxVyp4N/I3zUYlGYaWmzkhYudJ3W60IhoV
-         s6tfkgJNa0L+80lp2XHBJn1Gz6NjXQWb9+6dGtgQRw+5Wl3Re9M+d9+3pRRNyoxSRRC8
-         P7lW7dEtinoXt9FluuhIme1yivxq9zrDiZHDYJpHYSM3BPbL1pksKWkna93ma9JfLtyt
-         o4Olq7SUTjIeid/YtbsROl3lubS5kLTnvD7L4ckHAU8yrCWIpfofGbwY4r7E1IyNcfuS
-         KlwQqGRluuqncQcu36bcn0u6ESUEBPuz0nqhi2G+fMQd+NImZcr26tCZe6V8IvxIL2Hc
-         +jQg==
-X-Gm-Message-State: APjAAAU3wgEeFbw9MTF/ltaP83qq1h0u/KJUXbmi/g6QFeIiZb+JvADX
-        qnNiSvJekrm3ch/WL6TZc5hpgQ==
-X-Google-Smtp-Source: APXvYqy5fzhYOJSXvdtzGuYRxNq7/S9xCwSYJ5Zg3y0zdEQUs8+GkbOXHTnlZaj2JbCGjTxK/8Hdzg==
-X-Received: by 2002:adf:f591:: with SMTP id f17mr2519691wro.119.1561193476680;
-        Sat, 22 Jun 2019 01:51:16 -0700 (PDT)
-Received: from sudo.home ([2a01:cb1d:112:6f00:4bd:3f91:4ef8:ae7e])
-        by smtp.gmail.com with ESMTPSA id v15sm4863589wrt.25.2019.06.22.01.51.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Jun 2019 01:51:16 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jonathan Richardson <jonathan.richardson@broadcom.com>,
-        Luo XinanX <xinanx.luo@intel.com>,
-        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        Qian Cai <cai@lca.pw>, Tian Baofeng <baofeng.tian@intel.com>
-Subject: [PATCH 4/4] efibc: Replace variable set function in notifier call
-Date:   Sat, 22 Jun 2019 10:51:06 +0200
-Message-Id: <20190622085106.24859-5-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190622085106.24859-1-ard.biesheuvel@linaro.org>
-References: <20190622085106.24859-1-ard.biesheuvel@linaro.org>
+        Sat, 22 Jun 2019 04:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfFVIy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:54:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F572089C;
+        Sat, 22 Jun 2019 08:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561193666;
+        bh=kQuDG9P7GT4mBpe49vCLPobIP/JxzGZ+/TGdxu04U3c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FkjpFNKLhMZSkqbIbQHJb6MlZ7kZL7Sob2q1ys/Yitf0vK0EH29nI/0JdrsIJyOxq
+         l0NZJTBfaqpNGdYcRmQbW4spXcClXUKS4CiY0tR4SThvEqCAyHqrxZv1lRzdm+7NLh
+         re7feAzwa3vEVUu1Ozzpy0x13+D9r7ISm23albYo=
+Date:   Sat, 22 Jun 2019 09:54:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/2] iio: cros_ec: Add sign vector in core for
+ backward compatibility
+Message-ID: <20190622095421.6b4e38e9@archlinux>
+In-Reply-To: <20190621024106.158589-2-gwendal@chromium.org>
+References: <20190621024106.158589-1-gwendal@chromium.org>
+        <20190621024106.158589-2-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tian Baofeng <baofeng.tian@intel.com>
+On Thu, 20 Jun 2019 19:41:05 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-Replace the variable set function from "efivar_entry_set" to
-"efivar_entry_set_safe" in efibc panic notifier.
-In safe function parameter "block" will set to false
-and will call "efivar_entry_set_nonblocking"to set efi variables.
-efivar_entry_set_nonblocking is guaranteed to
-not block and is suitable for calling from crash/panic handlers.
-In UEFI android platform, when warm reset happens,
-with this change, efibc will not block the reboot process.
-Otherwise, set variable will call queue work and send to other offlined
-cpus then cause another panic, finally will cause reboot failure.
+> To allow cros_ec iio core library to be used with legacy device, add a
+> vector to rotate sensor data if necessary: legacy devices are not
+> reporting data in HTML5/Android sensor referential.
+> 
+> On veyron minnie, check chrome detect tablet mode and rotate
+> screen in tablet mode.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+I'm guessing that you have a whole pile of code that isn't using
+the mounting_matrix ABI and hence need the 'fixup' in kernel?
 
-Signed-off-by: Tian Baofeng <baofeng.tian@intel.com>
-Signed-off-by: Luo XinanX <xinanx.luo@intel.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- drivers/firmware/efi/efibc.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Otherwise this is fine, but I'd like to wait for Doug to have another
+look if he wants to (and ideally give a reviewed-by)
 
-diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
-index 61e099826cbb..35dccc88ac0a 100644
---- a/drivers/firmware/efi/efibc.c
-+++ b/drivers/firmware/efi/efibc.c
-@@ -43,11 +43,13 @@ static int efibc_set_variable(const char *name, const char *value)
- 	efibc_str_to_str16(value, (efi_char16_t *)entry->var.Data);
- 	memcpy(&entry->var.VendorGuid, &guid, sizeof(guid));
- 
--	ret = efivar_entry_set(entry,
--			       EFI_VARIABLE_NON_VOLATILE
--			       | EFI_VARIABLE_BOOTSERVICE_ACCESS
--			       | EFI_VARIABLE_RUNTIME_ACCESS,
--			       size, entry->var.Data, NULL);
-+	ret = efivar_entry_set_safe(entry->var.VariableName,
-+				    entry->var.VendorGuid,
-+				    EFI_VARIABLE_NON_VOLATILE
-+				    | EFI_VARIABLE_BOOTSERVICE_ACCESS
-+				    | EFI_VARIABLE_RUNTIME_ACCESS,
-+				    false, size, entry->var.Data);
-+
- 	if (ret)
- 		pr_err("failed to set %s EFI variable: 0x%x\n",
- 		       name, ret);
--- 
-2.20.1
+Anyone else's input also welcome of course.
+
+Jonathan
+
+> ---
+>  drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 4 ++++
+>  include/linux/iio/common/cros_ec_sensors_core.h           | 1 +
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 719a0df5aeeb..e8a4d78659c8 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -66,6 +66,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  		}
+>  		state->type = state->resp->info.type;
+>  		state->loc = state->resp->info.location;
+> +
+> +		/* Set sign vector, only used for backward compatibility. */
+> +		memset(state->sign, 1, CROS_EC_SENSOR_MAX_AXIS);
+>  	}
+>  
+>  	return 0;
+> @@ -254,6 +257,7 @@ static int cros_ec_sensors_read_data_unsafe(struct iio_dev *indio_dev,
+>  		if (ret < 0)
+>  			return ret;
+>  
+> +		*data *= st->sign[i];
+>  		data++;
+>  	}
+>  
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index ce16445411ac..a1c85ad4df91 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -71,6 +71,7 @@ struct cros_ec_sensors_core_state {
+>  	enum motionsensor_location loc;
+>  
+>  	s16 calib[CROS_EC_SENSOR_MAX_AXIS];
+> +	s8 sign[CROS_EC_SENSOR_MAX_AXIS];
+>  
+>  	u8 samples[CROS_EC_SAMPLE_SIZE];
+>  
 
