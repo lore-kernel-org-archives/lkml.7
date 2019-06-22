@@ -2,141 +2,195 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F296C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA8C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53278208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRilaimF"
+	by mail.kernel.org (Postfix) with ESMTP id 7980720665
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561226590;
+	bh=rS+QDUEv9Kv011x6Xcxx8PCZ+1Rhhfc8kGOfdal28LI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CuFpl0pNQj8YO4oFEtYdP9jrlQgz4hsVrOIXvvF9rE31VgVYrKwWwEwZpClqUkeIT
+	 1JXVOETTMGiKMmMyfQqav0ShV0212+biWG5E8JZxOvDADsClI/64SOjVfISb+dNZKr
+	 HmgTY4np5sAlwO4A69dHqmpLj9kRy6K8TIZredus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfFVSCY (ORCPT
+        id S1726454AbfFVSDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 14:02:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44136 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfFVSCY (ORCPT
+        Sat, 22 Jun 2019 14:03:09 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32982 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVSDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 14:02:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r16so9553398wrl.11;
-        Sat, 22 Jun 2019 11:02:22 -0700 (PDT)
+        Sat, 22 Jun 2019 14:03:08 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y17so7228417lfe.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 11:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=MvdVlfsCZCzoiO3dWaS7svRVtEzJywqCcVUPGHCcDEY=;
-        b=sRilaimFeaePIYvUwtlO1PJMAd7GYlH/2BTb3QuVFlcXeebELLDg49wv+7OV/8s353
-         2ix06k0Vj/SkuFx5HkmQ2iu4KpaVsy0yRQGztD4WrEVP5IENxBnKBn1yAQikMz/IY1gW
-         rz3EM5F7XA4NuzDE6aXSWaQ1VjRY/ipjHzBI6GleCLN8LLYpmIow2dZkBY2fK9X2yoWF
-         PdvH8NNebh274GufOsmCvHqDn5dU/BBti+LvvxujmK5TIX92VIDaIu3BRWtf2a0JUJx5
-         cXoykUUfB7HRzYXUkArpvOEt5GZsQijFbXFNB6Nf+yl6ppbcfsgTgiFkpWF3JQXkfk2n
-         402Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rTVQwNdpEANBFFxnKdTYMSvJa37ECLsEqk9sL0w2aCY=;
+        b=NHX+A4Hn+9k1GJ8KSdLWDJGit6XGMQmGE4DEU3fZsyRFWfBpw3wMmna3jspZ8npHAG
+         uKBQSW6kfbmK1saH4HAnCB+CK4PhAc0azGjSfqk5NUcxI70V/w92Nb9Dpol9ZFldVFig
+         uzoE3MUGDKRzt4OKUC0byx12pDyJL1JGvGwcI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=MvdVlfsCZCzoiO3dWaS7svRVtEzJywqCcVUPGHCcDEY=;
-        b=PzhWnwJDBfjem/oOpqjheusToiCgQ+d63onyFijfQppw5hzjbekv7jh0UpvdshVD1Q
-         b/hst7HMdWqCQAcUhbdj+NaqcHSrAWm6x1i2PECzvX8RxnnT0SkVo4Fcly7gfMuLhbFx
-         jzSKgc6d+11brDBc+FH5dnUE18ntOFodeCxvCTGOrriCrLHqStAhmUFpHQMMk72OPcwT
-         VceD3YzUs5wZ0gMttfE3zP7afVjiRbPEgvX95HWmGgqgG6eyeqZPwgOJprJOMfozAMoI
-         wRo2F5C589hv3ciiHkCEpxkFEHQy8v58twf+kpL7LKjxja9p7SmHoz/Xbrm/Ky4TU22x
-         ASQA==
-X-Gm-Message-State: APjAAAWaAlFlYhqn5gMqwN9jQGuW2pQDX9hNTSsv4D5DXHA5tzcKNj+u
-        AqvkRA81NiCNy2ntxRTcbSESHdVPNvRMGA==
-X-Google-Smtp-Source: APXvYqyndRWSOXsFEF0LcRNbc+VXO2mtyNTfcHVkaia8QxZAkUMLjqJhHL7pGbiMghjIHQMBNiYgHg==
-X-Received: by 2002:adf:82e7:: with SMTP id 94mr8603119wrc.95.1561226542020;
-        Sat, 22 Jun 2019 11:02:22 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id q15sm4621055wrr.19.2019.06.22.11.02.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 22 Jun 2019 11:02:20 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: =?iso-8859-1?Q?d=5Flookup:_Unable_to_handle_kernel_paging_request?=
-Date:   Sat, 22 Jun 2019 20:02:19 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rTVQwNdpEANBFFxnKdTYMSvJa37ECLsEqk9sL0w2aCY=;
+        b=LI1g+YoWyb//1IpmmT6GQpydyFNKnNvwelUHZUYUAWKt5p1aLzLE5flErxEgwcKdWZ
+         d56aHgSQ4NUcxAu3WjTyig7Unu5YKaiD+VojCoeMckBKQnSxPsgeu7oOeltXawdwTdfp
+         pmIkjlBZ35wd51kV9fWIDGPs3RxgjYx/IesmOIzLpi5YC7JkVRcBFOmvAJ1xUOnzLcUp
+         Xn1ac8SxiRg4bf7bR7GyQEuayaGHqjutlEKDne9hRWGBTn6egVFcfGOQxWLlKnBWcJeO
+         inWQ6a1PH1lJOkexD73p1t5iWbYsj2aI41wHclXSxrYZx7DqE1KgKlvfAz/suJ8N6A3K
+         CWDg==
+X-Gm-Message-State: APjAAAVOq/X2swiLAEu2SQKIshRbtJGqHcKiuFPRDqajo1jMGuW+NjmV
+        36HcbvNzcPKoHw7/pk/5zm1yZ3/+T3U=
+X-Google-Smtp-Source: APXvYqw81qrlJ7pnlTs7j/TWLu1+me7ekxUkOqXByVQm7DUfDAeFFgp5bIDW5rLN2v1SXEGd5yDuYg==
+X-Received: by 2002:a19:7607:: with SMTP id c7mr23415847lff.28.1561226585587;
+        Sat, 22 Jun 2019 11:03:05 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id p5sm935792ljb.91.2019.06.22.11.03.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 22 Jun 2019 11:03:04 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id i21so8820765ljj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 11:03:04 -0700 (PDT)
+X-Received: by 2002:a2e:9a58:: with SMTP id k24mr30871577ljj.165.1561226584112;
+ Sat, 22 Jun 2019 11:03:04 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <cd84de0e-909e-4117-a20a-6cde42079267@gmail.com>
-In-Reply-To: <20190619170940.GG17978@ZenIV.linux.org.uk>
-References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
- <20190522135331.GM17978@ZenIV.linux.org.uk>
- <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
- <20190522162945.GN17978@ZenIV.linux.org.uk>
- <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
- <20190618183548.GB17978@ZenIV.linux.org.uk>
- <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
- <20190619162802.GF17978@ZenIV.linux.org.uk>
- <bc774f6b-711e-4a20-ad85-c282f9761392@gmail.com>
- <20190619170940.GG17978@ZenIV.linux.org.uk>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190620022008.19172-1-peterx@redhat.com> <20190620022008.19172-3-peterx@redhat.com>
+In-Reply-To: <20190620022008.19172-3-peterx@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 22 Jun 2019 11:02:48 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiGphH2UL+To5rASyFoCk6=9bROUkGDWSa_rMu9Kgb0yw@mail.gmail.com>
+Message-ID: <CAHk-=wiGphH2UL+To5rASyFoCk6=9bROUkGDWSa_rMu9Kgb0yw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/25] mm: userfault: return VM_FAULT_RETRY on signals
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
-i think have a hint of what is going on.
-With the last kernel built with your sentinels at hlist_bl_*lock
-it is very easy to reproduce the issue.
-In fact it is so unstable that i had to connect a serial port
-in order to save the kernel trace.
-Unfortunately all the traces are at different addresses and
-your sentinel did not trigger.
+So I still think this all *may* ok, but at a minimum some of the
+comments are misleading, and we need more docs on what happens with
+normal signals.
 
-Now i am writing this email from that same buggy kernel, which is
-v5.2-rc5-224-gbed3c0d84e7e.
+I'm picking on just the first one I noticed, but I think there were
+other architectures with this too:
 
-The difference is that I changed the bootloader.
-Before was booting 5.1.12 and kexec into this one.
-Now booting from u-boot into this one.
-I will continue booting with u-boot for some time to be sure it is
-stable and confirm this is the cause.
-
-In case it is, who is the most probable offender?
-the kernel before kexec or the kernel after?
-
-The original report was sent to you because you appeared as the maintainer
-of fs/dcache.c, which appeared on the trace. Should this be redirected
-somewhere else now?
-
-Regards,
-  Vicen=C3=A7.
-
-On Wednesday, June 19, 2019 7:09:40 PM CEST, Al Viro wrote:
-> On Wed, Jun 19, 2019 at 06:51:51PM +0200, Vicente Bergas wrote:
+On Wed, Jun 19, 2019 at 7:20 PM Peter Xu <peterx@redhat.com> wrote:
 >
->>> What's your config, BTW?  SMP and DEBUG_SPINLOCK, specifically...
->>=20
->> Hi Al,
->> here it is:
->> https://paste.debian.net/1088517
+> diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+> index 6836095251ed..3517820aea07 100644
+> --- a/arch/arc/mm/fault.c
+> +++ b/arch/arc/mm/fault.c
+> @@ -139,17 +139,14 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+>          */
+>         fault = handle_mm_fault(vma, address, flags);
 >
-> Aha...  So LIST_BL_LOCKMASK is 1 there (same as on distro builds)...
->
-> Hell knows - how about
-> static inline void hlist_bl_lock(struct hlist_bl_head *b)
-> {
-> =09BUG_ON(((u32)READ_ONCE(*b)&~LIST_BL_LOCKMASK) =3D=3D 0x01000000);
->         bit_spin_lock(0, (unsigned long *)b);
-> }
->
-> and
->
-> static inline void hlist_bl_unlock(struct hlist_bl_head *b)
-> {
->         __bit_spin_unlock(0, (unsigned long *)b);
-> =09BUG_ON(((u32)READ_ONCE(*b)&~LIST_BL_LOCKMASK) =3D=3D 0x01000000);
-> }
->
-> to see if we can narrow down where that happens?
+> -       if (fatal_signal_pending(current)) {
+> -
+> +       if (unlikely((fault & VM_FAULT_RETRY) && signal_pending(current))) {
+> +               if (fatal_signal_pending(current) && !user_mode(regs))
+> +                       goto no_context;
+>                 /*
+>                  * if fault retry, mmap_sem already relinquished by core mm
+>                  * so OK to return to user mode (with signal handled first)
+>                  */
+> -               if (fault & VM_FAULT_RETRY) {
+> -                       if (!user_mode(regs))
+> -                               goto no_context;
+> -                       return;
+> -               }
+> +               return;
+>         }
 
+So note how the end result of this is:
+
+ (a) if a fatal signal is pending, and we're returning to kernel mode,
+we do the exception handling
+
+ (b) otherwise, if *any* signal is pending, we'll just return and
+retry the page fault
+
+I have nothing against (a), and (b) is likely also ok, but it's worth
+noting that (b) happens for kernel returns too. But the comment talks
+about returning to user mode.
+
+Is it ok to return to kernel mode when signals are pending? The signal
+won't be handled, and we'll just retry the access.
+
+Will we possibly keep retrying forever? When we take the fault again,
+we'll set the FAULT_FLAG_ALLOW_RETRY again, so any fault handler that
+says "if it allows retry, and signals are pending, just return" would
+keep never making any progress, and we'd be stuck taking page faults
+in kernel mode forever.
+
+So I think the x86 code sequence is the much safer and more correct
+one, because it will actually retry once, and set FAULT_FLAG_TRIED
+(and it will clear the "FAULT_FLAG_ALLOW_RETRY" flag - but you'll
+remove that clearing later in the series).
+
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 46df4c6aae46..dcd7c1393be3 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1463,16 +1463,20 @@ void do_user_addr_fault(struct pt_regs *regs,
+>          * that we made any progress. Handle this case first.
+>          */
+>         if (unlikely(fault & VM_FAULT_RETRY)) {
+> +               bool is_user = flags & FAULT_FLAG_USER;
+> +
+>                 /* Retry at most once */
+>                 if (flags & FAULT_FLAG_ALLOW_RETRY) {
+>                         flags &= ~FAULT_FLAG_ALLOW_RETRY;
+>                         flags |= FAULT_FLAG_TRIED;
+> +                       if (is_user && signal_pending(tsk))
+> +                               return;
+>                         if (!fatal_signal_pending(tsk))
+>                                 goto retry;
+>                 }
+>
+>                 /* User mode? Just return to handle the fatal exception */
+> -               if (flags & FAULT_FLAG_USER)
+> +               if (is_user)
+>                         return;
+>
+>                 /* Not returning to user mode? Handle exceptions or die: */
+
+However, I think the real issue is that it just needs documentation
+that a fault handler must not react to signal_pending() as part of the
+fault handling itself (ie the VM_FAULT_RETRY can not be *because* of a
+non-fatal signal), and there needs to be some guarantee of forward
+progress.
+
+At that point the "infinite page faults in kernel mode due to pending
+signals" issue goes away. But it's not obvious in this patch, at
+least.
+
+               Linus
