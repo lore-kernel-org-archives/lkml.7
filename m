@@ -2,243 +2,273 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D12C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12BAC48BE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72952075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8012075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0d0D49h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oLXbFf2v";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ILEoYwB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfFVBAz (ORCPT
+        id S1726388AbfFVBDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 21:00:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40855 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfFVBAx (ORCPT
+        Fri, 21 Jun 2019 21:03:01 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:25771 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfFVBDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 21:00:53 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so4404123pfp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 18:00:53 -0700 (PDT)
+        Fri, 21 Jun 2019 21:03:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561165409; x=1592701409;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Udndhz60ZzlfIpHCFeg0jc33OOEAT1IEHGJWYT7AkSI=;
+  b=oLXbFf2vzvHkoOcMu+olU87Yw/KRNxs3U6WxMdEBQiLT5Coi50ziHZyy
+   zIZV1U9BiyAmgIWDBskq2yuqNUx/s0VGYaDYg2O7AFQ2FhdnI9T9A2mPp
+   KJPDef279kDfnyf9Ldv+0mpun8do6msSQ750jC5psy630z8UFjYb5oDeD
+   lRRM1EnHqAwbjbG/o2SZa8t+PXoynmnwmLCWZPPYP7OUKG7+BCPmXvzz5
+   1cidxbO0EtOUuVUdm7FSdRcdSXUeg/IQdUY4xltNRBJI78B7w5/3ODVnb
+   zZgapC1YXflehQvnJgKzA4YoWofsCfw3aZutAoaorfdtKd1s7K2T6+W/9
+   w==;
+X-IronPort-AV: E=Sophos;i="5.63,402,1557158400"; 
+   d="scan'208";a="210966298"
+Received: from mail-bn3nam04lp2053.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.53])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2019 09:03:26 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pn4/IgcE/a3A9HRsf8YysVQmDOFkLMRirlv4eJOCAEY=;
-        b=r0d0D49hNJck2jmBOZ7hKq1EyIQm5VIsrCLXNfWA/zqw7JUB/PFT9/TEg3f9m8Exka
-         4OB4CLnAA+t7ZyRfMqNWActJqwB4eElCzw9OwOGul12RrF6Xah0/adQB3rDPYCiKwGSb
-         1cQfwLiJupuJHVE6kDeqU7eCLKZrrozRyUdaq1BAJ5w/IyIufGa6roBqLtZxSQ3wQLl8
-         cBD+npmSvsH7CB96WJOcXSzHxVdpszLog3BtkM+9yhp75ZfrhE2bcktgSWTAXvuCSrTY
-         kUvb5BfS0a52N4OmjgywAeDaICRhfTcMxYZ0cxZGqUP9umwcIynczzP5GVJDJnjw5aRm
-         2oGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pn4/IgcE/a3A9HRsf8YysVQmDOFkLMRirlv4eJOCAEY=;
-        b=QMGMQ3gG7PY+yUCNVTJE0X5gf5KHyPXuyyk8F9KYhdzOo3fmf3BI3Idu+f6cOxymOb
-         08pYrOKZogt6bZV6aPALK6KvfUE8FoX1U62ZuASQcGDpf68QZiay8k5R1KX5G+Q3J9G3
-         FULbEhJ/XYe5jgFjoYZpOYx1ZX9XKQXvWRtfejueQAqCSg491R3Gt6dPP2sprR5peuXm
-         cv1YIwBn1KI0/i5dZaWc+Utr9rEllHHCxg3sLq+xot6K2ZiCdkRt4D4NNbf6kTsj56wE
-         /ZT4EYV1oj0zfVRBfVxdxPxNf8cOF60zhUzQZBpiBImhTO8r1GcD/yr+p7vTyiqZHaTw
-         M3gw==
-X-Gm-Message-State: APjAAAX2aEQSsQD7kUs1k8q0ausXDJp60TcYvhCV9PQ4UINqQEFDrGcn
-        XzJG+V+n/eDYs5tuHgCoomuIVYsjyJmMJP8/3Eco+w==
-X-Google-Smtp-Source: APXvYqwOxize9xmrZ2ApT7No74w3onQmjRsjgozaiDJFMKpG33Vqht+PxeXD1e0v4vbFE+q+E/bORwyHwGlVO6g99RY=
-X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr10190000pjo.131.1561164883594;
- Fri, 21 Jun 2019 17:54:43 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TxhXsic7HCm3JaUSZgoQTreVYV33L1KfbJ+EQXdKi6o=;
+ b=ILEoYwB2jxL1/pMblb8QS49+oV6UFU2CU4YLnsSNtVmmYd/rokHyoL9tHv8RZRKpyZeZeh4WOuFrMzrrP1SLHWhbJCv1YEi29nor5XvDrLPrknoWdDvW7ToVpgCqmr1RvC7GiYpJnP4FHeAB496mQUvgfq27rw/Bc2UtBLkq6w4=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB5142.namprd04.prod.outlook.com (52.135.235.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Sat, 22 Jun 2019 01:02:57 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::e94e:8ead:40b1:fae6]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::e94e:8ead:40b1:fae6%7]) with mapi id 15.20.1987.014; Sat, 22 Jun 2019
+ 01:02:57 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "snitzer@redhat.com" <snitzer@redhat.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>
+Subject: Re: [PATCH 2/4] null_blk: add zone open, close, and finish support
+Thread-Topic: [PATCH 2/4] null_blk: add zone open, close, and finish support
+Thread-Index: AQHVKDJPvRqrrDdCI02PGkGKUbxkfQ==
+Date:   Sat, 22 Jun 2019 01:02:57 +0000
+Message-ID: <BYAPR04MB5816D471063D970DDCF9AEC7E7E60@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190621130711.21986-1-mb@lightnvm.io>
+ <20190621130711.21986-3-mb@lightnvm.io>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d46e582-e6b4-4697-e547-08d6f6ad5d27
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5142;
+x-ms-traffictypediagnostic: BYAPR04MB5142:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <BYAPR04MB514291E08B70C40920C7DC6AE7E60@BYAPR04MB5142.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0076F48C8A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(396003)(376002)(346002)(136003)(199004)(189003)(6246003)(7416002)(25786009)(14454004)(6436002)(68736007)(52536014)(72206003)(316002)(66446008)(64756008)(66556008)(66476007)(66946007)(71190400001)(71200400001)(73956011)(91956017)(76116006)(5660300002)(66574012)(478600001)(55016002)(2501003)(229853002)(2906002)(66066001)(9686003)(74316002)(14444005)(305945005)(7736002)(7696005)(76176011)(81166006)(186003)(476003)(81156014)(486006)(446003)(256004)(8936002)(4326008)(8676002)(110136005)(54906003)(53936002)(6116002)(3846002)(26005)(99286004)(6506007)(86362001)(102836004)(53546011)(33656002)(2201001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5142;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PkAnvaKGB2HsQemJLvBkMO67uA8gGV03iMOEKSErEPPZmvtRaHQyJ6E0IjzXdkueUZRXIfTzhqtbPSUxGJS2oM2SxFVQzIm+Y6HPT7E9hmpHefvtT64llT6r3QOpdEzjv7nGrsOvdl5C/UGeUqB5GXOG1n2ECR4TvW/QLMed6oU+ze/Fl+Pa4m3DqSHoSZ8IYI4A0u6W7rIL5l0nGfJVWAhDZnryjuPGMxq107YZQmVH9wRIxgY8qcLsTAyH9FeM4sC26F+0CY6mFdCy1RrsEDovnDlnEYmmOJOlIiJG4zu1SZahgEkKYjKDnYS5M7uAPAbbDYX5EZrE1R0aJutnRgszIhKNKo5TQ7dC6BZ3pEKUiWv6oV/s3biY4sgC2qW3m6Xwpuk9brqN50cfmpwRwpS+2mePHUhwViBtvPSxfrc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com> <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
- <20190621181342.GA17166@mit.edu> <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
-In-Reply-To: <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 21 Jun 2019 17:54:31 -0700
-Message-ID: <CAFd5g46W1u+6JKLW0WX9uicK5utvJe9tvq4YBsCkghuo0rCmng@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     shuah <shuah@kernel.org>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d46e582-e6b4-4697-e547-08d6f6ad5d27
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2019 01:02:57.1375
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:21 PM shuah <shuah@kernel.org> wrote:
->
-> On 6/21/19 12:13 PM, Theodore Ts'o wrote:
-> > On Fri, Jun 21, 2019 at 08:59:48AM -0600, shuah wrote:
-> >>>> ### But wait! Doesn't kselftest support in kernel testing?!
-> >>>>
-> >>>> ....
-> >>
-> >> I think I commented on this before. I agree with the statement that
-> >> there is no overlap between Kselftest and KUnit. I would like see this
-> >> removed. Kselftest module support supports use-cases KUnit won't be able
-> >> to. I can build an kernel with Kselftest test modules and use it in the
-> >> filed to load and run tests if I need to debug a problem and get data
-> >> from a system. I can't do that with KUnit.
-
-Sure, I think this point has been brought up a number of times before.
-Maybe I didn't write this section well because, like Frank said, it
-comes across as being critical of the Kselftest module support; that
-wasn't my intention. I was speaking from the perspective that
-Kselftest module support is just a feature of Kselftest, and not a
-full framework like KUnit is (obviously Kselftest itself *is* a
-framework, but a very small part of it is not).
-
-It was obvious to me what Kselftest module support was intended for,
-and it is not intended to cover the use case that KUnit is targeting.
-
-> >> In my mind, I am not viewing this as which is better. Kselftest and
-> >> KUnit both have their place in the kernel development process. It isn't
-> >> productive and/or necessary to comparing Kselftest and KUnit without a
-> >> good understanding of the problem spaces for each of these.
-
-Again, I didn't mean to draw a comparison of which is better than the
-other. I was just trying to point out that Kselftest module support
-doesn't make sense as a stand alone unit testing framework, or really
-a framework of any kind, despite how it might actually be used.
-
-> >> I would strongly recommend not making reference to Kselftest and talk
-> >> about what KUnit offers.
-
-I can see your point. It seems that both you and Frank seem to think
-that I drew a comparison between Kselftest and KUnit, which was
-unintended. I probably should have spent more time editing this
-section, but I can see the point of drawing the comparison itself
-might invite this confusion.
-
-> > Shuah,
-> >
-> > Just to recall the history, this section of the FAQ was added to rebut
-> > the ***very*** strong statements that Frank made that there was
-> > overlap between Kselftest and Kunit, and that having too many ways for
-> > kernel developers to do the identical thing was harmful (he said it
-> > was too much of a burden on a kernel developer) --- and this was an
-> > argument for not including Kunit in the upstream kernel.
-
-I don't think he was actually advocating that we don't include KUnit,
-maybe playing devil's advocate; nevertheless, at the end, Frank seemed
-to agree that there were valuable things that KUnit offered. I thought
-he just wanted to make the point that I hadn't made the distinction
-sufficiently clear in the cover letter, and other reviewers might get
-confused in the future as well.
-
-Additionally, it does look like people were trying to use Kselftest
-module support to cover some things which really were trying to be
-unit tests. I know this isn't really intended - everything looks like
-a nail when you only have a hammer, which I think Frank was pointing
-out furthers the above confusion.
-
-In anycase, it sounds like I have, if anything, only made the
-discussion even more confusing by adding this section; sorry about
-that.
-
-> > If we're past that objection, then perhaps this section can be
-> > dropped, but there's a very good reason why it was there.  I wouldn't
-> > Brendan to be accused of ignoring feedback from those who reviewed his
-> > patches.   :-)
-> >
->
-> Agreed. I understand that this FAQ probably was needed at one time and
-> Brendan added it to address the concerns.
-
-I don't want to speak for Frank, but I don't think it was an objection
-to KUnit itself, but rather an objection to not sufficiently
-addressing the point about how they differ.
-
-> I think at some point we do need to have a document that outlines when
-> to KUnit and when to use Kselftest modules. I think one concern people
-> have is that if KUnit is perceived as a  replacement for Ksefltest
-> module, Kselftest module will be ignored leaving users without the
-> ability to build and run with Kselftest modules and load them on a need
-> basis to gather data on a systems that aren't dedicated strictly for
-> testing.
-
-I absolutely agree! I posed a suggestion here[1], which after I just
-now searched for a link, I realize for some reason it didn't seem like
-it reached a number of the mailing lists that I sent it to, so I
-should probably resend it.
-
-Anyway, a summary of what I suggested: We should start off by better
-organizing Documentation/dev-tools/ and create a landing page that
-groups the dev-tools by function according to what person is likely to
-use them and for what. Eventually and specifically for Kselftest and
-KUnit, I would like to have a testing guide for the kernel that
-explains what testing procedure should look like and what to use and
-when.
-
-> I am trying to move the conversation forward from KUnit vs. Kselftest
-> modules discussion to which problem areas each one addresses keeping
-> in mind that it is not about which is better. Kselftest and KUnit both
-> have their place in the kernel development process. We just have to be
-> clear on usage as we write tests for each.
-
-I think that is the right long term approach. I think a good place to
-start, like I suggested above, is cleaning up
-Documentation/dev-tools/, but I think that belongs in a (probably
-several) follow-up patchset.
-
-Frank, I believe your objection was mostly related to how KUnit is
-presented specifically in the cover letter, and doesn't necessarily
-deal with the intended use case. So I don't think that doing this,
-especially doing this later, really addresses your concern. I don't
-want to belabor the issue, but I would also rather not put words in
-your mouth, what are your thoughts on the above?
-
-I think my main concern moving forward on this point is that I am not
-sure that I can address the debate that this section covers in a way
-that is both sufficiently concise for a cover letter, but also doesn't
-invite more potential confusion. My inclination at this point is to
-drop it since I think the set of reviewers for this patchset has at
-this point become fixed, and it seems that it will likely cause more
-confusion rather than reduce it; also, I don't really think this will
-be an issue for end users, especially once we have proper
-documentation in place. Alternatively, I guess I could maybe address
-the point elsewhere and refer to it in the cover letter? Or maybe just
-put it at the end of the cover letter?
-
-[1] https://www.mail-archive.com/kgdb-bugreport@lists.sourceforge.net/msg05059.html
+On 2019/06/21 22:07, Matias Bj=F8rling wrote:=0A=
+> From: Ajay Joshi <ajay.joshi@wdc.com>=0A=
+> =0A=
+> Implement REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH=0A=
+> support to allow explicit control of zone states.=0A=
+> =0A=
+> Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>=0A=
+> Signed-off-by: Matias Bj=F8rling <matias.bjorling@wdc.com>=0A=
+> ---=0A=
+>  drivers/block/null_blk.h       |  4 ++--=0A=
+>  drivers/block/null_blk_main.c  | 13 ++++++++++---=0A=
+>  drivers/block/null_blk_zoned.c | 33 ++++++++++++++++++++++++++++++---=0A=
+>  3 files changed, 42 insertions(+), 8 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h=0A=
+> index 34b22d6523ba..62ef65cb0f3e 100644=0A=
+> --- a/drivers/block/null_blk.h=0A=
+> +++ b/drivers/block/null_blk.h=0A=
+> @@ -93,7 +93,7 @@ int null_zone_report(struct gendisk *disk, sector_t sec=
+tor,=0A=
+>  		     gfp_t gfp_mask);=0A=
+>  void null_zone_write(struct nullb_cmd *cmd, sector_t sector,=0A=
+>  			unsigned int nr_sectors);=0A=
+> -void null_zone_reset(struct nullb_cmd *cmd, sector_t sector);=0A=
+> +void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sector);=0A=
+>  #else=0A=
+>  static inline int null_zone_init(struct nullb_device *dev)=0A=
+>  {=0A=
+> @@ -111,6 +111,6 @@ static inline void null_zone_write(struct nullb_cmd *=
+cmd, sector_t sector,=0A=
+>  				   unsigned int nr_sectors)=0A=
+>  {=0A=
+>  }=0A=
+> -static inline void null_zone_reset(struct nullb_cmd *cmd, sector_t secto=
+r) {}=0A=
+> +static inline void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sec=
+tor) {}=0A=
+>  #endif /* CONFIG_BLK_DEV_ZONED */=0A=
+>  #endif /* __NULL_BLK_H */=0A=
+> diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.=
+c=0A=
+> index 447d635c79a2..5058fb980c9c 100644=0A=
+> --- a/drivers/block/null_blk_main.c=0A=
+> +++ b/drivers/block/null_blk_main.c=0A=
+> @@ -1209,10 +1209,17 @@ static blk_status_t null_handle_cmd(struct nullb_=
+cmd *cmd)=0A=
+>  			nr_sectors =3D blk_rq_sectors(cmd->rq);=0A=
+>  		}=0A=
+>  =0A=
+> -		if (op =3D=3D REQ_OP_WRITE)=0A=
+> +		switch (op) {=0A=
+> +		case REQ_OP_WRITE:=0A=
+>  			null_zone_write(cmd, sector, nr_sectors);=0A=
+> -		else if (op =3D=3D REQ_OP_ZONE_RESET)=0A=
+> -			null_zone_reset(cmd, sector);=0A=
+> +			break;=0A=
+> +		case REQ_OP_ZONE_RESET:=0A=
+> +		case REQ_OP_ZONE_OPEN:=0A=
+> +		case REQ_OP_ZONE_CLOSE:=0A=
+> +		case REQ_OP_ZONE_FINISH:=0A=
+> +			null_zone_mgmt_op(cmd, sector);=0A=
+> +			break;=0A=
+> +		}=0A=
+>  	}=0A=
+>  out:=0A=
+>  	/* Complete IO by inline, softirq or timer */=0A=
+> diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zone=
+d.c=0A=
+> index fca0c97ff1aa..47d956b2e148 100644=0A=
+> --- a/drivers/block/null_blk_zoned.c=0A=
+> +++ b/drivers/block/null_blk_zoned.c=0A=
+> @@ -121,17 +121,44 @@ void null_zone_write(struct nullb_cmd *cmd, sector_=
+t sector,=0A=
+>  	}=0A=
+>  }=0A=
+>  =0A=
+> -void null_zone_reset(struct nullb_cmd *cmd, sector_t sector)=0A=
+> +void null_zone_mgmt_op(struct nullb_cmd *cmd, sector_t sector)=0A=
+>  {=0A=
+>  	struct nullb_device *dev =3D cmd->nq->dev;=0A=
+>  	unsigned int zno =3D null_zone_no(dev, sector);=0A=
+>  	struct blk_zone *zone =3D &dev->zones[zno];=0A=
+> +	enum req_opf op =3D req_op(cmd->rq);=0A=
+>  =0A=
+>  	if (zone->type =3D=3D BLK_ZONE_TYPE_CONVENTIONAL) {=0A=
+>  		cmd->error =3D BLK_STS_IOERR;=0A=
+>  		return;=0A=
+>  	}=0A=
+>  =0A=
+> -	zone->cond =3D BLK_ZONE_COND_EMPTY;=0A=
+> -	zone->wp =3D zone->start;=0A=
+> +	switch (op) {=0A=
+> +	case REQ_OP_ZONE_RESET:=0A=
+> +		zone->cond =3D BLK_ZONE_COND_EMPTY;=0A=
+> +		zone->wp =3D zone->start;=0A=
+> +		return;=0A=
+> +	case REQ_OP_ZONE_OPEN:=0A=
+> +		if (zone->cond =3D=3D BLK_ZONE_COND_FULL) {=0A=
+> +			cmd->error =3D BLK_STS_IOERR;=0A=
+> +			return;=0A=
+> +		}=0A=
+> +		zone->cond =3D BLK_ZONE_COND_EXP_OPEN;=0A=
+=0A=
+=0A=
+With ZBC, open of a full zone is a "nop". No error. So I would rather have =
+this as:=0A=
+=0A=
+		if (zone->cond !=3D BLK_ZONE_COND_FULL)=0A=
+			zone->cond =3D BLK_ZONE_COND_EXP_OPEN;=0A=
+		=0A=
+=0A=
+> +		return;=0A=
+> +	case REQ_OP_ZONE_CLOSE:=0A=
+> +		if (zone->cond =3D=3D BLK_ZONE_COND_FULL) {=0A=
+> +			cmd->error =3D BLK_STS_IOERR;=0A=
+> +			return;=0A=
+> +		}=0A=
+> +		zone->cond =3D BLK_ZONE_COND_CLOSED;=0A=
+=0A=
+Sam as for open. Closing a full zone on ZBC is a nop. And the code above wo=
+uld=0A=
+also set an empty zone to closed. Finally, if the zone is open but nothing =
+was=0A=
+written to it, it must be returned to empty condition, not closed. So somet=
+hing=0A=
+like this is needed.=0A=
+=0A=
+		switch (zone->cond) {=0A=
+		case BLK_ZONE_COND_FULL:=0A=
+		case BLK_ZONE_COND_EMPTY:=0A=
+			break;=0A=
+		case BLK_ZONE_COND_EXP_OPEN:=0A=
+			if (zone->wp =3D=3D zone->start) {=0A=
+				zone->cond =3D BLK_ZONE_COND_EMPTY;=0A=
+				break;=0A=
+			}=0A=
+		/* fallthrough */=0A=
+		default:=0A=
+			zone->cond =3D BLK_ZONE_COND_CLOSED;=0A=
+		}=0A=
+=0A=
+> +		return;=0A=
+> +	case REQ_OP_ZONE_FINISH:=0A=
+> +		zone->cond =3D BLK_ZONE_COND_FULL;=0A=
+> +		zone->wp =3D zone->start + zone->len;=0A=
+> +		return;=0A=
+> +	default:=0A=
+> +		/* Invalid zone condition */=0A=
+> +		cmd->error =3D BLK_STS_IOERR;=0A=
+> +		return;=0A=
+> +	}=0A=
+>  }=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
