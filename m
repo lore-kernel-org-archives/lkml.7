@@ -2,70 +2,125 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA7C48BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F539C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C8F20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B1A2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vNXZk1hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfFVFCc (ORCPT
+        id S1726180AbfFVFNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:02:32 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:26729 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726111AbfFVFCc (ORCPT
+        Sat, 22 Jun 2019 01:13:21 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:41492 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfFVFNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:02:32 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 21 Jun 2019 22:02:27 -0700
-Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 3C55341723;
-        Fri, 21 Jun 2019 22:02:25 -0700 (PDT)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <aarcange@redhat.com>, <jannh@google.com>, <oleg@redhat.com>,
-        <peterx@redhat.com>, <rppt@linux.ibm.com>, <jgg@mellanox.com>,
-        <mhocko@suse.com>
-CC:     <jglisse@redhat.com>, <akpm@linux-foundation.org>,
-        <mike.kravetz@oracle.com>, <viro@zeniv.linux.org.uk>,
-        <riandrews@android.com>, <arve@android.com>,
-        <yishaih@mellanox.com>, <dledford@redhat.com>,
-        <sean.hefty@intel.com>, <hal.rosenstock@gmail.com>,
-        <matanb@mellanox.com>, <leonro@mellanox.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <devel@driverdev.osuosl.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <akaher@vmware.com>, <srivatsab@vmware.com>, <amakhalov@vmware.com>
-Subject: [PATCH v3 0/2] [v4.9.y] coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
-Date:   Sat, 22 Jun 2019 18:32:19 +0530
-Message-ID: <1561208539-29682-3-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561208539-29682-1-git-send-email-akaher@vmware.com>
-References: <1561208539-29682-1-git-send-email-akaher@vmware.com>
+        Sat, 22 Jun 2019 01:13:20 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x5M5DDqi017299;
+        Sat, 22 Jun 2019 14:13:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5M5DDqi017299
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561180394;
+        bh=KdIj9gfPTr+KrZ1sDxUOA4m0IeC48LHZH0YQxYceD7E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vNXZk1hsI4XAgvzZbNpj3eEkuhbxR+xJUJgEQAfDLHUrThJBuGHZnQCO5vbNRFhY9
+         O6JJNTD2AoilsIhPpmAPLB1s4tU2y4wbYNdFvz73Ofj6mHBYw5ZRKRChdKtWhGqZDi
+         iBqeIGPFn9ldiGUmjSY9CUglghoeCgD3qPumjrBDSZNEKfDG9ZU7ueOhebEc+fo969
+         TgZY6+nM4I2xd4ajLhqTRGukFPJdLyN8D1rO1s1h9MYefCsRGBHweTxXGMXf846gEd
+         yNByTY3dWBt06CrMLnC6+MAxZ8qT1YpkX/lPVr2HSHKo/3ucD9voLty7ne2cwWjDPH
+         Jx7qcb82+RPrQ==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id f68so1742819vkf.5;
+        Fri, 21 Jun 2019 22:13:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAVeQWdYkqKNvJIsA4mA8ghhGCCWKN4H1uKX2jwXlCdWA6dxG5el
+        iu10ScYvznuXsFnP40/mV2q2vPEyZ9pYdqqsk3Y=
+X-Google-Smtp-Source: APXvYqzPInWk1IBu1alc9KP2LKnKvdXwjA7lll6wtO8cUk3YyTmS0WJGwLrcgnJ/Z+EOnHvGr4hhymNP3eUnWblqKus=
+X-Received: by 2002:a1f:aad2:: with SMTP id t201mr11091589vke.74.1561180393149;
+ Fri, 21 Jun 2019 22:13:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+ <20190604101409.2078-16-yamada.masahiro@socionext.com> <CAK8P3a08f25WYP5r57JHPcZWieS2+07=_qTphLosS4M2w8F0Zw@mail.gmail.com>
+In-Reply-To: <CAK8P3a08f25WYP5r57JHPcZWieS2+07=_qTphLosS4M2w8F0Zw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 22 Jun 2019 14:12:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
+Message-ID: <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
+Subject: Re: [PATCH 15/15] kbuild: compile test UAPI headers to ensure they
+ are self-contained
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Palmer Dabbelt <palmer@sifive.com>, bpf@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-coredump: fix race condition between mmget_not_zero()/get_task_mm()
-and core dumping
+On Sat, Jun 22, 2019 at 4:05 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Jun 4, 2019 at 12:16 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1363,7 +1363,7 @@ CLEAN_DIRS  +=3D $(MODVERDIR) include/ksym
+> >  CLEAN_FILES +=3D modules.builtin.modinfo
+> >
+> >  # Directories & files removed with 'make mrproper'
+> > -MRPROPER_DIRS  +=3D include/config usr/include include/generated      =
+    \
+> > +MRPROPER_DIRS  +=3D include/config include/generated          \
+> >                   arch/$(SRCARCH)/include/generated .tmp_objdiff
+> >  MRPROPER_FILES +=3D .config .config.old .version \
+> >                   Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS G=
+SYMS \
+>
+> This change seems to have caused a minor regression:
+>
+> $ make clean ; make clean
+> find: =E2=80=98*=E2=80=99: No such file or directory
 
-[PATCH v3 1/2]:
-Backporting of commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
+Hmm, I cannot reproduce this.
 
-[PATCH v3 2/2]:
-Extension of commit 04f5866e41fb to fix the race condition between
-get_task_mm() and core dumping for IB->mlx4 and IB->mlx5 drivers.
+I checked the latest linux-next.
 
-[diff from v2]:
-- moved mmget_still_valid to mm.h in [PATCH v3 1/2]
-- added binder.c changes in [PATCH v3 1/2]
-- added [PATCH v3 2/2]
+
+masahiro@grover:~/ref/linux-next$ git describe
+next-20190621
+masahiro@grover:~/ref/linux-next$ make clean; make clean
+masahiro@grover:~/ref/linux-next$
+
+
+
+
+
+> Any idea?
+>
+>       Arnd
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
