@@ -4,119 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E51C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D12C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA9720881
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5642020881
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QWSAua9g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wDF1wRh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfFVAGZ (ORCPT
+        id S1726774AbfFVAEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:06:25 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:48995 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfFVAEn (ORCPT
+        Fri, 21 Jun 2019 20:04:39 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:56220 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfFVAEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:04:43 -0400
-Received: by mail-vk1-f202.google.com with SMTP id f184so3036477vkd.15
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:43 -0700 (PDT)
+        Fri, 21 Jun 2019 20:04:36 -0400
+Received: by mail-vk1-f201.google.com with SMTP id b85so3016385vke.22
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=n33H2caFWJMziV8Vl9fEyuQPirYfKy2HcqzebAjjbEk=;
-        b=QWSAua9g9RwKP0uU2R678HQj1nTTQlk+ccuY/QK3BB9zuEyoAp2MVYhulrYkxknxtp
-         8CcguRHGvVDf5J0QYKG9GN2mG6EWCobGgzOL2HDjpsFhBVlDO71Hs+o0pLtXh/p3Ed4V
-         N5nM6O7m5g2LG2oUQZP1CsRN/M4x/GGJNW1x6vRcXwslO1ZZEosxSyRhL7850ntFt/Qr
-         0nB8h31WahXFNIUcWpZ86cgp6VcJyrAzNoEdvFqSnlqNyhwwQTw4mGjPAMnnSJ4bBY5N
-         uVnBjMN4HatYvmQyuAT2EkWPBDPyZag+Wolf4TT6MIZc1eWQtxhPUA57hp8Msm/MWMnW
-         KRIA==
+        bh=h2S4TyM7CDyJMzOjQbRR8ZxxuMRjDhoCrTzyxHQF79A=;
+        b=wDF1wRh7YRdkWENFBegReRPWg8Ckd32u7DCN0+IKAyery8b1+s7dI+zT3p8kB6IsBS
+         5ib5OAxiJgbnyubCe8ihMsjXCVgjsTjfbb1f3vFEpfT5YYOdxv9l2B5NGb/b7nhGNKyK
+         Ibh8t5mZvnavG9IT55dA1L9Uk4eK3afpzt5DPbSJFHyBwYP4ct439OguaEVPITJLKpLE
+         OAMCezhOu1zvy1uc46JxSLEBLHZ5r5I5Bewf9BckvkjTBLbmYQw3EIzELHSaNbnr0Hxn
+         aeE9u8eiAhIPpTR0XzbZL3CmimTaGzMLgzXV576COBT89EzENtfZbTVKlCjDiDg30Yow
+         lbOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=n33H2caFWJMziV8Vl9fEyuQPirYfKy2HcqzebAjjbEk=;
-        b=tUz7sbUAksJ/GCC2UU9R7qtWjPZdufLO+QFRKB40NUy64oURrYOtQndbi1LSJ2RNzl
-         SFpoD0v13OCwxaFYRZzXPC/sGAvX0rpLQHWuLxz7aPAn7GloRWYfVo4llsZxGrPEd30G
-         1beBDxGPve/1xxVvre9rQcPP6+yWhJWxCvELKEPJp5+l583PlFKTE+sCqulzALUBtA2q
-         QeO4N9iQY0dwJOsTtZYl9qVnbpY8uPLzCvhbvPr26wu1npQlN3+Is9XDqL+W0RQjq5xM
-         RrlOrht9f8+nMQwML2UewhEYF6akjTZsINAKbjx99mVGCz3+wAOnZTWlibZE7jVwpKIw
-         4AnQ==
-X-Gm-Message-State: APjAAAWM03NBQkHiiO7z2fsNM+6tUQoIQp+ezjTBIQtF+U+bAZ0DXJBV
-        o12Qq/GlJ4URulm6q8eKUuyi9igP3oXJHFgxkpmXZQ==
-X-Google-Smtp-Source: APXvYqz+aR99joPErIIEbc2OhbHDT9lUw4o9PwDXDXdQ9wGtV1PBN1Bun/Dpx72Xl1cgY14BcfWe++NbFFwjQPw4r6febw==
-X-Received: by 2002:a67:7fd8:: with SMTP id a207mr52544296vsd.85.1561161882682;
- Fri, 21 Jun 2019 17:04:42 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:03:45 -0700
+        bh=h2S4TyM7CDyJMzOjQbRR8ZxxuMRjDhoCrTzyxHQF79A=;
+        b=qrzu8lokc9krIngdW0kTW6Xy4MN13EkTof+fwfEZG2ZrcHG0vGNlMoC9qHZPqFeV3J
+         3heib+OMo+4iopEMgp5NlBGW90luZNaCElBMQ9FBY9ZsgSYdkVh5SkWW90Bx+/5O9Y9J
+         HTmBSDCT7HZktM84ERS/71lpqXgUQlOtNzPteQYpIc/EZ7jPEus51kOGFyC6KYmiGhAf
+         J5P0BVlHPP/FcV0DBcYXeiceTmve6hCo/FHOZ0zlgpJJOgLE8MDD8PFcWJoquyJq/MO6
+         jhRAkTCxn8ySMliY7Soj7JAzg40/3oNznrKMj5UWAsM7kiZOxBfKkvjbr3jqC3LXGM5j
+         E24g==
+X-Gm-Message-State: APjAAAVE0ygqny8Upl7ccDw2Mm+F5rwX9MwnxaCyxpq4zAtrZDXQ8JYY
+        vjpGopJMPCIj0JR9tsxiOQ8DF6U5UCRueGOoEG/K/g==
+X-Google-Smtp-Source: APXvYqwS2MgA1SXOj6fV/hh/k0TpKrnXr6zcFgypgeQp/ElwyjlX3xUnkgtDu8Nw/KiSDM52/+plAywMWgkcmWo34zOLNw==
+X-Received: by 2002:a67:13c3:: with SMTP id 186mr57496678vst.8.1561161874880;
+ Fri, 21 Jun 2019 17:04:34 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:03:42 -0700
 In-Reply-To: <20190622000358.19895-1-matthewgarrett@google.com>
-Message-Id: <20190622000358.19895-17-matthewgarrett@google.com>
+Message-Id: <20190622000358.19895-14-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190622000358.19895-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V34 16/29] acpi: Disable ACPI table override if the kernel is
+Subject: [PATCH V34 13/29] x86/msr: Restrict MSR access when the kernel is
  locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Linn Crosetto <linn@hpe.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
         David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>, linux-acpi@vger.kernel.org
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linn Crosetto <linn@hpe.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-From the kernel documentation (initrd_table_override.txt):
+Writing to MSRs should not be allowed if the kernel is locked down, since
+it could lead to execution of arbitrary code in kernel mode.  Based on a
+patch by Kees Cook.
 
-  If the ACPI_INITRD_TABLE_OVERRIDE compile option is true, it is possible
-  to override nearly any ACPI table provided by the BIOS with an
-  instrumented, modified one.
-
-When lockdown is enabled, the kernel should disallow any unauthenticated
-changes to kernel space.  ACPI tables contain code invoked by the kernel,
-so do not allow ACPI tables to be overridden if the kernel is locked down.
-
-Signed-off-by: Linn Crosetto <linn@hpe.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-cc: linux-acpi@vger.kernel.org
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+cc: x86@kernel.org
 ---
- drivers/acpi/tables.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/kernel/msr.c        | 8 ++++++++
+ include/linux/security.h     | 1 +
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 10 insertions(+)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 8fccbe49612a..41d9ccd0e075 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -34,6 +34,7 @@
- #include <linux/memblock.h>
- #include <linux/earlycpio.h>
- #include <linux/initrd.h>
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 4588414e2561..131861b4e447 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -39,6 +39,7 @@
+ #include <linux/notifier.h>
+ #include <linux/uaccess.h>
+ #include <linux/gfp.h>
 +#include <linux/security.h>
- #include "internal.h"
  
- #ifdef CONFIG_ACPI_CUSTOM_DSDT
-@@ -539,6 +540,11 @@ void __init acpi_table_upgrade(void)
- 	if (table_nr == 0)
- 		return;
+ #include <asm/cpufeature.h>
+ #include <asm/msr.h>
+@@ -84,6 +85,10 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 	int err = 0;
+ 	ssize_t bytes = 0;
  
-+	if (security_locked_down(LOCKDOWN_ACPI_TABLES)) {
-+		pr_notice("kernel is locked down, ignoring table override\n");
-+		return;
-+	}
++	err = security_locked_down(LOCKDOWN_MSR);
++	if (err)
++		return err;
 +
- 	acpi_tables_addr =
- 		memblock_find_in_range(0, ACPI_TABLE_UPGRADE_MAX_PHYS,
- 				       all_tables_size, PAGE_SIZE);
+ 	if (count % 8)
+ 		return -EINVAL;	/* Invalid chunk size */
+ 
+@@ -135,6 +140,9 @@ static long msr_ioctl(struct file *file, unsigned int ioc, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		err = security_locked_down(LOCKDOWN_MSR);
++		if (err)
++			break;
+ 		err = wrmsr_safe_regs_on_cpu(cpu, regs);
+ 		if (err)
+ 			break;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 60569b7e9465..30bc6f058926 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -88,6 +88,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_HIBERNATION,
+ 	LOCKDOWN_PCI_ACCESS,
+ 	LOCKDOWN_IOPORT,
++	LOCKDOWN_MSR,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 895ef3ba1b4c..297a065e6261 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -24,6 +24,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_HIBERNATION] = "hibernation",
+ 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+ 	[LOCKDOWN_IOPORT] = "raw io port access",
++	[LOCKDOWN_MSR] = "raw MSR access",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
