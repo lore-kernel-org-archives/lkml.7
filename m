@@ -2,119 +2,143 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F8CC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 21:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1364EC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 22:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9AB2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 21:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAB4206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 22:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561240740;
-	bh=E8j9ex4wBWFqQp3Qt20HBDtJ3huAwc+bX/+0YOJW8Cw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uy9jHTBPS7ZViZZNgmlH6uR9vDQpc6MRQ6N5IcVSE47PEuBXzeFF3T+YH8E84knhQ
-	 Tm3bP7HSfHePDCuaB2AOYSrasWXIrEgL8GQ8um8c8zJ6bzChrqfrjJnWlmqwaPVLqa
-	 RfXzHlb/DtCic93AKZYOZ8O8oUsSqRz6MIKxlsF8=
+	s=default; t=1561241318;
+	bh=BvSt+fMYJewY1L3HbKjDF1ilwCwa+LuIeaLapVC1Lgc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xITJ300ucj9Q3ZXPX6afbdRR2jV5dTZ3QBIijGl+wt/GLhqcB8JNfL/tPk0/Gmnzl
+	 DTiAftaQkLrsKqSD+EzMuv0zFM0DLFYBVQdY7eO8sfmVtCqIuw6v/8UeSnaia+9fqD
+	 gDVfZZ1fti2ZmOFnwJIRbziUsvYTVD2rkT3tts5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfFVV6v (ORCPT
+        id S1726372AbfFVWIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 17:58:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52898 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFVV6v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 17:58:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=me29Zf11xoxFtU1yC8+ub+hR7h7A8THD7PgX16YAKdg=; b=MutIyoB/SRS6uVgqTcil8z4ed
-        crDdeYP/YtYk+I7x4Kw2tYS9fJ9BxKMduORjBY8dj2//x5H1uHnW6tM43sydwRznWC0wYG+DZYcRv
-        /V6YL5ZwEjTexaIupn1ku6aCs5ch/eazKRMhNvkkSNY8Cd7tTlZVXOZUZYqkGWLMaROSgxqVuULEc
-        NnEDedKYRuV8UjwQIaufGzmFuehqK0wd29GEaETlY86IHR61wBbjNFtXl72UvsT3iqeSo0OE+sTQz
-        XaDiGY0syDzEqiztfyo5SKd1fGLAh8XZT4s2uekN0qVlj2JL+ACkdo4544soNSdkCp7coq4eNRbhz
-        1kZ0Gs5Sg==;
-Received: from [179.95.45.115] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1heo24-0007cP-Hx; Sat, 22 Jun 2019 21:58:48 +0000
-Date:   Sat, 22 Jun 2019 18:58:44 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@collabora.com>
-Cc:     linux-media@vger.kernel.org, hverkuil@xs4all.nl,
-        helen.koike@collabora.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] media: vimc: stream: add missing function
- documentation
-Message-ID: <20190622185844.4b2392a3@coco.lan>
-In-Reply-To: <c9602b72-7dbb-47ad-97ef-9348d7e1c3e9@collabora.com>
-References: <20190617133221.21246-1-andrealmeid@collabora.com>
-        <20190621181705.44415597@coco.lan>
-        <c9602b72-7dbb-47ad-97ef-9348d7e1c3e9@collabora.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 22 Jun 2019 18:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfFVWIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 18:08:23 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45FCA206B7;
+        Sat, 22 Jun 2019 22:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561241302;
+        bh=BvSt+fMYJewY1L3HbKjDF1ilwCwa+LuIeaLapVC1Lgc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AW2o0cx5rRzHPlM3kEFWc4wjywu9160FB9Kw2twAkwA7z2afodlI8HqBVFl8LnUVo
+         7GBtbN5ptaatKQayxBsSyyNgBr35HLaj08U0ZHlqLJJB1qMN4foQo2oHQQ7U/by0d2
+         56k0JUnYWOQVl7+tX+cblbb7zL1V2BtKNnCK0IkA=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] x86/vdso: Give the [ph]vclock_page declarations real types
+Date:   Sat, 22 Jun 2019 15:08:18 -0700
+Message-Id: <6920c5188f8658001af1fc56fd35b815706d300c.1561241273.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, 22 Jun 2019 18:51:06 -0300
-Andr=C3=A9 Almeida <andrealmeid@collabora.com> escreveu:
+Clean up the vDSO code a bit by giving pvclock_page and hvclock_page
+their actual types instead of u8[PAGE_SIZE].  This shouldn't
+materially affect the generated code.
 
-> Hello Mauro,
->=20
-> On 6/21/19 6:17 PM, Mauro Carvalho Chehab wrote:
-> > Em Mon, 17 Jun 2019 10:32:20 -0300
-> > Andr=C3=A9 Almeida <andrealmeid@collabora.com> escreveu:
-> > =20
-> >> Add comments at vimc_streamer_s_stream and vimc_streamer_thread, making
-> >> the vimc-stream totally documented. =20
-> > I'm applying it right now.
-> >
-> > Yet, if this is fully documented, IMO you should add it to
-> > Documentation/media/v4l-drivers, replacing the comments to kernel-doc
-> > markups. =20
->=20
-> This suggestion is a great improvement and it's simple to apply to the
-> source. Where do you believe we can place this at[1]? Maybe something like
->=20
->=20
-> Source code documentation
-> -------------------------
->=20
-> vimc-streamer
-> ~~~~~~~~~~~~
->=20
-> .. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.c
->    :internal:
->=20
->=20
-> at the end of the file?
->=20
-Yeah, this should be enough.
+Heavily based on a patch from Linus.
 
-> > That would make easier for the ones to read the comments and, if someone
-> > changes a function call, warnings will be produced, and the developer
-> > will be warned.
-> > Thanks,
-> > Mauro =20
->=20
-> Thanks,
-> =C2=A0=C2=A0=C2=A0 Andr=C3=A9
->=20
-> [1]
-> https://git.linuxtv.org/media_tree.git/tree/Documentation/media/v4l-drive=
-rs/vimc.rst
->=20
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/entry/vdso/vclock_gettime.c | 36 ++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
+index 4aed41f638bb..907efc5015ec 100644
+--- a/arch/x86/entry/vdso/vclock_gettime.c
++++ b/arch/x86/entry/vdso/vclock_gettime.c
+@@ -28,13 +28,33 @@ extern int __vdso_clock_gettime(clockid_t clock, struct timespec *ts);
+ extern int __vdso_gettimeofday(struct timeval *tv, struct timezone *tz);
+ extern time_t __vdso_time(time_t *t);
+ 
++/*
++ * Declare the memory-mapped vclock data pages.  These come from hypervisors.
++ * If we ever reintroduce something like direct access to an MMIO clock like
++ * the HPET again, it will go here as well.
++ *
++ * A load from any of these pages will segfault if the clock in question is
++ * disabled, so appropriate compiler barriers and checks need to be used
++ * to prevent stray loads.
++ *
++ * These declarations MUST NOT be const.  The compiler will assume that
++ * an extern const variable has genuinely constant contents, and the
++ * resulting code won't work, since the whole point is that these pages
++ * change over time, possibly while we're accessing them.
++ */
++
+ #ifdef CONFIG_PARAVIRT_CLOCK
+-extern u8 pvclock_page[PAGE_SIZE]
++/*
++ * This is the vCPU 0 pvclock page.  We only use pvclock from the vDSO
++ * if the hypervisor tells us that all vCPUs can get valid data from the
++ * vCPU 0 page.
++ */
++extern struct pvclock_vsyscall_time_info pvclock_page
+ 	__attribute__((visibility("hidden")));
+ #endif
+ 
+ #ifdef CONFIG_HYPERV_TSCPAGE
+-extern u8 hvclock_page[PAGE_SIZE]
++extern struct ms_hyperv_tsc_page hvclock_page
+ 	__attribute__((visibility("hidden")));
+ #endif
+ 
+@@ -69,14 +89,9 @@ notrace static long vdso_fallback_gettime(long clock, struct timespec *ts)
+ #endif
+ 
+ #ifdef CONFIG_PARAVIRT_CLOCK
+-static notrace const struct pvclock_vsyscall_time_info *get_pvti0(void)
+-{
+-	return (const struct pvclock_vsyscall_time_info *)&pvclock_page;
+-}
+-
+ static notrace u64 vread_pvclock(void)
+ {
+-	const struct pvclock_vcpu_time_info *pvti = &get_pvti0()->pvti;
++	const struct pvclock_vcpu_time_info *pvti = &pvclock_page.pvti;
+ 	u32 version;
+ 	u64 ret;
+ 
+@@ -117,10 +132,7 @@ static notrace u64 vread_pvclock(void)
+ #ifdef CONFIG_HYPERV_TSCPAGE
+ static notrace u64 vread_hvclock(void)
+ {
+-	const struct ms_hyperv_tsc_page *tsc_pg =
+-		(const struct ms_hyperv_tsc_page *)&hvclock_page;
+-
+-	return hv_read_tsc_page(tsc_pg);
++	return hv_read_tsc_page(&hvclock_page);
+ }
+ #endif
+ 
+-- 
+2.21.0
 
-
-Thanks,
-Mauro
