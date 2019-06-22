@@ -2,99 +2,103 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C607EC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5230C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A163B2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80C6208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561192421;
+	bh=of5tv1lk+Pdmx0ar/vak5HcBEM6lCMPJCV89NlP50P4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y2sltsBfUoeI1TJ08luUpEOHa8em9MOHTMuRBomrbNMD0ZA1T3wUeWF+dphpVvicV
+	 8TMVzk+M2U9bJEojugM/btGyJ2cBQUeb17epw/WOisMR1MYYsBRRXZRXtO/peP0pTz
+	 dhhVch+FnAmU8OS85Z08wa7P6bTCL6apLL8z9vjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfFVIUO (ORCPT
+        id S1726292AbfFVIdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:20:14 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38002 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfFVIUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:20:14 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 570E080642; Sat, 22 Jun 2019 10:20:01 +0200 (CEST)
-Date:   Sat, 22 Jun 2019 10:20:11 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     pavel@ucw.cz
-Cc:     linux-kernel@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH 4.19 10/61] sctp: Free cookie before we memdup a new one
-Message-ID: <20190622082011.GB10751@amd>
-References: <20190620174336.357373754@linuxfoundation.org>
- <20190620174339.137345137@linuxfoundation.org>
+        Sat, 22 Jun 2019 04:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfFVIdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 04:33:36 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F263520665;
+        Sat, 22 Jun 2019 08:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561192415;
+        bh=of5tv1lk+Pdmx0ar/vak5HcBEM6lCMPJCV89NlP50P4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=w8y+1uPpC2lrIj7R3ZRkGiIQA8Y6k14CMVDTr5DjROuWqLTTUZjy7zq0vkulHnQB6
+         6h5tQON+e8ugiuqYDVCRuaGAJoaNL4VtwhUWqx+r8QjXF6va6eca0kVIqYpILH3oMw
+         58ZZ9vD6s54DBjysGUomvb3pJhaDVodmZns/E6hE=
+Date:   Sat, 22 Jun 2019 09:33:25 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+Message-ID: <20190622093325.77539301@archlinux>
+In-Reply-To: <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
+        <20190621121344.24917-4-mircea.caprioru@analog.com>
+        <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
-Content-Disposition: inline
-In-Reply-To: <20190620174339.137345137@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 21 Jun 2019 08:31:14 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
---s2ZSL+KKDSLx8OML
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Jun 21, 2019 at 6:15 AM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
+> >
+> > Convert AD7124 bindings documentation to YAML format.
+> >
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> > ---
+> >
+> > Changelog v2:
+> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
+> > - added regex for a range from 0 to 15
+> > - added minimum and maximum constraints for reg property
+> > - set type and range of values for adi,reference-select property
+> > - used items for diff-channels property
+> > - set bipolar, adi,buffered-positive and negative to type: boolean
+> >
+> >  .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+The result is presumably good but the structure of the patch is not
+as straight forward as it should be.  As the changelog makes clear we
+aren't just doing a conversion here.  It is a mixture of conversion
+and new properties.  Please break the patch in two to reflect that.
+First convert the existing binding, then add the new properties.
 
-Hi!
+That will make it easier for people to see what is new.
 
-On Thu 2019-06-20 19:57:05, Greg Kroah-Hartman wrote:
-> From: Neil Horman <nhorman@tuxdriver.com>
->=20
-> [ Upstream commit ce950f1050cece5e406a5cde723c69bba60e1b26 ]
->=20
-> Based on comments from Xin, even after fixes for our recent syzbot
-> report of cookie memory leaks, its possible to get a resend of an INIT
-> chunk which would lead to us leaking cookie memory.
->=20
+Thanks,
 
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2600,6 +2600,8 @@ do_addr_param:
->  	case SCTP_PARAM_STATE_COOKIE:
->  		asoc->peer.cookie_len =3D
->  			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
-> +		if (asoc->peer.cookie)
-> +			kfree(asoc->peer.cookie);
->  		asoc->peer.cookie =3D kmemdup(param.cookie->body, asoc->peer.cookie_le=
-n, gfp);
->  		if (!asoc->peer.cookie)
->  			retval =3D 0;
+Jonathan
 
-kfree() handles NULL just fine. Can we simply work without the tests
-and save a bit of code?
 
-										Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---s2ZSL+KKDSLx8OML
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0N5LsACgkQMOfwapXb+vKzkQCdEGUbym7/n2RmW+fQBeeRoSLv
-TGcAoIyIhzIRz7hHml13X+PxkMaLBu7y
-=iJff
------END PGP SIGNATURE-----
-
---s2ZSL+KKDSLx8OML--
