@@ -2,46 +2,46 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C785C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325B3C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7082620821
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033D820821
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RhJzdLbw"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="L6sdhAib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfFVABV (ORCPT
+        id S1726339AbfFVABZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:01:21 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53748 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbfFVABU (ORCPT
+        Fri, 21 Jun 2019 20:01:25 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46970 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbfFVABZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:01:20 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNqmRE020809
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:01:18 -0700
+        Fri, 21 Jun 2019 20:01:25 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNt0FS005691
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:01:24 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=bBRE1O8+pjz3c8Ua3BJkmiLOIIW1HMGbjn13HDJ4cYs=;
- b=RhJzdLbwaxGsy2NmLUQezl1a3vhBHT8k+xp0aNcrs61uq9CRNSWtotehWDzKrdNaJqWO
- JrN3qf5pNnb+NW69plClLsKP4rhB21hYZlA0h91+yJQdpZhHs/TPeUfeqHyNHSMquy0F
- XH5tEF4Njv42kOAEOJVZldinRlTIONJe6Sw= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=pQnGGve/Vnh2HyxOCOdI1CzGbYYB1SvJlXif4X9k+UU=;
+ b=L6sdhAibl2kDYaNERgXyACpf60GF1GnZcsIOni0a2TSENSqJxq8vjZD+EXtc/OZjVfNW
+ kRzPQ4H7FywUWdxJDaSdsX5SkfuKWwOy8xWd3AvnW/0oAKi5ObXe4/unjMF1LHIqu1GD
+ vuF5rZ4br5mqBhWvsyeuVWKrt5nKKagT5tk= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t8uemtyvn-5
+        by mx0a-00082601.pphosted.com with ESMTP id 2t90mjj0ya-9
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:01:18 -0700
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:01:24 -0700
 Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 21 Jun 2019 17:01:16 -0700
+ 15.1.1713.5; Fri, 21 Jun 2019 17:01:19 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 1A23B62E2D56; Fri, 21 Jun 2019 17:01:15 -0700 (PDT)
+        id 173AC62E2D56; Fri, 21 Jun 2019 17:01:18 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -51,10 +51,12 @@ CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
         <kernel-team@fb.com>, <william.kucharski@oracle.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 0/5] THP aware uprobe
-Date:   Fri, 21 Jun 2019 17:01:04 -0700
-Message-ID: <20190622000109.914695-1-songliubraving@fb.com>
+Subject: [PATCH v5 1/5] mm: move memcmp_pages() and pages_identical()
+Date:   Fri, 21 Jun 2019 17:01:05 -0700
+Message-ID: <20190622000109.914695-2-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190622000109.914695-1-songliubraving@fb.com>
+References: <20190622000109.914695-1-songliubraving@fb.com>
 X-FB-Internal: Safe
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -63,7 +65,7 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=951 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906210182
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,58 +73,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set makes uprobe aware of THPs.
+This patch moves memcmp_pages() to mm/util.c and pages_identical() to
+mm.h, so that we can use them in other files.
 
-Currently, when uprobe is attached to text on THP, the page is split by
-FOLL_SPLIT. As a result, uprobe eliminates the performance benefit of THP.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ include/linux/mm.h |  7 +++++++
+ mm/ksm.c           | 18 ------------------
+ mm/util.c          | 13 +++++++++++++
+ 3 files changed, 20 insertions(+), 18 deletions(-)
 
-This set makes uprobe THP-aware. Instead of FOLL_SPLIT, we introduces
-FOLL_SPLIT_PMD, which only split PMD for uprobe. After all uprobes within
-the THP are removed, the PTEs are regrouped into huge PMD.
-
-Note that, with uprobes attached, the process runs with PTEs for the huge
-page. The performance benefit of THP is recovered _after_ all uprobes on
-the huge page are detached.
-
-This set (plus a few THP patches) is also available at
-
-   https://github.com/liu-song-6/linux/tree/uprobe-thp
-
-Changes v4 => v5:
-1. Propagate pte_alloc() error out of follow_pmd_mask().
-
-Changes since v3:
-1. Simplify FOLL_SPLIT_PMD case in follow_pmd_mask(), (Kirill A. Shutemov)
-2. Fix try_collapse_huge_pmd() to match change in follow_pmd_mask().
-
-Changes since v2:
-1. For FOLL_SPLIT_PMD, populated the page table in follow_pmd_mask().
-2. Simplify logic in uprobe_write_opcode. (Oleg Nesterov)
-3. Fix page refcount handling with FOLL_SPLIT_PMD.
-4. Much more testing, together with THP on ext4 and btrfs (sending in
-   separate set).
-5. Rebased.
-
-Changes since v1:
-1. introduces FOLL_SPLIT_PMD, instead of modifying split_huge_pmd*();
-2. reuse pages_identical() from ksm.c;
-3. rewrite most of try_collapse_huge_pmd().
-
-Song Liu (5):
-  mm: move memcmp_pages() and pages_identical()
-  uprobe: use original page when all uprobes are removed
-  mm, thp: introduce FOLL_SPLIT_PMD
-  uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
-  uprobe: collapse THP pmd after removing all uprobes
-
- include/linux/huge_mm.h |  7 +++++
- include/linux/mm.h      |  8 +++++
- kernel/events/uprobes.c | 54 +++++++++++++++++++++++++-------
- mm/gup.c                |  8 +++--
- mm/huge_memory.c        | 69 +++++++++++++++++++++++++++++++++++++++++
- mm/ksm.c                | 18 -----------
- mm/util.c               | 13 ++++++++
- 7 files changed, 145 insertions(+), 32 deletions(-)
-
---
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index dd0b5f4e1e45..0ab8c7d84cd0 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2891,5 +2891,12 @@ void __init setup_nr_node_ids(void);
+ static inline void setup_nr_node_ids(void) {}
+ #endif
+ 
++extern int memcmp_pages(struct page *page1, struct page *page2);
++
++static inline int pages_identical(struct page *page1, struct page *page2)
++{
++	return !memcmp_pages(page1, page2);
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 81c20ed57bf6..6f153f976c4c 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -1030,24 +1030,6 @@ static u32 calc_checksum(struct page *page)
+ 	return checksum;
+ }
+ 
+-static int memcmp_pages(struct page *page1, struct page *page2)
+-{
+-	char *addr1, *addr2;
+-	int ret;
+-
+-	addr1 = kmap_atomic(page1);
+-	addr2 = kmap_atomic(page2);
+-	ret = memcmp(addr1, addr2, PAGE_SIZE);
+-	kunmap_atomic(addr2);
+-	kunmap_atomic(addr1);
+-	return ret;
+-}
+-
+-static inline int pages_identical(struct page *page1, struct page *page2)
+-{
+-	return !memcmp_pages(page1, page2);
+-}
+-
+ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
+ 			      pte_t *orig_pte)
+ {
+diff --git a/mm/util.c b/mm/util.c
+index 9834c4ab7d8e..750e586d50bc 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -755,3 +755,16 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+ out:
+ 	return res;
+ }
++
++int memcmp_pages(struct page *page1, struct page *page2)
++{
++	char *addr1, *addr2;
++	int ret;
++
++	addr1 = kmap_atomic(page1);
++	addr2 = kmap_atomic(page2);
++	ret = memcmp(addr1, addr2, PAGE_SIZE);
++	kunmap_atomic(addr2);
++	kunmap_atomic(addr1);
++	return ret;
++}
+-- 
 2.17.1
+
