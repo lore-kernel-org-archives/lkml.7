@@ -2,249 +2,145 @@ Return-Path: <SRS0=s1fu=UU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82478C43613
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE24CC48BE0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3F2206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cMahPU3h"
+	by mail.kernel.org (Postfix) with ESMTP id 8CD15206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Jun 2019 23:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfFUX5e (ORCPT
+        id S1726481AbfFUX5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 19:57:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48548 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfFUX50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 19:57:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNsGrY052403;
-        Fri, 21 Jun 2019 23:56:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=78mpo7nmf/TzCxYm+FvueiHl24evXjLjlQCOrNx2ii0=;
- b=cMahPU3h3WDq3o77oZm0v0l4eAWtZqs/z8B7QgP9dV/rx4C/edHv9TeXRO0Fb9skdbZX
- MvIT1UKbFMUxTjPGF5ctb5YT/ptXqzjRKe0bEjHJXNIBDIlXoPkxy/IlasQSuXSlqiRp
- +esjhsZV2vt0hmx2CeWgITQXAWJndNzDgtadN5Vi/Wy2Rzss4rCWUAaq9ufIuoJg4pO0
- CXx8gFyk5qVEqBeqSdIBJjxjiyzTW1lPMf8roTQv35mwvkXROxRUuqe0PXhUo23jlqfq
- jo0DSSQMXqiYBxvFatD6UltM7XnOs51r/G+gZfd9hhdvvu+ronRsSfFchGKQK7ximVP5 Mg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t7809rsw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:56:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LNtNrf168098;
-        Fri, 21 Jun 2019 23:56:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t7rdy05x1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Jun 2019 23:56:43 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5LNuhUu170079;
-        Fri, 21 Jun 2019 23:56:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2t7rdy05wy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 23:56:43 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5LNue9m031369;
-        Fri, 21 Jun 2019 23:56:40 GMT
-Received: from localhost (/10.159.131.214)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 16:56:40 -0700
-Subject: [PATCH 3/4] fs: teach vfs_ioc_fssetxattr_check to check project id
- info
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        darrick.wong@oracle.com, shaggy@kernel.org,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk
-Cc:     cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Date:   Fri, 21 Jun 2019 16:56:37 -0700
-Message-ID: <156116139763.1664814.8565619516886294289.stgit@magnolia>
-In-Reply-To: <156116136742.1664814.17093419199766834123.stgit@magnolia>
-References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210182
+        Fri, 21 Jun 2019 19:57:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48779 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFUX5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Jun 2019 19:57:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jun 2019 16:57:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,402,1557212400"; 
+   d="scan'208";a="359022888"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2019 16:57:21 -0700
+From:   Megha Dey <megha.dey@linux.intel.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, marc.zyngier@arm.com, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com, megha.dey@intel.com,
+        Megha Dey <megha.dey@linux.intel.com>
+Subject: [RFC V1 RESEND 3/6] x86: Introduce the dynamic teardown function
+Date:   Fri, 21 Jun 2019 17:19:35 -0700
+Message-Id: <1561162778-12669-4-git-send-email-megha.dey@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+This is a preparatory patch to introduce disabling of MSI-X vectors
+belonging to a particular group. In this patch, we introduce a x86
+specific mechanism to teardown the IRQ vectors belonging to a
+particular group.
 
-Standardize the project id checks for FSSETXATTR.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- fs/ext4/ioctl.c    |   27 ---------------------------
- fs/f2fs/file.c     |   27 ---------------------------
- fs/inode.c         |   13 +++++++++++++
- fs/xfs/xfs_ioctl.c |   15 ---------------
- 4 files changed, 13 insertions(+), 69 deletions(-)
+ arch/x86/include/asm/x86_init.h |  1 +
+ arch/x86/kernel/x86_init.c      |  6 ++++++
+ drivers/pci/msi.c               | 18 ++++++++++++++++++
+ include/linux/msi.h             |  2 ++
+ 4 files changed, 27 insertions(+)
 
-
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index c2f48c90ca45..6aa1df1918f7 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -697,30 +697,6 @@ static long ext4_ioctl_group_add(struct file *file,
- 	return err;
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index b85a7c5..50f26a0 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -283,6 +283,7 @@ struct pci_dev;
+ struct x86_msi_ops {
+ 	int (*setup_msi_irqs)(struct pci_dev *dev, int nvec, int type);
+ 	void (*teardown_msi_irq)(unsigned int irq);
++	void (*teardown_msi_irqs_grp)(struct pci_dev *dev, int group_id);
+ 	void (*teardown_msi_irqs)(struct pci_dev *dev);
+ 	void (*restore_msi_irqs)(struct pci_dev *dev);
+ };
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index 50a2b49..794e7d4 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -127,6 +127,7 @@ EXPORT_SYMBOL_GPL(x86_platform);
+ struct x86_msi_ops x86_msi __ro_after_init = {
+ 	.setup_msi_irqs		= native_setup_msi_irqs,
+ 	.teardown_msi_irq	= native_teardown_msi_irq,
++	.teardown_msi_irqs_grp	= default_teardown_msi_irqs_grp,
+ 	.teardown_msi_irqs	= default_teardown_msi_irqs,
+ 	.restore_msi_irqs	= default_restore_msi_irqs,
+ };
+@@ -142,6 +143,11 @@ void arch_teardown_msi_irqs(struct pci_dev *dev)
+ 	x86_msi.teardown_msi_irqs(dev);
  }
  
--static int ext4_ioctl_check_project(struct inode *inode, struct fsxattr *fa)
--{
--	/*
--	 * Project Quota ID state is only allowed to change from within the init
--	 * namespace. Enforce that restriction only if we are trying to change
--	 * the quota ID state. Everything else is allowed in user namespaces.
--	 */
--	if (current_user_ns() == &init_user_ns)
--		return 0;
--
--	if (__kprojid_val(EXT4_I(inode)->i_projid) != fa->fsx_projid)
--		return -EINVAL;
--
--	if (ext4_test_inode_flag(inode, EXT4_INODE_PROJINHERIT)) {
--		if (!(fa->fsx_xflags & FS_XFLAG_PROJINHERIT))
--			return -EINVAL;
--	} else {
--		if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
--			return -EINVAL;
--	}
--
--	return 0;
--}
--
- static void ext4_fsgetxattr(struct inode *inode, struct fsxattr *fa)
- {
- 	struct ext4_inode_info *ei = EXT4_I(inode);
-@@ -1135,9 +1111,6 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 
- 		inode_lock(inode);
- 		ext4_fsgetxattr(inode, &old_fa);
--		err = ext4_ioctl_check_project(inode, &fa);
--		if (err)
--			goto out;
- 		err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
- 		if (err)
- 			goto out;
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f707de6bd4a8..183ed1ac60e1 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2799,30 +2799,6 @@ static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
- 	return 0;
- }
- 
--static int f2fs_ioctl_check_project(struct inode *inode, struct fsxattr *fa)
--{
--	/*
--	 * Project Quota ID state is only allowed to change from within the init
--	 * namespace. Enforce that restriction only if we are trying to change
--	 * the quota ID state. Everything else is allowed in user namespaces.
--	 */
--	if (current_user_ns() == &init_user_ns)
--		return 0;
--
--	if (__kprojid_val(F2FS_I(inode)->i_projid) != fa->fsx_projid)
--		return -EINVAL;
--
--	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL) {
--		if (!(fa->fsx_xflags & FS_XFLAG_PROJINHERIT))
--			return -EINVAL;
--	} else {
--		if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
--			return -EINVAL;
--	}
--
--	return 0;
--}
--
- static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
- {
- 	struct inode *inode = file_inode(filp);
-@@ -2850,9 +2826,6 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
- 		return err;
- 
- 	inode_lock(inode);
--	err = f2fs_ioctl_check_project(inode, &fa);
--	if (err)
--		goto out;
- 
- 	__f2fs_ioc_fsgetxattr(inode, &old_fa);
- 	err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
-diff --git a/fs/inode.c b/fs/inode.c
-index ddfe60679b53..f1ffa9605078 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -2221,6 +2221,19 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
- 	    !capable(CAP_LINUX_IMMUTABLE))
- 		return -EPERM;
- 
-+	/*
-+	 * Project Quota ID state is only allowed to change from within the init
-+	 * namespace. Enforce that restriction only if we are trying to change
-+	 * the quota ID state. Everything else is allowed in user namespaces.
-+	 */
-+	if (current_user_ns() != &init_user_ns) {
-+		if (old_fa->fsx_projid != fa->fsx_projid)
-+			return -EINVAL;
-+		if ((old_fa->fsx_xflags ^ fa->fsx_xflags) &
-+				FS_XFLAG_PROJINHERIT)
-+			return -EINVAL;
-+	}
++void arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
++{
++	x86_msi.teardown_msi_irqs_grp(dev, group_id);
++}
 +
- 	return 0;
- }
- EXPORT_SYMBOL(vfs_ioc_fssetxattr_check);
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 08c24f2f55c3..82961de98900 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1299,21 +1299,6 @@ xfs_ioctl_setattr_check_projid(
- 	if (fa->fsx_projid > (uint16_t)-1 &&
- 	    !xfs_sb_version_hasprojid32bit(&ip->i_mount->m_sb))
- 		return -EINVAL;
--
--	/*
--	 * Project Quota ID state is only allowed to change from within the init
--	 * namespace. Enforce that restriction only if we are trying to change
--	 * the quota ID state. Everything else is allowed in user namespaces.
--	 */
--	if (current_user_ns() == &init_user_ns)
--		return 0;
--
--	if (xfs_get_projid(ip) != fa->fsx_projid)
--		return -EINVAL;
--	if ((fa->fsx_xflags & FS_XFLAG_PROJINHERIT) !=
--	    (ip->i_d.di_flags & XFS_DIFLAG_PROJINHERIT))
--		return -EINVAL;
--
- 	return 0;
+ void arch_teardown_msi_irq(unsigned int irq)
+ {
+ 	x86_msi.teardown_msi_irq(irq);
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 73ad9bf..fd7fa6e 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -133,6 +133,24 @@ void __weak arch_teardown_msi_irqs(struct pci_dev *dev)
+ 	return default_teardown_msi_irqs(dev);
  }
  
++void default_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
++{
++	int i;
++	struct msi_desc *entry;
++
++	for_each_pci_msi_entry(entry, dev) {
++		if (entry->group_id == group_id && entry->irq) {
++			for (i = 0; i < entry->nvec_used; i++)
++				arch_teardown_msi_irq(entry->irq + i);
++		}
++	}
++}
++
++void __weak arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id)
++{
++	return default_teardown_msi_irqs_grp(dev, group_id);
++}
++
+ static void default_restore_msi_irq(struct pci_dev *dev, int irq)
+ {
+ 	struct msi_desc *entry;
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 91273cd..e61ba24 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -202,9 +202,11 @@ int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc);
+ void arch_teardown_msi_irq(unsigned int irq);
+ int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+ void arch_teardown_msi_irqs(struct pci_dev *dev);
++void arch_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id);
+ void arch_restore_msi_irqs(struct pci_dev *dev);
+ 
+ void default_teardown_msi_irqs(struct pci_dev *dev);
++void default_teardown_msi_irqs_grp(struct pci_dev *dev, int group_id);
+ void default_restore_msi_irqs(struct pci_dev *dev);
+ 
+ struct msi_controller {
+-- 
+2.7.4
 
