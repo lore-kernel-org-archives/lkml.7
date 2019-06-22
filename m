@@ -2,150 +2,189 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C295AC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CCEC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974FC20881
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E3020881
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TkB3WEMk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FpAHE5nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfFVAGM (ORCPT
+        id S1727125AbfFVAGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:06:12 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55968 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726678AbfFVAGK (ORCPT
+        Fri, 21 Jun 2019 20:06:19 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:33888 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfFVAEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:06:10 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LNt1fl005696
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:06:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=n2snFM7QmmPTPpShlBhEnsGKC2i2/uKCmCMTseCu52k=;
- b=TkB3WEMksGPkiSgJMtbOi5nd60Vn9LkBFGWBLqllbfRHKqjMvyN9xgpjLMSBxiNsT59u
- xXSjznVWMZNCtWyTtBnc2LUl/YYmfYW56N4xJiuIsFr+y6Qe5ZFFAOb3Jro0mEberPQs
- hJx7W5AQaf95gqEbevnn2c0lR2ZmiRAx+Bc= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t90mjj1eg-17
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:06:09 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Fri, 21 Jun 2019 17:05:27 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 1BB8B62E2D56; Fri, 21 Jun 2019 17:05:27 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
-        <akpm@linux-foundation.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v6 4/6] khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
-Date:   Fri, 21 Jun 2019 17:05:10 -0700
-Message-ID: <20190622000512.923867-5-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190622000512.923867-1-songliubraving@fb.com>
-References: <20190622000512.923867-1-songliubraving@fb.com>
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=566 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210182
-X-FB-Internal: deliver
+        Fri, 21 Jun 2019 20:04:50 -0400
+Received: by mail-pf1-f202.google.com with SMTP id y75so5338526pfg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=DcYA884YGcGGdCYTloo9C5D9P2JdZYIZcuEODFPPdyE=;
+        b=FpAHE5nRtiq8twPnU2FiA6jLImIS9YqBG0kkzIsrD6OMZiYkZhbmyWygj1lEcLXZZ+
+         yhPzB8BSVUrcxee0v1jTxwyQ+nDZsbbYuryXRtruDeoXjlY+p0iYOpq7nKjz9aZ0qq/p
+         /O2JfwU8M+jWw2Z9YuevmCs/eS4sN2vfFq0jaX0aCGRgjNzl5lcYsGj/jofyaP4CDRBt
+         0bN/jvJwoS9wJWP3S5dhVrX0L2iP0Ds82S3TrvG0hfHn3FJuvD905D7I/fQBcx2+B0Aa
+         273VlHuxdXiojhQkEa6oLg1y3gOOQCYo8Ldrh1xgfRjUEcXzF02eN6AaKuUrFSY255is
+         9IxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=DcYA884YGcGGdCYTloo9C5D9P2JdZYIZcuEODFPPdyE=;
+        b=oTWqGL68p3uk/resAYrwnd66dSySfHIfORWwRER/xSMxIxbNf7VOuUeNIDZf71iE08
+         aTgsWlNnI1ADlkIbOgUWNvza41UwCwBZoz4b08AiRfK0XTeIABo7cBm7pshqt+4Gz1uL
+         KOd1LPTsMK7bvxZDGvJ3bnlCDwbwbYMmhzD9Dvo2yQlxghknSdp3lE8a+Hkf94hJx1g3
+         uJbvWB4FsyBQrq4GGL+o2cLu3zb0/AzqycnlrigPxegp9qBOQWVwsHAHZ1OsSA+STvFP
+         AT73L7KSQ9l4ONYy4BO16G/ZOesOnHuXqEWWL7A4rVaA2SIpVU+5IzFfuCqLCuMP8X/9
+         pXzA==
+X-Gm-Message-State: APjAAAXu6diTM8rXwjyap0D+9Ui8lXt/zfAhb9pw7W49WXQRIs890Ne3
+        SgigMRskvpWJlQ0tEamvRTn4Y4Y2DYGJ9ulN0YTC9g==
+X-Google-Smtp-Source: APXvYqwnynpKqdK3Eq/xy1g7CilbIDHxC9Vh45kR566G/Sw5s9erByxy4tBBT/h8oYqEIaaSCkzkuhqgBVwmIC7LYGatZg==
+X-Received: by 2002:a63:5152:: with SMTP id r18mr20149468pgl.94.1561161889779;
+ Fri, 21 Jun 2019 17:04:49 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:03:48 -0700
+In-Reply-To: <20190622000358.19895-1-matthewgarrett@google.com>
+Message-Id: <20190622000358.19895-20-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH V34 19/29] Lock down module params that specify hardware
+ parameters (eg. ioport)
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Next patch will add khugepaged support of non-shmem files. This patch
-renames these two functions to reflect the new functionality:
+From: David Howells <dhowells@redhat.com>
 
-    collapse_shmem()        =>  collapse_file()
-    khugepaged_scan_shmem() =>  khugepaged_scan_file()
+Provided an annotation for module parameters that specify hardware
+parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
+dma buffers and other types).
 
-Acked-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
 ---
- mm/khugepaged.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ include/linux/security.h     |  1 +
+ kernel/params.c              | 27 ++++++++++++++++++++++-----
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 0f7419938008..dde8e45552b3 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1287,7 +1287,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 61e3f4a62d16..88064d7f6827 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -92,6 +92,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_ACPI_TABLES,
+ 	LOCKDOWN_PCMCIA_CIS,
+ 	LOCKDOWN_TIOCSSERIAL,
++	LOCKDOWN_MODULE_PARAMETERS,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/params.c b/kernel/params.c
+index ce89f757e6da..f94fe79e331d 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -24,6 +24,7 @@
+ #include <linux/err.h>
+ #include <linux/slab.h>
+ #include <linux/ctype.h>
++#include <linux/security.h>
+ 
+ #ifdef CONFIG_SYSFS
+ /* Protects all built-in parameters, modules use their own param_lock */
+@@ -108,13 +109,19 @@ bool parameq(const char *a, const char *b)
+ 	return parameqn(a, b, strlen(a)+1);
  }
  
- /**
-- * collapse_shmem - collapse small tmpfs/shmem pages into huge one.
-+ * collapse_file - collapse small tmpfs/shmem pages into huge one.
-  *
-  * Basic scheme is simple, details are more complex:
-  *  - allocate and lock a new huge page;
-@@ -1304,10 +1304,11 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
-  *    + restore gaps in the page cache;
-  *    + unlock and free huge page;
-  */
--static void collapse_shmem(struct mm_struct *mm,
-+static void collapse_file(struct vm_area_struct *vma,
- 		struct address_space *mapping, pgoff_t start,
- 		struct page **hpage, int node)
+-static void param_check_unsafe(const struct kernel_param *kp)
++static bool param_check_unsafe(const struct kernel_param *kp,
++			       const char *doing)
  {
-+	struct mm_struct *mm = vma->vm_mm;
- 	gfp_t gfp;
- 	struct page *new_page;
- 	struct mem_cgroup *memcg;
-@@ -1563,7 +1564,7 @@ static void collapse_shmem(struct mm_struct *mm,
- 	/* TODO: tracepoints */
- }
- 
--static void khugepaged_scan_shmem(struct mm_struct *mm,
-+static void khugepaged_scan_file(struct vm_area_struct *vma,
- 		struct address_space *mapping,
- 		pgoff_t start, struct page **hpage)
- {
-@@ -1631,14 +1632,14 @@ static void khugepaged_scan_shmem(struct mm_struct *mm,
- 			result = SCAN_EXCEED_NONE_PTE;
- 		} else {
- 			node = khugepaged_find_target_node();
--			collapse_shmem(mm, mapping, start, hpage, node);
-+			collapse_file(vma, mapping, start, hpage, node);
- 		}
+ 	if (kp->flags & KERNEL_PARAM_FL_UNSAFE) {
+ 		pr_notice("Setting dangerous option %s - tainting kernel\n",
+ 			  kp->name);
+ 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
  	}
- 
- 	/* TODO: tracepoints */
++
++	if (kp->flags & KERNEL_PARAM_FL_HWPARAM &&
++	    security_locked_down(LOCKDOWN_MODULE_PARAMETERS))
++		return false;
++	return true;
  }
- #else
--static void khugepaged_scan_shmem(struct mm_struct *mm,
-+static void khugepaged_scan_file(struct vm_area_struct *vma,
- 		struct address_space *mapping,
- 		pgoff_t start, struct page **hpage)
- {
-@@ -1722,7 +1723,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages,
- 				file = get_file(vma->vm_file);
- 				up_read(&mm->mmap_sem);
- 				ret = 1;
--				khugepaged_scan_shmem(mm, file->f_mapping,
-+				khugepaged_scan_file(vma, file->f_mapping,
- 						pgoff, hpage);
- 				fput(file);
- 			} else {
+ 
+ static int parse_one(char *param,
+@@ -144,8 +151,10 @@ static int parse_one(char *param,
+ 			pr_debug("handling %s with %p\n", param,
+ 				params[i].ops->set);
+ 			kernel_param_lock(params[i].mod);
+-			param_check_unsafe(&params[i]);
+-			err = params[i].ops->set(val, &params[i]);
++			if (param_check_unsafe(&params[i], doing))
++				err = params[i].ops->set(val, &params[i]);
++			else
++				err = -EPERM;
+ 			kernel_param_unlock(params[i].mod);
+ 			return err;
+ 		}
+@@ -553,6 +562,12 @@ static ssize_t param_attr_show(struct module_attribute *mattr,
+ 	return count;
+ }
+ 
++#ifdef CONFIG_MODULES
++#define mod_name(mod) (mod)->name
++#else
++#define mod_name(mod) "unknown"
++#endif
++
+ /* sysfs always hands a nul-terminated string in buf.  We rely on that. */
+ static ssize_t param_attr_store(struct module_attribute *mattr,
+ 				struct module_kobject *mk,
+@@ -565,8 +580,10 @@ static ssize_t param_attr_store(struct module_attribute *mattr,
+ 		return -EPERM;
+ 
+ 	kernel_param_lock(mk->mod);
+-	param_check_unsafe(attribute->param);
+-	err = attribute->param->ops->set(buf, attribute->param);
++	if (param_check_unsafe(attribute->param, mod_name(mk->mod)))
++		err = attribute->param->ops->set(buf, attribute->param);
++	else
++		err = -EPERM;
+ 	kernel_param_unlock(mk->mod);
+ 	if (!err)
+ 		return len;
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index c89046dc2155..d03c4c296af7 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -28,6 +28,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_ACPI_TABLES] = "modified ACPI tables",
+ 	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
+ 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
++	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
 -- 
-2.17.1
+2.22.0.410.gd8fdbe21b5-goog
 
