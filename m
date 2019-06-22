@@ -2,238 +2,179 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2515DC48BE8
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19F1C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90F92089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B622084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 23:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/U6ztiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfFVXXJ (ORCPT
+        id S1726373AbfFVX2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 19:23:09 -0400
-Received: from mx.ewheeler.net ([66.155.3.69]:49056 "EHLO mx.ewheeler.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbfFVXXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 19:23:08 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Jun 2019 19:23:07 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 7F6A6A0692;
-        Sat, 22 Jun 2019 23:16:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 4fDofOu3-nKt; Sat, 22 Jun 2019 23:16:27 +0000 (UTC)
-Received: from el7-dev.ewi (unknown [209.180.175.76])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id 58D7EA067D;
-        Sat, 22 Jun 2019 23:16:27 +0000 (UTC)
-From:   Eric Wheeler <bcache@lists.ewheeler.net>
-To:     Coly Li <colyli@suse.de>
-Cc:     linux-block@vger.kernel.org, Eric Wheeler <git@linux.ewheeler.net>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-        linux-kernel@vger.kernel.org (open list),
-        linux-bcache@vger.kernel.org (open list:BCACHE (BLOCK LAYER CACHE))
-Subject: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
-Date:   Sat, 22 Jun 2019 16:16:09 -0700
-Message-Id: <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
+        Sat, 22 Jun 2019 19:28:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39993 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVX2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 19:28:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so15646386eds.7;
+        Sat, 22 Jun 2019 16:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OvdGvB+gsBI8ix8GBbVgoDhcwK+AHVAdtlmUns+BMLk=;
+        b=l/U6ztiWvim6OPcpsFWv+8/nGMbNqRUP5HKW49NEuFiQ/2hm5kLZ4LOKVe4Dj9kDLL
+         h4stuhYillm96itObs7iUJZP+sT2TCufg4Cy9p25mhyv6xk4YFzCeWHzshYvdTM8syLa
+         XYDbgwvCQeZu1v0+Tf5TFOCIPu5oOP2Q9Z8BPZ8kuhFuBc9wZ4J6AgH/ubHeiOsmjlnK
+         2vm3QYGxJaVtJCyuCKlORFWR7xKSgmDUFAailHSENSEr0KXCUDn+AOsswOX+362EHKpm
+         DyjZE3VP2vqTXGZV7DJwj3grRVINabDTJQsScoIEKyoY5yJYNXK/JoU80CGqQRw3VJNU
+         Jquw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OvdGvB+gsBI8ix8GBbVgoDhcwK+AHVAdtlmUns+BMLk=;
+        b=KMN0zcxTfUqLq5DvtWt8+6aMj+KhuiX/udzLcs0SELBHNeucHtbcjZQFXV5rTy0PCg
+         6HNRRJVlsIw5dPoAY0DDNQpZhx6DHOldHwyUzXjfTHQPZFza17gPE/q7UKmh9Cqyhgtd
+         1orzl9Xbf0r/+ghUuSskIDJvdAiWr3jDE/xEK74c5Wd+LKcwq0x6PF+qhIZ4ug+bVSWZ
+         lpB4XZNPz7EL8AZUPDP+/PD0MnXM1ju3oMe+PubyTj52evUd14iJSJuB2Mxvs28XNbtt
+         QM6u+ZgC3ItI8Vfx6iXVrzAi7rE4pXpf28FGlVrawuov7BjxX7AUbF+qH3Nt+Fxu2iKr
+         BsJA==
+X-Gm-Message-State: APjAAAWUSOZ7MtlWaU4IW501gNJMNNfp52tABxS4wU9AdvJN4GbqhNUC
+        W/rdek0LXe40qOQf7oxxAyKbnC+hirotQA8gicfnhOx1
+X-Google-Smtp-Source: APXvYqwFLKK+g33AoATUdqVfqMxrjCm4EjDKVf4RHDoYPxn6MRppHUMZNpsmcSWHp1P/TWzfaasoZ54TfRUwqU9nxlo=
+X-Received: by 2002:a50:9468:: with SMTP id q37mr26168041eda.163.1561246115698;
+ Sat, 22 Jun 2019 16:28:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-3-masneyb@onstation.org>
+ <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
+ <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com> <20190621021444.GA13972@onstation.org>
+In-Reply-To: <20190621021444.GA13972@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 22 Jun 2019 16:28:20 -0700
+Message-ID: <CAF6AEGuVKtAu60kLYNKOsy3=hT0FDbJ5vvEJE6gFLAodpU5MGA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Wheeler <git@linux.ewheeler.net>
+On Thu, Jun 20, 2019 at 7:14 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Wed, Jun 19, 2019 at 01:21:20PM -0700, Rob Clark wrote:
+> > On Wed, Jun 19, 2019 at 1:17 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > >
+> > > > Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
+> > > > must use the On Chip MEMory (OCMEM) in order to be functional. Add the
+> > > > optional ocmem property to the Adreno Graphics Management Unit bindings.
+> > > >
+> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> > > > index 90af5b0a56a9..c746b95e95d4 100644
+> > > > --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> > > > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> > > > @@ -31,6 +31,10 @@ Required properties:
+> > > >  - iommus: phandle to the adreno iommu
+> > > >  - operating-points-v2: phandle to the OPP operating points
+> > > >
+> > > > +Optional properties:
+> > > > +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> > > > +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
+> > >
+> > > We already have a couple of similar properties. Lets standardize on
+> > > 'sram' as that is what TI already uses.
+> > >
+> > > Also, is the whole OCMEM allocated to the GMU? If not you should have
+> > > child nodes to subdivide the memory.
+> > >
+> >
+> > iirc, downstream a large chunk of OCMEM is statically allocated for
+> > GPU.. the remainder is dynamically allocated for different use-cases.
+> > The upstream driver Brian is proposing only handles the static
+> > allocation case
+>
+> It appears that the GPU expects to use a specific region of ocmem,
+> specifically starting at 0. The freedreno driver allocates 1MB of
+> ocmem on the Nexus 5 starting at ocmem address 0. As a test, I
+> changed the starting address to 0.5MB and kmscube shows only half the
+> cube, and four wide black bars across the screen:
+>
+> https://www.flickr.com/photos/masneyb/48100534381/
+>
+> > (and I don't think we have upstream support for the various audio and
+> > video use-cases that used dynamic OCMEM allocation downstream)
+>
+> That's my understanding as well.
+>
+> > Although maybe we should still have a child node to separate the
+> > statically and dynamically allocated parts?  I'm not sure what would
+> > make the most sense..
+>
+> Given that the GPU is expecting a fixed address in ocmem, perhaps it
+> makes sense to have the child node. How about this based on the
+> sram/sram.txt bindings?
+>
+>   ocmem: ocmem@fdd00000 {
+>     compatible = "qcom,msm8974-ocmem";
+>
+>     reg = <0xfdd00000 0x2000>, <0xfec00000 0x180000>;
+>     reg-names = "ctrl", "mem";
+>
+>     clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>, <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+>     clock-names = "core", "iface";
+>
+>     gmu-sram@0 {
+>       reg = <0x0 0x100000>;
+>       pool;
+>     };
+>
+>     misc-sram@0 {
+>       reg = <0x100000 0x080000>;
+>       export;
+>     };
+>   };
+>
+> I marked the misc pool as export since I've seen in the downstream ocmem
+> sources a reference to their closed libsensors that runs in userspace.
+>
+> Looking at the sram bindings led me to the genalloc API
+> (Documentation/core-api/genalloc.rst). I wonder if this is the way that
+> this should be done?
 
-While some drivers set queue_limits.io_opt (e.g., md raid5), there are
-currently no SCSI/RAID controller drivers that do.  Previously stripe_size
-and partial_stripes_expensive were read-only values and could not be
-tuned by users (eg, for hardware RAID5/6).
+won't claim to be a dt expert, but this seems somewhat sane..  maybe
+drop the export until a use-case comes along for that.. or even the
+entire second child node?  I guess that comes down to what robher and
+others prefer, I can't really speculate too much about the non-gpu
+use-cases for ocmem (or if they'll ever be upstream)
 
-This patch enables users to save the optimal IO size via sysfs through
-the backing device attributes stripe_size and partial_stripes_expensive
-into the bcache superblock.
-
-Superblock changes are backwards-compatable:
-
-*  partial_stripes_expensive: One bit was used in the superblock flags field
-
-*  stripe_size: There are eight 64-bit "pad" fields for future use in
-   the superblock which default to 0; from those, 32-bits are now used
-   to save the stripe_size and load at device registration time.
-
-Signed-off-by: Eric Wheeler <bcache@linux.ewheeler.net>
----
- Documentation/admin-guide/bcache.rst | 21 +++++++++++++++++++++
- drivers/md/bcache/super.c            | 15 ++++++++++++++-
- drivers/md/bcache/sysfs.c            | 33 +++++++++++++++++++++++++++++++--
- include/uapi/linux/bcache.h          |  6 ++++--
- 4 files changed, 70 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/bcache.rst b/Documentation/admin-guide/bcache.rst
-index c0ce64d..ef82022 100644
---- a/Documentation/admin-guide/bcache.rst
-+++ b/Documentation/admin-guide/bcache.rst
-@@ -420,6 +420,12 @@ dirty_data
- label
-   Name of underlying device.
- 
-+partial_stripes_expensive
-+  Flag to bcache that partial or unaligned stripe_size'd
-+  writes to the backing device are expensive (e.g., RAID5/6 incur
-+  read-copy-write). Writing this sysfs attribute updates the superblock
-+  and also takes effect immediately.  See also stripe_size, below.
-+
- readahead
-   Size of readahead that should be performed.  Defaults to 0.  If set to e.g.
-   1M, it will round cache miss reads up to that size, but without overlapping
-@@ -458,6 +464,21 @@ stop
-   Write to this file to shut down the bcache device and close the backing
-   device.
- 
-+stripe_size
-+  The stripe size in bytes of the backing device for optimial
-+  write performance (also known as the "stride width"). This is set
-+  automatically when using a device driver sets blk_limits_io_opt
-+  (e.g., md, rbd, skd, zram, virtio_blk).  No hardware RAID controller
-+  sets blk_limits_io_opt as of 2019-06-15, so configure this to suit
-+  your needs.  Note that you must unregister and re-register the backing
-+  device after making a change to stripe_size.
-+
-+  Where N is the number of data disks,
-+    RAID5: stripe_size = (N-1)*RAID_CHUNK_SIZE.
-+    RAID6: stripe_size = (N-2)*RAID_CHUNK_SIZE.
-+
-+  See also partial_stripes_expensive, above.
-+
- writeback_delay
-   When dirty data is written to the cache and it previously did not contain
-   any, waits some number of seconds before initiating writeback. Defaults to
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 1b63ac8..d0b9501 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -80,6 +80,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
- 
- 	sb->flags		= le64_to_cpu(s->flags);
- 	sb->seq			= le64_to_cpu(s->seq);
-+	sb->stripe_size		= le32_to_cpu(s->stripe_size);
- 	sb->last_mount		= le32_to_cpu(s->last_mount);
- 	sb->first_bucket	= le16_to_cpu(s->first_bucket);
- 	sb->keys		= le16_to_cpu(s->keys);
-@@ -221,6 +222,7 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
- 
- 	out->flags		= cpu_to_le64(sb->flags);
- 	out->seq		= cpu_to_le64(sb->seq);
-+	out->stripe_size	= cpu_to_le32(sb->stripe_size);
- 
- 	out->last_mount		= cpu_to_le32(sb->last_mount);
- 	out->first_bucket	= cpu_to_le16(sb->first_bucket);
-@@ -1258,7 +1260,18 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
- 
- 	dc->disk.stripe_size = q->limits.io_opt >> 9;
- 
--	if (dc->disk.stripe_size)
-+	if (dc->sb.stripe_size) {
-+		if (dc->disk.stripe_size &&
-+		    dc->disk.stripe_size != dc->sb.stripe_size) {
-+			pr_warn("superblock stripe_size (%d) overrides bdev stripe_size (%d)\n",
-+				(int)dc->sb.stripe_size,
-+				(int)dc->disk.stripe_size);
-+		}
-+
-+		dc->disk.stripe_size = dc->sb.stripe_size;
-+		dc->partial_stripes_expensive =
-+			(unsigned int)BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb);
-+	} else if (dc->disk.stripe_size)
- 		dc->partial_stripes_expensive =
- 			q->limits.raid_partial_stripes_expensive;
- 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index bfb437f..4ebca52 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -111,8 +111,8 @@
- rw_attribute(writeback_rate_minimum);
- read_attribute(writeback_rate_debug);
- 
--read_attribute(stripe_size);
--read_attribute(partial_stripes_expensive);
-+rw_attribute(stripe_size);
-+rw_attribute(partial_stripes_expensive);
- 
- rw_attribute(synchronous);
- rw_attribute(journal_delay_ms);
-@@ -343,6 +343,35 @@ static ssize_t bch_snprint_string_list(char *buf,
- 		}
- 	}
- 
-+	if (attr == &sysfs_stripe_size) {
-+		int v = strtoul_or_return(buf);
-+
-+		if (v & 0x1FF) {
-+			pr_err("stripe_size must be a muliple of 512-byte sectors");
-+			return -EINVAL;
-+		}
-+
-+		v >>= 9;
-+
-+		if (v != dc->sb.stripe_size) {
-+			dc->sb.stripe_size = v;
-+			pr_info("stripe_size=%d, re-register to take effect.",
-+				v<<9);
-+			bch_write_bdev_super(dc, NULL);
-+		} else
-+			pr_info("stripe_size is already set to %d.", v<<9);
-+	}
-+
-+	if (attr == &sysfs_partial_stripes_expensive) {
-+		int v = strtoul_or_return(buf);
-+
-+		if (v != BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb)) {
-+			SET_BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb, v);
-+			dc->partial_stripes_expensive = v;
-+			bch_write_bdev_super(dc, NULL);
-+		}
-+	}
-+
- 	if (attr == &sysfs_stop_when_cache_set_failed) {
- 		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
- 		if (v < 0)
-diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
-index 5d4f58e..ee60914 100644
---- a/include/uapi/linux/bcache.h
-+++ b/include/uapi/linux/bcache.h
-@@ -172,7 +172,9 @@ struct cache_sb {
- 
- 	__u64			flags;
- 	__u64			seq;
--	__u64			pad[8];
-+	__u32			stripe_size;
-+	__u32			pad_u32;
-+	__u64			pad_u64[7];
- 
- 	union {
- 	struct {
-@@ -230,7 +232,7 @@ static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
- #define BDEV_STATE_CLEAN		1U
- #define BDEV_STATE_DIRTY		2U
- #define BDEV_STATE_STALE		3U
--
-+BITMASK(BDEV_PARTIAL_STRIPES_EXPENSIVE,	struct cache_sb, flags, 60, 1);
- /*
-  * Magic numbers
-  *
--- 
-1.8.3.1
-
+BR,
+-R
