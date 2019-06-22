@@ -2,80 +2,121 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1BFC48BDF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0614C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF6F20843
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561182243;
-	bh=8XfY/ADqB/m32rtN3KWK7dF1kaYPkqEqs6tSWgPwc64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2DqlC3q9iXhaH9J9GGl/eBYwsNJX/aEmAWznE6vdYtTtMhQ9g6u4Knk2deZMACkhZ
-	 ty5k++QhMMSZ8uLw0MhWSUSQel6k6RbLYrbtRVQZPp9C7BSTD2sXlmKLYCbjuBW7OO
-	 tfGali6pfcApeg6NMoVNHvTaaiX4U32S2ZOlqO60=
+	by mail.kernel.org (Postfix) with ESMTP id 8064120843
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULCKOc6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbfFVFoB (ORCPT
+        id S1726180AbfFVFoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfFVFoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:44:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DB12070B;
-        Sat, 22 Jun 2019 05:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561182240;
-        bh=8XfY/ADqB/m32rtN3KWK7dF1kaYPkqEqs6tSWgPwc64=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jRC5gUXenqrX07WCB2us+4Fk7forVkRo8G6dgKtgIovGLPMxOyN1lX0aU8KSbgTrX
-         EIp6bXrqm5+5PahUTy5y/+bx4W9rimLTHBiOiJSOM27mWOdjaYHj0kJjBM7z4IZtzd
-         1EqC6T8Kdjk6xugvp1SYjxJHITeSpPodys0UzQco=
-Date:   Sat, 22 Jun 2019 07:43:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/98] 5.1.13-stable review
-Message-ID: <20190622054357.GA26075@kroah.com>
-References: <20190620174349.443386789@linuxfoundation.org>
- <4efcd858-1b66-097a-1d8a-1a4e0efe7a42@roeck-us.net>
+        Sat, 22 Jun 2019 01:44:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42796 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfFVFoH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 01:44:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l19so4338385pgh.9;
+        Fri, 21 Jun 2019 22:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NWS4f+aR6LO6iXUHr6HD4me4LkyrGwLq4KbFdEdeA6c=;
+        b=ULCKOc6OtZqjLETG5AND4K3JctUd3iKXZPNNT2E0muNoUNAA9yxkl3s01HndlEUcEv
+         bnxzvmijdiRM1wm/AYc5BgudSln6kCDuNzZvWHicF8D8tL/kQU15XKLlJirX2XKu4RkD
+         yq3Pxk4d0jKq4HtCSyqto/FRl3hFItwvNmfWYbJYZujgTLY5I0msV5B/5AUZc94yO2pe
+         rDy1g2xk3sDw0lM9jcgpTF1cOar/9rj34kuMov8LEYggEYtYzZwnODZ6ycfvgPU9V9iE
+         0/YNnvfZCQKlD/McuQ40dqUKTnWVkXubzGwFR12jXy4GUIsjqzH5PDkkJYVEX8lLRma9
+         3cmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NWS4f+aR6LO6iXUHr6HD4me4LkyrGwLq4KbFdEdeA6c=;
+        b=skjdCaNFXBOVPiBgeYrVMEyqBp/cilgYeE2xyAaEFsbc9kg4OiAVB1fyGHN93qYUZv
+         T8dbnJFugHlbZ6/0JK22z35wgnoemIu82ctggRLevtuynn6817RCgV2N7nsXaLWTgwPG
+         L1ovqYvtvR/mB8iYk9Q3GWvLzCeszYAUf7sc3/y4q75KMJI7sJ7HtokVeay/IrBJvLLA
+         l7G0R5OMIvcNmSFLuf5SCJNNkagwLLwrfQ1wN8GvnPtgqvhFIDEYqh+n0vKsGMFfAdNO
+         UFEBY4PHHkvvbfW2vnc1l5heewQhoUAaU0zouXNSeGlY1w4D78e4LlUOUk99NZKMiptJ
+         O2aw==
+X-Gm-Message-State: APjAAAWTKXNBWrndpoQBvuKWvxhb/BG748taTSQCRERt5HzCT0Ronc+q
+        mC8JjRRFSbP8nlueS2nWr74=
+X-Google-Smtp-Source: APXvYqy44LRkDO3jBpFKRB2NBMTaoymaDYjBhrhVQpMK53mfBq31Cyq1LzAcH5uU0qmHOEHjbCCYmQ==
+X-Received: by 2002:a63:d60c:: with SMTP id q12mr21757037pgg.176.1561182246687;
+        Fri, 21 Jun 2019 22:44:06 -0700 (PDT)
+Received: from Gentoo ([103.231.91.74])
+        by smtp.gmail.com with ESMTPSA id a3sm6753566pfi.63.2019.06.21.22.44.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 22:44:05 -0700 (PDT)
+Date:   Sat, 22 Jun 2019 11:13:47 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     pr-tracker-bot@kernel.org, David Miller <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT] Networking
+Message-ID: <20190622054347.GA27816@Gentoo>
+References: <20190621.212137.1249209897243384684.davem@davemloft.net>
+ <156118140484.25946.9601116477028790363.pr-tracker-bot@kernel.org>
+ <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Content-Disposition: inline
-In-Reply-To: <4efcd858-1b66-097a-1d8a-1a4e0efe7a42@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHk-=whArwYU0KwEps4A6oRniRJ-B8K6VFX7gF=YGuFFaxDxqA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 05:45:58PM -0700, Guenter Roeck wrote:
-> On 6/20/19 10:56 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.13 release.
-> > There are 98 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 364 pass: 364 fail: 0
 
-Wonderful!  Thanks for testing all of these and letting me know.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-greg k-h
+ROFL ....bots gets confused ...we are blurring the boundaries Linus...:)
+
+On 22:36 Fri 21 Jun , Linus Torvalds wrote:
+>On Fri, Jun 21, 2019 at 10:30 PM <pr-tracker-bot@kernel.org> wrote:
+>>
+>> The pull request you sent on Fri, 21 Jun 2019 21:21:37 -0400 (EDT):
+>>
+>> > (unable to parse the git remote)
+>
+>This "unable to parse the git remote" is apparently because the pull
+>request had an extraneous ':' in the remote description
+>
+>  git://git.kernel.org:/pub/scm/linux/kernel/git/davem/net.git
+>                     ^^^
+>
+>which seems to have confused the pr-tracker-bot.
+>
+>               Linus
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0NwA8ACgkQsjqdtxFL
+KRWQpggAulPoFvWzafYH4jgSKEhcIJQhnfnU+aBviuV9tu5Bz/qaBKeHEO7Anwa6
+8X+PTQSfdS/vhugNI/R1x7le1pkW4XfA7VYUGNNnSx1ortPByx+nf1gmNPh9mrFW
+ThXq+x8Ii8AI8zTHzha7W2KoT/g+OkjagVGL+9TP7eIQCxn6CCU5HJ9jjGi8xjkj
+BAZtZ54gD3wOFN/2tbRVz5+z25lD8AGwpho7m4/wI96MOrNLm3wXX12dNrUrkygC
+pa7gPcAwl3R6lIkSrNBPAhpSuyh3QP8KY1XoBPfE1N9BYJj2fmfBTDl7vHgh7HL/
+CjrigEK2r/wwZe+YXqNu34sbk4eS1Q==
+=2ky6
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
