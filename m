@@ -2,279 +2,222 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350AC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 20:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F15C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 21:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1875420657
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 20:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC419205ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 21:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nASuRUEE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1cL17iX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfFVU5b (ORCPT
+        id S1726370AbfFVVmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 16:57:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49410 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfFVU5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 16:57:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=oePEOBUvsBrcln8QForxiWhri9yf6+IUcHaEBSsdi/w=; b=nASuRUEENw6wlYLBmrsJ5oRi9W
-        pm7kmBa2z+1ftH8shG31OizOzSGC9CN6XcqbVNc1w73iqO4ttBzfbrvWOCNrmz5XCmS8hxHZI3ELj
-        vA+cIJCfMw/4kUj5miKevgCE8exySXKzF7LQpaabgIFH9clP9UDjQsEnwdGftl5wGdeo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hen4a-00048d-Rp; Sat, 22 Jun 2019 22:57:20 +0200
-Date:   Sat, 22 Jun 2019 22:57:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        netdev@vger.kernel.org, alexandru.marginean@nxp.com,
-        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Horghidan <catalin.horghidan@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next 6/6] net/mssc/ocelot: Add basic Felix switch
- driver
-Message-ID: <20190622205720.GK8497@lunn.ch>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-7-git-send-email-claudiu.manoil@nxp.com>
+        Sat, 22 Jun 2019 17:42:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36795 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfFVVmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 17:42:16 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r6so9802456oti.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 14:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sA7VtGDWxs1PvSfqLqhiT/lLON+GJR9IC0w/w0nnIBM=;
+        b=D1cL17iXU3Cpd4uakFKBHIz8GMmCUH5nrcvqcDGaon2xlXNfslYTXhkTtRifrfVG/Z
+         G3YYQXFKfq/+Dzt6rVrp1JNi0dLGFgYpyQfX92jwIdyFFRA4EhB8/6pytGmN8emCTaz2
+         dHCumVKE9pU4EMrF8d+UvZG0Zn8kl4ol0gtTlfQnk5ahVtCY/D3mSFoM2ZQfAvnt6nie
+         20oM8ReSSzw4+m1p7ATYl23pNdKay5szlUme+U+O32iMW9x/3sYPUqw7+hLBVOIT4FCr
+         qCD6JZCSHHdmlu8DsAD38HOW8qHTyZcrVH361/E+ThQK36QMPfbZibbr5pfFWXfljSSh
+         STQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sA7VtGDWxs1PvSfqLqhiT/lLON+GJR9IC0w/w0nnIBM=;
+        b=MN1Mx97CX3mVM+L1UWXyW6TQotZfIKurW4e++iEPDvJdwksXu/0irOuOmS6nvmVZCt
+         KXULP7FxiBWe8QUtnAtblPVBOPc/58mvLCsHUke4f7bK1YS4TB0NBN6GqBAuJjMHBz+F
+         FJkmrmdNnFr71vziTlX1S48gQmVoyNheX4iHOFK1heRcvQtE6tAF5W1T8a8r84EkgMvk
+         E3DoyE4DmN1SOz1Dsw9rakfW535zG7/jslbz46750F+3gkQR7uQIZPheSZGjTuvXuFyS
+         h2Xqj+bpdugGUAcvXdeNH/8DEfkFg/N100oU9mpInaEAl3e6ZaW5G2UxSzilf9vDHBS/
+         OrvA==
+X-Gm-Message-State: APjAAAXtGc0G0AKd4EAdSjOvCyB60y6BAFRW7RO6/YaNgi0UQDmK6KTu
+        DTTD3F1HaQl+zKkzCzZraq3SAaLJzA8mTAMn+APmjQ==
+X-Google-Smtp-Source: APXvYqw1/VjNqqLNPPsWgbEg0uYYz6v4taHFtKPb4IB3PluWVhoRJoIluqDxel0TkBM5NJ24l3ImDzXl+daUjAUK8X0=
+X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr21774228otr.231.1561239734747;
+ Sat, 22 Jun 2019 14:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561131532-14860-7-git-send-email-claudiu.manoil@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190622003449.33707-1-saravanak@google.com> <20190622003449.33707-3-saravanak@google.com>
+ <CAGTfZH18SQXj_2TpUf7iQPzWrZ5RP8-OCb_t6fp7qhuutGWz5A@mail.gmail.com>
+In-Reply-To: <CAGTfZH18SQXj_2TpUf7iQPzWrZ5RP8-OCb_t6fp7qhuutGWz5A@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Sat, 22 Jun 2019 14:41:39 -0700
+Message-ID: <CAGETcx9Gi24bng_PCqc6=9S584va4hRc4HHZtBLevKHgYGSNDA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] OPP: Add function to look up required OPP's for a
+ given OPP
+To:     cwchoi00@gmail.com
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 06:38:52PM +0300, Claudiu Manoil wrote:
-> This supports a switch core ethernet device from Microsemi
-> (VSC9959) that can be integrated on different SoCs as a PCIe
-> endpoint device.
-> 
-> The switchdev functionality is provided by the core Ocelot
-> switch driver. In this regard, the current driver is an
-> instance of Microsemi's Ocelot core driver.
-> 
-> The patch adds the PCI device driver part and defines the
-> register map for the Felix switch core, as it has some
-> differences in register addresses and bitfield mappings
-> compared to the Ocelot switch.  Also some registers or
-> bitfields present on Ocelot are not available on Felix.
-> That's why this driver has its own register map instance.
-> Other than that, the common registers and bitfields have the
-> same functionality and share the same name.
-> 
-> In a few cases, some h/w operations have to be done differently
-> on Felix due to missing bitfields.  This is the case for the
-> switch core reset and init.  Because for this operation Ocelot
-> uses some bits that are not present on Felix, the later has to
-> use a register from the global registers block (GCB) instead.
-> 
-> Signed-off-by: Catalin Horghidan <catalin.horghidan@gmail.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
->  drivers/net/ethernet/mscc/Kconfig       |   8 +
->  drivers/net/ethernet/mscc/Makefile      |   9 +-
->  drivers/net/ethernet/mscc/felix_board.c | 392 +++++++++++++++++++++
->  drivers/net/ethernet/mscc/felix_regs.c  | 448 ++++++++++++++++++++++++
->  drivers/net/ethernet/mscc/ocelot.h      |   7 +
->  5 files changed, 862 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/net/ethernet/mscc/felix_board.c
->  create mode 100644 drivers/net/ethernet/mscc/felix_regs.c
-> 
-> diff --git a/drivers/net/ethernet/mscc/Kconfig b/drivers/net/ethernet/mscc/Kconfig
-> index bcec0587cf61..e5a7fa69307e 100644
-> --- a/drivers/net/ethernet/mscc/Kconfig
-> +++ b/drivers/net/ethernet/mscc/Kconfig
-> @@ -29,4 +29,12 @@ config MSCC_OCELOT_SWITCH_OCELOT
->  	  This driver supports the Ocelot network switch device as present on
->  	  the Ocelot SoCs.
->  
-> +config MSCC_FELIX_SWITCH
-> +	tristate "Felix switch driver"
-> +	depends on MSCC_OCELOT_SWITCH
-> +	depends on PCI
-> +	help
-> +	  This driver supports the Felix network switch device, connected as a
-> +	  PCI device.
-> +
->  endif # NET_VENDOR_MICROSEMI
-> diff --git a/drivers/net/ethernet/mscc/Makefile b/drivers/net/ethernet/mscc/Makefile
-> index 9a36c26095c8..81593feb2ea1 100644
-> --- a/drivers/net/ethernet/mscc/Makefile
-> +++ b/drivers/net/ethernet/mscc/Makefile
-> @@ -1,5 +1,10 @@
->  # SPDX-License-Identifier: (GPL-2.0 OR MIT)
->  obj-$(CONFIG_MSCC_OCELOT_SWITCH) += mscc_ocelot_common.o
->  mscc_ocelot_common-y := ocelot.o ocelot_io.o
-> -mscc_ocelot_common-y += ocelot_regs.o ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o
-> -obj-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) += ocelot_board.o
-> +mscc_ocelot_common-y += ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o
-> +
-> +obj-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) += mscc_ocelot.o
-> +mscc_ocelot-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) := ocelot_regs.o ocelot_board.o
-> +
-> +obj-$(CONFIG_MSCC_FELIX_SWITCH) += mscc_felix.o
-> +mscc_felix-$(CONFIG_MSCC_FELIX_SWITCH) := felix_regs.o felix_board.o
-> diff --git a/drivers/net/ethernet/mscc/felix_board.c b/drivers/net/ethernet/mscc/felix_board.c
-> new file mode 100644
-> index 000000000000..57f7a897b3ae
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mscc/felix_board.c
-> @@ -0,0 +1,392 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/* Felix Switch driver
-> + *
-> + * Copyright 2018-2019 NXP
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/netdevice.h>
-> +#include <linux/phy_fixed.h>
-> +#include <linux/phy.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/of_net.h>
-> +#include <linux/iopoll.h>
-> +#include <net/switchdev.h>
-> +#include "ocelot.h"
-> +
-> +#define FELIX_DRV_VER_MAJ 1
-> +#define FELIX_DRV_VER_MIN 0
-> +
-> +#define FELIX_DRV_STR	"Felix Switch driver"
-> +#define FELIX_DRV_VER_STR __stringify(FELIX_DRV_VER_MAJ) "." \
-> +			  __stringify(FELIX_DRV_VER_MIN)
+On Sat, Jun 22, 2019 at 4:50 AM Chanwoo Choi <cwchoi00@gmail.com> wrote:
+>
+> Hi,
+>
+> Absolutely, I like this approach. I think that it is necessary to make
+> the connection
+> between frequencies of devices.
 
-Driver version strings are pretty pointless. What you really want to
-know if the specific kernel version.
+Happy to hear that.
 
-> +
-> +#define FELIX_PORT_RES_START	0x0100000
-> +#define FELIX_PORT_RES_SIZE	0x10000
+> But, I have a question on below.
+>
+> 2019=EB=85=84 6=EC=9B=94 22=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 9:35,=
+ Saravana Kannan <saravanak@google.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+> >
+> > Add a function that allows looking up required OPPs given a source OPP
+> > table, destination OPP table and the source OPP.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pm_opp.h | 11 +++++++++
+> >  2 files changed, 65 insertions(+)
+> >
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index 74c7bdc6f463..4f7870bffbf8 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -1830,6 +1830,60 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_ta=
+ble *opp_table,
+> >                 dev_err(virt_dev, "Failed to find required device entry=
+\n");
+> >  }
+> >
+> > +/**
+> > + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
+> > + * @src_table: OPP table which has dst_table as one of its required OP=
+P table.
+> > + * @dst_table: Required OPP table of the src_table.
+> > + * @pstate: OPP of the src_table.
+> > + *
+> > + * This function returns the OPP (present in @dst_table) pointed out b=
+y the
+> > + * "required-opps" property of the OPP (present in @src_table).
+> > + *
+> > + * The callers are required to call dev_pm_opp_put() for the returned =
+OPP after
+> > + * use.
+> > + *
+> > + * Return: destination table OPP on success, otherwise NULL on errors.
+> > + */
+> > +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> > +                                       struct opp_table *dst_table,
+> > +                                       struct dev_pm_opp *src_opp)
+> > +{
+> > +       struct dev_pm_opp *opp, *dest_opp =3D NULL;
+> > +       int i;
+> > +
+> > +       if (!src_table || !dst_table || !src_opp)
+> > +               return NULL;
+> > +
+> > +       for (i =3D 0; i < src_table->required_opp_count; i++) {
+> > +               if (src_table->required_opp_tables[i]->np =3D=3D dst_ta=
+ble->np)
+> > +                       break;
+> > +       }
+> > +
+> > +       if (unlikely(i =3D=3D src_table->required_opp_count)) {
+> > +               pr_err("%s: Couldn't find matching OPP table (%p: %p)\n=
+",
+> > +                      __func__, src_table, dst_table);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       mutex_lock(&src_table->lock);
+> > +
+> > +       list_for_each_entry(opp, &src_table->opp_list, node) {
+> > +               if (opp =3D=3D src_opp) {
+> > +                       dest_opp =3D opp->required_opps[i];
+>
+> Correct me if I am wrong. This patch assume that 'i' index is same on bet=
+ween
+> [1] and [2]. But in order to guarantee this assumption, all OPP entries
+> in the same opp_table have to have the same number of 'required-opps' pro=
+perties
+> and keep the sequence among 'required-opps' entries.
+>
+> [1] src_table->required_opp_tables[i]->np
+> [2] opp->required_opps[I];
+>
+> For example, three OPP entries in the 'parent_bus_opp'
+> have the different sequence of 'required-opps' and the different
+> number of 'required-opps'. Is it no problem?
+>
+> parent_bus_opp: opp_table {
+>     compatible =3D "operating-points-v2";
+>
+>     opp2 {
+>         opp-hz =3D /bits/ 64 <200000>;
+>         required-opps =3D <&child_bus_a_opp2>, <&child_bus_b_opp2>,
+> <&child_bus_c_opp2>;
+>     };
+>
+>     opp1 {
+>         opp-hz =3D /bits/ 64 <200000>;
+>         // change the sequence between child_bus_b_opp2  and child_bus_c_=
+opp2
+>         required-opps =3D <&child_bus_a_opp2>, <&child_bus_c_opp2>,
+> <&child_bus_b_opp2>
+>     };
+>
+>     opp0 {
+>         opp-hz =3D /bits/ 64 <200000>;
+>         // missing 'child_bus_a_opp2'
+>         required-opps =3D <&child_bus_c_opp2>, <&child_bus_b_opp2>
+>     };
+>
+> }
+>
 
-This should really be in device tree. You then get a lot closer to the
-binding for mscc-ocelot, and you can reuse more of its code.
+I get your question. If I'm not mistaken the OPP framework DT parsing
+code makes the assumption that the required-opps list has the phandles
+in the same order for each "row" in the OPP table. It actually only
+looks at the first OPP entry to figure out the list of required OPP
+tables.
 
-> +static void felix_release_ports(struct ocelot *ocelot)
-> +{
-> +	struct ocelot_port *ocelot_port;
-> +	struct phy_device *phydev;
-> +	struct device_node *dn;
-> +	int i;
-> +
-> +	for (i = 0; i < ocelot->num_phys_ports; i++) {
-> +		ocelot_port = ocelot->ports[i];
-> +		if (!ocelot_port || !ocelot_port->phy || !ocelot_port->dev)
-> +			continue;
+Technically one can write code to deal with random order of the
+required-opp list, but doesn't seem like that's worth it because
+there's no need to have that order all mixed up in DT. And even if
+someone wants to add support for that, I don't think improving the DT
+parsing to handle random order would be part of this patch series.
 
-Phys are often optional, e.g. an RGMII interface to another switch, or
-an SFP port.
+-Saravana
 
-> +
-> +		phydev = ocelot_port->phy;
-> +		unregister_netdev(ocelot_port->dev);
-> +		free_netdev(ocelot_port->dev);
-> +
-> +		if (phy_is_pseudo_fixed_link(phydev)) {
-> +			dn = phydev->mdio.dev.of_node;
-> +			/* decr refcnt: of_phy_register_fixed_link */
-> +			of_phy_deregister_fixed_link(dn);
-> +		}
-> +		phy_device_free(phydev); /* decr refcnt: of_phy_find_device */
-
-To be on the safe side, you should probably not free the netdev until
-you free the phydev.
-
-This function also seems pretty generic. Should it be shared?
-
-> +static int felix_ports_init(struct pci_dev *pdev)
-> +{
-> +	struct ocelot *ocelot = pci_get_drvdata(pdev);
-> +	struct device_node *np = ocelot->dev->of_node;
-> +	struct device_node *phy_node, *portnp;
-> +	struct phy_device *phydev;
-> +	void __iomem *port_regs;
-> +	resource_size_t base;
-> +	u32 port;
-> +	int err;
-> +
-> +	ocelot->num_phys_ports = FELIX_MAX_NUM_PHY_PORTS;
-> +
-> +	np = of_get_child_by_name(np, "ethernet-ports");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "ethernet-ports sub-node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* alloc netdev for each port */
-> +	err = ocelot_init(ocelot);
-> +	if (err)
-> +		return err;
-> +
-> +	base = pci_resource_start(pdev, FELIX_SWITCH_BAR);
-> +	for_each_available_child_of_node(np, portnp) {
-> +		struct resource res = {};
-> +		int phy_mode;
-> +
-> +		if (!portnp || !portnp->name ||
-> +		    of_node_cmp(portnp->name, "port") ||
-
-The name of the node should not matter.
-
-> +static int felix_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +
-> +	register_netdevice_notifier(&ocelot_netdevice_nb);
-> +	register_switchdev_notifier(&ocelot_switchdev_nb);
-> +	register_switchdev_blocking_notifier(&ocelot_switchdev_blocking_nb);
-
-This is also shared. So maybe move it into a common function?
-
-> +
-> +	dev_info(&pdev->dev, "%s v%s\n", FELIX_DRV_STR, FELIX_DRV_VER_STR);
-> +	return 0;
-> +
-> +err_ports_init:
-> +err_chip_init:
-> +err_sw_core_init:
-> +	pci_iounmap(pdev, regs);
-> +err_iomap:
-> +err_resource_len:
-> +err_alloc_ocelot:
-> +err_dma:
-> +	pci_disable_device(pdev);
-> +
-> +	return err;
-> +}
-> +
-> +static void felix_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct ocelot *ocelot;
-> +
-> +	ocelot = pci_get_drvdata(pdev);
-> +
-> +	/* stop workqueue thread */
-> +	ocelot_deinit(ocelot);
-> +	unregister_switchdev_blocking_notifier(&ocelot_switchdev_blocking_nb);
-> +	unregister_switchdev_notifier(&ocelot_switchdev_nb);
-> +	unregister_netdevice_notifier(&ocelot_netdevice_nb);
-
-This is also common.
-
-     Andrew
+> --
+> Best Regards,
+> Chanwoo Choi
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kernel-team+unsubscribe@android.com.
+>
