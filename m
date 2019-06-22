@@ -2,76 +2,108 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D86DC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC396C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 19:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362732070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 18:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1F82070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 19:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfFVSVK convert rfc822-to-8bit (ORCPT
+        id S1726351AbfFVTA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 14:21:10 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:47135 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFVSVK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 14:21:10 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC3D2.dip0.t-ipconnect.de [79.239.195.210])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 36213CF187;
-        Sat, 22 Jun 2019 20:29:36 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v5.2-rc5] Bluetooth: Fix regression with minimum
- encryption key size alignment
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190622181349.8C8F320862@mail.kernel.org>
-Date:   Sat, 22 Jun 2019 20:21:07 +0200
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F46C65F2-411F-4B24-BD3C-ED9F39F5E65E@holtmann.org>
-References: <20190622134701.7088-1-marcel@holtmann.org>
- <20190622181349.8C8F320862@mail.kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sat, 22 Jun 2019 15:00:59 -0400
+Received: from fieldses.org ([173.255.197.46]:46528 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFVTA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 15:00:59 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id B4A622010; Sat, 22 Jun 2019 15:00:58 -0400 (EDT)
+Date:   Sat, 22 Jun 2019 15:00:58 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <20190622190058.GD5343@fieldses.org>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190621174544.GC25590@fieldses.org>
+ <201906211431.E6552108@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201906211431.E6552108@keescook>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+On Fri, Jun 21, 2019 at 03:26:00PM -0700, Kees Cook wrote:
+> On Fri, Jun 21, 2019 at 01:45:44PM -0400, J. Bruce Fields wrote:
+> > I'm not sure who to get review from for this kind of thing.
+> > 
+> > Kees, you seem to be one of the only people to touch string_helpers.c
+> > at all recently, any ideas?
+> 
+> Hi! Yeah, I'm happy to take a look. Notes below...
 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: d5bb334a8e17 Bluetooth: Align minimum encryption key size for LE and BR/EDR connections.
-> 
-> The bot has tested the following trees: v5.1.12, v4.19.53, v4.14.128, v4.9.182, v4.4.182.
-> 
-> v5.1.12: Build failed! Errors:
->    net/bluetooth/l2cap_core.c:1356:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
-> 
-> v4.19.53: Build failed! Errors:
->    net/bluetooth/l2cap_core.c:1355:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
-> 
-> v4.14.128: Build failed! Errors:
->    net/bluetooth/l2cap_core.c:1355:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
-> 
-> v4.9.182: Build OK!
-> v4.4.182: Build OK!
-> 
-> How should we proceed with this patch?
+Thanks!
 
-either you reapply commit d5bb334a8e17 first or I have to send a version that combines both into a single commit for easy applying.
+> > On Thu, Jun 20, 2019 at 10:51:07AM -0400, J. Bruce Fields wrote:
+> > > From: "J. Bruce Fields" <bfields@redhat.com>
+> > > 
+> > > I'm exposing some information about NFS clients in pseudofiles.  I
+> > > expect to eventually have simple tools to help read those pseudofiles.
+> > > 
+> > > But it's also helpful if the raw files are human-readable to the extent
+> > > possible.  It aids debugging and makes them usable on systems that don't
+> > > have the latest nfs-utils.
+> > > 
+> > > A minor challenge there is opaque client-generated protocol objects like
+> > > state owners and client identifiers.  Some clients generate those to
+> > > include handy information in plain ascii.  But they may also include
+> > > arbitrary byte sequences.
+> > > 
+> > > I think the simplest approach is to limit to isprint(c) && isascii(c)
+> > > and escape everything else.
+> 
+> Can you get the same functionality out of sprintf's %pE (escaped
+> string)? If not, maybe we should expand the flags available?
 
-Regards
+Nothing against it, I just didn't want it to do that for one user,
+but...
 
-Marcel
+> 
+>  * - 'E[achnops]' For an escaped buffer, where rules are defined by
+>  * combination
+>  *                of the following flags (see string_escape_mem() for
+>  *                the
+>  *                details):
+>  *                  a - ESCAPE_ANY
+>  *                  c - ESCAPE_SPECIAL
+>  *                  h - ESCAPE_HEX
+>  *                  n - ESCAPE_NULL
+>  *                  o - ESCAPE_OCTAL
+>  *                  p - ESCAPE_NP
+>  *                  s - ESCAPE_SPACE
+>  *                By default ESCAPE_ANY_NP is used.
+> 
+> This doesn't cover escaping >0x7f and " and \
+> 
+> And perhaps I should rework kstrdup_quotable() to have that flag? It's
+> not currently escaping non-ascii and it probably should. Maybe
+> "ESCAPE_QUOTABLE" as "q"?
 
+... but if you think there's a lot of existing users that really want
+this behavior, then great.
+
+I'll look into that.
+
+The logic around ESCAPE_NP and the "only" string is really confusing.  I
+started assuming I could just add an ESCAPE_NONASCII flag and stick "
+and \ into the "only" string, but it doesn't work that way.
+
+---b.
