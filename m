@@ -2,149 +2,84 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283A8C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 14:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEFDC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 14:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192C2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 14:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD9520679
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 14:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jXOJSCNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfFVOuX (ORCPT
+        id S1726342AbfFVOy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 10:50:23 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:50119 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfFVOuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 10:50:23 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5MEoBSI050936;
-        Sat, 22 Jun 2019 23:50:11 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
- Sat, 22 Jun 2019 23:50:10 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5MEoAQH050929
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 22 Jun 2019 23:50:10 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker
- board
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190621180017.29646-1-katsuhiro@katsuster.net>
- <1871177.hjLhdHVgcu@phil>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
-Date:   Sat, 22 Jun 2019 23:50:10 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sat, 22 Jun 2019 10:54:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49094 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfFVOy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 10:54:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+UsBFNXh4ENWlTV/lM1RjdOaGGLoEu+kgMsM/uuDJ84=; b=jXOJSCNHsmzaa1S7bIter8Ga1V
+        ol7WvoMZlAJXSrXjLJG2K65ZkSonPpjJd9LXsw2Z+XuwUpxafCGIvJp/yT0GJeIV18ZiSMlrHm5qG
+        ga7ab87IE0JDb2lmFywd+cg5/pmOFfT3o0Za5R/L7tfpvmdCX0iSBFKMh6rttOfvuPX4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hehPk-0002Vh-4X; Sat, 22 Jun 2019 16:54:48 +0200
+Date:   Sat, 22 Jun 2019 16:54:48 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v3 0/5] net: macb: cover letter
+Message-ID: <20190622145448.GA8497@lunn.ch>
+References: <1561106037-6859-1-git-send-email-pthombar@cadence.com>
+ <20190621131611.GB21188@lunn.ch>
+ <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1871177.hjLhdHVgcu@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CO2PR07MB2469E07AEBF64DFC8A3E3FAFC1E60@CO2PR07MB2469.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Jun 22, 2019 at 03:18:42AM +0000, Parshuram Raju Thombare wrote:
+> Hi Andrew,
+> 
+> >On Fri, Jun 21, 2019 at 09:33:57AM +0100, Parshuram Thombare wrote:
+> >> Hello !
+> >>
+> >> 2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
+> >>    This patch add support for SGMII mode.
+> >
+> >Hi Parshuram
+> >
+> >What PHYs are using to test this? You mention TI PHY DP83867, but that seems to
+> >be a plain old 10/100/1000 RGMII PHY.
+> It is DP83867ISRGZ on VCU118 board.
 
-Current linux-next on my environment, 'ifconfig eth0 up' does not
-work correctly with following message...
+Thanks.
 
------
-root@linaro-alip:~# ifconfig eth0 up
-[  105.028916] rk_gmac-dwmac ff290000.ethernet eth0: stmmac_open: Cannot 
-attach to PHY (error: -19)
-SIOCSIFFLAGS: No such device
------
+As Russell says, this is still a 10/100/1000 PHY. What are you using
+for the higher speeds?
 
-I checked drivers/net/ethernet/stmicro/stmmac/stmmac_main.c and found
-stmmac_init_phy() is going to fail if ethernet device node does not
-have following property:
-   - phy-handle
-   - phy
-   - phy-device
-
-I salvaged old version of linux-next kernel (5.2.0-rc1-20190523),
-network device of my Tinker Board worked correctly if use it.
-
-I have not bisect commit of root cause yet... Is it better to bisect
-and find problem instead of sending this patch?
-
-Best Regards,
----
-Katsuhiro Suzuki
-
-
-On 2019/06/22 17:33, Heiko Stuebner wrote:
-> Hi,
-> 
-> Am Freitag, 21. Juni 2019, 20:00:17 CEST schrieb Katsuhiro Suzuki:
->> This patch adds missing mdio and ethernet PHY nodes for rk3328 ASUS
->> tinker board.
->>
->> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> 
-> just for my understanding, which problem does this solve?
-> Normally the gmac can establish connections just fine on
-> the rk3288 by probing the phy in the automatic way.
-> 
-> And I also don't see any additional properties like phy
-> interrupt line below.
-> 
-> 
-> Thanks
-> Heiko
-> 
->> ---
->>   arch/arm/boot/dts/rk3288-tinker.dtsi | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
->> index 293576869546..3190817e8d5d 100644
->> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
->> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
->> @@ -117,6 +117,7 @@
->>   	assigned-clocks = <&cru SCLK_MAC>;
->>   	assigned-clock-parents = <&ext_gmac>;
->>   	clock_in_out = "input";
->> +	phy-handle = <&phy0>;
->>   	phy-mode = "rgmii";
->>   	phy-supply = <&vcc33_lan>;
->>   	pinctrl-names = "default";
->> @@ -127,6 +128,17 @@
->>   	tx_delay = <0x30>;
->>   	rx_delay = <0x10>;
->>   	status = "ok";
->> +
->> +	mdio0 {
->> +		compatible = "snps,dwmac-mdio";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		phy0: ethernet-phy@0 {
->> +			compatible = "ethernet-phy-ieee802.3-c22";
->> +			reg = <0>;
->> +		};
->> +	};
->>   };
->>   
->>   &gpu {
->>
-> 
-> 
-> 
-> 
-> 
-
+    Thanks
+	Andrew
