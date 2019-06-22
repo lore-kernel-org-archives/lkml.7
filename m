@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35067C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C396C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4E1208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46A92089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 06:37:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Stfngi5q"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GaWfmEep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfFVGgQ (ORCPT
+        id S1726215AbfFVGhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 02:36:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38041 "EHLO
+        Sat, 22 Jun 2019 02:37:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57573 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfFVGgQ (ORCPT
+        with ESMTP id S1726067AbfFVGhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 02:36:16 -0400
+        Sat, 22 Jun 2019 02:37:11 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5M6ZqxY2004381
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5M6aiwm2004811
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 21 Jun 2019 23:35:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5M6ZqxY2004381
+        Fri, 21 Jun 2019 23:36:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5M6aiwm2004811
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561185353;
-        bh=PUxARrLvvRCnMRM1ZkVLEhRmiwS7gZ+Ote2Nu6gZmpo=;
+        s=2019061801; t=1561185405;
+        bh=ym1BUbM4AJpw+WHyHKi5PYmtrYRhXU0WGRHqJfH1iXc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Stfngi5qibHYNSMbikFiEYkDKD4ll9fRDVJxcvPgtpjTs6nYYrvaFBMfbFkyGfnqj
-         PACy4jmR7sCVbja7slkfJmafmERSasJF2/JRkkYRWupvdg2NMA0WOAUTufqMLRtN1k
-         0XKqyH5sQh20Gq/8ISTXYvcz7JAc8/rn+gB6FGUmLkrMMsWeU/uxb4TvIurH42QUIp
-         LklqeSy+YuP3Tqc+IlHgFnXZHU9uDkj1V3I4PGAIVIliUpAMgSBiS4zzVCjvy2ciKc
-         2qGPE0TFKf8BaYtH899yHQsDLA6U+Mu0A1BYXQRyHRTv0T75DoGaT8LrQXw05r4tuJ
-         FHU9dLTty+vdA==
+        b=GaWfmEepDDs5A4pT50qrLrhvxoIMxAf33l7YRAxttl65mKHowQQHdjOu4e5/KP2bV
+         9jq3WpPE/bJoxeAdDHoroWwmxU3k0lrnDAato/ihg9KTlfNB6gDhJNFazZV687nXZJ
+         aFjJAzzYWjEwroOWBiXtbT0sUU1NX7O5JGP418X5KZAKUhsxEkzeUfkaRQs8ZOBvC8
+         5byNyRylHQVL4x9ReBnPuUwrbq8JTudydXivcW0WndCVZqEvcTyJfn1VxsJ5ZuZGh2
+         5t6uRJg209B46X43X6asmAuHhysNopR+8bN0liC8MKdIo8ZOgjbmBXmmRhrIoEykMQ
+         VsSogx7g0eS/g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5M6ZqEX2004378;
-        Fri, 21 Jun 2019 23:35:52 -0700
-Date:   Fri, 21 Jun 2019 23:35:52 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5M6aiOx2004806;
+        Fri, 21 Jun 2019 23:36:44 -0700
+Date:   Fri, 21 Jun 2019 23:36:44 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-edff7809c80f09398783d602c33a507309c23e24@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com,
-        adrian.hunter@intel.com, tglx@linutronix.de, acme@redhat.com,
-        mingo@kernel.org, jolsa@redhat.com
-Reply-To: mingo@kernel.org, jolsa@redhat.com, linux-kernel@vger.kernel.org,
-          acme@redhat.com, tglx@linutronix.de, adrian.hunter@intel.com,
-          hpa@zytor.com
-In-Reply-To: <20190610072803.10456-2-adrian.hunter@intel.com>
-References: <20190610072803.10456-2-adrian.hunter@intel.com>
+Message-ID: <tip-a0db77bf880b8badd2f9ce4da708c69b0b865853@git.kernel.org>
+Cc:     adrian.hunter@intel.com, tglx@linutronix.de, jolsa@redhat.com,
+        acme@redhat.com, mingo@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org
+Reply-To: adrian.hunter@intel.com, tglx@linutronix.de, jolsa@redhat.com,
+          acme@redhat.com, mingo@kernel.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190610072803.10456-3-adrian.hunter@intel.com>
+References: <20190610072803.10456-3-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf intel-pt: Add new packets for PEBS via PT
-Git-Commit-ID: edff7809c80f09398783d602c33a507309c23e24
+Subject: [tip:perf/core] perf intel-pt: Add Intel PT packet decoder test
+Git-Commit-ID: a0db77bf880b8badd2f9ce4da708c69b0b865853
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,440 +69,500 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  edff7809c80f09398783d602c33a507309c23e24
-Gitweb:     https://git.kernel.org/tip/edff7809c80f09398783d602c33a507309c23e24
+Commit-ID:  a0db77bf880b8badd2f9ce4da708c69b0b865853
+Gitweb:     https://git.kernel.org/tip/a0db77bf880b8badd2f9ce4da708c69b0b865853
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 10 Jun 2019 10:27:53 +0300
+AuthorDate: Mon, 10 Jun 2019 10:27:54 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 17 Jun 2019 15:57:17 -0300
 
-perf intel-pt: Add new packets for PEBS via PT
+perf intel-pt: Add Intel PT packet decoder test
 
-Add 3 new packets to supports PEBS via PT, namely Block Begin Packet
-(BBP), Block Item Packet (BIP) and Block End Packet (BEP). PEBS data is
-encoded into multiple BIP packets that come between BBP and BEP. The BEP
-packet might be associated with a FUP packet. That is indicated by using
-a separate packet type (INTEL_PT_BEP_IP) similar to other packets types
-with the _IP suffix.
+Add Intel PT packet decoder test. This test feeds byte sequences to the
+Intel PT packet decoder and checks the results. Changes to the packet
+context are also checked.
 
-Refer to the Intel SDM for more information about PEBS via PT:
+Committer testing:
 
-  https://software.intel.com/en-us/articles/intel-sdm
-  May 2019 version: Vol. 3B 18.5.5.2 PEBS output to Intel® Processor Trace
-
-Decoding of BIP packets conflicts with single-byte TNT packets. Since
-BIP packets only occur in the context of a block (i.e. between BBP and
-BEP), that context must be recorded and passed to the packet decoder.
+  # perf test "Intel PT"
+  65: Intel PT packet decoder                               : Ok
+  # perf test -v "Intel PT"
+  65: Intel PT packet decoder                               :
+  --- start ---
+  test child forked, pid 6360
+  Decoded ok: 00                                                PAD
+  Decoded ok: 04                                                TNT N (1)
+  Decoded ok: 06                                                TNT T (1)
+  Decoded ok: 80                                                TNT NNNNNN (6)
+  Decoded ok: fe                                                TNT TTTTTT (6)
+  Decoded ok: 02 a3 02 00 00 00 00 00                           TNT N (1)
+  Decoded ok: 02 a3 03 00 00 00 00 00                           TNT T (1)
+  Decoded ok: 02 a3 00 00 00 00 00 80                           TNT NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN (47)
+  Decoded ok: 02 a3 ff ff ff ff ff ff                           TNT TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT (47)
+  Decoded ok: 0d                                                TIP no ip
+  Decoded ok: 2d 01 02                                          TIP 0x201
+  Decoded ok: 4d 01 02 03 04                                    TIP 0x4030201
+  Decoded ok: 6d 01 02 03 04 05 06                              TIP 0x60504030201
+  Decoded ok: 8d 01 02 03 04 05 06                              TIP 0x60504030201
+  Decoded ok: cd 01 02 03 04 05 06 07 08                        TIP 0x807060504030201
+  Decoded ok: 11                                                TIP.PGE no ip
+  Decoded ok: 31 01 02                                          TIP.PGE 0x201
+  Decoded ok: 51 01 02 03 04                                    TIP.PGE 0x4030201
+  Decoded ok: 71 01 02 03 04 05 06                              TIP.PGE 0x60504030201
+  Decoded ok: 91 01 02 03 04 05 06                              TIP.PGE 0x60504030201
+  Decoded ok: d1 01 02 03 04 05 06 07 08                        TIP.PGE 0x807060504030201
+  Decoded ok: 01                                                TIP.PGD no ip
+  Decoded ok: 21 01 02                                          TIP.PGD 0x201
+  Decoded ok: 41 01 02 03 04                                    TIP.PGD 0x4030201
+  Decoded ok: 61 01 02 03 04 05 06                              TIP.PGD 0x60504030201
+  Decoded ok: 81 01 02 03 04 05 06                              TIP.PGD 0x60504030201
+  Decoded ok: c1 01 02 03 04 05 06 07 08                        TIP.PGD 0x807060504030201
+  Decoded ok: 1d                                                FUP no ip
+  Decoded ok: 3d 01 02                                          FUP 0x201
+  Decoded ok: 5d 01 02 03 04                                    FUP 0x4030201
+  Decoded ok: 7d 01 02 03 04 05 06                              FUP 0x60504030201
+  Decoded ok: 9d 01 02 03 04 05 06                              FUP 0x60504030201
+  Decoded ok: dd 01 02 03 04 05 06 07 08                        FUP 0x807060504030201
+  Decoded ok: 02 43 02 04 06 08 0a 0c                           PIP 0x60504030201 (NR=0)
+  Decoded ok: 02 43 03 04 06 08 0a 0c                           PIP 0x60504030201 (NR=1)
+  Decoded ok: 99 00                                             MODE.Exec 16
+  Decoded ok: 99 01                                             MODE.Exec 64
+  Decoded ok: 99 02                                             MODE.Exec 32
+  Decoded ok: 99 20                                             MODE.TSX TXAbort:0 InTX:0
+  Decoded ok: 99 21                                             MODE.TSX TXAbort:0 InTX:1
+  Decoded ok: 99 22                                             MODE.TSX TXAbort:1 InTX:0
+  Decoded ok: 02 83                                             TraceSTOP
+  Decoded ok: 02 03 12 00                                       CBR 0x12
+  Decoded ok: 19 01 02 03 04 05 06 07                           TSC 0x7060504030201
+  Decoded ok: 59 12                                             MTC 0x12
+  Decoded ok: 02 73 00 00 00 00 00                              TMA CTC 0x0 FC 0x0
+  Decoded ok: 02 73 01 02 00 00 00                              TMA CTC 0x201 FC 0x0
+  Decoded ok: 02 73 00 00 00 ff 01                              TMA CTC 0x0 FC 0x1ff
+  Decoded ok: 02 73 80 c0 00 ff 01                              TMA CTC 0xc080 FC 0x1ff
+  Decoded ok: 03                                                CYC 0x0
+  Decoded ok: 0b                                                CYC 0x1
+  Decoded ok: fb                                                CYC 0x1f
+  Decoded ok: 07 02                                             CYC 0x20
+  Decoded ok: ff fe                                             CYC 0xfff
+  Decoded ok: 07 01 02                                          CYC 0x1000
+  Decoded ok: ff ff fe                                          CYC 0x7ffff
+  Decoded ok: 07 01 01 02                                       CYC 0x80000
+  Decoded ok: ff ff ff fe                                       CYC 0x3ffffff
+  Decoded ok: 07 01 01 01 02                                    CYC 0x4000000
+  Decoded ok: ff ff ff ff fe                                    CYC 0x1ffffffff
+  Decoded ok: 07 01 01 01 01 02                                 CYC 0x200000000
+  Decoded ok: ff ff ff ff ff fe                                 CYC 0xffffffffff
+  Decoded ok: 07 01 01 01 01 01 02                              CYC 0x10000000000
+  Decoded ok: ff ff ff ff ff ff fe                              CYC 0x7fffffffffff
+  Decoded ok: 07 01 01 01 01 01 01 02                           CYC 0x800000000000
+  Decoded ok: ff ff ff ff ff ff ff fe                           CYC 0x3fffffffffffff
+  Decoded ok: 07 01 01 01 01 01 01 01 02                        CYC 0x40000000000000
+  Decoded ok: ff ff ff ff ff ff ff ff fe                        CYC 0x1fffffffffffffff
+  Decoded ok: 07 01 01 01 01 01 01 01 01 02                     CYC 0x2000000000000000
+  Decoded ok: ff ff ff ff ff ff ff ff ff 0e                     CYC 0xffffffffffffffff
+  Decoded ok: 02 c8 01 02 03 04 05                              VMCS 0x504030201
+  Decoded ok: 02 f3                                             OVF
+  Decoded ok: 02 f3                                             OVF
+  Decoded ok: 02 f3                                             OVF
+  Decoded ok: 02 82 02 82 02 82 02 82 02 82 02 82 02 82 02 82   PSB
+  Decoded ok: 02 82 02 82 02 82 02 82 02 82 02 82 02 82 02 82   PSB
+  Decoded ok: 02 82 02 82 02 82 02 82 02 82 02 82 02 82 02 82   PSB
+  Decoded ok: 02 23                                             PSBEND
+  Decoded ok: 02 c3 88 01 02 03 04 05 06 07 00                  MNT 0x7060504030201
+  Decoded ok: 02 12 01 02 03 04                                 PTWRITE 0x4030201 IP:0
+  Decoded ok: 02 32 01 02 03 04 05 06 07 08                     PTWRITE 0x807060504030201 IP:0
+  Decoded ok: 02 92 01 02 03 04                                 PTWRITE 0x4030201 IP:1
+  Decoded ok: 02 b2 01 02 03 04 05 06 07 08                     PTWRITE 0x807060504030201 IP:1
+  Decoded ok: 02 62                                             EXSTOP IP:0
+  Decoded ok: 02 e2                                             EXSTOP IP:1
+  Decoded ok: 02 c2 00 00 00 00 00 00 00 00                     MWAIT 0x0 Hints 0x0 Extensions 0x0
+  Decoded ok: 02 c2 01 02 03 04 05 06 07 08                     MWAIT 0x807060504030201 Hints 0x1 Extensions 0x1
+  Decoded ok: 02 c2 ff 02 03 04 07 06 07 08                     MWAIT 0x8070607040302ff Hints 0xff Extensions 0x3
+  Decoded ok: 02 22 00 00                                       PWRE 0x0 HW:0 CState:0 Sub-CState:0
+  Decoded ok: 02 22 01 02                                       PWRE 0x201 HW:0 CState:0 Sub-CState:2
+  Decoded ok: 02 22 80 34                                       PWRE 0x3480 HW:1 CState:3 Sub-CState:4
+  Decoded ok: 02 22 00 56                                       PWRE 0x5600 HW:0 CState:5 Sub-CState:6
+  Decoded ok: 02 a2 00 00 00 00 00                              PWRX 0x0 Last CState:0 Deepest CState:0 Wake Reason 0x0
+  Decoded ok: 02 a2 01 02 03 04 05                              PWRX 0x504030201 Last CState:0 Deepest CState:1 Wake Reason 0x2
+  Decoded ok: 02 a2 ff ff ff ff ff                              PWRX 0xffffffffff Last CState:15 Deepest CState:15 Wake Reason 0xf
+  Decoded ok: 02 63 00                                          BBP SZ 8-byte Type 0x0
+  Decoded ok: 02 63 80                                          BBP SZ 4-byte Type 0x0
+  Decoded ok: 02 63 1f                                          BBP SZ 8-byte Type 0x1f
+  Decoded ok: 02 63 9f                                          BBP SZ 4-byte Type 0x1f
+  Decoded ok: 04 00 00 00 00                                    BIP ID 0x00 Value 0x0
+  Decoded ok: fc 00 00 00 00                                    BIP ID 0x1f Value 0x0
+  Decoded ok: 04 01 02 03 04                                    BIP ID 0x00 Value 0x4030201
+  Decoded ok: fc 01 02 03 04                                    BIP ID 0x1f Value 0x4030201
+  Decoded ok: 04 00 00 00 00 00 00 00 00                        BIP ID 0x00 Value 0x0
+  Decoded ok: fc 00 00 00 00 00 00 00 00                        BIP ID 0x1f Value 0x0
+  Decoded ok: 04 01 02 03 04 05 06 07 08                        BIP ID 0x00 Value 0x807060504030201
+  Decoded ok: fc 01 02 03 04 05 06 07 08                        BIP ID 0x1f Value 0x807060504030201
+  Decoded ok: 02 33                                             BEP IP:0
+  Decoded ok: 02 b3                                             BEP IP:1
+  Decoded ok: 02 33                                             BEP IP:0
+  Decoded ok: 02 b3                                             BEP IP:1
+  test child finished with 0
+  ---- end ----
+  Intel PT packet decoder: Ok
+  #
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190610072803.10456-2-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190610072803.10456-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  38 +++++-
- .../util/intel-pt-decoder/intel-pt-pkt-decoder.c   | 140 ++++++++++++++++++++-
- .../util/intel-pt-decoder/intel-pt-pkt-decoder.h   |  21 +++-
- tools/perf/util/intel-pt.c                         |   3 +-
- 4 files changed, 193 insertions(+), 9 deletions(-)
+ tools/perf/arch/x86/include/arch-tests.h           |   1 +
+ tools/perf/arch/x86/tests/Build                    |   2 +-
+ tools/perf/arch/x86/tests/arch-tests.c             |   4 +
+ .../arch/x86/tests/intel-pt-pkt-decoder-test.c     | 304 +++++++++++++++++++++
+ 4 files changed, 310 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index f001f4ec4ddf..2f7791d4034f 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -133,6 +133,7 @@ struct intel_pt_decoder {
- 	int mtc_shift;
- 	struct intel_pt_stack stack;
- 	enum intel_pt_pkt_state pkt_state;
-+	enum intel_pt_pkt_ctx pkt_ctx;
- 	struct intel_pt_pkt packet;
- 	struct intel_pt_pkt tnt;
- 	int pkt_step;
-@@ -559,7 +560,7 @@ static int intel_pt_get_split_packet(struct intel_pt_decoder *decoder)
- 	memcpy(buf + len, decoder->buf, n);
- 	len += n;
+diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
+index 613709cfbbd0..c41c5affe4be 100644
+--- a/tools/perf/arch/x86/include/arch-tests.h
++++ b/tools/perf/arch/x86/include/arch-tests.h
+@@ -9,6 +9,7 @@ struct test;
+ int test__rdpmc(struct test *test __maybe_unused, int subtest);
+ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest);
+ int test__insn_x86(struct test *test __maybe_unused, int subtest);
++int test__intel_pt_pkt_decoder(struct test *test, int subtest);
+ int test__bp_modify(struct test *test, int subtest);
  
--	ret = intel_pt_get_packet(buf, len, &decoder->packet);
-+	ret = intel_pt_get_packet(buf, len, &decoder->packet, &decoder->pkt_ctx);
- 	if (ret < (int)old_len) {
- 		decoder->next_buf = decoder->buf;
- 		decoder->next_len = decoder->len;
-@@ -594,6 +595,7 @@ static int intel_pt_pkt_lookahead(struct intel_pt_decoder *decoder,
- {
- 	struct intel_pt_pkt_info pkt_info;
- 	const unsigned char *buf = decoder->buf;
-+	enum intel_pt_pkt_ctx pkt_ctx = decoder->pkt_ctx;
- 	size_t len = decoder->len;
- 	int ret;
- 
-@@ -612,7 +614,8 @@ static int intel_pt_pkt_lookahead(struct intel_pt_decoder *decoder,
- 			if (!len)
- 				return INTEL_PT_NEED_MORE_BYTES;
- 
--			ret = intel_pt_get_packet(buf, len, &pkt_info.packet);
-+			ret = intel_pt_get_packet(buf, len, &pkt_info.packet,
-+						  &pkt_ctx);
- 			if (!ret)
- 				return INTEL_PT_NEED_MORE_BYTES;
- 			if (ret < 0)
-@@ -687,6 +690,10 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
- 	case INTEL_PT_MNT:
- 	case INTEL_PT_PTWRITE:
- 	case INTEL_PT_PTWRITE_IP:
-+	case INTEL_PT_BBP:
-+	case INTEL_PT_BIP:
-+	case INTEL_PT_BEP:
-+	case INTEL_PT_BEP_IP:
- 		return 0;
- 
- 	case INTEL_PT_MTC:
-@@ -879,7 +886,7 @@ static int intel_pt_get_next_packet(struct intel_pt_decoder *decoder)
- 		}
- 
- 		ret = intel_pt_get_packet(decoder->buf, decoder->len,
--					  &decoder->packet);
-+					  &decoder->packet, &decoder->pkt_ctx);
- 		if (ret == INTEL_PT_NEED_MORE_BYTES && BITS_PER_LONG == 32 &&
- 		    decoder->len < INTEL_PT_PKT_MAX_SZ && !decoder->next_buf) {
- 			ret = intel_pt_get_split_packet(decoder);
-@@ -1633,6 +1640,10 @@ static int intel_pt_walk_psbend(struct intel_pt_decoder *decoder)
- 		case INTEL_PT_MWAIT:
- 		case INTEL_PT_PWRE:
- 		case INTEL_PT_PWRX:
-+		case INTEL_PT_BBP:
-+		case INTEL_PT_BIP:
-+		case INTEL_PT_BEP:
-+		case INTEL_PT_BEP_IP:
- 			decoder->have_tma = false;
- 			intel_pt_log("ERROR: Unexpected packet\n");
- 			err = -EAGAIN;
-@@ -1726,6 +1737,10 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
- 		case INTEL_PT_MWAIT:
- 		case INTEL_PT_PWRE:
- 		case INTEL_PT_PWRX:
-+		case INTEL_PT_BBP:
-+		case INTEL_PT_BIP:
-+		case INTEL_PT_BEP:
-+		case INTEL_PT_BEP_IP:
- 			intel_pt_log("ERROR: Missing TIP after FUP\n");
- 			decoder->pkt_state = INTEL_PT_STATE_ERR3;
- 			decoder->pkt_step = 0;
-@@ -2047,6 +2062,12 @@ next:
- 			decoder->state.pwrx_payload = decoder->packet.payload;
- 			return 0;
- 
-+		case INTEL_PT_BBP:
-+		case INTEL_PT_BIP:
-+		case INTEL_PT_BEP:
-+		case INTEL_PT_BEP_IP:
-+			break;
+ #ifdef HAVE_DWARF_UNWIND_SUPPORT
+diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
+index 3d83d0c6982d..2997c506550c 100644
+--- a/tools/perf/arch/x86/tests/Build
++++ b/tools/perf/arch/x86/tests/Build
+@@ -4,5 +4,5 @@ perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ perf-y += arch-tests.o
+ perf-y += rdpmc.o
+ perf-y += perf-time-to-tsc.o
+-perf-$(CONFIG_AUXTRACE) += insn-x86.o
++perf-$(CONFIG_AUXTRACE) += insn-x86.o intel-pt-pkt-decoder-test.o
+ perf-$(CONFIG_X86_64) += bp-modify.o
+diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
+index d47d3f8e3c8e..6763135aec17 100644
+--- a/tools/perf/arch/x86/tests/arch-tests.c
++++ b/tools/perf/arch/x86/tests/arch-tests.c
+@@ -23,6 +23,10 @@ struct test arch_tests[] = {
+ 		.desc = "x86 instruction decoder - new instructions",
+ 		.func = test__insn_x86,
+ 	},
++	{
++		.desc = "Intel PT packet decoder",
++		.func = test__intel_pt_pkt_decoder,
++	},
+ #endif
+ #if defined(__x86_64__)
+ 	{
+diff --git a/tools/perf/arch/x86/tests/intel-pt-pkt-decoder-test.c b/tools/perf/arch/x86/tests/intel-pt-pkt-decoder-test.c
+new file mode 100644
+index 000000000000..901bf1f449c4
+--- /dev/null
++++ b/tools/perf/arch/x86/tests/intel-pt-pkt-decoder-test.c
+@@ -0,0 +1,304 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- 		default:
- 			return intel_pt_bug(decoder);
- 		}
-@@ -2085,6 +2106,10 @@ static int intel_pt_walk_psb(struct intel_pt_decoder *decoder)
- 		case INTEL_PT_MWAIT:
- 		case INTEL_PT_PWRE:
- 		case INTEL_PT_PWRX:
-+		case INTEL_PT_BBP:
-+		case INTEL_PT_BIP:
-+		case INTEL_PT_BEP:
-+		case INTEL_PT_BEP_IP:
- 			intel_pt_log("ERROR: Unexpected packet\n");
- 			err = -ENOENT;
- 			goto out;
-@@ -2291,6 +2316,10 @@ static int intel_pt_walk_to_ip(struct intel_pt_decoder *decoder)
- 		case INTEL_PT_MWAIT:
- 		case INTEL_PT_PWRE:
- 		case INTEL_PT_PWRX:
-+		case INTEL_PT_BBP:
-+		case INTEL_PT_BIP:
-+		case INTEL_PT_BEP:
-+		case INTEL_PT_BEP_IP:
- 		default:
- 			break;
- 		}
-@@ -2641,11 +2670,12 @@ static unsigned char *intel_pt_last_psb(unsigned char *buf, size_t len)
- static bool intel_pt_next_tsc(unsigned char *buf, size_t len, uint64_t *tsc,
- 			      size_t *rem)
- {
-+	enum intel_pt_pkt_ctx ctx = INTEL_PT_NO_CTX;
- 	struct intel_pt_pkt packet;
- 	int ret;
- 
- 	while (len) {
--		ret = intel_pt_get_packet(buf, len, &packet);
-+		ret = intel_pt_get_packet(buf, len, &packet, &ctx);
- 		if (ret <= 0)
- 			return false;
- 		if (packet.type == INTEL_PT_TSC) {
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-index 605fce537d80..0ccf10a0bf44 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-@@ -62,6 +62,10 @@ static const char * const packet_name[] = {
- 	[INTEL_PT_MWAIT]	= "MWAIT",
- 	[INTEL_PT_PWRE]		= "PWRE",
- 	[INTEL_PT_PWRX]		= "PWRX",
-+	[INTEL_PT_BBP]		= "BBP",
-+	[INTEL_PT_BIP]		= "BIP",
-+	[INTEL_PT_BEP]		= "BEP",
-+	[INTEL_PT_BEP_IP]	= "BEP",
- };
- 
- const char *intel_pt_pkt_name(enum intel_pt_pkt_type type)
-@@ -280,6 +284,55 @@ static int intel_pt_get_pwrx(const unsigned char *buf, size_t len,
- 	return 7;
- }
- 
-+static int intel_pt_get_bbp(const unsigned char *buf, size_t len,
-+			    struct intel_pt_pkt *packet)
-+{
-+	if (len < 3)
-+		return INTEL_PT_NEED_MORE_BYTES;
-+	packet->type = INTEL_PT_BBP;
-+	packet->count = buf[2] >> 7;
-+	packet->payload = buf[2] & 0x1f;
-+	return 3;
-+}
++#include <string.h>
 +
-+static int intel_pt_get_bip_4(const unsigned char *buf, size_t len,
-+			      struct intel_pt_pkt *packet)
-+{
-+	if (len < 5)
-+		return INTEL_PT_NEED_MORE_BYTES;
-+	packet->type = INTEL_PT_BIP;
-+	packet->count = buf[0] >> 3;
-+	memcpy_le64(&packet->payload, buf + 1, 4);
-+	return 5;
-+}
++#include "intel-pt-decoder/intel-pt-pkt-decoder.h"
 +
-+static int intel_pt_get_bip_8(const unsigned char *buf, size_t len,
-+			      struct intel_pt_pkt *packet)
-+{
-+	if (len < 9)
-+		return INTEL_PT_NEED_MORE_BYTES;
-+	packet->type = INTEL_PT_BIP;
-+	packet->count = buf[0] >> 3;
-+	memcpy_le64(&packet->payload, buf + 1, 8);
-+	return 9;
-+}
++#include "debug.h"
++#include "tests/tests.h"
++#include "arch-tests.h"
 +
-+static int intel_pt_get_bep(size_t len, struct intel_pt_pkt *packet)
-+{
-+	if (len < 2)
-+		return INTEL_PT_NEED_MORE_BYTES;
-+	packet->type = INTEL_PT_BEP;
-+	return 2;
-+}
-+
-+static int intel_pt_get_bep_ip(size_t len, struct intel_pt_pkt *packet)
-+{
-+	if (len < 2)
-+		return INTEL_PT_NEED_MORE_BYTES;
-+	packet->type = INTEL_PT_BEP_IP;
-+	return 2;
-+}
-+
- static int intel_pt_get_ext(const unsigned char *buf, size_t len,
- 			    struct intel_pt_pkt *packet)
- {
-@@ -320,6 +373,12 @@ static int intel_pt_get_ext(const unsigned char *buf, size_t len,
- 		return intel_pt_get_pwre(buf, len, packet);
- 	case 0xA2: /* PWRX */
- 		return intel_pt_get_pwrx(buf, len, packet);
-+	case 0x63: /* BBP */
-+		return intel_pt_get_bbp(buf, len, packet);
-+	case 0x33: /* BEP no IP */
-+		return intel_pt_get_bep(len, packet);
-+	case 0xb3: /* BEP with IP */
-+		return intel_pt_get_bep_ip(len, packet);
- 	default:
- 		return INTEL_PT_BAD_PACKET;
- 	}
-@@ -468,7 +527,8 @@ static int intel_pt_get_mtc(const unsigned char *buf, size_t len,
- }
- 
- static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
--				  struct intel_pt_pkt *packet)
-+				  struct intel_pt_pkt *packet,
-+				  enum intel_pt_pkt_ctx ctx)
- {
- 	unsigned int byte;
- 
-@@ -478,6 +538,22 @@ static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
- 		return INTEL_PT_NEED_MORE_BYTES;
- 
- 	byte = buf[0];
-+
-+	switch (ctx) {
-+	case INTEL_PT_NO_CTX:
-+		break;
-+	case INTEL_PT_BLK_4_CTX:
-+		if ((byte & 0x7) == 4)
-+			return intel_pt_get_bip_4(buf, len, packet);
-+		break;
-+	case INTEL_PT_BLK_8_CTX:
-+		if ((byte & 0x7) == 4)
-+			return intel_pt_get_bip_8(buf, len, packet);
-+		break;
-+	default:
-+		break;
-+	};
-+
- 	if (!(byte & BIT(0))) {
- 		if (byte == 0)
- 			return intel_pt_get_pad(packet);
-@@ -516,15 +592,65 @@ static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
- 	}
- }
- 
-+void intel_pt_upd_pkt_ctx(const struct intel_pt_pkt *packet,
-+			  enum intel_pt_pkt_ctx *ctx)
-+{
-+	switch (packet->type) {
-+	case INTEL_PT_BAD:
-+	case INTEL_PT_PAD:
-+	case INTEL_PT_TSC:
-+	case INTEL_PT_TMA:
-+	case INTEL_PT_MTC:
-+	case INTEL_PT_FUP:
-+	case INTEL_PT_CYC:
-+	case INTEL_PT_CBR:
-+	case INTEL_PT_MNT:
-+	case INTEL_PT_EXSTOP:
-+	case INTEL_PT_EXSTOP_IP:
-+	case INTEL_PT_PWRE:
-+	case INTEL_PT_PWRX:
-+	case INTEL_PT_BIP:
-+		break;
-+	case INTEL_PT_TNT:
-+	case INTEL_PT_TIP:
-+	case INTEL_PT_TIP_PGD:
-+	case INTEL_PT_TIP_PGE:
-+	case INTEL_PT_MODE_EXEC:
-+	case INTEL_PT_MODE_TSX:
-+	case INTEL_PT_PIP:
-+	case INTEL_PT_OVF:
-+	case INTEL_PT_VMCS:
-+	case INTEL_PT_TRACESTOP:
-+	case INTEL_PT_PSB:
-+	case INTEL_PT_PSBEND:
-+	case INTEL_PT_PTWRITE:
-+	case INTEL_PT_PTWRITE_IP:
-+	case INTEL_PT_MWAIT:
-+	case INTEL_PT_BEP:
-+	case INTEL_PT_BEP_IP:
-+		*ctx = INTEL_PT_NO_CTX;
-+		break;
-+	case INTEL_PT_BBP:
-+		if (packet->count)
-+			*ctx = INTEL_PT_BLK_4_CTX;
-+		else
-+			*ctx = INTEL_PT_BLK_8_CTX;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- int intel_pt_get_packet(const unsigned char *buf, size_t len,
--			struct intel_pt_pkt *packet)
-+			struct intel_pt_pkt *packet, enum intel_pt_pkt_ctx *ctx)
- {
- 	int ret;
- 
--	ret = intel_pt_do_get_packet(buf, len, packet);
-+	ret = intel_pt_do_get_packet(buf, len, packet, *ctx);
- 	if (ret > 0) {
- 		while (ret < 8 && len > (size_t)ret && !buf[ret])
- 			ret += 1;
-+		intel_pt_upd_pkt_ctx(packet, ctx);
- 	}
- 	return ret;
- }
-@@ -602,8 +728,10 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
- 		return snprintf(buf, buf_len, "%s 0x%llx IP:0", name, payload);
- 	case INTEL_PT_PTWRITE_IP:
- 		return snprintf(buf, buf_len, "%s 0x%llx IP:1", name, payload);
-+	case INTEL_PT_BEP:
- 	case INTEL_PT_EXSTOP:
- 		return snprintf(buf, buf_len, "%s IP:0", name);
-+	case INTEL_PT_BEP_IP:
- 	case INTEL_PT_EXSTOP_IP:
- 		return snprintf(buf, buf_len, "%s IP:1", name);
- 	case INTEL_PT_MWAIT:
-@@ -621,6 +749,12 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
- 				(unsigned int)((payload >> 4) & 0xf),
- 				(unsigned int)(payload & 0xf),
- 				(unsigned int)((payload >> 8) & 0xf));
-+	case INTEL_PT_BBP:
-+		return snprintf(buf, buf_len, "%s SZ %s-byte Type 0x%llx",
-+				name, packet->count ? "4" : "8", payload);
-+	case INTEL_PT_BIP:
-+		return snprintf(buf, buf_len, "%s ID 0x%02x Value 0x%llx",
-+				name, packet->count, payload);
- 	default:
- 		break;
- 	}
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
-index a7aefaa08588..17ca9b56d72f 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
-@@ -50,6 +50,10 @@ enum intel_pt_pkt_type {
- 	INTEL_PT_MWAIT,
- 	INTEL_PT_PWRE,
- 	INTEL_PT_PWRX,
-+	INTEL_PT_BBP,
-+	INTEL_PT_BIP,
-+	INTEL_PT_BEP,
-+	INTEL_PT_BEP_IP,
- };
- 
- struct intel_pt_pkt {
-@@ -58,10 +62,25 @@ struct intel_pt_pkt {
- 	uint64_t		payload;
- };
- 
-+/*
-+ * Decoding of BIP packets conflicts with single-byte TNT packets. Since BIP
-+ * packets only occur in the context of a block (i.e. between BBP and BEP), that
-+ * context must be recorded and passed to the packet decoder.
++/**
++ * struct test_data - Test data.
++ * @len: number of bytes to decode
++ * @bytes: bytes to decode
++ * @ctx: packet context to decode
++ * @packet: expected packet
++ * @new_ctx: expected new packet context
++ * @ctx_unchanged: the packet context must not change
 + */
-+enum intel_pt_pkt_ctx {
-+	INTEL_PT_NO_CTX,	/* BIP packets are invalid */
-+	INTEL_PT_BLK_4_CTX,	/* 4-byte BIP packets */
-+	INTEL_PT_BLK_8_CTX,	/* 8-byte BIP packets */
++struct test_data {
++	int len;
++	u8 bytes[INTEL_PT_PKT_MAX_SZ];
++	enum intel_pt_pkt_ctx ctx;
++	struct intel_pt_pkt packet;
++	enum intel_pt_pkt_ctx new_ctx;
++	int ctx_unchanged;
++} data[] = {
++	/* Padding Packet */
++	{1, {0}, 0, {INTEL_PT_PAD, 0, 0}, 0, 1 },
++	/* Short Taken/Not Taken Packet */
++	{1, {4}, 0, {INTEL_PT_TNT, 1, 0}, 0, 0 },
++	{1, {6}, 0, {INTEL_PT_TNT, 1, 0x20ULL << 58}, 0, 0 },
++	{1, {0x80}, 0, {INTEL_PT_TNT, 6, 0}, 0, 0 },
++	{1, {0xfe}, 0, {INTEL_PT_TNT, 6, 0x3fULL << 58}, 0, 0 },
++	/* Long Taken/Not Taken Packet */
++	{8, {0x02, 0xa3, 2}, 0, {INTEL_PT_TNT, 1, 0xa302ULL << 47}, 0, 0 },
++	{8, {0x02, 0xa3, 3}, 0, {INTEL_PT_TNT, 1, 0x1a302ULL << 47}, 0, 0 },
++	{8, {0x02, 0xa3, 0, 0, 0, 0, 0, 0x80}, 0, {INTEL_PT_TNT, 47, 0xa302ULL << 1}, 0, 0 },
++	{8, {0x02, 0xa3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}, 0, {INTEL_PT_TNT, 47, 0xffffffffffffa302ULL << 1}, 0, 0 },
++	/* Target IP Packet */
++	{1, {0x0d}, 0, {INTEL_PT_TIP, 0, 0}, 0, 0 },
++	{3, {0x2d, 1, 2}, 0, {INTEL_PT_TIP, 1, 0x201}, 0, 0 },
++	{5, {0x4d, 1, 2, 3, 4}, 0, {INTEL_PT_TIP, 2, 0x4030201}, 0, 0 },
++	{7, {0x6d, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP, 3, 0x60504030201}, 0, 0 },
++	{7, {0x8d, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP, 4, 0x60504030201}, 0, 0 },
++	{9, {0xcd, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_TIP, 6, 0x807060504030201}, 0, 0 },
++	/* Packet Generation Enable */
++	{1, {0x11}, 0, {INTEL_PT_TIP_PGE, 0, 0}, 0, 0 },
++	{3, {0x31, 1, 2}, 0, {INTEL_PT_TIP_PGE, 1, 0x201}, 0, 0 },
++	{5, {0x51, 1, 2, 3, 4}, 0, {INTEL_PT_TIP_PGE, 2, 0x4030201}, 0, 0 },
++	{7, {0x71, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP_PGE, 3, 0x60504030201}, 0, 0 },
++	{7, {0x91, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP_PGE, 4, 0x60504030201}, 0, 0 },
++	{9, {0xd1, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_TIP_PGE, 6, 0x807060504030201}, 0, 0 },
++	/* Packet Generation Disable */
++	{1, {0x01}, 0, {INTEL_PT_TIP_PGD, 0, 0}, 0, 0 },
++	{3, {0x21, 1, 2}, 0, {INTEL_PT_TIP_PGD, 1, 0x201}, 0, 0 },
++	{5, {0x41, 1, 2, 3, 4}, 0, {INTEL_PT_TIP_PGD, 2, 0x4030201}, 0, 0 },
++	{7, {0x61, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP_PGD, 3, 0x60504030201}, 0, 0 },
++	{7, {0x81, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_TIP_PGD, 4, 0x60504030201}, 0, 0 },
++	{9, {0xc1, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_TIP_PGD, 6, 0x807060504030201}, 0, 0 },
++	/* Flow Update Packet */
++	{1, {0x1d}, 0, {INTEL_PT_FUP, 0, 0}, 0, 0 },
++	{3, {0x3d, 1, 2}, 0, {INTEL_PT_FUP, 1, 0x201}, 0, 0 },
++	{5, {0x5d, 1, 2, 3, 4}, 0, {INTEL_PT_FUP, 2, 0x4030201}, 0, 0 },
++	{7, {0x7d, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_FUP, 3, 0x60504030201}, 0, 0 },
++	{7, {0x9d, 1, 2, 3, 4, 5, 6}, 0, {INTEL_PT_FUP, 4, 0x60504030201}, 0, 0 },
++	{9, {0xdd, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_FUP, 6, 0x807060504030201}, 0, 0 },
++	/* Paging Information Packet */
++	{8, {0x02, 0x43, 2, 4, 6, 8, 10, 12}, 0, {INTEL_PT_PIP, 0, 0x60504030201}, 0, 0 },
++	{8, {0x02, 0x43, 3, 4, 6, 8, 10, 12}, 0, {INTEL_PT_PIP, 0, 0x60504030201 | (1ULL << 63)}, 0, 0 },
++	/* Mode Exec Packet */
++	{2, {0x99, 0x00}, 0, {INTEL_PT_MODE_EXEC, 0, 16}, 0, 0 },
++	{2, {0x99, 0x01}, 0, {INTEL_PT_MODE_EXEC, 0, 64}, 0, 0 },
++	{2, {0x99, 0x02}, 0, {INTEL_PT_MODE_EXEC, 0, 32}, 0, 0 },
++	/* Mode TSX Packet */
++	{2, {0x99, 0x20}, 0, {INTEL_PT_MODE_TSX, 0, 0}, 0, 0 },
++	{2, {0x99, 0x21}, 0, {INTEL_PT_MODE_TSX, 0, 1}, 0, 0 },
++	{2, {0x99, 0x22}, 0, {INTEL_PT_MODE_TSX, 0, 2}, 0, 0 },
++	/* Trace Stop Packet */
++	{2, {0x02, 0x83}, 0, {INTEL_PT_TRACESTOP, 0, 0}, 0, 0 },
++	/* Core:Bus Ratio Packet */
++	{4, {0x02, 0x03, 0x12, 0}, 0, {INTEL_PT_CBR, 0, 0x12}, 0, 1 },
++	/* Timestamp Counter Packet */
++	{8, {0x19, 1, 2, 3, 4, 5, 6, 7}, 0, {INTEL_PT_TSC, 0, 0x7060504030201}, 0, 1 },
++	/* Mini Time Counter Packet */
++	{2, {0x59, 0x12}, 0, {INTEL_PT_MTC, 0, 0x12}, 0, 1 },
++	/* TSC / MTC Alignment Packet */
++	{7, {0x02, 0x73}, 0, {INTEL_PT_TMA, 0, 0}, 0, 1 },
++	{7, {0x02, 0x73, 1, 2}, 0, {INTEL_PT_TMA, 0, 0x201}, 0, 1 },
++	{7, {0x02, 0x73, 0, 0, 0, 0xff, 1}, 0, {INTEL_PT_TMA, 0x1ff, 0}, 0, 1 },
++	{7, {0x02, 0x73, 0x80, 0xc0, 0, 0xff, 1}, 0, {INTEL_PT_TMA, 0x1ff, 0xc080}, 0, 1 },
++	/* Cycle Count Packet */
++	{1, {0x03}, 0, {INTEL_PT_CYC, 0, 0}, 0, 1 },
++	{1, {0x0b}, 0, {INTEL_PT_CYC, 0, 1}, 0, 1 },
++	{1, {0xfb}, 0, {INTEL_PT_CYC, 0, 0x1f}, 0, 1 },
++	{2, {0x07, 2}, 0, {INTEL_PT_CYC, 0, 0x20}, 0, 1 },
++	{2, {0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0xfff}, 0, 1 },
++	{3, {0x07, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x1000}, 0, 1 },
++	{3, {0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x7ffff}, 0, 1 },
++	{4, {0x07, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x80000}, 0, 1 },
++	{4, {0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x3ffffff}, 0, 1 },
++	{5, {0x07, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x4000000}, 0, 1 },
++	{5, {0xff, 0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x1ffffffff}, 0, 1 },
++	{6, {0x07, 1, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x200000000}, 0, 1 },
++	{6, {0xff, 0xff, 0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0xffffffffff}, 0, 1 },
++	{7, {0x07, 1, 1, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x10000000000}, 0, 1 },
++	{7, {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x7fffffffffff}, 0, 1 },
++	{8, {0x07, 1, 1, 1, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x800000000000}, 0, 1 },
++	{8, {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x3fffffffffffff}, 0, 1 },
++	{9, {0x07, 1, 1, 1, 1, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x40000000000000}, 0, 1 },
++	{9, {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe}, 0, {INTEL_PT_CYC, 0, 0x1fffffffffffffff}, 0, 1 },
++	{10, {0x07, 1, 1, 1, 1, 1, 1, 1, 1, 2}, 0, {INTEL_PT_CYC, 0, 0x2000000000000000}, 0, 1 },
++	{10, {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe}, 0, {INTEL_PT_CYC, 0, 0xffffffffffffffff}, 0, 1 },
++	/* Virtual-Machine Control Structure Packet */
++	{7, {0x02, 0xc8, 1, 2, 3, 4, 5}, 0, {INTEL_PT_VMCS, 5, 0x504030201}, 0, 0 },
++	/* Overflow Packet */
++	{2, {0x02, 0xf3}, 0, {INTEL_PT_OVF, 0, 0}, 0, 0 },
++	{2, {0x02, 0xf3}, INTEL_PT_BLK_4_CTX, {INTEL_PT_OVF, 0, 0}, 0, 0 },
++	{2, {0x02, 0xf3}, INTEL_PT_BLK_8_CTX, {INTEL_PT_OVF, 0, 0}, 0, 0 },
++	/* Packet Stream Boundary*/
++	{16, {0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82}, 0, {INTEL_PT_PSB, 0, 0}, 0, 0 },
++	{16, {0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82}, INTEL_PT_BLK_4_CTX, {INTEL_PT_PSB, 0, 0}, 0, 0 },
++	{16, {0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82, 0x02, 0x82}, INTEL_PT_BLK_8_CTX, {INTEL_PT_PSB, 0, 0}, 0, 0 },
++	/* PSB End Packet */
++	{2, {0x02, 0x23}, 0, {INTEL_PT_PSBEND, 0, 0}, 0, 0 },
++	/* Maintenance Packet */
++	{11, {0x02, 0xc3, 0x88, 1, 2, 3, 4, 5, 6, 7}, 0, {INTEL_PT_MNT, 0, 0x7060504030201}, 0, 1 },
++	/* Write Data to PT Packet */
++	{6, {0x02, 0x12, 1, 2, 3, 4}, 0, {INTEL_PT_PTWRITE, 0, 0x4030201}, 0, 0 },
++	{10, {0x02, 0x32, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_PTWRITE, 1, 0x807060504030201}, 0, 0 },
++	{6, {0x02, 0x92, 1, 2, 3, 4}, 0, {INTEL_PT_PTWRITE_IP, 0, 0x4030201}, 0, 0 },
++	{10, {0x02, 0xb2, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_PTWRITE_IP, 1, 0x807060504030201}, 0, 0 },
++	/* Execution Stop Packet */
++	{2, {0x02, 0x62}, 0, {INTEL_PT_EXSTOP, 0, 0}, 0, 1 },
++	{2, {0x02, 0xe2}, 0, {INTEL_PT_EXSTOP_IP, 0, 0}, 0, 1 },
++	/* Monitor Wait Packet */
++	{10, {0x02, 0xc2}, 0, {INTEL_PT_MWAIT, 0, 0}, 0, 0 },
++	{10, {0x02, 0xc2, 1, 2, 3, 4, 5, 6, 7, 8}, 0, {INTEL_PT_MWAIT, 0, 0x807060504030201}, 0, 0 },
++	{10, {0x02, 0xc2, 0xff, 2, 3, 4, 7, 6, 7, 8}, 0, {INTEL_PT_MWAIT, 0, 0x8070607040302ff}, 0, 0 },
++	/* Power Entry Packet */
++	{4, {0x02, 0x22}, 0, {INTEL_PT_PWRE, 0, 0}, 0, 1 },
++	{4, {0x02, 0x22, 1, 2}, 0, {INTEL_PT_PWRE, 0, 0x0201}, 0, 1 },
++	{4, {0x02, 0x22, 0x80, 0x34}, 0, {INTEL_PT_PWRE, 0, 0x3480}, 0, 1 },
++	{4, {0x02, 0x22, 0x00, 0x56}, 0, {INTEL_PT_PWRE, 0, 0x5600}, 0, 1 },
++	/* Power Exit Packet */
++	{7, {0x02, 0xa2}, 0, {INTEL_PT_PWRX, 0, 0}, 0, 1 },
++	{7, {0x02, 0xa2, 1, 2, 3, 4, 5}, 0, {INTEL_PT_PWRX, 0, 0x504030201}, 0, 1 },
++	{7, {0x02, 0xa2, 0xff, 0xff, 0xff, 0xff, 0xff}, 0, {INTEL_PT_PWRX, 0, 0xffffffffff}, 0, 1 },
++	/* Block Begin Packet */
++	{3, {0x02, 0x63, 0x00}, 0, {INTEL_PT_BBP, 0, 0}, INTEL_PT_BLK_8_CTX, 0 },
++	{3, {0x02, 0x63, 0x80}, 0, {INTEL_PT_BBP, 1, 0}, INTEL_PT_BLK_4_CTX, 0 },
++	{3, {0x02, 0x63, 0x1f}, 0, {INTEL_PT_BBP, 0, 0x1f}, INTEL_PT_BLK_8_CTX, 0 },
++	{3, {0x02, 0x63, 0x9f}, 0, {INTEL_PT_BBP, 1, 0x1f}, INTEL_PT_BLK_4_CTX, 0 },
++	/* 4-byte Block Item Packet */
++	{5, {0x04}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BIP, 0, 0}, INTEL_PT_BLK_4_CTX, 0 },
++	{5, {0xfc}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BIP, 0x1f, 0}, INTEL_PT_BLK_4_CTX, 0 },
++	{5, {0x04, 1, 2, 3, 4}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BIP, 0, 0x04030201}, INTEL_PT_BLK_4_CTX, 0 },
++	{5, {0xfc, 1, 2, 3, 4}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BIP, 0x1f, 0x04030201}, INTEL_PT_BLK_4_CTX, 0 },
++	/* 8-byte Block Item Packet */
++	{9, {0x04}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BIP, 0, 0}, INTEL_PT_BLK_8_CTX, 0 },
++	{9, {0xfc}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BIP, 0x1f, 0}, INTEL_PT_BLK_8_CTX, 0 },
++	{9, {0x04, 1, 2, 3, 4, 5, 6, 7, 8}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BIP, 0, 0x0807060504030201}, INTEL_PT_BLK_8_CTX, 0 },
++	{9, {0xfc, 1, 2, 3, 4, 5, 6, 7, 8}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BIP, 0x1f, 0x0807060504030201}, INTEL_PT_BLK_8_CTX, 0 },
++	/* Block End Packet */
++	{2, {0x02, 0x33}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BEP, 0, 0}, 0, 0 },
++	{2, {0x02, 0xb3}, INTEL_PT_BLK_4_CTX, {INTEL_PT_BEP_IP, 0, 0}, 0, 0 },
++	{2, {0x02, 0x33}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BEP, 0, 0}, 0, 0 },
++	{2, {0x02, 0xb3}, INTEL_PT_BLK_8_CTX, {INTEL_PT_BEP_IP, 0, 0}, 0, 0 },
++	/* Terminator */
++	{0, {0}, 0, {0, 0, 0}, 0, 0 },
 +};
 +
- const char *intel_pt_pkt_name(enum intel_pt_pkt_type);
- 
- int intel_pt_get_packet(const unsigned char *buf, size_t len,
--			struct intel_pt_pkt *packet);
-+			struct intel_pt_pkt *packet,
-+			enum intel_pt_pkt_ctx *ctx);
++static int dump_packet(struct intel_pt_pkt *packet, u8 *bytes, int len)
++{
++	char desc[INTEL_PT_PKT_DESC_MAX];
++	int ret, i;
 +
-+void intel_pt_upd_pkt_ctx(const struct intel_pt_pkt *packet,
-+			  enum intel_pt_pkt_ctx *ctx);
- 
- int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf, size_t len);
- 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 8ed51f4e9e30..893cef494a43 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -177,13 +177,14 @@ static void intel_pt_dump(struct intel_pt *pt __maybe_unused,
- 	int ret, pkt_len, i;
- 	char desc[INTEL_PT_PKT_DESC_MAX];
- 	const char *color = PERF_COLOR_BLUE;
-+	enum intel_pt_pkt_ctx ctx = INTEL_PT_NO_CTX;
- 
- 	color_fprintf(stdout, color,
- 		      ". ... Intel Processor Trace data: size %zu bytes\n",
- 		      len);
- 
- 	while (len) {
--		ret = intel_pt_get_packet(buf, len, &packet);
-+		ret = intel_pt_get_packet(buf, len, &packet, &ctx);
- 		if (ret > 0)
- 			pkt_len = ret;
- 		else
++	for (i = 0; i < len; i++)
++		pr_debug(" %02x", bytes[i]);
++	for (; i < INTEL_PT_PKT_MAX_SZ; i++)
++		pr_debug("   ");
++	pr_debug("   ");
++	ret = intel_pt_pkt_desc(packet, desc, INTEL_PT_PKT_DESC_MAX);
++	if (ret < 0) {
++		pr_debug("intel_pt_pkt_desc failed!\n");
++		return TEST_FAIL;
++	}
++	pr_debug("%s\n", desc);
++
++	return TEST_OK;
++}
++
++static void decoding_failed(struct test_data *d)
++{
++	pr_debug("Decoding failed!\n");
++	pr_debug("Decoding:  ");
++	dump_packet(&d->packet, d->bytes, d->len);
++}
++
++static int fail(struct test_data *d, struct intel_pt_pkt *packet, int len,
++		enum intel_pt_pkt_ctx new_ctx)
++{
++	decoding_failed(d);
++
++	if (len != d->len)
++		pr_debug("Expected length: %d   Decoded length %d\n",
++			 d->len, len);
++
++	if (packet->type != d->packet.type)
++		pr_debug("Expected type: %d   Decoded type %d\n",
++			 d->packet.type, packet->type);
++
++	if (packet->count != d->packet.count)
++		pr_debug("Expected count: %d   Decoded count %d\n",
++			 d->packet.count, packet->count);
++
++	if (packet->payload != d->packet.payload)
++		pr_debug("Expected payload: 0x%llx   Decoded payload 0x%llx\n",
++			 (unsigned long long)d->packet.payload,
++			 (unsigned long long)packet->payload);
++
++	if (new_ctx != d->new_ctx)
++		pr_debug("Expected packet context: %d   Decoded packet context %d\n",
++			 d->new_ctx, new_ctx);
++
++	return TEST_FAIL;
++}
++
++static int test_ctx_unchanged(struct test_data *d, struct intel_pt_pkt *packet,
++			      enum intel_pt_pkt_ctx ctx)
++{
++	enum intel_pt_pkt_ctx old_ctx = ctx;
++
++	intel_pt_upd_pkt_ctx(packet, &ctx);
++
++	if (ctx != old_ctx) {
++		decoding_failed(d);
++		pr_debug("Packet context changed!\n");
++		return TEST_FAIL;
++	}
++
++	return TEST_OK;
++}
++
++static int test_one(struct test_data *d)
++{
++	struct intel_pt_pkt packet;
++	enum intel_pt_pkt_ctx ctx = d->ctx;
++	int ret;
++
++	memset(&packet, 0xff, sizeof(packet));
++
++	/* Decode a packet */
++	ret = intel_pt_get_packet(d->bytes, d->len, &packet, &ctx);
++	if (ret < 0 || ret > INTEL_PT_PKT_MAX_SZ) {
++		decoding_failed(d);
++		pr_debug("intel_pt_get_packet returned %d\n", ret);
++		return TEST_FAIL;
++	}
++
++	/* Some packets must always leave the packet context unchanged */
++	if (d->ctx_unchanged) {
++		int err;
++
++		err = test_ctx_unchanged(d, &packet, INTEL_PT_NO_CTX);
++		if (err)
++			return err;
++		err = test_ctx_unchanged(d, &packet, INTEL_PT_BLK_4_CTX);
++		if (err)
++			return err;
++		err = test_ctx_unchanged(d, &packet, INTEL_PT_BLK_8_CTX);
++		if (err)
++			return err;
++	}
++
++	/* Compare to the expected values */
++	if (ret != d->len || packet.type != d->packet.type ||
++	    packet.count != d->packet.count ||
++	    packet.payload != d->packet.payload || ctx != d->new_ctx)
++		return fail(d, &packet, ret, ctx);
++
++	pr_debug("Decoded ok:");
++	ret = dump_packet(&d->packet, d->bytes, d->len);
++
++	return ret;
++}
++
++/*
++ * This test feeds byte sequences to the Intel PT packet decoder and checks the
++ * results. Changes to the packet context are also checked.
++ */
++int test__intel_pt_pkt_decoder(struct test *test __maybe_unused, int subtest __maybe_unused)
++{
++	struct test_data *d = data;
++	int ret;
++
++	for (d = data; d->len; d++) {
++		ret = test_one(d);
++		if (ret)
++			return ret;
++	}
++
++	return TEST_OK;
++}
