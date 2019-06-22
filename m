@@ -2,172 +2,90 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA0CC43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1518CC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A19320821
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA70620821
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 01:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vSE0SwOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfFVBVk (ORCPT
+        id S1726338AbfFVBVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 21:21:40 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:47642 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfFVBVj (ORCPT
+        Fri, 21 Jun 2019 21:21:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43667 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfFVBVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 21:21:39 -0400
-Received: from localhost (unknown [50.234.174.228])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D4758153B136F;
-        Fri, 21 Jun 2019 18:21:38 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 21:21:37 -0400 (EDT)
-Message-Id: <20190621.212137.1249209897243384684.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        Fri, 21 Jun 2019 21:21:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cl9so3778442plb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 18:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=gfKY55VDFmH9sfDf7QmSwnOcZWdz3/zPBcS1vbxTeIs=;
+        b=vSE0SwOpKpJr4NR9EMm+8dVlG2peppROnIGEZle3TSjbPYS/NAc3/8BaXLuoGTies0
+         nW1NbiYojr581BtnqZNlK3MJSythEOHVVihKngZUfmHVIMpsqUYWdw3IhT2sqHsV6sWi
+         W4BIIOjK7yTDtJqj6eTDHISx+Nyl3A1NgqTXsv85rTbrlaBbEHGdSSYIfsVcXMHZp0nT
+         oE2xzNxcPuzvVpIaOSx0u5orCPE/PvCFXZ/gGLN0HcqPW6q5yJj1NzwzTuey2x/FjTbU
+         yNezDim0JlOy9KIv8aPaJR7SZmsGwSxPhVCbPTqtLYWdjKc2aGPEvVL4xVk2z+rXD2LP
+         lgdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gfKY55VDFmH9sfDf7QmSwnOcZWdz3/zPBcS1vbxTeIs=;
+        b=CrfRcXQOVQV+/pVIbbdqaK6MpiYCKL7thaF21W+spFCGp21rkBPJYhBTsP7rUSXnQf
+         qc3TZiKELbxlOPnAyNkNvpXmeYgY1G8Um05XwIsTTeJWsCftiZBwpiMWT/ejFTwESJCc
+         fuPwfJ4tQEpwX/dzMewJcoMIjfRZ/wIyJ7VAefl1Q/6nOY1XikL2VsBOKrI/q02MGp+/
+         Ln4R2YgS1SstjK45mkCWwHVZbmDaoD4BXvq/Ggq1mnOpVYlS4SyDfSSa1YVrBA9rihbO
+         BRM8sOrhnZ6hzjWo+pbst3yC4xTY3c1LKfFENkt5Xack1HFQbmlDa0csqeYrsPz+eEIH
+         9mIw==
+X-Gm-Message-State: APjAAAXWItctcBqZSm4YnPOikBBSOvlczVCJqBhOVQ7n7ySmhzziMf75
+        KPO7j25Qsjhq3jO3+JM8fziHcA==
+X-Google-Smtp-Source: APXvYqxsniCk8koIB+ws7n/g/Mm25oCraW+Hf6E/gRtPZkKce1g20AUH+H4Ip7W2ECP6AiHn+PnBgg==
+X-Received: by 2002:a17:902:8a8a:: with SMTP id p10mr52642916plo.88.1561166510236;
+        Fri, 21 Jun 2019 18:21:50 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u5sm3539148pgp.19.2019.06.21.18.21.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 18:21:49 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 21 Jun 2019 18:21:39 -0700 (PDT)
+Subject: [PATCH 0/2] soc: qcom: mdt_loader: Support loading non-split firmware
+Date:   Fri, 21 Jun 2019 18:21:44 -0700
+Message-Id: <20190622012146.19719-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Typically the firmware files for the various remoteprocs is split in a number
+of files. But in some releases these files are available in their unsplit form.
 
-1) Fix leak of unqueued fragments in ipv6 nf_defrag, from Guillaume
-   Nault.
+Extend the mdt loader to detect the unsplit firmware and load it transparently.
 
-2) Don't access the DDM interface unless the transceiver implements
-   it in bnx2x, from Mauro S. M. Rodrigues.
+Also expose the function that compose the metadata header for validation and
+use this from the modem remoteproc driver, so that it can support unsplit files
+as well.
 
-3) Don't double fetch 'len' from userspace in sock_getsockopt(), from
-   JingYi Hou.
+Bjorn Andersson (2):
+  soc: qcom: mdt_loader: Support loading non-split images
+  remoteproc: qcom: q6v5-mss: Support loading non-split images
 
-4) Sign extension overflow in lio_core, from Colin Ian King.
+ drivers/remoteproc/qcom_q6v5_mss.c  | 33 ++++++++---
+ drivers/soc/qcom/mdt_loader.c       | 88 ++++++++++++++++++++++++++++-
+ include/linux/soc/qcom/mdt_loader.h |  2 +
+ 3 files changed, 112 insertions(+), 11 deletions(-)
 
-5) Various netem bug fixes wrt. corrupted packets from Jakub
-   Kicinski.
+-- 
+2.18.0
 
-6) Fix epollout hang in hvsock, from Sunil Muthuswamy.
-
-7) Fix regression in default fib6_type, from David Ahern.
-
-8) Handle memory limits in tcp_fragment more appropriately,
-   from Eric Dumazet.
-
-Please pull, thanks a lot!
-
-The following changes since commit 29f785ff76b65696800b75c3d8e0b58e603bb1d0:
-
-  Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-06-17 16:28:28 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org:/pub/scm/linux/kernel/git/davem/net.git 
-
-for you to fetch changes up to b6653b3629e5b88202be3c9abc44713973f5c4b4:
-
-  tcp: refine memory limit test in tcp_fragment() (2019-06-21 20:58:42 -0400)
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      net: lio_core: fix potential sign-extension overflow on large shift
-
-David Ahern (1):
-      ipv6: Default fib6_type to RTN_UNICAST when not set
-
-David S. Miller (4):
-      Merge branch 'net-fix-quite-a-few-dst_cache-crashes-reported-by-syzbot'
-      Merge branch 'net-netem-fix-issues-with-corrupting-GSO-frames'
-      Merge git://git.kernel.org/.../pablo/nf
-      Merge branch 'af_iucv-fixes'
-
-Eric Dumazet (2):
-      inet: clear num_timeout reqsk_alloc()
-      tcp: refine memory limit test in tcp_fragment()
-
-Fei Li (1):
-      tun: wake up waitqueues after IFF_UP is set
-
-Fred Klassen (1):
-      net/udp_gso: Allow TX timestamp with UDP GSO
-
-Guillaume Nault (2):
-      netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments
-      netfilter: ipv6: nf_defrag: accept duplicate fragments again
-
-Jakub Kicinski (2):
-      net: netem: fix backlog accounting for corrupted GSO frames
-      net: netem: fix use after free and double free with packet corruption
-
-JingYi Hou (1):
-      net: remove duplicate fetch in sock_getsockopt
-
-Julian Wiedmann (3):
-      net/af_iucv: remove GFP_DMA restriction for HiperTransport
-      net/af_iucv: build proper skbs for HiperTransport
-      net/af_iucv: always register net_device notifier
-
-Krzysztof Kozlowski (1):
-      net: hns3: Fix inconsistent indenting
-
-Mauro S. M. Rodrigues (1):
-      bnx2x: Check if transceiver implements DDM before access
-
-Nathan Huckleberry (1):
-      net: mvpp2: debugfs: Add pmap to fs dump
-
-Pablo Neira Ayuso (1):
-      netfilter: nf_tables: fix module autoload with inet family
-
-Rasmus Villemoes (1):
-      net: dsa: mv88e6xxx: fix shift of FID bits in mv88e6185_g1_vtu_loadpurge()
-
-Sunil Muthuswamy (1):
-      hvsock: fix epollout hang from race condition
-
-Tuong Lien (1):
-      tipc: fix issues with early FAILOVER_MSG from peer
-
-Xin Long (3):
-      ip_tunnel: allow not to count pkts on tstats by setting skb's dev to NULL
-      ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
-      tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
-
- drivers/net/dsa/mv88e6xxx/global1_vtu.c             |  2 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c |  3 ++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h    |  1 +
- drivers/net/ethernet/cavium/liquidio/lio_core.c     |  2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c     |  2 +-
- drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c  |  3 +++
- drivers/net/tun.c                                   | 19 +++++++++----------
- include/net/ip6_tunnel.h                            |  9 ++++++---
- include/net/request_sock.h                          |  3 +++
- net/core/sock.c                                     |  3 ---
- net/ipv4/inet_connection_sock.c                     |  4 ----
- net/ipv4/ip_tunnel_core.c                           |  9 ++++++---
- net/ipv4/tcp_fastopen.c                             |  4 ----
- net/ipv4/tcp_output.c                               |  3 ++-
- net/ipv4/udp_offload.c                              |  5 +++++
- net/ipv6/netfilter/nf_conntrack_reasm.c             | 22 ++++++++++++----------
- net/ipv6/route.c                                    |  2 +-
- net/iucv/af_iucv.c                                  | 49 ++++++++++++++++++++++++++++++++++++-------------
- net/netfilter/nft_masq.c                            |  3 +--
- net/netfilter/nft_redir.c                           |  3 +--
- net/sched/sch_netem.c                               | 26 ++++++++++++++------------
- net/tipc/link.c                                     |  1 -
- net/tipc/node.c                                     | 10 +++++++---
- net/tipc/udp_media.c                                |  8 +++-----
- net/vmw_vsock/hyperv_transport.c                    | 39 ++++++++-------------------------------
- 25 files changed, 123 insertions(+), 112 deletions(-)
