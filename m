@@ -8,135 +8,108 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B4C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73902C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E50F20881
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4093220881
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 00:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YIv34y8s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+jT2ExB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfFVAGe (ORCPT
+        id S1727136AbfFVAGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Jun 2019 20:06:34 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:37499 "EHLO
+        Fri, 21 Jun 2019 20:06:40 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:36692 "EHLO
         mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfFVAEi (ORCPT
+        with ESMTP id S1726601AbfFVAEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Jun 2019 20:04:38 -0400
-Received: by mail-pg1-f202.google.com with SMTP id e16so5003372pga.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:38 -0700 (PDT)
+        Fri, 21 Jun 2019 20:04:25 -0400
+Received: by mail-pg1-f202.google.com with SMTP id s4so5008161pgr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2019 17:04:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=zyyz4Cz4gGHUXuxtWW1WrDh1XJA1NU8T7MmFpiT0rrE=;
-        b=YIv34y8sbA5lbQnK/eli+pwNC0VaL5Zccqe5P08QByeHBjnT4ZCaFF6VNL0237nXRe
-         Y82y2K6IWweiDfz+suVmozJiIJZ4FiWrNiF+czLcZ885+84IldvjGYnCqd6cBVGOB6X2
-         LIB2ZUGsmvExhTJU+g5rsLSfPaB38pUV78wxFfZqkdvu5Ty0dz1z8kt1VvYSbRJXtjNZ
-         PLQq1u/pklNhYtpNo+/JudN2J6hh+ZEnvhrWfXMwYC7LO2f/KTEcHLdaZib/MbY/cT6M
-         aVlj+/7Xd3xzeZffz22TPbGJZPZ1gHSJhdPrgKyRQrQrSPgPzbAC5RkBFZ9Hz3KfX+B5
-         eKNQ==
+        bh=o4JS6ZsbyHnt4Iukj8bZlTq9cv6XEso1+I/lLyLsbpA=;
+        b=a+jT2ExBtmOGrE2RBwibGRFthL5zBOYgrJWml8uNIPt9rHxq+DfglrA0/Y5pBqU9QQ
+         HpS+WH2bZYzHAFWpqgCYqmXUCwak+27QIHhABd4BbGjacaPht5GkZL4AUiYAZqiFEw4g
+         OWfCM5eDm4KrIttm0QlSi2FmyQ5mMxmZMrAg0PPYAY9jtCypjRtwPzqrvztnH6gGIENN
+         6gg0DvWo19xJnE3hv2pBXaws7upY4aoCIGqykeQepmFEC2MeVBjac+ouverM2jCUIr0N
+         76vtr2+s7zaSAuTfMYgT3Eb5U8sq72+KctC6jCs732M5YkTFIz0QsAVT6vMlXfsS6YBn
+         4DBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=zyyz4Cz4gGHUXuxtWW1WrDh1XJA1NU8T7MmFpiT0rrE=;
-        b=JIAKVXAlKFtYGlSJiMn6sSz1fQe2Vpedbr+vbjPi0NhZBn8zCtxlc/MjNcrm6lUiqE
-         RtusS/ZmifyBriLUYoFrjU3F5S+7S4Z6Xr2rFpo4CU0YKli78WO/GUsSez6IbMMCQGz1
-         h8s+x58FZK6rBLVd++C8T/7M0p0tXz9mQfrIFa+R15Rn+P/69FlJZbgdWTy3T+3F06XD
-         ntDc2xKo9Bi9spfW57Y3sW0+/Pm135fBaIjVQxYzQlrCN6G4mZ8gTuLA7al/X8vKNvmq
-         elqiJeDP0srbWkq6HgPGH06gPDwcUcu6YebBqyAI0gQtb8QcXiv6RV6fNac1c2BvTYt0
-         UOvA==
-X-Gm-Message-State: APjAAAXRjcaemKGzAwB9cd2aczylWArjUDy7xCluWfZNYnq6vIE1WbBT
-        XUQmiSB6R/lDgagR+40theEuwLd/cOStsMOIpWUysQ==
-X-Google-Smtp-Source: APXvYqxrieaEV4JvvipGtYx+FVX4wzWJu+9dkQO98TgTYS8DbVQaONy7gFhmlvKZ4R1EVRlKzulPfnPIGtj1Uc2BV2hMgw==
-X-Received: by 2002:a63:f817:: with SMTP id n23mr21183139pgh.35.1561161877500;
- Fri, 21 Jun 2019 17:04:37 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 17:03:43 -0700
+        bh=o4JS6ZsbyHnt4Iukj8bZlTq9cv6XEso1+I/lLyLsbpA=;
+        b=HeaN1ez2HgnW2g6oD09jkN4FtWScL+s8uWl4Rgu31tbKi3udnv6JCFTbfF2vRNti8t
+         XP+cn4kX7I5si3YF9BCNf6p0wml264eIhEx3dsj8Rd7JaYG3tnWwfdaAEFuUGB2ti+kq
+         eB6hr8LP389HVa9FD1W5d9i/mNgygPYd97rRqpTj6p7rVb6GWjmEZ3kJVi5cyltnf25I
+         Fdv2z+9flvBWMF768qEMJK2Ck5LPGAczrCnoHnKQeWECw3zD2u9F2ymDIf5IhrnLeatL
+         cAw01ioYfaGpc+f8B+/mNIMsTl9EVUGyQ6JiLvDVQiVW+VOsFOZhSLchFPJVBTCGZhEc
+         LjgA==
+X-Gm-Message-State: APjAAAUnMrbGCWecRksnFUq77nOx7vkZkyud53eUuoy8tBpcB2U5q3Kq
+        iq6RGhd2al3+/u+3nPhBGlhmHPnlw+Dzp+rgvq245A==
+X-Google-Smtp-Source: APXvYqw5rFft+vShj1dHsGGITKkOPUFNJ8H0xme43V9+MAij1nj1qBbMAY4uDsOV1ThNNZ0FUlZ3kOxEzhFD4poriXVZqQ==
+X-Received: by 2002:a63:8c0f:: with SMTP id m15mr1862896pgd.441.1561161864327;
+ Fri, 21 Jun 2019 17:04:24 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 17:03:38 -0700
 In-Reply-To: <20190622000358.19895-1-matthewgarrett@google.com>
-Message-Id: <20190622000358.19895-15-matthewgarrett@google.com>
+Message-Id: <20190622000358.19895-10-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190622000358.19895-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH V34 14/29] ACPI: Limit access to custom_method when the kernel
- is locked down
+Subject: [PATCH V34 09/29] kexec_file: Restrict at runtime if the kernel is
+ locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Matthew Garrett <mjg59@google.com>,
-        David Howells <dhowells@redhat.com>, linux-acpi@vger.kernel.org
+        Jiri Bohac <jbohac@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>, kexec@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: Jiri Bohac <jbohac@suse.cz>
 
-custom_method effectively allows arbitrary access to system memory, making
-it possible for an attacker to circumvent restrictions on module loading.
-Disable it if the kernel is locked down.
+When KEXEC_SIG is not enabled, kernel should not load images through
+kexec_file systemcall if the kernel is locked down.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
+[Modified by David Howells to fit with modifications to the previous patch
+ and to return -EPERM if the kernel is locked down for consistency with
+ other lockdowns. Modified by Matthew Garrett to remove the IMA
+ integration, which will be replaced by integrating with the IMA
+ architecture policy patches.]
+
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-acpi@vger.kernel.org
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Jiri Bohac <jbohac@suse.cz>
+cc: kexec@lists.infradead.org
 ---
- drivers/acpi/custom_method.c | 6 ++++++
- include/linux/security.h     | 1 +
- security/lockdown/lockdown.c | 1 +
- 3 files changed, 8 insertions(+)
+ kernel/kexec_file.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-index aa972dc5cb7e..6e56f9f43492 100644
---- a/drivers/acpi/custom_method.c
-+++ b/drivers/acpi/custom_method.c
-@@ -8,6 +8,7 @@
- #include <linux/uaccess.h>
- #include <linux/debugfs.h>
- #include <linux/acpi.h>
-+#include <linux/security.h>
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index eec7e5bb2a08..27adb4312b03 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -237,7 +237,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
  
- #include "internal.h"
- 
-@@ -28,6 +29,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 
- 	struct acpi_table_header table;
- 	acpi_status status;
-+	int ret;
+-		ret = 0;
++		ret = security_locked_down(LOCKDOWN_KEXEC);
++		if (ret)
++			goto out;
 +
-+	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
-+	if (ret)
-+		return ret;
+ 		break;
  
- 	if (!(*ppos)) {
- 		/* parse the table header to get the table length */
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 30bc6f058926..cc2b5ee4cadd 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -89,6 +89,7 @@ enum lockdown_reason {
- 	LOCKDOWN_PCI_ACCESS,
- 	LOCKDOWN_IOPORT,
- 	LOCKDOWN_MSR,
-+	LOCKDOWN_ACPI_TABLES,
- 	LOCKDOWN_INTEGRITY_MAX,
- 	LOCKDOWN_CONFIDENTIALITY_MAX,
- };
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 297a065e6261..1725224f0024 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
- 	[LOCKDOWN_IOPORT] = "raw io port access",
- 	[LOCKDOWN_MSR] = "raw MSR access",
-+	[LOCKDOWN_ACPI_TABLES] = "modified ACPI tables",
- 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
- 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
- };
+ 		/* All other errors are fatal, including nomem, unparseable
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
