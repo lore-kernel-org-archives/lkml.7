@@ -2,67 +2,99 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF092C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB9DC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFBF2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDA820843
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561181407;
-	bh=ysIxSKPyAHz/KZQK86Z6EfINleVifNb4GDxhmtFnXiQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RcUlrqs/HIMe9j/KKMK0X0q5NQ24MROfcJ6A9bhJ9gUUuYvMxjn1jHCMAUuM99PE1
-	 FhTUJ6XfSrEn+NbBb+TvcaI/irx8KWfj+bBJknLfvKFQewjj0aepSdJfapiAtHZcYr
-	 +bPf0AfMV0BZZ90AmJmH1561+4ElWe+CJ2Gbt06A=
+	s=default; t=1561181750;
+	bh=o2+bZapV1eflW9DPzro37eAdhaGW7cNgMP0IIvjvuxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UnPQm/eE2jDP2BtYfG2gmLPqrf8J3rdTJwv63oJFsvYEglaEEZUD8+THgI+iTi+RH
+	 44BRmBEkye7OcKwfMIjw4I/faQLqWBrWZcp78hDkxq7I3SuZ81QTK/TzIL5Tidd0dB
+	 G6kd2rT/+Q5gEfvvU6Fywd6N2YRVkCYaU7wKDY4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfFVFaG (ORCPT
+        id S1726099AbfFVFfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Sat, 22 Jun 2019 01:35:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfFVFaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:30:05 -0400
-Subject: Re: [GIT] Networking
+        id S1725932AbfFVFfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 01:35:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD17F2075E;
+        Sat, 22 Jun 2019 05:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561181404;
-        bh=ysIxSKPyAHz/KZQK86Z6EfINleVifNb4GDxhmtFnXiQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=PmEGgAaeDn3dDdeHklUJT2jmniCGuC2+5XLr2wC6jKIK2dDWmbhY3oiI+nY8lDLBO
-         bDDs8yfqAl/iVyou+5Nw7gAyjoNqPQAFblMrp1fbO+bQ2ghzBAacUJQqrsTH0e+kID
-         yfXwMV8SkBcDe1W71uMW+mv02KHF7EvKRb6+ZoAA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190621.212137.1249209897243384684.davem@davemloft.net>
-References: <20190621.212137.1249209897243384684.davem@davemloft.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190621.212137.1249209897243384684.davem@davemloft.net>
-X-PR-Tracked-Remote: (unable to parse the git remote)
-X-PR-Tracked-Commit-Id: b6653b3629e5b88202be3c9abc44713973f5c4b4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c356dc4b540edd6c02b409dd8cf3208ba2804c38
-Message-Id: <156118140484.25946.9601116477028790363.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Jun 2019 05:30:04 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        s=default; t=1561181744;
+        bh=o2+bZapV1eflW9DPzro37eAdhaGW7cNgMP0IIvjvuxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DSIbQbtYKwzyjoaGqfccftMEc8otHbG4ZOeZSLGWnTQIuqGSz1svHYAfM540+0FP3
+         fNpHu2oCebH1+AVJhsu/+f5xBWkcTcat0tyuvMmMNe160Ta93vUu5mElExbXBcfw5h
+         /nnYi4jgmwkNBdBVl97S0X/9eUKme0Ll02W5hUsM=
+Date:   Sat, 22 Jun 2019 07:34:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Rishiraj Manwatkar <manwatkar@outlook.com>,
+        devel@driverdev.osuosl.org, Vandana BN <bnvandana@gmail.com>,
+        linux-kernel@vger.kernel.org, kbuild-all@01.org,
+        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
+        Valerio Genovese <valerio.click@gmail.com>
+Subject: Re: [PATCH] staging: kpc2000: Fix: fix platform_no_drv_owner.cocci
+ warnings
+Message-ID: <20190622053453.GB16793@kroah.com>
+References: <201906220357.jo7Q9YJT%lkp@intel.com>
+ <20190621190408.GA17920@lkp-kbuild07>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621190408.GA17920@lkp-kbuild07>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 21 Jun 2019 21:21:37 -0400 (EDT):
+On Sat, Jun 22, 2019 at 03:04:08AM +0800, kbuild test robot wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c:200:3-8: No need to set .owner here. The core will do it.
+> 
+>  Remove .owner field if calls are used which set it automatically
+> 
+> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+> 
+> Fixes: abddd78ef465 ("staging: kpc2000: Fix: 'kpc_dma_del_device' and other symbols were not declared")
+> CC: Rishiraj Manwatkar <manwatkar@outlook.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> head:   e2d28c40292bdc35553d599e5bbbeaefbab49416
+> commit: abddd78ef465b86fc89a3d9750bb76a138bc0859 [5641/8196] staging: kpc2000: Fix: 'kpc_dma_del_device' and other symbols were not declared
+> 
+>  kpc_dma_driver.c |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> --- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
+> @@ -197,7 +197,6 @@ static struct platform_driver kpc_dma_pl
+>  	.remove       = kpc_dma_remove,
+>  	.driver = {
+>  		.name   = KP_DRIVER_NAME_DMA_CONTROLLER,
+> -		.owner  = THIS_MODULE,
+>  	},
+>  };
 
-> (unable to parse the git remote)
+Already in my tree, I think you are a bit behind :)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c356dc4b540edd6c02b409dd8cf3208ba2804c38
+thanks,
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+greg k-h
