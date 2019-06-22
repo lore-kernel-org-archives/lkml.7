@@ -2,110 +2,103 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FD5C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC1CC48BE7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B79206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xUHaVXMS"
+	by mail.kernel.org (Postfix) with ESMTP id B444820820
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 10:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561200784;
+	bh=XsbuTsWAoPCkGtHDg3vcdixFu29Z85KfcwCZsLv7mjk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FQlEcrLc4A/vybAwaFel13OmR75hqieCLNFWwhXFiLSy57DIEl8GF1xpyHEz2KRWj
+	 v55LRvAGtxY8UMPg36x0g4mOsAZgY1jR5fSF1zlAUJGrHfely8fchGblv6YM/j3vGH
+	 v9v3vwcCHmFZDMpjx+vQOHVT6f5+4pCj0FFkhsDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfFVKnr (ORCPT
+        id S1726331AbfFVKxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 06:43:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52024 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfFVKnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 06:43:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5MAe6EL149137;
-        Sat, 22 Jun 2019 10:43:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=kq0vqQjo14XEI66TpU/rqYxVUPhSaWKc+eKAGmgwWQA=;
- b=xUHaVXMSzCBsFfEes7e5FsFtZJjipV7WL6pW++EZJmcpQWQLGIXSBL+JnjPEf9qYFLTk
- WS5T7GxE1Nzobuppq2hF/Bmr8tWQ6Zy/T3sPNfSw2kIhBUhqxPME8z4MzauDRJUtdmnc
- 9s2M6LGTgzzHVuwJl1L5brdsZoo7kEHUn932cQRnyLIpuZx2DVx6oprsFIi0oR+MDKXx
- VY7E23g19pi4QauLQyApJY+qfCVnHWNfd86EFz+PzZYKvn8oF+wLx9QKJrFowKtxdgsF
- pJRmpMpv7Dg1rU+B0p4cCfbq7aAIaDA+YGQk9vI0X3C4QA5uou2aA5WckZXlqZ5BkGBK Dg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t9c9p8pp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Jun 2019 10:43:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5MAhPYm103599;
-        Sat, 22 Jun 2019 10:43:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9c5239h4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Jun 2019 10:43:35 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5MAhQga013247;
-        Sat, 22 Jun 2019 10:43:26 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 22 Jun 2019 03:43:25 -0700
-Date:   Sat, 22 Jun 2019 13:43:19 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, alexander.deucher@amd.com,
-        christian.koenig@amd.com, David1.Zhou@amd.com,
-        kernel-janitors@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        Sat, 22 Jun 2019 06:53:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbfFVKxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 06:53:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8552070B;
+        Sat, 22 Jun 2019 10:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561200781;
+        bh=XsbuTsWAoPCkGtHDg3vcdixFu29Z85KfcwCZsLv7mjk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EPAoZkeC+6QAR2EdwogfOoGFFEZE+gmxui1DPjGHrEGbnyTkDXCNB4JV4jkWgM7RU
+         4ZRclW5kES0zbpu/D1sqdT/fWDk5RHUnknTH/1sQO9YErbxx61w6Vof8f60uNhjh3i
+         sV3+9PRA+EAyyxE/3X1tQMsfJUVFX5BsGKVDkzeo=
+Date:   Sat, 22 Jun 2019 11:52:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] drm/amdgpu: remove set but not used variables 'ret'
-Message-ID: <20190622104318.GT28859@kadam>
-References: <20190622030314.169640-1-maowenan@huawei.com>
+Subject: Re: [PATCH] Documentation: ABI: Add missing newline at end of file
+Message-ID: <20190622115257.7198f8d4@archlinux>
+In-Reply-To: <20190617143057.4096-1-geert+renesas@glider.be>
+References: <20190617143057.4096-1-geert+renesas@glider.be>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190622030314.169640-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906220098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906220098
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 11:03:14AM +0800, Mao Wenan wrote:
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> index 0e6dba9..0bf4dd9 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> @@ -246,12 +246,10 @@ static int init_pmu_by_type(struct amdgpu_device *adev,
->  /* init amdgpu_pmu */
->  int amdgpu_pmu_init(struct amdgpu_device *adev)
->  {
-> -	int ret = 0;
-> -
->  	switch (adev->asic_type) {
->  	case CHIP_VEGA20:
->  		/* init df */
-> -		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
-> +		init_pmu_by_type(adev, df_v3_6_attr_groups,
->  				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
->  				       DF_V3_6_MAX_COUNTERS);
+On Mon, 17 Jun 2019 16:30:57 +0200
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
+> "git diff" says:
+> 
+>     \ No newline at end of file
+> 
+> after modifying the files.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-You're resending this for other reasons, but don't forget to update the
-indenting on the arguments so they still line up with the '('.
+Thanks,
 
-regards,
-dan carpenter
+Jonathan
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 | 2 +-
+>  Documentation/ABI/testing/sysfs-power                   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
+> index da9822309f0757bd..0e66ae9b0071e80b 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
+> @@ -13,4 +13,4 @@ Description:
+>  			error on writing
+>  		If DFSDM input is SPI Slave:
+>  			Reading returns value previously set.
+> -			Writing value before starting conversions.
+> \ No newline at end of file
+> +			Writing value before starting conversions.
+> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+> index 18b7dc929234f625..3c51303550118474 100644
+> --- a/Documentation/ABI/testing/sysfs-power
+> +++ b/Documentation/ABI/testing/sysfs-power
+> @@ -300,4 +300,4 @@ Description:
+>  		attempt.
+>  
+>  		Using this sysfs file will override any values that were
+> -		set using the kernel command line for disk offset.
+> \ No newline at end of file
+> +		set using the kernel command line for disk offset.
 
