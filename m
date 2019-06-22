@@ -2,261 +2,139 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0692DC48BE7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B6DC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56F420657
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV4ftO1p"
+	by mail.kernel.org (Postfix) with ESMTP id CBE5320657
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 11:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfFVLuj (ORCPT
+        id S1726323AbfFVLwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 07:50:39 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44301 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfFVLui (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 07:50:38 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so8275771ljc.11;
-        Sat, 22 Jun 2019 04:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=iNYX1eIR5m+yLL18gPgDNNyxPpPG7BFo26Nr+JmNscw=;
-        b=FV4ftO1pfUvNlMpsH2sh1SK0iWMhaHK2SU+5VOS0YxyWiNZ70Tx1g8SCp/dtoI+oZA
-         3z+JoNm8DJPWR/o07/Kd30GNGAwjXerSDUz7abmn86f3A27eLhMysYt4RXQG7LaAkBn4
-         QrIV2jZs1zfrzZ5iJJ/23ulPaMAjSUMCIruH+l5eCsllZxSuLtanFE2Np+9SrNaqNlaZ
-         Sd4rwUpGqEnjNx36AC6nMaB8r8sqwdadB0pJ9XWsDMmJrs1WmEm02z9ZIErLz+Qpi0VH
-         GhxRHeDoblmkn0ZFIYo98GfX2M7Ca0842peXapnMFM9aQT2czs2ksilEBQdYsYGUmjAy
-         D00Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=iNYX1eIR5m+yLL18gPgDNNyxPpPG7BFo26Nr+JmNscw=;
-        b=NcCUw8j4Zs9/Ei/ww/9wDPsQ2SEFNYepxDJ98MkBwdRxzWyDajcRmo+1INdtbqTlM7
-         9PnxhmXiq1lpF1gmWu5yP7It1bv06L2s6ifz1QRthIzrSZ4V2kMm1L7cH4aDVyn7fHyw
-         0UPGCSYX7M5Ymmhvd79qo0zkf2hgiyEx/i4p3hWSfe8z1Jxj/xvzDTgWNpfj60RqzUlx
-         M+3tb0VZc5Sg61OTpJ6ib8bk1wdA7dxwbpondYpagD1i+CL5AkKaKxp84RSvxw7x2Syb
-         jSIYnpnVAFpKp3bM1XhJBYsX37KoeNjebctjNUUDIuEnUcNuYx2eBx+qG8Elk+FH6SIp
-         ueGg==
-X-Gm-Message-State: APjAAAUp2nypeFblYDaCXNhPfGhcLVbdUEeosF0uyRQwkGAqlZWTDwTy
-        kfu006ThCOKUcQTVa/vo3CvxzTuuZEOJfSRrpoY=
-X-Google-Smtp-Source: APXvYqyrU2tMldAVtXb0sta7z06ngrSEsWKZOUOF6rybBfWi+li5n48iifNHhaxeT8Tnx19UGDfiNu0tPoxtfzYJqXo=
-X-Received: by 2002:a2e:3008:: with SMTP id w8mr39505617ljw.13.1561204235917;
- Sat, 22 Jun 2019 04:50:35 -0700 (PDT)
+        Sat, 22 Jun 2019 07:52:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57543 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbfFVLwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 07:52:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45WDS52D1hz9s3Z;
+        Sat, 22 Jun 2019 21:52:05 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Larry.Finger@lwfinger.net, christophe.leroy@c-s.fr, hch@lst.de,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mikey@neuling.org, sjitindarsingh@gmail.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-5 tag
+Date:   Sat, 22 Jun 2019 21:52:06 +1000
+Message-ID: <874l4halcp.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190622003449.33707-1-saravanak@google.com> <20190622003449.33707-3-saravanak@google.com>
-In-Reply-To: <20190622003449.33707-3-saravanak@google.com>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Sat, 22 Jun 2019 20:49:59 +0900
-Message-ID: <CAGTfZH18SQXj_2TpUf7iQPzWrZ5RP8-OCb_t6fp7qhuutGWz5A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] OPP: Add function to look up required OPP's for a
- given OPP
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kernel-team@android.com,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Absolutely, I like this approach. I think that it is necessary to make
-the connection
-between frequencies of devices. But, I have a question on below.
+Hi Linus,
 
-2019=EB=85=84 6=EC=9B=94 22=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 9:35, S=
-aravana Kannan <saravanak@google.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> Add a function that allows looking up required OPPs given a source OPP
-> table, destination OPP table and the source OPP.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++++
->  2 files changed, 65 insertions(+)
->
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 74c7bdc6f463..4f7870bffbf8 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1830,6 +1830,60 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_tabl=
-e *opp_table,
->                 dev_err(virt_dev, "Failed to find required device entry\n=
-");
->  }
->
-> +/**
-> + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
-> + * @src_table: OPP table which has dst_table as one of its required OPP =
-table.
-> + * @dst_table: Required OPP table of the src_table.
-> + * @pstate: OPP of the src_table.
-> + *
-> + * This function returns the OPP (present in @dst_table) pointed out by =
-the
-> + * "required-opps" property of the OPP (present in @src_table).
-> + *
-> + * The callers are required to call dev_pm_opp_put() for the returned OP=
-P after
-> + * use.
-> + *
-> + * Return: destination table OPP on success, otherwise NULL on errors.
-> + */
-> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-> +                                       struct opp_table *dst_table,
-> +                                       struct dev_pm_opp *src_opp)
-> +{
-> +       struct dev_pm_opp *opp, *dest_opp =3D NULL;
-> +       int i;
-> +
-> +       if (!src_table || !dst_table || !src_opp)
-> +               return NULL;
-> +
-> +       for (i =3D 0; i < src_table->required_opp_count; i++) {
-> +               if (src_table->required_opp_tables[i]->np =3D=3D dst_tabl=
-e->np)
-> +                       break;
-> +       }
-> +
-> +       if (unlikely(i =3D=3D src_table->required_opp_count)) {
-> +               pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
-> +                      __func__, src_table, dst_table);
-> +               return NULL;
-> +       }
-> +
-> +       mutex_lock(&src_table->lock);
-> +
-> +       list_for_each_entry(opp, &src_table->opp_list, node) {
-> +               if (opp =3D=3D src_opp) {
-> +                       dest_opp =3D opp->required_opps[i];
+Please pull some more powerpc fixes for 5.2.
 
-Correct me if I am wrong. This patch assume that 'i' index is same on betwe=
-en
-[1] and [2]. But in order to guarantee this assumption, all OPP entries
-in the same opp_table have to have the same number of 'required-opps' prope=
-rties
-and keep the sequence among 'required-opps' entries.
+This is a frustratingly large batch at rc5. Some of these were sent earlier but
+were missed by me due to being distracted by other things, and some took a while
+to track down due to needing manual bisection on old hardware. But still we
+clearly need to improve our testing of KVM, and of 32-bit, so that we catch
+these earlier.
 
-[1] src_table->required_opp_tables[i]->np
-[2] opp->required_opps[I];
-
-For example, three OPP entries in the 'parent_bus_opp'
-have the different sequence of 'required-opps' and the different
-number of 'required-opps'. Is it no problem?
-
-parent_bus_opp: opp_table {
-    compatible =3D "operating-points-v2";
-
-    opp2 {
-        opp-hz =3D /bits/ 64 <200000>;
-        required-opps =3D <&child_bus_a_opp2>, <&child_bus_b_opp2>,
-<&child_bus_c_opp2>;
-    };
-
-    opp1 {
-        opp-hz =3D /bits/ 64 <200000>;
-        // change the sequence between child_bus_b_opp2  and child_bus_c_op=
-p2
-        required-opps =3D <&child_bus_a_opp2>, <&child_bus_c_opp2>,
-<&child_bus_b_opp2>
-    };
-
-    opp0 {
-        opp-hz =3D /bits/ 64 <200000>;
-        // missing 'child_bus_a_opp2'
-        required-opps =3D <&child_bus_c_opp2>, <&child_bus_b_opp2>
-    };
-
-}
+cheers
 
 
+The following changes since commit c21f5a9ed85ca3e914ca11f421677ae9ae0d04b0:
 
-> +                       dev_pm_opp_get(dest_opp);
-> +                       goto unlock;
-> +               }
-> +       }
-> +
-> +       pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src=
-_table,
-> +              dst_table);
-> +
-> +unlock:
-> +       mutex_unlock(&src_table->lock);
-> +
-> +       return dest_opp;
-> +}
-> +
->  /**
->   * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for=
- src_table.
->   * @src_table: OPP table which has dst_table as one of its required OPP =
-table.
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index b150fe97ce5a..bc5c68bdfc8d 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -134,6 +134,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_=
-table *opp_table);
->  struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, stru=
-ct device *virt_dev, int index);
->  void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table, struct d=
-evice *virt_dev);
->  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, stru=
-ct opp_table *dst_table, unsigned int pstate);
-> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-> +                                       struct opp_table *dst_table,
-> +                                       struct dev_pm_opp *src_opp);
->  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
->  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpu=
-mask *cpumask);
->  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *=
-cpumask);
-> @@ -307,6 +310,14 @@ static inline int dev_pm_opp_xlate_performance_state=
-(struct opp_table *src_table
->         return -ENOTSUPP;
->  }
->
-> +static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
-> +                                               struct opp_table *src_tab=
-le,
-> +                                               struct opp_table *dst_tab=
-le,
-> +                                               struct dev_pm_opp *src_op=
-p)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long =
-target_freq)
->  {
->         return -ENOTSUPP;
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+  powerpc/32s: fix booting with CONFIG_PPC_EARLY_DEBUG_BOOTX (2019-06-07 19:00:14 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-5
+
+for you to fetch changes up to 50087112592016a3fc10b394a55f1f1a1bde6908:
+
+  KVM: PPC: Book3S HV: Invalidate ERAT when flushing guest TLB entries (2019-06-20 22:11:25 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.2 #5
+
+Seven fixes, all for bugs introduced this cycle.
+
+The commit to add KASAN support broke booting on 32-bit SMP machines, due to a
+refactoring that moved some setup out of the secondary CPU path.
+
+A fix for another 32-bit SMP bug introduced by the fast syscall entry
+implementation for 32-bit BOOKE. And a build fix for the same commit.
+
+Our change to allow the DAWR to be force enabled on Power9 introduced a bug in
+KVM, where we clobber r3 leading to a host crash.
+
+The same commit also exposed a previously unreachable bug in the nested KVM
+handling of DAWR, which could lead to an oops in a nested host.
+
+One of the DMA reworks broke the b43legacy WiFi driver on some people's
+powermacs, fix it by enabling a 30-bit ZONE_DMA on 32-bit.
+
+A fix for TLB flushing in KVM introduced a new bug, as it neglected to also
+flush the ERAT, this could lead to memory corruption in the guest.
+
+Thanks to:
+  Aaro Koskinen, Christoph Hellwig, Christophe Leroy, Larry Finger, Michael
+  Neuling, Suraj Jitindar Singh.
+
+- ------------------------------------------------------------------
+Christoph Hellwig (1):
+      powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+
+Christophe Leroy (3):
+      powerpc/32s: fix initial setup of segment registers on secondary CPU
+      powerpc/booke: fix fast syscall entry on SMP
+      powerpc/32: fix build failure on book3e with KVM
+
+Michael Neuling (1):
+      KVM: PPC: Book3S HV: Fix r3 corruption in h_set_dabr()
+
+Suraj Jitindar Singh (2):
+      KVM: PPC: Book3S HV: Only write DAWR[X] when handling h_set_dawr in real mode
+      KVM: PPC: Book3S HV: Invalidate ERAT when flushing guest TLB entries
 
 
---=20
-Best Regards,
-Chanwoo Choi
+ arch/powerpc/include/asm/page.h         |  7 +++++++
+ arch/powerpc/kernel/head_32.S           |  1 +
+ arch/powerpc/kernel/head_booke.h        | 10 +++++-----
+ arch/powerpc/kernel/head_fsl_booke.S    |  2 +-
+ arch/powerpc/kvm/book3s_hv_builtin.c    |  1 +
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S | 15 +++++++++++++--
+ arch/powerpc/mm/mem.c                   |  3 ++-
+ arch/powerpc/platforms/powermac/Kconfig |  1 +
+ 8 files changed, 31 insertions(+), 9 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJdDhYHAAoJEFHr6jzI4aWAe9MQALg4ximulK/aabpsUZ9VXvJG
+xGtfDYi41KQt73CdiE4nacx3RH7YlcqmZAoKU0JhcuLL2zbqqufhFYnKJNYPEHcG
+S2vHoEFfuVMR27B0Ba9FPHUwE1ND7dzPx8BGqjg4nUkoFd9rWV6xxQ5nYil3NBOi
++O5jtKMJxkF2DvSonaUrE6qX34F8N7HfVb8s3ZQpLEdcuyuJt3r9Zne/fvR9GRJ8
+gDvjkQervuw0iA3BcJlRWnJqf5ch9iijd+YvkAIeAjO7M1yWXoGUdRbVK3M39iO7
+n7znfy7JSdcM/AaMP+qiK0KDUgUNlBbtm/bvC9TFMBsD/dBHlYE3crCUIoYXxCE8
+0bVyQL502J4Qd8vbIqK3WCZCprqQpp/q2SVYxgIj1jnk2enFn8kEVREVrdyVDuTJ
+LcBQEyUtZooS/ATrwPOzIAC/XsdnHP7tBSqU23J3Ba+W6GM/t8wuDkGwN7nhwoYE
+SU8p0AbAQ/G6Yi9JvgATbtSXAMQ2pPO3TCYkLVzD18KQLhfSYD4cbMs+gWvMCwVR
+/8lRkRi4uHurUk8eE4y/Sp4T7pRk4mwVxYighLbGLXLW/pj9RvfdTRA3i+E51j/U
+Wu1lZSTrKPRzNp7XYUOM5ZGfngptgO7istNkgeQz8zJsPu1S0aoxyK1ypCp1aUZ8
+flxdVv62fmt3H/8A0I3O
+=5RHe
+-----END PGP SIGNATURE-----
