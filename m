@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149E1C48BE7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB4C43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C73206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E46D208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 08:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDAd1wO7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/p1qP5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfFVIvV (ORCPT
+        id S1726465AbfFVIvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 04:51:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35205 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFVIvQ (ORCPT
+        Sat, 22 Jun 2019 04:51:23 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45516 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfFVIvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 04:51:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so8757912wrv.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 01:51:14 -0700 (PDT)
+        Sat, 22 Jun 2019 04:51:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so8687554wre.12
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 01:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OT8SPNHWk4z4I8Pp+icjCJXudD3ZuOCKF+jmfrUNbnE=;
-        b=XDAd1wO7ZXP/gkz9tP6VaxixOwMxJNdn94LT+0YFDWEbbHwXz3J0qni/pdrkNShwW+
-         iX6TbIyyRSWGcNxHBi7Rf30Oi2htKV3CxWTHG72+lG2m+eYRMeqoOF3yWEetK3cRtcH/
-         JILOcF6hfHOM0geAh1PJ7P1jeMzDra6B9baC6Wn3+5/YQ77gSqHUr4+vXObVUxZUyt6t
-         SzwC0XKnD5ycOhRK1hduOSRi/XLrQ8QQBgFiF19fp4ANigZM3AkbsCsgdGdgtIARiL8x
-         k3ANoZz06BRD3MCxcjYdLQNoLmcwGFx8k23M/J+lCMqCN/+F0K8+1gGkz8PCFLa3va0K
-         Mz8g==
+        bh=qiN85MY5YnTwB3nQ80pJ/FSY8JMCGoluMGY1yE5pzt8=;
+        b=H/p1qP5UKrqbgx62rex5GvcEiP0tumRfLfdHFtTeGXRVnhy+Bc0wSAjxZkpJI2kT6U
+         vQUfAVCPe9SfCqgFiRYWiEmlDFWx07zJylvpNpmMiWu8esFrF0nsSylVV71EWkolD9xQ
+         S6t6QfIx1p643HMzcCMzaomCgLCtYVoT4th99SnrRo5wcclGgqXgD2Mkx7M81nBh7D8c
+         FHSNPRsklt3XRZV1fmkYW6h+38Z1j8NhVaQ1GreT6T/aI81iqlGF30NUrqPj0xQozNpg
+         HEyFXAK7Eufqhn0jAVrL7bYli/+XrGKo5PABFeIFVThkD2OuAz7cbiOlxuXxWaFMaFBO
+         ZJyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OT8SPNHWk4z4I8Pp+icjCJXudD3ZuOCKF+jmfrUNbnE=;
-        b=d2HO7RK9uwK9OO+FHF6dwlbDIXr5oR+kMn1TXoADLu2d47PSKbvgf6WHd6WxkV7s0r
-         tXpyrbS40CS+rbfBXyYH3gfYeHyTV3CHiVrilf8UXAINiXWdYHbMC2C0yBYiahTLhiVk
-         WN1O4pYAg7rcjC9oz5Adcp+IvU6/R8IihukxrNKdNwdRUpqiWkcjb890nB9APWkFEfVy
-         uyCzRA2P89P8jeR7k390DBJnMZ0mOXjxuIdlQ3JCRLwK7oHcAbh+zRZyBo6UezQPWHHr
-         Z9rBc5cHxvksMGwPOYvm9yXOpRsUb1aBbleM0LPmFO2L1eiHPWC+QuQt2ZYnF9HS/UFX
-         yaGg==
-X-Gm-Message-State: APjAAAWBgXOzdgD3+FH6glQxz+sELQUvw32ayJaawylXcip6zjyyjO1S
-        ZZy9Z2WoN4Ks6wAv7x5hV+pUHA==
-X-Google-Smtp-Source: APXvYqxuk4LvffOaJ8GkE3qYxtS7zZb3EEA/mB/jdVnyU1h0V18ENYI/mpS0guMTT8+y06baPY/I/g==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr95195242wrp.149.1561193474094;
-        Sat, 22 Jun 2019 01:51:14 -0700 (PDT)
+        bh=qiN85MY5YnTwB3nQ80pJ/FSY8JMCGoluMGY1yE5pzt8=;
+        b=UqUxfZxJ3LDSVbBMYTj+zDaUIRJxBertwxVyp4N/I3zUYlGYaWmzkhYudJ3W60IhoV
+         s6tfkgJNa0L+80lp2XHBJn1Gz6NjXQWb9+6dGtgQRw+5Wl3Re9M+d9+3pRRNyoxSRRC8
+         P7lW7dEtinoXt9FluuhIme1yivxq9zrDiZHDYJpHYSM3BPbL1pksKWkna93ma9JfLtyt
+         o4Olq7SUTjIeid/YtbsROl3lubS5kLTnvD7L4ckHAU8yrCWIpfofGbwY4r7E1IyNcfuS
+         KlwQqGRluuqncQcu36bcn0u6ESUEBPuz0nqhi2G+fMQd+NImZcr26tCZe6V8IvxIL2Hc
+         +jQg==
+X-Gm-Message-State: APjAAAU3wgEeFbw9MTF/ltaP83qq1h0u/KJUXbmi/g6QFeIiZb+JvADX
+        qnNiSvJekrm3ch/WL6TZc5hpgQ==
+X-Google-Smtp-Source: APXvYqy5fzhYOJSXvdtzGuYRxNq7/S9xCwSYJ5Zg3y0zdEQUs8+GkbOXHTnlZaj2JbCGjTxK/8Hdzg==
+X-Received: by 2002:adf:f591:: with SMTP id f17mr2519691wro.119.1561193476680;
+        Sat, 22 Jun 2019 01:51:16 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:4bd:3f91:4ef8:ae7e])
-        by smtp.gmail.com with ESMTPSA id v15sm4863589wrt.25.2019.06.22.01.51.12
+        by smtp.gmail.com with ESMTPSA id v15sm4863589wrt.25.2019.06.22.01.51.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Jun 2019 01:51:13 -0700 (PDT)
+        Sat, 22 Jun 2019 01:51:16 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -65,9 +65,9 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Luo XinanX <xinanx.luo@intel.com>,
         "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
         Qian Cai <cai@lca.pw>, Tian Baofeng <baofeng.tian@intel.com>
-Subject: [PATCH 2/4] efi/bgrt: Drop BGRT status field reserved bits check
-Date:   Sat, 22 Jun 2019 10:51:04 +0200
-Message-Id: <20190622085106.24859-3-ard.biesheuvel@linaro.org>
+Subject: [PATCH 4/4] efibc: Replace variable set function in notifier call
+Date:   Sat, 22 Jun 2019 10:51:06 +0200
+Message-Id: <20190622085106.24859-5-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190622085106.24859-1-ard.biesheuvel@linaro.org>
 References: <20190622085106.24859-1-ard.biesheuvel@linaro.org>
@@ -78,42 +78,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tian Baofeng <baofeng.tian@intel.com>
 
-Starting with ACPI 6.2 bits 1 and 2 of the BGRT status field are no longer
-reserved. These bits are now used to indicate if the image needs to be
-rotated before being displayed.
+Replace the variable set function from "efivar_entry_set" to
+"efivar_entry_set_safe" in efibc panic notifier.
+In safe function parameter "block" will set to false
+and will call "efivar_entry_set_nonblocking"to set efi variables.
+efivar_entry_set_nonblocking is guaranteed to
+not block and is suitable for calling from crash/panic handlers.
+In UEFI android platform, when warm reset happens,
+with this change, efibc will not block the reboot process.
+Otherwise, set variable will call queue work and send to other offlined
+cpus then cause another panic, finally will cause reboot failure.
 
-The first device using these bits has now shown up (the GPD MicroPC) and
-the reserved bits check causes us to reject the valid BGRT table on this
-device.
-
-Rather then changing the reserved bits check, allowing only the 2 new bits,
-instead just completely remove it so that we do not end up with a similar
-problem when more bits are added in the future.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Tian Baofeng <baofeng.tian@intel.com>
+Signed-off-by: Luo XinanX <xinanx.luo@intel.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/firmware/efi/efi-bgrt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/firmware/efi/efibc.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
-index a2384184a7de..b07c17643210 100644
---- a/drivers/firmware/efi/efi-bgrt.c
-+++ b/drivers/firmware/efi/efi-bgrt.c
-@@ -47,11 +47,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
- 		       bgrt->version);
- 		goto out;
- 	}
--	if (bgrt->status & 0xfe) {
--		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
--		       bgrt->status);
--		goto out;
--	}
- 	if (bgrt->image_type != 0) {
- 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
- 		       bgrt->image_type);
+diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
+index 61e099826cbb..35dccc88ac0a 100644
+--- a/drivers/firmware/efi/efibc.c
++++ b/drivers/firmware/efi/efibc.c
+@@ -43,11 +43,13 @@ static int efibc_set_variable(const char *name, const char *value)
+ 	efibc_str_to_str16(value, (efi_char16_t *)entry->var.Data);
+ 	memcpy(&entry->var.VendorGuid, &guid, sizeof(guid));
+ 
+-	ret = efivar_entry_set(entry,
+-			       EFI_VARIABLE_NON_VOLATILE
+-			       | EFI_VARIABLE_BOOTSERVICE_ACCESS
+-			       | EFI_VARIABLE_RUNTIME_ACCESS,
+-			       size, entry->var.Data, NULL);
++	ret = efivar_entry_set_safe(entry->var.VariableName,
++				    entry->var.VendorGuid,
++				    EFI_VARIABLE_NON_VOLATILE
++				    | EFI_VARIABLE_BOOTSERVICE_ACCESS
++				    | EFI_VARIABLE_RUNTIME_ACCESS,
++				    false, size, entry->var.Data);
++
+ 	if (ret)
+ 		pr_err("failed to set %s EFI variable: 0x%x\n",
+ 		       name, ret);
 -- 
 2.20.1
 
