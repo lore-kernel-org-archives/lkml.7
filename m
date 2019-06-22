@@ -2,127 +2,80 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414C8C43613
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1BFC48BDF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1884C2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vfztd4Br"
+	by mail.kernel.org (Postfix) with ESMTP id 3AF6F20843
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 05:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561182243;
+	bh=8XfY/ADqB/m32rtN3KWK7dF1kaYPkqEqs6tSWgPwc64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2DqlC3q9iXhaH9J9GGl/eBYwsNJX/aEmAWznE6vdYtTtMhQ9g6u4Knk2deZMACkhZ
+	 ty5k++QhMMSZ8uLw0MhWSUSQel6k6RbLYrbtRVQZPp9C7BSTD2sXlmKLYCbjuBW7OO
+	 tfGali6pfcApeg6NMoVNHvTaaiX4U32S2ZOlqO60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfFVFkc (ORCPT
+        id S1726111AbfFVFoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 01:40:32 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:55098 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfFVFkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 01:40:32 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5M5eC9L014968;
-        Sat, 22 Jun 2019 14:40:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5M5eC9L014968
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561182013;
-        bh=JxBG390b3AdnCwZiQOKsk1HAVj5lXZJFRQcpOMWwHbY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vfztd4BrukAdjcSvvO2e/ZaIiyZ9mx12XbkLTV+W2nuoyC48frSlNAvAwwbP73Vyr
-         Tn+tVvlKIzCwwccAQjVD1cg72WyVKXSwN1+zOr7lOr0xep66UxomKkozXKaAAqJ+CV
-         SfVa4bLXejWLmgX1RRFqEBQRb5vCW/M+iBtN1UirSWuQ9L3Xh33Fs3k5t2oCFMw6Ld
-         Z7kiY+Xf7S5QA3YRLzTg1M2Ye9HAaaVOTunAB6PxPorlGZDFETkls1kQhr8wgHXtMf
-         YjfN2RgtEjH09lnD0+PgldC7gF8hrf52UOZ7yY1R/DkdUlmXGwi5iBOm4amb4+aKnQ
-         LTT74SXqb15DQ==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id v18so3739081uad.12;
-        Fri, 21 Jun 2019 22:40:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAUuZhCGgH9XL0FGqr+jjF6Fh1RUhfsTRGXzsgdXdgTZS4cMprPS
-        afVQByBwbpOU9AaM+w1rJfdhJIl9V7gAVvOKBM4=
-X-Google-Smtp-Source: APXvYqzlKgWISF72/2l3BCTzXtxOrbxlLww7I4OL4+Gvksq0C26omqpvWWFe0eb5vghy8UgM0iBbJXyRxsNhrZQR8a0=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr48367542uag.40.1561182012133;
- Fri, 21 Jun 2019 22:40:12 -0700 (PDT)
+        Sat, 22 Jun 2019 01:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfFVFoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 01:44:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DB12070B;
+        Sat, 22 Jun 2019 05:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561182240;
+        bh=8XfY/ADqB/m32rtN3KWK7dF1kaYPkqEqs6tSWgPwc64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jRC5gUXenqrX07WCB2us+4Fk7forVkRo8G6dgKtgIovGLPMxOyN1lX0aU8KSbgTrX
+         EIp6bXrqm5+5PahUTy5y/+bx4W9rimLTHBiOiJSOM27mWOdjaYHj0kJjBM7z4IZtzd
+         1EqC6T8Kdjk6xugvp1SYjxJHITeSpPodys0UzQco=
+Date:   Sat, 22 Jun 2019 07:43:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 00/98] 5.1.13-stable review
+Message-ID: <20190622054357.GA26075@kroah.com>
+References: <20190620174349.443386789@linuxfoundation.org>
+ <4efcd858-1b66-097a-1d8a-1a4e0efe7a42@roeck-us.net>
 MIME-Version: 1.0
-References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
- <20190604101409.2078-16-yamada.masahiro@socionext.com> <CAK8P3a08f25WYP5r57JHPcZWieS2+07=_qTphLosS4M2w8F0Zw@mail.gmail.com>
- <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
-In-Reply-To: <CAK7LNATt8BSrMfrOVjZ_SbA0awsh4CvRhu6TF3gYYynirpviWw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 22 Jun 2019 14:39:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATi1kX_j9-7CoT24hohgTCQB1dSc9j8DNdmjnmEg1-kRg@mail.gmail.com>
-Message-ID: <CAK7LNATi1kX_j9-7CoT24hohgTCQB1dSc9j8DNdmjnmEg1-kRg@mail.gmail.com>
-Subject: Re: [PATCH 15/15] kbuild: compile test UAPI headers to ensure they
- are self-contained
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Palmer Dabbelt <palmer@sifive.com>, bpf@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4efcd858-1b66-097a-1d8a-1a4e0efe7a42@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 2:12 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Sat, Jun 22, 2019 at 4:05 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Jun 4, 2019 at 12:16 PM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> >
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -1363,7 +1363,7 @@ CLEAN_DIRS  +=3D $(MODVERDIR) include/ksym
-> > >  CLEAN_FILES +=3D modules.builtin.modinfo
-> > >
-> > >  # Directories & files removed with 'make mrproper'
-> > > -MRPROPER_DIRS  +=3D include/config usr/include include/generated    =
-      \
-> > > +MRPROPER_DIRS  +=3D include/config include/generated          \
-> > >                   arch/$(SRCARCH)/include/generated .tmp_objdiff
-> > >  MRPROPER_FILES +=3D .config .config.old .version \
-> > >                   Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS=
- GSYMS \
-> >
-> > This change seems to have caused a minor regression:
-> >
-> > $ make clean ; make clean
-> > find: =E2=80=98*=E2=80=99: No such file or directory
->
-> Hmm, I cannot reproduce this.
->
-> I checked the latest linux-next.
->
->
-> masahiro@grover:~/ref/linux-next$ git describe
-> next-20190621
-> masahiro@grover:~/ref/linux-next$ make clean; make clean
-> masahiro@grover:~/ref/linux-next$
->
->
+On Fri, Jun 21, 2019 at 05:45:58PM -0700, Guenter Roeck wrote:
+> On 6/20/19 10:56 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.1.13 release.
+> > There are 98 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 159 pass: 159 fail: 0
+> Qemu test results:
+> 	total: 364 pass: 364 fail: 0
 
-Ah, now I was able to reproduce it.
+Wonderful!  Thanks for testing all of these and letting me know.
 
-Will fix it soon. Thanks.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+greg k-h
