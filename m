@@ -2,84 +2,95 @@ Return-Path: <SRS0=kYop=UV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D407DC48BDF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB62AC43613
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B523E2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FD8208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Jun 2019 07:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561189078;
+	bh=4z2vmEU/QsMGr5ZEeJ2h7v3bjxQxll76H/iFChFi9XE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qu+eDerFSQmK7d8Ar6YMUueET0lcV251Fe/vqSpYPD8niRhvNisCJaOiXYbfiURe4
+	 zetjNrqXakGVghJEOmxPpubqQt0x4CQVsMb0XTNsoZ4exSDEW+eev87aDJWrnJogMg
+	 EWVEOZPdf/KRdizPHOb5gQT6afnuvK+RlIaJ/orM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfFVH2W (ORCPT
+        id S1726132AbfFVHh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 03:28:22 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57515 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfFVH2W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 03:28:22 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1heaRd-0003tp-O9; Sat, 22 Jun 2019 09:28:17 +0200
-Date:   Sat, 22 Jun 2019 09:28:16 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Miroslav Benes <mbenes@suse.cz>
-cc:     Cheng Jian <cj.chengjian@huawei.com>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, jpoimboe@redhat.com,
-        mingo@redhat.com, huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        yangyingliang@huawei.com, bobo.shaobowang@huawei.com
-Subject: Re: [PATCH] Revert "x86/module: Detect and skip invalid
- relocations"
-In-Reply-To: <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
-Message-ID: <alpine.DEB.2.21.1906220927460.5503@nanos.tec.linutronix.de>
-References: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com> <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 22 Jun 2019 03:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfFVHh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 03:37:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67B372089E;
+        Sat, 22 Jun 2019 07:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561189076;
+        bh=4z2vmEU/QsMGr5ZEeJ2h7v3bjxQxll76H/iFChFi9XE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cHsWVZpFw+9zFNKYyXETdCbkd/p+Djn3qDTdcs3t3sfs+S22ZrFqy4CNBDcN7cSL7
+         04mC14jNitcyUc0sgjmqFXNGXofvP9Cxdm5Jjx+ytM1aQBHTpLwtrBHr65iiqIvUae
+         TLAMuPxl3NCXhYp1I+/1j+kFwkpOeLwKWatfjhag=
+Date:   Sat, 22 Jun 2019 09:37:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        Eric Dumazet <edumazet@google.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Steam is broken on new kernels
+Message-ID: <20190622073753.GA10516@kroah.com>
+References: <a624ec85-ea21-c72e-f997-06273d9b9f9e@valvesoftware.com>
+ <20190621214139.GA31034@kroah.com>
+ <CAHk-=wgXoBMWdBahuQR9e75ri6oeVBBjoVEnk0rN1QXfSKK2Eg@mail.gmail.com>
+ <CANn89iL5+x3n9H9v4O6y39W=jvQs=uuXbzOvN5mBbcj0t+wdeg@mail.gmail.com>
+ <CAHk-=wjZ=8VSjWuqeG6JJv4dQfK6M0Jgckq5-6=SJa25aku-vQ@mail.gmail.com>
+ <CANn89iLU+NNy7QDPNLYPxNWMx5cXuhziOT7TX2uYt42uUJcNVg@mail.gmail.com>
+ <b72599d1-b5d5-1c23-15fc-8e2f9454af05@valvesoftware.com>
+ <CAHk-=wjZ1grLwJsGD+Fjz1_U_W47AFodBiwBX84HECUHt-guuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjZ1grLwJsGD+Fjz1_U_W47AFodBiwBX84HECUHt-guuw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miroslav,
-
-On Thu, 20 Jun 2019, Miroslav Benes wrote:
-> On Thu, 20 Jun 2019, Cheng Jian wrote:
+On Fri, Jun 21, 2019 at 10:28:21PM -0700, Linus Torvalds wrote:
+> On Fri, Jun 21, 2019 at 6:03 PM Pierre-Loup A. Griffais
+> <pgriffais@valvesoftware.com> wrote:
+> >
+> > I applied Eric's path to the tip of the branch and ran that kernel and
+> > the bug didn't occur through several logout / login cycles, so things
+> > look good at first glance. I'll keep running that kernel and report back
+> > if anything crops up in the future, but I believe we're good, beyond
+> > getting distros to ship this additional fix.
 > 
-> > This reverts commit eda9cec4c9a12208a6f69fbe68f72a6311d50032.
-> > 
-> > Since commit (eda9cec4c9a1 'x86/module: Detect and skip invalid
-> > relocations') add some sanity check in apply_relocate_add, borke
-> > re-insmod a kernel module which has been patched before,
-> > 
-> > The relocation informations of the livepatch module have been
-> > overwritten since first patched, so if we rmmod and insmod the
-> > kernel module, these values are not zero anymore, when
-> > klp_module_coming doing, and that commit marks them as invalid
-> > invalid_relocation.
-> > 
-> > Then the following error occurs:
-> > 
-> > 	module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc (____ptrval____), val ffffffffc000236c
-> > 	livepatch: failed to initialize patch 'livepatch_0001_test' for module 'test' (-8)
-> > 	livepatch: patch 'livepatch_0001_test' failed for module 'test', refusing to load module 'test'
+> Good. It's now in my tree, so we can get it quickly into stable and
+> then quickly to distributions.
 > 
-> Oh yeah. First reported here 20180602161151.apuhs2dygsexmcg2@treble (LP ML 
-> only and there is no archive on lore.kernel.org yet. Sorry about that.). I 
-> posted v1 here 
-> https://lore.kernel.org/lkml/20180607092949.1706-1-mbenes@suse.cz/ and 
-> even started to work on v2 in March with arch-specific nullifying, but 
-> then I got sidetracked again. I'll move it up my todo list a bit.
+> Greg, it's commit b6653b3629e5 ("tcp: refine memory limit test in
+> tcp_fragment()"), and I'm building it right now and I'll push it out
+> in a couple of minutes assuming nothing odd is going on.
 
-so we need to revert it for now, right?
+This looks good for 4.19 and 5.1, so I'll push out new stable kernels in
+a bit for them.
 
-Thanks,
+But for 4.14 and older, we don't have the "hint" to know this is an
+outbound going packet and not to apply these checks at that point in
+time, so this patch doesn't work.
 
-	tglx
+I'll see if I can figure anything else later this afternoon for those
+kernels...
+
+thanks,
+
+greg k-h
