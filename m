@@ -2,57 +2,194 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A57C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D751EC48BE4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D8720820
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC82C20645
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfFWSd4 (ORCPT
+        id S1726304AbfFWSpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 14:33:56 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:43560 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfFWSd4 (ORCPT
+        Sun, 23 Jun 2019 14:45:24 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:55591 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWSpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 14:33:56 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6867D12D8C0E6;
-        Sun, 23 Jun 2019 11:33:55 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 11:33:54 -0700 (PDT)
-Message-Id: <20190623.113354.132846566012344300.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] net/sched: cbs: Fix error path of cbs_module_init
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190621134437.4252-1-yuehaibing@huawei.com>
-References: <20190621134437.4252-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Jun 2019 11:33:55 -0700 (PDT)
+        Sun, 23 Jun 2019 14:45:23 -0400
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B9236FF802;
+        Sun, 23 Jun 2019 18:45:19 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH 3/4] IIO: Ingenic JZ47xx: Set clock divider on probe
+Date:   Sun, 23 Jun 2019 20:47:31 +0200
+Message-Id: <20190623184732.5492-3-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190623184732.5492-1-contact@artur-rojek.eu>
+References: <20190623184732.5492-1-contact@artur-rojek.eu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 21 Jun 2019 21:44:37 +0800
+From: Maarten ter Huurne <maarten@treewalker.org>
 
-> If register_qdisc fails, we should unregister
-> netdevice notifier.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The SADC component can run at up to 8 MHz on JZ4725B, but is fed
+a 12 MHz input clock (EXT). Divide it by two to get 6 MHz, then
+set up another divider to match, to produce a 10us clock.
 
-Applied.
+If the clock dividers are left on their power-on defaults (a divider
+of 1), the SADC mostly works, but will occasionally produce erroneous
+readings. This led to button presses being detected out of nowhere on
+the RS90 every few minutes. With this change, no ghost button presses
+were logged in almost a day worth of testing.
+
+The ADCLK register for configuring clock dividers doesn't exist on
+JZ4740, so avoid writing it there.
+
+A function has been introduced rather than a flag because there is a lot
+of variation between the ADCLK registers on JZ47xx SoCs, both in
+the internal layout of the register and in the frequency range
+supported by the SADC. So this solution should make it easier
+to add support for other JZ47xx SoCs later.
+
+Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+---
+ drivers/iio/adc/ingenic-adc.c | 54 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 92b1d5037ac9..e234970b7150 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -11,6 +11,7 @@
+ #include <linux/iio/iio.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
++#include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
+@@ -22,8 +23,11 @@
+ #define JZ_ADC_REG_ADTCH		0x18
+ #define JZ_ADC_REG_ADBDAT		0x1c
+ #define JZ_ADC_REG_ADSDAT		0x20
++#define JZ_ADC_REG_ADCLK		0x28
+ 
+ #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
++#define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
++#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+ 
+ #define JZ_ADC_AUX_VREF				3300
+ #define JZ_ADC_AUX_VREF_BITS			12
+@@ -34,6 +38,8 @@
+ #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
+ #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
+ 
++struct ingenic_adc;
++
+ struct ingenic_adc_soc_data {
+ 	unsigned int battery_high_vref;
+ 	unsigned int battery_high_vref_bits;
+@@ -41,6 +47,7 @@ struct ingenic_adc_soc_data {
+ 	size_t battery_raw_avail_size;
+ 	const int *battery_scale_avail;
+ 	size_t battery_scale_avail_size;
++	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
+ };
+ 
+ struct ingenic_adc {
+@@ -151,6 +158,42 @@ static const int jz4740_adc_battery_scale_avail[] = {
+ 	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
+ };
+ 
++static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
++{
++	struct clk *parent_clk;
++	unsigned long parent_rate, rate;
++	unsigned int div_main, div_10us;
++
++	parent_clk = clk_get_parent(adc->clk);
++	if (!parent_clk) {
++		dev_err(dev, "ADC clock has no parent\n");
++		return -ENODEV;
++	}
++	parent_rate = clk_get_rate(parent_clk);
++
++	/*
++	 * The JZ4725B ADC works at 500 kHz to 8 MHz.
++	 * We pick the highest rate possible.
++	 * In practice we typically get 6 MHz, half of the 12 MHz EXT clock.
++	 */
++	div_main = DIV_ROUND_UP(parent_rate, 8000000);
++	div_main = clamp(div_main, 1u, 64u);
++	rate = parent_rate / div_main;
++	if (rate < 500000 || rate > 8000000) {
++		dev_err(dev, "No valid divider for ADC main clock\n");
++		return -EINVAL;
++	}
++
++	/* We also need a divider that produces a 10us clock. */
++	div_10us = DIV_ROUND_UP(rate, 100000);
++
++	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
++	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
++	       adc->base + JZ_ADC_REG_ADCLK);
++
++	return 0;
++}
++
+ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
+ 	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
+ 	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
+@@ -158,6 +201,7 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
+ 	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
+ 	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
+ 	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
++	.init_clk_div = jz4725b_adc_init_clk_div,
+ };
+ 
+ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
+@@ -167,6 +211,7 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
+ 	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
+ 	.battery_scale_avail = jz4740_adc_battery_scale_avail,
+ 	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
++	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
+ };
+ 
+ static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
+@@ -317,6 +362,15 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* Set clock dividers. */
++	if (soc_data->init_clk_div) {
++		ret = soc_data->init_clk_div(dev, adc);
++		if (ret) {
++			clk_disable_unprepare(adc->clk);
++			return ret;
++		}
++	}
++
+ 	/* Put hardware in a known passive state. */
+ 	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
+ 	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+-- 
+2.22.0
+
