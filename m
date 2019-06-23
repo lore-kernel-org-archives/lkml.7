@@ -2,162 +2,110 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22E3C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50800C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3B20656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1658720673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YagS2PXc"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="kHUEMOx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfFWRR6 (ORCPT
+        id S1726648AbfFWRiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 13:17:58 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36100 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFWRR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 13:17:57 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g18so8121186qkl.3;
-        Sun, 23 Jun 2019 10:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oTQJHiQOFJX9TMuzD6eUCrwJJpcVrl2yW+goXQfQCj8=;
-        b=YagS2PXc8FqOqNX+u/fWdMCITgu5lEhgaubB8vuu7uzFL0gXqZagiKIZKs075Bf/xm
-         UHpjfEf41FZ8dknsiecZ79jJeMoFBiROnJHZYhKwdUoh1iVHiwxiZU2QgyWmNTCw4BB+
-         AgzsP/ZA8K3p9NnzDJtG0nCHUxj9YdooaiInEB3skusuIqQV+tDcLsY/pU97SeAFFM/q
-         MscnELUrEvzYMnj4gkr3gSTqr+jUwjE1dwAxknAEmnAyvmQgR+UD+e/eLzPmFieM/uJr
-         gQVWp86juxDTV78xq7Seil+VANoXj2A4vXNtra5tasImp5I+qJQL0JXco9ozFZCbkvPw
-         wISw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oTQJHiQOFJX9TMuzD6eUCrwJJpcVrl2yW+goXQfQCj8=;
-        b=p165nftV5SLY3PwwV5Nb2gQOgEu+O5kRoG6hbiioqdckIY3hc+Wne93q9aFyfQ+GEp
-         GjbsfdBrukx/Ef204nsaAxzSss00vqKuLRrVlnjVwNQBxgSf6A1jYYNFCnrVrsqn+d//
-         g5zqDdhpYhPb0eGFEIvXdRsMWAsSKinMAQf+Ia+/jtIDAqYThs/+hb65wiQgAVGXssS5
-         xGh5lHfWl82ITvzGS9UXKfR/uoN28axv2W6nWL8P0RzAruFJOucifHE7nq/LDISd839Z
-         fA/wwF9ou45Mo2l7G/dJ5CwAGkK+0Wbd2S2zkK7okNP25kv0IDwLeXasm3yOn2slqLj+
-         55JA==
-X-Gm-Message-State: APjAAAWCygLvcdOa1yLDiCsFViQelmnHZ9IYV+ziOIO4Ascy75il1o8R
-        tzN9HrqTbq06MFigrHdStYzOOaru
-X-Google-Smtp-Source: APXvYqyJTClxclnIYTcifSFy9E8UhzxwdPcRWT3uKf1e8+ma/aVZZm2fuvEjrIt4gaiVaAwmgwk2Cw==
-X-Received: by 2002:a37:4e8f:: with SMTP id c137mr82739150qkb.127.1561310276502;
-        Sun, 23 Jun 2019 10:17:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id g5sm5631799qta.77.2019.06.23.10.17.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 10:17:55 -0700 (PDT)
-Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30
- support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
- <20190501233815.32643-1-digetx@gmail.com>
- <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
- <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
- <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
- <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
- <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
-Message-ID: <389cc71d-8f0b-fa39-1325-433d27c75dc8@gmail.com>
-Date:   Sun, 23 Jun 2019 20:17:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Sun, 23 Jun 2019 13:38:00 -0400
+Received: from mail-eopbgr800071.outbound.protection.outlook.com ([40.107.80.71]:39424
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726466AbfFWRh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 13:37:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sU//ICQyKsXNwhNLqzUnO1yFVB4bPMOQrqsE5/jFOJk=;
+ b=kHUEMOx6wTAjZeG4gbW7IJfcXopCMtFbLzHMnvVENHgx7syyARpJIr+JYrRgQMG6yHAdN3lye9OHks9y6edZRHklaMdY4xA9uN+p3rJxuhOH/G9nPJz2tpcRJWeOGykKpWffrYYo2bKs++jiIyX3FlZbmVXZpzyKoBcv2dloVr0=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.31.141) by
+ BN7PR08MB4241.namprd08.prod.outlook.com (52.133.222.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Sun, 23 Jun 2019 17:37:56 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::4dd2:da15:6626:c3b0]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::4dd2:da15:6626:c3b0%3]) with mapi id 15.20.2008.014; Sun, 23 Jun 2019
+ 17:37:56 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Subject: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
+Thread-Topic: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
+Thread-Index: AdUp6BAI7ZILf7ZTT5ms/BIKCU7S/A==
+Date:   Sun, 23 Jun 2019 17:37:56 +0000
+Message-ID: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+Accept-Language: en-150, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70cd04bc-5ab1-433e-759b-08d6f801870e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB4241;
+x-ms-traffictypediagnostic: BN7PR08MB4241:|BN7PR08MB4241:
+x-microsoft-antispam-prvs: <BN7PR08MB4241AFC333E62658383985FADBE10@BN7PR08MB4241.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 00770C4423
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(136003)(396003)(366004)(189003)(199004)(2906002)(52536014)(110136005)(71190400001)(26005)(102836004)(6506007)(74316002)(55236004)(14444005)(186003)(256004)(476003)(4326008)(4744005)(73956011)(316002)(71200400001)(486006)(81156014)(14454004)(66066001)(66946007)(81166006)(305945005)(7736002)(66476007)(5660300002)(8676002)(66446008)(66556008)(64756008)(54906003)(9686003)(478600001)(76116006)(86362001)(6436002)(68736007)(7696005)(53936002)(55016002)(33656002)(25786009)(8936002)(3846002)(6116002)(107886003)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4241;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eoMLmnHGPnqwly1Ish1OP0Oj77JwuIKLQGn66g8Ryg04toDY1b8qppdZrZXN9TDNOxiuUT6xZ4cILh8Dim6ijofXK9wHYziF6bEQUn7VFdoSy9v9ifva8GpqytJaN3P3gbF0mMEyw2qDlnREAT70LEUKipoDQ4TjjFeLckZnmxRDsh7tJKhZ8Q/P+KRefdz4ZI/istZuZ3jlrIhpIGjcmto/FKxuBTstjL5hqytLoNF5OIWKExTT2Ef086dOcHG3y+yJM6S/NUPh1P+fYfsxeSXPSn0T6h0vWOPtizmeZwvWvQJP74knYTsEXd/gksE/9a+bZfini6nZx3jtfuNt9hnQOs6SovN+Id8AxpUEmRFTu415DCGCZQ6/+/UnJOIqFCO32JchbhP1Je0niEA3v2BGnnQImMkaH4jY5cdddAI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70cd04bc-5ab1-433e-759b-08d6f801870e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2019 17:37:56.1692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: beanhuo@micron.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.06.2019 2:09, Dmitry Osipenko пишет:
-> 04.06.2019 3:49, Chanwoo Choi пишет:
->> On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
->>> 03.05.2019 3:52, Dmitry Osipenko пишет:
->>>> 03.05.2019 3:31, Chanwoo Choi пишет:
->>>>> Hi Dmitry,
->>>>>
->>>>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
->>>>>> Changelog:
->>>>>>
->>>>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
->>>>>>
->>>>>>     - changed the driver removal order to match the probe exactly
->>>>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
->>>>>>
->>>>>>     Chanwoo, please also note that the clk patch that should fix
->>>>>>     compilation problem that was reported the kbuild-test-robot is already
->>>>>>     applied and available in the recent linux-next.
->>>>>
->>>>> I knew that Stephen picked up your path about clock.
->>>>
->>>> Hi Chanwoo,
->>>>
->>>> Okay, good. Thank you very much for reviewing this series! I assume it's
->>>> too late now for v5.2, but it should be good to go for v5.3.
->>>>
->>>
->>> Hello Chanwoo,
->>>
->>> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
->>> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
->>> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
->>> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
->>> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
->>> we'll be able to work out that with Thierry and Jon if necessary.
->>>
->>>
->>
->> Hi Dmitry,
->> I think that it is enough for applying to mainline branch.
->> The devfreq.git is maintained by Myungjoo. He will be merged or
->> reviewed if there are th remained review point.
-> 
-> Thank you very much!
-> 
->>
->> Hi Myungjoo,
->> I reviewed the Dmitry's patches from v1 to v4 patches.
->> And then I tested them on my testing branch[1] for catching
->> the build warning and error. In result, it is clean.
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
->>
->> Please review or apply these patches for v5.3.
->>
-> 
-> Hello Myungjoo,
-> 
-> I think this patchset should be completed now. Thierry has some extra
-> comments to the patches, but seems nothing critical so far and all the
-> concerns could be addressed in a follow-up series. Please let me know if
-> you're fine with this, I can re-spin v5 as well if necessary.
-> 
 
-Hello Chanwoo,
+From: Bean Huo <beanhuo@micron.com>
 
-It looks like Myungjoo is inactive at the moment. Do you know if he'll
-be back to the time of the merge window opening or you'll be curating
-the pull request for 5.3 this time?
+This series patch is to fix several typos and fix one issue of twice
+completing ufs-bsg job in case of UPIU/DME command failed.
 
-Secondly, I'll send a few more patches on top of this series, addressing
-Thierry's comments and making more improvements. Please let me know if
-this causes any problems and I should re-spin the whole series.
+Changed since v1:
+    - split v1 patch
+    - add fixes tag
+    - delete needless blank line
+
+Bean Huo (3):
+  scsi: ufs: fix typos in comment of ufshcd_uic_change_pwr_mode
+  scsi: ufs-bsg: fix typo in ufs_bsg_request
+  scsi: ufs-bsg: complete ufs-bsg job only if no error
+
+ drivers/scsi/ufs/ufs_bsg.c | 6 ++++--
+ drivers/scsi/ufs/ufshcd.c  | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+--=20
+2.7.4
