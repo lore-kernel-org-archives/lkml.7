@@ -2,144 +2,209 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94838C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E6C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD8A20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:53:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="SylbMrRu"
+	by mail.kernel.org (Postfix) with ESMTP id 262CE20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfFWKxe (ORCPT
+        id S1726516AbfFWLBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 06:53:34 -0400
-Received: from onstation.org ([52.200.56.107]:35478 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbfFWKxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 06:53:34 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id BE38C3E951;
-        Sun, 23 Jun 2019 10:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1561287212;
-        bh=QWDzJTgK2u7G6sVT2aNJPw8wBx+pnsIuHGrHBw4hX1M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SylbMrRuiOpN+Ee4P8jjYh0jWnVZKwulHNxQV4dWtYocaTVcBa+/PJSnMhp9LvI+S
-         uvG0O/rv8p5g0s2cuL4rw5aUVVcBJitbSXMwx+6oGa+Ss7yl34WPGBMQPFU5E/RPk6
-         UUEIzMp5beHwB+fPqSUYXjd8m4Y0HrSj1BLAlkmc=
-Date:   Sun, 23 Jun 2019 06:53:32 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
- tree bindings for vibrator
-Message-ID: <20190623105332.GA25506@onstation.org>
-References: <20190516085018.2207-1-masneyb@onstation.org>
- <20190520142149.D56DA214AE@mail.kernel.org>
- <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
- <20190529101231.GA14540@basecamp>
- <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+        Sun, 23 Jun 2019 07:01:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33198 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfFWLBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 07:01:37 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hezZw-0007TA-3t; Sun, 23 Jun 2019 12:18:32 +0200
+Date:   Sun, 23 Jun 2019 12:18:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jason Vas Dias <jason.vas.dias@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/vdso: Move mult and shift into struct
+ vgtod_ts
+In-Reply-To: <20190605144116.28553-2-alexander.sverdlin@nokia.com>
+Message-ID: <alpine.DEB.2.21.1906231008170.32342@nanos.tec.linutronix.de>
+References: <20190605144116.28553-1-alexander.sverdlin@nokia.com> <20190605144116.28553-2-alexander.sverdlin@nokia.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen and Thierry,
+Alexander,
 
-On Fri, May 31, 2019 at 12:51:38PM +0200, Linus Walleij wrote:
-> On Wed, May 29, 2019 at 12:12 PM Brian Masney <masneyb@onstation.org> wrote:
-> 
-> > My first revision of this vibrator driver used the Linux PWM framework
-> > due to the variable duty cycle:
-> 
-> So what I perceive if I get the thread right is that actually a lot of
-> qcom clocks (all with the M/N/D counter set-up) have variable duty
-> cycle. Very few consumers use that feature.
-> 
-> It would be a bit much to ask that they all be implemented as PWMs
-> and then cast into clocks for the 50/50 dutycycle case, I get that.
-> 
-> What about simply doing both?
-> 
-> Export the same clocks from the clk and pwm frameworks and be
-> happy. Of course with some mutex inside the driver so that it can't
-> be used from both ends at the same time.
+On Wed, 5 Jun 2019, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
 
-Do you have any feedback about this? As far as I understand, there are
-two options on the table right now:
+> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> 
+> This is a preparation for CLOCK_MONOTONIC_RAW vDSO implementation.
+> Coincidentally it had a slight performance improvement as well:
+> 
+> ---- Test code ----
+>  #include <errno.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <time.h>
+>  #include <unistd.h>
+> 
+>  #define CLOCK_TYPE CLOCK_MONOTONIC_RAW
+>  #define DURATION_SEC 10
+> 
+> int main(int argc, char **argv)
+> {
+> 	struct timespec t, end;
+> 	unsigned long long cnt = 0;
+> 
+> 	clock_gettime(CLOCK_TYPE, &end);
+> 	end.tv_sec += DURATION_SEC;
+> 
+> 	do {
+> 		clock_gettime(CLOCK_TYPE, &t);
+> 		++cnt;
+> 	} while (t.tv_sec < end.tv_sec || t.tv_nsec < end.tv_nsec);
+> 
+> 	dprintf(STDOUT_FILENO, "%llu", cnt);
+> 
+> 	return EXIT_SUCCESS;
+> }
+> -------------------
+> 
+> The results from the above test program:
+> 
+> Clock                   Before  After   Diff
+> -----                   ------  -----   ----
+> CLOCK_MONOTONIC         355.5M  359.6M  +1%
+> CLOCK_REALTIME          355.5M  359.6M  +1%
 
-1) Add support for the duty cycle to the qcom clk driver and write a
-   general purpose clk-vibra driver for the input subsystem.
+Been there done that. But the results of the micro benchmark above have to
+be taken with a grain of salt.
 
-2) Do what Linus suggests above. We can use v1 of this series from last
-   September (see below for link) that adds this to the pwm subsystem.
-   The locking would need to be added so that it won't conflict with the
-   clk subsystem. This can be tied into the input subsystem with the
-   existing pwm-vibra driver.
+Let's look at the cache side effects of this change:
 
-Either case, the msm-vibrator driver that I added to the input subsystem
-will be dropped.
+Before:
+
+struct vsyscall_gtod_data {
+	unsigned int               seq;                  /*     0     4 */
+	int                        vclock_mode;          /*     4     4 */
+	u64                        cycle_last;           /*     8     8 */
+	u64                        mask;                 /*    16     8 */
+	u32                        mult;                 /*    24     4 */
+	u32                        shift;                /*    28     4 */
+	struct vgtod_ts            basetime[12];         /*    32   192 */
+	/* --- cacheline 3 boundary (192 bytes) was 32 bytes ago --- */
+	int                        tz_minuteswest;       /*   224     4 */
+	int                        tz_dsttime;           /*   228     4 */
+
+	/* size: 232, cachelines: 4, members: 9 */
+	/* last cacheline: 40 bytes */
+};
+
+After:
+
+struct vsyscall_gtod_data {
+	unsigned int               seq;                  /*     0     4 */
+	int                        vclock_mode;          /*     4     4 */
+	u64                        cycle_last;           /*     8     8 */
+	u64                        mask;                 /*    16     8 */
+	struct vgtod_ts            basetime[12];         /*    24   288 */
+	/* --- cacheline 4 boundary (256 bytes) was 56 bytes ago --- */
+	int                        tz_minuteswest;       /*   312     4 */
+	int                        tz_dsttime;           /*   316     4 */
+
+	/* size: 320, cachelines: 5, members: 7 */
+};
+
+So the interesting change is here:
+
+	struct vgtod_ts            basetime[12];         /*    32   192 */
+
+vs.
+
+	struct vgtod_ts            basetime[12];         /*    24   288 */
+
+In the original version struct vgtod_ts occupies 16 bytes in the modified
+version it has 24 bytes. As a consequence:
+
+	CLOCK				Before		After
+	data->basetime[CLOCK_REALTIME]	32 .. 47	24 .. 47
+	data->basetime[CLOCK_MONOTONIC]	48 .. 63	48 .. 71
+
+That means that the CLOCK_MONOTONIC storage now overlaps into a second
+cache line. CLOCK_MONOTONIC is widely used.
+
+Of course on a micro benchmark this does not matter at all, but in real
+world use cases which care about cache pressure it does.
+
+Another thing is that just adding some small computation to the benchmark
+loop makes the advantage of the modified version go away and it becomes
+slightly slower.
+
+On a real world application which is a cache heavy and uses CLOCK MONOTONIC
+extensivly I can observe a significant L1 miss increase (%2) with the
+modified version.
+
+Now there is something else which is interesting:
+
+On a guest (pvclock) I can observe with your benchmark:
+
+ Before:
+
+	MONO  cnt: 576.7
+	REAL  cnt: 576.6
+
+ After: 
+
+ 	MONO  cnt: 577.1
+	REAL  cnt: 577.0
+
+But on a (different) host:
+
+ Before:
+
+       MONO   cnt: 353.9
+       REAL   cnt: 354.4
+
+ After:
+
+       MONO   cnt: 347.9
+       REAL   cnt: 347.1
+
+Yuck!
+
+So this is really sensitive and I'm inclined not to do that due to the
+cache line side effect.
+
+The alternative solution for this is what Vincenzo has in his unified VDSO
+patch series:
+
+  https://lkml.kernel.org/r/20190621095252.32307-1-vincenzo.frascino@arm.com
+
+It leaves the data struct unmodified and has a separate array for the raw
+clock. That does not have the side effects at all.
+
+I'm in the process of merging that series and I actually adapted your
+scheme to the new unified infrastructure where it has exactly the same
+effects as with your original patches against the x86 version.
 
 Thanks,
 
-Brian
-
-> 
-> Further Thierry comments
-> https://lore.kernel.org/lkml/20181012114749.GC31561@ulmo/
-> 
-> > The device itself doesn't seem to be a
-> > generic PWM in the way that the PWM framework
-> > expects it.
-> 
-> I don't see why.  I just look at this function from the original
-> patch series:
-> 
-> +static int msm_vibra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> + int duty_ns, int period_ns)
-> +{
-> + struct msm_vibra_pwm *msm_pwm = to_msm_vibra_pwm(chip);
-> + int d_reg_val;
-> +
-> + d_reg_val = 127 - (((duty_ns / 1000) * 126) / (period_ns / 1000));
-> +
-> + msm_vibra_pwm_write(msm_pwm, REG_CFG_RCGR,
-> +    (2 << 12) | /* dual edge mode */
-> +    (0 << 8) |  /* cxo */
-> +    (7 << 0));
-> + msm_vibra_pwm_write(msm_pwm, REG_M, 1);
-> + msm_vibra_pwm_write(msm_pwm, REG_N, 128);
-> + msm_vibra_pwm_write(msm_pwm, REG_D, d_reg_val);
-> + msm_vibra_pwm_write(msm_pwm, REG_CMD_RCGR, 1);
-> + msm_vibra_pwm_write(msm_pwm, REG_CBCR, 1);
-> +
-> + return 0;
-> +}
-> 
-> How is this NOT a a generic PWM in the way that the PWM
-> framework expects it? It configures the period and duty cycle on
-> a square wave, that is what a generic PWM is in my book.
-> 
-> Yours,
-> Linus Walleij
+	tglx
