@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36746C43613
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52871C48BE8
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1387B208CA
+	by mail.kernel.org (Postfix) with ESMTP id 35799216C8
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfFWN1n (ORCPT
+        id S1726748AbfFWN1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 09:27:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33411 "EHLO
+        Sun, 23 Jun 2019 09:27:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33444 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfFWN1k (ORCPT
+        with ESMTP id S1726681AbfFWN1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 09:27:40 -0400
+        Sun, 23 Jun 2019 09:27:44 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hf2Ww-0001jC-Nh; Sun, 23 Jun 2019 15:27:38 +0200
-Message-Id: <20190623132434.447880978@linutronix.de>
+        id 1hf2Wz-0001k1-Rg; Sun, 23 Jun 2019 15:27:41 +0200
+Message-Id: <20190623132434.951733064@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 23 Jun 2019 15:23:45 +0200
+Date:   Sun, 23 Jun 2019 15:23:50 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -36,7 +36,7 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
         Stephane Eranian <eranian@google.com>,
         Ravi Shankar <ravi.v.shankar@intel.com>
-Subject: [patch 05/29] x86/hpet: Remove unused parameter from hpet_next_event()
+Subject: [patch 10/29] x86/hpet: Shuffle code around for readability sake
 References: <20190623132340.463097504@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,56 +45,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clockevent device pointer is not used in this function.
+It doesn't make sense to have init functions in the middle of other
+code. Aside of that, further changes in that area create horrible diffs if
+the code stays where it is.
 
-While at it, rename the misnamed 'timer' parameter to 'channel', which makes it
-clear what this parameter means.
-
-No functional change.
+No functional change
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/hpet.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kernel/hpet.c |   81 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -347,15 +347,14 @@ static int hpet_resume(struct clock_even
- 	return 0;
+@@ -559,6 +559,47 @@ static void init_one_hpet_msi_clockevent
+ 					0x7FFFFFFF);
  }
  
--static int hpet_next_event(unsigned long delta,
--			   struct clock_event_device *evt, int timer)
-+static int hpet_next_event(unsigned long delta, int channel)
- {
- 	u32 cnt;
- 	s32 res;
- 
- 	cnt = hpet_readl(HPET_COUNTER);
- 	cnt += (u32) delta;
--	hpet_writel(cnt, HPET_Tn_CMP(timer));
-+	hpet_writel(cnt, HPET_Tn_CMP(channel));
- 
- 	/*
- 	 * HPETs are a complete disaster. The compare register is
-@@ -407,7 +406,7 @@ static int hpet_legacy_resume(struct clo
- static int hpet_legacy_next_event(unsigned long delta,
- 			struct clock_event_device *evt)
- {
--	return hpet_next_event(delta, evt, 0);
-+	return hpet_next_event(delta, 0);
- }
- 
- /*
-@@ -508,7 +507,8 @@ static int hpet_msi_next_event(unsigned
- 				struct clock_event_device *evt)
- {
- 	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
--	return hpet_next_event(delta, evt, hdev->num);
++static struct hpet_dev *hpet_get_unused_timer(void)
++{
++	int i;
 +
-+	return hpet_next_event(delta, hdev->num);
++	if (!hpet_devs)
++		return NULL;
++
++	for (i = 0; i < hpet_num_timers; i++) {
++		struct hpet_dev *hdev = &hpet_devs[i];
++
++		if (!(hdev->flags & HPET_DEV_VALID))
++			continue;
++		if (test_and_set_bit(HPET_DEV_USED_BIT,
++			(unsigned long *)&hdev->flags))
++			continue;
++		return hdev;
++	}
++	return NULL;
++}
++
++static int hpet_cpuhp_online(unsigned int cpu)
++{
++	struct hpet_dev *hdev = hpet_get_unused_timer();
++
++	if (hdev)
++		init_one_hpet_msi_clockevent(hdev, cpu);
++	return 0;
++}
++
++static int hpet_cpuhp_dead(unsigned int cpu)
++{
++	struct hpet_dev *hdev = per_cpu(cpu_hpet_dev, cpu);
++
++	if (!hdev)
++		return 0;
++	free_irq(hdev->irq, hdev);
++	hdev->flags &= ~HPET_DEV_USED;
++	per_cpu(cpu_hpet_dev, cpu) = NULL;
++	return 0;
++}
++
+ #ifdef CONFIG_HPET
+ /* Reserve at least one timer for userspace (/dev/hpet) */
+ #define RESERVE_TIMERS 1
+@@ -644,46 +685,6 @@ static void __init hpet_reserve_msi_time
  }
+ #endif
  
- static irqreturn_t hpet_interrupt_handler(int irq, void *data)
+-static struct hpet_dev *hpet_get_unused_timer(void)
+-{
+-	int i;
+-
+-	if (!hpet_devs)
+-		return NULL;
+-
+-	for (i = 0; i < hpet_num_timers; i++) {
+-		struct hpet_dev *hdev = &hpet_devs[i];
+-
+-		if (!(hdev->flags & HPET_DEV_VALID))
+-			continue;
+-		if (test_and_set_bit(HPET_DEV_USED_BIT,
+-			(unsigned long *)&hdev->flags))
+-			continue;
+-		return hdev;
+-	}
+-	return NULL;
+-}
+-
+-static int hpet_cpuhp_online(unsigned int cpu)
+-{
+-	struct hpet_dev *hdev = hpet_get_unused_timer();
+-
+-	if (hdev)
+-		init_one_hpet_msi_clockevent(hdev, cpu);
+-	return 0;
+-}
+-
+-static int hpet_cpuhp_dead(unsigned int cpu)
+-{
+-	struct hpet_dev *hdev = per_cpu(cpu_hpet_dev, cpu);
+-
+-	if (!hdev)
+-		return 0;
+-	free_irq(hdev->irq, hdev);
+-	hdev->flags &= ~HPET_DEV_USED;
+-	per_cpu(cpu_hpet_dev, cpu) = NULL;
+-	return 0;
+-}
+ #else
+ 
+ static inline void hpet_msi_capability_lookup(unsigned int start_timer) { }
 
 
