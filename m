@@ -2,50 +2,76 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0004C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A563AC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A963720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D903208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tsoy.me header.i=@tsoy.me header.b="DlU/4SIS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLKEEFV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfFXDIf (ORCPT
+        id S1727394AbfFXDJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:08:35 -0400
-Received: from puleglot.ru ([195.201.32.202]:57094 "EHLO puleglot.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbfFXDIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:08:34 -0400
-X-Greylist: delayed 4500 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 23:08:33 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tsoy.me;
-        s=mymail; h=Sender:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-        Subject:Cc:To:From:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=7gzZRVZMPxrYEi8p0WnYNZ3kUBTmNCNosDX5es9YDxw=; b=DlU/4SISOPzAAz1iUF9i0lhtfR
-        23IYUA5n6xmWF8nUlXgDm7QrC55EbppjloG7jdzu9qPFpG6Wdh+eBGkDAqszt+lTv8GKb1+ML8RPw
-        gmt1kON+kZ0vqoYxgdRRTXesPxFBgLq27Xv3CkDXcLhJmrYlKZYDuvT1Fm7EYoKOVtq8=;
-Received: from [2a00:1370:8125:470f:6c77:37a5:dd3b:d396] (helo=home.puleglot.ru)
-        by puleglot.ru with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <puleglot@puleglot.ru>)
-        id 1hfCAN-0002YE-RM; Mon, 24 Jun 2019 02:44:59 +0300
-From:   Alexander Tsoy <alexander@tsoy.me>
-To:     linux-input@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sun, 23 Jun 2019 23:09:44 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33550 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfFXDJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:09:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h10so11079593ljg.0;
+        Sun, 23 Jun 2019 20:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y381zs7JqUeO4ZbV4kzg6cbvTaILm3gppCIZ9QaFOsw=;
+        b=KLKEEFV7vyQEtxZ0uYEFUUY5ay9LG072nBkWBGisDQoh237JAJ6TnNhz4qsxgAGK22
+         YNFSxBL5c+kfsqSm+FEwy4tdVxBIPEC5Dz/4fbi4gx0NTUoGuGOnHdKG6AvZ8gAuLLBT
+         FthFg8LiYixseIyfokMbAhKy0/fG2R5y40iC7A9pvKuE2dCAzxOGEoADpz1/gnKHdmgA
+         Mlexq03Pe5YwnT9xH0yosgCWaP2TDN3CAM1SCK9kHzDCYkBmtiKgYbUgjyurURDmPqDe
+         To/wh7jkGuUiJIIAU3QuGjUiiyRenvhT9dc+Jh0yg89XDyTXt3HIsMBxhcneBn3SzVk6
+         dBww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y381zs7JqUeO4ZbV4kzg6cbvTaILm3gppCIZ9QaFOsw=;
+        b=llfoXSjqqAZsiV5PQLMguB7WTLH4i1UbRg+pH3Iasghf9h0JHGIHoXtb9OjzUGpBIW
+         AU5tp5W7/xe0y6Dk+WH2fLntCaKksry2ehN+jhdnKaI9M9hA/BvUjvl7uwWciLFY0f+o
+         G92Eg1kHWdhrkvTPreHDKxFdMTt4K0GcPk951mBPqV0VCHL/XEsQGm5hTdIZLJVKwBfP
+         0UVrhjqXtPh0Foc9RjwrGD22dUHvhX087pqvl7UT9rplOpA60+nrS91p6ahrcBQC75zU
+         IORlUHJgP6d46cmyxoXelohEYuMpjnJ+dyk4RrUb2hucT+4yFS0UFgC/HHxdiTUlFrpf
+         qn2w==
+X-Gm-Message-State: APjAAAWvf2V95Z44T0VZCrVa0BILC3HZDDKd3lU22gz1PF+VQwI0cvoC
+        TUSQkphZ6bhdyxYY/djZ3GL21IwX
+X-Google-Smtp-Source: APXvYqwMtcEyUBqTG0OrMlZmNbYr3qFE2ieb5bqL32t92m479TGx4QU6qZIPGEn0PHf+rKxTEBwdpA==
+X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr14060925lja.228.1561326523122;
+        Sun, 23 Jun 2019 14:48:43 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 14:48:42 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: joydev - extend absolute mouse detection
-Date:   Mon, 24 Jun 2019 02:44:56 +0300
-Message-Id: <20190623234456.4074-1-alexander@tsoy.me>
-X-Mailer: git-send-email 2.21.0
+Subject: [PATCH v1 08/11] PM / devfreq: tegra30: Stop de-boosting once it's finished
+Date:   Mon, 24 Jun 2019 00:46:55 +0300
+Message-Id: <20190623214658.11680-9-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
+References: <20190623214658.11680-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,65 +79,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend event signature matching to catch more input devices emulated by
-BMC firmwares, QEMU and VMware.
+Once boosting value is 0, then further consecutive-down events won't do
+anything useful since the only purpose of those consecutive events to
+boost the freq and de-boosting is over in the case of 0. Note that upper
+watermark is infinitely high in a case of frequency max out and thus the
+upper events are stopping by themselves. In a result of this change all
+parasite interrupts are fixed now and interrupts activity is nearly
+non-existent now!
 
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/input/joydev.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/input/joydev.c b/drivers/input/joydev.c
-index ac21c050fdb0..a2b5fbba2d3b 100644
---- a/drivers/input/joydev.c
-+++ b/drivers/input/joydev.c
-@@ -808,6 +808,7 @@ static bool joydev_dev_is_blacklisted(struct input_dev *dev)
- static bool joydev_dev_is_absolute_mouse(struct input_dev *dev)
- {
- 	DECLARE_BITMAP(jd_scratch, KEY_CNT);
-+	bool ev_match = false;
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 6fb3ca125438..81449cc1392b 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -424,6 +424,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 					     dev->config->boost_up_coeff);
+ 		dev->boost_freq += ACTMON_BOOST_FREQ_STEP;
  
- 	BUILD_BUG_ON(ABS_CNT > KEY_CNT || EV_CNT > KEY_CNT);
- 
-@@ -826,17 +827,36 @@ static bool joydev_dev_is_absolute_mouse(struct input_dev *dev)
- 	 * considered to be an absolute mouse if the following is
- 	 * true:
- 	 *
--	 * 1) Event types are exactly EV_ABS, EV_KEY and EV_SYN.
-+	 * 1) Event types are exactly
-+	 *      EV_ABS, EV_KEY and EV_SYN
-+	 *    or
-+	 *      EV_ABS, EV_KEY, EV_SYN and EV_MSC
-+	 *    or
-+	 *      EV_ABS, EV_KEY, EV_SYN, EV_MSC and EV_REL.
- 	 * 2) Absolute events are exactly ABS_X and ABS_Y.
- 	 * 3) Keys are exactly BTN_LEFT, BTN_RIGHT and BTN_MIDDLE.
- 	 * 4) Device is not on "Amiga" bus.
- 	 */
- 
- 	bitmap_zero(jd_scratch, EV_CNT);
-+	/* VMware VMMouse, HP ILO2 */
- 	__set_bit(EV_ABS, jd_scratch);
- 	__set_bit(EV_KEY, jd_scratch);
- 	__set_bit(EV_SYN, jd_scratch);
--	if (!bitmap_equal(jd_scratch, dev->evbit, EV_CNT))
-+	if (bitmap_equal(jd_scratch, dev->evbit, EV_CNT))
-+		ev_match = true;
++		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
 +
-+	/* HP ILO2, AMI BMC firmware */
-+	__set_bit(EV_MSC, jd_scratch);
-+	if (bitmap_equal(jd_scratch, dev->evbit, EV_CNT))
-+		ev_match = true;
-+
-+	/* VMware Virtual USB Mouse, QEMU USB Tablet, ATEN BMC firmware */
-+	__set_bit(EV_REL, jd_scratch);
-+	if (bitmap_equal(jd_scratch, dev->evbit, EV_CNT))
-+		ev_match = true;
-+
-+	if (!ev_match)
- 		return false;
+ 		if (dev->boost_freq >= tegra->max_freq && !low_activity)
+ 			dev->boost_freq = tegra->max_freq;
  
- 	bitmap_zero(jd_scratch, ABS_CNT);
+@@ -442,6 +444,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 		tegra_devfreq_update_wmark(tegra, dev);
+ 	}
+ 
++	/* no boosting => no need for consecutive-down interrupt */
++	if (dev->boost_freq == 0)
++		dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
++
+ 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
+ 
+ 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
 -- 
-2.21.0
+2.22.0
 
