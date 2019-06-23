@@ -2,141 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06550C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601CBC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D6C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38825208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADKaGoys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfFXDQu (ORCPT
+        id S1727447AbfFXDRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:16:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19062 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbfFXDQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:16:50 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9FB2A91CF8408B57CC70;
-        Mon, 24 Jun 2019 11:16:47 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
- 11:16:45 +0800
-Subject: Re: [PATCH -next v2] drm/amdgpu: return 'ret' in amdgpu_pmu_init
-To:     Julia Lawall <julia.lawall@lip6.fr>
-References: <20190622104318.GT28859@kadam>
- <20190622130527.182022-1-maowenan@huawei.com>
- <alpine.DEB.2.21.1906221504110.3253@hadrien>
- <063c9726-8f16-f9b7-2d16-bc87a99085bb@huawei.com>
- <alpine.DEB.2.21.1906221559060.3253@hadrien>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <dan.carpenter@oracle.com>, <kernel-janitors@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <fced7783-1216-ff3f-039f-d7c3a70b4916@huawei.com>
-Date:   Mon, 24 Jun 2019 11:16:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sun, 23 Jun 2019 23:17:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45665 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfFXDRE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:17:04 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m23so11009176lje.12;
+        Sun, 23 Jun 2019 20:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KuK/HJBB+sabov/uStjAYnZLIz/87lFFGThs8FI3mQo=;
+        b=ADKaGoys8uZe39G6vzOfMQxp52ANy6A8hq08yILdHzRwsJVTh+iQef/bZ0c7nOSR2g
+         AGya6G9fkSdH5RxY+V2hNNkAWm6Wz7mQSGtpYlh6K6DcKTipdnO24viU0h37W5p/GZoo
+         G+Xa3l7M30vhz8jLJBsgDfLfXZ1Vd74dhbSODGuaEYXX/XYe0ZyQ8fe96Mj8XozKbzL9
+         brIlGizU9frPWEfQ6XONvPJ5UFx8t0dOJ9sp/QktoVRpc9M1P5gghU45p1kAplBoUxng
+         48iancZgoiCC2wH8EBvGh5ln1UnY1Ld4ynmRtCFmmF4bpddAsss6Pn8dZ5VeakjnnKXY
+         aFeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KuK/HJBB+sabov/uStjAYnZLIz/87lFFGThs8FI3mQo=;
+        b=QX/X5Y6hAf4mNd+OAT9F5NFxcQH1bdwgEr35Rwnqcmx+dKbE6SapsPvyFXiLzR/6IP
+         RSZDvKUncIRK3MQKqoc7ABeX4vleUtW9vgDh3kMe9oE9Oci66gCIm5T460gX3dquVEUC
+         pNxFOXOp0dIGo9beU2qJnkq29YamrEBWuTwazT8pCP7EGwj19BCdrHkZYMkjYWff5rlw
+         l9gxawyBfXz/buInfe8sF35xcCuww4KwQvYPJcfjD1vu+Won/yip09AdKVnWCzkLseNn
+         V7p5RvM8UdcOr5P2N+Q8SpTyQUNjTRYm0OBAU95DVHc8SsDs2J8RYmrAYuV7leW6HQoU
+         v+zg==
+X-Gm-Message-State: APjAAAUUqmXpIl0s4JDyN7AkVCjLgvezuRZwY530mIsWcN/8Ot1GNRfY
+        FwQ8TP6VUwpwKGgn39gahw/tyXBa
+X-Google-Smtp-Source: APXvYqy5wejoCrg2EumLvR8/AjNLGElfUZlXldTgYEiYg4AcGai9CAXpJIsQcoAxhNsF+F1yekcT7w==
+X-Received: by 2002:a2e:959a:: with SMTP id w26mr33411080ljh.150.1561326522191;
+        Sun, 23 Jun 2019 14:48:42 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 14:48:41 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 07/11] PM / devfreq: tegra30: Reset boosting if clock rate changed
+Date:   Mon, 24 Jun 2019 00:46:54 +0300
+Message-Id: <20190623214658.11680-8-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
+References: <20190623214658.11680-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906221559060.3253@hadrien>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is a situation when memory activity is going up, hence boosting up
+starts to happen, and then governor ramps memory clock rate up. In this
+case consecutive events may be stopped if new "COUNT" is within watermarks
+range, meanwhile old boosting value remains, which is plainly wrong and
+results in unneeded "go down" events after ramping up. In a result of this
+change unnecessary interrupts activity goes even lower.
 
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra30-devfreq.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-On 2019/6/22 22:00, Julia Lawall wrote:
-> 
-> 
-> On Sat, 22 Jun 2019, maowenan wrote:
-> 
->>
->>
->> On 2019/6/22 21:06, Julia Lawall wrote:
->>>
->>>
->>> On Sat, 22 Jun 2019, Mao Wenan wrote:
->>>
->>>> There is one warning:
->>>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
->>>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->>>>   int ret = 0;
->>>>       ^
->>>> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
->>>> which will use the return value. So it returns 'ret' for caller.
->>>> amdgpu_device_init()
->>>> 	r = amdgpu_pmu_init(adev);
->>>>
->>>> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
->>>>
->>>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->>>> ---
->>>>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
->>>>  amdgpu_pmu_init().
->>>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 6 +++---
->>>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->>>> index 0e6dba9..145e720 100644
->>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->>>> @@ -252,8 +252,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
->>>>  	case CHIP_VEGA20:
->>>>  		/* init df */
->>>>  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
->>>> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
->>>> -				       DF_V3_6_MAX_COUNTERS);
->>>> +							   "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
->>>> +							   DF_V3_6_MAX_COUNTERS);
->>>>
->>>>  		/* other pmu types go here*/
->>>
->>> I don't know what is the impact of the other pmu types that are planned
->>> for the future.  Perhaps it would be better to abort the function
->>> immediately in the case of a failure.
->>
-
-OK, v3 will be sent.
-
->> I guess it would be better to use new function or new switch case clause to process different PMU types
->> in future.
-> 
-> I don't know.  But normally when an error may occur it is checked for
-> immediately, rather than just letting it go until the end of the function.
-> But maybe the developer know what is planned for the future for this
-> function.
-> 
-> julia
-> 
->>
->>>
->>> julia
->>>
->>>>  		break;
->>>> @@ -261,7 +261,7 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
->>>>  		return 0;
->>>>  	}
->>>>
->>>> -	return 0;
->>>> +	return ret;
->>>>  }
->>>>
->>>>
->>>> --
->>>> 2.7.4
->>>>
->>>>
->>>
->>
->>
-> 
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index fc278f2f1b62..6fb3ca125438 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -631,6 +631,24 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+ 		tegra_actmon_stop_device(&tegra->devices[i]);
+ }
+ 
++static void tegra_actmon_stop_boosting(struct tegra_devfreq *tegra)
++{
++	struct tegra_devfreq_device *dev = tegra->devices;
++	unsigned int i;
++	u32 dev_ctrl;
++
++	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++, dev++) {
++		if (!dev->boost_freq)
++			continue;
++
++		dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
++		dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
++		device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
++
++		dev->boost_freq = 0;
++	}
++}
++
+ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+ 				u32 flags)
+ {
+@@ -656,6 +674,16 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+ 	if (err)
+ 		goto restore_min_rate;
+ 
++	/*
++	 * Hence boosting-up could be active at the moment of the rate-change
++	 * and in this case boosting should be reset because it doesn't relate
++	 * to the new state. If average won't follow shortly in a case of going
++	 * UP, then clock rate will drop back on next update due to the missed
++	 * boosting.
++	 */
++	if (rate != devfreq->previous_freq)
++		tegra_actmon_stop_boosting(tegra);
++
+ 	return 0;
+ 
+ restore_min_rate:
+-- 
+2.22.0
 
