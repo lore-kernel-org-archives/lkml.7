@@ -2,82 +2,173 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B88C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B96CC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA252073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561275386;
-	bh=GoqMkEGAkw9RsRi9oynfQuaA0MqWs5oMzUhbx6/BIjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aGnlgp2qRFFzhqZczsTiy+xXKbAVjTsSx/k8uCeCXdY+K7L5FPcGxZ2c2CbJLZvoZ
-	 mP+7T1rc/y+Dam7KYNkJdySXPqbX7eB3hQyceq4+iR2shhuSIt9Jy6EEW0KJgBR1gr
-	 yPL5Cley7FlPZqzsZdqgcwcbSZCbE9YYLJNKM3Po=
+	by mail.kernel.org (Postfix) with ESMTP id 453B520840
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="qdl30SBW";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="NAKfNnZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFWHgS (ORCPT
+        id S1726422AbfFWHlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 03:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfFWHgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 03:36:18 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7E92073F;
-        Sun, 23 Jun 2019 07:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561275377;
-        bh=GoqMkEGAkw9RsRi9oynfQuaA0MqWs5oMzUhbx6/BIjk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h5cwObSJLtfGBmPwzlpJCw9ntlEZ/Hv7gCDQ5Zjnf8e0FlS3aGFVVwL1lY0V5NFVK
-         69x89nQrjd3MQ4CM3CrnMxSmU6LJSyuooXR0Np6mZhoPpahmsX4TO4pRx2XDckXB9A
-         NCM4R0rgY0oNLtu2yDTrgSg3PL3TNKjBwmKCwXM8=
-Date:   Sun, 23 Jun 2019 15:36:06 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     daniel.baluta@nxp.com
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        shengjiu.wang@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.felsch@pengutronix.de
-Subject: Re: [PATCH v4 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Message-ID: <20190623073605.GA3800@dragon>
-References: <20190604123257.2920-1-daniel.baluta@nxp.com>
- <20190604123257.2920-3-daniel.baluta@nxp.com>
+        Sun, 23 Jun 2019 03:41:42 -0400
+Received: from mail10.wdc04.mandrillapp.com ([205.201.139.10]:1361 "EHLO
+        mail10.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726056AbfFWHlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 03:41:42 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 03:41:40 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=dSY8NMzAi0uW7gbo3MkKCEB6rvCWIFKhM/6k9k6ce5E=;
+ b=qdl30SBWmhx9DIxJm4gPr9bhAmF1Fj9mBA+xccPr0GTjFyRGf6e8Vvv6btalLaeLv2xYAlECzakQ
+   TBBHPj86GaTL/HePtxMB9EbFDsLD6l998s7hbsA4E0kjNnIExsGXLmeSLSOeZi78WkdKQrgsVXVF
+   YhOX5xUAxy/5/uiI7kM=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail10.wdc04.mandrillapp.com id h1smj81jvmga for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:26:38 +0000 (envelope-from <bounce-md_31050260.5d0f29ae.v1-35928b741ae6496da30a567c5491a435@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1561274798; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=dSY8NMzAi0uW7gbo3MkKCEB6rvCWIFKhM/6k9k6ce5E=; 
+ b=NAKfNnZiQPSwteksG3ggLqasc3SZ2dfa8MEBGjnA1SKN4GrsysJ4fGLT1l57yY9FJKTk74
+ qgU1cbraenhPCzJ7jK0u+5jCkAs7jcU0K6vXWYhVD/lhfUZ3WL22kdmVov02zlTG+eFY2Rrm
+ ijFaR6bh4WYlNbC76JrHjQN5s0bs8=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH, RESEND] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
+Received: from [87.98.221.171] by mandrillapp.com id 35928b741ae6496da30a567c5491a435; Sun, 23 Jun 2019 07:26:38 +0000
+X-Mailer: git-send-email 2.20.1
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        <gluster-devel@gluster.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sander Eikelenboom <linux@eikelenboom.it>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>
+Message-Id: <20190623072619.31037-1-kirr@nexedi.com>
+In-Reply-To: <f79ff13f-701b-89d8-149c-e53bb880bb77@eikelenboom.it>
+References: 
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.35928b741ae6496da30a567c5491a435
+X-Mandrill-User: md_31050260
+Date:   Sun, 23 Jun 2019 07:26:38 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604123257.2920-3-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 08:32:57PM +0800, daniel.baluta@nxp.com wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
-> 
-> i.MX8MM has one wm8524 audio codec connected with
-> SAI3 digital audio interface.
-> 
-> This patch uses simple-card machine driver in order
-> to enable wm8524 codec.
-> 
-> We need to set:
-> 	* SAI3 pinctrl configuration
-> 	* codec reset gpio pinctrl configuration
-> 	* clock hierarchy
-> 	* codec node
-> 	* simple-card configuration
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+[ This retries commit d4b13963f217 which was reverted in 766741fcaa1f.
 
-Applied, thanks.
+  In this version we require only `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
+  instead of 4K for FUSE request header room, because, contrary to
+  libfuse and kernel client behaviour, GlusterFS actually provides only
+  so much room for request header. ]
+
+A FUSE filesystem server queues /dev/fuse sys_read calls to get
+filesystem requests to handle. It does not know in advance what would be
+that request as it can be anything that client issues - LOOKUP, READ,
+WRITE, ... Many requests are short and retrieve data from the
+filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
+
+Before getting into operation phase, FUSE filesystem server and kernel
+client negotiate what should be the maximum write size the client will
+ever issue. After negotiation the contract in between server/client is
+that the filesystem server then should queue /dev/fuse sys_read calls with
+enough buffer capacity to receive any client request - WRITE in
+particular, while FUSE client should not, in particular, send WRITE
+requests with > negotiated max_write payload. FUSE client in kernel and
+libfuse historically reserve 4K for request header. However an existing
+filesystem server - GlusterFS - was found which reserves only 80 bytes
+for header room (= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`).
+
+https://lore.kernel.org/linux-fsdevel/20190611202738.GA22556@deco.navytux.spb.ru/
+https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/mount/fuse/src/fuse-bridge.c#L4894
+
+Since
+
+	`sizeof(fuse_in_header) + sizeof(fuse_write_in)` ==
+	`sizeof(fuse_in_header) + sizeof(fuse_read_in)`  ==
+	`sizeof(fuse_in_header) + sizeof(fuse_notify_retrieve_in)`
+
+is the absolute minimum any sane filesystem should be using for header
+room, the contract is that filesystem server should queue sys_reads with
+`sizeof(fuse_in_header) + sizeof(fuse_write_in)` + max_write buffer.
+
+If the filesystem server does not follow this contract, what can happen
+is that fuse_dev_do_read will see that request size is > buffer size,
+and then it will return EIO to client who issued the request but won't
+indicate in any way that there is a problem to filesystem server.
+This can be hard to diagnose because for some requests, e.g. for
+NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+waiting for request completion and that EIO goes nowhere, while on
+filesystem server side things look like the kernel is not replying back
+after successful NOTIFY_RETRIEVE request made by the server.
+
+We can make the problem easy to diagnose if we indicate via error return to
+filesystem server when it is violating the contract.  This should not
+practically cause problems because if a filesystem server is using shorter
+buffer, writes to it were already very likely to cause EIO, and if the
+filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
+minimum buffer size.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real (because kernel client was incorrectly sending more than
+max_write data with NOTIFY_REPLY; see also previous patch), how the
+situation was traced and for more involving patch that did not make it
+into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Tested-by: Sander Eikelenboom <linux@eikelenboom.it>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+---
+ fs/fuse/dev.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index ea8237513dfa..b2b2344eadcf 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1317,6 +1317,26 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
+ 	unsigned reqsize;
+ 	unsigned int hash;
+ 
++	/*
++	 * Require sane minimum read buffer - that has capacity for fixed part
++	 * of any request header + negotiated max_write room for data. If the
++	 * requirement is not satisfied return EINVAL to the filesystem server
++	 * to indicate that it is not following FUSE server/client contract.
++	 * Don't dequeue / abort any request.
++	 *
++	 * Historically libfuse reserves 4K for fixed header room, but e.g.
++	 * GlusterFS reserves only 80 bytes
++	 *
++	 *	= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
++	 *
++	 * which is the absolute minimum any sane filesystem should be using
++	 * for header room.
++	 */
++	if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER,
++			   sizeof(struct fuse_in_header) + sizeof(struct fuse_write_in) +
++				fc->max_write))
++		return -EINVAL;
++
+  restart:
+ 	spin_lock(&fiq->waitq.lock);
+ 	err = -EAGAIN;
+-- 
+2.20.1
