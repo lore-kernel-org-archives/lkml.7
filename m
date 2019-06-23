@@ -2,230 +2,147 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0048C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0854DC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4281205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC1820663
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QE8WrCXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFWMLK (ORCPT
+        id S1726538AbfFWMQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 08:11:10 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40167 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfFWMLK (ORCPT
+        Sun, 23 Jun 2019 08:16:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37867 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfFWMQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 08:11:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so17107841eds.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 05:11:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nakBwI4sZGx37gf/nqQhnhkTTc4nH7gPn8eeyN2vS8M=;
-        b=jGJKD4H9hav46bGdbMRlwdFbQNtIosjeL9nmtg4PQxbF4b2vnJgf/GBWTMv4mvksoE
-         jU8CUz2lkZC7lPHez6AYfVRv/kNb4TkRSDBl2m/bfZKaHwJpPlssrF9y+8uB+AbeoU6U
-         6bL7uGnkisooGmPjyOTSwiHLAHGjVNQ5rIRl5ySz1zX/0DApJxSkywqXALXaSFA672Pq
-         w7TbPLPsCjDrfqfHtfWJozy7vqbF1tZvNZOLKCY/2V0aR0U+tFmG52brJdSnfJlYitjS
-         H21m/ZyMvBRPYvLvJP2gt/tMi00PB5qpw7AE1ljjgtmuNzRXLP3oUCC6VXF3gCbpy6Dv
-         jrxA==
-X-Gm-Message-State: APjAAAWOOIGywyZEQB67suJ+qxNwGmi75OGlcliXyAIbGWlomW1w1Hiu
-        MLYcFlzPj5b4xCh4M0qYfnV+8Q==
-X-Google-Smtp-Source: APXvYqyZ6F4Gqyf1cneAQ+IhpWxmyuyOUQ4oEoz0is6nrggMhomfTzXpIIkJ0JA2pB63Ppiz79GlZw==
-X-Received: by 2002:a50:f781:: with SMTP id h1mr90781547edn.240.1561291868076;
-        Sun, 23 Jun 2019 05:11:08 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id y3sm2661992edr.27.2019.06.23.05.11.07
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 05:11:07 -0700 (PDT)
-Subject: Re: [Intel-gfx] [PATCH v3 3/4] drm/connector: Split out orientation
- quirk detection
-To:     Derek Basehore <dbasehore@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        intel-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, CK Hu <ck.hu@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190622034105.188454-1-dbasehore@chromium.org>
- <20190622034105.188454-4-dbasehore@chromium.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ff551bd8-ab2b-a89f-281b-5b3d3c285efc@redhat.com>
-Date:   Sun, 23 Jun 2019 14:11:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 23 Jun 2019 08:16:56 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NCGFds2628585
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 23 Jun 2019 05:16:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NCGFds2628585
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561292176;
+        bh=W2/TO928gvP0dcSWSbNsBo/E6mSsInsl5Qy9X27bdL4=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=QE8WrCXTGQYhZMSlpOYvRYd02e//LcbvHYplTgFrTHtHZCTRvkhzE+lu1qpYv4+Bn
+         LBWvhA6sQppoT/D3WXcXvc0I0jnmrqL5B2uhnbnMqD7ICh6IsKtMGSZGcV1MCNq4DH
+         zm1/Wln7BvgcEJAjIkvNDmlk7c+H1BvXVatJqeKrrG5liEJY8pOX8TJ43OvInzDk/7
+         P3aUy6mBAc+t2xLKbtwDFc9U4ttDNe7BbKxqklu4mzIHG8c9NakuZYMlTXc5Zjo6Rv
+         m/evqZJwVIQfiEowZ1qMJukwsqcA9jpJ+PauVA0JR1TqGqHnff6i8/t1UmLATgG2QE
+         bZN8qIw/Z686w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NCGEQD2628582;
+        Sun, 23 Jun 2019 05:16:14 -0700
+Date:   Sun, 23 Jun 2019 05:16:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nadav Amit <tipbot@zytor.com>
+Message-ID: <tip-dde3626f815e38bbf96fddd5185038c4b4d395a8@git.kernel.org>
+Cc:     peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com,
+        bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, namit@vmware.com, tglx@linutronix.de
+Reply-To: hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, namit@vmware.com, peterz@infradead.org,
+          luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de
+In-Reply-To: <20190613064813.8102-10-namit@vmware.com>
+References: <20190613064813.8102-10-namit@vmware.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic: Use non-atomic operations when possible
+Git-Commit-ID: dde3626f815e38bbf96fddd5185038c4b4d395a8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190622034105.188454-4-dbasehore@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit-ID:  dde3626f815e38bbf96fddd5185038c4b4d395a8
+Gitweb:     https://git.kernel.org/tip/dde3626f815e38bbf96fddd5185038c4b4d395a8
+Author:     Nadav Amit <namit@vmware.com>
+AuthorDate: Wed, 12 Jun 2019 23:48:13 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Sun, 23 Jun 2019 14:07:23 +0200
 
-On 22-06-19 05:41, Derek Basehore wrote:
-> Not every platform needs quirk detection for panel orientation, so
-> split the drm_connector_init_panel_orientation_property into two
-> functions. One for platforms without the need for quirks, and the
-> other for platforms that need quirks.
-> 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->   drivers/gpu/drm/drm_connector.c | 45 ++++++++++++++++++++++++---------
->   drivers/gpu/drm/i915/intel_dp.c |  4 +--
->   drivers/gpu/drm/i915/vlv_dsi.c  |  5 ++--
->   include/drm/drm_connector.h     |  2 ++
->   4 files changed, 39 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-> index e17586aaa80f..c4b01adf927a 100644
-> --- a/drivers/gpu/drm/drm_connector.c
-> +++ b/drivers/gpu/drm/drm_connector.c
-> @@ -1894,31 +1894,23 @@ EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
->    * drm_connector_init_panel_orientation_property -
->    *	initialize the connecters panel_orientation property
->    * @connector: connector for which to init the panel-orientation property.
-> - * @width: width in pixels of the panel, used for panel quirk detection
-> - * @height: height in pixels of the panel, used for panel quirk detection
->    *
->    * This function should only be called for built-in panels, after setting
->    * connector->display_info.panel_orientation first (if known).
->    *
-> - * This function will check for platform specific (e.g. DMI based) quirks
-> - * overriding display_info.panel_orientation first, then if panel_orientation
-> - * is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
-> - * "panel orientation" property to the connector.
-> + * This function will check if the panel_orientation is not
-> + * DRM_MODE_PANEL_ORIENTATION_UNKNOWN. If not, it will attach the "panel
-> + * orientation" property to the connector.
->    *
->    * Returns:
->    * Zero on success, negative errno on failure.
->    */
->   int drm_connector_init_panel_orientation_property(
-> -	struct drm_connector *connector, int width, int height)
-> +	struct drm_connector *connector)
->   {
->   	struct drm_device *dev = connector->dev;
->   	struct drm_display_info *info = &connector->display_info;
->   	struct drm_property *prop;
-> -	int orientation_quirk;
-> -
-> -	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
-> -	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-> -		info->panel_orientation = orientation_quirk;
->   
->   	if (info->panel_orientation == DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
->   		return 0;
-> @@ -1941,6 +1933,35 @@ int drm_connector_init_panel_orientation_property(
->   }
->   EXPORT_SYMBOL(drm_connector_init_panel_orientation_property);
->   
-> +/**
-> + * drm_connector_init_panel_orientation_property_quirk -
-> + *	initialize the connecters panel_orientation property with a quirk
-> + *	override
-> + * @connector: connector for which to init the panel-orientation property.
-> + * @width: width in pixels of the panel, used for panel quirk detection
-> + * @height: height in pixels of the panel, used for panel quirk detection
-> + *
-> + * This function will check for platform specific (e.g. DMI based) quirks
-> + * overriding display_info.panel_orientation first, then if panel_orientation
-> + * is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
-> + * "panel orientation" property to the connector.
-> + *
-> + * Returns:
-> + * Zero on success, negative errno on failure.
-> + */
-> +int drm_connector_init_panel_orientation_property_quirk(
-> +	struct drm_connector *connector, int width, int height)
-> +{
-> +	int orientation_quirk;
-> +
-> +	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
-> +	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-> +		connector->display_info.panel_orientation = orientation_quirk;
-> +
-> +	return drm_connector_init_panel_orientation_property(connector);
-> +}
-> +EXPORT_SYMBOL(drm_connector_init_panel_orientation_property_quirk);
-> +
->   int drm_connector_set_obj_prop(struct drm_mode_object *obj,
->   				    struct drm_property *property,
->   				    uint64_t value)
-> diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
-> index b099a9dc28fd..7d4e61cf5463 100644
-> --- a/drivers/gpu/drm/i915/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/intel_dp.c
-> @@ -7282,8 +7282,8 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
->   	intel_panel_setup_backlight(connector, pipe);
->   
->   	if (fixed_mode)
-> -		drm_connector_init_panel_orientation_property(
-> -			connector, fixed_mode->hdisplay, fixed_mode->vdisplay);
-> +		drm_connector_init_panel_orientation_property_quirk(connector,
-> +				fixed_mode->hdisplay, fixed_mode->vdisplay);
->   
->   	return true;
->   
-> diff --git a/drivers/gpu/drm/i915/vlv_dsi.c b/drivers/gpu/drm/i915/vlv_dsi.c
-> index bfe2891eac37..fa9833dbe359 100644
-> --- a/drivers/gpu/drm/i915/vlv_dsi.c
-> +++ b/drivers/gpu/drm/i915/vlv_dsi.c
-> @@ -1650,6 +1650,7 @@ static void intel_dsi_add_properties(struct intel_connector *connector)
->   
->   	if (connector->panel.fixed_mode) {
->   		u32 allowed_scalers;
-> +		int orientation;
->   
->   		allowed_scalers = BIT(DRM_MODE_SCALE_ASPECT) | BIT(DRM_MODE_SCALE_FULLSCREEN);
->   		if (!HAS_GMCH(dev_priv))
+x86/apic: Use non-atomic operations when possible
 
-The above chunk seems to be a leftover from the previous version of this series.
+Using __clear_bit() and __cpumask_clear_cpu() is more efficient than using
+their atomic counterparts.
 
-Otherwise this patch looks good, with this fixed you can add my:
+Use them when atomicity is not needed, such as when manipulating bitmasks
+that are on the stack.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190613064813.8102-10-namit@vmware.com
 
-Regards,
+---
+ arch/x86/kernel/apic/apic_flat_64.c   | 4 ++--
+ arch/x86/kernel/apic/x2apic_cluster.c | 2 +-
+ arch/x86/kernel/smp.c                 | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Hans
-
-
-
-> @@ -1660,9 +1661,7 @@ static void intel_dsi_add_properties(struct intel_connector *connector)
->   
->   		connector->base.state->scaling_mode = DRM_MODE_SCALE_ASPECT;
->   
-> -		connector->base.display_info.panel_orientation =
-> -			vlv_dsi_get_panel_orientation(connector);
-> -		drm_connector_init_panel_orientation_property(
-> +		drm_connector_init_panel_orientation_property_quirk(
->   				&connector->base,
->   				connector->panel.fixed_mode->hdisplay,
->   				connector->panel.fixed_mode->vdisplay);
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index 47e749b74e5f..0468fd9a4418 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -1370,6 +1370,8 @@ void drm_connector_set_link_status_property(struct drm_connector *connector,
->   void drm_connector_set_vrr_capable_property(
->   		struct drm_connector *connector, bool capable);
->   int drm_connector_init_panel_orientation_property(
-> +	struct drm_connector *connector);
-> +int drm_connector_init_panel_orientation_property_quirk(
->   	struct drm_connector *connector, int width, int height);
->   int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
->   					  int min, int max);
-> 
+diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+index 0005c284a5c5..65072858f553 100644
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -78,7 +78,7 @@ flat_send_IPI_mask_allbutself(const struct cpumask *cpumask, int vector)
+ 	int cpu = smp_processor_id();
+ 
+ 	if (cpu < BITS_PER_LONG)
+-		clear_bit(cpu, &mask);
++		__clear_bit(cpu, &mask);
+ 
+ 	_flat_send_IPI_mask(mask, vector);
+ }
+@@ -92,7 +92,7 @@ static void flat_send_IPI_allbutself(int vector)
+ 			unsigned long mask = cpumask_bits(cpu_online_mask)[0];
+ 
+ 			if (cpu < BITS_PER_LONG)
+-				clear_bit(cpu, &mask);
++				__clear_bit(cpu, &mask);
+ 
+ 			_flat_send_IPI_mask(mask, vector);
+ 		}
+diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
+index 7685444a106b..609e499387a1 100644
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -50,7 +50,7 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
+ 	cpumask_copy(tmpmsk, mask);
+ 	/* If IPI should not be sent to self, clear current CPU */
+ 	if (apic_dest != APIC_DEST_ALLINC)
+-		cpumask_clear_cpu(smp_processor_id(), tmpmsk);
++		__cpumask_clear_cpu(smp_processor_id(), tmpmsk);
+ 
+ 	/* Collapse cpus in a cluster so a single IPI per cluster is sent */
+ 	for_each_cpu(cpu, tmpmsk) {
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 04adc8d60aed..acddd988602d 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -146,7 +146,7 @@ void native_send_call_func_ipi(const struct cpumask *mask)
+ 	}
+ 
+ 	cpumask_copy(allbutself, cpu_online_mask);
+-	cpumask_clear_cpu(smp_processor_id(), allbutself);
++	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+ 
+ 	if (cpumask_equal(mask, allbutself) &&
+ 	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
