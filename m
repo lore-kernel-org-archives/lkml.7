@@ -2,198 +2,115 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F33C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2114C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7118820673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979AE20673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0qExktD"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="uWwzJJC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFWRiE (ORCPT
+        id S1726796AbfFWRim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 13:38:04 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33569 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfFWRiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 13:38:03 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r6so8138873qkc.0;
-        Sun, 23 Jun 2019 10:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Taorv013lx4BF1e9mQ5frJv1zsMiL53dKrJ0Mfj3qx4=;
-        b=i0qExktDOvmtUHmy+8LfQWIfsj+7c/KfuWryEMjvL850aOttg1UgB4u3YdMMiw6tUQ
-         oUr4Uzh0mo3H0NXiw6CXiEGEqW8wY/v2soaQTvK4xSpUQ8J4AEpCfTotUDFGu6C7+2Qz
-         FZRRfFHY50qwNhnwXZzX7GfNq4mSzAbYFAU+If4/4d2zgZwYzAyD5KTykp9ImlnylfYC
-         Rs5ShfPEJstSCDPIknItVC/6+brEZJvUNqc7Jd1tKMk3N+zyfXTctTbBp7UezxgMJqX+
-         cOSs0iEkUS/vmtde81cuHxxvPItAWeZIg0DsZWbWnOrczrXMVyYyDxdrt17f7umQn5tC
-         /UVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Taorv013lx4BF1e9mQ5frJv1zsMiL53dKrJ0Mfj3qx4=;
-        b=JAP8IbI759o250IEsfGAGEAYxlTOyTAavgidFk2zIdOtRlgy6KzUUA6flHZCu21u3K
-         fop4W3U8BDJKWu1aoV0KhH9trEF9pJnJT446Mwkq9rMux03Hc6hHFLU+g7I1hhKVdbjc
-         joEMNyv+WZQ1F2QByRH56VCgBdclOSLq1rYMFVQDRXHJ5qgxspuj2PsY66Non4LNUgwa
-         cXGYOZXfL1/cYK6LxZKTbZGjWZ1oCx+W8d4SZ9GLxZAD7UgzztA8q2j9N1Gm4BTBJIiD
-         gSyZoamdSp1o3lQq+zXMMWak/FwxWIIh5ULcpWv8RAdyp991iewSKzAn36XBYHSt4vPs
-         aS3Q==
-X-Gm-Message-State: APjAAAXgXyew9BuEh+ew//mHl1wYjjKCsDDYNAZAAOgFupQPwRdzbYEW
-        3U6ubDccHyTIj82njSBhmgU=
-X-Google-Smtp-Source: APXvYqyxoVySJ+bjh9dacS0w0vip5Vr0BkFtivb56+vWtspFfCp3xLiTPe3jL8pbW162KCckP1ophg==
-X-Received: by 2002:a37:8145:: with SMTP id c66mr13276625qkd.459.1561311482169;
-        Sun, 23 Jun 2019 10:38:02 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id c55sm5342498qtk.53.2019.06.23.10.38.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 10:38:01 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from IOMMU domain
-Date:   Sun, 23 Jun 2019 20:37:42 +0300
-Message-Id: <20190623173743.24088-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623173743.24088-1-digetx@gmail.com>
-References: <20190623173743.24088-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 13:38:42 -0400
+Received: from mail-eopbgr820058.outbound.protection.outlook.com ([40.107.82.58]:46146
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726718AbfFWRim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 13:38:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uKNdVwuWPQ6+Ma7r9s1BrMJRxa5BXYVhunKUxWS4WEs=;
+ b=uWwzJJC5PHpWskVe/rw98MF4uilVciSHy/tpleLJARBnKpdi2dZpkqZkwTWdpH4IkRqmSOk0BTnM+FVY30wUrQoVg13w3Mg/5LL5xGghFEVdIBReHEXQjxvqlRtQrskS+v2h5UwZlHyh116MIB6EeTspnWrFD1Iyvm5EwuqGUtM=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.31.141) by
+ BN7PR08MB4241.namprd08.prod.outlook.com (52.133.222.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Sun, 23 Jun 2019 17:38:39 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::4dd2:da15:6626:c3b0]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::4dd2:da15:6626:c3b0%3]) with mapi id 15.20.2008.014; Sun, 23 Jun 2019
+ 17:38:39 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Subject: [PATCH v2 2/3] scsi: ufs-bsg: fix typo in ufs_bsg_request
+Thread-Topic: [PATCH v2 2/3] scsi: ufs-bsg: fix typo in ufs_bsg_request
+Thread-Index: AdUp6T3Xt41XLu9MQdqAaZ+DpHy+6Q==
+Date:   Sun, 23 Jun 2019 17:38:39 +0000
+Message-ID: <BN7PR08MB56845341A1F184196F0D5C4FDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ac89d705-d23d-4912-982a-08d6f801a083
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB4241;
+x-ms-traffictypediagnostic: BN7PR08MB4241:|BN7PR08MB4241:
+x-microsoft-antispam-prvs: <BN7PR08MB42414946CEB3BFBEB134AC0CDBE10@BN7PR08MB4241.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 00770C4423
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(136003)(396003)(366004)(189003)(199004)(2906002)(52536014)(110136005)(71190400001)(26005)(102836004)(6506007)(74316002)(55236004)(14444005)(186003)(256004)(476003)(4326008)(4744005)(73956011)(316002)(71200400001)(486006)(81156014)(14454004)(66066001)(66946007)(81166006)(305945005)(7736002)(66476007)(5660300002)(8676002)(66446008)(66556008)(64756008)(54906003)(9686003)(478600001)(76116006)(86362001)(6436002)(68736007)(7696005)(53936002)(55016002)(33656002)(25786009)(8936002)(3846002)(6116002)(107886003)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4241;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Yq/vxWlHQv0Yu4q99EhvczRmkm3rWqoMTU6+uAXexUCK+zkGehHaeWttc2Y1gKzrH4nHSmH2rk3r99E2Sl6GfH/8sb8lYHANqWxKTg8wPJW2XQYi8UH3gsDVTLbYKz6A8vRDixtLyQA6maOAi6KdG2wNEtSj/x6yBg+g1qCcrLt8YpIAtBHi6q+g3bfzQxl2VAqpBbvSryqczEKalckJH4x+FqphLKKsolIOYa35UYBwdsOXagZhCrNS2pd9GKxydKh0Jy0jJLElkLI34Duqb5uFlkfog8RKEtwoBugCKG/a3Qmp9e0DAHgrVQTZfSH0UTR7nsygZGpKTTW9BvhKoYkbrYVzkCc1dNeKSYMuIP7bbEKq1QNyQKCUYyOBnk7hsTv8Ph87/9moUG8RBaw+yYgxppbm9sIQMhJotaIIzos=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac89d705-d23d-4912-982a-08d6f801a083
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2019 17:38:39.0168
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: beanhuo@micron.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should should fire up on the DRM's driver module re-loader because
-there won't be enough available domains on older Tegra SoCs.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+From: Bean Huo <beanhuo@micron.com>
+
+Correct dev_dbg to dev_err, so as to print out the error
+information in case of DME command failed.
+
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/gpu/drm/tegra/dc.c   | 4 ++--
- drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
- drivers/gpu/drm/tegra/drm.h  | 3 ++-
- drivers/gpu/drm/tegra/gr2d.c | 4 ++--
- drivers/gpu/drm/tegra/gr3d.c | 4 ++--
- 5 files changed, 14 insertions(+), 10 deletions(-)
+ drivers/scsi/ufs/ufs_bsg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index fa505baaaabc..c1b885444d90 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2388,7 +2388,7 @@ static int tegra_dc_init(struct host1x_client *client)
- 	if (!IS_ERR(primary))
- 		drm_plane_cleanup(primary);
- 
--	host1x_client_iommu_detach(client, dc->group);
-+	host1x_client_iommu_detach(client, dc->group, true);
- 	host1x_syncpt_free(dc->syncpt);
- 
- 	return err;
-@@ -2412,7 +2412,7 @@ static int tegra_dc_exit(struct host1x_client *client)
- 		return err;
- 	}
- 
--	host1x_client_iommu_detach(client, dc->group);
-+	host1x_client_iommu_detach(client, dc->group, true);
- 	host1x_syncpt_free(dc->syncpt);
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
-index d2080bd7d392..f94441457c64 100644
---- a/drivers/gpu/drm/tegra/drm.c
-+++ b/drivers/gpu/drm/tegra/drm.c
-@@ -1120,15 +1120,18 @@ struct iommu_group *host1x_client_iommu_attach(struct host1x_client *client,
- }
- 
- void host1x_client_iommu_detach(struct host1x_client *client,
--				struct iommu_group *group)
-+				struct iommu_group *group,
-+				bool shared)
- {
- 	struct drm_device *drm = dev_get_drvdata(client->parent);
- 	struct tegra_drm *tegra = drm->dev_private;
- 
- 	if (group) {
--		if (group == tegra->group) {
-+		if (!shared || group == tegra->group) {
- 			iommu_detach_group(tegra->domain, group);
--			tegra->group = NULL;
-+
-+			if (group == tegra->group)
-+				tegra->group = NULL;
- 		}
- 
- 		iommu_group_put(group);
-diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
-index 488f36f00bd8..9f1a3d6f3406 100644
---- a/drivers/gpu/drm/tegra/drm.h
-+++ b/drivers/gpu/drm/tegra/drm.h
-@@ -107,7 +107,8 @@ int tegra_drm_unregister_client(struct tegra_drm *tegra,
- struct iommu_group *host1x_client_iommu_attach(struct host1x_client *client,
- 					       bool shared);
- void host1x_client_iommu_detach(struct host1x_client *client,
--				struct iommu_group *group);
-+				struct iommu_group *group,
-+				bool shared);
- 
- int tegra_drm_init(struct tegra_drm *tegra, struct drm_device *drm);
- int tegra_drm_exit(struct tegra_drm *tegra);
-diff --git a/drivers/gpu/drm/tegra/gr2d.c b/drivers/gpu/drm/tegra/gr2d.c
-index 673059fd2fcb..c486e0a05c9d 100644
---- a/drivers/gpu/drm/tegra/gr2d.c
-+++ b/drivers/gpu/drm/tegra/gr2d.c
-@@ -69,7 +69,7 @@ static int gr2d_init(struct host1x_client *client)
- 	return 0;
- 
- detach:
--	host1x_client_iommu_detach(client, gr2d->group);
-+	host1x_client_iommu_detach(client, gr2d->group, false);
- free:
- 	host1x_syncpt_free(client->syncpts[0]);
- put:
-@@ -89,7 +89,7 @@ static int gr2d_exit(struct host1x_client *client)
- 	if (err < 0)
- 		return err;
- 
--	host1x_client_iommu_detach(client, gr2d->group);
-+	host1x_client_iommu_detach(client, gr2d->group, false);
- 	host1x_syncpt_free(client->syncpts[0]);
- 	host1x_channel_put(gr2d->channel);
- 
-diff --git a/drivers/gpu/drm/tegra/gr3d.c b/drivers/gpu/drm/tegra/gr3d.c
-index 4778ae999668..591bafe455e0 100644
---- a/drivers/gpu/drm/tegra/gr3d.c
-+++ b/drivers/gpu/drm/tegra/gr3d.c
-@@ -79,7 +79,7 @@ static int gr3d_init(struct host1x_client *client)
- 	return 0;
- 
- detach:
--	host1x_client_iommu_detach(client, gr3d->group);
-+	host1x_client_iommu_detach(client, gr3d->group, false);
- free:
- 	host1x_syncpt_free(client->syncpts[0]);
- put:
-@@ -98,7 +98,7 @@ static int gr3d_exit(struct host1x_client *client)
- 	if (err < 0)
- 		return err;
- 
--	host1x_client_iommu_detach(client, gr3d->group);
-+	host1x_client_iommu_detach(client, gr3d->group, false);
- 	host1x_syncpt_free(client->syncpts[0]);
- 	host1x_channel_put(gr3d->channel);
- 
--- 
-2.22.0
-
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index 869e71f861d6..f420d6f8d84c 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -122,7 +122,7 @@ static int ufs_bsg_request(struct bsg_job *job)
+ 		memcpy(&uc, &bsg_request->upiu_req.uc, UIC_CMD_SIZE);
+ 		ret =3D ufshcd_send_uic_cmd(hba, &uc);
+ 		if (ret)
+-			dev_dbg(hba->dev,
++			dev_err(hba->dev,
+ 				"send uic cmd: error code %d\n", ret);
+=20
+ 		memcpy(&bsg_reply->upiu_rsp.uc, &uc, UIC_CMD_SIZE);
+--=20
+2.7.4
