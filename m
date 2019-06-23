@@ -2,177 +2,213 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EE5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97682C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF8C2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CC52089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wYbpjEsl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZROOufct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfFXCOu (ORCPT
+        id S1726955AbfFXCQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:14:50 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44107 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfFXCOu (ORCPT
+        Sun, 23 Jun 2019 22:16:02 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:17871 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfFXCQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:14:50 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so10938464ljc.11
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 19:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q7wz2t7u/9aK1bNPZ479OzccMgC+SVvO9ZTRTaDQNLE=;
-        b=wYbpjEslFKzGNA9UaWsVFJoVeLBrAL2HmRatz8rnXjHTni7OJoRzaBqf+1rBIdEwZw
-         Cx9pdmsZUDC/a+Q7OsWMnQCi4PH5CB8Hre6I0gStJ4XwjEoTZWjf+E2fZ0aa75ILq1/o
-         5wQyQz/YYBAYTpy4i6neEfHrjZqOG4vYDJ9qpJkyij231cxbv15bxsfnyKiSoUmIandO
-         iyzVrAmOx/iZrCrvom9Y7aLJOvkdw6HJLoe1pee4JERvMzXQ4SMrE/9CBfFDcd5XSRr0
-         ohuRCeg1XcOtmzKkZuVvV0xc9FQ6fNxv9yFvl9g5WAEjwm7x/GUrIV2kDIWoxEcWo2ZL
-         ICHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Q7wz2t7u/9aK1bNPZ479OzccMgC+SVvO9ZTRTaDQNLE=;
-        b=eY4PEdWk1U93ipCMmjCXIvsJYLh4r3wtnPg3UMWrhkhxRoKK+FxA2PlqabjtYmaCr1
-         KF0E3rvLKYGqM7YIEvvpv/V0yLjpoAFwfclESXpzzwrMJzpCX7r4Ot9ytgriMvu5zEZS
-         4GCpUfEOg9b62n0CCUaXyU6A96PosJxVLx9SukvOydl9HRaI3F90Hh4ExVu40Y2stkmL
-         Daa9Y6UaVUZjKjHQI9A2irw+fZDln6zs+FCQvdzM1qhNfZ1/5dDo0TStt0TzTg6g1jDy
-         3Nwvee2ZHySABkoyjwtVDOhz/G8kYRSfeiy/yt3HhazW9N1rQZSfj14HN7SWQC7I2VkX
-         VbYQ==
-X-Gm-Message-State: APjAAAVMnPj3niz5ikVbzZ4tBEj4Rp3bKNdU75xJln72sMkK6W4CoXpd
-        P+aFJe9D3jVOCKwIbRTdV3PrqQ==
-X-Google-Smtp-Source: APXvYqzVtXIxqFwTgM8EzEXOeQXVyES/27218XIBMarVRmRWmUa/XKEZAMMJKYyORixUr2FpTKApSw==
-X-Received: by 2002:a2e:9950:: with SMTP id r16mr45976579ljj.173.1561332668839;
-        Sun, 23 Jun 2019 16:31:08 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id 80sm1325307lfz.56.2019.06.23.16.31.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Jun 2019 16:31:08 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 02:31:06 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, ilias.apalodimas@linaro.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com,
-        grygorii.strashko@ti.com, nsekhar@ti.com
-Subject: Re: [PATCH] net: ethernet: ti: cpsw: Fix suspend/resume break
-Message-ID: <20190623233105.GA5472@khorivan>
-Mail-Followup-To: Keerthy <j-keerthy@ti.com>, davem@davemloft.net,
-        andrew@lunn.ch, ilias.apalodimas@linaro.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com,
-        grygorii.strashko@ti.com, nsekhar@ti.com
-References: <20190622103140.22902-1-j-keerthy@ti.com>
+        Sun, 23 Jun 2019 22:16:01 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190623234831epoutp02b73cc145b1c4b71e089a789be62e74f8~q_L0Obz-W3105331053epoutp02a
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:48:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190623234831epoutp02b73cc145b1c4b71e089a789be62e74f8~q_L0Obz-W3105331053epoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561333711;
+        bh=y5JFwrOZq4d42qzJPkw+Zg+TcIER/Wk/VIKyGC4xXtM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ZROOufcthysiq9fS5Ltd8c6Dx5aWt+gIVm844JI6QoJpm/HScuN0loVoZU9aW1Put
+         +uHq2Ab/UTYaNPfVOjKy+8rYxbN+J3ehT7mR+gyN9IpPjKGcBURZp3mEIMNXtwPd/p
+         5BW7lWaXJOrD3/n0+45cQP8GNsUCSdFRFcxViUgg=
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190623234827epcas1p13e2ecfb1ca561a0b2c3a901536393930~q_Lv3tEc_0191701917epcas1p1O;
+        Sun, 23 Jun 2019 23:48:27 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4D.7E.04257.2CF001D5; Mon, 24 Jun 2019 08:48:18 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190623234817epcas1p394d0ec7c278969f0b2e3d73c45df407a~q_LnCE6ds0503705037epcas1p3f;
+        Sun, 23 Jun 2019 23:48:17 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190623234817epsmtrp10e6374e407264530a6ab2f883a9634cb~q_LnBOmNw2617626176epsmtrp1E;
+        Sun, 23 Jun 2019 23:48:17 +0000 (GMT)
+X-AuditID: b6c32a38-5e3ff700000010a1-1f-5d100fc2f8bf
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.AF.03662.1CF001D5; Mon, 24 Jun 2019 08:48:17 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190623234817epsmtip1264e7902c17275a3cf2cc2e0c14370f0~q_Lm5JBod0344203442epsmtip1y;
+        Sun, 23 Jun 2019 23:48:17 +0000 (GMT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and
+ Tegra20/30 support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <31fc1430-5a3b-cccb-06bb-7b46081edb68@samsung.com>
+Date:   Mon, 24 Jun 2019 08:50:53 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190622103140.22902-1-j-keerthy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <389cc71d-8f0b-fa39-1325-433d27c75dc8@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmvu4hfoFYg2f/NS1Wf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
+        zaNvyypGj8+b5AJYo7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22V
+        XHwCdN0yc4AOUlIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBboFSfmFpfmpesl
+        5+daGRoYGJkCFSZkZyx6sJqp4IFkRdOHWYwNjEdFuhg5OSQETCR23bvH3sXIxSEksINRYsm0
+        xUwQzidGiQ1n30E53xglTp/+ygbT8nP/V2aIxF5Gic7OB1D97xkljn84D1YlLBAh8WrROmYQ
+        W0QgUOLds31gHcwCbUwS7Rf/MoEk2AS0JPa/uAHWwC+gKHH1x2NGEJtXwE7ief8nVhCbRUBV
+        ovntBLAaUaChl7fsgqoRlDg58wkLiM0pYCsx/8txsGXMAuISt57MZ4Kw5SWat84GWywh8J9N
+        YmLnR6gfXCR2fO9mgbCFJV4d38IOYUtJvOxvg7KrJVaePMIG0dzBKLFl/wVWiISxxP6lk4E2
+        cABt0JRYv0sfIqwosfP3XEaIxXwS7772sIKUSAjwSnS0CUGUKEtcfnCXCcKWlFjc3sk2gVFp
+        FpJ3ZiF5YRaSF2YhLFvAyLKKUSy1oDg3PbXYsMAEOb43MYKTq5bFDsY953wOMQpwMCrx8Aps
+        4I8VYk0sK67MPcQowcGsJMLLk8MTK8SbklhZlVqUH19UmpNafIjRFBjaE5mlRJPzgYk/ryTe
+        0NTI2NjYwsTQzNTQUEmcN577ZoyQQHpiSWp2ampBahFMHxMHp1QDo+fzoN2zf6ZtuhYdz3jY
+        JbWtoTgl+seu/gStxoQIcQF1rx3nzN6sDNz/4MoMtg2K5U+uWQud/fkwLY43aG/Y2jdZbomW
+        x/u9n2noJ8w7+jI8fq9F2uOE2DPdh1XaUqaVneLuXR6Y8WHryen5Md7VTovj+b6z7FW8WaEd
+        M8NkzhoFfUHBfO8uJZbijERDLeai4kQAQ/dOV8QDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnO5BfoFYg4uv5CxWf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
+        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyFj1YzVTwQLKi6cMsxgbGoyJdjJwcEgImEj/3
+        f2UGsYUEdjNKnF+UDBGXlJh28ShQnAPIFpY4fLi4i5ELqOQto8TSiRvYQGqEBSIk5l+4xARi
+        iwgESpx+sJURpIhZoINJ4sn6n4wQHfuZJbZ3fWUBqWIT0JLY/+IGWDe/gKLE1R+PGUFsXgE7
+        ief9n1hBbBYBVYnmtxPAakSBNvS1zWaDqBGUODnzCdgcTgFbiflfjoNdzSygLvFn3iUoW1zi
+        1pP5TBC2vETz1tnMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7N
+        S9dLzs/dxAiOMS2tHYwnTsQfYhTgYFTi4RXYwB8rxJpYVlyZe4hRgoNZSYSXJ4cnVog3JbGy
+        KrUoP76oNCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVANj/+8vs1ifhtToZJkH
+        CDx7PdFDblXhXgf7EuV6x6nfo1abMnqyFmv++TtntYssR5LKQdOw78cc5ir5tYkfXrNyYqar
+        VefF5ztzA4zLOx9uWvt1WVu2n0b0p30zJ3q9WahrJDmH8ZqG0GcOR5Wltcqnrn15ZXb50iMW
+        dp2Md28n3VhnerJKPnCGEktxRqKhFnNRcSIAPNA1Pa0CAAA=
+X-CMS-MailID: 20190623234817epcas1p394d0ec7c278969f0b2e3d73c45df407a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+        <20190501233815.32643-1-digetx@gmail.com>
+        <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+        <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+        <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
+        <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
+        <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
+        <389cc71d-8f0b-fa39-1325-433d27c75dc8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 04:01:40PM +0530, Keerthy wrote:
+Hi Dmitry,
 
-Hi Keerty,
+On 19. 6. 24. 오전 2:17, Dmitry Osipenko wrote:
+> 05.06.2019 2:09, Dmitry Osipenko пишет:
+>> 04.06.2019 3:49, Chanwoo Choi пишет:
+>>> On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
+>>>> 03.05.2019 3:52, Dmitry Osipenko пишет:
+>>>>> 03.05.2019 3:31, Chanwoo Choi пишет:
+>>>>>> Hi Dmitry,
+>>>>>>
+>>>>>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>>>>>>> Changelog:
+>>>>>>>
+>>>>>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+>>>>>>>
+>>>>>>>     - changed the driver removal order to match the probe exactly
+>>>>>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>>>>>>
+>>>>>>>     Chanwoo, please also note that the clk patch that should fix
+>>>>>>>     compilation problem that was reported the kbuild-test-robot is already
+>>>>>>>     applied and available in the recent linux-next.
+>>>>>>
+>>>>>> I knew that Stephen picked up your path about clock.
+>>>>>
+>>>>> Hi Chanwoo,
+>>>>>
+>>>>> Okay, good. Thank you very much for reviewing this series! I assume it's
+>>>>> too late now for v5.2, but it should be good to go for v5.3.
+>>>>>
+>>>>
+>>>> Hello Chanwoo,
+>>>>
+>>>> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
+>>>> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
+>>>> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
+>>>> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
+>>>> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
+>>>> we'll be able to work out that with Thierry and Jon if necessary.
+>>>>
+>>>>
+>>>
+>>> Hi Dmitry,
+>>> I think that it is enough for applying to mainline branch.
+>>> The devfreq.git is maintained by Myungjoo. He will be merged or
+>>> reviewed if there are th remained review point.
+>>
+>> Thank you very much!
+>>
+>>>
+>>> Hi Myungjoo,
+>>> I reviewed the Dmitry's patches from v1 to v4 patches.
+>>> And then I tested them on my testing branch[1] for catching
+>>> the build warning and error. In result, it is clean.
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
+>>>
+>>> Please review or apply these patches for v5.3.
+>>>
+>>
+>> Hello Myungjoo,
+>>
+>> I think this patchset should be completed now. Thierry has some extra
+>> comments to the patches, but seems nothing critical so far and all the
+>> concerns could be addressed in a follow-up series. Please let me know if
+>> you're fine with this, I can re-spin v5 as well if necessary.
+>>
+> 
+> Hello Chanwoo,
+> 
+> It looks like Myungjoo is inactive at the moment. Do you know if he'll
+> be back to the time of the merge window opening or you'll be curating
+> the pull request for 5.3 this time?
 
->Commit bfe59032bd6127ee190edb30be9381a01765b958 ("net: ethernet:
->ti: cpsw: use cpsw as drv data")changes
->the driver data to struct cpsw_common *cpsw. This is done
->only in probe/remove but the suspend/resume functions are
->still left with struct net_device *ndev. Hence fix both
->suspend & resume also to fetch the updated driver data.
->
->Fixes: bfe59032bd6127ee1 ("net: ethernet: ti: cpsw: use cpsw as drv data")
->Signed-off-by: Keerthy <j-keerthy@ti.com>
->---
-> drivers/net/ethernet/ti/cpsw.c | 36 +++++++++++-----------------------
-> 1 file changed, 11 insertions(+), 25 deletions(-)
->
->diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
->index 7bdd287074fc..2aeaad15e20e 100644
->--- a/drivers/net/ethernet/ti/cpsw.c
->+++ b/drivers/net/ethernet/ti/cpsw.c
->@@ -2590,20 +2590,12 @@ static int cpsw_remove(struct platform_device *pdev)
-> #ifdef CONFIG_PM_SLEEP
-> static int cpsw_suspend(struct device *dev)
-> {
->-	struct net_device	*ndev = dev_get_drvdata(dev);
->-	struct cpsw_common	*cpsw = ndev_to_cpsw(ndev);
->-
->-	if (cpsw->data.dual_emac) {
->-		int i;
->+	struct cpsw_common *cpsw = dev_get_drvdata(dev);
->+	int i;
->
->-		for (i = 0; i < cpsw->data.slaves; i++) {
->-			if (netif_running(cpsw->slaves[i].ndev))
->-				cpsw_ndo_stop(cpsw->slaves[i].ndev);
->-		}
->-	} else {
->-		if (netif_running(ndev))
->-			cpsw_ndo_stop(ndev);
->-	}
->+	for (i = 0; i < cpsw->data.slaves; i++)
->+		if (netif_running(cpsw->slaves[i].ndev))
-Seems I've missed to add this, but in your fix potential issue in switch mode.
-ndev is not necessarily present for slave, you need to check on ndev != null
-before using it, if you still remove cpsw->data.dual_emac ofc.
+Myungoo works in the same place. I'll talk with him.
 
-Thanks.
+> 
+> Secondly, I'll send a few more patches on top of this series, addressing
+> Thierry's comments and making more improvements. Please let me know if
+> this causes any problems and I should re-spin the whole series.
 
->+			cpsw_ndo_stop(cpsw->slaves[i].ndev);
->
-> 	/* Select sleep pin state */
-> 	pinctrl_pm_select_sleep_state(dev);
->@@ -2613,25 +2605,19 @@ static int cpsw_suspend(struct device *dev)
->
-> static int cpsw_resume(struct device *dev)
-> {
->-	struct net_device	*ndev = dev_get_drvdata(dev);
->-	struct cpsw_common	*cpsw = ndev_to_cpsw(ndev);
->+	struct cpsw_common *cpsw = dev_get_drvdata(dev);
->+	int i;
->
-> 	/* Select default pin state */
-> 	pinctrl_pm_select_default_state(dev);
->
-> 	/* shut up ASSERT_RTNL() warning in netif_set_real_num_tx/rx_queues */
-> 	rtnl_lock();
->-	if (cpsw->data.dual_emac) {
->-		int i;
->
->-		for (i = 0; i < cpsw->data.slaves; i++) {
->-			if (netif_running(cpsw->slaves[i].ndev))
->-				cpsw_ndo_open(cpsw->slaves[i].ndev);
->-		}
->-	} else {
->-		if (netif_running(ndev))
->-			cpsw_ndo_open(ndev);
->-	}
->+	for (i = 0; i < cpsw->data.slaves; i++)
->+		if (netif_running(cpsw->slaves[i].ndev))
->+			cpsw_ndo_open(cpsw->slaves[i].ndev);
->+
-same here
+OK. I'll review them.
 
-> 	rtnl_unlock();
->
-> 	return 0;
->-- 
->2.17.1
->
 
 -- 
-Regards,
-Ivan Khoronzhuk
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
