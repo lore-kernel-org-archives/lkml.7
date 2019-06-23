@@ -6,56 +6,41 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD42C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2BBC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2F42073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFE92073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfFXDB5 (ORCPT
+        id S1727287AbfFXDBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:01:57 -0400
+        Sun, 23 Jun 2019 23:01:43 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:34569 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfFXDBw (ORCPT
+        with ESMTP id S1726323AbfFXDBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:01:52 -0400
+        Sun, 23 Jun 2019 23:01:41 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hfAj1-0007Ex-1q; Mon, 24 Jun 2019 00:12:40 +0200
-Date:   Mon, 24 Jun 2019 00:12:37 +0200 (CEST)
+        id 1hfBA2-0007QU-DG; Mon, 24 Jun 2019 00:40:35 +0200
+Date:   Mon, 24 Jun 2019 00:40:33 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>, linux-hyperv@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
-In-Reply-To: <20190623190929.GL2226@sasha-vm>
-Message-ID: <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <20190530141531.43462-19-vincenzo.frascino@arm.com> <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com> <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
- <20190614211710.GQ1513@sasha-vm> <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de> <20190623190929.GL2226@sasha-vm>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v5 4/5] x86/umwait: Add sysfs interface to control umwait
+ maximum time
+In-Reply-To: <1560994438-235698-5-git-send-email-fenghua.yu@intel.com>
+Message-ID: <alpine.DEB.2.21.1906232246380.32342@nanos.tec.linutronix.de>
+References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com> <1560994438-235698-5-git-send-email-fenghua.yu@intel.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -67,46 +52,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha,
+On Wed, 19 Jun 2019, Fenghua Yu wrote:
 
-On Sun, 23 Jun 2019, Sasha Levin wrote:
-> On Sat, Jun 22, 2019 at 04:46:28PM +0200, Thomas Gleixner wrote:
-> > Folks, please stop chosing Cc lists as you like. We have well established
-> > rules for that. And please stop queueing random unreviewed patches in
-> > next. Next is not a playground for not ready and unreviewed stuff. No, the
-> > hyper-v inbreed Reviewed-by is not sufficient for anything x86 and
-> > clocksource related.
-> 
-> I'm sorry for this, you were supposed to be Cc'ed on these patches and I
-> see that you were not.
+> Users can write an unsigned 32-bit number to
+> /sys/devices/system/cpu/umwait_control/max_time to change the default
 
-All good. I've vented steam and am back to normal pressure :)
+Users? Administrators can. Users NOT.
 
-> > After chasing and looking at those patches, which have horrible subject
-> > lines and changelogs btw, I was not able to judge quickly whether that
-> > stuff is self contained or not. So no, I fixed up the fallout and rebased
-> > Vincenzos VDSO stuff on mainline w/o those hyperv changes simply because if
-> > they are not self contained they will break bisection badly.
-> > 
-> > I'm going to push out the VDSO series later today. That will nicely break
+> value. Note that a value of zero means there is no limit. Low order
+> two bits must be zero.
 
-Not yet, but soon :)
+...
 
-> > in combination with the hyper-next branch. Stephen, please drop that and do
-> > not try to handle the fallout. That stuff needs to go through the proper
-> > channels or at least be acked/reviewed by the relevant maintainers. So the
-> > hyper-v folks can rebase themself and post it proper.
-> 
-> Okay, thank you. We'll rebase and resend.
+> +static ssize_t max_time_store(struct device *kobj,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t count)
+> +{
+> +	u32 max_time;
+> +	int ret;
+> +
+> +	ret = kstrtou32(buf, 0, &max_time);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* bits[1:0] must be zero */
+> +	if (max_time & ~MSR_IA32_UMWAIT_CONTROL_MAX_TIME)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&umwait_lock);
+> +
+> +	if (max_time == get_umwait_ctrl_max_time())
+> +		goto out_unlock;
+> +
+> +	WRITE_ONCE(umwait_control_cached,
+> +		   UMWAIT_CTRL_VAL(max_time, get_umwait_ctrl_c02()));
 
-I have no objections if you collect hyper-v stuff, quite the contrary, but
-changes which touch other subsystems need to be coordinated upfront. That's
-all I'm asking for.
+Same convoluted logic with reading the cached value twice to confuse the
+reader.
 
-Btw, that clocksource stuff looks good code wise, just the change logs need
-some care and after the VDSO stuff hits next we need to sort out the
-logistics. I hope these changes are completely self contained. If not we'll
-find a solution.
+	ctrl = READ_ONCE(umwait_control_cached);
+	if (max_time == umwait_ctrl_max_time(ctrl))
+		goto out_unlock;
+
+	ctrl = (ctrl & ~MSR_IA32_UMWAIT_CONTROL_TIME_MASK) | max_time;
+	WRITE_ONCE(umwait_control_cached, ctrl);
+
+Simple, right?
+
+But this can be done even simpler with a shared update function:
+
+static void umwait_update_control(u32 maxtime, bool c02_enable)
+{
+        u32 ctrl = maxtime & MSR_IA32_UMWAIT_CONTROL_TIME_MASK;
+
+        if (!c02_enable)
+                ctrl |= MSR_IA32_UMWAIT_CONTROL_C02_DISABLE;
+
+        WRITE_ONCE(umwait_control_cached, ctrl);
+        /* Propagate to all CPUs */
+        on_each_cpu(umwait_update_control_msr, NULL, 1);
+}
+
+With that both functions become trivial and do not have duplicated code.
 
 Thanks,
 
