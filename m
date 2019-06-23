@@ -2,156 +2,64 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A568CC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D1FC48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7364C20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86D22073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfFWV2E (ORCPT
+        id S1726430AbfFWVea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 17:28:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43082 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfFWV2E (ORCPT
+        Sun, 23 Jun 2019 17:34:30 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45354 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfFWVea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 17:28:04 -0400
-Received: from [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3C4B626111E;
-        Sun, 23 Jun 2019 22:27:59 +0100 (BST)
-Subject: Re: [PATCH 3/5] media: vimc: stream: format comments as kernel-doc
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org
-References: <20190623164024.9836-1-andrealmeid@collabora.com>
- <20190623164024.9836-3-andrealmeid@collabora.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <a1973442-5ccb-5ba3-e508-132514b6e83e@collabora.com>
-Date:   Sun, 23 Jun 2019 18:27:22 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190623164024.9836-3-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Sun, 23 Jun 2019 17:34:30 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CDF99142DE3A5;
+        Sun, 23 Jun 2019 14:34:26 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 14:34:24 -0700 (PDT)
+Message-Id: <20190623.143424.1962536673442328783.davem@davemloft.net>
+To:     gomonovych@gmail.com
+Cc:     george.cherian@cavium.com, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: cavium remove casting dma_alloc
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190623204849.22089-1-gomonovych@gmail.com>
+References: <20190623204849.22089-1-gomonovych@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Jun 2019 14:34:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vasyl Gomonovych <gomonovych@gmail.com>
+Date: Sun, 23 Jun 2019 22:48:49 +0200
 
-On 6/23/19 1:40 PM, André Almeida wrote:
-> Format the current existing comments as kernel-doc comments, to be
-> reused at kernel documention. Add opening marks (/**) and return values.
->
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
-> ---
->  drivers/media/platform/vimc/vimc-streamer.c | 38 +++++++++++++--------
->  1 file changed, 24 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-> index 3b3f36357a0e..9970650b0f26 100644
-> --- a/drivers/media/platform/vimc/vimc-streamer.c
-> +++ b/drivers/media/platform/vimc/vimc-streamer.c
-> @@ -20,6 +20,8 @@
->   *
->   * Helper function that returns the media entity containing the source pad
->   * linked with the first sink pad from the given media entity pad list.
-> + *
-> + * Return: The source pad or NULL, if it wasn't found.
->   */
->  static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
->  {
-> @@ -35,7 +37,7 @@ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
->  	return NULL;
->  }
+> @@ -233,7 +233,7 @@ static int alloc_command_queues(struct cpt_vf *cptvf,
 >  
-> -/*
-> +/**
->   * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
->   *
->   * @stream: the pointer to the stream structure with the pipeline to be
-> @@ -63,15 +65,18 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
->  	}
->  }
->  
-> -/*
-> - * vimc_streamer_pipeline_init - initializes the stream structure
-> +/**
-> + * vimc_streamer_pipeline_init - Initializes the stream structure
->   *
->   * @stream: the pointer to the stream structure to be initialized
->   * @ved:    the pointer to the vimc entity initializing the stream
->   *
->   * Initializes the stream structure. Walks through the entity graph to
->   * construct the pipeline used later on the streamer thread.
-> - * Calls s_stream to enable stream in all entities of the pipeline.
-> + * Calls ``vimc_streamer_s_stream`` to enable stream in all entities of
-``vimc_streamer_s_stream`` could also been written as
-:c:func:`vimc_streamer_s_stream`. In this latest setup, the
-Documentation output would display a nice hyperlink to the documentation
-of  vimc_streamer_s_stream function. Is this a good improvement or it
-will be too verbose?
-> + * the pipeline.
-> + *
-> + * Return: 0 if success, error code otherwise.
->   */
->  static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
->  				       struct vimc_ent_device *ved)
-> @@ -122,13 +127,17 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
->  	return -EINVAL;
->  }
->  
-> -/*
-> - * vimc_streamer_thread - process frames through the pipeline
-> +/**
-> + * vimc_streamer_thread - Process frames through the pipeline
->   *
->   * @data:	vimc_stream struct of the current stream
->   *
->   * From the source to the sink, gets a frame from each subdevice and send to
->   * the next one of the pipeline at a fixed framerate.
-> + *
-> + * Return:
-> + * Always zero (created as ``int`` instead of ``void`` to comply with
-> + * kthread API).
->   */
->  static int vimc_streamer_thread(void *data)
->  {
-> @@ -157,19 +166,20 @@ static int vimc_streamer_thread(void *data)
->  	return 0;
->  }
->  
-> -/*
-> - * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
-> +/**
-> + * vimc_streamer_s_stream - Start/stop the streaming on the media pipeline
->   *
->   * @stream:	the pointer to the stream structure of the current stream
->   * @ved:	pointer to the vimc entity of the entity of the stream
->   * @enable:	flag to determine if stream should start/stop
->   *
-> - * When starting, check if there is no stream->kthread allocated. This should
-> - * indicate that a stream is already running. Then, it initializes
-> - * the pipeline, creates and runs a kthread to consume buffers through the
-> - * pipeline.
-> - * When stopping, analogously check if there is a stream running, stop
-> - * the thread and terminates the pipeline.
-> + * When starting, check if there is no ``stream->kthread`` allocated. This
-> + * should indicate that a stream is already running. Then, it initializes the
-> + * pipeline, creates and runs a kthread to consume buffers through the pipeline.
-> + * When stopping, analogously check if there is a stream running, stop the
-> + * thread and terminates the pipeline.
-> + *
-> + * Return: 0 if success, error code otherwise.
->   */
->  int vimc_streamer_s_stream(struct vimc_stream *stream,
->  			   struct vimc_ent_device *ved,
+>  			c_size = (rem_q_size > qcsize_bytes) ? qcsize_bytes :
+>  					rem_q_size;
+> -			curr->head = (u8 *)dma_alloc_coherent(&pdev->dev,
+> +			curr->head = dma_alloc_coherent(&pdev->dev,
+>  							      c_size + CPT_NEXT_CHUNK_PTR_SIZE,
+>  							      &curr->dma_addr,
+>  							      GFP_KERNEL);
+
+Please fix up the indentation of the 2nd, 3rd, and 4th line of the call
+if you do this.  Each of those lines should start precisely at the
+first column after the openning parenthesis of the first line.
+
+Thank you.
