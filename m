@@ -5,62 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FFFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E49C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF37212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605B920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LyMN2+S4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fMa51adx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfFXM6l (ORCPT
+        id S1730323AbfFXM6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:58:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37100 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXM6j (ORCPT
+        Mon, 24 Jun 2019 08:58:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40208 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729956AbfFXM6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:58:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCsGs3142975;
-        Mon, 24 Jun 2019 12:58:20 GMT
+        Mon, 24 Jun 2019 08:58:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCsCOt134804;
+        Mon, 24 Jun 2019 12:58:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=KLBclTheGjubyUpbAx+QHqK/8lekhX1YiHOk2x91wZU=;
- b=LyMN2+S4uJvGq8XmNHJVvnpR67iAGd3vC6p4NbKp3UGqqh4hnJ9n8WxpSKKmi4Jq8JWn
- vo8c0Il2jxhJWGEvd9ahOI+n4i2himzhdZR4vvA2N/aDN0CqcyDLMII1wgbKEvvm5A/P
- Zm3lD6r1Gzixk0z+MBa7gZWBtxhw05yVJgoYZBEETB2c+RnkUQ5LfS95bmEd/U9tTXHG
- q60lAks2RT9jdaavL6NcYWtwKXbVxTs95p5DBu7Aq/dLJwxj7e/imHCpHNXsiduY+B1J
- HtFLAFK4xvdKTw5CCwv6wsjcnxfP4Gd7hBPb70KhOrNxKahyU28PKMzhUq9unFMU5nMV Jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyq66qa-1
+ bh=+Q4pzzrxZoJXh+xVOIj14v8jnXjgdLST/W4xS1dW8sQ=;
+ b=fMa51adxpe2xRi74bVyNtxKNrVqVbNu56QNXztXbNDMdlbocpv7FNVwpzCuTCbi/0XZ4
+ IXCJ7KPjWBAz6PREBQzE3auHgTQLSkzWLv9R5B3oovhX2uNlvvgsqmMO0YseCJjqmvhI
+ 7DKW3KLrsqYkjd7ZXJDUysuy8dHJM8e8/95E/u+CBHBsaZyb68huRAOZGYVx9/IohwAI
+ 7AkZfzeSo8ZpTeoeApGJBClWaGA7UzAZ5fnNJ7iTHAsXGxkaKSfkK2vvb73T23ebyNIL
+ 52lQzFD7kn851uvBlQ3+oM47WJMSkOpRZmycPF7Kg59wF24M0yFpokegjP8ADLEHuVUj zw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t9brsx9a2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 12:58:20 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCwBQl108078;
-        Mon, 24 Jun 2019 12:58:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tjnhh-1
+        Mon, 24 Jun 2019 12:58:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCw9Ws042162;
+        Mon, 24 Jun 2019 12:58:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t9acbg5r9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 12:58:19 +0000
+        Mon, 24 Jun 2019 12:58:23 +0000
 Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5OCwHri010630;
-        Mon, 24 Jun 2019 12:58:17 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OCwNcK024881;
+        Mon, 24 Jun 2019 12:58:23 GMT
 Received: from z2.cn.oracle.com (/10.182.69.87)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 05:58:16 -0700
+        with ESMTP ; Mon, 24 Jun 2019 05:58:23 -0700
 From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
         boris.ostrovsky@oracle.com, jgross@suse.com,
         sstabellini@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH 3/6] x86: Add nopv parameter to disable PV extensions
-Date:   Sun, 23 Jun 2019 21:01:40 +0800
-Message-Id: <1561294903-6166-3-git-send-email-zhenzhong.duan@oracle.com>
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH 5/6] locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
+Date:   Sun, 23 Jun 2019 21:01:42 +0800
+Message-Id: <1561294903-6166-5-git-send-email-zhenzhong.duan@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1561294903-6166-1-git-send-email-zhenzhong.duan@oracle.com>
 References: <1561294903-6166-1-git-send-email-zhenzhong.duan@oracle.com>
@@ -80,65 +83,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In virtualization environment, PV extensions (drivers, interrupts,
-timers, etc) are enabled in the majority of use cases which is the
-best option.
+With the boot parameter "hv_nopvspin" specified a Hyperv guest should
+not make use of paravirt spinlocks, but behave as if running on bare
+metal. This is not true, however, as the qspinlock code will fall back
+to a test-and-set scheme when it is detecting a hypervisor.
 
-However, in some cases (kexec not fully working, benchmarking)
-we want to disable PV extensions. As such introduce the
-'nopv' parameter that will do it.
+In order to avoid this disable the virt_spin_lock_key.
 
-There is already 'xen_nopv' parameter for XEN platform but not for
-others. 'xen_nopv' can then be removed with this change.
+Same change for XEN is already in Commit e6fd28eb3522
+("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
 
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: xen-devel@lists.xenproject.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: linux-hyperv@vger.kernel.org
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 ++++
- arch/x86/kernel/cpu/hypervisor.c                | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+ arch/x86/hyperv/hv_spinlock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f666..b352f36 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5268,6 +5268,10 @@
- 			improve timer resolution at the expense of processing
- 			more timer interrupts.
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index 07f21a0..210495b 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
  
-+	nopv=		[X86]
-+			Disables the PV optimizations forcing the guest to run
-+			as generic guest with no PV drivers.
-+
- 	xirc2ps_cs=	[NET,PCMCIA]
- 			Format:
- 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-index 479ca47..4f2c875 100644
---- a/arch/x86/kernel/cpu/hypervisor.c
-+++ b/arch/x86/kernel/cpu/hypervisor.c
-@@ -85,10 +85,21 @@ static void __init copy_array(const void *src, void *target, unsigned int size)
- 			to[i] = from[i];
- }
- 
-+static bool nopv;
-+static __init int xen_parse_nopv(char *arg)
-+{
-+	nopv = true;
-+	return 0;
-+}
-+early_param("nopv", xen_parse_nopv);
-+
- void __init init_hypervisor_platform(void)
+ void __init hv_init_spinlocks(void)
  {
- 	const struct hypervisor_x86 *h;
- 
-+	if (nopv)
-+		return;
++	if (!hv_pvspin)
++		static_branch_disable(&virt_spin_lock_key);
 +
- 	h = detect_hypervisor_vendor();
- 
- 	if (!h)
+ 	if (!hv_pvspin || !apic ||
+ 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
+ 	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
 -- 
 1.8.3.1
 
