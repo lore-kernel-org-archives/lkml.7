@@ -2,151 +2,116 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EDCC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 01:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5CC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 02:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093E320820
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 01:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561255056;
-	bh=DbHELEFktwFIO3TcwhinuOLMWsirGAILkCkazCNQxF0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kAr+Fc8odfnbrOVO+wO3trAd5/0pdz8MT9XKijeGa0ezhVEWAze45Ln3p6c0gV+bg
-	 RyWn5r7FwCG9jO1r3c3KbrBzibI7J9SGDHWfLHGgKWGtlCU/GKNQSI0FWFDgtBbSKK
-	 DEpkGDvzGAwOpQnSE0lN1Pqs9AAL2ghxBdkFnzzY=
+	by mail.kernel.org (Postfix) with ESMTP id A395120673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 02:48:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCkQmVpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfFWB5Z (ORCPT
+        id S1726388AbfFWCma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 21:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfFWB5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 21:57:24 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8275120820;
-        Sun, 23 Jun 2019 01:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561255043;
-        bh=DbHELEFktwFIO3TcwhinuOLMWsirGAILkCkazCNQxF0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ODywlkzvGzHGFBC4/svAr8OFCcBLnRE+Vl7UhoSN9FkuYrfIV5AgaKlp1G8acNi4J
-         FGnS63WbNnagpHhEsOtq4Pf/Gs7MduY51/RF0xy2IgeeIp0RxtHiE8mbs1U3J/fxDi
-         ePBJKSDYvFtzvWwdTwRWVp8B+TyxKBoaQb4kkoQ8=
-Date:   Sun, 23 Jun 2019 10:57:17 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH V34 22/29] Lock down tracing and perf kprobes when in
- confidentiality mode
-Message-Id: <20190623105717.7a22195ea66f276c38ae5096@kernel.org>
-In-Reply-To: <20190622000358.19895-23-matthewgarrett@google.com>
-References: <20190622000358.19895-1-matthewgarrett@google.com>
-        <20190622000358.19895-23-matthewgarrett@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 22 Jun 2019 22:42:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38802 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfFWCma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 22:42:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id j6so404687ioa.5
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 19:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cnFWOK8KBDczr/rYP2uNrysQXAIVz65G0LlKrMiXR+0=;
+        b=qCkQmVpCurrWTAf7i+jAZr5wtWQfHkzFiDFJ01k89OP/MlzDfcOugjeIWZ19eudvjH
+         YdPHpVFpWDIiWbu1tHy7nMZNv91uXhFrr9mg5UmO5O4W3yByuAKEnC38/9THElsSNgKt
+         SnsyQHQgQZfzR750GKruPbZJPOUSxiconLsixDkNppIxP+phuVhF0H4dRPHvlkcOLhGj
+         +ZNfqXKpLE3NE2znt6rZ6xcEyXTjfhrHHIU5CAkkchh0Q0J/wzcO6cgPnI/E+REKZ3QO
+         wOuR8v6R/V4zxmVeoNuuIES1MhCNrVxhLqmOKSxdsJKIQLo0BoTWhAQjsj+BQMCeSV9M
+         tEHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cnFWOK8KBDczr/rYP2uNrysQXAIVz65G0LlKrMiXR+0=;
+        b=c6GPKuF0aUhT33S5d1L8Ol2usdgWhZpeo3Wl9lHMO4wtnMN/2TH1TFw/fNQ9lpdtky
+         bJLHSdLCcQAevHyO7fuv9U/SgKt31txVL9nYEMMPrjg2BCeIreiltmY6k/BYNSnOAUDH
+         /GfTUrDg/Ytp5t4kFfR43E8uPOuGpf54jLaknkzEwoznan4UZoNV3XedGYEkxgqLmec1
+         cRbJUMkI28vuTDJ70u7vJjwJUZdhllqeO4x2k2sLtpGGF3FPKNQl83K9hUXET32RlGGD
+         dd/6RMI3PYjm4Ma2DZrg+y4fXmp7b40VdLjp4f0Aj7GV3c0B3hSMPsTfu4lEpG6JU+X8
+         kKxA==
+X-Gm-Message-State: APjAAAUlN7vPxqZY8w5uwnUt7gtbyvrkcBHeJrqnSUf+aMcoXQzOC5Cs
+        l4gnAvbIfOqX/0oeO2a46r8S13krVKpr7HoyRO8=
+X-Google-Smtp-Source: APXvYqy2GZpCglXvbYLgZBHVnuts2GjGG9FMnMJEDZrcmFcTX1F6EYSPadbyZ5TUSlKLzCW5J9JwFaiL6/m4AyZ2Gg4=
+X-Received: by 2002:a02:ce92:: with SMTP id y18mr34222866jaq.40.1561257749692;
+ Sat, 22 Jun 2019 19:42:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190621162117.22533-1-krzk@kernel.org>
+In-Reply-To: <20190621162117.22533-1-krzk@kernel.org>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Sun, 23 Jun 2019 10:42:18 +0800
+Message-ID: <CAKGbVbviu4i=KAA1cE5X0_du-FnaCzf5ekbmOCv9g8MWuai6vA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] drm/lima: Mark 64-bit number as ULL to silence
+ Smatch warning
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lima@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 17:03:51 -0700
-Matthew Garrett <matthewgarrett@google.com> wrote:
+Thanks. This patch series are:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
-> From: David Howells <dhowells@redhat.com>
-> 
-> Disallow the creation of perf and ftrace kprobes when the kernel is
-> locked down in confidentiality mode by preventing their registration.
-> This prevents kprobes from being used to access kernel memory to steal
-> crypto data, but continues to allow the use of kprobes from signed
-> modules.
+I'll apply them to drm-misc-next.
 
-Looks (and sounds) good to me.
+Regards,
+Qiang
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
-
-> 
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: davem@davemloft.net
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+On Sat, Jun 22, 2019 at 12:21 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Mark long numbers with ULL to silence the Smatch warning:
+>
+>     drivers/gpu/drm/lima/lima_device.c:314:32: warning: constant 0x100000000 is so big it is long long
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
+>
 > ---
->  include/linux/security.h     | 1 +
->  kernel/trace/trace_kprobe.c  | 5 +++++
->  security/lockdown/lockdown.c | 1 +
->  3 files changed, 7 insertions(+)
-> 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 3875f6df2ecc..e6e3e2403474 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -96,6 +96,7 @@ enum lockdown_reason {
->  	LOCKDOWN_MMIOTRACE,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_KCORE,
-> +	LOCKDOWN_KPROBES,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
->  
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 5d5129b05df7..5a76a0f79d48 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -11,6 +11,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/rculist.h>
->  #include <linux/error-injection.h>
-> +#include <linux/security.h>
->  
->  #include "trace_dynevent.h"
->  #include "trace_kprobe_selftest.h"
-> @@ -415,6 +416,10 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
->  {
->  	int i, ret;
->  
-> +	ret = security_locked_down(LOCKDOWN_KPROBES);
-> +	if (ret)
-> +		return ret;
-> +
->  	if (trace_probe_is_registered(&tk->tp))
->  		return -EINVAL;
->  
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 4c9b324dfc55..5a08c17f224d 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -32,6 +32,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_KCORE] = "/proc/kcore access",
-> +	[LOCKDOWN_KPROBES] = "use of kprobes",
->  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->  };
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>
+> Changes since v1:
+> 1. Add reviewed-by tag
+> ---
+>  drivers/gpu/drm/lima/lima_vm.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/lima/lima_vm.h b/drivers/gpu/drm/lima/lima_vm.h
+> index caee2f8a29b4..e0bdedcf14dd 100644
+> --- a/drivers/gpu/drm/lima/lima_vm.h
+> +++ b/drivers/gpu/drm/lima/lima_vm.h
+> @@ -15,9 +15,9 @@
+>  #define LIMA_VM_NUM_PT_PER_BT (1 << LIMA_VM_NUM_PT_PER_BT_SHIFT)
+>  #define LIMA_VM_NUM_BT (LIMA_PAGE_ENT_NUM >> LIMA_VM_NUM_PT_PER_BT_SHIFT)
+>
+> -#define LIMA_VA_RESERVE_START  0xFFF00000
+> +#define LIMA_VA_RESERVE_START  0x0FFF00000ULL
+>  #define LIMA_VA_RESERVE_DLBU   LIMA_VA_RESERVE_START
+> -#define LIMA_VA_RESERVE_END    0x100000000
+> +#define LIMA_VA_RESERVE_END    0x100000000ULL
+>
+>  struct lima_device;
+>
+> --
+> 2.17.1
+>
