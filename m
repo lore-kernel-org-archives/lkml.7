@@ -2,121 +2,135 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39036C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CBBC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C13820679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789012145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="F+cz7D0q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U17bqOBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfFXM4i (ORCPT
+        id S1727855AbfFXM6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:56:38 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:34046 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfFXM4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:56:37 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id 6243EA3CE0;
-        Mon, 24 Jun 2019 14:56:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1561380995;
-        bh=ftLh3jjn96azi7D40yoVAcACOsELxiOylqDXhJNBYqY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=F+cz7D0qNH+OMabqAaPEpFg2lOv2GVExnUwmrt73hWRux1wg4tQh8+CHFieEu6OKx
-         MnWRAJFsGjVXN0Gwp9/KEsjRgt6qQWm56YgkZlqpJj8/pSve1i8mK3LqqmIzHzKvXE
-         ACGqMio9jTjkklnaeoHDudWKXgSjVbgBO4bzkm0w=
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: input: Add support for the MPR121
- without interrupt line
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <1558098773-47416-2-git-send-email-michal.vokac@ysoft.com>
- <20190613223945.GA938@bogus>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <69302603-f1a3-8955-7d90-74a290071794@ysoft.com>
-Date:   Mon, 24 Jun 2019 14:56:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190613223945.GA938@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Jun 2019 08:58:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40094 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfFXM6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 08:58:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCt2vM135433;
+        Mon, 24 Jun 2019 12:58:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=kGn74/hddQ3jiwC8Udn/ISBNEFh1bmGXUBKkLp6x5h8=;
+ b=U17bqOBe5SuR9BvhJFsKv4UVniBZ1sKPJAqbmPY/7N3p2lj7KbKZYCDLPxRCOhNFccE5
+ Deb1pqdkOFG6K4wN6ojWL668yPCtsY4HjubegrZzScyyjyARg8L/PAlbtRmuOtsA2EHg
+ 2NfqrqNeiH3d4FWGBelPd9PA432MAhL9mS+NZVdGYJx+OVCYQyfc3kHudSSWVbH7Z3mE
+ JunV9VB9zobWi3xJJNYHBvozkouHaCvGsBfItDOrMwNbOt8mDGxKjHSw7GCh3fA6dUdC
+ L1bewGCLVjOSwAAuOEnz1lIfe45Adr+7ikVv+5aXJPgLIbqbjzaVYeaPvRRM7n2qK3i7 bg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brsx997-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 12:58:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCw9HI177777;
+        Mon, 24 Jun 2019 12:58:14 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7bmd4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 12:58:14 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OCw7rw024782;
+        Mon, 24 Jun 2019 12:58:07 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 05:58:06 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH 1/6] x86/xen: Mark xen_hvm_need_lapic() and xen_hvm_need_lapic() as __init
+Date:   Sun, 23 Jun 2019 21:01:38 +0800
+Message-Id: <1561294903-6166-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14. 06. 19 0:39, Rob Herring wrote:
-> On Fri, May 17, 2019 at 03:12:50PM +0200, Michal Vokáč wrote:
->> Normally, the MPR121 controller uses separate interrupt line to notify
->> the I2C host that a key was touched/released. To support platforms that
->> can not use the interrupt line, polling of the MPR121 registers can be
->> used.
-> 
-> 'separate' from what?
+.. as they are only called at early bootup stage. In fact, other
+functions in x86_hyper_xen_hvm.init.* are all marked as __init.
 
-"Separate" here is meant like "additional to the standard set of SCL
-and SDA I2C lines". Looks like inappropriately used word by
-a non-native speaker that can be omitted.
+Unexport xen_hvm_need_lapic as it's never used outside.
 
->> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
->> ---
->> Changes since v1:
->> - Document the polled binding in the original file, do not create a new one.
->>    (Rob)
->>
->>   Documentation/devicetree/bindings/input/mpr121-touchkey.txt | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/input/mpr121-touchkey.txt b/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
->> index b7c61ee5841b..97f55273d473 100644
->> --- a/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
->> +++ b/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
->> @@ -1,9 +1,14 @@
->> -* Freescale MPR121 Controllor
->> +* Freescale MPR121 Controller
->>   
->>   Required Properties:
->> -- compatible:		Should be "fsl,mpr121-touchkey"
->> +- compatible:		Should be one of:
->> +			- "fsl,mpr121-touchkey" - MPR121 with interrupt line
->> +			- "fsl,mpr121-touchkey-polled" - MPR121 with polling
->>   - reg:			The I2C slave address of the device.
->>   - interrupts:		The interrupt number to the cpu.
->> +			In case of "fsl,mpr121-touchkey-polled" the interrupt
->> +			line is not used and hence the interrupts property is
->> +			not required.
-> 
-> Absence of the interrupts property is enough to determine polled mode
-> and you don't need a separate compatible string.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+---
+ arch/x86/include/asm/xen/hypervisor.h | 6 +++---
+ arch/x86/xen/enlighten_hvm.c          | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-Would not this work only if the polled mode was implemented as
-part of the current driver? I raised this question in the cover letter.
-I do not really know how this should be done.
+diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
+index 39171b3..42e1245 100644
+--- a/arch/x86/include/asm/xen/hypervisor.h
++++ b/arch/x86/include/asm/xen/hypervisor.h
+@@ -44,14 +44,14 @@ static inline uint32_t xen_cpuid_base(void)
+ }
+ 
+ #ifdef CONFIG_XEN
+-extern bool xen_hvm_need_lapic(void);
++extern bool __init xen_hvm_need_lapic(void);
+ 
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return xen_hvm_need_lapic();
+ }
+ #else
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return (xen_cpuid_base() != 0);
+ }
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index 0e75642..ac4943c 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -218,7 +218,7 @@ static __init int xen_parse_nopv(char *arg)
+ }
+ early_param("xen_nopv", xen_parse_nopv);
+ 
+-bool xen_hvm_need_lapic(void)
++bool __init xen_hvm_need_lapic(void)
+ {
+ 	if (xen_nopv)
+ 		return false;
+@@ -230,7 +230,6 @@ bool xen_hvm_need_lapic(void)
+ 		return false;
+ 	return true;
+ }
+-EXPORT_SYMBOL_GPL(xen_hvm_need_lapic);
+ 
+ static uint32_t __init xen_platform_hvm(void)
+ {
+-- 
+1.8.3.1
 
-So I implemented the polled mode in a new driver (taking the
-gpio-keys-polled as an example). Having separate compatible string is
-the only option I know of to match the right driver.
-
-Anyway, Dmitry already commented that his addition of input_polled_dev
-for creating polled input devices was not the best choice. He would
-rather like to implement polling mode for all regular input devices
-and that would allow to enable polling mode in existing drivers.
-
-Since I do not know how to help with that work I am stuck with the
-separate driver/compatible string solution.
