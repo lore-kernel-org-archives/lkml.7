@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD1FC48BE4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CCDC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9790208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FFE2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e522gMpk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WX3Yrc0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfFWQmV (ORCPT
+        id S1726978AbfFWQm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:42:21 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40938 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfFWQmR (ORCPT
+        Sun, 23 Jun 2019 12:42:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44536 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfFWQmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:42:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so6107032pfp.7;
-        Sun, 23 Jun 2019 09:42:17 -0700 (PDT)
+        Sun, 23 Jun 2019 12:42:24 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t7so5490150plr.11;
+        Sun, 23 Jun 2019 09:42:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=l52fWtW3aoPkxwNQa5fIqgZrHE13Sc/TSQJ/idB7mO0=;
-        b=e522gMpk4cJiXZ8WanDck6Eu2glNq4tzW8JKnszog3QBvg4Ippfq8hNQnuBo94orbX
-         u2gMCzLLiqfDEbsZASmbJ/LDbnQHM3WuwjsSQks2HwbcjZwW8bYclLUg8YNHN4cRskuG
-         1mxiV6/zUeI2UHI4i07lZEVAddmJg3NlXLYI0Cea4XUSP2KJCoRdXJCu5ywoyQBBrO4J
-         gSDJzHwbDUQ41U4Hp9VyyQS5koSpmaIYzZII/KVK+V0OGPFxqs7Nb+IC82AvHAMrHN62
-         NMkiDDwZjezT0qG3aFg6JiCw+YhtJ2roIWJnfE6wpzAZTmn7ZmgEwFn1BGH1knsQvnET
-         Lwug==
+        bh=QeuzSFtFULNoQbGg4hqLSd4xmo0B4o8ksbknu1n0KZM=;
+        b=WX3Yrc0OvQ8B4sl+cSv2hgv3FAi1TFu+BMpDsDcgG2niFAPlDuUCFFhgZT32h1myEe
+         OtI8aFmwrPENLyEXeOboC0R5ChT8PcsJwGPZdcnK3obduopK7EL8O618V8I3vX87FsGM
+         W+SifyHWCKQJGj9xfXnzDbwRP+jNnE/bFXZgvpt3bw7BxHfNUZmo+7zeM6pjWJHXyh59
+         5nF4UUTVWkTN3xE34blNimLRleCmmRIMDrVgnf3u251YCFwHLS9r0nQs/ukEinAW4XTE
+         iIpCgUsg22Bwbo+a6b9zUJ3sewCrvqe41ug9HGsuSntXfo2ffqGkG7r/D6iJaaZIFqCb
+         /Glg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=l52fWtW3aoPkxwNQa5fIqgZrHE13Sc/TSQJ/idB7mO0=;
-        b=uXINXBbNJa3Vl8COQ3OB9TW439GKpeimY/ctnF/hLhRgTQ9TfantSuH7P+NZzHE4zo
-         ET55s57SjOre7EnqZPTgSOIvt0pfX14x+AUjVe2t9OSPwHkuA0fCqh/y06upVj8B+Twr
-         O+b/f12G37GR8UILIA5RLWVyTHV65IGONncWoH9g4cMpp5YVwjjAuyvGUgLz06C1l/Dd
-         3HybF726/lal4e2FqxWzkHkSb3aD4noDrsnhwQ46FdEi3CuFo+Xa/3iRcGSshdiTi3oO
-         RWZxe+IAPWtcdI1d8kXSjgLYvRgskK8d0xE7jMJFfbaRXkjG7GhOjqrxQ31+AhywF96i
-         a/MQ==
-X-Gm-Message-State: APjAAAUIMPosMngMEW8y50HWWxEPSl0FIAWjlXkN/y45efwag4bF1Zwi
-        x9t4QyrLhctVP8I406pkwD/sOLEk
-X-Google-Smtp-Source: APXvYqxwcVFm4cX8NcFvvREnvAiZRJODJ0isOyybQ/E6r9Z7HRNVzLSobEYtQ42YhiYekF7fI++91Q==
-X-Received: by 2002:a63:8341:: with SMTP id h62mr17783424pge.206.1561308137073;
-        Sun, 23 Jun 2019 09:42:17 -0700 (PDT)
+        bh=QeuzSFtFULNoQbGg4hqLSd4xmo0B4o8ksbknu1n0KZM=;
+        b=lOqXxhIkZXFS+9a0s/uUhueEnIcq7zJrH7hh3D08kJLU5LQSAZnMWGdpT/McSwhEva
+         hkUQpmeln2ncxc1plzNTBi13aHSssYWIayCMPzC8BLenZOUVsVJdVvcuRWiUMVt6fpxi
+         EJO2cxDmG5I1ySlJmKwPjyrwYTS/jNQfUH/JLHACZe43zOf1CSB53fwB2WVdlz2K+oLr
+         zq/qDiOWMTGGyMaI/gYxEQpkRQpNQ/9Bn3T6sG9bQpiOXdUpCiENYeG1NRGN9Duw433l
+         Jj8C3vth3P++S5TDThXwg/iuz+dit1yJFExQsvWmd5yf0sAsJaJJITv4y2JbQVE063k+
+         Ueng==
+X-Gm-Message-State: APjAAAWiTngzjkPJvOGtCxs4HPSGqqQYN7pTl+g9CcVe4OBaMD+bST5W
+        Am0QjPRVH/rLfBe29sveF1mrtiBKMWA=
+X-Google-Smtp-Source: APXvYqwmAwNO0tRQc1DYoa+hJd5YtKf6VLWWVmJUG+ZzCkzrIkvCUZwARJRuxYe6faj0d1GPkbIWBg==
+X-Received: by 2002:a17:902:6b02:: with SMTP id o2mr48701805plk.133.1561308143647;
+        Sun, 23 Jun 2019 09:42:23 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id m6sm9744878pjl.18.2019.06.23.09.42.16
+        by smtp.gmail.com with ESMTPSA id e6sm9766388pfn.71.2019.06.23.09.42.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Jun 2019 09:42:16 -0700 (PDT)
+        Sun, 23 Jun 2019 09:42:23 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     rui.zhang@intel.com, edubezval@gmail.com,
         daniel.lezcano@linaro.org, robh+dt@kernel.org,
@@ -66,9 +66,9 @@ To:     rui.zhang@intel.com, edubezval@gmail.com,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v4 03/11] thermal: fix indentation in makefile
-Date:   Sun, 23 Jun 2019 12:41:58 -0400
-Message-Id: <20190623164206.7467-4-tiny.windzz@gmail.com>
+Subject: [PATCH v4 06/11] thermal: sun8i: get ths init func from device compatible
+Date:   Sun, 23 Jun 2019 12:42:01 -0400
+Message-Id: <20190623164206.7467-7-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
 References: <20190623164206.7467-1-tiny.windzz@gmail.com>
@@ -77,49 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To unify code style.
+There are some differences in register initialization for
+different socs. So we get different initialization functions
+from device compatible.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index fa6f8b206281..d7eafb5ef8ef 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -5,7 +5,7 @@
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index e473a5651436..59acbbac76e4 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -59,6 +59,7 @@ struct ths_thermal_chip {
+ 	int		scale;
+ 	int		ft_deviation;
+ 	int		temp_data_base;
++	int		(*init)(struct ths_device *tmdev);
+ };
  
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
--					thermal_helpers.o
-+				   thermal_helpers.o
+ struct ths_device {
+@@ -362,7 +363,7 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
  
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
-@@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
- thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+-	ret = sun50i_thermal_init(tmdev);
++	ret = tmdev->chip->init(tmdev);
+ 	if (ret)
+ 		return ret;
  
- # devfreq cooling
--thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-+thermal_sys-$(CONFIG_DEVFREQ_THERMAL) 	+= devfreq_cooling.o
+@@ -400,6 +401,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.scale = -67,
+ 	.ft_deviation = SUN50I_H6_FT_DEVIATION,
+ 	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
++	.init = sun50i_thermal_init,
+ };
  
- # platform thermal drivers
- obj-y				+= broadcom/
--obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-+obj-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-@@ -50,7 +50,7 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+= ti-soc-thermal/
- obj-y				+= st/
- obj-$(CONFIG_QCOM_TSENS)	+= qcom/
- obj-y				+= tegra/
--obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
-+obj-$(CONFIG_HISI_THERMAL)     	+= hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+ static const struct of_device_id of_ths_match[] = {
 -- 
 2.17.1
 
