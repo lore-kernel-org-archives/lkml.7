@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A0DC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352E1C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07CE21738
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CFD821738
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfFWN1t (ORCPT
+        id S1726730AbfFWN1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 09:27:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33463 "EHLO
+        Sun, 23 Jun 2019 09:27:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33439 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbfFWN1q (ORCPT
+        with ESMTP id S1725963AbfFWN1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 09:27:46 -0400
+        Sun, 23 Jun 2019 09:27:43 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hf2X1-0001kP-N3; Sun, 23 Jun 2019 15:27:43 +0200
-Message-Id: <20190623132435.241032433@linutronix.de>
+        id 1hf2Wz-0001ji-8z; Sun, 23 Jun 2019 15:27:41 +0200
+Message-Id: <20190623132434.860549134@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 23 Jun 2019 15:23:53 +0200
+Date:   Sun, 23 Jun 2019 15:23:49 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -36,7 +36,7 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
         Stephane Eranian <eranian@google.com>,
         Ravi Shankar <ravi.v.shankar@intel.com>
-Subject: [patch 13/29] x86/hpet: Decapitalize and rename EVT_TO_HPET_DEV
+Subject: [patch 09/29] x86/hpet: Move static and global variables to one place
 References: <20190623132340.463097504@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,81 +45,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a function not a macro and the upcoming changes use channel for the
-individual hpet timer units to allow a step by step refactoring approach.
+Having static and global variables sprinkled all over the code is just
+annoying to read. Move them all to the top of the file.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/hpet.c |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+ arch/x86/kernel/hpet.c |   50 +++++++++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 28 deletions(-)
 
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -69,9 +69,10 @@ static bool				hpet_verbose;
+@@ -23,6 +23,15 @@
+ #undef  pr_fmt
+ #define pr_fmt(fmt) "hpet: " fmt
  
- static struct clock_event_device	hpet_clockevent;
++struct hpet_dev {
++	struct clock_event_device	evt;
++	unsigned int			num;
++	int				cpu;
++	unsigned int			irq;
++	unsigned int			flags;
++	char				name[10];
++};
++
+ #define HPET_MASK			CLOCKSOURCE_MASK(32)
  
--static inline struct hpet_dev *EVT_TO_HPET_DEV(struct clock_event_device *evtdev)
-+static inline
-+struct hpet_dev *clockevent_to_channel(struct clock_event_device *evt)
+ #define HPET_DEV_USED_BIT		2
+@@ -43,18 +52,22 @@ bool					hpet_msi_disable;
+ 
+ #ifdef CONFIG_PCI_MSI
+ static unsigned int			hpet_num_timers;
++static struct hpet_dev			*hpet_devs;
++static DEFINE_PER_CPU(struct hpet_dev *, cpu_hpet_dev);
++static struct irq_domain		*hpet_domain;
+ #endif
++
+ static void __iomem			*hpet_virt_address;
+ static u32				*hpet_boot_cfg;
+ 
+-struct hpet_dev {
+-	struct clock_event_device	evt;
+-	unsigned int			num;
+-	int				cpu;
+-	unsigned int			irq;
+-	unsigned int			flags;
+-	char				name[10];
+-};
++static bool				hpet_legacy_int_enabled;
++static unsigned long			hpet_freq;
++
++bool					boot_hpet_disable;
++bool					hpet_force_user;
++static bool				hpet_verbose;
++
++static struct clock_event_device	hpet_clockevent;
+ 
+ static inline struct hpet_dev *EVT_TO_HPET_DEV(struct clock_event_device *evtdev)
  {
--	return container_of(evtdev, struct hpet_dev, evt);
-+	return container_of(evt, struct hpet_dev, evt);
- }
- 
- inline unsigned int hpet_readl(unsigned int a)
-@@ -458,28 +459,22 @@ void hpet_msi_write(struct hpet_dev *hde
- 
- static int hpet_msi_shutdown(struct clock_event_device *evt)
- {
--	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+@@ -85,10 +98,6 @@ static inline void hpet_clear_mapping(vo
+ /*
+  * HPET command line enable / disable
+  */
+-bool boot_hpet_disable;
+-bool hpet_force_user;
+-static bool hpet_verbose;
 -
--	return hpet_shutdown(evt, hdev->num);
-+	return hpet_shutdown(evt, clockevent_to_channel(evt)->num);
+ static int __init hpet_setup(char *str)
+ {
+ 	while (str) {
+@@ -120,11 +129,6 @@ static inline int is_hpet_capable(void)
+ 	return !boot_hpet_disable && hpet_address;
  }
  
- static int hpet_msi_set_oneshot(struct clock_event_device *evt)
- {
--	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-/*
+- * HPET timer interrupt enable / disable
+- */
+-static bool hpet_legacy_int_enabled;
 -
--	return hpet_set_oneshot(evt, hdev->num);
-+	return hpet_set_oneshot(evt, clockevent_to_channel(evt)->num);
- }
+ /**
+  * is_hpet_enabled - check whether the hpet timer interrupt is enabled
+  */
+@@ -217,13 +221,7 @@ static void __init hpet_reserve_platform
+ static void hpet_reserve_platform_timers(unsigned int id) { }
+ #endif
  
- static int hpet_msi_set_periodic(struct clock_event_device *evt)
- {
--	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-/*
+- * Common hpet info
+- */
+-static unsigned long hpet_freq;
 -
--	return hpet_set_periodic(evt, hdev->num);
-+	return hpet_set_periodic(evt, clockevent_to_channel(evt)->num);
- }
- 
- static int hpet_msi_resume(struct clock_event_device *evt)
- {
--	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
-+	struct hpet_dev *hdev = clockevent_to_channel(evt);
- 	struct irq_data *data = irq_get_irq_data(hdev->irq);
- 	struct msi_msg msg;
- 
-@@ -491,16 +486,14 @@ static int hpet_msi_resume(struct clock_
- }
- 
- static int hpet_msi_next_event(unsigned long delta,
--				struct clock_event_device *evt)
-+			       struct clock_event_device *evt)
- {
--	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-static struct clock_event_device hpet_clockevent;
 -
--	return hpet_next_event(delta, hdev->num);
-+	return hpet_next_event(delta, clockevent_to_channel(evt)->num);
- }
- 
- static irqreturn_t hpet_interrupt_handler(int irq, void *data)
++/* Common hpet functions */
+ static void hpet_stop_counter(void)
  {
--	struct hpet_dev *dev = (struct hpet_dev *)data;
-+	struct hpet_dev *dev = data;
- 	struct clock_event_device *hevt = &dev->evt;
+ 	u32 cfg = hpet_readl(HPET_CFG);
+@@ -430,10 +428,6 @@ static struct clock_event_device hpet_cl
+  */
+ #ifdef CONFIG_PCI_MSI
  
- 	if (!hevt->event_handler) {
+-static DEFINE_PER_CPU(struct hpet_dev *, cpu_hpet_dev);
+-static struct hpet_dev	*hpet_devs;
+-static struct irq_domain *hpet_domain;
+-
+ void hpet_msi_unmask(struct irq_data *data)
+ {
+ 	struct hpet_dev *hdev = irq_data_get_irq_handler_data(data);
 
 
