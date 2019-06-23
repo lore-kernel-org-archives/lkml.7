@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30289C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB8EC48BE4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0607222CEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F4D22CEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XUorqbSn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yD/hblzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfFXBlr (ORCPT
+        id S1726883AbfFXBlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:41:47 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43987 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFXBk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:41:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51211 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfFXBk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 21:40:57 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNrCnR2859711
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNupjx2860305
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 16:53:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNrCnR2859711
+        Sun, 23 Jun 2019 16:56:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNupjx2860305
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561333993;
-        bh=edl4mcIV9KIInPAdE5Cm1ulGFQS5zNDKqOxX+yAEMWk=;
+        s=2019061801; t=1561334212;
+        bh=cU6U0DTDpzt3ITirMeTEFL0anIB+F/Sdmvp7TuSAZkc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=XUorqbSn5dewYUPpr08alpXyQq77DD/dZO+CuuSLaenCD6o2UPxnsN7jp4M4d6iCX
-         Wd0bNL0NwZ7IjlIRVocXD6DR7oHcyg52g2NSfS0dcfXaOjd4lJrDixAdbPk9JamU06
-         9t314WaNiCKzmT3bISwYmEm0q2MmfsBcOLKOt8/fMkFAhPNz7/ERXIPo6RqP81Nhc+
-         ja67svlfQ8749/uAjrJ9b7I34zQFkmazQ6ecMoR0ncF9LMK9h9C4UL8nws60t2eCW4
-         29v33liZMAXqZLfjJ5m4YkPY7fk/YXN+Ivj2s5t8pEsFXsr+INS2REjpyo4LDVEgiC
-         2TthAmjeC0Eqw==
+        b=yD/hblzZ86RHmH/i1/E9J/6kV/WgGChYHByBrVPwSRf5RaBWBsXLEzOtqT1glY58D
+         P8G0qWTYlvNSR4B1Dsi9T0CPhm/zeFQQq1DNlkwRa9dSoQ6jWKTTWRq6wPgJlqeeC2
+         bg11jqXxrfA5UORCI5bcXQ2lMO6T9hkxnyVe5fnjfXStK9lE+3XDisxXhurKo6RllX
+         p0COtxe8lHBHQptYcPybfk4NaPis9UrUfyqzfi+A5NCyb3YVXih1OXW3+xeMpIt/0Y
+         IOVn7WVrIJWm7kJpomRgi3xcZj8NsaweiPKSV+Y6vqcc8h+aXvDIeFOsswpvomrWon
+         pmogFJiqyfIOg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNrBsK2859708;
-        Sun, 23 Jun 2019 16:53:11 -0700
-Date:   Sun, 23 Jun 2019 16:53:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNuokd2860302;
+        Sun, 23 Jun 2019 16:56:50 -0700
+Date:   Sun, 23 Jun 2019 16:56:50 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Vincenzo Frascino <tipbot@zytor.com>
-Message-ID: <tip-1e3f17f55aec6510f88ff65dcbaae13435af0ba6@git.kernel.org>
-Cc:     andre.przywara@arm.com, vincenzo.frascino@arm.com,
-        sthotton@marvell.com, huw@codeweavers.com, arnd@arndb.de,
-        linux@rasmusvillemoes.dk, salyzyn@android.com,
-        0x7f454c46@gmail.com, mingo@kernel.org, shuah@kernel.org,
-        hpa@zytor.com, paul.burton@mips.com, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk, ralf@linux-mips.org, tglx@linutronix.de,
-        will.deacon@arm.com, pcc@google.com, daniel.lezcano@linaro.org,
-        catalin.marinas@arm.com
-Reply-To: mingo@kernel.org, 0x7f454c46@gmail.com, hpa@zytor.com,
-          shuah@kernel.org, arnd@arndb.de, sthotton@marvell.com,
-          huw@codeweavers.com, vincenzo.frascino@arm.com,
-          andre.przywara@arm.com, salyzyn@android.com,
-          linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org,
-          pcc@google.com, catalin.marinas@arm.com, ralf@linux-mips.org,
-          linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-          paul.burton@mips.com, will.deacon@arm.com, tglx@linutronix.de
-In-Reply-To: <20190621095252.32307-14-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-14-vincenzo.frascino@arm.com>
+Message-ID: <tip-22ca962288c0a1c9729e8e440b9bb9ad05df6db6@git.kernel.org>
+Cc:     ralf@linux-mips.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux@rasmusvillemoes.dk, will.deacon@arm.com,
+        0x7f454c46@gmail.com, mingo@kernel.org, tglx@linutronix.de,
+        hpa@zytor.com, andre.przywara@arm.com, daniel.lezcano@linaro.org,
+        sthotton@marvell.com, vincenzo.frascino@arm.com, pcc@google.com,
+        linux@armlinux.org.uk, salyzyn@android.com, paul.burton@mips.com,
+        catalin.marinas@arm.com, huw@codeweavers.com
+Reply-To: daniel.lezcano@linaro.org, sthotton@marvell.com,
+          andre.przywara@arm.com, hpa@zytor.com, tglx@linutronix.de,
+          mingo@kernel.org, will.deacon@arm.com, 0x7f454c46@gmail.com,
+          linux@rasmusvillemoes.dk, arnd@arndb.de, shuah@kernel.org,
+          linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+          huw@codeweavers.com, paul.burton@mips.com,
+          catalin.marinas@arm.com, salyzyn@android.com,
+          linux@armlinux.org.uk, pcc@google.com, vincenzo.frascino@arm.com
+In-Reply-To: <20190621095252.32307-25-vincenzo.frascino@arm.com>
+References: <20190621095252.32307-25-vincenzo.frascino@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] arm64: elf: VDSO code page discovery
-Git-Commit-ID: 1e3f17f55aec6510f88ff65dcbaae13435af0ba6
+Subject: [tip:timers/vdso] x86/vdso: Add clock_gettime64() entry point
+Git-Commit-ID: 22ca962288c0a1c9729e8e440b9bb9ad05df6db6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -78,25 +79,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1e3f17f55aec6510f88ff65dcbaae13435af0ba6
-Gitweb:     https://git.kernel.org/tip/1e3f17f55aec6510f88ff65dcbaae13435af0ba6
+Commit-ID:  22ca962288c0a1c9729e8e440b9bb9ad05df6db6
+Gitweb:     https://git.kernel.org/tip/22ca962288c0a1c9729e8e440b9bb9ad05df6db6
 Author:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate: Fri, 21 Jun 2019 10:52:40 +0100
+AuthorDate: Fri, 21 Jun 2019 10:52:51 +0100
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 21:21:09 +0200
+CommitDate: Sat, 22 Jun 2019 21:21:10 +0200
 
-arm64: elf: VDSO code page discovery
+x86/vdso: Add clock_gettime64() entry point
 
-Like in normal vDSOs, when compat vDSOs are enabled the auxiliary
-vector symbol AT_SYSINFO_EHDR needs to point to the address of the
-vDSO code, to allow the dynamic linker to find it.
+Linux 5.1 gained the new clock_gettime64() syscall to address the Y2038
+problem on 32bit systems. The x86 VDSO is missing support for this variant
+of clock_gettime().
 
-Add the necessary code to the elf arm64 module to make this possible.
+Update the x86 specific vDSO library accordingly so it exposes the new time
+getter.
+
+[ tglx: Massaged changelog ]
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Shijith Thotton <sthotton@marvell.com>
-Tested-by: Andre Przywara <andre.przywara@arm.com>
 Cc: linux-arch@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-mips@vger.kernel.org
@@ -114,35 +116,43 @@ Cc: Shuah Khan <shuah@kernel.org>
 Cc: Dmitry Safonov <0x7f454c46@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Huw Davies <huw@codeweavers.com>
-Link: https://lkml.kernel.org/r/20190621095252.32307-14-vincenzo.frascino@arm.com
+Cc: Shijith Thotton <sthotton@marvell.com>
+Cc: Andre Przywara <andre.przywara@arm.com>
+Link: https://lkml.kernel.org/r/20190621095252.32307-25-vincenzo.frascino@arm.com
 
 ---
- arch/arm64/include/asm/elf.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/entry/vdso/vclock_gettime.c    | 8 ++++++++
+ arch/x86/entry/vdso/vdso32/vdso32.lds.S | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index 325d9515c0f8..3c7037c6ba9b 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -202,7 +202,21 @@ typedef compat_elf_greg_t		compat_elf_gregset_t[COMPAT_ELF_NGREG];
- ({									\
- 	set_thread_flag(TIF_32BIT);					\
-  })
-+#ifdef CONFIG_GENERIC_COMPAT_VDSO
-+#define COMPAT_ARCH_DLINFO						\
-+do {									\
-+	/*								\
-+	 * Note that we use Elf64_Off instead of elf_addr_t because	\
-+	 * elf_addr_t in compat is defined as Elf32_Addr and casting	\
-+	 * current->mm->context.vdso to it triggers a cast warning of	\
-+	 * cast from pointer to integer of different size.		\
-+	 */								\
-+	NEW_AUX_ENT(AT_SYSINFO_EHDR,					\
-+			(Elf64_Off)current->mm->context.vdso);		\
-+} while (0)
-+#else
- #define COMPAT_ARCH_DLINFO
-+#endif
- extern int aarch32_setup_additional_pages(struct linux_binprm *bprm,
- 					  int uses_interp);
- #define compat_arch_setup_additional_pages \
+diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
+index 1a648b509d46..d9ff616bb0f6 100644
+--- a/arch/x86/entry/vdso/vclock_gettime.c
++++ b/arch/x86/entry/vdso/vclock_gettime.c
+@@ -67,6 +67,14 @@ int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
+ int clock_gettime(clockid_t, struct old_timespec32 *)
+ 	__attribute__((weak, alias("__vdso_clock_gettime")));
+ 
++int __vdso_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts)
++{
++	return __cvdso_clock_gettime(clock, ts);
++}
++
++int clock_gettime64(clockid_t, struct __kernel_timespec *)
++	__attribute__((weak, alias("__vdso_clock_gettime64")));
++
+ int __vdso_clock_getres(clockid_t clock, struct old_timespec32 *res)
+ {
+ 	return __cvdso_clock_getres_time32(clock, res);
+diff --git a/arch/x86/entry/vdso/vdso32/vdso32.lds.S b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
+index 991b26cc855b..c7720995ab1a 100644
+--- a/arch/x86/entry/vdso/vdso32/vdso32.lds.S
++++ b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
+@@ -27,6 +27,7 @@ VERSION
+ 		__vdso_gettimeofday;
+ 		__vdso_time;
+ 		__vdso_clock_getres;
++		__vdso_clock_gettime64;
+ 	};
+ 
+ 	LINUX_2.5 {
