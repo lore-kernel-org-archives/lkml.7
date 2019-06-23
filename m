@@ -2,132 +2,98 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB998C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0522AC48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03F0205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561317416;
-	bh=6JDucSZw1YglZ+Kvn1XvG/d7XRm8rtQU0pYzpt6juPQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D+h+p89tmihVKLFidjmljlUhAZiq+B1rjHdgvB+kGlL2zbXPzKaAaIivp6xFqu+/j
-	 Q2RCPWBnSaBX6bvnRJNQo/SrTO0baeqbAbyz3AiBwiH5Pl36dORBzKlvsEj75aRO4P
-	 xrekpcjpCtX1XYxP+C3uqxvC7P0yafCmA9+I6IP8=
+	by mail.kernel.org (Postfix) with ESMTP id D1A3F20656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KQ4j5ZKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFWTQz (ORCPT
+        id S1726357AbfFWTSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 15:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfFWTQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 15:16:55 -0400
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C1420656;
-        Sun, 23 Jun 2019 19:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561317413;
-        bh=6JDucSZw1YglZ+Kvn1XvG/d7XRm8rtQU0pYzpt6juPQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CgPUq7sAB/XO8qNar6PVGibgQKQdya1cBTNQIzBoYgFB2qjMHS9QfbpRzqC3/m5kG
-         OyWlgC3LDdCBlN053kcq+D1tj4UrG6j4U59OKjyr98+U5nfZOMojlQLAXv4nBo04+r
-         H9cm5qcsA6Ct10se9Ln3/pBQK07y8eU/9hU+49eU=
-Received: by mail-lf1-f51.google.com with SMTP id d11so8439863lfb.4;
-        Sun, 23 Jun 2019 12:16:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAXCozIVeGdHOLUGfcA1aoaPtJ5J28y5hjvo/qvKUTJgFFAjBmR5
-        MBVuIMcoiGJ6hccUt3p/J04obKjeEm0fHWuIXJM=
-X-Google-Smtp-Source: APXvYqxXWDrgM4m579DLxJ1WTUgWjKF7XpNZeubHja/pXAlMQf3hxn+h9Y9vADetzdK8SIjDbU+EfRUwHC82D+/8Bxw=
-X-Received: by 2002:ac2:5601:: with SMTP id v1mr7937600lfd.106.1561317411913;
- Sun, 23 Jun 2019 12:16:51 -0700 (PDT)
+        Sun, 23 Jun 2019 15:18:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44379 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbfFWTSr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 15:18:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so6199459pfe.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 12:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=f9qXptgylHIAEQXQTAuBnq2RBq3dvQEaePaTzKc6t5o=;
+        b=KQ4j5ZKmjcMZt3yJiy9ufK2L4dMLjg1mXx6wX7BtxENgmv9ZDdkCUV1I9bSu4M/8ik
+         9mnLUHwkqwm3G/cVj/1SUXEbG0XWNrmOyC9l3b1H5cGyncPyiwkUg8tQEEhMFfjLuh82
+         jy/is46Fjz/qQixn41IByRhOMz3Bmgb7W3xiLSejYdSh7MJ9y3BA67/GYoDe5eBU1slV
+         n/Jr4PdFwyPoc7lqMcMQAyvwzCrhO52Qea7CXiW0tX1Sq4jnVyZ5bMVlHb9NAW8TiEVg
+         gGwAukMIfG9ytZ1KpjlWijFFoU70ZTUa9rVf8APnhmyMsv0YX5SriHHYNsgpp+4xCAYp
+         1NlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=f9qXptgylHIAEQXQTAuBnq2RBq3dvQEaePaTzKc6t5o=;
+        b=HXySyJDGBpz2ax69LYt9MOjzJjsAnkk4B6tnzzY8AFNywuSFFPMkUac4cn7iViiDDi
+         51rZPUr+WTOpMuxT9rYoyx2Uwsfe9NT5NUt2JDujEXmw78WXkqEktCpsS5xRagmBnki7
+         gNEIvJkeOx1//v3FK191KVSrvZDI+kk/vhPqv49bzxvGZFloPxqjIpiDowPP/yVA4uSu
+         Hpol7k9qyrhY/yaEKShsBP4i5F+KcWa1dfTZF46LJeAJ3x/Cj7+GXmP/UdQJvHZ8J9dL
+         opWKTV5QxRRs/32b4ZML93lOW0DvyW2EcVyxBHneYxvs/EfYbroGMdienxWO7e7FFNPH
+         fd9A==
+X-Gm-Message-State: APjAAAWwmV648QYAYnesncjnOLdkI8Yi7qdCyawuSxr8OtJ+PvI0LsTr
+        y+i0fmrmtPHqX7DlsQyT2oFw7NBtI4k=
+X-Google-Smtp-Source: APXvYqy6th0fKsgTaL4WunOqvuhGKOUKqQYaQw7eAE0Dqj3MtmkeNpMhyAK2c4KAlL1lXEfEpOBw9g==
+X-Received: by 2002:a63:4419:: with SMTP id r25mr30247484pga.247.1561317525806;
+        Sun, 23 Jun 2019 12:18:45 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id f88sm9808002pjg.5.2019.06.23.12.18.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 23 Jun 2019 12:18:44 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 12:18:44 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+cc:     Brijesh Singh <brijesh.singh@amd.com>,
+        Cfir Cohen <cfir@google.com>, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [patch] crypto: ccp - Free ccp if initialization fails
+Message-ID: <alpine.DEB.2.21.1906231217040.15277@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190621180208.25361-7-krzk@kernel.org> <20190622191838.29850-1-krzk@kernel.org>
- <CAGTfZH2g6E2pCEtqjfCd+PjEzjwc2AB75LXJfCeO+PcYLiLTUw@mail.gmail.com>
-In-Reply-To: <CAGTfZH2g6E2pCEtqjfCd+PjEzjwc2AB75LXJfCeO+PcYLiLTUw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sun, 23 Jun 2019 21:16:40 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcFFY08R1H-DrrzX2BC3L8x4NPJTP7nDn9yixAvmaiF9Q@mail.gmail.com>
-Message-ID: <CAJKOXPcFFY08R1H-DrrzX2BC3L8x4NPJTP7nDn9yixAvmaiF9Q@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: defconfig: Enable Panfrost and Lima drivers
-To:     cwchoi00@gmail.com
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Olof Johansson <olof@lixom.net>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019 at 06:31, Chanwoo Choi <cwchoi00@gmail.com> wrote:
->
-> Hi Krzysztof,
->
-> 2019=EB=85=84 6=EC=9B=94 23=EC=9D=BC (=EC=9D=BC) =EC=98=A4=EC=A0=84 4:20,=
- Krzysztof Kozlowski <krzk@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1=
-:
-> >
-> > Enable support for Mali GPU with Panfrost and Lima drivers for:
-> > 1. Samsung Exynos5433 and Exynos7 (having Mali T760),
-> > 2. Allwiner A64 and H5 (Mali 400/450).
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > 1. Enable Lima driver
-> > ---
-> >  arch/arm64/configs/defconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
-g
-> > index fbbc065415d4..3d31611368af 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -518,6 +518,8 @@ CONFIG_DRM_HISI_HIBMC=3Dm
-> >  CONFIG_DRM_HISI_KIRIN=3Dm
-> >  CONFIG_DRM_MESON=3Dm
-> >  CONFIG_DRM_PL111=3Dm
-> > +CONFIG_DRM_LIMA=3Dm
-> > +CONFIG_DRM_PANFROST=3Dm
-> >  CONFIG_FB=3Dy
-> >  CONFIG_FB_MODE_HELPERS=3Dy
-> >  CONFIG_BACKLIGHT_GENERIC=3Dm
-> > @@ -718,7 +720,6 @@ CONFIG_ARCH_TEGRA_194_SOC=3Dy
-> >  CONFIG_ARCH_K3_AM6_SOC=3Dy
-> >  CONFIG_SOC_TI=3Dy
-> >  CONFIG_TI_SCI_PM_DOMAINS=3Dy
-> > -CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=3Dy
->
-> Exynos5433-tm2 board support the exynos-bus device which
-> used the simple_ondmenad governor of devfreq.
-> Why do you remove this configuration from the defconfig?
+If ccp_dev_init() fails, kfree() the allocated ccp since it will otherwise
+be leaked.
 
-It is selected by default by DRM_PANFROST. The difference is that
-PANFROST selects it as module. The 'y' is chosen because of:
-  SCSI_UFSHCD [=3Dy] && SCSI_LOWLEVEL [=3Dy] && SCSI [=3Dy] && SCSI_DMA [=
-=3Dy]
+Fixes: 720419f01832 ("crypto: ccp - Introduce the AMD Secure Processor
+device")
 
-Best regards,
-Krzysztof
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ drivers/crypto/ccp/ccp-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/crypto/ccp/ccp-dev.c b/drivers/crypto/ccp/ccp-dev.c
+--- a/drivers/crypto/ccp/ccp-dev.c
++++ b/drivers/crypto/ccp/ccp-dev.c
+@@ -609,6 +609,7 @@ int ccp_dev_init(struct sp_device *sp)
+ 
+ e_err:
+ 	sp->ccp_data = NULL;
++	kfree(ccp);
+ 
+ 	dev_notice(dev, "ccp initialization failed\n");
+ 
