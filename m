@@ -2,156 +2,111 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B64C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691B8C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B2820679
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DFuAqy07"
+	by mail.kernel.org (Postfix) with ESMTP id 3F91320679
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfFWKWj (ORCPT
+        id S1726527AbfFWKcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 06:22:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37431 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfFWKWj (ORCPT
+        Sun, 23 Jun 2019 06:32:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33163 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfFWKcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 06:22:39 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NAMOV02589435
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 03:22:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NAMOV02589435
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561285345;
-        bh=fL//r75TyoOH12BOusdMff8Y1ddZJgL7vjP9d2f+UKs=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=DFuAqy07/H5VoPIWAKG0DcdQ51PjdgxOeRuhRho5zbpcz2HAVmU9RoeY1dDvE3/k9
-         fVv0El+zOgyxzimj+5yJlYWoC4GMbrSQ+AuDx0z49bZAc12f6CBCDQHQz+KGfJizuy
-         RerD05FE6yfMNzCNMmytgHJPO/WY2Do6jsqau0WabNxjmTpqDhx5bIvTVRJ+XBerUk
-         cBCBLVO4iUH9H/NMpxrCzy7h2K45jYqW37E18WeywcRGqNF2id3Jdy+yBh9ehFEu5l
-         zYY7jKpC8xe5kMc66d9Z0jedwPN+LD9H+fDJ/kaI8yK6HT++fnhfg+0cnlkSt4dq1e
-         /YWTqyTD3CuKA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NAMODK2589431;
-        Sun, 23 Jun 2019 03:22:24 -0700
-Date:   Sun, 23 Jun 2019 03:22:24 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nathan Huckleberry <tipbot@zytor.com>
-Message-ID: <tip-a9314773a91a1d3b36270085246a6715a326ff00@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        ndesaulniers@google.com, hpa@zytor.com, nhuck@google.com
-Reply-To: tglx@linutronix.de, nhuck@google.com, ndesaulniers@google.com,
-          mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190614181604.112297-1-nhuck@google.com>
-References: <20190614181604.112297-1-nhuck@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] timer_list: Guard procfs specific code
-Git-Commit-ID: a9314773a91a1d3b36270085246a6715a326ff00
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 23 Jun 2019 06:32:20 -0400
+X-Greylist: delayed 825 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 06:32:19 EDT
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1heznB-0007bM-ND; Sun, 23 Jun 2019 12:32:13 +0200
+Date:   Sun, 23 Jun 2019 12:32:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] time: hrtimer: use a bullet for the returns bullet
+ list
+In-Reply-To: <20190620171617.3368f30b@coco.lan>
+Message-ID: <alpine.DEB.2.21.1906231228080.32342@nanos.tec.linutronix.de>
+References: <a83ea390bc28784518fce772b4c961ea1c976f14.1560883872.git.mchehab+samsung@kernel.org> <a4cab6020e0475e7a4afc65dc5854756dd1bfbe9.1560883872.git.mchehab+samsung@kernel.org> <20190620140233.3d7202ee@lwn.net> <20190620171617.3368f30b@coco.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: multipart/mixed; BOUNDARY="8323329-1631302952-1561285808=:32342"
+Content-ID: <alpine.DEB.2.21.1906231230220.32342@nanos.tec.linutronix.de>
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a9314773a91a1d3b36270085246a6715a326ff00
-Gitweb:     https://git.kernel.org/tip/a9314773a91a1d3b36270085246a6715a326ff00
-Author:     Nathan Huckleberry <nhuck@google.com>
-AuthorDate: Fri, 14 Jun 2019 11:16:04 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sun, 23 Jun 2019 00:08:52 +0200
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-timer_list: Guard procfs specific code
+--8323329-1631302952-1561285808=:32342
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.DEB.2.21.1906231230221.32342@nanos.tec.linutronix.de>
 
-With CONFIG_PROC_FS=n the following warning is emitted:
+On Thu, 20 Jun 2019, Mauro Carvalho Chehab wrote:
+> Em Thu, 20 Jun 2019 14:02:33 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+> > On Tue, 18 Jun 2019 15:51:20 -0300
+> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > >   * Returns:
+> > > - *  0 when the timer was not active
+> > > - *  1 when the timer was active
+> > > - * -1 when the timer is currently executing the callback function and
+> > > + *
+> > > + *  •  0 when the timer was not active
+> > > + *  •  1 when the timer was active
+> > > + *  • -1 when the timer is currently executing the callback function and
+> > >   *    cannot be stopped  
+> > 
+> > So I have taken some grief for letting non-ASCII stuff into the docs
+> > before; I can only imagine that those who object would be even more
+> > unhappy to see it in a C source file.  I'm all for fixing the warning, but
+> > I think we shouldn't start introducing exotic characters at this point...
+> 
+> According to:
+> 	http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists
+> 
+> The ASCII options are: "-", "+" or "*".
+> 
+> Both signs ('-' and '+') aren't too nice here, due to "-1".
+> 
+> So, what's left is '*'.
+> 
+> I remember someone once complained about having something like:
+> 
+> 	* * -1 when the ...
 
-kernel/time/timer_list.c:361:36: warning: unused variable
-'timer_list_sops' [-Wunused-const-variable]
-   static const struct seq_operations timer_list_sops = {
-
-Add #ifdef guard around procfs specific code.
-
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/534
-Link: https://lkml.kernel.org/r/20190614181604.112297-1-nhuck@google.com
-
----
- kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index 98ba50dcb1b2..acb326f5f50a 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -282,23 +282,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
- 	SEQ_printf(m, "\n");
- }
+I'm fine with that.
  
--static int timer_list_show(struct seq_file *m, void *v)
--{
--	struct timer_list_iter *iter = v;
--
--	if (iter->cpu == -1 && !iter->second_pass)
--		timer_list_header(m, iter->now);
--	else if (!iter->second_pass)
--		print_cpu(m, iter->cpu, iter->now);
--#ifdef CONFIG_GENERIC_CLOCKEVENTS
--	else if (iter->cpu == -1 && iter->second_pass)
--		timer_list_show_tickdevices_header(m);
--	else
--		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
--#endif
--	return 0;
--}
--
- void sysrq_timer_list_show(void)
- {
- 	u64 now = ktime_to_ns(ktime_get());
-@@ -317,6 +300,24 @@ void sysrq_timer_list_show(void)
- 	return;
- }
+> But if you think we shouldn't use UTF-8 chars, be it.
+
+I don't even know how to write them in the first place.
  
-+#ifdef CONFIG_PROC_FS
-+static int timer_list_show(struct seq_file *m, void *v)
-+{
-+	struct timer_list_iter *iter = v;
-+
-+	if (iter->cpu == -1 && !iter->second_pass)
-+		timer_list_header(m, iter->now);
-+	else if (!iter->second_pass)
-+		print_cpu(m, iter->cpu, iter->now);
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS
-+	else if (iter->cpu == -1 && iter->second_pass)
-+		timer_list_show_tickdevices_header(m);
-+	else
-+		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
-+#endif
-+	return 0;
-+}
-+
- static void *move_iter(struct timer_list_iter *iter, loff_t offset)
- {
- 	for (; offset; offset--) {
-@@ -376,3 +377,4 @@ static int __init init_timer_list_procfs(void)
- 	return 0;
- }
- __initcall(init_timer_list_procfs);
-+#endif
+> Feel free to replace it at the patch, or if you prefer, I'll send a new
+> version tomorrow.
+
+Yes, please.
+
+And while at it please fix the subject line. The usual prefix for hrtimer
+is surprisingly 'hrtimer:' and not 'time: hrtimer:'. Also please start the
+short sentence after the prefix with an uppercase character.
+
+Thanks,
+
+	tglx
+--8323329-1631302952-1561285808=:32342--
