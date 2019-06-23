@@ -2,209 +2,162 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D28DC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22E3C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066762133F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD3B20656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhAuLaJF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YagS2PXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfFWRIV (ORCPT
+        id S1726657AbfFWRR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 13:08:21 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38575 "EHLO
+        Sun, 23 Jun 2019 13:17:58 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36100 "EHLO
         mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfFWRIQ (ORCPT
+        with ESMTP id S1726399AbfFWRR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 13:08:16 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a27so8072020qkk.5;
-        Sun, 23 Jun 2019 10:08:15 -0700 (PDT)
+        Sun, 23 Jun 2019 13:17:57 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g18so8121186qkl.3;
+        Sun, 23 Jun 2019 10:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=M9elc0PQ+TI8jbg2PmLg+UuOO6GjGx+5PwCXytaA0Wc=;
-        b=IhAuLaJF4p/Ij7jvNewOxVJ/KZgmy2R1Vv6RMRFzKePLzpQRrtXb/6Ocxrb/QaaVFO
-         9mvH+TCOnyIpw7OQEzPZ58+EtOP3CtqXqCuME0XLEC0XkcDQPf4omElc8/KNLhY/H2qV
-         6r8nsB39P7MoTHfGHJNAvJzZkXLdkHSnJakJbtBAhQ/SK+NTkp7zhgufqjJDYkTki46c
-         r6t2B24TANc2djX1kewd6hWOm8XOX60d2xpSKSPcMvmR7KdYERJ8ct6opayn9wkD9rOV
-         BI2xhmc0u59mnsxMbwsLBCbBRADgswLlUG+Sn/ogA9QKT0e1LMaMHi+zppTnmJLaFC9p
-         TqaQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oTQJHiQOFJX9TMuzD6eUCrwJJpcVrl2yW+goXQfQCj8=;
+        b=YagS2PXc8FqOqNX+u/fWdMCITgu5lEhgaubB8vuu7uzFL0gXqZagiKIZKs075Bf/xm
+         UHpjfEf41FZ8dknsiecZ79jJeMoFBiROnJHZYhKwdUoh1iVHiwxiZU2QgyWmNTCw4BB+
+         AgzsP/ZA8K3p9NnzDJtG0nCHUxj9YdooaiInEB3skusuIqQV+tDcLsY/pU97SeAFFM/q
+         MscnELUrEvzYMnj4gkr3gSTqr+jUwjE1dwAxknAEmnAyvmQgR+UD+e/eLzPmFieM/uJr
+         gQVWp86juxDTV78xq7Seil+VANoXj2A4vXNtra5tasImp5I+qJQL0JXco9ozFZCbkvPw
+         wISw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M9elc0PQ+TI8jbg2PmLg+UuOO6GjGx+5PwCXytaA0Wc=;
-        b=dznZYac/s1ozPgOEkHSVW6di61BfNlSqipiGR/6/OgYwXLqSxqZo1nzYjwQKd4QELN
-         lM+Gp8y0sotK3rUx95xW2Bn7i1vQCgICyFHT0bK24bPAQCWPDEkWLRknJYjSpn+6NpaZ
-         VI72Z5lGCd6lf8iFu79ZLnCEhD2ibMWd3IQkBDlcouI25QNDZuFtED/9mfdqi/zmokFs
-         kIzQWTKfNaaZgI3K5XflnbCSYHEG+Ns8HPn4q0BhCX9fU3HSIxOJUDPYPMJ9N8MpDLyQ
-         WWvd5YTl6XqOiWJKVa8duDH54POCAA73Uhx6qw/ujv1gv8gXwGVk1q1jQQSZtyoga6u1
-         M/Dg==
-X-Gm-Message-State: APjAAAVi3X2+VBbyLCDoZsQ0vR6Qd3C6yGL7vN1Vgc6xpsraSe753jM6
-        pv2/J+L7rKfvihhsrfuUt7o=
-X-Google-Smtp-Source: APXvYqyT/dhyY8beKLB+S5C2DTElYVyHUfi2XKiR44cnoiCe02r+rHBnMkyjjoblnPDYTakeNvfu7A==
-X-Received: by 2002:a37:6152:: with SMTP id v79mr13049899qkb.488.1561309695342;
-        Sun, 23 Jun 2019 10:08:15 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id o54sm5790756qtb.63.2019.06.23.10.08.13
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oTQJHiQOFJX9TMuzD6eUCrwJJpcVrl2yW+goXQfQCj8=;
+        b=p165nftV5SLY3PwwV5Nb2gQOgEu+O5kRoG6hbiioqdckIY3hc+Wne93q9aFyfQ+GEp
+         GjbsfdBrukx/Ef204nsaAxzSss00vqKuLRrVlnjVwNQBxgSf6A1jYYNFCnrVrsqn+d//
+         g5zqDdhpYhPb0eGFEIvXdRsMWAsSKinMAQf+Ia+/jtIDAqYThs/+hb65wiQgAVGXssS5
+         xGh5lHfWl82ITvzGS9UXKfR/uoN28axv2W6nWL8P0RzAruFJOucifHE7nq/LDISd839Z
+         fA/wwF9ou45Mo2l7G/dJ5CwAGkK+0Wbd2S2zkK7okNP25kv0IDwLeXasm3yOn2slqLj+
+         55JA==
+X-Gm-Message-State: APjAAAWCygLvcdOa1yLDiCsFViQelmnHZ9IYV+ziOIO4Ascy75il1o8R
+        tzN9HrqTbq06MFigrHdStYzOOaru
+X-Google-Smtp-Source: APXvYqyJTClxclnIYTcifSFy9E8UhzxwdPcRWT3uKf1e8+ma/aVZZm2fuvEjrIt4gaiVaAwmgwk2Cw==
+X-Received: by 2002:a37:4e8f:: with SMTP id c137mr82739150qkb.127.1561310276502;
+        Sun, 23 Jun 2019 10:17:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id g5sm5631799qta.77.2019.06.23.10.17.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 10:08:14 -0700 (PDT)
+        Sun, 23 Jun 2019 10:17:55 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30
+ support
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] staging: media: tegra-vde: Manually pack UAPI structures
-Date:   Sun, 23 Jun 2019 20:07:28 +0300
-Message-Id: <20190623170730.5095-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623170730.5095-1-digetx@gmail.com>
-References: <20190623170730.5095-1-digetx@gmail.com>
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+ <20190501233815.32643-1-digetx@gmail.com>
+ <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+ <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+ <0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com>
+ <683b343a-e64f-8345-ac44-10f5c00521bd@samsung.com>
+ <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
+Message-ID: <389cc71d-8f0b-fa39-1325-433d27c75dc8@gmail.com>
+Date:   Sun, 23 Jun 2019 20:17:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <5c2a7c32-a98c-3930-14ae-beb0241908d0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __packed macro isn't available in userspace with the kernel headers.
-Checkpatch asks to use the macro, which is unwanted in a case of a UAPI
-header. There is no much benefit in a tight packing of the structures,
-hence let's pack them manually to cleanup things a tad. Note that there
-is no old-stable userspace that will suffer from this change, hence it's
-fine to change the ABI. In a result also more space is reserved for a
-possible future expansion of the UAPI as it was already shown that more
-fields will be needed for a later SoC generations.
+05.06.2019 2:09, Dmitry Osipenko пишет:
+> 04.06.2019 3:49, Chanwoo Choi пишет:
+>> On 19. 6. 4. 오전 1:52, Dmitry Osipenko wrote:
+>>> 03.05.2019 3:52, Dmitry Osipenko пишет:
+>>>> 03.05.2019 3:31, Chanwoo Choi пишет:
+>>>>> Hi Dmitry,
+>>>>>
+>>>>> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>>>>>> Changelog:
+>>>>>>
+>>>>>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+>>>>>>
+>>>>>>     - changed the driver removal order to match the probe exactly
+>>>>>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>>>>>
+>>>>>>     Chanwoo, please also note that the clk patch that should fix
+>>>>>>     compilation problem that was reported the kbuild-test-robot is already
+>>>>>>     applied and available in the recent linux-next.
+>>>>>
+>>>>> I knew that Stephen picked up your path about clock.
+>>>>
+>>>> Hi Chanwoo,
+>>>>
+>>>> Okay, good. Thank you very much for reviewing this series! I assume it's
+>>>> too late now for v5.2, but it should be good to go for v5.3.
+>>>>
+>>>
+>>> Hello Chanwoo,
+>>>
+>>> Will be nice to see the patches in the linux-next before they'll hit mainline. We have tested that
+>>> everything works fine on a selective devices, but won't hurt to get some extra testing beforehand.
+>>> AFAIK, at least NVIDIA people are regularly testing -next on theirs dev boards. Please note that
+>>> this not very important, so don't bother if there is some hurdle with pushing to the tracking branch
+>>> for now. Also please let me know if you're expecting to see some ACK's on the patches, I'm sure
+>>> we'll be able to work out that with Thierry and Jon if necessary.
+>>>
+>>>
+>>
+>> Hi Dmitry,
+>> I think that it is enough for applying to mainline branch.
+>> The devfreq.git is maintained by Myungjoo. He will be merged or
+>> reviewed if there are th remained review point.
+> 
+> Thank you very much!
+> 
+>>
+>> Hi Myungjoo,
+>> I reviewed the Dmitry's patches from v1 to v4 patches.
+>> And then I tested them on my testing branch[1] for catching
+>> the build warning and error. In result, it is clean.
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
+>>
+>> Please review or apply these patches for v5.3.
+>>
+> 
+> Hello Myungjoo,
+> 
+> I think this patchset should be completed now. Thierry has some extra
+> comments to the patches, but seems nothing critical so far and all the
+> concerns could be addressed in a follow-up series. Please let me know if
+> you're fine with this, I can re-spin v5 as well if necessary.
+> 
 
-Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/staging/media/tegra-vde/tegra-vde.c | 13 +++++-
- drivers/staging/media/tegra-vde/uapi.h      | 44 +++++++++++----------
- 2 files changed, 34 insertions(+), 23 deletions(-)
+Hello Chanwoo,
 
-diff --git a/drivers/staging/media/tegra-vde/tegra-vde.c b/drivers/staging/media/tegra-vde/tegra-vde.c
-index a5020dbf6eef..cc4244da2705 100644
---- a/drivers/staging/media/tegra-vde/tegra-vde.c
-+++ b/drivers/staging/media/tegra-vde/tegra-vde.c
-@@ -795,7 +795,7 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
- {
- 	struct device *dev = vde->miscdev.parent;
- 	struct tegra_vde_h264_decoder_ctx ctx;
--	struct tegra_vde_h264_frame frames[17];
-+	struct tegra_vde_h264_frame *frames;
- 	struct tegra_vde_h264_frame __user *frames_user;
- 	struct video_frame *dpb_frames;
- 	struct dma_buf_attachment *bitstream_data_dmabuf_attachment;
-@@ -830,11 +830,17 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
- 	if (ret)
- 		return ret;
- 
-+	frames = kmalloc_array(ctx.dpb_frames_nb, sizeof(*frames), GFP_KERNEL);
-+	if (!frames) {
-+		ret = -ENOMEM;
-+		goto release_bitstream_dmabuf;
-+	}
-+
- 	dpb_frames = kcalloc(ctx.dpb_frames_nb, sizeof(*dpb_frames),
- 			     GFP_KERNEL);
- 	if (!dpb_frames) {
- 		ret = -ENOMEM;
--		goto release_bitstream_dmabuf;
-+		goto free_frames;
- 	}
- 
- 	macroblocks_nb = ctx.pic_width_in_mbs * ctx.pic_height_in_mbs;
-@@ -955,6 +961,9 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
- free_dpb_frames:
- 	kfree(dpb_frames);
- 
-+free_frames:
-+	kfree(frames);
-+
- release_bitstream_dmabuf:
- 	tegra_vde_detach_and_put_dmabuf(bitstream_data_dmabuf_attachment,
- 					bitstream_sgt, DMA_TO_DEVICE);
-diff --git a/drivers/staging/media/tegra-vde/uapi.h b/drivers/staging/media/tegra-vde/uapi.h
-index dd3e4a8c9f7e..ffb4983e5bb6 100644
---- a/drivers/staging/media/tegra-vde/uapi.h
-+++ b/drivers/staging/media/tegra-vde/uapi.h
-@@ -21,40 +21,42 @@ struct tegra_vde_h264_frame {
- 	__u32 frame_num;
- 	__u32 flags;
- 
--	__u32 reserved;
--} __attribute__((packed));
-+	// Must be zero'ed
-+	__u32 reserved[6];
-+};
- 
- struct tegra_vde_h264_decoder_ctx {
- 	__s32 bitstream_data_fd;
- 	__u32 bitstream_data_offset;
- 
- 	__u64 dpb_frames_ptr;
--	__u8  dpb_frames_nb;
--	__u8  dpb_ref_frames_with_earlier_poc_nb;
-+	__u32 dpb_frames_nb;
-+	__u32 dpb_ref_frames_with_earlier_poc_nb;
- 
- 	// SPS
--	__u8  baseline_profile;
--	__u8  level_idc;
--	__u8  log2_max_pic_order_cnt_lsb;
--	__u8  log2_max_frame_num;
--	__u8  pic_order_cnt_type;
--	__u8  direct_8x8_inference_flag;
--	__u8  pic_width_in_mbs;
--	__u8  pic_height_in_mbs;
-+	__u32 baseline_profile;
-+	__u32 level_idc;
-+	__u32 log2_max_pic_order_cnt_lsb;
-+	__u32 log2_max_frame_num;
-+	__u32 pic_order_cnt_type;
-+	__u32 direct_8x8_inference_flag;
-+	__u32 pic_width_in_mbs;
-+	__u32 pic_height_in_mbs;
- 
- 	// PPS
--	__u8  pic_init_qp;
--	__u8  deblocking_filter_control_present_flag;
--	__u8  constrained_intra_pred_flag;
--	__u8  chroma_qp_index_offset;
--	__u8  pic_order_present_flag;
-+	__u32 pic_init_qp;
-+	__u32 deblocking_filter_control_present_flag;
-+	__u32 constrained_intra_pred_flag;
-+	__u32 chroma_qp_index_offset;
-+	__u32 pic_order_present_flag;
- 
- 	// Slice header
--	__u8  num_ref_idx_l0_active_minus1;
--	__u8  num_ref_idx_l1_active_minus1;
-+	__u32 num_ref_idx_l0_active_minus1;
-+	__u32 num_ref_idx_l1_active_minus1;
- 
--	__u32 reserved;
--} __attribute__((packed));
-+	// Must be zero'ed
-+	__u32 reserved[11];
-+};
- 
- #define VDE_IOCTL_BASE			('v' + 0x20)
- 
--- 
-2.22.0
+It looks like Myungjoo is inactive at the moment. Do you know if he'll
+be back to the time of the merge window opening or you'll be curating
+the pull request for 5.3 this time?
 
+Secondly, I'll send a few more patches on top of this series, addressing
+Thierry's comments and making more improvements. Please let me know if
+this causes any problems and I should re-spin the whole series.
