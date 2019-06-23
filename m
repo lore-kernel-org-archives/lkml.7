@@ -2,427 +2,174 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BB4C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15740C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DFB20665
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Yb7Hg8VG"
+	by mail.kernel.org (Postfix) with ESMTP id E086020665
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfFWMdF (ORCPT
+        id S1726559AbfFWMhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 08:33:05 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52093 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFWMdE (ORCPT
+        Sun, 23 Jun 2019 08:37:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41466 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFWMhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 08:33:04 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NCW3EJ2633806
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 05:32:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NCW3EJ2633806
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561293124;
-        bh=xI64kCSLthFnWHAv7fria3Qdf/e2UpskuLW6LkOyOaY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Yb7Hg8VGPyfFAcX+bx6U2P8952VxKrMeYu9v8kL5fW3KDwD8ZXscKmNsHkT5aBCij
-         V8fkizSR/mtC51wSVhhNKTQcXPwgB9iDcW++5H7m3hEbClOWcQ9x7qpYtmUGgshhYI
-         YHR5hUhEc0U0RAx1U33Fk8Pg3sghVoJLl2874NPFo0jJfdMymUnwo4pzj6jKU+wLN+
-         Q0raDKHA8iyXT7OUL/bue5wQYar7uwEKJX0Je/62qDJU26atZjWkC1kguvlqgjNjdb
-         xhbhXciCUhWrNR6sYFf4WOLMDPL6QTCTiDk7HXnOZJix2Ov4ClrsczdB9jkjXxMHCJ
-         GffSt+Zxhn2XA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NCW0OV2633803;
-        Sun, 23 Jun 2019 05:32:00 -0700
-Date:   Sun, 23 Jun 2019 05:32:00 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-caa759323c73676b3e48c8d9c86093c88b4aba97@git.kernel.org>
-Cc:     dave.hansen@linux.intel.com, namit@vmware.com,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com, hpa@zytor.com,
-        ink@jurassic.park.msu.ru, akpm@linux-foundation.org,
-        luto@kernel.org, peterz@infradead.org, mattst88@gmail.com,
-        bp@alien8.de, tglx@linutronix.de, tony.luck@intel.com,
-        mingo@kernel.org, rth@twiddle.net
-Reply-To: ink@jurassic.park.msu.ru, fenghua.yu@intel.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, namit@vmware.com,
-          dave.hansen@linux.intel.com, peterz@infradead.org,
-          luto@kernel.org, akpm@linux-foundation.org, rth@twiddle.net,
-          mingo@kernel.org, tony.luck@intel.com, tglx@linutronix.de,
-          mattst88@gmail.com, bp@alien8.de
-In-Reply-To: <20190613064813.8102-2-namit@vmware.com>
-References: <20190613064813.8102-2-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:smp/hotplug] smp: Remove smp_call_function() and on_each_cpu()
- return values
-Git-Commit-ID: caa759323c73676b3e48c8d9c86093c88b4aba97
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 23 Jun 2019 08:37:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id x17so18023833iog.8
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 05:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=sarunq0A1sMgfSItDbzpicgpCBMaLWJDDOt+JuY0HN8=;
+        b=VIPoEJahJQYK0L/LuCB6lk74zzuIoZyfqLr4rylbKtAk2/dl9+AZYkI6+DQeO08033
+         sXZCmXi1vzEZDrGgrvXQ8N1IzH/mecqUZzaIu54mFahzu4fw2D+f/tuyMfCxjmGHmUk8
+         fhXE/Dk67v6+dYP/sSGc9RRhAP9jgoL4OylTxwySAEzhALG1JygCgqOC11YUzXAaQ6AL
+         JzbZf9EU5xfrfBX+acWlr7YrOWRmLkTkU/eAvETxw5tStBPOKqXmsEJIWYJolh1tcsD6
+         Tyrb9vtu5LzX6xUmJB0FUqPQyNRUobUW0TOGN4NZOQdOGEtrWxVep67yC1pB2XO78Eji
+         QXWQ==
+X-Gm-Message-State: APjAAAWT6et6T4Vf1ZNhWdzUFkeh0XtNfnpUykVhLGOF4xQsNIjDGuV8
+        /pkV4fXGxEg63BYmN58O+4OwiPT/Rf2Mn36WdBWYKJ7FOzSJ
+X-Google-Smtp-Source: APXvYqy/aUuGIO8U7WZKTPkfZeBfkImq/jMX6z9VAtxaCzTWq3mu8MwTvLkUkCLpFLVw2imyjPYOeMNQZBX4XfK4UlM5BZr5F5vV
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Received: by 2002:a5d:8a0c:: with SMTP id w12mr58791506iod.68.1561293425068;
+ Sun, 23 Jun 2019 05:37:05 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 05:37:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fdd3f3058bfcf369@google.com>
+Subject: WARNING: bad unlock balance in rcu_lock_release
+From:   syzbot <syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  caa759323c73676b3e48c8d9c86093c88b4aba97
-Gitweb:     https://git.kernel.org/tip/caa759323c73676b3e48c8d9c86093c88b4aba97
-Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Wed, 12 Jun 2019 23:48:05 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sun, 23 Jun 2019 14:26:26 +0200
+Hello,
 
-smp: Remove smp_call_function() and on_each_cpu() return values
+syzbot found the following crash on:
 
-The return value is fixed. Remove it and amend the callers.
+HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=148ef681a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=f9545ab3e9f85cd43a3a
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-[ tglx: Fixup arm/bL_switcher and powerpc/rtas ]
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lkml.kernel.org/r/20190613064813.8102-2-namit@vmware.com
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com
+
+=====================================
+WARNING: bad unlock balance detected!
+5.2.0-rc5+ #3 Not tainted
+-------------------------------------
+syz-executor.3/1203 is trying to release lock (rcu_callback) at:
+[<ffffffff81636ec4>] rcu_lock_release+0x4/0x20 include/linux/rcupdate.h:212
+but there are no more locks to release!
+
+other info that might help us debug this:
+1 lock held by syz-executor.3/1203:
+  #0: 00000000ae396ab9 (&type->s_umount_key#48/1){+.+.}, at:  
+alloc_super+0x15f/0x740 fs/super.c:228
+
+stack backtrace:
+CPU: 0 PID: 1203 Comm: syz-executor.3 Not tainted 5.2.0-rc5+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_unlock_imbalance_bug+0x26d/0x2b0 kernel/locking/lockdep.c:3846
+  __lock_release kernel/locking/lockdep.c:4062 [inline]
+  lock_release+0x435/0x790 kernel/locking/lockdep.c:4322
+  rcu_lock_release+0x1c/0x20 include/linux/rcupdate.h:214
+  __rcu_reclaim kernel/rcu/rcu.h:223 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2092 [inline]
+  invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
+  rcu_core+0x8e2/0xf90 kernel/rcu/tree.c:2291
+  __do_softirq+0x340/0x7b0 arch/x86/include/asm/paravirt.h:777
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x21a/0x230 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0xf8/0x260 arch/x86/kernel/apic/apic.c:1068
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:767  
+[inline]
+RIP: 0010:console_unlock+0xa65/0xf20 kernel/printk/printk.c:2471
+Code: 20 00 74 0c 48 c7 c7 90 63 aa 88 e8 a5 44 50 00 48 83 3d fd cc 4b 07  
+00 0f 84 7d 04 00 00 e8 52 1b 17 00 48 8b 7c 24 28 57 9d <0f> 1f 44 00 00  
+f6 44 24 1f 01 75 52 e8 3a 1b 17 00 eb 63 0f 1f 84
+RSP: 0018:ffff88805b6c7540 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: ffffffff815e969e RBX: 0000000000000200 RCX: 0000000000040000
+RDX: ffffc9000c450000 RSI: 000000000002643c RDI: 0000000000000282
+RBP: ffff88805b6c7670 R08: ffff88805cb14040 R09: fffffbfff115a505
+R10: fffffbfff115a505 R11: 1ffffffff115a504 R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff88c31298
+  vprintk_emit+0x239/0x3a0 kernel/printk/printk.c:1986
+  vprintk_default+0x28/0x30 kernel/printk/printk.c:2013
+  vprintk_func+0x158/0x170 kernel/printk/printk_safe.c:386
+  printk+0xc4/0x11d kernel/printk/printk.c:2046
+  __ntfs_error+0x21b/0x230 fs/ntfs/debug.c:89
+  parse_options+0x481/0x1f80 fs/ntfs/super.c:234
+  ntfs_fill_super+0x19b/0x2940 fs/ntfs/super.c:2748
+  mount_bdev+0x31c/0x440 fs/super.c:1346
+  ntfs_mount+0x34/0x40 fs/ntfs/super.c:3051
+  legacy_get_tree+0xf9/0x1a0 fs/fs_context.c:661
+  vfs_get_tree+0x8f/0x360 fs/super.c:1476
+  do_new_mount fs/namespace.c:2791 [inline]
+  do_mount+0x1813/0x2730 fs/namespace.c:3111
+  ksys_mount+0xcc/0x100 fs/namespace.c:3320
+  __do_sys_mount fs/namespace.c:3334 [inline]
+  __se_sys_mount fs/namespace.c:3331 [inline]
+  __x64_sys_mount+0xbf/0xd0 fs/namespace.c:3331
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45bd1a
+Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 9d 8d fb ff c3 66 2e 0f  
+1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7a 8d fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007f49071c9a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f49071c9b40 RCX: 000000000045bd1a
+RDX: 00007f49071c9ae0 RSI: 0000000020000140 RDI: 00007f49071c9b00
+RBP: 0000000000000000 R08: 00007f49071c9b40 R09: 00007f49071c9ae0
+R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000003
+R13: 00000000004c82e2 R14: 00000000004deb40 R15: 00000000ffffffff
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+net_ratelimit: 21 callbacks suppressed
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+
 
 ---
- arch/alpha/kernel/smp.c       | 19 +++++--------------
- arch/alpha/oprofile/common.c  |  6 +++---
- arch/arm/common/bL_switcher.c |  6 ++----
- arch/ia64/kernel/perfmon.c    | 12 ++----------
- arch/ia64/kernel/uncached.c   |  8 ++++----
- arch/powerpc/kernel/rtas.c    |  3 +--
- arch/x86/lib/cache-smp.c      |  3 ++-
- drivers/char/agp/generic.c    |  3 +--
- include/linux/smp.h           |  7 +++----
- kernel/smp.c                  | 10 +++-------
- kernel/up.c                   |  3 +--
- 11 files changed, 27 insertions(+), 53 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/alpha/kernel/smp.c b/arch/alpha/kernel/smp.c
-index d0dccae53ba9..5f90df30be20 100644
---- a/arch/alpha/kernel/smp.c
-+++ b/arch/alpha/kernel/smp.c
-@@ -614,8 +614,7 @@ void
- smp_imb(void)
- {
- 	/* Must wait other processors to flush their icache before continue. */
--	if (on_each_cpu(ipi_imb, NULL, 1))
--		printk(KERN_CRIT "smp_imb: timed out\n");
-+	on_each_cpu(ipi_imb, NULL, 1);
- }
- EXPORT_SYMBOL(smp_imb);
- 
-@@ -630,9 +629,7 @@ flush_tlb_all(void)
- {
- 	/* Although we don't have any data to pass, we do want to
- 	   synchronize with the other processors.  */
--	if (on_each_cpu(ipi_flush_tlb_all, NULL, 1)) {
--		printk(KERN_CRIT "flush_tlb_all: timed out\n");
--	}
-+	on_each_cpu(ipi_flush_tlb_all, NULL, 1);
- }
- 
- #define asn_locked() (cpu_data[smp_processor_id()].asn_lock)
-@@ -667,9 +664,7 @@ flush_tlb_mm(struct mm_struct *mm)
- 		}
- 	}
- 
--	if (smp_call_function(ipi_flush_tlb_mm, mm, 1)) {
--		printk(KERN_CRIT "flush_tlb_mm: timed out\n");
--	}
-+	smp_call_function(ipi_flush_tlb_mm, mm, 1);
- 
- 	preempt_enable();
- }
-@@ -720,9 +715,7 @@ flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
- 	data.mm = mm;
- 	data.addr = addr;
- 
--	if (smp_call_function(ipi_flush_tlb_page, &data, 1)) {
--		printk(KERN_CRIT "flush_tlb_page: timed out\n");
--	}
-+	smp_call_function(ipi_flush_tlb_page, &data, 1);
- 
- 	preempt_enable();
- }
-@@ -772,9 +765,7 @@ flush_icache_user_range(struct vm_area_struct *vma, struct page *page,
- 		}
- 	}
- 
--	if (smp_call_function(ipi_flush_icache_page, mm, 1)) {
--		printk(KERN_CRIT "flush_icache_page: timed out\n");
--	}
-+	smp_call_function(ipi_flush_icache_page, mm, 1);
- 
- 	preempt_enable();
- }
-diff --git a/arch/alpha/oprofile/common.c b/arch/alpha/oprofile/common.c
-index 310a4ce1dccc..1b1259c7d7d1 100644
---- a/arch/alpha/oprofile/common.c
-+++ b/arch/alpha/oprofile/common.c
-@@ -65,7 +65,7 @@ op_axp_setup(void)
- 	model->reg_setup(&reg, ctr, &sys);
- 
- 	/* Configure the registers on all cpus.  */
--	(void)smp_call_function(model->cpu_setup, &reg, 1);
-+	smp_call_function(model->cpu_setup, &reg, 1);
- 	model->cpu_setup(&reg);
- 	return 0;
- }
-@@ -86,7 +86,7 @@ op_axp_cpu_start(void *dummy)
- static int
- op_axp_start(void)
- {
--	(void)smp_call_function(op_axp_cpu_start, NULL, 1);
-+	smp_call_function(op_axp_cpu_start, NULL, 1);
- 	op_axp_cpu_start(NULL);
- 	return 0;
- }
-@@ -101,7 +101,7 @@ op_axp_cpu_stop(void *dummy)
- static void
- op_axp_stop(void)
- {
--	(void)smp_call_function(op_axp_cpu_stop, NULL, 1);
-+	smp_call_function(op_axp_cpu_stop, NULL, 1);
- 	op_axp_cpu_stop(NULL);
- }
- 
-diff --git a/arch/arm/common/bL_switcher.c b/arch/arm/common/bL_switcher.c
-index 57f3b7512636..17bc259729e2 100644
---- a/arch/arm/common/bL_switcher.c
-+++ b/arch/arm/common/bL_switcher.c
-@@ -542,16 +542,14 @@ static void bL_switcher_trace_trigger_cpu(void *__always_unused info)
- 
- int bL_switcher_trace_trigger(void)
- {
--	int ret;
--
- 	preempt_disable();
- 
- 	bL_switcher_trace_trigger_cpu(NULL);
--	ret = smp_call_function(bL_switcher_trace_trigger_cpu, NULL, true);
-+	smp_call_function(bL_switcher_trace_trigger_cpu, NULL, true);
- 
- 	preempt_enable();
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(bL_switcher_trace_trigger);
- 
-diff --git a/arch/ia64/kernel/perfmon.c b/arch/ia64/kernel/perfmon.c
-index 58a6337c0690..7c52bd2695a2 100644
---- a/arch/ia64/kernel/perfmon.c
-+++ b/arch/ia64/kernel/perfmon.c
-@@ -6390,11 +6390,7 @@ pfm_install_alt_pmu_interrupt(pfm_intr_handler_desc_t *hdl)
- 	}
- 
- 	/* save the current system wide pmu states */
--	ret = on_each_cpu(pfm_alt_save_pmu_state, NULL, 1);
--	if (ret) {
--		DPRINT(("on_each_cpu() failed: %d\n", ret));
--		goto cleanup_reserve;
--	}
-+	on_each_cpu(pfm_alt_save_pmu_state, NULL, 1);
- 
- 	/* officially change to the alternate interrupt handler */
- 	pfm_alt_intr_handler = hdl;
-@@ -6421,7 +6417,6 @@ int
- pfm_remove_alt_pmu_interrupt(pfm_intr_handler_desc_t *hdl)
- {
- 	int i;
--	int ret;
- 
- 	if (hdl == NULL) return -EINVAL;
- 
-@@ -6435,10 +6430,7 @@ pfm_remove_alt_pmu_interrupt(pfm_intr_handler_desc_t *hdl)
- 
- 	pfm_alt_intr_handler = NULL;
- 
--	ret = on_each_cpu(pfm_alt_restore_pmu_state, NULL, 1);
--	if (ret) {
--		DPRINT(("on_each_cpu() failed: %d\n", ret));
--	}
-+	on_each_cpu(pfm_alt_restore_pmu_state, NULL, 1);
- 
- 	for_each_online_cpu(i) {
- 		pfm_unreserve_session(NULL, 1, i);
-diff --git a/arch/ia64/kernel/uncached.c b/arch/ia64/kernel/uncached.c
-index 583f7ff6b589..c618d0745e22 100644
---- a/arch/ia64/kernel/uncached.c
-+++ b/arch/ia64/kernel/uncached.c
-@@ -124,8 +124,8 @@ static int uncached_add_chunk(struct uncached_pool *uc_pool, int nid)
- 	status = ia64_pal_prefetch_visibility(PAL_VISIBILITY_PHYSICAL);
- 	if (status == PAL_VISIBILITY_OK_REMOTE_NEEDED) {
- 		atomic_set(&uc_pool->status, 0);
--		status = smp_call_function(uncached_ipi_visibility, uc_pool, 1);
--		if (status || atomic_read(&uc_pool->status))
-+		smp_call_function(uncached_ipi_visibility, uc_pool, 1);
-+		if (atomic_read(&uc_pool->status))
- 			goto failed;
- 	} else if (status != PAL_VISIBILITY_OK)
- 		goto failed;
-@@ -146,8 +146,8 @@ static int uncached_add_chunk(struct uncached_pool *uc_pool, int nid)
- 	if (status != PAL_STATUS_SUCCESS)
- 		goto failed;
- 	atomic_set(&uc_pool->status, 0);
--	status = smp_call_function(uncached_ipi_mc_drain, uc_pool, 1);
--	if (status || atomic_read(&uc_pool->status))
-+	smp_call_function(uncached_ipi_mc_drain, uc_pool, 1);
-+	if (atomic_read(&uc_pool->status))
- 		goto failed;
- 
- 	/*
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index fbc676160adf..64d95eb6ffff 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -994,8 +994,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 	/* Call function on all CPUs.  One of us will make the
- 	 * rtas call
- 	 */
--	if (on_each_cpu(rtas_percpu_suspend_me, &data, 0))
--		atomic_set(&data.error, -EINVAL);
-+	on_each_cpu(rtas_percpu_suspend_me, &data, 0);
- 
- 	wait_for_completion(&done);
- 
-diff --git a/arch/x86/lib/cache-smp.c b/arch/x86/lib/cache-smp.c
-index 1811fa4a1b1a..7c48ff4ae8d1 100644
---- a/arch/x86/lib/cache-smp.c
-+++ b/arch/x86/lib/cache-smp.c
-@@ -15,6 +15,7 @@ EXPORT_SYMBOL(wbinvd_on_cpu);
- 
- int wbinvd_on_all_cpus(void)
- {
--	return on_each_cpu(__wbinvd, NULL, 1);
-+	on_each_cpu(__wbinvd, NULL, 1);
-+	return 0;
- }
- EXPORT_SYMBOL(wbinvd_on_all_cpus);
-diff --git a/drivers/char/agp/generic.c b/drivers/char/agp/generic.c
-index 658664a5a5aa..df1edb5ec0ad 100644
---- a/drivers/char/agp/generic.c
-+++ b/drivers/char/agp/generic.c
-@@ -1311,8 +1311,7 @@ static void ipi_handler(void *null)
- 
- void global_cache_flush(void)
- {
--	if (on_each_cpu(ipi_handler, NULL, 1) != 0)
--		panic(PFX "timed out waiting for the other CPUs!\n");
-+	on_each_cpu(ipi_handler, NULL, 1);
- }
- EXPORT_SYMBOL(global_cache_flush);
- 
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index a56f08ff3097..bb8b451ab01f 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -35,7 +35,7 @@ int smp_call_function_single(int cpuid, smp_call_func_t func, void *info,
- /*
-  * Call a function on all processors
-  */
--int on_each_cpu(smp_call_func_t func, void *info, int wait);
-+void on_each_cpu(smp_call_func_t func, void *info, int wait);
- 
- /*
-  * Call a function on processors specified by mask, which might include
-@@ -101,7 +101,7 @@ extern void smp_cpus_done(unsigned int max_cpus);
- /*
-  * Call a function on all other processors
-  */
--int smp_call_function(smp_call_func_t func, void *info, int wait);
-+void smp_call_function(smp_call_func_t func, void *info, int wait);
- void smp_call_function_many(const struct cpumask *mask,
- 			    smp_call_func_t func, void *info, bool wait);
- 
-@@ -144,9 +144,8 @@ static inline void smp_send_stop(void) { }
-  *	These macros fold the SMP functionality into a single CPU system
-  */
- #define raw_smp_processor_id()			0
--static inline int up_smp_call_function(smp_call_func_t func, void *info)
-+static inline void up_smp_call_function(smp_call_func_t func, void *info)
- {
--	return 0;
- }
- #define smp_call_function(func, info, wait) \
- 			(up_smp_call_function(func, info))
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 220ad142f5dd..616d4d114847 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -487,13 +487,11 @@ EXPORT_SYMBOL(smp_call_function_many);
-  * You must not call this function with disabled interrupts or from a
-  * hardware interrupt handler or from a bottom half handler.
-  */
--int smp_call_function(smp_call_func_t func, void *info, int wait)
-+void smp_call_function(smp_call_func_t func, void *info, int wait)
- {
- 	preempt_disable();
- 	smp_call_function_many(cpu_online_mask, func, info, wait);
- 	preempt_enable();
--
--	return 0;
- }
- EXPORT_SYMBOL(smp_call_function);
- 
-@@ -594,18 +592,16 @@ void __init smp_init(void)
-  * early_boot_irqs_disabled is set.  Use local_irq_save/restore() instead
-  * of local_irq_disable/enable().
-  */
--int on_each_cpu(void (*func) (void *info), void *info, int wait)
-+void on_each_cpu(void (*func) (void *info), void *info, int wait)
- {
- 	unsigned long flags;
--	int ret = 0;
- 
- 	preempt_disable();
--	ret = smp_call_function(func, info, wait);
-+	smp_call_function(func, info, wait);
- 	local_irq_save(flags);
- 	func(info);
- 	local_irq_restore(flags);
- 	preempt_enable();
--	return ret;
- }
- EXPORT_SYMBOL(on_each_cpu);
- 
-diff --git a/kernel/up.c b/kernel/up.c
-index 483c9962c999..862b460ab97a 100644
---- a/kernel/up.c
-+++ b/kernel/up.c
-@@ -35,14 +35,13 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd)
- }
- EXPORT_SYMBOL(smp_call_function_single_async);
- 
--int on_each_cpu(smp_call_func_t func, void *info, int wait)
-+void on_each_cpu(smp_call_func_t func, void *info, int wait)
- {
- 	unsigned long flags;
- 
- 	local_irq_save(flags);
- 	func(info);
- 	local_irq_restore(flags);
--	return 0;
- }
- EXPORT_SYMBOL(on_each_cpu);
- 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
