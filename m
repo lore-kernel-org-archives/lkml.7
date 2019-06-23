@@ -2,58 +2,60 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986B3C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DD8C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713C120820
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEB720840
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHq9iXY7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4UGlyPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfFWPNy (ORCPT
+        id S1726720AbfFWPOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 11:13:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38845 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfFWPNy (ORCPT
+        Sun, 23 Jun 2019 11:14:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37379 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfFWPOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 11:13:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so1410507pfn.5;
-        Sun, 23 Jun 2019 08:13:54 -0700 (PDT)
+        Sun, 23 Jun 2019 11:14:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so6057433pfa.4;
+        Sun, 23 Jun 2019 08:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=Xny/Smm8ZOguBx6TIBYh9sfQZ5lBQfd4r1V74iu/FWY=;
-        b=AHq9iXY732JpkFSqZdNIYjZNHnrPNVqUImqq8TWWU45Q3Esqy5KfwrkA9Vb0zJz8hR
-         8p1BVEMu/lR5DwXb36tOM+ZwT5i7oPTfi2M7f36Ix3XTlBygBeCAW/jdWdcC4NFTB9C3
-         8Vag/Y/jhqkr4RhoHTnUy2LuO+R6GGdvJ6TUnKhKyxe3tVw/WOarmd6mMiruUvMjVYbd
-         IMppE2WaX0i2Rlw/yRAHXS0FSm9UwC54+mJKiRSoDOmT6sXtCQcIOvaXfpxmuxS1xogJ
-         0p9gi+R7XHfmvA3x7Kl9RYAyPLh5jt5MJ+S4xWyQZh3AjhYXE9JZI0ij4hSkhFDOelBc
-         3ELA==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=vyn7/J6WtFqIgwRgd3bOo6fzSejJfTSgtqjS1/ZB+c0=;
+        b=c4UGlyPAQFWxnUFzIHpN9PK/1UAkdiP0wHX591aQvU+VaG5vobK1l+jhu8JjTAHWx4
+         PX9TGvgnXXcDbbCSQbjGFntFQSovX3Kv00SSfo4siU/jR00o5oNeWkU5RBCKOTV1ivgv
+         jgWLvIH++KHJ+lZxFqUlWKrR4gY+UEbQUIyv0mwhBE4gEu5bqaOHqHBoyzcDuUt/Nj4M
+         O719CMy7/5OdSSbZYe1is/dDdvpWJZos9Q6dBWwA3qr8b//6Elcn7/DtRSio/Yzy+uJO
+         QxfSmr84FYhenR6h9/L1xhdbvthxAtXhS+pvu5b1ZMaeCRtPOfMHrSMsfI2ckzToIyB7
+         OCCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=Xny/Smm8ZOguBx6TIBYh9sfQZ5lBQfd4r1V74iu/FWY=;
-        b=A6AJpbK0nhXuQL6Fj7VvKRr9JmXWF0Wk5XhZHUrd12dfOlt238J34ToWYPW1O1xuRB
-         Q7MmHY1Nmzyn2jH/QCc6QZ4EsKlrgPwMZn91OKLG74U4FhVNgQ0ETSu2KYwx+LUFBgmR
-         zMpOgSwBdVPBep/sRbXLpSyUl9WIDA4qavSPmgX7Qg1GZuCehJgVuTSQQ9Ff602RvrQN
-         b4twQHS92xnIMKDpL85lxwoBYKhK4hJGrG/UxMuArjQiOp0XaiS8oG7cQN6kzYQL+m4K
-         2vGrRRKBHSOzXy5stsZ3fZi/wO3RlQr4yk77CBK32m2wb+SmxogjKivqQFAXkoqLITp2
-         uqpA==
-X-Gm-Message-State: APjAAAVbIFnW2ja/GEJs0f8YCuXPfK03gX8l4fUqBA75ztnUDQPzVmOr
-        mqRS6bnP6S03HHReq2sT7lg=
-X-Google-Smtp-Source: APXvYqxriftyOkEo1w2RU5r8+lBgCvesL+lma0dOdPirxFZjjUgMMEvh5asrfLLTeV2X5oRX0ldd/A==
-X-Received: by 2002:a17:90a:d3d7:: with SMTP id d23mr18126025pjw.26.1561302833413;
-        Sun, 23 Jun 2019 08:13:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=vyn7/J6WtFqIgwRgd3bOo6fzSejJfTSgtqjS1/ZB+c0=;
+        b=n0X7bYXyzV8tDLM+CXK4GM3wP5WV2UvGcwNJANdi1qx9KqqXhKWWzqDKYDsX+wOLpU
+         mgb7VlKlHgz/Gkhi6Dq9Bt7EspJFKlfEonK47kPoeEfpb0J0MoSXvA7ClG1I0xcVhjMe
+         DOaOzc0nIT6t4lD2DhQJXLMqIZwkAnGjlX6O95nLmPxDdWdvzHfvqUbQQ41Mr21TbTWY
+         t/n8oMN0PrBijgVFOuWINDf8cwzRExRAN20CY3G/qtaxecMDU+Z5zZ0hDPxT2BcnVy0U
+         6EW4NjVMzS+AXfffulCXH3e+cE5rvHoAl+ryjiMmj/YzuiOUoH0fxeDoRIOxexul8AVD
+         GjdQ==
+X-Gm-Message-State: APjAAAV89HVClSdNumwDiaoD7hFwJoQSkmZ5DLzVseVNAAH0TBI9VWOy
+        KMjFM55JpJy9bEKHP6IcgVk=
+X-Google-Smtp-Source: APXvYqwWurJt/gVmQMSK4uD+ZWYajKFCJvoak+ySh0QBSZIVNlGPKNVwYFC55ffGFpHzajFSctII6A==
+X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr18982260pji.136.1561302855004;
+        Sun, 23 Jun 2019 08:14:15 -0700 (PDT)
 Received: from debian.net.fpt ([1.55.47.94])
-        by smtp.gmail.com with ESMTPSA id p6sm8329194pgs.77.2019.06.23.08.13.43
+        by smtp.gmail.com with ESMTPSA id p6sm8329194pgs.77.2019.06.23.08.13.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 08:13:52 -0700 (PDT)
+        Sun, 23 Jun 2019 08:14:14 -0700 (PDT)
 From:   Phong Tran <tranmanphong@gmail.com>
 To:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
         songliubraving@fb.com, andrew@lunn.ch, peterz@infradead.org,
@@ -77,56 +79,49 @@ To:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
         kgene@kernel.org, kernel@pengutronix.de, sudeep.holla@arm.com,
         bpf@vger.kernel.org, shawnguo@kernel.org, kafai@fb.com,
         daniel@zonque.org
-Subject: [PATCH 00/15] cleanup cppcheck signed shifting errors
-Date:   Sun, 23 Jun 2019 22:12:58 +0700
-Message-Id: <20190623151313.970-1-tranmanphong@gmail.com>
+Subject: [PATCH 01/15] arm: perf: cleanup cppcheck shifting error
+Date:   Sun, 23 Jun 2019 22:12:59 +0700
+Message-Id: <20190623151313.970-2-tranmanphong@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190623151313.970-1-tranmanphong@gmail.com>
+References: <20190623151313.970-1-tranmanphong@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are errors with cppcheck 
+fix "Shifting signed 32-bit value by 31 bits is undefined behaviour
+errors"
 
-"Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
+[arch/arm/kernel/perf_event_v7.c:1080]: (error) Shifting signed 32-bit
+value by 31 bits is undefined behaviour
+[arch/arm/kernel/perf_event_v7.c:1436]: (error) Shifting signed 32-bit
+value by 31 bits is undefined behaviour
+[arch/arm/kernel/perf_event_v7.c:1783]: (error) Shifting signed 32-bit
+value by 31 bits is undefined behaviour
 
-This is just a mirror changing.
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ arch/arm/kernel/perf_event_v7.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Phong Tran (15):
-  arm: perf: cleanup cppcheck shifting error
-  ARM: davinci: cleanup cppcheck shifting errors
-  ARM: ep93xx: cleanup cppcheck shifting errors
-  ARM: exynos: cleanup cppcheck shifting error
-  ARM: footbridge: cleanup cppcheck shifting error
-  ARM: imx: cleanup cppcheck shifting errors
-  ARM: ks8695: cleanup cppcheck shifting error
-  ARM: mmp: cleanup cppcheck shifting errors
-  ARM: omap2: cleanup cppcheck shifting error
-  ARM: orion5x: cleanup cppcheck shifting errors
-  ARM: pxa: cleanup cppcheck shifting errors
-  ARM: vexpress: cleanup cppcheck shifting error
-  ARM: mm: cleanup cppcheck shifting errors
-  ARM: bpf: cleanup cppcheck shifting error
-  ARM: vfp: cleanup cppcheck shifting errors
-
- arch/arm/kernel/perf_event_v7.c    |   6 +-
- arch/arm/mach-davinci/ddr2.h       |   6 +-
- arch/arm/mach-ep93xx/soc.h         | 132 ++++++++++++++++++-------------------
- arch/arm/mach-exynos/suspend.c     |   2 +-
- arch/arm/mach-footbridge/dc21285.c |   2 +-
- arch/arm/mach-imx/iomux-mx3.h      |  64 +++++++++---------
- arch/arm/mach-ks8695/regs-pci.h    |   4 +-
- arch/arm/mach-mmp/pm-mmp2.h        |  40 +++++------
- arch/arm/mach-mmp/pm-pxa910.h      |  76 ++++++++++-----------
- arch/arm/mach-omap2/powerdomain.c  |   2 +-
- arch/arm/mach-orion5x/pci.c        |   8 +--
- arch/arm/mach-pxa/irq.c            |   4 +-
- arch/arm/mach-vexpress/spc.c       |  12 ++--
- arch/arm/mm/fault.h                |   6 +-
- arch/arm/net/bpf_jit_32.c          |   2 +-
- arch/arm/vfp/vfpinstr.h            |  28 ++++----
- 16 files changed, 197 insertions(+), 197 deletions(-)
-
+diff --git a/arch/arm/kernel/perf_event_v7.c b/arch/arm/kernel/perf_event_v7.c
+index a4fb0f8b8f84..83dc472a39b2 100644
+--- a/arch/arm/kernel/perf_event_v7.c
++++ b/arch/arm/kernel/perf_event_v7.c
+@@ -697,9 +697,9 @@ static struct attribute_group armv7_pmuv2_events_attr_group = {
+ /*
+  * Event filters for PMUv2
+  */
+-#define	ARMV7_EXCLUDE_PL1	(1 << 31)
+-#define	ARMV7_EXCLUDE_USER	(1 << 30)
+-#define	ARMV7_INCLUDE_HYP	(1 << 27)
++#define	ARMV7_EXCLUDE_PL1	(1U << 31)
++#define	ARMV7_EXCLUDE_USER	(1U << 30)
++#define	ARMV7_INCLUDE_HYP	(1U << 27)
+ 
+ /*
+  * Secure debug enable reg
 -- 
 2.11.0
 
