@@ -2,110 +2,177 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A88C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EE5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AD6208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF8C2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hzjpX5+9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wYbpjEsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfFXCNK (ORCPT
+        id S1726932AbfFXCOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:13:10 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:53127 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfFXCNK (ORCPT
+        Sun, 23 Jun 2019 22:14:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44107 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfFXCOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:13:10 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190624021306epoutp015982f94b7bc6e2a0f05f632c06f94c27~rAKC9VSqu0940109401epoutp01H
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:13:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190624021306epoutp015982f94b7bc6e2a0f05f632c06f94c27~rAKC9VSqu0940109401epoutp01H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561342386;
-        bh=Bjxv0RRUWPDBM+vlsvLdx6BQWrwtvpQPL5LR7DGLxjw=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=hzjpX5+9hx/a1tdVMF8nJlqTy4AoOattbUJB3gjjl2g9E4cDDgyE9EZSCiKyYCk+j
-         AAxsgbzscgkEwuqqh8zB5aSwmHq5Hbw1hY7hQdcmF4cgc1m7EqhAuZDv3vU7K8i5Lx
-         O9AvXL2KfXmItk6fZhNotQzX4qzE3540oCxuNXuo=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.155]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190624021301epcas1p32614991eb0c0533de1d556cbf4945e11~rAJ_vt4kw0385803858epcas1p3A;
-        Mon, 24 Jun 2019 02:13:01 +0000 (GMT)
-X-AuditID: b6c32a38-5cbff700000010a1-02-5d10319df346
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D9.4A.04257.D91301D5; Mon, 24 Jun 2019 11:12:45 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH v1 01/11] PM / devfreq: tegra30: Change irq type to
- unsigned int
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190623214658.11680-2-digetx@gmail.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190624021245epcms1p5366dd98904dac95625dc2deb4b649cb1@epcms1p5>
-Date:   Mon, 24 Jun 2019 11:12:45 +0900
-X-CMS-MailID: 20190624021245epcms1p5366dd98904dac95625dc2deb4b649cb1
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj285ydHZfLz2n1YWXrQBeFpUedHStDSGJQghFUWDIPeprD3diZ
-        KytIUqk0zUIr5qUsI9PCC16ms5QZRZlFiYWEJd3MUrtohFjUtjOxf8/38Lzv87zv95KY7DIR
-        QmoNFs5sYHUUIcHb+8IUiioapkaOl9PMy5kxEdPw/R1g8m1XcWbgxISYGeyqJJjp4nuAOT1j
-        I5jZrmqcKbn9nEjwU9lHaoGq0zYiVhXnTRGqktZ6oJpuCU0WpWRtyeTYDM4s5wzpxgytQRNP
-        7dit3qZWxkbSCjqO2UjJDayei6cSdyYrtmt1rkCU3Mrqsl1UMsvzVMTWLWZjtoWTZxp5SzzF
-        mTJ0pjjTBp7V89kGzYZ0o34THRkZpXQJ07Iyx2YLRKZx38ODde+JXNDoWwj8SARjUF7BW8KN
-        ZdAO0IXRfYWAJKUwEP2xB7npILgHnSmxAUFCodzhu5jAR6BTo+0enoAK1NY0ghcCCRkM5wC6
-        0/lO5H5gsBOgqdY3YsFMii6d/IALeDnquNHmqfaDsejRi1PeQEvQcMOkeB5/vX8ZCDgYFbwe
-        wAQciEZnHWC+z6Wyv96eR9GLi9fEbmME8wEqbijziiLQ46qHnimlMAl9cvzyYByuQd+c173F
-        iej0UJHIjTG4CnVMVmLuTWAwDDV2RQiS1ahzrgoIksVo6ucZ0fxc9ur33vxrkdNR682/AvVf
-        rPFmVqGzM+WYsMWbAHU046VAblvYte0/Y9uC8RWA1YOlnInXazieNsX8/7stwHOc4YwddD/Z
-        6QSQBJS/FDYFpMpErJXP0TsBIjEqWOqv80+VSTPYnCOc2ag2Z+s43gmUrvnPYSFL0o2uUzdY
-        1LQyKjo6momhY5U0TS2TqhcNH5BBDWvhsjjOxJnn63xJv5BcEBy0SSKRfbM23uofqa7T3teG
-        Nj/tt35pOb+4rHZ2fXivpXSiyOiYHIxS1ZT77F33O+djwLFDnxVvQ7ldn5Z2/6ocL5qx90w/
-        S8Ff6VoqHMPyvocpuWUXjgds7H/c8yCh4od9haYmxzDUdnK5JDVtQmrVjoUm1Ww+mNTb7uMT
-        s3L/KgrnM1k6HDPz7D9DtmwasgMAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190623214841epcas5p161cceab51cb10d5146e57d49a696d5e5
-References: <20190623214658.11680-2-digetx@gmail.com>
-        <20190623214658.11680-1-digetx@gmail.com>
-        <CGME20190623214841epcas5p161cceab51cb10d5146e57d49a696d5e5@epcms1p5>
+        Sun, 23 Jun 2019 22:14:50 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k18so10938464ljc.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 19:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q7wz2t7u/9aK1bNPZ479OzccMgC+SVvO9ZTRTaDQNLE=;
+        b=wYbpjEslFKzGNA9UaWsVFJoVeLBrAL2HmRatz8rnXjHTni7OJoRzaBqf+1rBIdEwZw
+         Cx9pdmsZUDC/a+Q7OsWMnQCi4PH5CB8Hre6I0gStJ4XwjEoTZWjf+E2fZ0aa75ILq1/o
+         5wQyQz/YYBAYTpy4i6neEfHrjZqOG4vYDJ9qpJkyij231cxbv15bxsfnyKiSoUmIandO
+         iyzVrAmOx/iZrCrvom9Y7aLJOvkdw6HJLoe1pee4JERvMzXQ4SMrE/9CBfFDcd5XSRr0
+         ohuRCeg1XcOtmzKkZuVvV0xc9FQ6fNxv9yFvl9g5WAEjwm7x/GUrIV2kDIWoxEcWo2ZL
+         ICHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Q7wz2t7u/9aK1bNPZ479OzccMgC+SVvO9ZTRTaDQNLE=;
+        b=eY4PEdWk1U93ipCMmjCXIvsJYLh4r3wtnPg3UMWrhkhxRoKK+FxA2PlqabjtYmaCr1
+         KF0E3rvLKYGqM7YIEvvpv/V0yLjpoAFwfclESXpzzwrMJzpCX7r4Ot9ytgriMvu5zEZS
+         4GCpUfEOg9b62n0CCUaXyU6A96PosJxVLx9SukvOydl9HRaI3F90Hh4ExVu40Y2stkmL
+         Daa9Y6UaVUZjKjHQI9A2irw+fZDln6zs+FCQvdzM1qhNfZ1/5dDo0TStt0TzTg6g1jDy
+         3Nwvee2ZHySABkoyjwtVDOhz/G8kYRSfeiy/yt3HhazW9N1rQZSfj14HN7SWQC7I2VkX
+         VbYQ==
+X-Gm-Message-State: APjAAAVMnPj3niz5ikVbzZ4tBEj4Rp3bKNdU75xJln72sMkK6W4CoXpd
+        P+aFJe9D3jVOCKwIbRTdV3PrqQ==
+X-Google-Smtp-Source: APXvYqzVtXIxqFwTgM8EzEXOeQXVyES/27218XIBMarVRmRWmUa/XKEZAMMJKYyORixUr2FpTKApSw==
+X-Received: by 2002:a2e:9950:: with SMTP id r16mr45976579ljj.173.1561332668839;
+        Sun, 23 Jun 2019 16:31:08 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id 80sm1325307lfz.56.2019.06.23.16.31.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Jun 2019 16:31:08 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 02:31:06 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, ilias.apalodimas@linaro.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com,
+        grygorii.strashko@ti.com, nsekhar@ti.com
+Subject: Re: [PATCH] net: ethernet: ti: cpsw: Fix suspend/resume break
+Message-ID: <20190623233105.GA5472@khorivan>
+Mail-Followup-To: Keerthy <j-keerthy@ti.com>, davem@davemloft.net,
+        andrew@lunn.ch, ilias.apalodimas@linaro.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com,
+        grygorii.strashko@ti.com, nsekhar@ti.com
+References: <20190622103140.22902-1-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190622103140.22902-1-j-keerthy@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->IRQ numbers are always positive, hence the corresponding variable should
->be unsigned to keep types consistent. This is a minor change that cleans
->up code a tad more.
+On Sat, Jun 22, 2019 at 04:01:40PM +0530, Keerthy wrote:
+
+Hi Keerty,
+
+>Commit bfe59032bd6127ee190edb30be9381a01765b958 ("net: ethernet:
+>ti: cpsw: use cpsw as drv data")changes
+>the driver data to struct cpsw_common *cpsw. This is done
+>only in probe/remove but the suspend/resume functions are
+>still left with struct net_device *ndev. Hence fix both
+>suspend & resume also to fetch the updated driver data.
 >
->Suggested-by: Thierry Reding <thierry.reding@gmail.com>
->Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>Fixes: bfe59032bd6127ee1 ("net: ethernet: ti: cpsw: use cpsw as drv data")
+>Signed-off-by: Keerthy <j-keerthy@ti.com>
+>---
+> drivers/net/ethernet/ti/cpsw.c | 36 +++++++++++-----------------------
+> 1 file changed, 11 insertions(+), 25 deletions(-)
+>
+>diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+>index 7bdd287074fc..2aeaad15e20e 100644
+>--- a/drivers/net/ethernet/ti/cpsw.c
+>+++ b/drivers/net/ethernet/ti/cpsw.c
+>@@ -2590,20 +2590,12 @@ static int cpsw_remove(struct platform_device *pdev)
+> #ifdef CONFIG_PM_SLEEP
+> static int cpsw_suspend(struct device *dev)
+> {
+>-	struct net_device	*ndev = dev_get_drvdata(dev);
+>-	struct cpsw_common	*cpsw = ndev_to_cpsw(ndev);
+>-
+>-	if (cpsw->data.dual_emac) {
+>-		int i;
+>+	struct cpsw_common *cpsw = dev_get_drvdata(dev);
+>+	int i;
+>
+>-		for (i = 0; i < cpsw->data.slaves; i++) {
+>-			if (netif_running(cpsw->slaves[i].ndev))
+>-				cpsw_ndo_stop(cpsw->slaves[i].ndev);
+>-		}
+>-	} else {
+>-		if (netif_running(ndev))
+>-			cpsw_ndo_stop(ndev);
+>-	}
+>+	for (i = 0; i < cpsw->data.slaves; i++)
+>+		if (netif_running(cpsw->slaves[i].ndev))
+Seems I've missed to add this, but in your fix potential issue in switch mode.
+ndev is not necessarily present for slave, you need to check on ndev != null
+before using it, if you still remove cpsw->data.dual_emac ofc.
 
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Thanks.
 
+>+			cpsw_ndo_stop(cpsw->slaves[i].ndev);
+>
+> 	/* Select sleep pin state */
+> 	pinctrl_pm_select_sleep_state(dev);
+>@@ -2613,25 +2605,19 @@ static int cpsw_suspend(struct device *dev)
+>
+> static int cpsw_resume(struct device *dev)
+> {
+>-	struct net_device	*ndev = dev_get_drvdata(dev);
+>-	struct cpsw_common	*cpsw = ndev_to_cpsw(ndev);
+>+	struct cpsw_common *cpsw = dev_get_drvdata(dev);
+>+	int i;
+>
+> 	/* Select default pin state */
+> 	pinctrl_pm_select_default_state(dev);
+>
+> 	/* shut up ASSERT_RTNL() warning in netif_set_real_num_tx/rx_queues */
+> 	rtnl_lock();
+>-	if (cpsw->data.dual_emac) {
+>-		int i;
+>
+>-		for (i = 0; i < cpsw->data.slaves; i++) {
+>-			if (netif_running(cpsw->slaves[i].ndev))
+>-				cpsw_ndo_open(cpsw->slaves[i].ndev);
+>-		}
+>-	} else {
+>-		if (netif_running(ndev))
+>-			cpsw_ndo_open(ndev);
+>-	}
+>+	for (i = 0; i < cpsw->data.slaves; i++)
+>+		if (netif_running(cpsw->slaves[i].ndev))
+>+			cpsw_ndo_open(cpsw->slaves[i].ndev);
+>+
+same here
 
-Cheers,
-MyungJoo
+> 	rtnl_unlock();
+>
+> 	return 0;
+>-- 
+>2.17.1
+>
+
+-- 
+Regards,
+Ivan Khoronzhuk
