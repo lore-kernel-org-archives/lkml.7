@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65338C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200C0C48BE4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3BA2073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D6C2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfFWQmH (ORCPT
+        id S1726863AbfFWQmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:42:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42070 "EHLO
+        Sun, 23 Jun 2019 12:42:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42074 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFWQmF (ORCPT
+        with ESMTP id S1726399AbfFWQmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:42:05 -0400
+        Sun, 23 Jun 2019 12:42:09 -0400
 Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1A4E628A3A5;
-        Sun, 23 Jun 2019 17:42:01 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 752AE2613D9;
+        Sun, 23 Jun 2019 17:42:05 +0100 (BST)
 From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
 To:     linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
         kernel@collabora.com, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH 4/5] media: vimc.rst: Add a proper alt attribute to vimc.dot
-Date:   Sun, 23 Jun 2019 13:40:23 -0300
-Message-Id: <20190623164024.9836-4-andrealmeid@collabora.com>
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5/5] media: vimc.rst: add vimc-streamer source documentation
+Date:   Sun, 23 Jun 2019 13:40:24 -0300
+Message-Id: <20190623164024.9836-5-andrealmeid@collabora.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190623164024.9836-1-andrealmeid@collabora.com>
 References: <20190623164024.9836-1-andrealmeid@collabora.com>
@@ -45,29 +46,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to W3C, "the content of the alt attribute is: use text that
-fulfills the same function as the image". While it's hard to describe
-the whole content of this image, replace the actual alt to something
-more useful to people with slow connection or that uses screen readers.
+Since vimc-streamer.{c, h} are fully documented and conforming with the
+kernel-doc syntax, add those files to vimc.rst
 
 Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Suggested-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/media/v4l-drivers/vimc.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/media/v4l-drivers/vimc.rst | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-index 4628b12d417f..bece85867424 100644
+index bece85867424..406417680db5 100644
 --- a/Documentation/media/v4l-drivers/vimc.rst
 +++ b/Documentation/media/v4l-drivers/vimc.rst
-@@ -15,7 +15,7 @@ recompile the driver to achieve your own topology. This is the default topology:
- .. _vimc_topology_graph:
- 
- .. kernel-figure:: vimc.dot
--    :alt:   vimc.dot
-+    :alt:   Diagram of the default media pipeline topology
-     :align: center
- 
-     Media pipeline graph on vimc
+@@ -96,3 +96,14 @@ those arguments to each subdevice, not to the vimc module. For example::
+         Window size to calculate the mean. Note: the window size needs to be an
+         odd number, as the main pixel stays in the center of the window,
+         otherwise the next odd number is considered (the default value is 3).
++
++Source code documentation
++-------------------------
++
++vimc-streamer
++~~~~~~~~~~~~~
++
++.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.h
++   :internal:
++
++.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.c
 -- 
 2.22.0
 
