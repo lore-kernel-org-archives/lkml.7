@@ -2,161 +2,107 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1AFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817F5C48BE4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D8F208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CA9204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e/k9EVQH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VkG2AWeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfFXCgD (ORCPT
+        id S1727237AbfFXCh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:36:03 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:30191 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfFXCgC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:36:02 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190624000832epoutp0245e0ece1a061b1d3aa79ef79990776f8~q_dSUhPLQ1751417514epoutp021
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:08:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190624000832epoutp0245e0ece1a061b1d3aa79ef79990776f8~q_dSUhPLQ1751417514epoutp021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561334912;
-        bh=FXLhH3xp58N69ijMnn/sGIRveP7AeFn1jV5SXYXCSfo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=e/k9EVQHgtzF6idvBashl0scU6AqpCG3MikscZIOkWNep6MYPFyUtqO4RE+tc7+H0
-         LTgvUPQAZdSdROBgxBbGGNUMJqyH4V5c762HQc12PfoGoiQZJ2kVty5jtkKoKhqxAw
-         QqTf+cxP0HmxrBRXfu7B9AZrYkSN0TNRQAvRK/4c=
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190624000828epcas1p35a140a12268e526527e29b924b776d5c~q_dO12xgF2287522875epcas1p3m;
-        Mon, 24 Jun 2019 00:08:28 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        02.07.04108.874101D5; Mon, 24 Jun 2019 09:08:24 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190624000822epcas1p423597f0f8dd7a4a68047ee0ef6421d11~q_dJj4tkz2257922579epcas1p45;
-        Mon, 24 Jun 2019 00:08:22 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190624000822epsmtrp10fb5112d79464145805163aff943c17c~q_dJjHIpg0223602236epsmtrp1U;
-        Mon, 24 Jun 2019 00:08:22 +0000 (GMT)
-X-AuditID: b6c32a39-89fff7000000100c-ca-5d1014781765
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        92.90.03662.674101D5; Mon, 24 Jun 2019 09:08:22 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190624000822epsmtip2abc340df84519acf14a96ee564282d31~q_dJZLITx2730627306epsmtip2g;
-        Mon, 24 Jun 2019 00:08:22 +0000 (GMT)
-Subject: Re: [PATCH] extcon: gpio: Request reasonable interrupts
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <547eacd4-e4b9-e9a9-9f89-aa33b05cb674@samsung.com>
-Date:   Mon, 24 Jun 2019 09:10:58 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Sun, 23 Jun 2019 22:37:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:60631 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfFXChZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 22:37:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45X5cV0C1qz9s5c;
+        Mon, 24 Jun 2019 07:47:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561326442;
+        bh=VkBXuv7fVGNt+d2zUDjCDYOwbWse739pBe2u/5BhT/4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VkG2AWeCHJlfrD5pp+YEYXrGqA7/v/xmsgATu72h5xaqQdgJ/iUXbBPZd6S1YGfJT
+         qRqtd4D0SiIbj4xWVNtv3GLjbpLMXkZmtZ5p/JzOnuvh8pzsDpF2bRO8lWi8vXjHP5
+         J6Zqg+ibI4jg/eKcrSTlNYsupL2zY6I5DBoE3irMgX4IAZHcc0zoi86paQPCcrX3Bu
+         k1Sw4WSv5ih2H8eSXQvh/lC27+/cMfYoXFx7JLalWp0Axd6eA4ixhPv2Xk6cF9cNcl
+         fs/nRMwCfxmuD7jcjzJm+jvOrqmkdEN6t+tJtQFVqZB3G+4k8tXKiQxHh3kO2Md2Sd
+         EKOUh9aUUnAjQ==
+Date:   Mon, 24 Jun 2019 07:47:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Roland Hii <roland.king.guan.hii@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20190624074716.44b749d3@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaCaZyzfr9=QRz6uRZpK6mw_zDeVmBwgH7=FPbNGKB9tQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdlhTT7dCRCDW4OIHZospf5YzWWye/4fR
-        4vKuOWwWtxtXsDmweNy5tofNo2/LKkaPz5vkApijsm0yUhNTUosUUvOS81My89JtlbyD453j
-        Tc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgLYpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yV
-        UgtScgosC/SKE3OLS/PS9ZLzc60MDQyMTIEKE7IzHv86yFhwj69iy1PpBsYd3F2MHBwSAiYS
-        n1YwdzFycQgJ7GCUaNl8hxXC+cQocf/DIhYI5xujxLmtT9m7GDnBOt69ncgOkdjLKPFu9T82
-        COc9o8SliTfBqoQFHCRmXf8MZosI6Eh0b/vJCmIzCyxnlFhwzxLEZhPQktj/4gYbiM0voChx
-        9cdjRhCbV8BO4tuHJ2D1LAKqEg9WdoHZogIREpe37IKqEZQ4OfMJC4jNKRAo8fl3CwvEfHGJ
-        W0/mM0HY8hLNW2eDPSchcIZN4vPhy1AvuEhs6zvJCGELS7w6vgUqLiXxsr8Nyq6WWHnyCBtE
-        cwejxJb9F1ghEsYS+5dOZgKFHrOApsT6XfoQYUWJnb/nMkIs5pN497WHFRLAvBIdbUIQJcoS
-        lx/cZYKwJSUWt3eyTWBUmoXknVlIXpiF5IVZCMsWMLKsYhRLLSjOTU8tNiwwRY7sTYzghKhl
-        uYPx2DmfQ4wCHIxKPLwCG/hjhVgTy4orcw8xSnAwK4nw8uTwxArxpiRWVqUW5ccXleakFh9i
-        NAWG9kRmKdHkfGCyziuJNzQ1MjY2tjAxNDM1NFQS543nvhkjJJCeWJKanZpakFoE08fEwSnV
-        wKjrWcP7dOksg/p1iUnbj33dc9r/yqqpyjZK/3/2vHaYdu3OjXceyhVcTLna79/8TJ4srqAf
-        wHxKU23hkSW1TldWid6sMri4U33bjsUMi3d4rJ2eHlJwV0assP3kPzbejMoTh9czR002DQ9f
-        Gzx7oZrjM23m3a+DlA5Pm+t0R3PNNoaln50jn19TYinOSDTUYi4qTgQAZ8Fbe54DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsWy7bCSvG6ZiECswbKfuhZT/ixnstg8/w+j
-        xeVdc9gsbjeuYHNg8bhzbQ+bR9+WVYwenzfJBTBHcdmkpOZklqUW6dslcGU8/nWQseAeX8WW
-        p9INjDu4uxg5OSQETCTevZ3I3sXIxSEksJtR4trE5YwQCUmJaRePMncxcgDZwhKHDxdD1Lxl
-        lLhy5S1YjbCAg8Ss65/ZQWwRAR2J7m0/WUGKmAWWM0rcP3qXFaKjh0niz4duNpAqNgEtif0v
-        boDZ/AKKEld/PAabxCtgJ/HtwxNWEJtFQFXiwcouMFtUIEKir202G0SNoMTJmU9YQGxOgUCJ
-        z79bwGxmAXWJP/MuMUPY4hK3nsxngrDlJZq3zmaewCg8C0n7LCQts5C0zELSsoCRZRWjZGpB
-        cW56brFhgVFearlecWJucWleul5yfu4mRnB0aGntYDxxIv4QowAHoxIPr8AG/lgh1sSy4src
-        Q4wSHMxKIrw8OTyxQrwpiZVVqUX58UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZ
-        ODilGhitA5ZkTA/PXP/FavIHn5tX69lPndnlelTsOIdFwOd5f/7+mxNauauS7/rrvhJ5xY4I
-        f+9tBc/tOuKOdTv0Zenu+/vI0LEjdtlU1f5ta87Kl3u/4VzVlcdtvEw7Of94aPnnm9Zq61d8
-        X/w8n6lQKkL2sYqkm+q1rJt3DZ8tXiSjOf+U2/lpL1YqsRRnJBpqMRcVJwIAT2T+9IoCAAA=
-X-CMS-MailID: 20190624000822epcas1p423597f0f8dd7a4a68047ee0ef6421d11
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256
-References: <CGME20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256@epcas5p4.samsung.com>
-        <20190530183932.4132-1-linus.walleij@linaro.org>
-        <28b92b86-19ac-0bf3-57d8-c7ab4557a45b@samsung.com>
-        <CACRpkdaCaZyzfr9=QRz6uRZpK6mw_zDeVmBwgH7=FPbNGKB9tQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Na9+/O=gek0KognWqCqb/n3"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 6. 8. 오전 6:24, Linus Walleij wrote:
-> On Tue, Jun 4, 2019 at 3:30 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> On 19. 5. 31. 오전 3:39, Linus Walleij wrote:
-> 
->>> +     /*
->>> +      * It is unlikely that this is an acknowledged interrupt that goes
->>> +      * away after handling, what we are looking for are falling edges
->>> +      * if the signal is active low, and rising edges if the signal is
->>> +      * active high.
->>> +      */
->>> +     if (gpiod_is_active_low(data->gpiod))
->>> +             irq_flags = IRQF_TRIGGER_FALLING;
->>
->> If gpiod_is_active_low(data->gpiod) is true, irq_flags might be
->> IRQF_TRIGGER_LOW instead of IRQF_TRIGGER_FALLING. How can we sure
->> that irq_flags is always IRQF_TRIGGER_FALLING?
-> 
-> OK correct me if I'm wrong, but this is an external connector and
-> the GPIO goes low/high when the connector is physically inserted.
-> If it was level trigged, it would lock up the CPU with interrupts until
-> it was unplugged again, since there is no way to acknowledge a
-> level IRQ.
-> 
-> I think level IRQ on GPIOs are only used for logic peripherals
-> such as ethernet controllers etc where you can talk to the peripheral
-> and get it to deassert the line and thus acknowledge the IRQ.
-> 
-> So the way I see it only edge triggering makes sense for extcon.
-> 
-> Correct me if I'm wrong.
+--Sig_/Na9+/O=gek0KognWqCqb/n3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for late reply because of vacation.
+Hi all,
 
-Actually, I have not thought that the kind of irq_flags are fixed
-according to the category of specific h/w device. Until now, as I knew,
-the h/w device have to initialize the the kind of irq_flags
-for each peripheral device dependency. The each vendor of peripheral device
-might design the kind of the kind of irq-flags for detection.
+In commit
 
-If possible, could you provide some example on mainline kernel?
+  d0bb82fd6018 ("net: stmmac: set IC bit when transmitting frames with HW t=
+imestamp")
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Fixes tag
+
+  Fixes: f748be531d70 ("net: stmmac: Rework coalesce timer and fix multi-qu=
+eue races")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+Fixes: f748be531d70 ("stmmac: support new GMAC4")
+
+or did you mean
+
+Fixes: 8fce33317023 ("net: stmmac: Rework coalesce timer and fix multi-queu=
+e races")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Na9+/O=gek0KognWqCqb/n3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0P82QACgkQAVBC80lX
+0GzOpAf9F/VT4UgXO75BenZ0s4eht/5MSb6+HByvDuP5GyXkYOi+yl4lteWBrUFg
+tiBQvw3cq/j7aHcPs+x7NHhNHiMuFovU2g11GMGkG11hEAPAJ5CfQLmqJK2NiOwm
+Eala+LJs+CjbgBpWVQeqdJQZMQEe438y0LTyJG1YtRzSxP8/pmbOpJSEN7kP4h2X
+MPUCGd+dlAfHsilXpcg18Kg4svDD9SWk0y/j5rYS9XLcLGL8sPjsiEUZIxoDaOIU
+dukVL/9BtN75lseVL6Y87EMPS4Cuv2ahsEdaTRYpqSGcPkRN7DsNXygLITyno++A
+cjs07J5aKrvC8ejQ6GUoEvSnbBw5FA==
+=ygt7
+-----END PGP SIGNATURE-----
+
+--Sig_/Na9+/O=gek0KognWqCqb/n3--
