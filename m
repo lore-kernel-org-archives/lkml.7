@@ -2,87 +2,96 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4430FC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18493C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197172073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D173C20652
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xDxG0siw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFWQIf (ORCPT
+        id S1726702AbfFWQNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:08:35 -0400
-Received: from mail.sf-mail.de ([116.202.16.50]:48679 "EHLO mail.sf-mail.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfFWQIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:08:35 -0400
-X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 12:08:34 EDT
-Received: (qmail 18769 invoked from network); 23 Jun 2019 16:01:36 -0000
-Received: from dslb-092-076-185-040.092.076.pools.vodafone-ip.de ([::ffff:92.76.185.40]:33320 HELO daneel.sf-tec.de) (auth=eike@sf-mail.de)
-        by mail.sf-mail.de (Qsmtpd 0.35dev) with (DHE-RSA-AES256-GCM-SHA384 encrypted) ESMTPSA
-        for <efremov@linux.com>; Sun, 23 Jun 2019 18:01:36 +0200
-From:   Rolf Eike Beer <eike-kernel@sf-tec.de>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+        Sun, 23 Jun 2019 12:13:39 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:23058 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfFWQNi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 12:13:38 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x5NGDU0w024279;
+        Mon, 24 Jun 2019 01:13:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x5NGDU0w024279
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561306410;
+        bh=jqiQ1y5oNfRR0g7lME/nEDNqOJEW6bjlbalGJ20HGQ0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xDxG0siw4cbp7po2wAgeT49KgFRCeqsPlrhZEwuZggbYGoHPmGabUijA79H8aOPgE
+         043ZeuEXYhloNDl93C987jGila8l9k6Y/w8ggnmssC4Bi84UxraxZcDh3fE+dD9Sqc
+         3gMDLiFYOK7Go3ya81r/l+RVnLl614U3qJI0IdHweL8YBZ0WY6mgyKwjGEM0fK0L9i
+         T+kBWj4+seEbUFVV7O8kBFQ6/2B1yknD4ywlPF1PVT4OJ5Q0z6BE/XcwPEtSl6Y+9Y
+         GplBE7YI11RrvZollgtMH3zvUysZa23pN6m++1tg+gNrJ90BOOB9Z0srA1pN6yea+F
+         Wf5HvEaiFhrZg==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] parisc: asm: psw.h: missing header guard
-Date:   Sun, 23 Jun 2019 18:01:41 +0200
-Message-ID: <8264763.oMOxLtkXCx@daneel.sf-tec.de>
-In-Reply-To: <20190623150920.26422-1-efremov@linux.com>
-References: <20190623150920.26422-1-efremov@linux.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart8051854.DE1LrJNj9i"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Subject: [PATCH 1/2] kbuild: fix missed rebuild of modules.builtin
+Date:   Mon, 24 Jun 2019 01:13:27 +0900
+Message-Id: <20190623161328.22461-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart8051854.DE1LrJNj9i
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Unlike modules.order, modules.builtin is not rebuilt every time.
+Once modules.builtin is created, it will not be updated until
+auto.conf or tristate.conf is changed.
 
-Denis Efremov wrote:
-> The psw.h header file contains #ifndef directive of the guard,
-> but the complimentary #define directive is missing. The patch
-> adds the appropriate #define to fix the header guard.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  arch/parisc/include/asm/psw.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/parisc/include/asm/psw.h b/arch/parisc/include/asm/psw.h
-> index 76c301146c31..7a175e866ed0 100644
-> --- a/arch/parisc/include/asm/psw.h
-> +++ b/arch/parisc/include/asm/psw.h
-> @@ -1,5 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #ifndef _PARISC_PSW_H
-> +#define _PARISC_PSW_H
-> 
-> 
->  #define	PSW_I	0x00000001
+So, it misses to notice a change in Makefile, for example, renaming
+of modules.
 
-You could have removed one of the 2 empty lines then.
+Kbuild must always descend into directories for modules.builtin too.
 
-Eike
---nextPart8051854.DE1LrJNj9i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
------BEGIN PGP SIGNATURE-----
+ Makefile | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-iF0EABECAB0WIQSaYVDeqwKa3fTXNeNcpIk+abn8TgUCXQ+iZQAKCRBcpIk+abn8
-Tq+ZAJ0ShaFX1qk7lxyzXG0d4+P4iEcUMQCgjAcANB3MxFvxsDrfK5u76TCdHDo=
-=xLAY
------END PGP SIGNATURE-----
-
---nextPart8051854.DE1LrJNj9i--
-
-
+diff --git a/Makefile b/Makefile
+index 9514dac2660a..19c33bc69bb1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1289,12 +1289,16 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+ 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
+ 
+-modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
+-	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
++modbuiltin-dirs := $(addprefix _modbuiltin_, $(vmlinux-dirs))
+ 
+-%/modules.builtin: include/config/auto.conf include/config/tristate.conf
+-	$(Q)$(MAKE) $(modbuiltin)=$*
++modules.builtin: $(modbuiltin-dirs)
++	$(Q)$(AWK) '!x[$$0]++' $(addsuffix /$@, $(vmlinux-dirs)) > $@
+ 
++PHONY += $(modbuiltin-dirs)
++# tristate.conf is not included from this Makefile. Add it as a prerequisite
++# here to make it self-healing in case somebody accidentally removes it.
++$(modbuiltin-dirs): include/config/tristate.conf
++	$(Q)$(MAKE) $(modbuiltin)=$(patsubst _modbuiltin_%,%,$@)
+ 
+ # Target to prepare building external modules
+ PHONY += modules_prepare
+-- 
+2.17.1
 
