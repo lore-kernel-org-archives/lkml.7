@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4753DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D50AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3BE22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6847622DA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EmN3irit"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="x2RdswGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFXBlk (ORCPT
+        id S1726845AbfFXBlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:41:40 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51211 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfFXBk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:41:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43987 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726557AbfFXBk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 21:40:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNhbLv2856611
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNrsq72859764
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 16:43:38 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNhbLv2856611
+        Sun, 23 Jun 2019 16:53:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNrsq72859764
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561333419;
-        bh=Zya2uyCCLGkqpLnHRxNkZNm9EbFu0GD0WvoO1K2KFO8=;
+        s=2019061801; t=1561334036;
+        bh=LUevjWnxulWmyQspA1Jq/kxZST/G4AGPNALMYRoAZXo=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=EmN3iritynRXUl33zPhXgJjAsERLAvF4CDkq3CvIlq4owKEZ3Kufvk4WZCXUlvGFH
-         0qp9jXW2BWsQwXS3NUwiSUzTs9+VfSTuIuWPqYuKR9IJ0WOfrKfI8RKiG+RBXVL8Ac
-         uZRQ+dIFd1kDAtuoUApsJ67kxU/J7teU1XmfA/GxxZbc6o5MPpaxknjToA/kbXt0iq
-         mHjVR2p++ujh897PE46NR80nKBI6zYk7eiEdKPZmGaGw773+7dni1VxhJOxM5XJ5RJ
-         MkTX6vcumI5hSEginD8MI7xelTXe27lC8cU16MNAQTN1DQ1TC6TlggfTIyxDH8Vx8j
-         Q0V73DBQGbwnA==
+        b=x2RdswGXZX5lL4IIy8hAgUUZVwDgJHbXlsl1CfWHavmITTUnFuPs0RvDFLQtEPi3A
+         HGz9vUFYMaouLloGcBY90WxAwsuHWodr6QGNNwzbIuqqiRYyEI/njk6yS/L8QdWIk+
+         h9fHtXUrAz8JJ+IwRbB5buIs1N/vFRgmzXYxHu9x5GCNA6EfEbAd0xGSoMQNF6nDaM
+         jbjDfGC7p0KrYbnDYGwVIfSzZY7qF+G3J+Om0rdc3zm5212Bwo1U7gX3ezJw4BspwM
+         YzTG1OCMmN/UeplOsBs2Ihf3J8YuI3+dbe8RX8PGclm8+DZuZUaCpQoNcuG+xVvW3G
+         P/Tnjpu3AF/HQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNhWC12856606;
-        Sun, 23 Jun 2019 16:43:32 -0700
-Date:   Sun, 23 Jun 2019 16:43:32 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNrs1J2859761;
+        Sun, 23 Jun 2019 16:53:54 -0700
+Date:   Sun, 23 Jun 2019 16:53:54 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Vincenzo Frascino <tipbot@zytor.com>
-Message-ID: <tip-32e29396f00e7849ea0b1aeebae097fc1de6e979@git.kernel.org>
-Cc:     salyzyn@android.com, ralf@linux-mips.org, 0x7f454c46@gmail.com,
-        hpa@zytor.com, daniel.lezcano@linaro.org, linux@rasmusvillemoes.dk,
-        sthotton@marvell.com, paul.burton@mips.com, huw@codeweavers.com,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, pcc@google.com,
-        arnd@arndb.de, linux@armlinux.org.uk, andre.przywara@arm.com,
-        shuah@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org
-Reply-To: huw@codeweavers.com, tglx@linutronix.de, hpa@zytor.com,
-          0x7f454c46@gmail.com, salyzyn@android.com, ralf@linux-mips.org,
-          sthotton@marvell.com, paul.burton@mips.com,
-          linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org,
-          linux-kernel@vger.kernel.org, shuah@kernel.org,
-          andre.przywara@arm.com, mingo@kernel.org, will.deacon@arm.com,
-          catalin.marinas@arm.com, vincenzo.frascino@arm.com,
-          linux@armlinux.org.uk, arnd@arndb.de, pcc@google.com
-In-Reply-To: <20190621095252.32307-3-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-3-vincenzo.frascino@arm.com>
+Message-ID: <tip-f01703b3d2e6faf7233cedf78f1e2d31b39fa90f@git.kernel.org>
+Cc:     sthotton@marvell.com, hpa@zytor.com, tglx@linutronix.de,
+        andre.przywara@arm.com, 0x7f454c46@gmail.com, arnd@arndb.de,
+        linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, pcc@google.com, paul.burton@mips.com,
+        mingo@kernel.org, shuah@kernel.org, catalin.marinas@arm.com,
+        daniel.lezcano@linaro.org, salyzyn@android.com,
+        huw@codeweavers.com, vincenzo.frascino@arm.com,
+        ralf@linux-mips.org, linux@armlinux.org.uk
+Reply-To: arnd@arndb.de, linux@rasmusvillemoes.dk,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          sthotton@marvell.com, hpa@zytor.com, 0x7f454c46@gmail.com,
+          andre.przywara@arm.com, paul.burton@mips.com,
+          will.deacon@arm.com, pcc@google.com, daniel.lezcano@linaro.org,
+          salyzyn@android.com, mingo@kernel.org, shuah@kernel.org,
+          catalin.marinas@arm.com, ralf@linux-mips.org,
+          linux@armlinux.org.uk, vincenzo.frascino@arm.com,
+          huw@codeweavers.com
+In-Reply-To: <20190621095252.32307-15-vincenzo.frascino@arm.com>
+References: <20190621095252.32307-15-vincenzo.frascino@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] hrtimer: Split out hrtimer defines into separate
- header
-Git-Commit-ID: 32e29396f00e7849ea0b1aeebae097fc1de6e979
+Subject: [tip:timers/vdso] arm64: compat: Get sigreturn trampolines from
+ vDSO
+Git-Commit-ID: f01703b3d2e6faf7233cedf78f1e2d31b39fa90f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -79,20 +80,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  32e29396f00e7849ea0b1aeebae097fc1de6e979
-Gitweb:     https://git.kernel.org/tip/32e29396f00e7849ea0b1aeebae097fc1de6e979
+Commit-ID:  f01703b3d2e6faf7233cedf78f1e2d31b39fa90f
+Gitweb:     https://git.kernel.org/tip/f01703b3d2e6faf7233cedf78f1e2d31b39fa90f
 Author:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate: Sat, 22 Jun 2019 15:02:07 +0200
+AuthorDate: Fri, 21 Jun 2019 10:52:41 +0100
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 21:21:04 +0200
+CommitDate: Sat, 22 Jun 2019 21:21:09 +0200
 
-hrtimer: Split out hrtimer defines into separate header
+arm64: compat: Get sigreturn trampolines from vDSO
 
-To avoid include dependency hell split out the hrtimer defines which are
-required in the upcoming VDSO library into a separate header file.
+When the compat vDSO is enabled, the sigreturn trampolines are not
+anymore available through [sigpage] but through [vdso].
 
-[ tglx: Split out from the VDSO library patch and included ktime.h as
-        the new header depends on it. ]
+Add the relevant code the enable the feature.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -115,83 +115,75 @@ Cc: Shuah Khan <shuah@kernel.org>
 Cc: Dmitry Safonov <0x7f454c46@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Huw Davies <huw@codeweavers.com>
-Link: https://lkml.kernel.org/r/20190621095252.32307-3-vincenzo.frascino@arm.com
----
- include/linux/hrtimer.h      | 16 +---------------
- include/linux/hrtimer_defs.h | 27 +++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 15 deletions(-)
+Link: https://lkml.kernel.org/r/20190621095252.32307-15-vincenzo.frascino@arm.com
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 2e8957eac4d4..4971100a8cab 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -12,8 +12,8 @@
- #ifndef _LINUX_HRTIMER_H
- #define _LINUX_HRTIMER_H
+---
+ arch/arm64/include/asm/vdso.h |  3 +++
+ arch/arm64/kernel/signal32.c  | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
+index 1f94ec19903c..9c15e0a06301 100644
+--- a/arch/arm64/include/asm/vdso.h
++++ b/arch/arm64/include/asm/vdso.h
+@@ -17,6 +17,9 @@
+ #ifndef __ASSEMBLY__
  
-+#include <linux/hrtimer_defs.h>
- #include <linux/rbtree.h>
--#include <linux/ktime.h>
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/percpu.h>
-@@ -298,26 +298,12 @@ struct clock_event_device;
+ #include <generated/vdso-offsets.h>
++#ifdef CONFIG_COMPAT_VDSO
++#include <generated/vdso32-offsets.h>
++#endif
  
- extern void hrtimer_interrupt(struct clock_event_device *dev);
+ #define VDSO_SYMBOL(base, name)						   \
+ ({									   \
+diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
+index 8a9a5ceb63b7..12a585386c2f 100644
+--- a/arch/arm64/kernel/signal32.c
++++ b/arch/arm64/kernel/signal32.c
+@@ -18,6 +18,7 @@
+ #include <asm/traps.h>
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
++#include <asm/vdso.h>
  
--/*
-- * The resolution of the clocks. The resolution value is returned in
-- * the clock_getres() system call to give application programmers an
-- * idea of the (in)accuracy of timers. Timer values are rounded up to
-- * this resolution values.
-- */
--# define HIGH_RES_NSEC		1
--# define KTIME_HIGH_RES		(HIGH_RES_NSEC)
--# define MONOTONIC_RES_NSEC	HIGH_RES_NSEC
--# define KTIME_MONOTONIC_RES	KTIME_HIGH_RES
--
- extern void clock_was_set_delayed(void);
- 
- extern unsigned int hrtimer_resolution;
- 
- #else
- 
--# define MONOTONIC_RES_NSEC	LOW_RES_NSEC
--# define KTIME_MONOTONIC_RES	KTIME_LOW_RES
--
- #define hrtimer_resolution	(unsigned int)LOW_RES_NSEC
- 
- static inline void clock_was_set_delayed(void) { }
-diff --git a/include/linux/hrtimer_defs.h b/include/linux/hrtimer_defs.h
-new file mode 100644
-index 000000000000..2d3e3c5fb946
---- /dev/null
-+++ b/include/linux/hrtimer_defs.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_HRTIMER_DEFS_H
-+#define _LINUX_HRTIMER_DEFS_H
+ struct compat_vfp_sigframe {
+ 	compat_ulong_t	magic;
+@@ -341,6 +342,30 @@ static void compat_setup_return(struct pt_regs *regs, struct k_sigaction *ka,
+ 		retcode = ptr_to_compat(ka->sa.sa_restorer);
+ 	} else {
+ 		/* Set up sigreturn pointer */
++#ifdef CONFIG_COMPAT_VDSO
++		void *vdso_base = current->mm->context.vdso;
++		void *vdso_trampoline;
 +
-+#include <linux/ktime.h>
++		if (ka->sa.sa_flags & SA_SIGINFO) {
++			if (thumb) {
++				vdso_trampoline = VDSO_SYMBOL(vdso_base,
++							compat_rt_sigreturn_thumb);
++			} else {
++				vdso_trampoline = VDSO_SYMBOL(vdso_base,
++							compat_rt_sigreturn_arm);
++			}
++		} else {
++			if (thumb) {
++				vdso_trampoline = VDSO_SYMBOL(vdso_base,
++							compat_sigreturn_thumb);
++			} else {
++				vdso_trampoline = VDSO_SYMBOL(vdso_base,
++							compat_sigreturn_arm);
++			}
++		}
 +
-+#ifdef CONFIG_HIGH_RES_TIMERS
-+
-+/*
-+ * The resolution of the clocks. The resolution value is returned in
-+ * the clock_getres() system call to give application programmers an
-+ * idea of the (in)accuracy of timers. Timer values are rounded up to
-+ * this resolution values.
-+ */
-+# define HIGH_RES_NSEC		1
-+# define KTIME_HIGH_RES		(HIGH_RES_NSEC)
-+# define MONOTONIC_RES_NSEC	HIGH_RES_NSEC
-+# define KTIME_MONOTONIC_RES	KTIME_HIGH_RES
-+
++		retcode = ptr_to_compat(vdso_trampoline) + thumb;
 +#else
-+
-+# define MONOTONIC_RES_NSEC	LOW_RES_NSEC
-+# define KTIME_MONOTONIC_RES	KTIME_LOW_RES
-+
+ 		unsigned int idx = thumb << 1;
+ 
+ 		if (ka->sa.sa_flags & SA_SIGINFO)
+@@ -348,6 +373,7 @@ static void compat_setup_return(struct pt_regs *regs, struct k_sigaction *ka,
+ 
+ 		retcode = (unsigned long)current->mm->context.vdso +
+ 			  (idx << 2) + thumb;
 +#endif
-+
-+#endif
+ 	}
+ 
+ 	regs->regs[0]	= usig;
