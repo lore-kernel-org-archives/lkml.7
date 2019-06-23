@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B1C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B07C48BE4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32E820656
+	by mail.kernel.org (Postfix) with ESMTP id D6DFA20820
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFWMvG (ORCPT
+        id S1726589AbfFWMvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 08:51:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36543 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfFWMvG (ORCPT
+        Sun, 23 Jun 2019 08:51:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47269 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFWMvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 08:51:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id k21so18201783ioj.3
+Received: by mail-io1-f72.google.com with SMTP id r27so18184958iob.14
         for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 05:51:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=akj0uRzdQOuIMOVJzexqusSdGlgWZ/bYGADjUjTklDA=;
-        b=FT/kSRxkhr/IyNpw4U6I9njkkl46wa+zeY0dbJfju4CNjnD+Bgb1hUgWiKDAB5IJWg
-         G8GPfa/hxVOI1aNQ9Jg0bBBi/LlSSKrocZQKUdDi7fha0yQG4tWyongPGPYg9cre0vt0
-         70ZPmTRAtlzhlBwTee6ipSI4j9YYSXgh7P+p1FnL6+xv+0E0nalQ+VWWhklpqzOdYwSl
-         yn9qFthm7+O+NgqPEWO8LA7RotPOd/6+uknEvWmWFw8kCga3INbQU8MhirR7JyscBxyC
-         PXlvpQ2kPXlEa2pP4ro8c85FiaT6RrGZOPfWKJNvJUqrHp2w7Ggc9z5WEMZ1YxmBk22O
-         WbVQ==
-X-Gm-Message-State: APjAAAV7aNzCDLhUUOX3dJFaN1aicXyzCV23AbFFAVf8C54XZWZwILSq
-        /OlzpjSoKIMHGUy74wxFT4ozlqYMk2TxR2dTFYy98nXcZBCv
-X-Google-Smtp-Source: APXvYqwfgI8Kr0Lm57kf2Z5J8KyLFcQQTYBnM7py8lZ5TNLmAVC+giJmqSmJq4+s4FA1K5uqL9uHT3IghDrwVL82mIM+x/xbMJb+
+        bh=kXaTpUMB141Sio/v1vYpi203tFotQH/1Wy9zkwXn66s=;
+        b=Fb99xDeQHBjHFUySHhLB9GQDEstxzx8VHYDC4yshslSZkF7uBsQCMSm7xHlJT2bQTj
+         +L22wK7cEpsqm0OgDlODCe4kIGIDhFAESBpIaMStDmKxdNvssConJXrV8X5S0pVDQbfo
+         OUWXUK6JS0XJVRXn/4j+kltm4dwdSu4AafGKAAq8yMlLw8AY0O52qEHjUDI6PORQib1q
+         y3/uzodDu5kYm+gFRqx+TMpzsD9b+HLZDqgcIWBsmcmZHwaeqLGp5VtftSfg+pUZSbcI
+         SmUjxK/thZMURQSg2BOSsaKHwHXASz2QCAd2w4tNzR8MWJTu1tR3Yn2Cq+BALX4DjIvd
+         KzkA==
+X-Gm-Message-State: APjAAAUcW5lejaUXKpTOi3f59ReU+6rCSWKY876LJNYPpHzOw/qvom4a
+        e9g2cWMmpacPCT2g3VWam+HZkPU6irGcRlQ5krwU4c8iqP86
+X-Google-Smtp-Source: APXvYqzcFA+EMFZhoK5ooQwachkSlc25xxKAQ9TDLwSYySrT2apNKBVdu5TzHbNy0NWZzRwZUBBo1Dm6J+Vy9B4JPNJQ88jGhvuG
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:38a:: with SMTP id y10mr37939351jap.104.1561294265707;
+X-Received: by 2002:a02:c6b8:: with SMTP id o24mr78442599jan.80.1561294265890;
  Sun, 23 Jun 2019 05:51:05 -0700 (PDT)
 Date:   Sun, 23 Jun 2019 05:51:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000018f6f1058bfd26e4@google.com>
-Subject: kernel BUG at arch/x86/mm/physaddr.c:LINE! (3)
-From:   syzbot <syzbot+50a27df2d1cd8ae38609@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000001bbe63058bfd26d9@google.com>
+Subject: WARNING in kernfs_remove_by_name_ns
+From:   syzbot <syzbot+b76f1b62f3f98711bd93@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,51 +58,84 @@ syzbot found the following crash on:
 
 HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15068816a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a6c806a00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
-dashboard link: https://syzkaller.appspot.com/bug?extid=50a27df2d1cd8ae38609
+dashboard link: https://syzkaller.appspot.com/bug?extid=b76f1b62f3f98711bd93
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+50a27df2d1cd8ae38609@syzkaller.appspotmail.com
+Reported-by: syzbot+b76f1b62f3f98711bd93@syzkaller.appspotmail.com
 
 ------------[ cut here ]------------
-kernel BUG at arch/x86/mm/physaddr.c:27!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 29308 Comm: kworker/0:0 Not tainted 5.2.0-rc5+ #31
+kernfs: can not remove 'nr_tags', no directory
+WARNING: CPU: 0 PID: 19627 at fs/kernfs/dir.c:1503  
+kernfs_remove_by_name_ns+0x9f/0xb0 fs/kernfs/dir.c:1503
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 19627 Comm: syz-executor.1 Not tainted 5.2.0-rc5+ #31
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: events cache_reap
-RIP: 0010:__phys_addr+0xb3/0x120 arch/x86/mm/physaddr.c:27
-Code: 08 4c 89 e3 31 ff 48 d3 eb 48 89 de e8 f6 00 3e 00 48 85 db 75 0f e8  
-4c ff 3d 00 4c 89 e0 5b 41 5c 41 5d 5d c3 e8 3d ff 3d 00 <0f> 0b e8 36 ff  
-3d 00 48 c7 c0 10 50 a7 88 48 ba 00 00 00 00 00 fc
-RSP: 0018:ffff88804752fbd8 EFLAGS: 00010093
-RAX: ffff888059350600 RBX: 0000000000000000 RCX: ffffffff8132c192
-RDX: 0000000000000000 RSI: ffffffff8132c1f3 RDI: 0000000000000006
-RBP: ffff88804752fbf0 R08: ffff888059350600 R09: ffffed1008ea5f80
-R10: ffffed1008ea5f7f R11: 0000000000000003 R12: 0000778000000000
-R13: 0000000080000000 R14: ffff88804dd46c00 R15: ffffea00025de388
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2f423000 CR3: 000000009320c000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  virt_to_head_page include/linux/mm.h:729 [inline]
-  free_block+0xa8/0x250 mm/slab.c:3349
-  drain_array_locked+0x36/0x90 mm/slab.c:2142
-  drain_array+0x8c/0xb0 mm/slab.c:3960
-  cache_reap+0xf4/0x280 mm/slab.c:4001
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
-
-======================================================
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:kernfs_remove_by_name_ns+0x9f/0xb0 fs/kernfs/dir.c:1503
+Code: 99 ff 48 c7 c7 60 22 c9 88 41 bc fe ff ff ff e8 a7 c4 44 05 eb d7 e8  
+f0 4e 99 ff 4c 89 ee 48 c7 c7 80 c8 78 87 e8 ff 87 6b ff <0f> 0b 41 bc fe  
+ff ff ff eb b9 0f 1f 80 00 00 00 00 55 48 89 e5 41
+RSP: 0018:ffff888058aaf798 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffffffff88f18128 RCX: 0000000000000000
+RDX: 000000000001e0a4 RSI: ffffffff815ad926 RDI: ffffed100b155ee5
+RBP: ffff888058aaf7b0 R08: ffff88804eb8a240 R09: ffffed1015d060a1
+R10: ffffed1015d060a0 R11: ffff8880ae830507 R12: 0000000000000000
+R13: ffffffff87a35540 R14: 0000000000000000 R15: ffffffff87a35480
+  kernfs_remove_by_name include/linux/kernfs.h:567 [inline]
+  remove_files.isra.0+0x7b/0x190 fs/sysfs/group.c:27
+  sysfs_remove_group+0xb6/0x1b0 fs/sysfs/group.c:264
+  sysfs_remove_groups fs/sysfs/group.c:288 [inline]
+  sysfs_remove_groups+0x61/0xb0 fs/sysfs/group.c:280
+  kobject_del+0x9c/0x170 lib/kobject.c:619
+  blk_mq_unregister_hctx.part.0+0x126/0x170 block/blk-mq-sysfs.c:243
+  blk_mq_unregister_hctx block/blk-mq-sysfs.c:237 [inline]
+  blk_mq_sysfs_unregister+0x16b/0x200 block/blk-mq-sysfs.c:373
+  __blk_mq_update_nr_hw_queues block/blk-mq.c:3286 [inline]
+  blk_mq_update_nr_hw_queues+0x4f9/0xd30 block/blk-mq.c:3321
+  nbd_start_device+0x156/0xac0 drivers/block/nbd.c:1166
+  nbd_start_device_ioctl drivers/block/nbd.c:1207 [inline]
+  __nbd_ioctl drivers/block/nbd.c:1278 [inline]
+  nbd_ioctl+0x53f/0xbd0 drivers/block/nbd.c:1318
+  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
+  blkdev_ioctl+0xece/0x1c10 block/ioctl.c:606
+  block_ioctl+0xee/0x130 fs/block_dev.c:1930
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4592c9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9aba72cc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00000000004592c9
+RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9aba72d6d4
+R13: 00000000004c2a81 R14: 00000000004d5b10 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
