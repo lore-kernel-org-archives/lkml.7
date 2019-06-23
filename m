@@ -2,99 +2,129 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CE6C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0961C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6BA2073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561307926;
-	bh=oty7YWPdXvfYhqoDo8MNJH/4PkqB2xDgQ06sCbgUZ7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L5XVaouv/xWSYvCNN9rNM3WYy17UiZOwwycuYrTTSDgdPKCs5Hb3kJWvHbll0YrbS
-	 xc7KcaOgUwJSRyap92f6uDke1KanyzIzk0a9L74vC9ZsKK85U4fAIApvav6SD7od3y
-	 CuaTqJfswYIf8HitklcIVUJHKkSGpIjENjvAT+6I=
+	by mail.kernel.org (Postfix) with ESMTP id 9FCF22073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfFWQin (ORCPT
+        id S1726755AbfFWQjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfFWQin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:38:43 -0400
-Received: from localhost (unknown [106.201.35.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0892073F;
-        Sun, 23 Jun 2019 16:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561307922;
-        bh=oty7YWPdXvfYhqoDo8MNJH/4PkqB2xDgQ06sCbgUZ7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PIFDyhGrATZA7UWxJUVCKa8yKq3lqodyll1qpq2ZM4ND7A9qUY8Mn+4+8nkE3Ez6Z
-         ISVoR4NOPbWpvsc62dH2lsw0xITzhPFMDLal38QeR5YNZGF0JnFgNQlrCslv9IaV5I
-         l/wtEOldl+B8/sksLdEtMqoDzsy26APf9Ps0gtdU=
-Date:   Sun, 23 Jun 2019 22:05:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] usb: xhci: handle uPD720201 and uPD720202 w/o ROM
-Message-ID: <20190623163533.GS2962@vkoul-mobl>
-References: <20190621085913.8722-1-vkoul@kernel.org>
- <20190621085913.8722-3-vkoul@kernel.org>
- <2243374.tJjtY2ZRGj@debian64>
+        Sun, 23 Jun 2019 12:39:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33801 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWQjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 12:39:00 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hf5Vk-0003To-B7; Sun, 23 Jun 2019 18:38:36 +0200
+Date:   Sun, 23 Jun 2019 18:38:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+cc:     corbet@lwn.net, mcgrof@kernel.org,
+        Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org,
+        manfred@colorfullife.com, jwilk@jwilk.net, dvyukov@google.com,
+        feng.tang@intel.com, sunilmut@microsoft.com,
+        quentin.perret@arm.com, linux@leemhuis.info, alex.popov@linux.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, tedheadster@gmail.com,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+In-Reply-To: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+Message-ID: <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
+References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2243374.tJjtY2ZRGj@debian64>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-06-19, 21:53, Christian Lamparter wrote:
-> On Friday, June 21, 2019 10:59:10 AM CEST Vinod Koul wrote:
-> > From: Christian Lamparter <chunkeey@googlemail.com>
-> > 
-> > This patch adds a firmware check for the uPD720201K8-711-BAC-A
-> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> > devices which need a firmware in order to work as they do not have
-> > support to load the firmware from an external ROM.
-> > 
-> > Currently, the xhci-pci driver is unable to initialize the hcd in
-> > this case. Instead it will wait for 30 seconds and cause a timeout
-> > in xhci_handshake() and fails.
-> > 
-> > [    5.116990] xhci_hcd 0000:45:00.0: new USB bus registered ...
-> > [   32.335215] xhci_hcd 0000:45:00.0: can't setup: -110
-> > [   32.340179] xhci_hcd 0000:45:00.0: USB bus 2 deregistered
-> > [   32.345587] xhci_hcd 0000:45:00.0: init 0000:45:00.0 fail, -110
-> > [   32.351496] xhci_hcd: probe of 0000:45:00.0 failed with error -110
-> > 
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Zhiqiang,
+
+On Thu, 20 Jun 2019, Zhiqiang Liu wrote:
+
+> From: Zhiqiang liu <liuzhiqiang26@huawei.com>
 > 
-> >From what I remember, this was the "backup" patch that just prevented
-> a stuck device (since the xhci-pci would trigger the watchdog on the
-> powerpc APM82181). I posted because it because I didn't get any reply
-> from Greg or Felipe. This patch should be skipable since patch 1/5 adds
-> the full loader.
+> In __do_softirq func, MAX_SOFTIRQ_TIME was set to 2ms via experimentation by
+> commit c10d73671 ("softirq: reduce latencies") in 2013, which was designed
+> to reduce latencies for various network workloads. The key reason is that the
+> maximum number of microseconds in one NAPI polling cycle in net_rx_action func
+> was set to 2 jiffies, so different HZ settting will lead to different latencies.
+> 
+> However, commit 7acf8a1e8 ("Replace 2 jiffies with sysctl netdev_budget_usecs
+> to enable softirq tuning") adopts netdev_budget_usecs to tun maximum number of
+> microseconds in one NAPI polling cycle. So the latencies of net_rx_action can be
+> controlled by sysadmins to copy with hardware changes over time.
 
-Okay let me drop this then!
+So much for the theory. See below.
 
--- 
-~Vinod
+> Correspondingly, the MAX_SOFTIRQ_TIME should be able to be tunned by sysadmins,
+> who knows best about hardware performance, for excepted tradeoff between latence
+> and fairness.
+> 
+> Here, we add sysctl variable max_softirq_time_usecs to replace MAX_SOFTIRQ_TIME
+> with 2ms default value.
+
+...
+
+>   */
+> -#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
+> +unsigned int __read_mostly max_softirq_time_usecs = 2000;
+>  #define MAX_SOFTIRQ_RESTART 10
+> 
+>  #ifdef CONFIG_TRACE_IRQFLAGS
+> @@ -248,7 +249,8 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
+> 
+>  asmlinkage __visible void __softirq_entry __do_softirq(void)
+>  {
+> -	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
+> +	unsigned long end = jiffies +
+> +		usecs_to_jiffies(max_softirq_time_usecs);
+
+That's still jiffies based and therefore depends on CONFIG_HZ. Any budget
+value will be rounded up to the next jiffie. So in case of HZ=100 and
+time=1000us this will still result in 10ms of allowed loop time.
+
+I'm not saying that we must use a more fine grained time source, but both
+the changelog and the sysctl documentation are misleading.
+
+If we keep it jiffies based, then microseconds do not make any sense. They
+just give a false sense of controlability.
+
+Keep also in mind that with jiffies the accuracy depends also on the
+distance to the next tick when 'end' is evaluated. The next tick might be
+imminent.
+
+That's all information which needs to be in the documentation.
+
+> +	{
+> +		.procname	= "max_softirq_time_usecs",
+> +		.data		= &max_softirq_time_usecs,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler   = proc_dointvec_minmax,
+> +		.extra1		= &zero,
+> +	},
+
+Zero as the lower limit? That means it allows a single loop. Fine, but
+needs to be documented as well.
+
+Thanks,
+
+	tglx
