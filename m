@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ACC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480C4C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49282073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21115208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFWEkN (ORCPT
+        id S1726554AbfFWEkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 00:40:13 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:52268 "EHLO hermes.aosc.io"
+        Sun, 23 Jun 2019 00:40:23 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:52284 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfFWEkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 00:40:13 -0400
+        id S1726050AbfFWEkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 00:40:23 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 30D106B5D5;
-        Sun, 23 Jun 2019 04:40:08 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 3F8806B5D5;
+        Sun, 23 Jun 2019 04:40:19 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -31,47 +31,52 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v3 7/9] dt-bindings: vendor-prefixes: add Sipeed
-Date:   Sun, 23 Jun 2019 12:37:59 +0800
-Message-Id: <20190623043801.14040-8-icenowy@aosc.io>
+Subject: [PATCH v3 8/9] dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+Date:   Sun, 23 Jun 2019 12:38:00 +0800
+Message-Id: <20190623043801.14040-9-icenowy@aosc.io>
 In-Reply-To: <20190623043801.14040-1-icenowy@aosc.io>
 References: <20190623043801.14040-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shenzhen Sipeed Technology Co., Ltd. is a company focused on development
-kits, which also contains rebranded Lichee Pi series.
+The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI Flash.
+It has a gold finger connector for expansion, and UART is available from
+reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+Allwinner V3L SoCs.
 
-Add its vendor prefix binding.
+Add the device tree binding of the basic version of the core board --
+w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-Changes in v3:
-- Rebased because of the addition of sinlinx and sinovoip.
+No changes in v3.
 
 Patch introduced in v2.
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 92f50cac1055..bbbce4c9cc4e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -847,6 +847,8 @@ patternProperties:
-     description: Sinlinx Electronics Technology Co., LTD
-   "^sinovoip,.*":
-     description: SinoVoip Co., Ltd
-+  "^sipeed,.*":
-+    description: Shenzhen Sipeed Technology Co., Ltd.
-   "^sirf,.*":
-     description: SiRF Technology, Inc.
-   "^sis,.*":
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 000a00d12d6a..48c126a7a848 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -353,6 +353,11 @@ properties:
+           - const: licheepi,licheepi-zero
+           - const: allwinner,sun8i-v3s
+ 
++      - description: Lichee Zero Plus (with S3, without eMMC/SPI Flash)
++        items:
++          - const: sipeed,lichee-zero-plus
++          - const: allwinner,sun8i-s3
++
+       - description: Linksprite PCDuino
+         items:
+           - const: linksprite,a10-pcduino
 -- 
 2.21.0
 
