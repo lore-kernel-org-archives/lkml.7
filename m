@@ -2,87 +2,104 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1ABC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 09:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B82C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189AE20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 09:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2707E20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eMSSnu20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfFWJrB (ORCPT
+        id S1726489AbfFWKIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 05:47:01 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35467 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfFWJrB (ORCPT
+        Sun, 23 Jun 2019 06:08:37 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:43558 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfFWKIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 05:47:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id w17so17796654iom.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 02:47:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=//qCEHHwsKmQKJGq2sElU6h7rWpgyd394JCVN/Ky63Y=;
-        b=KALjCk6FMbinth1gt0762WcnliBYQDkzxgKO4CO6g705kIh+i9bfPIFnzz+F7GVyEv
-         Iyrer8j6oMe2KS1Ft05H1cMzW3iO4KRQdP2n3dqkrywLE9Xr2W/gy5YjDVc74n2a8S4C
-         278XX0aTkKnWtsPqiniYYPOVXG4+BMUZgxypNn9YI6ErzWQnE8CCs7V73yE7wSvccdII
-         44yxpGjIR+DubdqTSLgTEL2xhDOJU9rwLBxu8OJrvpTNPk/KvCCbexXjmYsSTGeZQoDa
-         LCPX/QcVp7gEy2HM8NfnpsxbX+XY4LH27/43t/B4riMCAjSGHLo5yOuLufBtfyqfdxS1
-         0gPQ==
-X-Gm-Message-State: APjAAAW1/kmf6qqC1o5RCiDhIbF3cJ6zrtP3ty/AwNWJJl1/o8FDQDQ2
-        PHoe6pkc7r+MBgby2JH5T9vFZ56FTl1NxKpEdfv0in5at1OJ
-X-Google-Smtp-Source: APXvYqyGiLQ70dP6eFGnQ63Jed2MzJ0lmOsmDLwDerlbWSICxM7PikGk1Wtt/hUYnDo1CxkwarJk5FqD8R5xYTNQF8/oFlSwbHR+
+        Sun, 23 Jun 2019 06:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RRJoASm2wuNLycnVQyCO3oYrfaDo4EO1HNKxQfPp1Y4=; b=eMSSnu20h26/9MDMv0N3aNbzq
+        a9IiH6pLxSyGInAeuYWZvxDGr++Y5rBeLnwl1/WxAzrniKFNF9uTXZcV3UmpXVtNGx6TmqRyQ4zAN
+        EGjd0QuZenqtzQc7IGtSG+Cn4CnwEvXH6cYW4t+tmeP5Hxp5RSZnhb0vdBPxYXwjJ8BLQIgEPJrF3
+        2shA5G2UzplIHv3hATuYDLf+mUtXr/xkjvIb0IDJppWLFxjem5lbJ7GwvxHna2zQjrSERmug3f2uH
+        kWxdpvVdu6q6rKTh2dTwWEzgn+ByhXDBL9J28ZtwCNA86fatqRPucb81FVNSVB98hxrpRtP4D7FkG
+        eioQPrcEg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58914)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hezQC-0000gV-Uo; Sun, 23 Jun 2019 11:08:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hezQ8-0004ve-PB; Sun, 23 Jun 2019 11:08:24 +0100
+Date:   Sun, 23 Jun 2019 11:08:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com
+Subject: Re: [PATCH v4 1/5] net: macb: add phylink support
+Message-ID: <20190623100824.3xlmkofiqebdf4sa@shell.armlinux.org.uk>
+References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
+ <1561281457-6886-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6a01:: with SMTP id x1mr26057928iog.77.1561283220587;
- Sun, 23 Jun 2019 02:47:00 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 02:47:00 -0700
-In-Reply-To: <00000000000090ae7a058bc12946@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c1cb06058bfa9371@google.com>
-Subject: Re: WARNING in debug_check_no_obj_freed
-From:   syzbot <syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com>
-To:     alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
-        andriy.shevchenko@linux.intel.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        dmitry.torokhov@gmail.com, f.fainelli@gmail.com,
-        idosch@mellanox.com, jeffrey.t.kirsher@intel.com,
-        jiri@mellanox.com, kafai@fb.com, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tyhicks@canonical.com,
-        ubraun@linux.ibm.com, wanghai26@huawei.com, yhs@fb.com,
-        yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561281457-6886-1-git-send-email-pthombar@cadence.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sun, Jun 23, 2019 at 10:17:37AM +0100, Parshuram Thombare wrote:
+> +	switch (state->interface) {
+> +	case PHY_INTERFACE_MODE_GMII:
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
+> +			phylink_set(mask, 1000baseT_Full);
+> +			phylink_set(mask, 1000baseX_Full);
+> +			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
+> +				phylink_set(mask, 1000baseT_Half);
+> +				phylink_set(mask, 1000baseT_Half);
 
-commit 99182beed858a1bde22f60046602b9b223225f73
-Author: Daniel Borkmann <daniel@iogearbox.net>
-Date:   Tue Apr 2 21:17:19 2019 +0000
+I think this can be cleaned up.
 
-     Merge branch 'bpf-selftest-clang-fixes'
+> +			}
+> +		}
+> +	/* fallthrough */
+> +	case PHY_INTERFACE_MODE_MII:
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		phylink_set(mask, 10baseT_Half);
+> +		phylink_set(mask, 10baseT_Full);
+> +		phylink_set(mask, 100baseT_Half);
+> +		phylink_set(mask, 100baseT_Full);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  
+> -	spin_lock_irqsave(&bp->lock, flags);
+> +	linkmode_and(supported, supported, mask);
+> +	linkmode_and(state->advertising, state->advertising, mask);
+>  
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12faf81aa00000
-start commit:   bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11faf81aa00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16faf81aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-dashboard link: https://syzkaller.appspot.com/bug?extid=b972214bb803a343f4fe
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fcf0b2a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a22ad6a00000
+You remove this blank line in the next patch, so given that this is a
+new function, you might as well clean that up in this patch.
 
-Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
-Fixes: 99182beed858 ("Merge branch 'bpf-selftest-clang-fixes'")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
