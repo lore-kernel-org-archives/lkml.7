@@ -2,124 +2,151 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A285BC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE338C48BE4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5953121537
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lK04Va+z"
+	by mail.kernel.org (Postfix) with ESMTP id C0F1720652
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfFWMY1 (ORCPT
+        id S1726505AbfFWM3h convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 08:24:27 -0400
-Received: from mail-eopbgr70042.outbound.protection.outlook.com ([40.107.7.42]:12703
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725963AbfFWMY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 08:24:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nbPrApaPO1J8+RuUsUfkGpPn4x1KcDxkk/WnZ3tI+Qk=;
- b=lK04Va+zi6g5aM+LcTScYPPrR71zuUu0/yRrtmnfpe+lT6/AW2dfDRst8nFFKPyJJcIAp4kXv1ylBAVRkpRy02rGYeVBq7iDxQxLFjEzmnXCmTET/ZtRvxJhFyYFgyXYcl8bXn7H6vhCc+93S0s4jXVRBSXC0YVSRWK0hH6wUO0=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3786.eurprd04.prod.outlook.com (52.134.71.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Sun, 23 Jun 2019 12:24:15 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2008.014; Sun, 23 Jun 2019
- 12:24:15 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 2/3] clocksource: imx-sysctr: Add of_clk skip option
-Thread-Topic: [PATCH V2 2/3] clocksource: imx-sysctr: Add of_clk skip option
-Thread-Index: AQHVKbuWNWrHQhlrtkONmwA387ffcaapJ8uAgAABY9A=
-Date:   Sun, 23 Jun 2019 12:24:15 +0000
-Message-ID: <DB3PR0402MB3916EF5948655AE1373E0AF9F5E10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190623120434.19556-1-Anson.Huang@nxp.com>
- <20190623120434.19556-2-Anson.Huang@nxp.com>
- <alpine.DEB.2.21.1906231413110.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906231413110.32342@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a28c3474-ce7a-4895-6e18-08d6f7d5b52b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3786;
-x-ms-traffictypediagnostic: DB3PR0402MB3786:
-x-microsoft-antispam-prvs: <DB3PR0402MB378663CF37E034B4375B38D7F5E10@DB3PR0402MB3786.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00770C4423
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(366004)(54534003)(189003)(199004)(186003)(102836004)(229853002)(4326008)(86362001)(5660300002)(71200400001)(6916009)(26005)(478600001)(71190400001)(25786009)(73956011)(52536014)(66446008)(66556008)(14454004)(7416002)(66476007)(66946007)(76116006)(64756008)(81166006)(33656002)(7696005)(68736007)(81156014)(6506007)(486006)(44832011)(9686003)(476003)(256004)(6116002)(14444005)(11346002)(446003)(305945005)(74316002)(7736002)(3846002)(53936002)(2906002)(8936002)(316002)(99286004)(6246003)(55016002)(76176011)(66066001)(54906003)(8676002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3786;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NR3WsAjgzO64Z0QYiwy3JYp3jichEB0d6vK1Wk3jRxIo3L4VGQIMoFlsBQLV5EhHRzsVJ2jSe6j9vlShfFkcPZoJw4rQtLkgXZtYRA0luw2v+aypP9COhnY3aymdhHiUhxh3wNzkEvVZDmk2/x7GTpVx0FwBOrABnhx3jbpbQtYsKajaWf3FeMK1chBQSvBewam+gXnyPrybISAi8pci1ZkBs4HwxcLvifzg4RlWSkkPref2wphZ88omnqWB2kepwcmDBOuVrW7qEklFp6PDC6bCUE32lPbqxLYbdMXlH9jTSWm8Fp0GWTLrbyrIu7YePA5B1zNWw9sDns/aJJTShD48EUY+lK4O9klNMx6UaKLOuRfF0U8TfrSwwnuqW4PJOIFr4RXywbT91qCbvA9/okDBG2KPrcwgjKHh7mRhBjs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 23 Jun 2019 08:29:37 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52089 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFWM3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 08:29:36 -0400
+Received: from localhost ([46.78.234.140]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MWixU-1i7VnU36Uq-00X7UB; Sun, 23 Jun 2019 14:29:12 +0200
+Date:   Sun, 23 Jun 2019 14:29:10 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     linux-iio@vger.kernel.org
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, zbynek.kocur@fel.cvut.cz,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: srf04: fix wrong limitation in distance measuring
+Message-ID: <20190623122909.hhzskp6k5vm4wify@arbad>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a28c3474-ce7a-4895-6e18-08d6f7d5b52b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2019 12:24:15.7981
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3786
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:NdLtTXvHU/xPnCzbq5Md/U7HJiBQy4o5genzOnWEkXHMH2sFrha
+ 1N1ihlOVqwDYY00rNklluSMns2mZnN5rDP9SZ/yROh6LBdeJKM0fEzq1yAd0yvdjo5NmPcL
+ kWg3ldKYe4Mq3yNp9N7xoLQqrmYz7A6rtcTrgvnceFXbnzlu1ldCmRgp8/5w7apG/5E/I6E
+ 2Xvp1mvpdimSWSbnBbKjw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TSsAfz4Wkwo=:ZWAFNUw0q/HaEpf1AnEQXX
+ mPvZEWXyMMbkZ/kVD8me//dPIb/kbsAFYoCV0Z3RaWCxZDReo2Y+Tz2OUYBdAR/l5lOpVRKQi
+ 6Y2g7Y+uU+PinIevgcVesv0EGEM+hD+Do99zmYP6aZQYKfQC01X9sTOg25JlmLL1lti9Waiyf
+ 0+n4lFcHqXRRRyDv7eWl03ZhZ8l2EUOkiXAGm2NWc4Rmz6BP29CNI12lKMkdIPDyY7YLc9pGb
+ a2tEAQ19CcCaI9gxiUavDbWnxjfwo0AjzRRpMc2HS5wY9BmGmKQjCEOTAWSXRTFk9DC0Goiy2
+ /lIAwszraBa8Rk7kWE1Wfxi6X52b1LYGI+p7I2XKbQfnd+e8ifDnOpeZya3h6Q1hNdH5Hk4EA
+ taxhZ6DvekRWXsgIUKhCJDqp++noQ8BhBJOnfrQgY1t4q1pox0Dl5r3dLCPad/ky1BL5kiFPg
+ F2OW9lF4FWWu3XfTeW2mwyJbs52x858HAMVIDx2QnwX4CGHD6tZF/3aMj8e3NWOP9EgzmEtmS
+ hYJmK0DJvY8Igc+aH/W3PV+/rnCY9/nBiLQjTFO9HJdvJvQ9W3JqjOuY0mwJy3eNJYPu0xmQx
+ 795OlbT/II2bpj5+78eLt0clTfNh+HeaxlZeV1gal/YXwlRMcT5654NVqSDnwdtYMoybeOhE2
+ UMANB06wAlAQMiHJnIIuFacfh/4pTzLu2nz4Bu6LJloyZsan8DifxdKSzsIrqZJJshDh7tJ1O
+ MUulB/j83e2dJi24nm57J+Ct+lF49pnY3k3HlA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFRob21hcw0KDQo+IE9uIFN1biwgMjMgSnVuIDIwMTksIEFuc29uLkh1YW5nQG54cC5jb20g
-d3JvdGU6DQo+IA0KPiBBZ2FpbiB0aGUgc2hvcnQgc3VtbWFyeSBjb3VsZCBiZSBtb3JlIGluZm9y
-bWF0aXZlLiBJbnN0ZWFkIG9mICdBZGQgZm9vJw0KPiB5b3UgY291bGQgc2F5Og0KPiANCj4gICAg
-IC4uLi4uOiBNYWtlIHRpbWVyIHdvcmsgd2l0aCBwbGF0Zm9ybSBkcml2ZXIgbW9kZWwNCj4gDQo+
-IFRoYXQgc3VtcyB1cCB0aGUgcmVhbCBtZWF0IG9mIHRoZSBwYXRjaC4gJ0FkZCBzb21lIG9wdGlv
-bicgaXMgcHJldHR5DQo+IHVuaW5mb3JtYXRpdmUuDQoNCk1ha2VzIHNlbnNlLg0KDQo+IA0KPiA+
-IE9uIHNvbWUgaS5NWDhNIHBsYXRmb3JtcywgY2xvY2sgZHJpdmVyIHVzZXMgcGxhdGZvcm0gZHJp
-dmVyIG1vZGVsIGFuZA0KPiA+IGl0IGlzIE5PVCByZWFkeSBkdXJpbmcgdGltZXIgaW5pdGlhbGl6
-YXRpb24gcGhhc2UsIHRoZSBjbG9jaw0KPiA+IG9wZXJhdGlvbnMgd2lsbCBmYWlsIGFuZCBzeXN0
-ZW0gY291bnRlciBkcml2ZXIgd2lsbCBmYWlsIHRvby4gQXMgYWxsDQo+ID4gdGhlIGkuTVg4TSBw
-bGF0Zm9ybXMnIHN5c3RlbSBjb3VudGVyIGNsb2NrIGFyZSBmcm9tIE9TQyB3aGljaCBpcw0KPiA+
-IGFsd2F5cyBlbmFibGVkLCBzbyBpdCBpcyBubyBuZWVkIHRvIGVuYWJsZSBjbG9jayBmb3Igc3lz
-dGVtIGNvdW50ZXINCj4gPiBkcml2ZXIsIHRoZSBPTkxZIHRoaW5nIGlzIHRvIHBhc3MgY2xvY2sg
-ZnJlcXVlbmNlIHRvIGRyaXZlci4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvcHRpb24g
-b2Ygc2tpcHBpbmcgb2ZfY2xrIG9wZXJhdGlvbiBmb3Igc3lzdGVtDQo+ID4gY291bnRlciBkcml2
-ZXIsIGFuIG9wdGlvbmFsIHByb3BlcnR5ICJjbG9jay1mcmVxdWVuY3kiDQo+ID4gaXMgaW50cm9k
-dWNlZCB0byBwYXNzIHRoZSBmcmVxdWVuY3kgdmFsdWUgdG8gc3lzdGVtIGNvdW50ZXIgZHJpdmVy
-IGFuZA0KPiA+IGluZGljYXRlIGRyaXZlciB0byBza2lwIG9mX2NsayBvcGVyYXRpb25zLg0KPiAN
-Cj4gVGhlIGNvbW1lbnRzIHRvIHRoZSBjaGFuZ2Vsb2cgb2YgcGF0Y2ggMSBhcHBseSBoZXJlIGFz
-IHdlbGwgOikNCj4gDQo+IEhpbnQ6ICdUaGlzIHBhdGNoJw0KDQpPb3BzLi4uZGlkIE5PVCBub3Rp
-Y2UgdGhhdCwgSSB3aWxsIHJlc2VuZCB0aGUgVjIgcGF0Y2ggc2VyaWVzIGFzIHRoZXkgYXJlIGFj
-dHVhbGx5DQpzaW1pbGFyIGlzc3Vlcy4NCg0KVGhhbmtzLA0KQW5zb24NCg0KPiANCj4gVGhhbmtz
-LA0KPiANCj4gCXRnbHgNCj4gDQoNCg==
+The measured time value in the driver is limited to the maximum distance
+which can be read by the sensor. This limitation was wrong and is fixed
+by this patch.
+
+It also takes into account that we are supporting a variety of sensors
+today and that the recently added sensors have a higher maximum
+distance range.
+
+Suggested-by: Zbyněk Kocur <zbynek.kocur@fel.cvut.cz>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ drivers/iio/proximity/srf04.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
+index 8b50d56b0a03..01eb8cc63076 100644
+--- a/drivers/iio/proximity/srf04.c
++++ b/drivers/iio/proximity/srf04.c
+@@ -110,7 +110,7 @@ static int srf04_read(struct srf04_data *data)
+ 	udelay(data->cfg->trigger_pulse_us);
+ 	gpiod_set_value(data->gpiod_trig, 0);
+ 
+-	/* it cannot take more than 20 ms */
++	/* it should not take more than 20 ms until echo is rising */
+ 	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
+ 	if (ret < 0) {
+ 		mutex_unlock(&data->lock);
+@@ -120,7 +120,8 @@ static int srf04_read(struct srf04_data *data)
+ 		return -ETIMEDOUT;
+ 	}
+ 
+-	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
++	/* it cannot take more than 50 ms until echo is falling */
++	ret = wait_for_completion_killable_timeout(&data->falling, HZ/20);
+ 	if (ret < 0) {
+ 		mutex_unlock(&data->lock);
+ 		return ret;
+@@ -135,19 +136,19 @@ static int srf04_read(struct srf04_data *data)
+ 
+ 	dt_ns = ktime_to_ns(ktime_dt);
+ 	/*
+-	 * measuring more than 3 meters is beyond the capabilities of
+-	 * the sensor
++	 * measuring more than 6,45 meters is beyond the capabilities of
++	 * the supported sensors
+ 	 * ==> filter out invalid results for not measuring echos of
+ 	 *     another us sensor
+ 	 *
+ 	 * formula:
+-	 *         distance       3 m
+-	 * time = ---------- = --------- = 9404389 ns
+-	 *          speed       319 m/s
++	 *         distance     6,45 * 2 m
++	 * time = ---------- = ------------ = 40438871 ns
++	 *          speed         319 m/s
+ 	 *
+ 	 * using a minimum speed at -20 °C of 319 m/s
+ 	 */
+-	if (dt_ns > 9404389)
++	if (dt_ns > 40438871)
+ 		return -EIO;
+ 
+ 	time_ns = dt_ns;
+@@ -159,20 +160,20 @@ static int srf04_read(struct srf04_data *data)
+ 	 *   with Temp in °C
+ 	 *   and speed in m/s
+ 	 *
+-	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
++	 * use 343,5 m/s as ultrasonic speed at 20 °C here in absence of the
+ 	 * temperature
+ 	 *
+ 	 * therefore:
+-	 *             time     343
+-	 * distance = ------ * -----
+-	 *             10^6       2
++	 *             time     343,5     time * 106
++	 * distance = ------ * ------- = ------------
++	 *             10^6         2         617176
+ 	 *   with time in ns
+ 	 *   and distance in mm (one way)
+ 	 *
+-	 * because we limit to 3 meters the multiplication with 343 just
++	 * because we limit to 6,45 meters the multiplication with 106 just
+ 	 * fits into 32 bit
+ 	 */
+-	distance_mm = time_ns * 343 / 2000000;
++	distance_mm = time_ns * 106 / 617176;
+ 
+ 	return distance_mm;
+ }
+-- 
+2.11.0
