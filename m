@@ -2,91 +2,112 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5460C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AAAC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7C2205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E49D20840
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFWLce (ORCPT
+        id S1726597AbfFWLes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 07:32:34 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:44088 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfFWLce (ORCPT
+        Sun, 23 Jun 2019 07:34:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33258 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfFWLer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 07:32:34 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id E597372CC6C;
-        Sun, 23 Jun 2019 14:32:30 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id BD7567CCE2E; Sun, 23 Jun 2019 14:32:30 +0300 (MSK)
-Date:   Sun, 23 Jun 2019 14:32:30 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: make pidfd-metadata fail gracefully on older
- kernels
-Message-ID: <20190623113230.GC20697@altlinux.org>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
- <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
- <20190621170613.GA26182@altlinux.org>
- <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+        Sun, 23 Jun 2019 07:34:47 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hf0la-0008KU-TC; Sun, 23 Jun 2019 13:34:39 +0200
+Date:   Sun, 23 Jun 2019 13:34:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+cc:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/3] clocksource/drivers/sysctr: Add an optional
+ property
+In-Reply-To: <DB3PR0402MB3916B3B871FDEA9BFC960C67F5E10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.1906231331390.32342@nanos.tec.linutronix.de>
+References: <20190621082838.12630-1-Anson.Huang@nxp.com> <alpine.DEB.2.21.1906231232520.32342@nanos.tec.linutronix.de> <DB3PR0402MB3916B3B871FDEA9BFC960C67F5E10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
-In-Reply-To: <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Anson,
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-On Sat, Jun 22, 2019 at 12:13:39AM +0200, Christian Brauner wrote:
-[...]
-> Out of curiosity: what makes the new flag different than say
-> CLONE_NEWCGROUP or any new clone flag that got introduced?
-> CLONE_NEWCGROUP too would not be detectable apart from the method I gave
-> you above; same for other clone flags. Why are you so keen on being able
-> to detect this flag when other flags didn't seem to matter that much.
+A: No.
+Q: Should I include quotations after my reply?
 
-I wasn't following uapi changes closely enough those days. ;)
+http://daringfireball.net/2007/07/on_top
 
+On Sun, 23 Jun 2019, Anson Huang wrote:
 
---=20
-ldv
+> Hi, Thomas
+> 	Thanks for the useful comment, I will resend the patch with improvement.
+> 
+> Anson.
+> 
+> > -----Original Message-----
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> > Sent: Sunday, June 23, 2019 6:47 PM
+> > To: Anson Huang <anson.huang@nxp.com>
+> > Cc: daniel.lezcano@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; l.stach@pengutronix.de; Abel Vesa
+> > <abel.vesa@nxp.com>; ccaione@baylibre.com; angus@akkea.ca;
+> > andrew.smirnov@gmail.com; agx@sigxcpu.org; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH 1/3] clocksource/drivers/sysctr: Add an optional
+> > property
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
+Also please fix your mailer to NOT copy the full mail header into the
+reply. That's absolutely useless.
 
------BEGIN PGP SIGNATURE-----
+> > 
+> > Anson,
+> > 
+> > On Fri, 21 Jun 2019, Anson.Huang@nxp.com wrote:
+> > 
+> > > Subject : [PATCH 1/3] clocksource/drivers/sysctr: Add an optional
+> > > property
 
-iQIcBAEBCAAGBQJdD2NOAAoJEAVFT+BVnCUIynwQANQg2+3d1f3l3bLNZVQ5QcSi
-TXyKC5vKPf+zMj/1U2worLzq75AC6r+cfM7dVZoTb6zVCqN3CiQMQUuVXJHItA3N
-uwFq3KM4DLR0ofIyRoyYq9MnWDpBUWNt0xdUZxLYPYMiRfaueAaqDfvFOAhexDcX
-PouLJj3ixzVP5JXmzxzZer//oj+gyy+8Of2Z5QTg7K4mJMyrthS/3/qg9q7Ys1jR
-N9LysvxIVUn8UgmtWxIk1vKcwiVjCNmrqM63NWfhm6gX8YhaDzP+k9AwdYBO3MIV
-U58OZwWsQ4lrsnKEjQd74ACZPyuZk1ics50oK9bfFwk9HJBVgIp1WfEP2z1//VZM
-auZtI5SYix3svGX2MIV8l16nKj/FP3IY+IfyYwSxlermffcM9olR+hRNoEdYAxEt
-SBC7mSfozIeNLqokGNXr81SMx2w+QT0GawDdk2P8WB9ZJNAARDgLxOUw69Eu7p7q
-0lBb0bPqUrCrp6XPJ3zVDpi6W+DbVBd7748iTxlorSKepFfVbWIsKLE591pfmOe/
-m+tWajRVbMHQ080kualKehGgFLyahPpCzqUEmyThibInTlxShvZ50iFoNWRUxiID
-6BF7OzGRoVG6Y4qSS4EalX1Mzo7xwh6+dcQPLxshSU0J32FG2alLxyQKOEChzAQ9
-YQ8V+SuiitfJh3VPHBE6
-=Eosu
------END PGP SIGNATURE-----
+And finally please trim your replies, so the uninteresting parts are gone.
 
---SLDf9lqlvOQaIe6s--
+Thanks,
+
+	tglx
