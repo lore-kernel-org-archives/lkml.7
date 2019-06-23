@@ -2,129 +2,127 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF36C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09175C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7410A20840
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVEMmNei"
+	by mail.kernel.org (Postfix) with ESMTP id D3B5F2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFWHFH (ORCPT
+        id S1726432AbfFWHfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 03:05:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43428 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFWHFH (ORCPT
+        Sun, 23 Jun 2019 03:35:20 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:57991
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726362AbfFWHfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 03:05:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so5063324plb.10;
-        Sun, 23 Jun 2019 00:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZnpCzo1NN9Md21LN3g8I3RIF4YViSRZP0r1Fx0SQ3qk=;
-        b=jVEMmNei2LTirlxL0/IDX1B3y5pJJgi02yOX+2LKm83WV7r/qkwpHhzsDVlt4MlfsL
-         gLxlBAYRm+LmbywgT2m3fCT+OqBuWeB+gJkMIzbzVFjwonTWm6SkxDbPTvzik5qSEMcf
-         6YhwtJvv4gbVrCgwyAnBF4lfyoP9q0K6iR3ZxCNmHI0Ol0JEMSKrjAMIN6IfRCTiDwlX
-         nVvzAqTzJKhY1fEuS5XoSJ4zXZ+AhVTsyEcxyrttBWrLd+3N7E7fyjEOfs/kgpdX4iTn
-         ATpJlGA9iUR5jEJH8YgnCDaegvA6JtGOtXf1KuJeNAcui2MavguwTGnANMGl8+RC4thq
-         62cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZnpCzo1NN9Md21LN3g8I3RIF4YViSRZP0r1Fx0SQ3qk=;
-        b=hyny7k3MKC/spKyzNAkI7RSis1jFpuH7rLcWXksLjTz7Z6dE2UKW0/rddlVKc2Y/4u
-         /K+hzZtb4fc7jZjOJSl5RZpeUTu/hlurCPwurArwb2q68+UDWO76gz7tzHXGcOfZ0WR1
-         gB+CgJa2aImUpXmK0+5+Yy29BuZ/RLDeoPSFHndTbhrNz3ai3JELQlxp8JJO1f1S49Oe
-         Ycfg6aB/YhMiamV3BGLo6xq0q2Mxeef3gq1r4bFNcA8tbuRRE3Y1IdwlfEFCfv5m6zZv
-         cPnNwb2dnxLpHeLmZl+bW7dW16ePGIVQYTM/fGndglTuWfMLImBZ9ogdJSJK7T2TBLZf
-         tU7g==
-X-Gm-Message-State: APjAAAXGOipPiJaAwuhkjA8gDr2rMDNO6I/pIuuBNNWoaYcXaZ8sTpEL
-        t/gZnPJCCTqNGBH6ZhoQdto=
-X-Google-Smtp-Source: APXvYqw98NyNvej0S/JhvdpiCIMWy/Pmnw7NdOwIaICwB1nXmuJIZDwQ+TpJs8zZzwVw2jutwskfnw==
-X-Received: by 2002:a17:902:2a26:: with SMTP id i35mr101268234plb.315.1561273506124;
-        Sun, 23 Jun 2019 00:05:06 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r1sm7040201pji.15.2019.06.23.00.05.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 23 Jun 2019 00:05:05 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 00:05:04 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@bootlin.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v1] Input: rotary-encoder - Add gpio as push button
-Message-ID: <20190623070504.GE204275@dtor-ws>
-References: <20190614133651.28396-1-mylene.josserand@bootlin.com>
- <20190614145158.ic5n4jauzigvcpru@flea>
+        Sun, 23 Jun 2019 03:35:20 -0400
+X-IronPort-AV: E=Sophos;i="5.63,407,1557180000"; 
+   d="scan'208";a="311103180"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2019 09:35:18 +0200
+Date:   Sun, 23 Jun 2019 09:35:17 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Kirill Smelkov <kirr@nexedi.com>
+cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/2] coccinelle: api/stream_open: treat all wait_.*()
+ calls as blocking
+In-Reply-To: <20190623072838.31234-1-kirr@nexedi.com>
+Message-ID: <alpine.DEB.2.21.1906230934080.4961@hadrien>
+References: <20190623072838.31234-1-kirr@nexedi.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614145158.ic5n4jauzigvcpru@flea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:51:58PM +0200, Maxime Ripard wrote:
-> Hi Mylene,
-> 
-> On Fri, Jun 14, 2019 at 03:36:51PM +0200, Mylène Josserand wrote:
-> > Add the support of a gpio that can be defined as a push button.
-> > Thanks to that, it is possible to emit a keycode in case of a
-> > "push" event, if the rotary supports that.
-> >
-> > The keycode to emit is defined using "linux,code" property
-> > (such as in gpio-keys).
-> >
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  .../devicetree/bindings/input/rotary-encoder.txt   |  5 +++
-> >  drivers/input/misc/rotary_encoder.c                | 50 ++++++++++++++++++++++
-> >  2 files changed, 55 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > index a644408b33b8..1cfce5d0b5c4 100644
-> > --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > @@ -22,6 +22,9 @@ Optional properties:
-> >  - wakeup-source: Boolean, rotary encoder can wake up the system.
-> >  - rotary-encoder,encoding: String, the method used to encode steps.
-> >    Supported are "gray" (the default and more common) and "binary".
-> > +- push-gpio: a gpio to be used as a detection of a push from the rotary.
-> 
-> According to Documentation/devicetree/bindings/gpio/gpio.txt, GPIO
-> properties with a -gpio suffix are now deprecated in favor of the
-> -gpios suffix.
-> 
-> > +- linux,code: keycode to emit with the push-gpio of this rotary encoder.
-> > +  Required property in case "push-gpio"'s one is used.
-> 
-> I guess we should make it clear in the property name that it's the
-> keycode emitted at push. Otherwise, it will be ambiguous between the
-> rotary itself, or the button.
 
-Also, I am pretty sure someone will come up with a switch instead of a
-button shortly after ;) so I think we should have an event type there as
-well.
 
-Thanks.
+On Sun, 23 Jun 2019, Kirill Smelkov wrote:
 
--- 
-Dmitry
+> Previously steam_open.cocci was treating only wait_event_.* - e.g.
+> wait_event_interruptible - as a blocking operation. However e.g.
+> wait_for_completion_interruptible is also blocking, and so from this
+> point of view it would be more logical to treat all wait_.* as a
+> blocking point.
+>
+> The logic of this change actually came up for real when
+> drivers/pci/switch/switchtec.c changed from using
+> wait_event_interruptible to wait_for_completion_interruptible:
+>
+> 	https://lore.kernel.org/linux-pci/20190413170056.GA11293@deco.navytux.spb.ru/
+> 	https://lore.kernel.org/linux-pci/20190415145456.GA15280@deco.navytux.spb.ru/
+> 	https://lore.kernel.org/linux-pci/20190415154102.GB17661@deco.navytux.spb.ru/
+>
+> For a driver that uses nonseekable_open with read/write having stream
+> semantic and read also calling e.g. wait_for_completion_interruptible,
+> running stream_open.cocci before this patch would produce:
+>
+> 	WARNING: <driver>_fops: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open.
+>
+> while after this patch it will report:
+>
+> 	ERROR: <driver>_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+
+Are you really sure that every word that starts with wait_ in the Linux
+kernel has the property you want?  How many of them are there?  Would it
+be reasonable to put the names in the semantic patch explicitly?
+
+julia
+
+>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+> ---
+>  scripts/coccinelle/api/stream_open.cocci | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
+> index 350145da7669..12ce18fa6b74 100644
+> --- a/scripts/coccinelle/api/stream_open.cocci
+> +++ b/scripts/coccinelle/api/stream_open.cocci
+> @@ -35,11 +35,11 @@ type loff_t;
+>  // a function that blocks
+>  @ blocks @
+>  identifier block_f;
+> -identifier wait_event =~ "^wait_event_.*";
+> +identifier wait =~ "^wait_.*";
+>  @@
+>    block_f(...) {
+>      ... when exists
+> -    wait_event(...)
+> +    wait(...)
+>      ... when exists
+>    }
+>
+> @@ -49,12 +49,12 @@ identifier wait_event =~ "^wait_event_.*";
+>  // XXX currently reader_blocks supports only direct and 1-level indirect cases.
+>  @ reader_blocks_direct @
+>  identifier stream_reader.readstream;
+> -identifier wait_event =~ "^wait_event_.*";
+> +identifier wait =~ "^wait_.*";
+>  @@
+>    readstream(...)
+>    {
+>      ... when exists
+> -    wait_event(...)
+> +    wait(...)
+>      ... when exists
+>    }
+>
+> --
+> 2.20.1
+>
