@@ -7,188 +7,103 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A92C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939EFC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8CF20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3C820663
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2PB1Mez5"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xEJOfUUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfFWOLy (ORCPT
+        id S1726640AbfFWOOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 10:11:54 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:23360 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFWOLy (ORCPT
+        Sun, 23 Jun 2019 10:14:22 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:45903 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFWOOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 10:11:54 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x5NEBV69011197
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:11:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5NEBV69011197
+        Sun, 23 Jun 2019 10:14:22 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x5NEEGLB028061
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:14:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5NEEGLB028061
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561299092;
-        bh=IAWEC1k7JmeweyFBrRKSY79vqZflSYuq0o8X6SeOK3A=;
+        s=dec2015msa; t=1561299257;
+        bh=NuvwZgU5VzQ83P+ghCASox//DwIgbA0bWMR3kZMvN4o=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2PB1Mez515B6HihQQBQb8WCi8icDjimVH5dCRzYmYc/TOnguMs3KnV4K+DOss/ZEp
-         PoxzI8Wb8AT6+T2+yfcew3XlJj7tCAByH9z+yd3x3kaJ6YyW6W8aOjgiasd8HGVshu
-         xghLRo2vb6QdQ0ZwnaEUdoKZpBs5pFPezgo7h/AFZcwa5eNF1a6C2+n6M0S3iY3DjT
-         xzf37AJjG+JNHOWB2Y2Wra2cebb4s4XnTS72pTi+nmJBjM8q/qLq59OiFFLqN4iX7q
-         Byuk4YBpq50FFxjU41X/Qs7C3FghYyPCOHG/q09Dj+MOm8kdmqEzPfZzb7Wks2rX5R
-         eYIyTUDhAOq3Q==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id s4so4711869uad.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:11:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXKDkYwd7XwlFyYeJarscWwM3t0leBbHjxyuMnNB3u0jyEsDSXg
-        aZMDfwJ4mH7+tKJPRWQ/6pbKGvFuCN4uBgg/bjI=
-X-Google-Smtp-Source: APXvYqxxL9Fe1f4D+36OPQQYmIHaTRLbAeCCkDst90U/jbNKx6rUFrwQUHLg1/HA63wqrhcO/G2ISUlEKZcqaBy0/t0=
-X-Received: by 2002:ab0:234e:: with SMTP id h14mr28875617uao.25.1561299091313;
- Sun, 23 Jun 2019 07:11:31 -0700 (PDT)
+        b=xEJOfUUocWnyWNl48IDIhe4EXWlkJf0yxActmOaDbNwmDYHC38bdx9uoElM1M9GqP
+         wD9SDiEqGd/3UCYZLrc+jwWhth6UE8juCnnWu1/wEN6459/JH9X++LrDalzmcNuPHT
+         nnpTbqp6p3MoshQMxaSMDyeF12tolaoj2GSEeSwtrcfmAURvhFv8eEfoVnhRt8t2L7
+         8QuWCBadcXNOzogzd2qOKWTzNNBlZxqpSCb26WZ3q7tHcTzYRSAcOnIHgxW+tCDf92
+         dmasqnHgHVoYyduApfF06aVNiqQOHuBImU9hkC4bwyE0eTCC2zVBLu8bjyArVzR4Dk
+         rTvxQD4aj5aSA==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id u124so6914640vsu.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:14:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAUKGo3cyG6137qZVpXvDaF9hlNjTMyjNa1lCfUzRyjdr3v7pvGf
+        M5ZH6Vp0xdTIQSAXtY/kUIK3NDgIZTFXch//DmQ=
+X-Google-Smtp-Source: APXvYqwie7xjtXMjHUN+TIIxSMQan1QJFChMNteSA1Qakl5NCxQ1GZtJ35sWLOosqjnrSwhu4vf+3bw8E0evMuHRsOk=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr65723335vsn.54.1561299256313;
+ Sun, 23 Jun 2019 07:14:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557756964-13087-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1557756964-13087-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1557666733-19527-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1557666733-19527-1-git-send-email-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 23 Jun 2019 23:10:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARFYJo2mKAMsxrbLdyOrjFp5gJhq2ySUsDA-8jic3XpZQ@mail.gmail.com>
-Message-ID: <CAK7LNARFYJo2mKAMsxrbLdyOrjFp5gJhq2ySUsDA-8jic3XpZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] powerpc/boot: pass CONFIG options in a simpler and
- more robust way
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Rob Herring <robh@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Mark Greer <mgreer@animalcreek.com>
+Date:   Sun, 23 Jun 2019 23:13:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATViOYXJVLuJ8VnCruyMAPbYOkTc_0ZuW+gqi5H9x9-cA@mail.gmail.com>
+Message-ID: <CAK7LNATViOYXJVLuJ8VnCruyMAPbYOkTc_0ZuW+gqi5H9x9-cA@mail.gmail.com>
+Subject: Re: [PATCH] nios2: remove pointless second entry for CONFIG_TRACE_IRQFLAGS_SUPPORT
+To:     Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 11:24 PM Masahiro Yamada
+On Sun, May 12, 2019 at 10:16 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> Commit 5e9dcb6188a4 ("powerpc/boot: Expose Kconfig symbols to wrapper")
-> was wrong, but commit e41b93a6be57 ("powerpc/boot: Fix build failures
-> with -j 1") was also wrong.
+> Strangely enough, NIOS2 defines TRACE_IRQFLAGS_SUPPORT twice
+> with different values, which is pointless and confusing.
 >
-> The correct dependency is:
+> [1] arch/nios2/Kconfig
 >
->   $(obj)/serial.o: $(obj)/autoconf.h
+>   config TRACE_IRQFLAGS_SUPPORT
+>           def_bool n
 >
-> However, I do not see the reason why we need to copy autoconf.h to
-> arch/power/boot/. Nor do I see consistency in the way of passing
-> CONFIG options.
+> [2] arch/nios2/Kconfig.debug
 >
-> decompress.c references CONFIG_KERNEL_GZIP and CONFIG_KERNEL_XZ, which
-> are passed via the command line.
+>   config TRACE_IRQFLAGS_SUPPORT
+>           def_bool y
 >
-> serial.c includes autoconf.h to reference a couple of CONFIG options,
-> but this is fragile because we often forget to include "autoconf.h"
-> from source files.
+> [1] is included before [2]. In the Kconfig syntax, the first one
+> is effective. So, TRACE_IRQFLAGS_SUPPORT is always 'n'.
 >
-> In fact, it is already broken.
->
-> ppc_asm.h references CONFIG_PPC_8xx, but utils.S is not given any way
-> to access CONFIG options. So, CONFIG_PPC_8xx is never defined here.
->
-> Pass $(LINUXINCLUDE) to make sure CONFIG options are accessible from
-> all .c and .S files in arch/powerpc/boot/.
->
-> I also removed the -traditional flag to make include/linux/kconfig.h
-> work. This flag makes the preprocessor imitate the behavior of the
-> pre-standard C compiler, but I do not understand why it is necessary.
+> The second define in arch/nios2/Kconfig.debug is dead code.
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->
 
 Ping.
 
 
-
-> Changes in v2:
->  - reword commit log
+>  arch/nios2/Kconfig.debug | 3 ---
+>  1 file changed, 3 deletions(-)
 >
->  arch/powerpc/boot/.gitignore |  2 --
->  arch/powerpc/boot/Makefile   | 14 +++-----------
->  arch/powerpc/boot/serial.c   |  1 -
->  3 files changed, 3 insertions(+), 14 deletions(-)
+> diff --git a/arch/nios2/Kconfig.debug b/arch/nios2/Kconfig.debug
+> index f1da8a7..a8bc06e 100644
+> --- a/arch/nios2/Kconfig.debug
+> +++ b/arch/nios2/Kconfig.debug
+> @@ -1,8 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
 >
-> diff --git a/arch/powerpc/boot/.gitignore b/arch/powerpc/boot/.gitignore
-> index 32034a0c..6610665 100644
-> --- a/arch/powerpc/boot/.gitignore
-> +++ b/arch/powerpc/boot/.gitignore
-> @@ -44,5 +44,3 @@ fdt_sw.c
->  fdt_wip.c
->  libfdt.h
->  libfdt_internal.h
-> -autoconf.h
+> -config TRACE_IRQFLAGS_SUPPORT
+> -       def_bool y
 > -
-> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-> index 73d1f35..b8a82be 100644
-> --- a/arch/powerpc/boot/Makefile
-> +++ b/arch/powerpc/boot/Makefile
-> @@ -20,9 +20,6 @@
->
->  all: $(obj)/zImage
->
-> -compress-$(CONFIG_KERNEL_GZIP) := CONFIG_KERNEL_GZIP
-> -compress-$(CONFIG_KERNEL_XZ)   := CONFIG_KERNEL_XZ
-> -
->  ifdef CROSS32_COMPILE
->      BOOTCC := $(CROSS32_COMPILE)gcc
->      BOOTAR := $(CROSS32_COMPILE)ar
-> @@ -34,7 +31,7 @@ endif
->  BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
->                  -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx \
->                  -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
-> -                -D$(compress-y)
-> +                $(LINUXINCLUDE)
->
->  ifdef CONFIG_PPC64_BOOT_WRAPPER
->  BOOTCFLAGS     += -m64
-> @@ -51,7 +48,7 @@ BOOTCFLAGS    += -mlittle-endian
->  BOOTCFLAGS     += $(call cc-option,-mabi=elfv2)
->  endif
->
-> -BOOTAFLAGS     := -D__ASSEMBLY__ $(BOOTCFLAGS) -traditional -nostdinc
-> +BOOTAFLAGS     := -D__ASSEMBLY__ $(BOOTCFLAGS) -nostdinc
->
->  BOOTARFLAGS    := -cr$(KBUILD_ARFLAGS)
->
-> @@ -202,14 +199,9 @@ $(obj)/empty.c:
->  $(obj)/zImage.coff.lds $(obj)/zImage.ps3.lds : $(obj)/%: $(srctree)/$(src)/%.S
->         $(Q)cp $< $@
->
-> -$(srctree)/$(src)/serial.c: $(obj)/autoconf.h
-> -
-> -$(obj)/autoconf.h: $(obj)/%: $(objtree)/include/generated/%
-> -       $(Q)cp $< $@
-> -
->  clean-files := $(zlib-) $(zlibheader-) $(zliblinuxheader-) \
->                 $(zlib-decomp-) $(libfdt) $(libfdtheader) \
-> -               autoconf.h empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
-> +               empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
->
->  quiet_cmd_bootcc = BOOTCC  $@
->        cmd_bootcc = $(BOOTCC) -Wp,-MD,$(depfile) $(BOOTCFLAGS) -c -o $@ $<
-> diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
-> index b0491b8..9457863 100644
-> --- a/arch/powerpc/boot/serial.c
-> +++ b/arch/powerpc/boot/serial.c
-> @@ -18,7 +18,6 @@
->  #include "stdio.h"
->  #include "io.h"
->  #include "ops.h"
-> -#include "autoconf.h"
->
->  static int serial_open(void)
->  {
+>  config EARLY_PRINTK
+>         bool "Activate early kernel debugging"
+>         default y
 > --
 > 2.7.4
 >
