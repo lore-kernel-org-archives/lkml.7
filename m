@@ -2,226 +2,166 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED78AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDF7C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80D020840
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6381208CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 07:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qmnRY63C"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="qtGG98Yv";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Nj5FcayR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfFWHrR (ORCPT
+        id S1726423AbfFWH4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 03:47:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37367 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFWHrR (ORCPT
+        Sun, 23 Jun 2019 03:56:44 -0400
+Received: from mail10.wdc04.mandrillapp.com ([205.201.139.10]:59202 "EHLO
+        mail10.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726056AbfFWH4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 03:47:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bh12so5107222plb.4;
-        Sun, 23 Jun 2019 00:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=RPrYEkPk1O1WCEgspfUiwE49F/TDzzk3qG3u3/Wz2qI=;
-        b=qmnRY63CZzVF3ZeL5UAUuVJHPc9EozPMoh088OGaFND04B8oJHa1WF1GNEmGy0+l6S
-         23B0WTmvIkKHleWsofgfIYneJEySN1jDdbzHXk5OYfHCewZdVSc7P65yoTlXV3yfTHgd
-         EgKYW7EuLq5vvR0BuCkjtY4sTnMjWY4/FV2BZyuymFT8rnbokuHshAzLoqgJQ73Pq/q7
-         JfquJ+xLa+Xa3HONQjQJzxgkSe3VgmxsbP7/M2SIjGOhYSmFtjjQ50UhqS7lu/OfO+1l
-         lEy9I1v1gzl+5KQ1aSXLl+DM3/y371SyEtY2dQXsjWfu3HSQUBrSY0aMs40ZB1wHTydA
-         mI4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=RPrYEkPk1O1WCEgspfUiwE49F/TDzzk3qG3u3/Wz2qI=;
-        b=bM1Kv/a32OGdcuytYnMfbC+564TfId0PvG1jd1tTM9zQVxYtq3g7v28YcKoJKDqdLh
-         yd3oetVey1Sbkk1qpwLSeFVq5YkOiNX5yMUvi29yxrwh+x1E2iIH2YfEf0IdO68K8n+J
-         e1cWam5DPq3qDe/0z9a8t3O6yGwK0uETVQF4noYzKpBymlKBSFPt8/aTcLBQxtOe0CV/
-         uDaRL+2MP4CY9Ud/4t8mn1cPlmyOC5+wplH1F3JlSyIjTGtnvmzwtio0X9xZ0ZEZ0yJB
-         9zP29ay2KXaGDztp43MI82A2H5VYBy2l+9EkG22HbWUez7X7oNFQRNwCeuQ1Wkv8RobQ
-         LowQ==
-X-Gm-Message-State: APjAAAXDb+8oKpe2tPCv4rbcLrbUl5+5aelXCGZP943wjNC9Ae+SdZbU
-        +s80Oaiqaz0uxvHPVN6UzA5fvAzQ
-X-Google-Smtp-Source: APXvYqwHlTSr/LFimnC++W2Zo8tL9aZUILn287invNOUF4ZPvUjgdtg1u4r5jQyJhJVv/ZBoKun0jg==
-X-Received: by 2002:a17:902:4a:: with SMTP id 68mr141914672pla.235.1561276035953;
-        Sun, 23 Jun 2019 00:47:15 -0700 (PDT)
-Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
-        by smtp.gmail.com with ESMTPSA id n17sm14444567pfq.182.2019.06.23.00.47.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 00:47:14 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH V7 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
-Thread-Topic: [PATCH V7 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
-Thread-Index: AQHVKRrW7dkXykCM7EuXNA/8yEbrl6ao3X9t
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sun, 23 Jun 2019 07:47:09 +0000
-Message-ID: <PSXP216MB0662E297AC662E53D515141CAAE10@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-References: <20190622165143.11906-1-vidyas@nvidia.com>
- <20190622165143.11906-2-vidyas@nvidia.com>
-In-Reply-To: <20190622165143.11906-2-vidyas@nvidia.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 23 Jun 2019 03:56:43 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 03:56:42 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=SQoaU4CrfNl4Jf6eu/xkbrQQO2NHeGQLLOHbulVuvP0=;
+ b=qtGG98YvidblLwr23ePJkHBMiqBQRbeQ/2zrbWbkBoNewy802QLF1b0phIducNSd7Yo0Xtt66Mfa
+   grlH0W0lJ45m0XnrLcRXLuDDikw8iEkmllhfxcxAtR8kDY/yM0jX2etmLlcDyhx6ICTOq0o0mkOt
+   6ucnvDaz9x1VO90N2sc=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail10.wdc04.mandrillapp.com id h1sobk1jvmg0 for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:29:03 +0000 (envelope-from <bounce-md_31050260.5d0f2a3f.v1-6c7e1f4d18e44a43a290edfdf183c17a@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1561274943; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=SQoaU4CrfNl4Jf6eu/xkbrQQO2NHeGQLLOHbulVuvP0=; 
+ b=Nj5FcayRxDKCVgZCOKxhUoD4BrDRN4sDATjn898EEFLP5g2ijbTl0cvfLmjkCCfvnQpxCL
+ UYYC9P11sl4Wen5VmDfcGjz5Hp7ds7flFbQhLX8c2dn/4qLTkWdUi7BYhEVibYsz2JuAIISH
+ iyZJn4RrelJqnFe3fbrmt8mkAt2Wg=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH 2/2] *: convert stream-like files -> stream_open, even if they use noop_llseek
+Received: from [87.98.221.171] by mandrillapp.com id 6c7e1f4d18e44a43a290edfdf183c17a; Sun, 23 Jun 2019 07:29:03 +0000
+X-Mailer: git-send-email 2.20.1
+To:     <cocci@systeme.lip6.fr>, <linux-input@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc:     Kirill Smelkov <kirr@nexedi.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Jan Blunck <jblunck@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Message-Id: <20190623072838.31234-2-kirr@nexedi.com>
+In-Reply-To: <20190623072838.31234-1-kirr@nexedi.com>
+References: <20190623072838.31234-1-kirr@nexedi.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.6c7e1f4d18e44a43a290edfdf183c17a
+X-Mandrill-User: md_31050260
+Date:   Sun, 23 Jun 2019 07:29:03 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/19, 1:52 AM, Vidya Sagar wrote:
->
-> Cleanup DBI read and write APIs by removing "__" (underscore) from their
-> names as there are no no-underscore versions and the underscore versions
-> are already doing what no-underscore versions typically do. It also remov=
-es
-> passing dbi/dbi2 base address as one of the arguments as the same can be
-> derived with in read and write APIs. Since dw_pcie_{readl/writel}_dbi()
-> APIs can't be used for ATU read/write as ATU base address could be
-> different from DBI base address, this patch attempts to implement
-> ATU read/write APIs using ATU base address without using
-> dw_pcie_{readl/writel}_dbi() APIs.
->
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes from v6:
-> * Modified ATU read/write APIs to use implementation specific DBI read/wr=
-ite
->   APIs if present.
->
-> Changes from v5:
-> * Removed passing base address as one of the arguments as the same can be=
- derived within
->   the API itself.
-> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
->
-> Changes from v4:
-> * This is a new patch in this series
->
->  drivers/pci/controller/dwc/pcie-designware.c | 28 +++++------
->  drivers/pci/controller/dwc/pcie-designware.h | 51 +++++++++++++-------
->  2 files changed, 45 insertions(+), 34 deletions(-)
+This patch continues 10dce8af3422 (fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock) and c5bf68fe0c86 (*: convert stream-like files from
+nonseekable_open -> stream_open) and teaches steam_open.cocci to
+consider files as being stream-like not only if they have
+.llseek=no_llseek, but also if they have .llseek=noop_llseek.
 
-.....
+This is safe to do: the comment about noop_llseek says
 
->  static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 =
-val)
->  {
-> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
-> +	int ret;
-> +
-> +	if (pci->ops->write_dbi) {
-> +		pci->ops->write_dbi(pci, pci->atu_base, reg, 0x4, val);
-> +		return;
-> +	}
-> +
-> +	ret =3D dw_pcie_write(pci->atu_base + reg, 0x4, val);
-> +	if (ret)
-> +		dev_err(pci->dev, "Write ATU address failed\n");
->  }
-> =20
->  static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
->  {
-> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (pci->ops->read_dbi)
-> +		return pci->ops->read_dbi(pci, pci->atu_base, reg, 0x4);
-> +
-> +	ret =3D dw_pcie_read(pci->atu_base + reg, 0x4, &val);
-> +	if (ret)
-> +		dev_err(pci->dev, "Read ATU address failed\n");
-> +
-> +	return val;
->  }
+	This is an implementation of ->llseek useable for the rare special case when
+	userspace expects the seek to succeed but the (device) file is actually not
+	able to perform the seek. In this case you use noop_llseek() instead of
+	falling back to the default implementation of ->llseek.
 
-Hmm. In cases of dbi and  dbi2, readb/readw/readl and writeb/writew/writel =
-are
-located in pcie-designware.h. These functions just call read/write which ar=
-e located
-in pcie-designware.c. For readability, would you write the code as below?
+and in general noop_llseek was massively added to drivers in 6038f373a3dc
+(llseek: automatically add .llseek fop) when changing default for NULL .llseek
+from NOP to no_llseek with the idea to avoid breaking compatibility, if
+maybe some user-space program was using lseek on a device without caring
+about the result, but caring if it was an error or not.
 
-1. For drivers/pci/controller/dwc/pcie-designware.h,
-    Just call dw_pcie_{write/read}_atu(), instead of implementing functions=
- as below.
+Amended semantic patch produces two changes when applied tree-wide:
 
-	static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 va=
-l)
-	{
-		return  dw_pcie_write_atu(pci, reg, 0x4, val);
-	}
+        drivers/hid/hid-sensor-custom.c:690:8-24: WARNING: hid_sensor_custom_fops: .read() has stream semantic; safe to change nonseekable_open -> stream_open.
+        drivers/input/mousedev.c:564:1-17: ERROR: mousedev_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
 
-	static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)=09
-	{
-		return  dw_pcie_read_atu(pci, reg, 0x4);
-	}
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Jan Blunck <jblunck@suse.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+---
+ drivers/hid/hid-sensor-custom.c          | 2 +-
+ drivers/input/mousedev.c                 | 2 +-
+ scripts/coccinelle/api/stream_open.cocci | 9 ++++++++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-2. For drivers/pci/controller/dwc/pcie-designware.c,
-    Please add new dw_pcie_{write/read}_atu() as below.
-
-	void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
-	{
-		int ret;
-
-		if (pci->ops->write_dbi) {
-			pci->ops->write_dbi(pci, pci->atu_base, reg, size, val);
-			return;
-		}
-
-		ret =3D dw_pcie_write(pci->atu_base + reg, size, val);
-		if (ret)
-			dev_err(pci->dev, "Write ATU address failed\n");
-	}
-
-	u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size)
-	{
-		int ret;
-		u32 val;
-
-		if (pci->ops->read_dbi)
-			return pci->ops->read_dbi(pci, pci->atu_base, reg, size);
-
-		ret =3D dw_pcie_read(pci->atu_base + reg, size, &val);
-		if (ret)
-			dev_err(pci->dev, "Read ATU address failed\n");
-
-		return val;
-	}
-
-Thank you.
-
-Best regards,
-Jingoo Han
-
-> =20
->  static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
-> --=20
-> 2.17.1
-
+diff --git a/drivers/hid/hid-sensor-custom.c b/drivers/hid/hid-sensor-custom.c
+index c60f82673cf2..fb827c295842 100644
+--- a/drivers/hid/hid-sensor-custom.c
++++ b/drivers/hid/hid-sensor-custom.c
+@@ -687,7 +687,7 @@ static int hid_sensor_custom_open(struct inode *inode, struct file *file)
+ 	if (test_and_set_bit(0, &sensor_inst->misc_opened))
+ 		return -EBUSY;
+ 
+-	return nonseekable_open(inode, file);
++	return stream_open(inode, file);
+ }
+ 
+ static __poll_t hid_sensor_custom_poll(struct file *file,
+diff --git a/drivers/input/mousedev.c b/drivers/input/mousedev.c
+index 412fa71245af..58afd5253485 100644
+--- a/drivers/input/mousedev.c
++++ b/drivers/input/mousedev.c
+@@ -561,7 +561,7 @@ static int mousedev_open(struct inode *inode, struct file *file)
+ 		goto err_free_client;
+ 
+ 	file->private_data = client;
+-	nonseekable_open(inode, file);
++	stream_open(inode, file);
+ 
+ 	return 0;
+ 
+diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
+index 12ce18fa6b74..df00d6619b06 100644
+--- a/scripts/coccinelle/api/stream_open.cocci
++++ b/scripts/coccinelle/api/stream_open.cocci
+@@ -134,6 +134,13 @@ identifier fops0.fops;
+     .llseek = no_llseek,
+   };
+ 
++@ has_noop_llseek @
++identifier fops0.fops;
++@@
++  struct file_operations fops = {
++    .llseek = noop_llseek,
++  };
++
+ @ has_mmap @
+ identifier fops0.fops;
+ identifier mmap_f;
+@@ -180,7 +187,7 @@ identifier splice_write_f;
+ //
+ // XXX for simplicity require no .{read/write}_iter and no .splice_{read/write} for now.
+ // XXX maybe_steam.fops cannot be used in other rules - it gives "bad rule maybe_stream or bad variable fops".
+-@ maybe_stream depends on (!has_llseek || has_no_llseek) && !has_mmap && !has_copy_file_range && !has_remap_file_range && !has_read_iter && !has_write_iter && !has_splice_read && !has_splice_write @
++@ maybe_stream depends on (!has_llseek || has_no_llseek || has_noop_llseek) && !has_mmap && !has_copy_file_range && !has_remap_file_range && !has_read_iter && !has_write_iter && !has_splice_read && !has_splice_write @
+ identifier fops0.fops;
+ @@
+   struct file_operations fops = {
+-- 
+2.20.1
