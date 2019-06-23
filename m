@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3A2C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12343C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D5920679
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AF920679
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 11:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfFWLxC (ORCPT
+        id S1726608AbfFWL4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 07:53:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33279 "EHLO
+        Sun, 23 Jun 2019 07:56:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33289 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfFWLxC (ORCPT
+        with ESMTP id S1726453AbfFWL4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 07:53:02 -0400
+        Sun, 23 Jun 2019 07:56:05 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hf13E-0008VJ-Nn; Sun, 23 Jun 2019 13:52:52 +0200
-Date:   Sun, 23 Jun 2019 13:52:51 +0200 (CEST)
+        id 1hf16F-00006C-EP; Sun, 23 Jun 2019 13:55:59 +0200
+Date:   Sun, 23 Jun 2019 13:55:58 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Dianzhang Chen <dianzhangchen0@gmail.com>
-cc:     oleg@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: fix possible spectre-v1 in ptrace_get_debugreg()
-In-Reply-To: <1558702622-15143-1-git-send-email-dianzhangchen0@gmail.com>
-Message-ID: <alpine.DEB.2.21.1906231348340.32342@nanos.tec.linutronix.de>
-References: <1558702622-15143-1-git-send-email-dianzhangchen0@gmail.com>
+cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: tls: fix possible spectre-v1 in
+ do_get_thread_area()
+In-Reply-To: <1560258958-19291-1-git-send-email-dianzhangchen0@gmail.com>
+Message-ID: <alpine.DEB.2.21.1906231353120.32342@nanos.tec.linutronix.de>
+References: <1560258958-19291-1-git-send-email-dianzhangchen0@gmail.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,52 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019, Dianzhang Chen wrote:
+On Tue, 11 Jun 2019, Dianzhang Chen wrote:
 
-> Subject : [PATCH] x86: fix possible spectre-v1 in ptrace_get_debugreg()
+Subject prefix is 'x86/tls:' please.
 
-Please use the proper prefix. Run git log on the file and you'll find
-it. Also please start the short summary sentence after the prefix with an
-upper case letter.
+> The idx in do_get_thread_area() is controlled by userspace
 
-> The n in ptrace_get_debugreg() is indirectly controlled by userspace via syscall: ptrace(defined in kernel/ptrace.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
-> The n can be controlled from: ptrace -> arch_ptrace -> ptrace_get_debugreg.
->
+The idx? Please to not variable names in the change log. The variable name
+is an implementation detail.
 
-Please format the text proper with a line break around column 70.
+  The index to access the threads tls array is controlled ....
 
-Also please refrain from '(defined in kernel/ptrace.c)'. Use sys_ptrace()
-which is entirely clear.
+Hmm?
 
-> Fix this by sanitizing n before using it to index thread->ptrace_bps.
+> via syscall: ptrace(defined in kernel/ptrace.c), hence
+
+sys_ptrace() again.
+
+> leading to a potential exploitation of the Spectre variant 1 vulnerability.
+> The idx can be controlled from:
+> 	ptrace -> arch_ptrace -> do_get_thread_area.
+> 
+> Fix this by sanitizing idx before using it to index p->thread.tls_array.
 > 
 > Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
 > ---
->  arch/x86/kernel/ptrace.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/x86/kernel/tls.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-> index 4b8ee05..3f8f158 100644
-> --- a/arch/x86/kernel/ptrace.c
-> +++ b/arch/x86/kernel/ptrace.c
-> @@ -24,6 +24,7 @@
->  #include <linux/rcupdate.h>
->  #include <linux/export.h>
->  #include <linux/context_tracking.h>
+> diff --git a/arch/x86/kernel/tls.c b/arch/x86/kernel/tls.c
+> index a5b802a..4cd338c 100644
+> --- a/arch/x86/kernel/tls.c
+> +++ b/arch/x86/kernel/tls.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/user.h>
+>  #include <linux/regset.h>
+>  #include <linux/syscalls.h>
 > +#include <linux/nospec.h>
 >  
 >  #include <linux/uaccess.h>
->  #include <asm/pgtable.h>
-> @@ -644,7 +645,8 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
->  	unsigned long val = 0;
+>  #include <asm/desc.h>
+> @@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
+>  		       struct user_desc __user *u_info)
+>  {
+>  	struct user_desc info;
+> +	int index = idx - GDT_ENTRY_TLS_MIN;
 >  
->  	if (n < HBP_NUM) {
-> -		struct perf_event *bp = thread->ptrace_bps[n];
-> +		struct perf_event *bp =
-> +			thread->ptrace_bps[array_index_nospec(n, HBP_NUM)];
+>  	if (idx == -1 && get_user(idx, &u_info->entry_number))
+>  		return -EFAULT;
 
-Please use an intermediate variable to calculate the index instead of this
-weird line break.
+Broken in the same way as the other one.
 
 Thanks,
 
