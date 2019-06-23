@@ -2,61 +2,45 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D217C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5170C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409E4208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC5E208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfFXDBk (ORCPT
+        id S1727304AbfFXDBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:01:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34568 "EHLO
+        Sun, 23 Jun 2019 23:01:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34569 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727280AbfFXDBi (ORCPT
+        with ESMTP id S1726579AbfFXDBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:01:38 -0400
+        Sun, 23 Jun 2019 23:01:43 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hfCwE-0000Q9-46; Mon, 24 Jun 2019 02:34:26 +0200
-Date:   Mon, 24 Jun 2019 02:34:24 +0200 (CEST)
+        id 1hfBFh-0007WN-Tm; Mon, 24 Jun 2019 00:46:26 +0200
+Date:   Mon, 24 Jun 2019 00:46:24 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-cc:     linux-arch@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
-In-Reply-To: <20190621095252.32307-1-vincenzo.frascino@arm.com>
-Message-ID: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v5 5/5] x86/umwait: Document umwait control sysfs
+ interfaces
+In-Reply-To: <alpine.DEB.2.21.1906232305360.32342@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1906240043310.32342@nanos.tec.linutronix.de>
+References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com> <1560994438-235698-6-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906232305360.32342@nanos.tec.linutronix.de>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -68,98 +52,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vincenzo,
-
-On Fri, 21 Jun 2019, Vincenzo Frascino wrote:
-> vDSO (virtual dynamic shared object) is a mechanism that the Linux
-> kernel provides as an alternative to system calls to reduce where
-> possible the costs in terms of cycles.
-> This is possible because certain syscalls like gettimeofday() do
-> not write any data and return one or more values that are stored
-> in the kernel, which makes relatively safe calling them directly
-> as a library function.
+On Mon, 24 Jun 2019, Thomas Gleixner wrote:
+> On Wed, 19 Jun 2019, Fenghua Yu wrote:
+> > +Description:	Umwait control
+> > +
+> > +		enable_c02: Read/write interface to control umwait C0.2 state
+> > +			Read returns C0.2 state status:
+> > +				0: C0.2 is disabled
+> > +				1: C0.2 is enabled
+> > +
+> > +			Write 'Yy1' or [oO][nN] for on to enable C0.2 state.
 > 
-> Even if the mechanism is pretty much standard, every architecture
-> in the last few years ended up implementing their own vDSO library
-> in the architectural code.
+>   Write 'Yy1' ? You meant [Yy1] I assume.
+> 
+> > +			Write 'Nn0' or [oO][fF] for off to disable C0.2 state.
+>   
+> What about avoiding all that unreadable confusion?
+> 
+>                         Write 'y' or '1'  or 'on' to enable C0.2 state.
+>                         Write 'n' or '0'  or 'of' to disable C0.2 state.
+> 
+>                         The interface is case insensitive.
 
-....
- 
-> This implementation contains the portings to the common library for: arm64,
-> compat mode for arm64, arm, mips, x86_64, x32, compat mode for x86_64 and
-> i386.
+Don't try to fixup all that in a hurry.
 
-I picked up the core implementation and the ARM64 and x86 conversion. I did
-some refinements in several places, coding style, naming conventions,
-comments and changelogs including subject prefixes. Please double check!
-
-I did not merge the ARM and MIPS parts as they lack any form of
-acknowlegment from their maintainers. Please talk to those folks. If they
-ack/review the changes then I can pick them up and they go into 5.3 or they
-have to go in a later cycle. Nevertheless it was well worth the trouble to
-have those conversions done to confirm that the new common library fits a
-bunch of different architectures.
-
-As you can see from the commit dates, this has soaked for some time in a
-WIP branch and I did extensive regression testing. So far so good.
-
-Thanks a lot for going through several iterations. It's a very much
-appreciated effort!
-
-Especially with the upcoming time namespaces this will avoid a lot of
-duplicated and pointlessly different horrors all over the architecture
-space. Any architecture which wants to gain that support needs to convert
-to the generic VDSO first.
-
-As you have become the dude who knows almost everything about VDSO
-including all the nasty pitfalls, I propose the patch below.
+I've already done most of it while trying to ready if for merging. If you
+see the tip bot mails coming in, make sure to double check my modifications
+and yell if I screwed up on the way.
 
 Thanks,
 
 	tglx
 
-8<------------
-Subject: MAINTAINERS: Add entry for the generic VDSO library
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Mon, 24 Jun 2019 02:03:50 +0200
 
-Asign the following folks in alphabetic order:
-
- - Andy for being the VDSO wizard of x86 and in general. He's also the
-   performance monitor of choice and the code in the generic library is
-   heavily influenced by his previous x86 VDSO work.
-
- - Thomas for being the dude who has to deal with any form of time(r)
-   nonsense anyway
-
- - Vincenzo for being the poor sod who went through all the different
-   architecture implementations in order to unify them. A lot of knowledge
-   gained from VDSO implementation details to the intricacies of taming the
-   build system.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- MAINTAINERS |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6665,6 +6665,18 @@ L:	kvm@vger.kernel.org
- S:	Supported
- F:	drivers/uio/uio_pci_generic.c
- 
-+GENERIC VDSO LIBRARY:
-+M:	Andy Lutomirksy <luto@kernel.org>
-+M:	Thomas Gleixner <tglx@linutronix.de>
-+M:	Vincenzo Frascino <vincenzo.frascino@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
-+S:	Maintained
-+F:	lib/vdso
-+F:	kernel/time/vsyscall.c
-+F:	include/vdso
-+F:	include/asm-generic/vdso/vsyscall.h
-+
- GENWQE (IBM Generic Workqueue Card)
- M:	Frank Haverkamp <haver@linux.ibm.com>
- S:	Supported
