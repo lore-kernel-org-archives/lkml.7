@@ -2,112 +2,235 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B7CC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A43C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DB120657
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F14020663
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pIstnD45"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XT80z7eL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfFWNut (ORCPT
+        id S1726610AbfFWOJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 09:50:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50748 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfFWNus (ORCPT
+        Sun, 23 Jun 2019 10:09:53 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:38265 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFWOJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 09:50:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so10327706wmf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 06:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=zpwiXk85jpT08Y6ZBMcJ/wyE7pImTcgVQKw9N3i4sSU=;
-        b=pIstnD45O0Rbt6O7+GyPNJBPgVAt5/dwQalEToNACvICunCyRTvK8hIi90C5WVKjC6
-         xLmOlz4McRUgtNMbo2kHV94uRb4YT7Uoe6+iHtZ06CGQoixxDx5LWye1yh1H6WC4n20U
-         XhpMONoeVVseUwUdydycfbl1QLyOtpDArxQaDkIohmrurjF+YlIYbo/1aM0jgT8r64Rf
-         IHRtz2m3Dw3yXSndzBRZZ1T7MwMF1N3RHBCCLp56pY5Y2u5NIEhW5Gwtr63S1ATui8Sr
-         E6eHx8b2rLr8NvkUugyHZU0WQSwYlSAD+hybLfP+JDrB190a1AqSxTvIIKSumJ6LZ7B8
-         vPMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zpwiXk85jpT08Y6ZBMcJ/wyE7pImTcgVQKw9N3i4sSU=;
-        b=ga1MF8mnT30dthQ7aKt8WvAryZA0W1bvt8RM2zdcRZwQ5xwpa59ig+HJgvOQCl0j1A
-         G2FZA4TWDprugLzoBHw5mHC3y91eS20q9HTuPZQlArejRMVD6Nb/A/lZlMvmEeHywN19
-         sfFazkgtm4E9rdxXYG3ryvuK2cnfCi2/HuMiTitvCBnqeMPCuYt8I4WXG3qWgymheZlz
-         7G88pN31+0qSIXJcVQ3/2v952MawG8PKhsLPbOutp0hfclVwWytjRtLK8EYNP9TqpfDw
-         D3B88/37nsf1n71ItmYNgOyoPSMpj/Bil7Zi4nck0bO7koFfroBpIKqn8ehiFvT6jvKQ
-         XV7w==
-X-Gm-Message-State: APjAAAWCFBnymTwTCbp/xDWprTwzJfdCx+Tj0zdAn7W2rGHJLRA1V26A
-        Zgx9Fz2PjBef+UNHOVmU7EU=
-X-Google-Smtp-Source: APXvYqwXmn6kr1SRfH2fCMSytgNX6EiiGjtIWgPn87uzKD9/DS/oxvW4zlGNVhfB7+QquenCWiXuAQ==
-X-Received: by 2002:a7b:c84c:: with SMTP id c12mr11651885wml.70.1561297846416;
-        Sun, 23 Jun 2019 06:50:46 -0700 (PDT)
-Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
-        by smtp.gmail.com with ESMTPSA id p26sm20617422wrp.58.2019.06.23.06.50.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Jun 2019 06:50:45 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 15:50:38 +0200
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Robin van der Gracht <robin@protonic.nl>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] auxdisplay for v5.2-rc7
-Message-ID: <20190623135038.GA29791@gmail.com>
+        Sun, 23 Jun 2019 10:09:53 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x5NE9iFp021214
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:09:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x5NE9iFp021214
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561298985;
+        bh=7DrdzqGtK5Y7N0S66FZgjsMEvNefGAC5fLt9hgMKs4M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XT80z7eLGgOQnrgsK30BjntfvHfVOaknd7EyGUqr6EGIdXf8bWKkk6ZT0juw2Q4cj
+         9kR3233maD9iRLPFQ1aaYRFEv1fc03KjZxLQicR4W8WsAf+YtwlBq5HSIWdNJs1wl0
+         +5W+O0qseaoSezdRdKbJ2HunH0XqmntmnRjMsHf12tSIRDiVSYgzUOu/BoVcb722rM
+         Q2u4JVp5eoPFGaYZxWOo/mjmpe1PMkgtYYzdI2u0GyKp0OqrVSEcigFXg9UfcUCUMn
+         EmGQmMSR0zo2sGtpF7wxRW0Pce/PB9x7rnIu9ooVR/+GEpfsRJxLCtqWhDMOKMN8YP
+         AN1DMRg4lyrGQ==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id c4so4748026uad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:09:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAV7jM7Px1ELRnAxNqo22OqoOg6LToX5Q8zKRfcjlm8ojbeGqsHJ
+        NX/mXyUgIfQQb4QxjhUB1cjUA5yREJA8De2YnIQ=
+X-Google-Smtp-Source: APXvYqwLqOxLA12mww6wVSFtva4zQ7F/DVpEIq5zBS5i1DRrlXlbYvKX+Wt0iogyjnmX8slY85KwVV+l5bvhf+llGUg=
+X-Received: by 2002:a9f:25e9:: with SMTP id 96mr65484522uaf.95.1561298983528;
+ Sun, 23 Jun 2019 07:09:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: elm/2
+References: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 23 Jun 2019 23:09:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARoHtS0aqO9NCvwxAstJQxfeXhaWvh=1MQD3Wje8Pnmtw@mail.gmail.com>
+Message-ID: <CAK7LNARoHtS0aqO9NCvwxAstJQxfeXhaWvh=1MQD3Wje8Pnmtw@mail.gmail.com>
+Subject: Re: [PATCH v2] powerpc/mm: mark more tlb functions as __always_inline
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, May 21, 2019 at 10:19 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
+> with gcc 9.1.1:
+>
+>   arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+>   arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+>     104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+>         |  ^~~
+>   arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+>
+> Fixing _tlbiel_pid() is enough to address the warning above, but I
+> inlined more functions to fix all potential issues.
+>
+> To meet the "i" (immediate) constraint for the asm operands, functions
+> propagating "ric" must be always inlined.
+>
+> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> Reported-by: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-A cleanup that was in -next for several weeks (before I added
-an Ack). It is late in the cycle, so pick it up if you feel
-like it!
+Ping.
+This missed the recent PR, but
+I believe this should be fixed.
 
-Cheers,
-Miguel
+Thanks.
 
-The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
+>
+> Changes in v2:
+>   - Do not split lines
+>
+>  arch/powerpc/mm/book3s64/hash_native.c |  2 +-
+>  arch/powerpc/mm/book3s64/radix_tlb.c   | 32 ++++++++++++++++----------------
+>  2 files changed, 17 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
+> index aaa28fd..c854151 100644
+> --- a/arch/powerpc/mm/book3s64/hash_native.c
+> +++ b/arch/powerpc/mm/book3s64/hash_native.c
+> @@ -60,7 +60,7 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
+>   * tlbiel instruction for hash, set invalidation
+>   * i.e., r=1 and is=01 or is=10 or is=11
+>   */
+> -static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
+> +static __always_inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
+>                                         unsigned int pid,
+>                                         unsigned int ric, unsigned int prs)
+>  {
+> diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+> index 4d84136..4d3dc10 100644
+> --- a/arch/powerpc/mm/book3s64/radix_tlb.c
+> +++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+> @@ -29,7 +29,7 @@
+>   * tlbiel instruction for radix, set invalidation
+>   * i.e., r=1 and is=01 or is=10 or is=11
+>   */
+> -static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
+> +static __always_inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
+>                                         unsigned int pid,
+>                                         unsigned int ric, unsigned int prs)
+>  {
+> @@ -150,8 +150,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
+>         trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
+>  }
+>
+> -static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+> -                               unsigned long ric)
+> +static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+> +                                               unsigned long ric)
+>  {
+>         unsigned long rb,rs,prs,r;
+>
+> @@ -167,8 +167,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+>  }
+>
+>
+> -static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+> -                              unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
+> +                                       unsigned long ap, unsigned long ric)
+>  {
+>         unsigned long rb,rs,prs,r;
+>
+> @@ -183,8 +183,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+>         trace_tlbie(0, 1, rb, rs, ric, prs, r);
+>  }
+>
+> -static inline void __tlbie_va(unsigned long va, unsigned long pid,
+> -                             unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
+> +                                      unsigned long ap, unsigned long ric)
+>  {
+>         unsigned long rb,rs,prs,r;
+>
+> @@ -199,8 +199,8 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
+>         trace_tlbie(0, 0, rb, rs, ric, prs, r);
+>  }
+>
+> -static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> -                             unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> +                                           unsigned long ap, unsigned long ric)
+>  {
+>         unsigned long rb,rs,prs,r;
+>
+> @@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+>  /*
+>   * We use 128 set in radix mode and 256 set in hpt mode.
+>   */
+> -static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+> +static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+>  {
+>         int set;
+>
+> @@ -341,7 +341,7 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
+>         asm volatile("eieio; tlbsync; ptesync": : :"memory");
+>  }
+>
+> -static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
+> +static __always_inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
+>  {
+>         int set;
+>
+> @@ -381,8 +381,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
+>                 __tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
+>  }
+>
+> -static inline void _tlbiel_va(unsigned long va, unsigned long pid,
+> -                             unsigned long psize, unsigned long ric)
+> +static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
+> +                                      unsigned long psize, unsigned long ric)
+>  {
+>         unsigned long ap = mmu_get_ap(psize);
+>
+> @@ -413,8 +413,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
+>                 __tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
+>  }
+>
+> -static inline void _tlbie_va(unsigned long va, unsigned long pid,
+> -                             unsigned long psize, unsigned long ric)
+> +static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
+> +                                     unsigned long psize, unsigned long ric)
+>  {
+>         unsigned long ap = mmu_get_ap(psize);
+>
+> @@ -424,7 +424,7 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
+>         asm volatile("eieio; tlbsync; ptesync": : :"memory");
+>  }
+>
+> -static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> +static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
+>                               unsigned long psize, unsigned long ric)
+>  {
+>         unsigned long ap = mmu_get_ap(psize);
+> --
+> 2.7.4
+>
 
-  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
 
-are available in the Git repository at:
-
-  https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.2-rc7
-
-for you to fetch changes up to f4bb1f895aa07dfcb96169192ff7c9154620df87:
-
-  auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero() (2019-06-20 15:06:24 +0200)
-
-----------------------------------------------------------------
-A cleanup for two drivers in auxdisplay:
-
-  - Convert to use vm_map_pages_zero()
-    From Souptick Joarder
-
-----------------------------------------------------------------
-Souptick Joarder (2):
-      auxdisplay/cfag12864bfb.c: Convert to use vm_map_pages_zero()
-      auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
-
- drivers/auxdisplay/cfag12864bfb.c | 5 +++--
- drivers/auxdisplay/ht16k33.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+-- 
+Best Regards
+Masahiro Yamada
