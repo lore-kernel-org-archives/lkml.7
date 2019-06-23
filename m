@@ -6,57 +6,53 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA3FC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A57C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAEA020645
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D8720820
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFWSZi (ORCPT
+        id S1726793AbfFWSd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 14:25:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:43498 "EHLO
+        Sun, 23 Jun 2019 14:33:56 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:43560 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfFWSZh (ORCPT
+        with ESMTP id S1726632AbfFWSd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 14:25:37 -0400
+        Sun, 23 Jun 2019 14:33:56 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 70AA0126A1260;
-        Sun, 23 Jun 2019 11:25:37 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 11:25:37 -0700 (PDT)
-Message-Id: <20190623.112537.2211302797354603091.davem@davemloft.net>
-To:     rasmus.villemoes@prevas.dk
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        Rasmus.Villemoes@prevas.se, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: introduce helpers for
- handling chip->reg_lock
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6867D12D8C0E6;
+        Sun, 23 Jun 2019 11:33:55 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 11:33:54 -0700 (PDT)
+Message-Id: <20190623.113354.132846566012344300.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] net/sched: cbs: Fix error path of cbs_module_init
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190620135034.24986-1-rasmus.villemoes@prevas.dk>
-References: <20190620135034.24986-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190621134437.4252-1-yuehaibing@huawei.com>
+References: <20190621134437.4252-1-yuehaibing@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Jun 2019 11:25:37 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Jun 2019 11:33:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date: Thu, 20 Jun 2019 13:50:42 +0000
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Fri, 21 Jun 2019 21:44:37 +0800
 
-> This is a no-op that simply moves all locking and unlocking of
-> ->reg_lock into trivial helpers. I did that to be able to easily add
-> some ad hoc instrumentation to those helpers to get some information
-> on contention and hold times of the mutex. Perhaps others want to do
-> something similar at some point, so this frees them from doing the
-> 'sed -i' yoga, and have a much smaller 'git diff' while fiddling.
+> If register_qdisc fails, we should unregister
+> netdevice notifier.
 > 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Applied.
