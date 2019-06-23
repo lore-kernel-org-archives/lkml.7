@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A4DC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03D8C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AB12073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751D72073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DO56xL8G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J79n+G0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfFWQmg (ORCPT
+        id S1727060AbfFWQmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:42:36 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34780 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfFWQmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 12:42:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so6126389pfc.1;
-        Sun, 23 Jun 2019 09:42:34 -0700 (PDT)
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35413 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfFWQmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 12:42:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s27so5795476pgl.2;
+        Sun, 23 Jun 2019 09:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Wt7RMWJEU5nf2APAW5wITney1vGRi8ExyzwA2ly5tbM=;
-        b=DO56xL8GNC3pRjMbczek/js2aH+Jr00XhhADU2CusMADs20FUQ6om0QfFNRcH7bIok
-         utY8iKwz2gs/7WHR18tlrl+XRM9KtdS9MZyCglgz5ZWErisPeGVp+BPEcw81Ezw1KyjP
-         +I7gFX+cYEvLyjmwJRHb04L6mRZ4LjmdVX+GURXCGE4Ky2HFiZkXGwRma8nQVRg7xzb1
-         OpjjtLiiCN+Zc/sg6Vk26H04UbcX2a5L9ZDyAyFJkne9LJuc3SjKpjccxQ4NfVaSg62X
-         sX8QGDvadx5+1F6N6uKmqbh/oIFj9SbUUmdqZyIvf9VMIoiCKn8bIS68Io+mfdDuE05u
-         4YKQ==
+        bh=RTcK3pbraTehLFDRf/5iQTqAdMG2KSczJRXJiBCvB5Y=;
+        b=J79n+G0FL6XsNrisl6wbrkk+LaSJR6g3/f6ISU3BTLA9JY3Gqkm4YYdTSvx/+5Kqg7
+         kbr1y5dzXFGY1CYoZ83vKdhe7nZ7CKTdLOBaDy/ML+spf/jCjKex5kzhqJeI0IPbN3N0
+         yxwnVWyDo28A2xTdG5uWbE1xAfskgvDsey1vfABp8IHb7J7YnXcj8Y8Zlvaiz49r1b3L
+         fGNKV8818ts9AVqoiVfZU1XtTPsUtfmFVkjgmtVGGiVuSofPy0kZbll+M8ozOW+x+JPa
+         PRBDcTuudkpmeEV4rk5FT8U1nNgL7daeNWgAMoZeaBYmT2mk/vxpb9lzrniT2jLpukwd
+         HhRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Wt7RMWJEU5nf2APAW5wITney1vGRi8ExyzwA2ly5tbM=;
-        b=fuO5jCXvT1vmpjRvtSuaDIkIg7S+7itQPALdSigBTo1jNPKqr0yf8Dx0+lljpn5ZnE
-         Y7wx43I3jTcF/jLWNG1xsZM66eosR8ZukLbd/Q+vP+Eqt6sDCHdHnoc4kKBLckAcVmlO
-         rL9tlvuPW1tqKyBSTzGw54rDqlo3IxTDbfw6knFH0TcctocewGuudeEaJGsmTzYMAHzG
-         /6ZCmCUPKrH+a81RT767/E5rhZjxLQ1kUBM2+hhtc1wQ010ndZc+xCFPtVeLfqnl1xab
-         Rx1pVE+YxKHMNHgkwfUN8qrAS4+/jbZj8vg3ul/3tO0m/1q0wJA1+xnqDUqtfkm48kiC
-         vZxA==
-X-Gm-Message-State: APjAAAVQHO5c5sns6gO7YkZPIOAX/sTt94K5OVx3W4YGnTByMEZPPGZ2
-        JmsewR9rTpyCUo6IqmFaZN0=
-X-Google-Smtp-Source: APXvYqyPdz3cE/WXdIcDs7kmAR8F/niCfqMamQH54dQcogysOpQv1BP/blKrSSByCMUg+zO2djgwVA==
-X-Received: by 2002:a17:90a:7f02:: with SMTP id k2mr19642846pjl.78.1561308154262;
-        Sun, 23 Jun 2019 09:42:34 -0700 (PDT)
+        bh=RTcK3pbraTehLFDRf/5iQTqAdMG2KSczJRXJiBCvB5Y=;
+        b=EblGvD7/ycTZ4XWIfgTFkfHbXN0/K5WjUMrd99e2AxQKNsQN9ydF92b7PCuMCZ4H7I
+         TosFrfpaLcTumTPlG+Rfyp2hgaByk1ltvqmeNs0muQ6Ls1zGmdt9IITEk+f1HpQ1JcBS
+         m895VQaETO9ttXfcrLRKl6dRM4JakOog1/ZloLEr3iU7fFQLRRBFuzDmYMwijBOKmbDz
+         ns5XJ3WwQAOPKqQVsC4npvOon1kB/Tz6nuAUhq6ledRmTDM7uejbLeBBbq/dRco5h2my
+         UTJoO6T5nttPpQQ3r+mDXuiWSzxeMNyMe0eV9m+izz6Ma7iT+wWbLbMsaqLMITimx49m
+         k5Uw==
+X-Gm-Message-State: APjAAAUaI3V8CMQy+u2hGDm7KEbg8BU4zlSDEWUKIlPMhdeNGfVjZTOg
+        OnaMgiiaiv0ue2Mo4t/dpls=
+X-Google-Smtp-Source: APXvYqzGanD57O3MhuhLaVMM/J9OguOZ9knpULHKCKx5u7OSJ407HPyX7xnw3TY+8qmoUkfWdIvHGw==
+X-Received: by 2002:a65:418d:: with SMTP id a13mr29100398pgq.332.1561308151893;
+        Sun, 23 Jun 2019 09:42:31 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id y17sm4923619pfe.148.2019.06.23.09.42.33
+        by smtp.gmail.com with ESMTPSA id w3sm8457242pgl.31.2019.06.23.09.42.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Jun 2019 09:42:33 -0700 (PDT)
+        Sun, 23 Jun 2019 09:42:31 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     rui.zhang@intel.com, edubezval@gmail.com,
         daniel.lezcano@linaro.org, robh+dt@kernel.org,
@@ -66,9 +66,9 @@ To:     rui.zhang@intel.com, edubezval@gmail.com,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v4 11/11] thermal: sun8i: add thermal driver for h3
-Date:   Sun, 23 Jun 2019 12:42:06 -0400
-Message-Id: <20190623164206.7467-12-tiny.windzz@gmail.com>
+Subject: [PATCH v4 09/11] thermal: sun8i: rework for ths calibrate func
+Date:   Sun, 23 Jun 2019 12:42:04 -0400
+Message-Id: <20190623164206.7467-10-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
 References: <20190623164206.7467-1-tiny.windzz@gmail.com>
@@ -77,137 +77,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the support for allwinner h3 thermal sensor.
+Here, we do something to prepare for the subsequent
+support of multiple platforms.
+
+1) rename sun50i_ths_calibrate to sun8i_ths_calibrate, because
+   this function should be suitable for all platforms now.
+
+2) introduce calibrate callback to mask calibration method
+   differences.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/sun8i_thermal.c | 72 +++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/thermal/sun8i_thermal.c | 86 ++++++++++++++++++---------------
+ 1 file changed, 48 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 260b24340f5b..c8ee291f3b17 100644
+index 04f53ffb6a14..260b24340f5b 100644
 --- a/drivers/thermal/sun8i_thermal.c
 +++ b/drivers/thermal/sun8i_thermal.c
-@@ -27,6 +27,14 @@
- #define TEMP_TO_REG				672
- #define CALIBRATE_DEFAULT			0x800
- 
-+#define SUN8I_THS_CTRL0				0x00
-+#define SUN8I_THS_CTRL2				0x40
-+#define SUN8I_THS_IC				0x44
-+#define SUN8I_THS_IS				0x48
-+#define SUN8I_THS_MFC				0x70
-+#define SUN8I_THS_TEMP_CALIB			0x74
-+#define SUN8I_THS_TEMP_DATA			0x80
-+
- #define SUN50I_THS_CTRL0			0x00
- #define SUN50I_H6_THS_ENABLE			0x04
- #define SUN50I_H6_THS_PC			0x08
-@@ -36,6 +44,9 @@
- #define SUN50I_H6_THS_TEMP_CALIB		0xa0
- #define SUN50I_H6_THS_TEMP_DATA			0xc0
- 
-+#define SUN8I_THS_CTRL0_T_ACQ0(x)		(GENMASK(15, 0) & (x))
-+#define SUN8I_THS_CTRL2_T_ACQ1(x)		((GENMASK(15, 0) & (x)) << 16)
-+
- #define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
- #define SUN50I_THS_FILTER_EN			BIT(2)
- #define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
-@@ -121,6 +132,21 @@ static const struct regmap_config config = {
- 	.fast_io = true,
+@@ -60,6 +60,8 @@ struct ths_thermal_chip {
+ 	int		scale;
+ 	int		ft_deviation;
+ 	int		temp_data_base;
++	int		(*calibrate)(struct ths_device *tmdev,
++				     u16 *caldata, int callen);
+ 	int		(*init)(struct ths_device *tmdev);
+ 	int             (*irq_ack)(struct ths_device *tmdev);
  };
- 
-+static int sun8i_h3_irq_ack(struct ths_device *tmdev)
-+{
-+	int state, ret = 0;
-+
-+	regmap_read(tmdev->regmap, SUN8I_THS_IS, &state);
-+
-+	if (state & BIT(8)) {
-+		regmap_write(tmdev->regmap, SUN8I_THS_IS,
-+			     BIT(8));
-+		ret |= BIT(1);
-+	}
-+
-+	return ret;
-+}
-+
- static int sun50i_h6_irq_ack(struct ths_device *tmdev)
- {
- 	int i, state, ret = 0;
-@@ -154,6 +180,14 @@ static irqreturn_t sun8i_irq_thread(int irq, void *data)
+@@ -152,45 +154,14 @@ static irqreturn_t sun8i_irq_thread(int irq, void *data)
  	return IRQ_HANDLED;
  }
  
-+static int sun8i_h3_ths_calibrate(struct ths_device *tmdev,
-+			       u16 *caldata, int callen)
-+{
-+	regmap_write(tmdev->regmap, SUN8I_THS_TEMP_CALIB, *caldata);
-+
+-static int sun50i_ths_calibrate(struct ths_device *tmdev)
++static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
++				   u16 *caldata, int callen)
+ {
+-	struct nvmem_cell *calcell;
+ 	struct device *dev = tmdev->dev;
+-	u16 *caldata;
+-	size_t callen;
+-	int ft_temp;
+-	int i, ret = 0;
+-
+-	calcell = devm_nvmem_cell_get(dev, "calib");
+-	if (IS_ERR(calcell)) {
+-		if (PTR_ERR(calcell) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-		/*
+-		 * Even if the external calibration data stored in sid is
+-		 * not accessible, the THS hardware can still work, although
+-		 * the data won't be so accurate.
+-		 *
+-		 * The default value of calibration register is 0x800 for
+-		 * every sensor, and the calibration value is usually 0x7xx
+-		 * or 0x8xx, so they won't be away from the default value
+-		 * for a lot.
+-		 *
+-		 * So here we do not return error if the calibartion data is
+-		 * not available, except the probe needs deferring.
+-		 */
+-		goto out;
+-	}
++	int i, ft_temp;
+ 
+-	caldata = nvmem_cell_read(calcell, &callen);
+-	if (IS_ERR(caldata)) {
+-		ret = PTR_ERR(caldata);
+-		goto out;
+-	}
+-
+-	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
+-		ret = -EINVAL;
+-		goto out_free;
+-	}
++	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num)
++		return -EINVAL;
+ 
+ 	/*
+ 	 * efuse layout:
+@@ -251,7 +222,45 @@ static int sun50i_ths_calibrate(struct ths_device *tmdev)
+ 		}
+ 	}
+ 
+-out_free:
 +	return 0;
 +}
 +
- static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
- 				   u16 *caldata, int callen)
- {
-@@ -325,6 +359,32 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
++static int sun8i_ths_calibrate(struct ths_device *tmdev)
++{
++	struct nvmem_cell *calcell;
++	struct device *dev = tmdev->dev;
++	u16 *caldata;
++	size_t callen;
++	int ret = 0;
++
++	calcell = devm_nvmem_cell_get(dev, "calib");
++	if (IS_ERR(calcell)) {
++		if (PTR_ERR(calcell) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		/*
++		 * Even if the external calibration data stored in sid is
++		 * not accessible, the THS hardware can still work, although
++		 * the data won't be so accurate.
++		 *
++		 * The default value of calibration register is 0x800 for
++		 * every sensor, and the calibration value is usually 0x7xx
++		 * or 0x8xx, so they won't be away from the default value
++		 * for a lot.
++		 *
++		 * So here we do not return error if the calibartion data is
++		 * not available, except the probe needs deferring.
++		 */
++		goto out;
++	}
++
++	caldata = nvmem_cell_read(calcell, &callen);
++	if (IS_ERR(caldata)) {
++		ret = PTR_ERR(caldata);
++		goto out;
++	}
++
++	tmdev->chip->calibrate(tmdev, caldata, callen);
++
+ 	kfree(caldata);
+ out:
  	return ret;
- }
+@@ -300,7 +309,7 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+ 	if (ret)
+ 		goto bus_disable;
  
-+static int sun8i_h3_thermal_init(struct ths_device *tmdev)
-+{
-+	/* average over 4 samples */
-+	regmap_write(tmdev->regmap, SUN8I_THS_MFC,
-+		     SUN50I_THS_FILTER_EN |
-+		     SUN50I_THS_FILTER_TYPE(1));
-+	/*
-+	 * period = (x + 1) * 4096 / clkin; ~10ms
-+	 * enable data interrupt
-+	 */
-+	regmap_write(tmdev->regmap, SUN8I_THS_IC,
-+		     SUN50I_H6_THS_PC_TEMP_PERIOD(58) | BIT(8));
-+	/*
-+	 * clkin = 24MHz
-+	 * T acquire = clkin / (x + 1)
-+	 *           = 20us
-+	 * enable sensor
-+	 */
-+	regmap_write(tmdev->regmap, SUN8I_THS_CTRL0,
-+		     SUN8I_THS_CTRL0_T_ACQ0(479));
-+	regmap_write(tmdev->regmap, SUN8I_THS_CTRL2,
-+		     SUN8I_THS_CTRL2_T_ACQ1(479) | BIT(0));
-+
-+	return 0;
-+}
-+
- static int sun50i_thermal_init(struct ths_device *tmdev)
- {
- 	int val;
-@@ -431,6 +491,17 @@ static int sun8i_ths_remove(struct platform_device *pdev)
- 	return 0;
- }
+-	ret = sun50i_ths_calibrate(tmdev);
++	ret = sun8i_ths_calibrate(tmdev);
+ 	if (ret)
+ 		goto ahb_disable;
  
-+static const struct ths_thermal_chip sun8i_h3_ths = {
-+	.sensor_num = 1,
-+	.offset = -1794,
-+	.scale = -121,
-+	.has_ahb_clk = true,
-+	.temp_data_base = SUN8I_THS_TEMP_DATA,
-+	.calibrate = sun8i_h3_ths_calibrate,
-+	.init = sun8i_h3_thermal_init,
-+	.irq_ack = sun8i_h3_irq_ack,
-+};
-+
- static const struct ths_thermal_chip sun50i_h6_ths = {
- 	.sensor_num = 2,
- 	.offset = -2794,
-@@ -443,6 +514,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
- };
- 
- static const struct of_device_id of_ths_match[] = {
-+	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
- 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
- 	{ /* sentinel */ },
+@@ -428,6 +437,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.scale = -67,
+ 	.ft_deviation = SUN50I_H6_FT_DEVIATION,
+ 	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
++	.calibrate = sun50i_h6_ths_calibrate,
+ 	.init = sun50i_thermal_init,
+ 	.irq_ack = sun50i_h6_irq_ack,
  };
 -- 
 2.17.1
