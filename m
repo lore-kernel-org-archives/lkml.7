@@ -5,67 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39600C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01785C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1591221530
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 17:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D261120840
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 18:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHKP5U/b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMjq9R2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfFWRvn (ORCPT
+        id S1726699AbfFWSAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 13:51:43 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44039 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfFWRvm (ORCPT
+        Sun, 23 Jun 2019 14:00:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40215 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWSAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 13:51:42 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so10349132ljc.11;
-        Sun, 23 Jun 2019 10:51:40 -0700 (PDT)
+        Sun, 23 Jun 2019 14:00:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so11405902wre.7
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 11:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=I2qjKuaK2bAC6HwMuzdrbSEtzdln2IR0U/1QHxDJnig=;
-        b=vHKP5U/b4Y5fe87aMnMbnhNneSbOQNKMAR/ogmA9aVTaiHiFbM+029R6fUcnbgjHTa
-         rpsPci6nFQkCrzcD1S7nbwStAzGhBy6e0GcsNjuu9Rrg8Zf/LYljujokdwUmIKgQfQVu
-         1tkmlX/ekPOkTzeb/akWGuQv3DNBqO5G7A43N7wlcIgk+/lOYiJ5tJpO79wa69pcsWhz
-         zhTcPOeJE83pQGuDmDFGqTnzPkBZrb8F4tKIgO9L6kkkZpYE8pxsEqEdWTsqc/3h0VD2
-         6Tvs/fpZSgsRjtbkOyDrnw78bz3+IKTiC32jkXLc9ZVsIwRPbYaQRspyubYi7CPQg6kw
-         pVBA==
+        bh=XwY7oF1s2rpAVXJCsz1ECdo2yKOBz2vGMZwE6GybNDE=;
+        b=gMjq9R2MKHHjqs9OKYS0aCOUV2sFpbrVHbG6pbzBSiKU8V67PGWeXT+ZlQui40ad7G
+         XN2U/tRPSQL99FaRbzn7v5nuOHgZTiMo2i0dMh1yMXNlXtNTezlwsE3TLESbm4Og2yOc
+         5LA4Qvfve8ePOBiDAB4vYchm2DuMaQCbLWjabU//ZMrhJaejGMC+BW1elZPSqU14w4oR
+         r4cVajtTSR325If+3rHI6joP4u8Cs7wVnHeN277pp+ltMnWTiYaOXNQlDU/DuZWh6b4e
+         BPMcqYLQb2JhJ4y+Wr5rokm5QaC2Fi1DsB65tsjGcfPCTGqBBH7udxSc6QlkoUuTIjyi
+         zsJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=I2qjKuaK2bAC6HwMuzdrbSEtzdln2IR0U/1QHxDJnig=;
-        b=uHvuTnAK5bVPG3BY2oUb7jOqpM2xdjRpYp1cyCdWO8dYXwJusBFNJvsoGX2KGWuAaD
-         MTK2SIm3rRTy12B1prv+CVAN5v07o8QEMFozfY2DbANiVmT/IAvDtf3F43KpEEQauknr
-         VLP2TZnC5ohmyfiMkkwVOgZjcLczGjNtNt7ex4rH2nR7j8+syQ2KG9dJ9jX4FOmz/RZc
-         zTLW58Cb3KSxmWz7BJeCQ4jrFCtB26iONMVQ4BSiO03r65kPuQ+2CeQQLkxQgKaC6tiV
-         Gm6LuqkswutHz4luCmuRqDYlpYNQ3YcpFje5GeknpGv29hakkkEpMMr/W5lIITDat9R0
-         8FhQ==
-X-Gm-Message-State: APjAAAWclCo5Y8ysRHCEK7TjMm967ua9Vk/wjpbTsdSFswPmcQeZcmaf
-        O9MyrPVLfhqpKllJfOZn9yS2nYbP
-X-Google-Smtp-Source: APXvYqwN3ULDWGn/ez52l0K+WbE83Ki8B/PRvoeJM9DvUa1T3I9jvVc6qVJCf6amPevExY5hdKuStw==
-X-Received: by 2002:a2e:3013:: with SMTP id w19mr66938891ljw.73.1561312300308;
-        Sun, 23 Jun 2019 10:51:40 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id l22sm417693ljc.4.2019.06.23.10.51.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 10:51:39 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Marc Dietrich <marvin24@gmx.de>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] OPP: Fix crashing when current OPP has unsupportable voltage
-Date:   Sun, 23 Jun 2019 20:50:53 +0300
-Message-Id: <20190623175053.26167-1-digetx@gmail.com>
+        bh=XwY7oF1s2rpAVXJCsz1ECdo2yKOBz2vGMZwE6GybNDE=;
+        b=XiljCoUvQ80/0UeVOB/KrMM3DRS4MEi+Yfe4oVazdUQyzHC9wqMqGt8E88PHB3mUyO
+         k+4BfckEpWhQuDG4Sq8KVDg/Rj/QAtTUvG/M69NgUmpeBnIP9mB5sWEAj9/bhiR7nJ5r
+         iyAX2L35mbVmZkEhnTgU6n58kztukm7KqCGO5zkSQQPDcG8/sfLKTrK4qWSG7cd592jT
+         p+9yk2t9OtlL9WYhajuF/kWu8APw5hRe1aJZ2xf29Os9BZC6LlBNvolOprn4QrGa2gu9
+         gwSKN1Bey6Spmqk41uTpNOfJhxNKp3pyvfNNY09freDqSeOF624JTkbWWGiYz8LAOrqX
+         Sb3w==
+X-Gm-Message-State: APjAAAX5KqRkUkjZP3qAYdeyxjFlwuJVOkk+lj6OBCJaisqSnmiFksGz
+        P5lFCjXf9/NrMAnowzaiHdw=
+X-Google-Smtp-Source: APXvYqyhkzHacP8GvpB/UGe5BNJEowImB7WDuz4lkYbuNelTfLNQjMn1fK2AVjTQd3sNLbii4U1Tww==
+X-Received: by 2002:a5d:5303:: with SMTP id e3mr14568750wrv.239.1561312816800;
+        Sun, 23 Jun 2019 11:00:16 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id c4sm8216742wrt.86.2019.06.23.11.00.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 23 Jun 2019 11:00:16 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/2] staging: rtl8188eu: remove unused function get_bsstype()
+Date:   Sun, 23 Jun 2019 19:59:56 +0200
+Message-Id: <20190623175957.16763-1-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,33 +73,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix NULL dereference caused by a typo in the code. In particular it
-happens when CPU is running on a frequency which has unsupportable voltage
-(by regulator) defined in the OPP table and a custom set_opp() callback is
-being used. The problem was spotted during of testing of upcoming update
-for the NVIDIA Tegra CPUFreq driver.
+Function get_bsstype() is not used in the driver code, so remove it.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 7e535993fa4f ("OPP: Separate out custom OPP handler specific code")
-Reported-by: Marc Dietrich <marvin24@gmx.de>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/opp/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/rtl8188eu/core/rtw_wlan_util.c   | 10 ----------
+ drivers/staging/rtl8188eu/include/rtw_mlme_ext.h |  1 -
+ 2 files changed, 11 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 9fda9a0ec016..89ec6aa220cf 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -685,7 +685,7 @@ static int _set_opp_custom(const struct opp_table *opp_table,
+diff --git a/drivers/staging/rtl8188eu/core/rtw_wlan_util.c b/drivers/staging/rtl8188eu/core/rtw_wlan_util.c
+index d1e99885c8f5..159c46b096cb 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8188eu/core/rtw_wlan_util.c
+@@ -346,16 +346,6 @@ void set_channel_bwmode(struct adapter *padapter, unsigned char channel, unsigne
+ 	SetBWMode(padapter, bwmode, channel_offset);
+ }
  
- 	data->old_opp.rate = old_freq;
- 	size = sizeof(*old_supply) * opp_table->regulator_count;
--	if (IS_ERR(old_supply))
-+	if (!old_supply)
- 		memset(data->old_opp.supplies, 0, size);
- 	else
- 		memcpy(data->old_opp.supplies, old_supply, size);
+-int get_bsstype(unsigned short capability)
+-{
+-	if (capability & BIT(0))
+-		return WIFI_FW_AP_STATE;
+-	else if (capability & BIT(1))
+-		return WIFI_FW_ADHOC_STATE;
+-	else
+-		return 0;
+-}
+-
+ u16 get_beacon_interval(struct wlan_bssid_ex *bss)
+ {
+ 	__le16 val;
+diff --git a/drivers/staging/rtl8188eu/include/rtw_mlme_ext.h b/drivers/staging/rtl8188eu/include/rtw_mlme_ext.h
+index 1fb2349bd0a0..fa14b6fedf08 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_mlme_ext.h
++++ b/drivers/staging/rtl8188eu/include/rtw_mlme_ext.h
+@@ -485,7 +485,6 @@ void flush_all_cam_entry(struct adapter *padapter);
+ void update_network(struct wlan_bssid_ex *dst, struct wlan_bssid_ex *src,
+ 		    struct adapter *adapter, bool update_ie);
+ 
+-int get_bsstype(unsigned short capability);
+ u16 get_beacon_interval(struct wlan_bssid_ex *bss);
+ 
+ int is_client_associated_to_ap(struct adapter *padapter);
 -- 
 2.22.0
 
