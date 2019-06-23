@@ -2,100 +2,151 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AFEC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EDCC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 01:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D07120675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:41:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qGH0WBAr"
+	by mail.kernel.org (Postfix) with ESMTP id 093E320820
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 01:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561255056;
+	bh=DbHELEFktwFIO3TcwhinuOLMWsirGAILkCkazCNQxF0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kAr+Fc8odfnbrOVO+wO3trAd5/0pdz8MT9XKijeGa0ezhVEWAze45Ln3p6c0gV+bg
+	 RyWn5r7FwCG9jO1r3c3KbrBzibI7J9SGDHWfLHGgKWGtlCU/GKNQSI0FWFDgtBbSKK
+	 DEpkGDvzGAwOpQnSE0lN1Pqs9AAL2ghxBdkFnzzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfFWAla (ORCPT
+        id S1726376AbfFWB5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 20:41:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57856 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFWAla (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 20:41:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5N0fN4F137368;
-        Sun, 23 Jun 2019 00:41:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=J+z+M4DxF8VeiH/SFm0jJi7hUA1gtP2EOoXI6xVLPGQ=;
- b=qGH0WBAr0WvtrXmJgAbrSjGmz2SbYYAoVdsDmn4NlazAoKO0qSGVZB5MzTRwo6eCmNHu
- F8fstYecG/qKVpPM1g0oaBrS1YdpbSBcoc18gwKT80jZcvTS0muKtHBlOfmbsegc9gfk
- /LR4elJD/B4hBs95z1er/5zjJnmICj8lhGXejqTWWS6TmfVoYI2pIU+2LJzIbDoG2Lme
- Kek4rSx/mH29CZZl5zQ9DcQCPDoMxSZAmGYZK6iKNvYzsvAjnXHXt/qZjZ4UV2wo1tFa
- zsyRfX85ohrquFlpUlKzTjx/I6v8F5xTsY8E28Tfo7KqSYvmRG/EyLjDY2TRKeqXW4tG HA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brssrq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 23 Jun 2019 00:41:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5N0fMKI155776;
-        Sun, 23 Jun 2019 00:41:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acb0fwb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 23 Jun 2019 00:41:22 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5N0fEuc021875;
-        Sun, 23 Jun 2019 00:41:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 22 Jun 2019 17:41:14 -0700
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
-        Eric Wheeler <git@linux.ewheeler.net>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-        linux-kernel@vger.kernel.org (open list),
-        linux-bcache@vger.kernel.org (open list:BCACHE (BLOCK LAYER CACHE))
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
-        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-Date:   Sat, 22 Jun 2019 20:41:11 -0400
-In-Reply-To: <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-        (Eric Wheeler's message of "Sat, 22 Jun 2019 16:16:09 -0700")
-Message-ID: <yq1v9wxnnfc.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9296 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=586
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906230004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9296 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=641 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906230004
+        Sat, 22 Jun 2019 21:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfFWB5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Jun 2019 21:57:24 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8275120820;
+        Sun, 23 Jun 2019 01:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561255043;
+        bh=DbHELEFktwFIO3TcwhinuOLMWsirGAILkCkazCNQxF0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ODywlkzvGzHGFBC4/svAr8OFCcBLnRE+Vl7UhoSN9FkuYrfIV5AgaKlp1G8acNi4J
+         FGnS63WbNnagpHhEsOtq4Pf/Gs7MduY51/RF0xy2IgeeIp0RxtHiE8mbs1U3J/fxDi
+         ePBJKSDYvFtzvWwdTwRWVp8B+TyxKBoaQb4kkoQ8=
+Date:   Sun, 23 Jun 2019 10:57:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH V34 22/29] Lock down tracing and perf kprobes when in
+ confidentiality mode
+Message-Id: <20190623105717.7a22195ea66f276c38ae5096@kernel.org>
+In-Reply-To: <20190622000358.19895-23-matthewgarrett@google.com>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+        <20190622000358.19895-23-matthewgarrett@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 21 Jun 2019 17:03:51 -0700
+Matthew Garrett <matthewgarrett@google.com> wrote:
 
-Eric,
+> From: David Howells <dhowells@redhat.com>
+> 
+> Disallow the creation of perf and ftrace kprobes when the kernel is
+> locked down in confidentiality mode by preventing their registration.
+> This prevents kprobes from being used to access kernel memory to steal
+> crypto data, but continues to allow the use of kprobes from signed
+> modules.
 
-> While some drivers set queue_limits.io_opt (e.g., md raid5), there are
-> currently no SCSI/RAID controller drivers that do.
+Looks (and sounds) good to me.
 
-That's not true. Lots of SCSI RAID devices report a stripe width.
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+
+> 
+> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Cc: davem@davemloft.net
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  include/linux/security.h     | 1 +
+>  kernel/trace/trace_kprobe.c  | 5 +++++
+>  security/lockdown/lockdown.c | 1 +
+>  3 files changed, 7 insertions(+)
+> 
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 3875f6df2ecc..e6e3e2403474 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -96,6 +96,7 @@ enum lockdown_reason {
+>  	LOCKDOWN_MMIOTRACE,
+>  	LOCKDOWN_INTEGRITY_MAX,
+>  	LOCKDOWN_KCORE,
+> +	LOCKDOWN_KPROBES,
+>  	LOCKDOWN_CONFIDENTIALITY_MAX,
+>  };
+>  
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 5d5129b05df7..5a76a0f79d48 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/rculist.h>
+>  #include <linux/error-injection.h>
+> +#include <linux/security.h>
+>  
+>  #include "trace_dynevent.h"
+>  #include "trace_kprobe_selftest.h"
+> @@ -415,6 +416,10 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
+>  {
+>  	int i, ret;
+>  
+> +	ret = security_locked_down(LOCKDOWN_KPROBES);
+> +	if (ret)
+> +		return ret;
+> +
+>  	if (trace_probe_is_registered(&tk->tp))
+>  		return -EINVAL;
+>  
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index 4c9b324dfc55..5a08c17f224d 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -32,6 +32,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>  	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+>  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+>  	[LOCKDOWN_KCORE] = "/proc/kcore access",
+> +	[LOCKDOWN_KPROBES] = "use of kprobes",
+>  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+>  };
+>  
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Masami Hiramatsu <mhiramat@kernel.org>
