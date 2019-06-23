@@ -2,198 +2,156 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBCDC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A568CC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D060F20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="KOKBO4yg"
+	by mail.kernel.org (Postfix) with ESMTP id 7364C20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 21:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfFWVXa (ORCPT
+        id S1726438AbfFWV2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 17:23:30 -0400
-Received: from mx-rz-1.rrze.uni-erlangen.de ([131.188.11.20]:42631 "EHLO
-        mx-rz-1.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726312AbfFWVX3 (ORCPT
+        Sun, 23 Jun 2019 17:28:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43082 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfFWV2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 17:23:29 -0400
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 17:23:28 EDT
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Sun, 23 Jun 2019 17:28:04 -0400
+Received: from [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 45X4wX4BFdz8sbC;
-        Sun, 23 Jun 2019 23:16:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
-        t=1561324572; bh=TvAWv5mAdSTHTCUznqhA0MpkCk410TmUpI3jPeG6N0s=;
-        h=From:To:Cc:Subject:Date:From:To:CC:Subject;
-        b=KOKBO4ygoenPycEQ6wCeF+RTs9vjl8HgB6oVeU/S03a3itTQr3WgXngHlJoRH604L
-         W5uUTS6/UJW3SW5aY1OH1mKYZUKEdlLB/y3s0MpyfyateFGovxQqSg4icvxntn3Ws7
-         x20jpVtRcjr5gC1Sbu8wGvRy9nWy02SqZEQLy0VipDJED5nGCgONaQXFkZKwH7RNRR
-         znbLC3NA/0yxnViuFp4YRvC4zuQSU1Ya4sZwdprV6JJS0uBLpMTagwjn4FjsmW8hsk
-         sDtLiA1nPTHypDcLK4nC3xD5h41NTESS3P3FeisEYofN8ymXojPkr1VsaEJuRSaess
-         P9sZbFjCa9A3w==
-X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2003:d5:702:6a00:f4f6:d397:1904:c079
-Received: from laptop.fritz.box (p200300D507026A00F4F6D3971904C079.dip0.t-ipconnect.de [IPv6:2003:d5:702:6a00:f4f6:d397:1904:c079])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: U2FsdGVkX18QX5maE9gIFkEd6Z1+JPmLBSYaIwGxR+s=)
-        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 45X4wV0X0rz8snq;
-        Sun, 23 Jun 2019 23:16:10 +0200 (CEST)
-From:   Fabian Schindlatz <fabian.schindlatz@fau.de>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Fabian Schindlatz <fabian.schindlatz@fau.de>,
-        =?UTF-8?q?Thomas=20R=C3=B6thenbacher?= 
-        <thomas.roethenbacher@fau.de>, linux-kernel@i4.cs.fau.de
-Subject: [PATCH] bluetooth: Cleanup formatting and coding style
-Date:   Sun, 23 Jun 2019 23:15:48 +0200
-Message-Id: <20190623211548.1966-1-fabian.schindlatz@fau.de>
-X-Mailer: git-send-email 2.20.1
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3C4B626111E;
+        Sun, 23 Jun 2019 22:27:59 +0100 (BST)
+Subject: Re: [PATCH 3/5] media: vimc: stream: format comments as kernel-doc
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
+        kernel@collabora.com, linux-kernel@vger.kernel.org
+References: <20190623164024.9836-1-andrealmeid@collabora.com>
+ <20190623164024.9836-3-andrealmeid@collabora.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <a1973442-5ccb-5ba3-e508-132514b6e83e@collabora.com>
+Date:   Sun, 23 Jun 2019 18:27:22 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190623164024.9836-3-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some warnings and one error reported by checkpatch.pl:
-- lines longer than 80 characters are wrapped
-- empty lines inserted to separate variable declarations from the actual
-  code
-- line break inserted after if (...)
 
-Co-developed-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
-Signed-off-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
-Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
-Cc: linux-kernel@i4.cs.fau.de
----
- drivers/bluetooth/bpa10x.c |  3 ++-
- drivers/bluetooth/hci_ll.c | 25 ++++++++++++++++++-------
- 2 files changed, 20 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/bluetooth/bpa10x.c b/drivers/bluetooth/bpa10x.c
-index a346ccb5450d..a0e84538cec8 100644
---- a/drivers/bluetooth/bpa10x.c
-+++ b/drivers/bluetooth/bpa10x.c
-@@ -359,7 +359,8 @@ static int bpa10x_set_diag(struct hci_dev *hdev, bool enable)
- 	return 0;
- }
- 
--static int bpa10x_probe(struct usb_interface *intf, const struct usb_device_id *id)
-+static int bpa10x_probe(struct usb_interface *intf,
-+			const struct usb_device_id *id)
- {
- 	struct bpa10x_data *data;
- 	struct hci_dev *hdev;
-diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-index 3e767f245ed5..5ee221d06d65 100644
---- a/drivers/bluetooth/hci_ll.c
-+++ b/drivers/bluetooth/hci_ll.c
-@@ -141,6 +141,7 @@ static int ll_open(struct hci_uart *hu)
- 
- 	if (hu->serdev) {
- 		struct ll_device *lldev = serdev_device_get_drvdata(hu->serdev);
-+
- 		if (!IS_ERR(lldev->ext_clk))
- 			clk_prepare_enable(lldev->ext_clk);
- 	}
-@@ -175,6 +176,7 @@ static int ll_close(struct hci_uart *hu)
- 
- 	if (hu->serdev) {
- 		struct ll_device *lldev = serdev_device_get_drvdata(hu->serdev);
-+
- 		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
- 
- 		clk_disable_unprepare(lldev->ext_clk);
-@@ -240,7 +242,8 @@ static void ll_device_want_to_wakeup(struct hci_uart *hu)
- 		break;
- 	default:
- 		/* any other state is illegal */
--		BT_ERR("received HCILL_WAKE_UP_IND in state %ld", ll->hcill_state);
-+		BT_ERR("received HCILL_WAKE_UP_IND in state %ld",
-+		       ll->hcill_state);
- 		break;
- 	}
- 
-@@ -269,7 +272,8 @@ static void ll_device_want_to_sleep(struct hci_uart *hu)
- 
- 	/* sanity check */
- 	if (ll->hcill_state != HCILL_AWAKE)
--		BT_ERR("ERR: HCILL_GO_TO_SLEEP_IND in state %ld", ll->hcill_state);
-+		BT_ERR("ERR: HCILL_GO_TO_SLEEP_IND in state %ld",
-+		       ll->hcill_state);
- 
- 	/* acknowledge device sleep */
- 	if (send_hcill_cmd(HCILL_GO_TO_SLEEP_ACK, hu) < 0) {
-@@ -302,7 +306,8 @@ static void ll_device_woke_up(struct hci_uart *hu)
- 
- 	/* sanity check */
- 	if (ll->hcill_state != HCILL_ASLEEP_TO_AWAKE)
--		BT_ERR("received HCILL_WAKE_UP_ACK in state %ld", ll->hcill_state);
-+		BT_ERR("received HCILL_WAKE_UP_ACK in state %ld",
-+		       ll->hcill_state);
- 
- 	/* send pending packets and change state to HCILL_AWAKE */
- 	__ll_do_awake(ll);
-@@ -351,7 +356,8 @@ static int ll_enqueue(struct hci_uart *hu, struct sk_buff *skb)
- 		skb_queue_tail(&ll->tx_wait_q, skb);
- 		break;
- 	default:
--		BT_ERR("illegal hcill state: %ld (losing packet)", ll->hcill_state);
-+		BT_ERR("illegal hcill state: %ld (losing packet)",
-+		       ll->hcill_state);
- 		kfree_skb(skb);
- 		break;
- 	}
-@@ -451,6 +457,7 @@ static int ll_recv(struct hci_uart *hu, const void *data, int count)
- static struct sk_buff *ll_dequeue(struct hci_uart *hu)
- {
- 	struct ll_struct *ll = hu->priv;
-+
- 	return skb_dequeue(&ll->txq);
- }
- 
-@@ -462,7 +469,8 @@ static int read_local_version(struct hci_dev *hdev)
- 	struct sk_buff *skb;
- 	struct hci_rp_read_local_version *ver;
- 
--	skb = __hci_cmd_sync(hdev, HCI_OP_READ_LOCAL_VERSION, 0, NULL, HCI_INIT_TIMEOUT);
-+	skb = __hci_cmd_sync(hdev, HCI_OP_READ_LOCAL_VERSION, 0, NULL,
-+			     HCI_INIT_TIMEOUT);
- 	if (IS_ERR(skb)) {
- 		bt_dev_err(hdev, "Reading TI version information failed (%ld)",
- 			   PTR_ERR(skb));
-@@ -482,7 +490,8 @@ static int read_local_version(struct hci_dev *hdev)
- 	version = le16_to_cpu(ver->lmp_subver);
- 
- out:
--	if (err) bt_dev_err(hdev, "Failed to read TI version info: %d", err);
-+	if (err)
-+		bt_dev_err(hdev, "Failed to read TI version info: %d", err);
- 	kfree_skb(skb);
- 	return err ? err : version;
- }
-@@ -689,7 +698,9 @@ static int hci_ti_probe(struct serdev_device *serdev)
- 	serdev_device_set_drvdata(serdev, lldev);
- 	lldev->serdev = hu->serdev = serdev;
- 
--	lldev->enable_gpio = devm_gpiod_get_optional(&serdev->dev, "enable", GPIOD_OUT_LOW);
-+	lldev->enable_gpio = devm_gpiod_get_optional(&serdev->dev,
-+						     "enable",
-+						     GPIOD_OUT_LOW);
- 	if (IS_ERR(lldev->enable_gpio))
- 		return PTR_ERR(lldev->enable_gpio);
- 
--- 
-2.20.1
-
+On 6/23/19 1:40 PM, André Almeida wrote:
+> Format the current existing comments as kernel-doc comments, to be
+> reused at kernel documention. Add opening marks (/**) and return values.
+>
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+>  drivers/media/platform/vimc/vimc-streamer.c | 38 +++++++++++++--------
+>  1 file changed, 24 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+> index 3b3f36357a0e..9970650b0f26 100644
+> --- a/drivers/media/platform/vimc/vimc-streamer.c
+> +++ b/drivers/media/platform/vimc/vimc-streamer.c
+> @@ -20,6 +20,8 @@
+>   *
+>   * Helper function that returns the media entity containing the source pad
+>   * linked with the first sink pad from the given media entity pad list.
+> + *
+> + * Return: The source pad or NULL, if it wasn't found.
+>   */
+>  static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+>  {
+> @@ -35,7 +37,7 @@ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+>  	return NULL;
+>  }
+>  
+> -/*
+> +/**
+>   * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
+>   *
+>   * @stream: the pointer to the stream structure with the pipeline to be
+> @@ -63,15 +65,18 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+>  	}
+>  }
+>  
+> -/*
+> - * vimc_streamer_pipeline_init - initializes the stream structure
+> +/**
+> + * vimc_streamer_pipeline_init - Initializes the stream structure
+>   *
+>   * @stream: the pointer to the stream structure to be initialized
+>   * @ved:    the pointer to the vimc entity initializing the stream
+>   *
+>   * Initializes the stream structure. Walks through the entity graph to
+>   * construct the pipeline used later on the streamer thread.
+> - * Calls s_stream to enable stream in all entities of the pipeline.
+> + * Calls ``vimc_streamer_s_stream`` to enable stream in all entities of
+``vimc_streamer_s_stream`` could also been written as
+:c:func:`vimc_streamer_s_stream`. In this latest setup, the
+Documentation output would display a nice hyperlink to the documentation
+of  vimc_streamer_s_stream function. Is this a good improvement or it
+will be too verbose?
+> + * the pipeline.
+> + *
+> + * Return: 0 if success, error code otherwise.
+>   */
+>  static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>  				       struct vimc_ent_device *ved)
+> @@ -122,13 +127,17 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>  	return -EINVAL;
+>  }
+>  
+> -/*
+> - * vimc_streamer_thread - process frames through the pipeline
+> +/**
+> + * vimc_streamer_thread - Process frames through the pipeline
+>   *
+>   * @data:	vimc_stream struct of the current stream
+>   *
+>   * From the source to the sink, gets a frame from each subdevice and send to
+>   * the next one of the pipeline at a fixed framerate.
+> + *
+> + * Return:
+> + * Always zero (created as ``int`` instead of ``void`` to comply with
+> + * kthread API).
+>   */
+>  static int vimc_streamer_thread(void *data)
+>  {
+> @@ -157,19 +166,20 @@ static int vimc_streamer_thread(void *data)
+>  	return 0;
+>  }
+>  
+> -/*
+> - * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
+> +/**
+> + * vimc_streamer_s_stream - Start/stop the streaming on the media pipeline
+>   *
+>   * @stream:	the pointer to the stream structure of the current stream
+>   * @ved:	pointer to the vimc entity of the entity of the stream
+>   * @enable:	flag to determine if stream should start/stop
+>   *
+> - * When starting, check if there is no stream->kthread allocated. This should
+> - * indicate that a stream is already running. Then, it initializes
+> - * the pipeline, creates and runs a kthread to consume buffers through the
+> - * pipeline.
+> - * When stopping, analogously check if there is a stream running, stop
+> - * the thread and terminates the pipeline.
+> + * When starting, check if there is no ``stream->kthread`` allocated. This
+> + * should indicate that a stream is already running. Then, it initializes the
+> + * pipeline, creates and runs a kthread to consume buffers through the pipeline.
+> + * When stopping, analogously check if there is a stream running, stop the
+> + * thread and terminates the pipeline.
+> + *
+> + * Return: 0 if success, error code otherwise.
+>   */
+>  int vimc_streamer_s_stream(struct vimc_stream *stream,
+>  			   struct vimc_ent_device *ved,
