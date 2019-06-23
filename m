@@ -2,84 +2,85 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A2C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD0DC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AC62073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qaLFmSnM"
+	by mail.kernel.org (Postfix) with ESMTP id BB5D020645
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfFWPYW (ORCPT
+        id S1726760AbfFWPwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 11:24:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50638 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfFWPYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 11:24:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=tO9c/rs97W0ia9zMhQ+rkqpEZpffIjpr7pWLTraofSE=; b=qaLFmSnMQl4sPp1o2z/HXGCzah
-        gMwwcsQXCYPlG6KtqEJ2hGiujAEeoKTqb98ksLJhFsHhnSDfRILIc+zxWu0H7DSDIuWGK71T6hTOU
-        14HFECNi1bjjVp3jlL82mzgEJBIVQFKM1uMHnP/u93T3aVmFe6tYIfHVKB48U4sWi+G8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hf4Kt-00088y-5x; Sun, 23 Jun 2019 17:23:19 +0200
-Date:   Sun, 23 Jun 2019 17:23:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
-        songliubraving@fb.com, peterz@infradead.org, nsekhar@ti.com,
-        ast@kernel.org, jolsa@redhat.com, netdev@vger.kernel.org,
-        gerg@uclinux.org, lorenzo.pieralisi@arm.com, will@kernel.org,
-        linux-samsung-soc@vger.kernel.org, daniel@iogearbox.net,
-        festevam@gmail.com, gregory.clement@bootlin.com,
-        allison@lohutok.net, linux@armlinux.org.uk, krzk@kernel.org,
-        haojian.zhuang@gmail.com, bgolaszewski@baylibre.com,
-        tony@atomide.com, mingo@redhat.com, linux-imx@nxp.com, yhs@fb.com,
-        sebastian.hesselbarth@gmail.com, illusionist.neo@gmail.com,
-        jason@lakedaemon.net, liviu.dudau@arm.com, s.hauer@pengutronix.de,
-        acme@kernel.org, lkundrak@v3.sk, robert.jarzmik@free.fr,
-        dmg@turingmachine.org, swinslow@gmail.com, namhyung@kernel.org,
-        tglx@linutronix.de, linux-omap@vger.kernel.org,
-        alexander.sverdlin@gmail.com, linux-arm-kernel@lists.infradead.org,
-        info@metux.net, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        hsweeten@visionengravers.com, kgene@kernel.org,
-        kernel@pengutronix.de, sudeep.holla@arm.com, bpf@vger.kernel.org,
-        shawnguo@kernel.org, kafai@fb.com, daniel@zonque.org
-Subject: Re: [PATCH 10/15] ARM: orion5x: cleanup cppcheck shifting errors
-Message-ID: <20190623152319.GD28942@lunn.ch>
-References: <20190623151313.970-1-tranmanphong@gmail.com>
- <20190623151313.970-11-tranmanphong@gmail.com>
+        Sun, 23 Jun 2019 11:52:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46170 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWPwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 11:52:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so5447049pls.13;
+        Sun, 23 Jun 2019 08:52:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O30R5IepqsX9VW9UMy1gWcvt3pvWZfQRhZyo7WcC+Ws=;
+        b=L/tTFSSpw07xcJb+VfO58wQcJubYvfTwZQ3kqJ4W+P4HQAIXJGK7mDohuVq9qGwC/l
+         2oL5Z0AyOIQ3JEix0PYgyyMkh/GNxhtwHgzjqTJTg3Fxynj2eWtwgaXhM3tCP6/ToA+w
+         FLai+Hj+TtG2NtY0CKlGmRR97JZxreyW7OfHCWGndwycR00LSwLG9j0EL6aTdYzN4aa6
+         xGLHgQR3z/mZF6DTQ0jvjA/HRJkHeEULxth1mMC5lQitUpP1yjW4uC+xPASW6vHxoo08
+         f/d4A66EjslRpIxnwRlN3zMFJUM2GFDjSzGMJALQOWkvjA4ZzUvudEUV8c9Q5rwVXkQn
+         Eujg==
+X-Gm-Message-State: APjAAAWOfqhhf+6bNaZWgv+AhZUOcb2o4SGpsdnUSUjyvr8jUyHrJEL/
+        pHY/aabPhxyCAyxYEutkWF4=
+X-Google-Smtp-Source: APXvYqzEheaakgyT/FA8+Ar1pHqTgDrpSpjY4hSyiy1ogM+X7fv6dTZShWXl3KwQf017ytTZjCQBvw==
+X-Received: by 2002:a17:902:9a91:: with SMTP id w17mr46166834plp.126.1561305152092;
+        Sun, 23 Jun 2019 08:52:32 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id c18sm9167081pfc.180.2019.06.23.08.52.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 08:52:31 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Simon Guo <wei.guo.simon@gmail.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/powerpc: ppc_asm.h: typo in the header guard
+Date:   Sun, 23 Jun 2019 18:52:00 +0300
+Message-Id: <20190623155200.2147-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623151313.970-11-tranmanphong@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 10:13:08PM +0700, Phong Tran wrote:
-> [arch/arm/mach-orion5x/pci.c:281]: (error) Shifting signed 32-bit value
-> by 31 bits is undefined behaviour
-> [arch/arm/mach-orion5x/pci.c:305]: (error) Shifting signed 32-bit value
-> by 31 bits is undefined behaviour
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+The guard macro __PPC_ASM_H in the header ppc_asm.h
+doesn't match the #ifndef macro _PPC_ASM_H. The patch
+makes them the same.
 
-Maybe using the BIT() macro would be better, but this is O.K.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ tools/testing/selftests/powerpc/stringloops/asm/ppc_asm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+diff --git a/tools/testing/selftests/powerpc/stringloops/asm/ppc_asm.h b/tools/testing/selftests/powerpc/stringloops/asm/ppc_asm.h
+index d2c0a911f55e..2b488b78c4f2 100644
+--- a/tools/testing/selftests/powerpc/stringloops/asm/ppc_asm.h
++++ b/tools/testing/selftests/powerpc/stringloops/asm/ppc_asm.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _PPC_ASM_H
+-#define __PPC_ASM_H
++#define _PPC_ASM_H
+ #include <ppc-asm.h>
+ 
+ #ifndef r1
+-- 
+2.21.0
 
-    Andrew
