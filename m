@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C30C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D33CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E851122CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6612722CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TUKsgWp4"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wpa6IVGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFXBlY (ORCPT
+        id S1726779AbfFXBlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:41:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51211 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfFXBk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:41:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43987 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726565AbfFXBk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 21:40:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNu8Q22860229
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNiXUx2858277
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 16:56:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNu8Q22860229
+        Sun, 23 Jun 2019 16:44:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNiXUx2858277
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561334169;
-        bh=C0loTj/gJM3E6LeqWTO4cZ658sIJrg5v1gEhQqEsWQI=;
+        s=2019061801; t=1561333474;
+        bh=+Pnp97QirDw23SXvjDjC+j20gnJWLcG2oWbLeC/mHhQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TUKsgWp49LtQCbE/1dui0MQq+iOocWjyJTWVBsXgJisRwxGn7zE9Nnn6qFOAXyi5k
-         rbiNh+dSnwDWgspvBOv7i6uYZztGKnOzUyi1ys5DKEvLvb+68otF7kgbij+HVl6zHP
-         CuOWya10OTw6kApxD7dwPk0WX5vtNt3oTgMZ+iBkHfIRCgHHpNwjl9PDSMfQZE2z7K
-         wiPAwVfONIfCffYw1coA2sE2cajlXlOFEV4K9AK2D9ik6w1ylNlO9epzyzHyVqXrFb
-         w0znDjufvVsdrt6tq/JHIY+E/KCW2e5t4wh5urstmmD9vlrqb3pi10qG+CbrUpgg7o
-         alUonE3XYdcRA==
+        b=Wpa6IVGrSfOIwfOzANMbaE1ZzND3X6VdpkVhUfbCgoMpbjQcmFOwIgP6fDNKD8d/7
+         jIrVOIT8PEn1tIvZgHVy/I3QgvWSrVhS/oaAGEmY6/D4AaheXnIEIxoO9SAblguKNY
+         3ieJaKDkYTS3TMZAwVzAUx/smPQGvh4iOKFwLlti3c6tiq4iD1oqYZA/rj6NxoHo7G
+         yHPCYNi+j+Onr8H7/kfDB/b43HpGorCXq+QN06xVxGfbW4uAGBFHn+gzPjpkQ1zcvd
+         CyB+JiZaBZ2CedhEMdqHLgKPbw+JnT4dVYgcgNoKe3ti/cMSuRPH35k94ZY6StWap3
+         cu0B+2vkqSPig==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNu7BY2860226;
-        Sun, 23 Jun 2019 16:56:07 -0700
-Date:   Sun, 23 Jun 2019 16:56:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNiWpp2858274;
+        Sun, 23 Jun 2019 16:44:32 -0700
+Date:   Sun, 23 Jun 2019 16:44:32 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Vincenzo Frascino <tipbot@zytor.com>
-Message-ID: <tip-f66501dc53e72079045a6a17e023b41316ede220@git.kernel.org>
-Cc:     pcc@google.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        0x7f454c46@gmail.com, salyzyn@android.com, andre.przywara@arm.com,
-        vincenzo.frascino@arm.com, shuah@kernel.org, linux@armlinux.org.uk,
-        linux@rasmusvillemoes.dk, paul.burton@mips.com, tglx@linutronix.de,
-        catalin.marinas@arm.com, ralf@linux-mips.org, hpa@zytor.com,
-        daniel.lezcano@linaro.org, sthotton@marvell.com, arnd@arndb.de,
-        will.deacon@arm.com, huw@codeweavers.com
-Reply-To: hpa@zytor.com, catalin.marinas@arm.com, ralf@linux-mips.org,
-          arnd@arndb.de, sthotton@marvell.com, daniel.lezcano@linaro.org,
-          will.deacon@arm.com, huw@codeweavers.com, paul.burton@mips.com,
-          tglx@linutronix.de, salyzyn@android.com, andre.przywara@arm.com,
-          shuah@kernel.org, vincenzo.frascino@arm.com,
-          linux@armlinux.org.uk, linux@rasmusvillemoes.dk,
-          mingo@kernel.org, pcc@google.com, linux-kernel@vger.kernel.org,
-          0x7f454c46@gmail.com
-In-Reply-To: <20190621095252.32307-24-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-24-vincenzo.frascino@arm.com>
+Message-ID: <tip-361f8aee9b093526297d567a9dc2f6cbf746e5f9@git.kernel.org>
+Cc:     linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org, arnd@arndb.de,
+        mingo@kernel.org, tglx@linutronix.de, sthotton@marvell.com,
+        andre.przywara@arm.com, ralf@linux-mips.org, will.deacon@arm.com,
+        shuah@kernel.org, linux@armlinux.org.uk, vincenzo.frascino@arm.com,
+        huw@codeweavers.com, salyzyn@android.com, hpa@zytor.com,
+        paul.burton@mips.com, pcc@google.com, 0x7f454c46@gmail.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org
+Reply-To: will.deacon@arm.com, ralf@linux-mips.org, andre.przywara@arm.com,
+          sthotton@marvell.com, tglx@linutronix.de, mingo@kernel.org,
+          arnd@arndb.de, daniel.lezcano@linaro.org,
+          linux@rasmusvillemoes.dk, catalin.marinas@arm.com,
+          linux-kernel@vger.kernel.org, 0x7f454c46@gmail.com,
+          pcc@google.com, paul.burton@mips.com, vincenzo.frascino@arm.com,
+          hpa@zytor.com, salyzyn@android.com, huw@codeweavers.com,
+          shuah@kernel.org, linux@armlinux.org.uk
+In-Reply-To: <20190621095252.32307-2-vincenzo.frascino@arm.com>
+References: <20190621095252.32307-2-vincenzo.frascino@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] x86/vdso: Add clock_getres() entry point
-Git-Commit-ID: f66501dc53e72079045a6a17e023b41316ede220
+Subject: [tip:timers/vdso] vdso: Define standardized vdso_datapage
+Git-Commit-ID: 361f8aee9b093526297d567a9dc2f6cbf746e5f9
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -78,24 +77,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f66501dc53e72079045a6a17e023b41316ede220
-Gitweb:     https://git.kernel.org/tip/f66501dc53e72079045a6a17e023b41316ede220
+Commit-ID:  361f8aee9b093526297d567a9dc2f6cbf746e5f9
+Gitweb:     https://git.kernel.org/tip/361f8aee9b093526297d567a9dc2f6cbf746e5f9
 Author:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate: Fri, 21 Jun 2019 10:52:50 +0100
+AuthorDate: Fri, 21 Jun 2019 10:52:28 +0100
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 21:21:10 +0200
+CommitDate: Sat, 22 Jun 2019 21:21:05 +0200
 
-x86/vdso: Add clock_getres() entry point
+vdso: Define standardized vdso_datapage
 
-The generic vDSO library provides an implementation of clock_getres()
-that can be leveraged by each architecture.
+Define a common formet for the vdso datapage as a preparation for sharing
+the VDSO implementation as a generic library.
 
-Add the clock_getres() VDSO entry point on x86.
+The datastructures are based on the current x86 layout.
 
-[ tglx: Massaged changelog and cleaned up the function signature formatting ]
+[ tglx: Massaged changelog ]
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Shijith Thotton <sthotton@marvell.com>
+Tested-by: Andre Przywara <andre.przywara@arm.com>
 Cc: linux-arch@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-mips@vger.kernel.org
@@ -113,138 +114,108 @@ Cc: Shuah Khan <shuah@kernel.org>
 Cc: Dmitry Safonov <0x7f454c46@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Huw Davies <huw@codeweavers.com>
-Cc: Shijith Thotton <sthotton@marvell.com>
-Cc: Andre Przywara <andre.przywara@arm.com>
-Link: https://lkml.kernel.org/r/20190621095252.32307-24-vincenzo.frascino@arm.com
+Link: https://lkml.kernel.org/r/20190621095252.32307-2-vincenzo.frascino@arm.com
 
 ---
- arch/x86/entry/vdso/vclock_gettime.c     | 17 +++++++++++++++++
- arch/x86/entry/vdso/vdso.lds.S           |  2 ++
- arch/x86/entry/vdso/vdso32/vdso32.lds.S  |  1 +
- arch/x86/include/asm/vdso/gettimeofday.h | 31 +++++++++++++++++++++++++++++++
- 4 files changed, 51 insertions(+)
+ include/vdso/datapage.h | 93 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
-index f01a3f0787ca..1a648b509d46 100644
---- a/arch/x86/entry/vdso/vclock_gettime.c
-+++ b/arch/x86/entry/vdso/vclock_gettime.c
-@@ -36,6 +36,7 @@ time_t time(time_t *t)	__attribute__((weak, alias("__vdso_time")));
- #if defined(CONFIG_X86_64) && !defined(BUILD_VDSO32_64)
- /* both 64-bit and x32 use these */
- extern int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts);
-+extern int __vdso_clock_getres(clockid_t clock, struct __kernel_timespec *res);
- 
- int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- {
-@@ -45,9 +46,18 @@ int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- int clock_gettime(clockid_t, struct __kernel_timespec *)
- 	__attribute__((weak, alias("__vdso_clock_gettime")));
- 
-+int __vdso_clock_getres(clockid_t clock,
-+			struct __kernel_timespec *res)
-+{
-+	return __cvdso_clock_getres(clock, res);
-+}
-+int clock_getres(clockid_t, struct __kernel_timespec *)
-+	__attribute__((weak, alias("__vdso_clock_getres")));
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+new file mode 100644
+index 000000000000..e6eb36c3d54f
+--- /dev/null
++++ b/include/vdso/datapage.h
+@@ -0,0 +1,93 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_DATAPAGE_H
++#define __VDSO_DATAPAGE_H
 +
- #else
- /* i386 only */
- extern int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts);
-+extern int __vdso_clock_getres(clockid_t clock, struct old_timespec32 *res);
- 
- int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
- {
-@@ -57,4 +67,11 @@ int __vdso_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
- int clock_gettime(clockid_t, struct old_timespec32 *)
- 	__attribute__((weak, alias("__vdso_clock_gettime")));
- 
-+int __vdso_clock_getres(clockid_t clock, struct old_timespec32 *res)
-+{
-+	return __cvdso_clock_getres_time32(clock, res);
-+}
++#ifdef __KERNEL__
 +
-+int clock_getres(clockid_t, struct old_timespec32 *)
-+	__attribute__((weak, alias("__vdso_clock_getres")));
- #endif
-diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-index d3a2dce4cfa9..36b644e16272 100644
---- a/arch/x86/entry/vdso/vdso.lds.S
-+++ b/arch/x86/entry/vdso/vdso.lds.S
-@@ -25,6 +25,8 @@ VERSION {
- 		__vdso_getcpu;
- 		time;
- 		__vdso_time;
-+		clock_getres;
-+		__vdso_clock_getres;
- 	local: *;
- 	};
- }
-diff --git a/arch/x86/entry/vdso/vdso32/vdso32.lds.S b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
-index 422764a81d32..991b26cc855b 100644
---- a/arch/x86/entry/vdso/vdso32/vdso32.lds.S
-+++ b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
-@@ -26,6 +26,7 @@ VERSION
- 		__vdso_clock_gettime;
- 		__vdso_gettimeofday;
- 		__vdso_time;
-+		__vdso_clock_getres;
- 	};
- 
- 	LINUX_2.5 {
-diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
-index 0e2650fc191b..f92752d6cbcf 100644
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -24,6 +24,8 @@
- 
- #define VDSO_HAS_TIME 1
- 
-+#define VDSO_HAS_CLOCK_GETRES 1
++#ifndef __ASSEMBLY__
 +
- #ifdef CONFIG_PARAVIRT_CLOCK
- extern u8 pvclock_page[PAGE_SIZE]
- 	__attribute__((visibility("hidden")));
-@@ -60,6 +62,18 @@ long gettimeofday_fallback(struct __kernel_old_timeval *_tv,
- 	return ret;
- }
- 
-+static __always_inline
-+long clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	long ret;
++#include <linux/bits.h>
++#include <linux/time.h>
++#include <linux/types.h>
 +
-+	asm ("syscall" : "=a" (ret), "=m" (*_ts) :
-+	     "0" (__NR_clock_getres), "D" (_clkid), "S" (_ts) :
-+	     "rcx", "r11");
++#define VDSO_BASES	(CLOCK_TAI + 1)
++#define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
++			 BIT(CLOCK_MONOTONIC)		| \
++			 BIT(CLOCK_BOOTTIME)		| \
++			 BIT(CLOCK_TAI))
++#define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
++			 BIT(CLOCK_MONOTONIC_COARSE))
++#define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
 +
-+	return ret;
-+}
++#define CS_HRES_COARSE	0
++#define CS_RAW		1
++#define CS_BASES	(CS_RAW + 1)
 +
- #else
- 
- static __always_inline
-@@ -97,6 +111,23 @@ long gettimeofday_fallback(struct __kernel_old_timeval *_tv,
- 	return ret;
- }
- 
-+static __always_inline long
-+clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	long ret;
++/**
++ * struct vdso_timestamp - basetime per clock_id
++ * @sec:	seconds
++ * @nsec:	nanoseconds
++ *
++ * There is one vdso_timestamp object in vvar for each vDSO-accelerated
++ * clock_id. For high-resolution clocks, this encodes the time
++ * corresponding to vdso_data.cycle_last. For coarse clocks this encodes
++ * the actual time.
++ *
++ * To be noticed that for highres clocks nsec is left-shifted by
++ * vdso_data.cs[x].shift.
++ */
++struct vdso_timestamp {
++	u64	sec;
++	u64	nsec;
++};
 +
-+	asm (
-+		"mov %%ebx, %%edx \n"
-+		"mov %[clock], %%ebx \n"
-+		"call __kernel_vsyscall \n"
-+		"mov %%edx, %%ebx \n"
-+		: "=a" (ret), "=m" (*_ts)
-+		: "0" (__NR_clock_getres_time64), [clock] "g" (_clkid), "c" (_ts)
-+		: "edx");
++/**
++ * struct vdso_data - vdso datapage representation
++ * @seq:		timebase sequence counter
++ * @clock_mode:		clock mode
++ * @cycle_last:		timebase at clocksource init
++ * @mask:		clocksource mask
++ * @mult:		clocksource multiplier
++ * @shift:		clocksource shift
++ * @basetime[clock_id]:	basetime per clock_id
++ * @tz_minuteswest:	minutes west of Greenwich
++ * @tz_dsttime:		type of DST correction
++ * @hrtimer_res:	hrtimer resolution
++ * @__unused:		unused
++ *
++ * vdso_data will be accessed by 64 bit and compat code at the same time
++ * so we should be careful before modifying this structure.
++ */
++struct vdso_data {
++	u32			seq;
 +
-+	return ret;
-+}
++	s32			clock_mode;
++	u64			cycle_last;
++	u64			mask;
++	u32			mult;
++	u32			shift;
 +
- #endif
- 
- #ifdef CONFIG_PARAVIRT_CLOCK
++	struct vdso_timestamp	basetime[VDSO_BASES];
++
++	s32			tz_minuteswest;
++	s32			tz_dsttime;
++	u32			hrtimer_res;
++	u32			__unused;
++};
++
++/*
++ * We use the hidden visibility to prevent the compiler from generating a GOT
++ * relocation. Not only is going through a GOT useless (the entry couldn't and
++ * must not be overridden by another library), it does not even work: the linker
++ * cannot generate an absolute address to the data page.
++ *
++ * With the hidden visibility, the compiler simply generates a PC-relative
++ * relocation, and this is what we need.
++ */
++extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")));
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __KERNEL__ */
++
++#endif /* __VDSO_DATAPAGE_H */
