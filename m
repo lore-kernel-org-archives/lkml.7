@@ -2,72 +2,69 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64360C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E698BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2684522CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B272122CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uUXoGr+2"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="s3500vnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfFXBlW (ORCPT
+        id S1726734AbfFXBlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 23 Jun 2019 21:41:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51211 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfFXBk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from terminus.zytor.com ([198.137.202.136]:43987 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbfFXBk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Jun 2019 21:40:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNkiQv2858667
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNqTjR2859643
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 16:46:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNkiQv2858667
+        Sun, 23 Jun 2019 16:52:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNqTjR2859643
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561333605;
-        bh=tWNsDYKjm7OuwZ4ihPphc6KWeBre5kho7BOWhzqYIRQ=;
+        s=2019061801; t=1561333950;
+        bh=BxzixoOusyzFB5MfBVCb4Q2TYJ4MTWYTpifuKqW+23I=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uUXoGr+2hcd0B37pUaYejKhgDr3Hp8nuccYtRTYLD1ySBetFUSA88Ef8SuM30s+Q0
-         PGO6N8iPfvzfzRELGlrEXNvY49Hz5BfKyUkDqoII9d4NECqthS+7XjEBjjJgxhzWzy
-         bFJdmU9b/a4jKgeka7fK5L5xLf0ZHZzvc/J+15ivyZ6uPmIeYxeQ5EfLeeLfwqffwt
-         mbwgojarXFOVJJuEGj1y8KqFDhpiRy7v79nY+0/yd2EOsOlFNuirWfKGuiqjc3oPta
-         Mihy8ftfb2pJnEzA5cJ71dnT1JfrszsAAMrb6du2Rp8gl1GAZNfsk0Q7M3/OtdCcBv
-         s1O1UXRgxWhFg==
+        b=s3500vnSS78S8RykXAedTjZiUsJtE+QgTMOwrKzdKx6EMiR4w1aB7uI2P4QeyYMI5
+         yNvoe2719AK056h4r29LKIBF/tlrpSWzSBtejySQjbOrLEfI8X5DMYEVor4kuekV+l
+         bp0YsoPEr3i24rYI1+cjC/5DdT6cVN5hU8yVXm9PQ7qQhny0GrS95Vn0654aVpOM8q
+         6QkJ3Q3aLBkdmy8najVat0GQuF9jBUFYpzITIM7PtL5CSz2mRCr/dZeWx+XTpsFySx
+         B8MGbovCKVlqCw5lJQLCdKnj6c+AQWe6PfsNWKYIMpCWShtOs0SEg5pZFJ6LlqoHKD
+         q4Tff/mHERj8Q==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNkhUU2858664;
-        Sun, 23 Jun 2019 16:46:43 -0700
-Date:   Sun, 23 Jun 2019 16:46:43 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNqSB42859640;
+        Sun, 23 Jun 2019 16:52:28 -0700
+Date:   Sun, 23 Jun 2019 16:52:28 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Vincenzo Frascino <tipbot@zytor.com>
-Message-ID: <tip-44f57d788e7deecb504843534081d3449c2eede9@git.kernel.org>
-Cc:     arnd@arndb.de, linux@rasmusvillemoes.dk, ralf@linux-mips.org,
-        pcc@google.com, huw@codeweavers.com, will.deacon@arm.com,
-        shuah@kernel.org, hpa@zytor.com, paul.burton@mips.com,
-        sthotton@marvell.com, salyzyn@android.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        0x7f454c46@gmail.com, linux@armlinux.org.uk, mingo@kernel.org,
-        catalin.marinas@arm.com, vincenzo.frascino@arm.com,
-        andre.przywara@arm.com
-Reply-To: 0x7f454c46@gmail.com, linux-kernel@vger.kernel.org,
-          daniel.lezcano@linaro.org, mingo@kernel.org,
-          linux@armlinux.org.uk, catalin.marinas@arm.com,
-          vincenzo.frascino@arm.com, andre.przywara@arm.com,
-          linux@rasmusvillemoes.dk, arnd@arndb.de, pcc@google.com,
-          ralf@linux-mips.org, huw@codeweavers.com, paul.burton@mips.com,
-          will.deacon@arm.com, shuah@kernel.org, hpa@zytor.com,
-          sthotton@marvell.com, salyzyn@android.com, tglx@linutronix.de
-In-Reply-To: <20190621095252.32307-4-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-4-vincenzo.frascino@arm.com>
+Message-ID: <tip-7c1deeeb01308426a27a70d5a506aa5fae66dc62@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        ralf@linux-mips.org, hpa@zytor.com, pcc@google.com,
+        shuah@kernel.org, linux@armlinux.org.uk, will.deacon@arm.com,
+        tglx@linutronix.de, salyzyn@android.com, sthotton@marvell.com,
+        daniel.lezcano@linaro.org, 0x7f454c46@gmail.com,
+        andre.przywara@arm.com, linux@rasmusvillemoes.dk,
+        huw@codeweavers.com, arnd@arndb.de, catalin.marinas@arm.com,
+        paul.burton@mips.com, vincenzo.frascino@arm.com
+Reply-To: linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+          mingo@kernel.org, hpa@zytor.com, pcc@google.com,
+          linux@armlinux.org.uk, shuah@kernel.org, will.deacon@arm.com,
+          tglx@linutronix.de, salyzyn@android.com, sthotton@marvell.com,
+          daniel.lezcano@linaro.org, 0x7f454c46@gmail.com,
+          andre.przywara@arm.com, linux@rasmusvillemoes.dk,
+          huw@codeweavers.com, arnd@arndb.de, catalin.marinas@arm.com,
+          paul.burton@mips.com, vincenzo.frascino@arm.com
+In-Reply-To: <20190621095252.32307-13-vincenzo.frascino@arm.com>
+References: <20190621095252.32307-13-vincenzo.frascino@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] timekeeping: Provide a generic update_vsyscall()
- implementation
-Git-Commit-ID: 44f57d788e7deecb504843534081d3449c2eede9
+Subject: [tip:timers/vdso] arm64: compat: VDSO setup for compat layer
+Git-Commit-ID: 7c1deeeb01308426a27a70d5a506aa5fae66dc62
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -81,23 +78,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  44f57d788e7deecb504843534081d3449c2eede9
-Gitweb:     https://git.kernel.org/tip/44f57d788e7deecb504843534081d3449c2eede9
+Commit-ID:  7c1deeeb01308426a27a70d5a506aa5fae66dc62
+Gitweb:     https://git.kernel.org/tip/7c1deeeb01308426a27a70d5a506aa5fae66dc62
 Author:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate: Fri, 21 Jun 2019 10:52:30 +0100
+AuthorDate: Fri, 21 Jun 2019 10:52:39 +0100
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 21:21:06 +0200
+CommitDate: Sat, 22 Jun 2019 21:21:08 +0200
 
-timekeeping: Provide a generic update_vsyscall() implementation
+arm64: compat: VDSO setup for compat layer
 
-The new generic VDSO library allows to unify the update_vsyscall[_tz]()
-implementations.
+If CONFIG_GENERIC_COMPAT_VDSO is enabled, compat vDSO is installed in a
+compat (32 bit) process instead of sigpage.
 
-Provide a generic implementation based on the x86 code and the bindings
-which need to be implemented in architecture specific code.
-
-[ tglx: Moved it into kernel/time where it belongs. Removed the pointless
-  	line breaks in the stub functions. Massaged changelog ]
+Add the necessary code to setup the vDSO required pages.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -120,235 +113,183 @@ Cc: Shuah Khan <shuah@kernel.org>
 Cc: Dmitry Safonov <0x7f454c46@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Huw Davies <huw@codeweavers.com>
-Link: https://lkml.kernel.org/r/20190621095252.32307-4-vincenzo.frascino@arm.com
+Link: https://lkml.kernel.org/r/20190621095252.32307-13-vincenzo.frascino@arm.com
 
 ---
- include/asm-generic/vdso/vsyscall.h |  50 ++++++++++++++
- include/vdso/vsyscall.h             |  11 +++
- kernel/time/Makefile                |   1 +
- kernel/time/vsyscall.c              | 133 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 195 insertions(+)
+ arch/arm64/kernel/vdso.c | 90 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 88 insertions(+), 2 deletions(-)
 
-diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
-new file mode 100644
-index 000000000000..e94b19782c92
---- /dev/null
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -0,0 +1,50 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_GENERIC_VSYSCALL_H
-+#define __ASM_GENERIC_VSYSCALL_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#ifndef __arch_get_k_vdso_data
-+static __always_inline struct vdso_data *__arch_get_k_vdso_data(void)
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index be23efc3f60d..354b11e27c07 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -29,12 +29,22 @@
+ #include <asm/vdso.h>
+ 
+ extern char vdso_start[], vdso_end[];
++#ifdef CONFIG_COMPAT_VDSO
++extern char vdso32_start[], vdso32_end[];
++#endif /* CONFIG_COMPAT_VDSO */
+ 
+ /* vdso_lookup arch_index */
+ enum arch_vdso_type {
+ 	ARM64_VDSO = 0,
++#ifdef CONFIG_COMPAT_VDSO
++	ARM64_VDSO32 = 1,
++#endif /* CONFIG_COMPAT_VDSO */
+ };
++#ifdef CONFIG_COMPAT_VDSO
++#define VDSO_TYPES		(ARM64_VDSO32 + 1)
++#else
+ #define VDSO_TYPES		(ARM64_VDSO + 1)
++#endif /* CONFIG_COMPAT_VDSO */
+ 
+ struct __vdso_abi {
+ 	const char *name;
+@@ -53,6 +63,13 @@ static struct __vdso_abi vdso_lookup[VDSO_TYPES] __ro_after_init = {
+ 		.vdso_code_start = vdso_start,
+ 		.vdso_code_end = vdso_end,
+ 	},
++#ifdef CONFIG_COMPAT_VDSO
++	{
++		.name = "vdso32",
++		.vdso_code_start = vdso32_start,
++		.vdso_code_end = vdso32_end,
++	},
++#endif /* CONFIG_COMPAT_VDSO */
+ };
+ 
+ /*
+@@ -163,24 +180,52 @@ up_fail:
+ /*
+  * Create and map the vectors page for AArch32 tasks.
+  */
++#ifdef CONFIG_COMPAT_VDSO
++static int aarch32_vdso_mremap(const struct vm_special_mapping *sm,
++		struct vm_area_struct *new_vma)
 +{
-+	return NULL;
++	return __vdso_remap(ARM64_VDSO32, sm, new_vma);
 +}
-+#endif /* __arch_get_k_vdso_data */
++#endif /* CONFIG_COMPAT_VDSO */
 +
-+#ifndef __arch_update_vdso_data
-+static __always_inline int __arch_update_vdso_data(void)
+ /*
+  * aarch32_vdso_pages:
+  * 0 - kuser helpers
+  * 1 - sigreturn code
++ * or (CONFIG_COMPAT_VDSO):
++ * 0 - kuser helpers
++ * 1 - vdso data
++ * 2 - vdso code
+  */
+ #define C_VECTORS	0
++#ifdef CONFIG_COMPAT_VDSO
++#define C_VVAR		1
++#define C_VDSO		2
++#define C_PAGES		(C_VDSO + 1)
++#else
+ #define C_SIGPAGE	1
+ #define C_PAGES		(C_SIGPAGE + 1)
++#endif /* CONFIG_COMPAT_VDSO */
+ static struct page *aarch32_vdso_pages[C_PAGES] __ro_after_init;
+-static const struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
++static struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
+ 	{
+ 		.name	= "[vectors]", /* ABI */
+ 		.pages	= &aarch32_vdso_pages[C_VECTORS],
+ 	},
++#ifdef CONFIG_COMPAT_VDSO
++	{
++		.name = "[vvar]",
++	},
++	{
++		.name = "[vdso]",
++		.mremap = aarch32_vdso_mremap,
++	},
++#else
+ 	{
+ 		.name	= "[sigpage]", /* ABI */
+ 		.pages	= &aarch32_vdso_pages[C_SIGPAGE],
+ 	},
++#endif /* CONFIG_COMPAT_VDSO */
+ };
+ 
+ static int aarch32_alloc_kuser_vdso_page(void)
+@@ -203,7 +248,33 @@ static int aarch32_alloc_kuser_vdso_page(void)
+ 	return 0;
+ }
+ 
+-static int __init aarch32_alloc_vdso_pages(void)
++#ifdef CONFIG_COMPAT_VDSO
++static int __aarch32_alloc_vdso_pages(void)
 +{
-+	return 0;
-+}
-+#endif /* __arch_update_vdso_data */
++	int ret;
 +
-+#ifndef __arch_get_clock_mode
-+static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
-+{
-+	return 0;
-+}
-+#endif /* __arch_get_clock_mode */
++	vdso_lookup[ARM64_VDSO32].dm = &aarch32_vdso_spec[C_VVAR];
++	vdso_lookup[ARM64_VDSO32].cm = &aarch32_vdso_spec[C_VDSO];
 +
-+#ifndef __arch_use_vsyscall
-+static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
-+{
-+	return 1;
-+}
-+#endif /* __arch_use_vsyscall */
++	ret = __vdso_init(ARM64_VDSO32);
++	if (ret)
++		return ret;
 +
-+#ifndef __arch_update_vsyscall
-+static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
-+						   struct timekeeper *tk)
-+{
-+}
-+#endif /* __arch_update_vsyscall */
++	ret = aarch32_alloc_kuser_vdso_page();
++	if (ret) {
++		unsigned long c_vvar =
++			(unsigned long)page_to_virt(aarch32_vdso_pages[C_VVAR]);
++		unsigned long c_vdso =
++			(unsigned long)page_to_virt(aarch32_vdso_pages[C_VDSO]);
 +
-+#ifndef __arch_sync_vdso_data
-+static __always_inline void __arch_sync_vdso_data(struct vdso_data *vdata)
-+{
-+}
-+#endif /* __arch_sync_vdso_data */
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __ASM_GENERIC_VSYSCALL_H */
-diff --git a/include/vdso/vsyscall.h b/include/vdso/vsyscall.h
-new file mode 100644
-index 000000000000..2c6134e0c23d
---- /dev/null
-+++ b/include/vdso/vsyscall.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __VDSO_VSYSCALL_H
-+#define __VDSO_VSYSCALL_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <asm/vdso/vsyscall.h>
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __VDSO_VSYSCALL_H */
-diff --git a/kernel/time/Makefile b/kernel/time/Makefile
-index f1e46f338a9c..1867044800bb 100644
---- a/kernel/time/Makefile
-+++ b/kernel/time/Makefile
-@@ -16,5 +16,6 @@ ifeq ($(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST),y)
- endif
- obj-$(CONFIG_GENERIC_SCHED_CLOCK)		+= sched_clock.o
- obj-$(CONFIG_TICK_ONESHOT)			+= tick-oneshot.o tick-sched.o
-+obj-$(CONFIG_HAVE_GENERIC_VDSO)			+= vsyscall.o
- obj-$(CONFIG_DEBUG_FS)				+= timekeeping_debug.o
- obj-$(CONFIG_TEST_UDELAY)			+= test_udelay.o
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-new file mode 100644
-index 000000000000..a80893180826
---- /dev/null
-+++ b/kernel/time/vsyscall.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 ARM Ltd.
-+ *
-+ * Generic implementation of update_vsyscall and update_vsyscall_tz.
-+ *
-+ * Based on the x86 specific implementation.
-+ */
-+
-+#include <linux/hrtimer.h>
-+#include <linux/timekeeper_internal.h>
-+#include <vdso/datapage.h>
-+#include <vdso/helpers.h>
-+#include <vdso/vsyscall.h>
-+
-+static inline void update_vdso_data(struct vdso_data *vdata,
-+				    struct timekeeper *tk)
-+{
-+	struct vdso_timestamp *vdso_ts;
-+	u64 nsec;
-+
-+	vdata[CS_HRES_COARSE].cycle_last	= tk->tkr_mono.cycle_last;
-+	vdata[CS_HRES_COARSE].mask		= tk->tkr_mono.mask;
-+	vdata[CS_HRES_COARSE].mult		= tk->tkr_mono.mult;
-+	vdata[CS_HRES_COARSE].shift		= tk->tkr_mono.shift;
-+	vdata[CS_RAW].cycle_last		= tk->tkr_raw.cycle_last;
-+	vdata[CS_RAW].mask			= tk->tkr_raw.mask;
-+	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
-+	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
-+
-+	/* CLOCK_REALTIME */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
-+	vdso_ts->sec	= tk->xtime_sec;
-+	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
-+
-+	/* CLOCK_MONOTONIC */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
-+	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-+
-+	nsec = tk->tkr_mono.xtime_nsec;
-+	nsec += ((u64)tk->wall_to_monotonic.tv_nsec << tk->tkr_mono.shift);
-+	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-+		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-+		vdso_ts->sec++;
-+	}
-+	vdso_ts->nsec	= nsec;
-+
-+	/* CLOCK_MONOTONIC_RAW */
-+	vdso_ts		= &vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
-+	vdso_ts->sec	= tk->raw_sec;
-+	vdso_ts->nsec	= tk->tkr_raw.xtime_nsec;
-+
-+	/* CLOCK_BOOTTIME */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
-+	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-+	nsec = tk->tkr_mono.xtime_nsec;
-+	nsec += ((u64)(tk->wall_to_monotonic.tv_nsec +
-+		       ktime_to_ns(tk->offs_boot)) << tk->tkr_mono.shift);
-+	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-+		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-+		vdso_ts->sec++;
-+	}
-+	vdso_ts->nsec	= nsec;
-+
-+	/* CLOCK_TAI */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
-+	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
-+	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
-+
-+	/*
-+	 * Read without the seqlock held by clock_getres().
-+	 * Note: No need to have a second copy.
-+	 */
-+	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
-+}
-+
-+void update_vsyscall(struct timekeeper *tk)
-+{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+	struct vdso_timestamp *vdso_ts;
-+	u64 nsec;
-+
-+	if (__arch_update_vdso_data()) {
-+		/*
-+		 * Some architectures might want to skip the update of the
-+		 * data page.
-+		 */
-+		return;
++		free_page(c_vvar);
++		free_page(c_vdso);
 +	}
 +
-+	/* copy vsyscall data */
-+	vdso_write_begin(vdata);
-+
-+	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
-+	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
-+
-+	/* CLOCK_REALTIME_COARSE */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
-+	vdso_ts->sec	= tk->xtime_sec;
-+	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-+
-+	/* CLOCK_MONOTONIC_COARSE */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
-+	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-+	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-+	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
-+	while (nsec >= NSEC_PER_SEC) {
-+		nsec = nsec - NSEC_PER_SEC;
-+		vdso_ts->sec++;
-+	}
-+	vdso_ts->nsec	= nsec;
-+
-+	if (__arch_use_vsyscall(vdata))
-+		update_vdso_data(vdata, tk);
-+
-+	__arch_update_vsyscall(vdata, tk);
-+
-+	vdso_write_end(vdata);
-+
-+	__arch_sync_vdso_data(vdata);
++	return ret;
 +}
++#else
++static int __aarch32_alloc_vdso_pages(void)
+ {
+ 	extern char __aarch32_sigret_code_start[], __aarch32_sigret_code_end[];
+ 	int sigret_sz = __aarch32_sigret_code_end - __aarch32_sigret_code_start;
+@@ -224,6 +295,12 @@ static int __init aarch32_alloc_vdso_pages(void)
+ 
+ 	return ret;
+ }
++#endif /* CONFIG_COMPAT_VDSO */
 +
-+void update_vsyscall_tz(void)
++static int __init aarch32_alloc_vdso_pages(void)
 +{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	if (__arch_use_vsyscall(vdata)) {
-+		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
-+		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
-+	}
-+
-+	__arch_sync_vdso_data(vdata);
++	return __aarch32_alloc_vdso_pages();
 +}
+ arch_initcall(aarch32_alloc_vdso_pages);
+ 
+ static int aarch32_kuser_helpers_setup(struct mm_struct *mm)
+@@ -245,6 +322,7 @@ static int aarch32_kuser_helpers_setup(struct mm_struct *mm)
+ 	return PTR_ERR_OR_ZERO(ret);
+ }
+ 
++#ifndef CONFIG_COMPAT_VDSO
+ static int aarch32_sigreturn_setup(struct mm_struct *mm)
+ {
+ 	unsigned long addr;
+@@ -272,6 +350,7 @@ static int aarch32_sigreturn_setup(struct mm_struct *mm)
+ out:
+ 	return PTR_ERR_OR_ZERO(ret);
+ }
++#endif /* !CONFIG_COMPAT_VDSO */
+ 
+ int aarch32_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ {
+@@ -285,7 +364,14 @@ int aarch32_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	if (ret)
+ 		goto out;
+ 
++#ifdef CONFIG_COMPAT_VDSO
++	ret = __setup_additional_pages(ARM64_VDSO32,
++				       mm,
++				       bprm,
++				       uses_interp);
++#else
+ 	ret = aarch32_sigreturn_setup(mm);
++#endif /* CONFIG_COMPAT_VDSO */
+ 
+ out:
+ 	up_write(&mm->mmap_sem);
