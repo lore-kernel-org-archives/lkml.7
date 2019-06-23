@@ -2,172 +2,98 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADDEC48BE4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ACBC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E052073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71926205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 19:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561316978;
-	bh=mlvFSvzkR+cCMmE9uWWqrJrJQDHurcL5lzCZSBcXqeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aob8/pmcrX9l5iBmT0JJBcR5MpAwWWcTI2IuXpEoe+FNQ3V1FZwvkEBUOgKEndl+H
-	 TqqFd5nyQSds8cPS1l7NeICH2wnIr3VTaYr/PdnbOb0U81JnWCFlCwZkJPTtWB/hch
-	 F01ooSEAEjNUG5+h1bMTVgg4tLCVjElhuTbNjn+g=
+	s=default; t=1561317181;
+	bh=AsxupFvBvqb1mH3XUIHGLPhSXMlhWmiYztuijWSq/GQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Hd0iAlubWrfmiaBpyNNGXn4p0MXWRjmq2iDW9gGB/NXpo2nZ4Os514ltQ0MYpx8ny
+	 PffYvURuvuXG3nBxJ9WTEJFPYe9+NPhWqT7+2yUkjgt4WUNdAxxC4+e8dPbDjHSE+x
+	 K25YmANilgcYlG8oHMdygQed6AeOg09G80M4tf5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfFWTJh (ORCPT
+        id S1726381AbfFWTMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 15:09:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
+        Sun, 23 Jun 2019 15:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfFWTJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 15:09:36 -0400
-Received: from localhost (unknown [107.242.116.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726119AbfFWTMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 15:12:52 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2BD20656;
-        Sun, 23 Jun 2019 19:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E215B215EA;
+        Sun, 23 Jun 2019 19:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561316975;
-        bh=mlvFSvzkR+cCMmE9uWWqrJrJQDHurcL5lzCZSBcXqeM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WIlojUbYbhbPxgmncsctvio3d5Mn73rmmLk0d4dqSMx5J9aWVK+Ch0Ktgq95tupOF
-         i/eIm1MdKNrRPM0pwIU0Hj6wp7UJ/S2I6lj8po0jYtHxFAVuuZjhJZzLWxBsbcQRlO
-         iRp5ngtuuFHBff8VqAdtHzZ2JfD+gVpQNfhvhlGw=
-Date:   Sun, 23 Jun 2019 15:09:29 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>, linux-hyperv@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
-Message-ID: <20190623190929.GL2226@sasha-vm>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-19-vincenzo.frascino@arm.com>
- <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
- <20190614211710.GQ1513@sasha-vm>
- <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
+        s=default; t=1561317171;
+        bh=AsxupFvBvqb1mH3XUIHGLPhSXMlhWmiYztuijWSq/GQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uJbKaQIyzSWaWU00fx8r+BgyZH9qH3M1R9/GjS5amJxhq2/wMRfKlESl/AGt7ycXB
+         ha0lnIyzb/RrBbLBKIida0P9PPS0bf0gRIpgT8FKt2U21oHebm129KzlVwMeLB3caD
+         MszeI+AS46K1WmuMqEvYmziFe5DO20u0Zy+g9YF0=
+Received: by mail-lj1-f181.google.com with SMTP id 205so1667253ljj.8;
+        Sun, 23 Jun 2019 12:12:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAVyih0uk2fF1U3ZGyOS4oqfIBKd5qK5QkrdweGrbLxmIV0Tl+Uj
+        faEJqYQYpRG+Xa1RhqE1inUDwF+9U5igdawMqbA=
+X-Google-Smtp-Source: APXvYqzc0BAAUk0GcaZ6RKalll+UsB43Pr/w/hhGJmdfj5xhmoT71i8jk/2UViGqeh/ujennhK/FVzPhSD/yw16ZWlw=
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr26819194ljg.80.1561317169025;
+ Sun, 23 Jun 2019 12:12:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190623151313.970-1-tranmanphong@gmail.com> <20190623151313.970-5-tranmanphong@gmail.com>
+In-Reply-To: <20190623151313.970-5-tranmanphong@gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Sun, 23 Jun 2019 21:12:37 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfCrgS_iJAK0cxm0-XyGt6P2vq1FH4v2_8LSbfUp8gwUw@mail.gmail.com>
+Message-ID: <CAJKOXPfCrgS_iJAK0cxm0-XyGt6P2vq1FH4v2_8LSbfUp8gwUw@mail.gmail.com>
+Subject: Re: [PATCH 04/15] ARM: exynos: cleanup cppcheck shifting error
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
+        songliubraving@fb.com, andrew@lunn.ch, peterz@infradead.org,
+        nsekhar@ti.com, ast@kernel.org, jolsa@redhat.com,
+        netdev@vger.kernel.org, gerg@uclinux.org,
+        lorenzo.pieralisi@arm.com, will@kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, daniel@iogearbox.net,
+        festevam@gmail.com, gregory.clement@bootlin.com,
+        allison@lohutok.net, linux@armlinux.org.uk,
+        haojian.zhuang@gmail.com, bgolaszewski@baylibre.com,
+        tony@atomide.com, mingo@redhat.com, linux-imx@nxp.com, yhs@fb.com,
+        sebastian.hesselbarth@gmail.com, illusionist.neo@gmail.com,
+        jason@lakedaemon.net, liviu.dudau@arm.com, s.hauer@pengutronix.de,
+        acme@kernel.org, lkundrak@v3.sk, robert.jarzmik@free.fr,
+        dmg@turingmachine.org, swinslow@gmail.com, namhyung@kernel.org,
+        tglx@linutronix.de, linux-omap@vger.kernel.org,
+        alexander.sverdlin@gmail.com, linux-arm-kernel@lists.infradead.org,
+        info@metux.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        hsweeten@visionengravers.com, kgene@kernel.org,
+        kernel@pengutronix.de, sudeep.holla@arm.com, bpf@vger.kernel.org,
+        shawnguo@kernel.org, kafai@fb.com, daniel@zonque.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 22, 2019 at 04:46:28PM +0200, Thomas Gleixner wrote:
->On Fri, 14 Jun 2019, Sasha Levin wrote:
->> On Fri, Jun 14, 2019 at 01:15:23PM +0200, Thomas Gleixner wrote:
->> > On Thu, 30 May 2019, Michael Kelley wrote:
->> > > Vincenzo -- these changes for Hyper-V are a subset of a larger patch set
->> > > I have that moves all of the Hyper-V clock/timer code into a separate
->> > > clocksource driver in drivers/clocksource, with an include file in
->> > > includes/clocksource.  That new include file should be able to work
->> > > instead of your new mshyperv-tsc.h.  It also has the benefit of being
->> > > ISA neutral, so it will work with my in-progress patch set to support
->> > > Linux on Hyper-V on ARM64.  See https://lkml.org/lkml/2019/5/27/231
->> > > for the new clocksource driver patch set.
->> >
->> > Grrr. That's queued in hyperv-next for whatever reasons.
->>
->> I queue up our future pull requests there to give them some soaking in
->> -next.
+On Sun, 23 Jun 2019 at 17:14, Phong Tran <tranmanphong@gmail.com> wrote:
 >
->What? You queue completely unreviewed stuff which touches two other
->subsystems to let it soak in next?
-
-It was out on LKML for 2+ weeks before I've pulled it in. As it mostly
-touches hyperv bits I felt comfortable to give it time in -next (but not
-actually to try and merge it until it gets a few acks).
-
->> > Sasha, can you please provide me the branch to pull from so I can have a
->> > common base for all the various changes floating around?
->>
->> I'll send you a unified pull request for these changes.
+> [arch/arm/mach-exynos/suspend.c:288]: (error) Shifting signed 32-bit
+> value by 31 bits is undefined behaviour
 >
->Which has not materialized yet.
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  arch/arm/mach-exynos/suspend.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Appologies about this. I ended up with way more travel than I would have
-liked (writing this from an airport). I've reset our hyperv-next branch
-to remove these 3 commits until we figure this out.
+Let's switch to BIT macro. It will solve the problem and is preferred
+way of coding.
 
->TBH, I'm pretty grumpy about those clocksource changes. Here is the
->diffstat:
->
-> MAINTAINERS                          |    2
-> arch/x86/entry/vdso/vclock_gettime.c |    1
-> arch/x86/entry/vdso/vma.c            |    2
-> arch/x86/hyperv/hv_init.c            |   91 ---------
-> arch/x86/include/asm/hyperv-tlfs.h   |    6
-> arch/x86/include/asm/mshyperv.h      |   81 +-------
-> arch/x86/kernel/cpu/mshyperv.c       |    2
-> arch/x86/kvm/x86.c                   |    1
-> drivers/clocksource/Makefile         |    1
-> drivers/clocksource/hyperv_timer.c   |  322 +++++++++++++++++++++++++++++++++++
-> drivers/hv/Kconfig                   |    3
-> drivers/hv/hv.c                      |  156 ----------------
-> drivers/hv/hv_util.c                 |    1
-> drivers/hv/hyperv_vmbus.h            |    3
-> drivers/hv/vmbus_drv.c               |   42 ++--
-> include/clocksource/hyperv_timer.h   |  105 +++++++++++
->
->While the world and some more people have been CC'ed on those patches,
->neither the clocksource nor the x86 maintainer have been.
->
->When I gave Vincenzo the advise to base his code on that hyper-v branch, I
->expected that I find the related patches in my mail backlog. No, they have
->not been there because I was not on CC.
->
->Folks, please stop chosing Cc lists as you like. We have well established
->rules for that. And please stop queueing random unreviewed patches in
->next. Next is not a playground for not ready and unreviewed stuff. No, the
->hyper-v inbreed Reviewed-by is not sufficient for anything x86 and
->clocksource related.
-
-I'm sorry for this, you were supposed to be Cc'ed on these patches and I
-see that you were not.
-
->After chasing and looking at those patches, which have horrible subject
->lines and changelogs btw, I was not able to judge quickly whether that
->stuff is self contained or not. So no, I fixed up the fallout and rebased
->Vincenzos VDSO stuff on mainline w/o those hyperv changes simply because if
->they are not self contained they will break bisection badly.
->
->I'm going to push out the VDSO series later today. That will nicely break
->in combination with the hyper-next branch. Stephen, please drop that and do
->not try to handle the fallout. That stuff needs to go through the proper
->channels or at least be acked/reviewed by the relevant maintainers. So the
->hyper-v folks can rebase themself and post it proper.
-
-Okay, thank you. We'll rebase and resend.
-
---
-Thanks,
-Sasha
+Best regards,
+Krzysztof
