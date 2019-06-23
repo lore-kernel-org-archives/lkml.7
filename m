@@ -2,84 +2,121 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7A9C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2499DC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75FF20665
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021F320665
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 12:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfFWMC4 (ORCPT
+        id S1726620AbfFWMF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 08:02:56 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54268 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfFWMCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 08:02:55 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A2392003C8;
-        Sun, 23 Jun 2019 14:02:53 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A69A2003BF;
-        Sun, 23 Jun 2019 14:02:44 +0200 (CEST)
-Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81F804030D;
-        Sun, 23 Jun 2019 20:02:33 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de,
-        abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca,
-        andrew.smirnov@gmail.com, agx@sigxcpu.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/3] arm64: dts: imx8mq: Add system counter node
-Date:   Sun, 23 Jun 2019 20:04:34 +0800
-Message-Id: <20190623120434.19556-3-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190623120434.19556-1-Anson.Huang@nxp.com>
-References: <20190623120434.19556-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 23 Jun 2019 08:05:59 -0400
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:40476 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbfFWMF7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 08:05:59 -0400
+Received: from faui03f.informatik.uni-erlangen.de (faui03f.informatik.uni-erlangen.de [131.188.30.118])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 1FB07241393;
+        Sun, 23 Jun 2019 14:05:56 +0200 (CEST)
+Received: by faui03f.informatik.uni-erlangen.de (Postfix, from userid 30501)
+        id 117BD341CD4; Sun, 23 Jun 2019 14:05:56 +0200 (CEST)
+Date:   Sun, 23 Jun 2019 14:05:55 +0200
+From:   Thomas Preisner <linux@tpreisner.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Preisner <linux@tpreisner.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: add simple oneshot function tracer
+Message-ID: <20190623120555.nka2357agpqovxla@stud.informatik.uni-erlangen.de>
+References: <20190529104552.146fa97c@oasis.local.home>
+ <20190612212935.4xq6dyua5d5vrrvj@stud.informatik.uni-erlangen.de>
+ <20190617201627.647547c7@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617201627.647547c7@gandalf.local.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Jun 17, 2019 at 08:16:27PM -0400, Steven Rostedt wrote:
+> On Wed, 12 Jun 2019 23:29:35 +0200
+> Thomas Preisner <linux@tpreisner.de> wrote:
+> 
+> Hi Thomas,
+> 
+> BTW, what email client do you use, because your replies seem to confuse
+> my email client (claws-mail) and it doesn't thread them at all.
+> Although they do look fine on mutt (when I view my LKML folder). Looks
+> like it doesn't create a "References:" header.
+> 
+> > On Tue, 11 Jun 2019 17:52:37 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > What do you mean? The function profile has its own file to enable it:
+> > > 
+> > >  echo 1 > /sys/kernel/tracing/function_profile_enabled
+> > >  
+> > >  And disable it:
+> > >  
+> > >   echo 0 > /sys/kernel/tracing/function_profile_enabled
+> > >   
+> > >   -- Steve  
+> > 
+> > Yes, I am aware of the function profiler providing a file operation for
+> > enabling and disabling itself. However, my oneshot profiler as of [PATCH
+> > v2] is a separate tracer/profiler without this file operation.
+> > 
+> > As this oneshot profiler is intended to be used for coverage/usage
+> > reports I want it to be able to record functions as soon as possible
+> > during bootup. Therefore, I just permanently activated the oneshot
+> > profiler since as of now there is no means to activate it or the
+> > function profiler via kernel commandline just like the normal tracers.
+> > 
+> > Still, if you want to I can add the file operation for
+> > enabling/disabling this new profiler together with a new kernel
+> > commandline argument for this profiler?
+> > 
+> > Or what would be your prefered way?
+> > 
+> 
+> Hmm, I guess I still need to think about exactly what this is for.
+> Perhaps we could add a "oneshot" option to the function tracer, and
+> when set it will only trace a function once? Is there a strong reason
+> to add a new event type "oneshot_entry"? It may be useful to record the
+> parent of the function that triggered the first instance as well.
+> 
+> I'm still trying to get a grip around exactly what use cases this would
+> be good for. Especially when adding new functionality like this.
+> 
+> -- Steve
+> 
 
-Add i.MX8MQ system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+I've created this tracer with kernel tailoring in mind since the
+tailoring process of e.g. undertaker heavily benefits from a more
+precise set of input data.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+A "oneshot" option for the function tracer would be a viable
+possibility. However, this may add a lot of overhead (performance wise)
+in comparison to my current approach? After all, the use case of my
+tracer would be some sort of kernel activity monitoring during "normal
+usage" in order to get a grasp of (hopefully) all required kernel
+functions.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..9d99191 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -635,6 +635,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8333333>;
-+			};
- 		};
- 
- 		bus@30800000 { /* AIPS3 */
--- 
-2.7.4
+Also, there is no strong reason to add a new event type,
+this was just a means of reducing the collected data (which may as well
+be omitted since there is no real benefit).
 
+My "oneshot tracer" actually collects and outputs every parent in order
+to get a more thorough view on used kernel code. Therefore, I would
+suggest to keep this functionality and maybe make it configurable
+instead?
+
+Yours sincerely,
+Thomas
