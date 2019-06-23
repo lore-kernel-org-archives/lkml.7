@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58615C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87EEC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81C220840
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FE121744
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFWN1v (ORCPT
+        id S1726851AbfFWN15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 09:27:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33475 "EHLO
+        Sun, 23 Jun 2019 09:27:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33482 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfFWN1q (ORCPT
+        with ESMTP id S1726681AbfFWN1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 09:27:46 -0400
+        Sun, 23 Jun 2019 09:27:48 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hf2X3-0001kf-29; Sun, 23 Jun 2019 15:27:45 +0200
-Message-Id: <20190623132435.454138339@linutronix.de>
+        id 1hf2X3-0001kj-KY; Sun, 23 Jun 2019 15:27:45 +0200
+Message-Id: <20190623132435.545653922@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 23 Jun 2019 15:23:55 +0200
+Date:   Sun, 23 Jun 2019 15:23:56 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -37,7 +37,7 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Ravi Shankar <ravi.v.shankar@intel.com>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [patch 15/29] x86/hpet: Make naming consistent
+Subject: [patch 16/29] x86/hpet: Clean up comments
 References: <20190623132340.463097504@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -48,94 +48,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ingo Molnar <mingo@kernel.org>
 
-Use 'evt' for clockevents pointers and capitalize HPET in comments.
-
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/hpet.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/kernel/hpet.c |   41 +++++++++++++++++++++++------------------
+ 1 file changed, 23 insertions(+), 18 deletions(-)
 
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -121,7 +121,7 @@ static inline int is_hpet_capable(void)
- }
- 
- /**
-- * is_hpet_enabled - check whether the hpet timer interrupt is enabled
-+ * is_hpet_enabled - Check whether the legacy HPET timer interrupt is enabled
-  */
- int is_hpet_enabled(void)
- {
-@@ -164,7 +164,7 @@ do {								\
- } while (0)
- 
- /*
-- * When the hpet driver (/dev/hpet) is enabled, we need to reserve
-+ * When the HPET driver (/dev/hpet) is enabled, we need to reserve
-  * timer 0 and timer 1 in case of RTC emulation.
-  */
- #ifdef CONFIG_HPET
-@@ -212,7 +212,7 @@ static void __init hpet_reserve_platform
- static void hpet_reserve_platform_timers(unsigned int id) { }
- #endif
- 
--/* Common hpet functions */
-+/* Common HPET functions */
- static void hpet_stop_counter(void)
- {
- 	u32 cfg = hpet_readl(HPET_CFG);
-@@ -266,7 +266,7 @@ static void hpet_legacy_clockevent_regis
+@@ -266,8 +266,8 @@ static void hpet_legacy_clockevent_regis
  	hpet_enable_legacy_int();
  
  	/*
--	 * Start hpet with the boot cpu mask and make it
-+	 * Start HPET with the boot cpu mask and make it
- 	 * global after the IO_APIC has been initialized.
+-	 * Start HPET with the boot cpu mask and make it
+-	 * global after the IO_APIC has been initialized.
++	 * Start HPET with the boot CPU's cpumask and make it global after
++	 * the IO_APIC has been initialized.
  	 */
  	hpet_clockevent.cpumask = cpumask_of(boot_cpu_data.cpu_index);
-@@ -399,7 +399,7 @@ static int hpet_legacy_next_event(unsign
- }
- 
+ 	clockevents_config_and_register(&hpet_clockevent, hpet_freq,
+@@ -688,10 +688,10 @@ static inline void hpet_reserve_msi_time
  /*
-- * The hpet clock event device
-+ * The HPET clock event device
-  */
- static struct clock_event_device hpet_clockevent = {
- 	.name			= "hpet",
-@@ -484,14 +484,14 @@ static int hpet_msi_next_event(unsigned
- static irqreturn_t hpet_interrupt_handler(int irq, void *data)
- {
- 	struct hpet_dev *dev = data;
--	struct clock_event_device *hevt = &dev->evt;
-+	struct clock_event_device *evt = &dev->evt;
- 
--	if (!hevt->event_handler) {
-+	if (!evt->event_handler) {
- 		pr_info("Spurious interrupt HPET timer %d\n", dev->num);
- 		return IRQ_HANDLED;
- 	}
- 
--	hevt->event_handler(hevt);
-+	evt->event_handler(evt);
- 	return IRQ_HANDLED;
- }
- 
-@@ -703,7 +703,7 @@ static inline void hpet_reserve_msi_time
-  * with its associated locking overhead. And we also need 64-bit atomic
-  * read.
+  * Reading the HPET counter is a very slow operation. If a large number of
+  * CPUs are trying to access the HPET counter simultaneously, it can cause
+- * massive delay and slow down system performance dramatically. This may
++ * massive delays and slow down system performance dramatically. This may
+  * happen when HPET is the default clock source instead of TSC. For a
+  * really large system with hundreds of CPUs, the slowdown may be so
+- * severe that it may actually crash the system because of a NMI watchdog
++ * severe, that it can actually crash the system because of a NMI watchdog
+  * soft lockup, for example.
   *
-- * The lock and the hpet value are stored together and can be read in a
-+ * The lock and the HPET value are stored together and can be read in a
+  * If multiple CPUs are trying to access the HPET counter at the same time,
+@@ -700,8 +700,7 @@ static inline void hpet_reserve_msi_time
+  *
+  * This special feature is only enabled on x86-64 systems. It is unlikely
+  * that 32-bit x86 systems will have enough CPUs to require this feature
+- * with its associated locking overhead. And we also need 64-bit atomic
+- * read.
++ * with its associated locking overhead. We also need 64-bit atomic read.
+  *
+  * The lock and the HPET value are stored together and can be read in a
   * single atomic 64-bit read. It is explicitly assumed that arch_spinlock_t
-  * is 32 bits in size.
+@@ -1020,19 +1019,25 @@ void hpet_disable(void)
+ 
+ #ifdef CONFIG_HPET_EMULATE_RTC
+ 
+-/* HPET in LegacyReplacement Mode eats up RTC interrupt line. When, HPET
++/*
++ * HPET in LegacyReplacement mode eats up the RTC interrupt line. When HPET
+  * is enabled, we support RTC interrupt functionality in software.
++ *
+  * RTC has 3 kinds of interrupts:
+- * 1) Update Interrupt - generate an interrupt, every sec, when RTC clock
+- *    is updated
+- * 2) Alarm Interrupt - generate an interrupt at a specific time of day
+- * 3) Periodic Interrupt - generate periodic interrupt, with frequencies
+- *    2Hz-8192Hz (2Hz-64Hz for non-root user) (all freqs in powers of 2)
+- * (1) and (2) above are implemented using polling at a frequency of
+- * 64 Hz. The exact frequency is a tradeoff between accuracy and interrupt
+- * overhead. (DEFAULT_RTC_INT_FREQ)
+- * For (3), we use interrupts at 64Hz or user specified periodic
+- * frequency, whichever is higher.
++ *
++ *  1) Update Interrupt - generate an interrupt, every second, when the
++ *     RTC clock is updated
++ *  2) Alarm Interrupt - generate an interrupt at a specific time of day
++ *  3) Periodic Interrupt - generate periodic interrupt, with frequencies
++ *     2Hz-8192Hz (2Hz-64Hz for non-root user) (all frequencies in powers of 2)
++ *
++ * (1) and (2) above are implemented using polling at a frequency of 64 Hz:
++ * DEFAULT_RTC_INT_FREQ.
++ *
++ * The exact frequency is a tradeoff between accuracy and interrupt overhead.
++ *
++ * For (3), we use interrupts at 64 Hz, or the user specified periodic frequency,
++ * if it's higher.
   */
-@@ -1053,7 +1053,7 @@ static unsigned long hpet_pie_limit;
+ #include <linux/mc146818rtc.h>
+ #include <linux/rtc.h>
+@@ -1053,7 +1058,7 @@ static unsigned long hpet_pie_limit;
  static rtc_irq_handler irq_handler;
  
  /*
-- * Check that the hpet counter c1 is ahead of the c2
-+ * Check that the HPET counter c1 is ahead of the c2
+- * Check that the HPET counter c1 is ahead of the c2
++ * Check that the HPET counter c1 is ahead of c2
   */
  static inline int hpet_cnt_ahead(u32 c1, u32 c2)
  {
