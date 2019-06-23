@@ -2,68 +2,72 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D33CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64360C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6612722CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2684522CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wpa6IVGr"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uUXoGr+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfFXBlX (ORCPT
+        id S1726756AbfFXBlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:41:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43987 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbfFXBk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:40:58 -0400
+        Sun, 23 Jun 2019 21:41:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51211 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfFXBk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:40:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNiXUx2858277
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NNkiQv2858667
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 23 Jun 2019 16:44:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNiXUx2858277
+        Sun, 23 Jun 2019 16:46:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NNkiQv2858667
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561333474;
-        bh=+Pnp97QirDw23SXvjDjC+j20gnJWLcG2oWbLeC/mHhQ=;
+        s=2019061801; t=1561333605;
+        bh=tWNsDYKjm7OuwZ4ihPphc6KWeBre5kho7BOWhzqYIRQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Wpa6IVGrSfOIwfOzANMbaE1ZzND3X6VdpkVhUfbCgoMpbjQcmFOwIgP6fDNKD8d/7
-         jIrVOIT8PEn1tIvZgHVy/I3QgvWSrVhS/oaAGEmY6/D4AaheXnIEIxoO9SAblguKNY
-         3ieJaKDkYTS3TMZAwVzAUx/smPQGvh4iOKFwLlti3c6tiq4iD1oqYZA/rj6NxoHo7G
-         yHPCYNi+j+Onr8H7/kfDB/b43HpGorCXq+QN06xVxGfbW4uAGBFHn+gzPjpkQ1zcvd
-         CyB+JiZaBZ2CedhEMdqHLgKPbw+JnT4dVYgcgNoKe3ti/cMSuRPH35k94ZY6StWap3
-         cu0B+2vkqSPig==
+        b=uUXoGr+2hcd0B37pUaYejKhgDr3Hp8nuccYtRTYLD1ySBetFUSA88Ef8SuM30s+Q0
+         PGO6N8iPfvzfzRELGlrEXNvY49Hz5BfKyUkDqoII9d4NECqthS+7XjEBjjJgxhzWzy
+         bFJdmU9b/a4jKgeka7fK5L5xLf0ZHZzvc/J+15ivyZ6uPmIeYxeQ5EfLeeLfwqffwt
+         mbwgojarXFOVJJuEGj1y8KqFDhpiRy7v79nY+0/yd2EOsOlFNuirWfKGuiqjc3oPta
+         Mihy8ftfb2pJnEzA5cJ71dnT1JfrszsAAMrb6du2Rp8gl1GAZNfsk0Q7M3/OtdCcBv
+         s1O1UXRgxWhFg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNiWpp2858274;
-        Sun, 23 Jun 2019 16:44:32 -0700
-Date:   Sun, 23 Jun 2019 16:44:32 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NNkhUU2858664;
+        Sun, 23 Jun 2019 16:46:43 -0700
+Date:   Sun, 23 Jun 2019 16:46:43 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Vincenzo Frascino <tipbot@zytor.com>
-Message-ID: <tip-361f8aee9b093526297d567a9dc2f6cbf746e5f9@git.kernel.org>
-Cc:     linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org, arnd@arndb.de,
-        mingo@kernel.org, tglx@linutronix.de, sthotton@marvell.com,
-        andre.przywara@arm.com, ralf@linux-mips.org, will.deacon@arm.com,
-        shuah@kernel.org, linux@armlinux.org.uk, vincenzo.frascino@arm.com,
-        huw@codeweavers.com, salyzyn@android.com, hpa@zytor.com,
-        paul.burton@mips.com, pcc@google.com, 0x7f454c46@gmail.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org
-Reply-To: will.deacon@arm.com, ralf@linux-mips.org, andre.przywara@arm.com,
-          sthotton@marvell.com, tglx@linutronix.de, mingo@kernel.org,
-          arnd@arndb.de, daniel.lezcano@linaro.org,
-          linux@rasmusvillemoes.dk, catalin.marinas@arm.com,
-          linux-kernel@vger.kernel.org, 0x7f454c46@gmail.com,
-          pcc@google.com, paul.burton@mips.com, vincenzo.frascino@arm.com,
-          hpa@zytor.com, salyzyn@android.com, huw@codeweavers.com,
-          shuah@kernel.org, linux@armlinux.org.uk
-In-Reply-To: <20190621095252.32307-2-vincenzo.frascino@arm.com>
-References: <20190621095252.32307-2-vincenzo.frascino@arm.com>
+Message-ID: <tip-44f57d788e7deecb504843534081d3449c2eede9@git.kernel.org>
+Cc:     arnd@arndb.de, linux@rasmusvillemoes.dk, ralf@linux-mips.org,
+        pcc@google.com, huw@codeweavers.com, will.deacon@arm.com,
+        shuah@kernel.org, hpa@zytor.com, paul.burton@mips.com,
+        sthotton@marvell.com, salyzyn@android.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        0x7f454c46@gmail.com, linux@armlinux.org.uk, mingo@kernel.org,
+        catalin.marinas@arm.com, vincenzo.frascino@arm.com,
+        andre.przywara@arm.com
+Reply-To: 0x7f454c46@gmail.com, linux-kernel@vger.kernel.org,
+          daniel.lezcano@linaro.org, mingo@kernel.org,
+          linux@armlinux.org.uk, catalin.marinas@arm.com,
+          vincenzo.frascino@arm.com, andre.przywara@arm.com,
+          linux@rasmusvillemoes.dk, arnd@arndb.de, pcc@google.com,
+          ralf@linux-mips.org, huw@codeweavers.com, paul.burton@mips.com,
+          will.deacon@arm.com, shuah@kernel.org, hpa@zytor.com,
+          sthotton@marvell.com, salyzyn@android.com, tglx@linutronix.de
+In-Reply-To: <20190621095252.32307-4-vincenzo.frascino@arm.com>
+References: <20190621095252.32307-4-vincenzo.frascino@arm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] vdso: Define standardized vdso_datapage
-Git-Commit-ID: 361f8aee9b093526297d567a9dc2f6cbf746e5f9
+Subject: [tip:timers/vdso] timekeeping: Provide a generic update_vsyscall()
+ implementation
+Git-Commit-ID: 44f57d788e7deecb504843534081d3449c2eede9
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -77,21 +81,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  361f8aee9b093526297d567a9dc2f6cbf746e5f9
-Gitweb:     https://git.kernel.org/tip/361f8aee9b093526297d567a9dc2f6cbf746e5f9
+Commit-ID:  44f57d788e7deecb504843534081d3449c2eede9
+Gitweb:     https://git.kernel.org/tip/44f57d788e7deecb504843534081d3449c2eede9
 Author:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate: Fri, 21 Jun 2019 10:52:28 +0100
+AuthorDate: Fri, 21 Jun 2019 10:52:30 +0100
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 22 Jun 2019 21:21:05 +0200
+CommitDate: Sat, 22 Jun 2019 21:21:06 +0200
 
-vdso: Define standardized vdso_datapage
+timekeeping: Provide a generic update_vsyscall() implementation
 
-Define a common formet for the vdso datapage as a preparation for sharing
-the VDSO implementation as a generic library.
+The new generic VDSO library allows to unify the update_vsyscall[_tz]()
+implementations.
 
-The datastructures are based on the current x86 layout.
+Provide a generic implementation based on the x86 code and the bindings
+which need to be implemented in architecture specific code.
 
-[ tglx: Massaged changelog ]
+[ tglx: Moved it into kernel/time where it belongs. Removed the pointless
+  	line breaks in the stub functions. Massaged changelog ]
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -114,108 +120,235 @@ Cc: Shuah Khan <shuah@kernel.org>
 Cc: Dmitry Safonov <0x7f454c46@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Huw Davies <huw@codeweavers.com>
-Link: https://lkml.kernel.org/r/20190621095252.32307-2-vincenzo.frascino@arm.com
+Link: https://lkml.kernel.org/r/20190621095252.32307-4-vincenzo.frascino@arm.com
 
 ---
- include/vdso/datapage.h | 93 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ include/asm-generic/vdso/vsyscall.h |  50 ++++++++++++++
+ include/vdso/vsyscall.h             |  11 +++
+ kernel/time/Makefile                |   1 +
+ kernel/time/vsyscall.c              | 133 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 195 insertions(+)
 
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
 new file mode 100644
-index 000000000000..e6eb36c3d54f
+index 000000000000..e94b19782c92
 --- /dev/null
-+++ b/include/vdso/datapage.h
-@@ -0,0 +1,93 @@
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -0,0 +1,50 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __VDSO_DATAPAGE_H
-+#define __VDSO_DATAPAGE_H
-+
-+#ifdef __KERNEL__
++#ifndef __ASM_GENERIC_VSYSCALL_H
++#define __ASM_GENERIC_VSYSCALL_H
 +
 +#ifndef __ASSEMBLY__
 +
-+#include <linux/bits.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
++#ifndef __arch_get_k_vdso_data
++static __always_inline struct vdso_data *__arch_get_k_vdso_data(void)
++{
++	return NULL;
++}
++#endif /* __arch_get_k_vdso_data */
 +
-+#define VDSO_BASES	(CLOCK_TAI + 1)
-+#define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
-+			 BIT(CLOCK_MONOTONIC)		| \
-+			 BIT(CLOCK_BOOTTIME)		| \
-+			 BIT(CLOCK_TAI))
-+#define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
-+			 BIT(CLOCK_MONOTONIC_COARSE))
-+#define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
++#ifndef __arch_update_vdso_data
++static __always_inline int __arch_update_vdso_data(void)
++{
++	return 0;
++}
++#endif /* __arch_update_vdso_data */
 +
-+#define CS_HRES_COARSE	0
-+#define CS_RAW		1
-+#define CS_BASES	(CS_RAW + 1)
++#ifndef __arch_get_clock_mode
++static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
++{
++	return 0;
++}
++#endif /* __arch_get_clock_mode */
 +
-+/**
-+ * struct vdso_timestamp - basetime per clock_id
-+ * @sec:	seconds
-+ * @nsec:	nanoseconds
-+ *
-+ * There is one vdso_timestamp object in vvar for each vDSO-accelerated
-+ * clock_id. For high-resolution clocks, this encodes the time
-+ * corresponding to vdso_data.cycle_last. For coarse clocks this encodes
-+ * the actual time.
-+ *
-+ * To be noticed that for highres clocks nsec is left-shifted by
-+ * vdso_data.cs[x].shift.
-+ */
-+struct vdso_timestamp {
-+	u64	sec;
-+	u64	nsec;
-+};
++#ifndef __arch_use_vsyscall
++static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
++{
++	return 1;
++}
++#endif /* __arch_use_vsyscall */
 +
-+/**
-+ * struct vdso_data - vdso datapage representation
-+ * @seq:		timebase sequence counter
-+ * @clock_mode:		clock mode
-+ * @cycle_last:		timebase at clocksource init
-+ * @mask:		clocksource mask
-+ * @mult:		clocksource multiplier
-+ * @shift:		clocksource shift
-+ * @basetime[clock_id]:	basetime per clock_id
-+ * @tz_minuteswest:	minutes west of Greenwich
-+ * @tz_dsttime:		type of DST correction
-+ * @hrtimer_res:	hrtimer resolution
-+ * @__unused:		unused
-+ *
-+ * vdso_data will be accessed by 64 bit and compat code at the same time
-+ * so we should be careful before modifying this structure.
-+ */
-+struct vdso_data {
-+	u32			seq;
++#ifndef __arch_update_vsyscall
++static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
++						   struct timekeeper *tk)
++{
++}
++#endif /* __arch_update_vsyscall */
 +
-+	s32			clock_mode;
-+	u64			cycle_last;
-+	u64			mask;
-+	u32			mult;
-+	u32			shift;
-+
-+	struct vdso_timestamp	basetime[VDSO_BASES];
-+
-+	s32			tz_minuteswest;
-+	s32			tz_dsttime;
-+	u32			hrtimer_res;
-+	u32			__unused;
-+};
-+
-+/*
-+ * We use the hidden visibility to prevent the compiler from generating a GOT
-+ * relocation. Not only is going through a GOT useless (the entry couldn't and
-+ * must not be overridden by another library), it does not even work: the linker
-+ * cannot generate an absolute address to the data page.
-+ *
-+ * With the hidden visibility, the compiler simply generates a PC-relative
-+ * relocation, and this is what we need.
-+ */
-+extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")));
++#ifndef __arch_sync_vdso_data
++static __always_inline void __arch_sync_vdso_data(struct vdso_data *vdata)
++{
++}
++#endif /* __arch_sync_vdso_data */
 +
 +#endif /* !__ASSEMBLY__ */
 +
-+#endif /* __KERNEL__ */
++#endif /* __ASM_GENERIC_VSYSCALL_H */
+diff --git a/include/vdso/vsyscall.h b/include/vdso/vsyscall.h
+new file mode 100644
+index 000000000000..2c6134e0c23d
+--- /dev/null
++++ b/include/vdso/vsyscall.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_VSYSCALL_H
++#define __VDSO_VSYSCALL_H
 +
-+#endif /* __VDSO_DATAPAGE_H */
++#ifndef __ASSEMBLY__
++
++#include <asm/vdso/vsyscall.h>
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __VDSO_VSYSCALL_H */
+diff --git a/kernel/time/Makefile b/kernel/time/Makefile
+index f1e46f338a9c..1867044800bb 100644
+--- a/kernel/time/Makefile
++++ b/kernel/time/Makefile
+@@ -16,5 +16,6 @@ ifeq ($(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST),y)
+ endif
+ obj-$(CONFIG_GENERIC_SCHED_CLOCK)		+= sched_clock.o
+ obj-$(CONFIG_TICK_ONESHOT)			+= tick-oneshot.o tick-sched.o
++obj-$(CONFIG_HAVE_GENERIC_VDSO)			+= vsyscall.o
+ obj-$(CONFIG_DEBUG_FS)				+= timekeeping_debug.o
+ obj-$(CONFIG_TEST_UDELAY)			+= test_udelay.o
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+new file mode 100644
+index 000000000000..a80893180826
+--- /dev/null
++++ b/kernel/time/vsyscall.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 ARM Ltd.
++ *
++ * Generic implementation of update_vsyscall and update_vsyscall_tz.
++ *
++ * Based on the x86 specific implementation.
++ */
++
++#include <linux/hrtimer.h>
++#include <linux/timekeeper_internal.h>
++#include <vdso/datapage.h>
++#include <vdso/helpers.h>
++#include <vdso/vsyscall.h>
++
++static inline void update_vdso_data(struct vdso_data *vdata,
++				    struct timekeeper *tk)
++{
++	struct vdso_timestamp *vdso_ts;
++	u64 nsec;
++
++	vdata[CS_HRES_COARSE].cycle_last	= tk->tkr_mono.cycle_last;
++	vdata[CS_HRES_COARSE].mask		= tk->tkr_mono.mask;
++	vdata[CS_HRES_COARSE].mult		= tk->tkr_mono.mult;
++	vdata[CS_HRES_COARSE].shift		= tk->tkr_mono.shift;
++	vdata[CS_RAW].cycle_last		= tk->tkr_raw.cycle_last;
++	vdata[CS_RAW].mask			= tk->tkr_raw.mask;
++	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
++	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
++
++	/* CLOCK_REALTIME */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
++	vdso_ts->sec	= tk->xtime_sec;
++	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
++
++	/* CLOCK_MONOTONIC */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
++	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
++
++	nsec = tk->tkr_mono.xtime_nsec;
++	nsec += ((u64)tk->wall_to_monotonic.tv_nsec << tk->tkr_mono.shift);
++	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
++		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
++		vdso_ts->sec++;
++	}
++	vdso_ts->nsec	= nsec;
++
++	/* CLOCK_MONOTONIC_RAW */
++	vdso_ts		= &vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
++	vdso_ts->sec	= tk->raw_sec;
++	vdso_ts->nsec	= tk->tkr_raw.xtime_nsec;
++
++	/* CLOCK_BOOTTIME */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
++	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
++	nsec = tk->tkr_mono.xtime_nsec;
++	nsec += ((u64)(tk->wall_to_monotonic.tv_nsec +
++		       ktime_to_ns(tk->offs_boot)) << tk->tkr_mono.shift);
++	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
++		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
++		vdso_ts->sec++;
++	}
++	vdso_ts->nsec	= nsec;
++
++	/* CLOCK_TAI */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
++	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
++	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
++
++	/*
++	 * Read without the seqlock held by clock_getres().
++	 * Note: No need to have a second copy.
++	 */
++	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
++}
++
++void update_vsyscall(struct timekeeper *tk)
++{
++	struct vdso_data *vdata = __arch_get_k_vdso_data();
++	struct vdso_timestamp *vdso_ts;
++	u64 nsec;
++
++	if (__arch_update_vdso_data()) {
++		/*
++		 * Some architectures might want to skip the update of the
++		 * data page.
++		 */
++		return;
++	}
++
++	/* copy vsyscall data */
++	vdso_write_begin(vdata);
++
++	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
++	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
++
++	/* CLOCK_REALTIME_COARSE */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
++	vdso_ts->sec	= tk->xtime_sec;
++	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++
++	/* CLOCK_MONOTONIC_COARSE */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
++	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
++	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
++	while (nsec >= NSEC_PER_SEC) {
++		nsec = nsec - NSEC_PER_SEC;
++		vdso_ts->sec++;
++	}
++	vdso_ts->nsec	= nsec;
++
++	if (__arch_use_vsyscall(vdata))
++		update_vdso_data(vdata, tk);
++
++	__arch_update_vsyscall(vdata, tk);
++
++	vdso_write_end(vdata);
++
++	__arch_sync_vdso_data(vdata);
++}
++
++void update_vsyscall_tz(void)
++{
++	struct vdso_data *vdata = __arch_get_k_vdso_data();
++
++	if (__arch_use_vsyscall(vdata)) {
++		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
++		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
++	}
++
++	__arch_sync_vdso_data(vdata);
++}
