@@ -2,135 +2,75 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FBC48BE4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF5C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F662073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561308050;
-	bh=mtPesJuWQ7t0JFWn2B6X2pN6nU+T7enAXuVl76hjQRk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H6tS6fw0x+fk1GTYQMsdeB3jdKZ1LqIh0nN5BC7y0mmOtrbmoCL0A89mlRBwGI/VV
-	 xdgKPD/hZ2LtqJJ8lHk+z/R9ceHABkjtOsBhiS9WZCOVqW204T98zKXSg5wf1j+Fq+
-	 xoTKFiBJcWz0lcr05ZbqPWSEcmSYa+E8H6j0dXeQ=
+	by mail.kernel.org (Postfix) with ESMTP id 60D482073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfFWQks (ORCPT
+        id S1726728AbfFWQl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfFWQks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:40:48 -0400
-Received: from localhost (unknown [106.201.35.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 23 Jun 2019 12:41:56 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42052 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWQl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 12:41:56 -0400
+Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F16C2073F;
-        Sun, 23 Jun 2019 16:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561308047;
-        bh=mtPesJuWQ7t0JFWn2B6X2pN6nU+T7enAXuVl76hjQRk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uaHq9OKEc72NTXo6bCpJxpTavqpbbSn6z00ubbv1DmU/IVJZKGezMw4fPM48T/bHR
-         bU/kMUAUqfdSatwL/btXAf5kuMXGBnfJzF+A62KLdjpBf0dVipbpqHGdwOg81k/bwZ
-         BvLXP1+MoiMiwy/jT3IES3RYMGfLpFTPUICxwdJM=
-Date:   Sun, 23 Jun 2019 22:07:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5]  usb: xhci: Add support for Renesas USB
- controllers
-Message-ID: <20190623163737.GU2962@vkoul-mobl>
-References: <20190621085913.8722-1-vkoul@kernel.org>
- <11747914.jfR0NPdACA@debian64>
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4252B2613D9;
+        Sun, 23 Jun 2019 17:41:51 +0100 (BST)
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
+        kernel@collabora.com, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH 1/5] media: vimc: stream: remove obsolete function doc
+Date:   Sun, 23 Jun 2019 13:40:20 -0300
+Message-Id: <20190623164024.9836-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11747914.jfR0NPdACA@debian64>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-06-19, 21:41, Christian Lamparter wrote:
-> On Friday, June 21, 2019 10:59:08 AM CEST Vinod Koul wrote:
-> > This series add support for Renesas USB controllers uPD720201 and uPD720202.
-> > These require firmware to be loaded and in case devices have ROM those can
-> > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
-> > 
-> > This includes two patches from Christian which supported these controllers
-> > w/o ROM and later my patches for ROM support and multiple firmware versions.
-> > 
-> > Changes in v2:
-> >   used macros for timeout count and delay
-> >   removed renesas_fw_alive_check
-> >   cleaned renesas_fw_callback
-> >   removed recurion for renesas_fw_download
-> >   added MODULE_FIRMWARE
-> >   added comment for multiple fw order
-> > 
-> > Christian Lamparter (2):
-> >   usb: xhci: add firmware loader for uPD720201 and uPD720202 w/o ROM
-> >   usb: xhci: handle uPD720201 and uPD720202 w/o ROM
-> > 
-> > Vinod Koul (3):
-> >   usb: xhci: Use register defined and field names
-> >   usb: xhci: Add ROM loader for uPD720201
-> >   usb: xhci: allow multiple firmware versions
-> > 
-> >  drivers/usb/host/xhci-pci.c | 942 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 942 insertions(+)
-> > 
-> 
-> bootlog from a Netgear WNDR4700 with a 32GiB USB3 Stick attached to the 
-> Renesas uPD720202K8-711-BAA-A chip.
-> 
-> [   13.523094] xhci_hcd 0000:45:00.0: firmware size is not a multiple of 8.
-> [   13.868071] xhci_hcd 0000:45:00.0: xHCI Host Controller
-> [   13.873325] xhci_hcd 0000:45:00.0: new USB bus registered, assigned bus number 2
-> [   13.886296] xhci_hcd 0000:45:00.0: hcc params 0x014051cf hci version 0x100 quirks 0x0000000101000090
-> [   13.902719] usbcore: registered new interface driver usb-storage
-> [   13.909277] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
-> [   13.917336] hub 2-0:1.0: USB hub found
-> [   13.921432] init: - preinit -
-> [   13.930356] hub 2-0:1.0: 2 ports detected
-> [   13.942869] xhci_hcd 0000:45:00.0: xHCI Host Controller
-> [   13.948122] xhci_hcd 0000:45:00.0: new USB bus registered, assigned bus number 3
-> [   13.955514] xhci_hcd 0000:45:00.0: Host supports USB 3.0  SuperSpeed
-> [   13.981227] usb usb3: We don't know the algorithms for LPM for this host, disabling LPM.
-> [   13.997141] hub 3-0:1.0: USB hub found
-> [   14.004375] hub 3-0:1.0: 2 ports detected
-> [   14.375644] usb-storage 1-1:1.0: USB Mass Storage device detected
-> [   14.382247] scsi host1: usb-storage 1-1:1.0
-> [   14.438959] usb 3-2: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
-> [   14.467746] usb-storage 3-2:1.0: USB Mass Storage device detected
-> [   14.474241] scsi host2: usb-storage 3-2:1.0
-> [   15.394562] scsi 1:0:0:0: Direct-Access     Generic  STORAGE DEVICE   9454 PQ: 0 ANSI: 0
-> [   15.405183] sd 1:0:0:0: [sda] Attached SCSI removable disk
-> [   15.522448] scsi 2:0:0:0: Direct-Access     SanDisk  Ultra            1.00 PQ: 0 ANSI: 6
-> [   15.531952] sd 2:0:0:0: [sdb] 60063744 512-byte logical blocks: (30.8 GB/28.6 GiB)
-> [   15.541007] sd 2:0:0:0: [sdb] Write Protect is off
-> [   15.546808] sd 2:0:0:0: [sdb] Write cache: disabled, read cache: enabled, doesn't support DPO or FUA
-> [   15.574567]  sdb: sdb1
-> [   15.580581] sd 2:0:0:0: [sdb] Attached SCSI removable disk
-> 
-> This is working.
-> 
-> Tested-by: Christian Lamparter <chunkeey@gmail.com>
+As a more complete version of vimc_streamer_s_streamer comment was added
+at "media: vimc: stream: add missing function documentation" commit in
+.c file, remove the old documentation from .h file.
 
-Thanks for the verification Christian.
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+ drivers/media/platform/vimc/vimc-streamer.h | 8 --------
+ 1 file changed, 8 deletions(-)
 
-Regards
+diff --git a/drivers/media/platform/vimc/vimc-streamer.h b/drivers/media/platform/vimc/vimc-streamer.h
+index 2b3667408794..28c3706e3c21 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.h
++++ b/drivers/media/platform/vimc/vimc-streamer.h
+@@ -43,14 +43,6 @@ struct vimc_stream {
+ 	u32 producer_pixfmt;
+ };
+ 
+-/**
+- * vimc_streamer_s_streamer - start/stop the stream
+- *
+- * @stream:	the pointer to the stream to start or stop
+- * @ved:	The last entity of the streamer pipeline
+- * @enable:	any non-zero number start the stream, zero stop
+- *
+- */
+ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 			   struct vimc_ent_device *ved,
+ 			   int enable);
 -- 
-~Vinod
+2.22.0
+
