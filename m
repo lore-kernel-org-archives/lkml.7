@@ -2,44 +2,60 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79116C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD42C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAE82073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2F42073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfFXDB4 (ORCPT
+        id S1727384AbfFXDB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:01:56 -0400
+        Sun, 23 Jun 2019 23:01:57 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:34569 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfFXDBu (ORCPT
+        with ESMTP id S1727344AbfFXDBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:01:50 -0400
+        Sun, 23 Jun 2019 23:01:52 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hfApz-0007IB-Sg; Mon, 24 Jun 2019 00:19:52 +0200
-Date:   Mon, 24 Jun 2019 00:19:51 +0200 (CEST)
+        id 1hfAj1-0007Ex-1q; Mon, 24 Jun 2019 00:12:40 +0200
+Date:   Mon, 24 Jun 2019 00:12:37 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] x86/vdso: Give the [ph]vclock_page declarations real
- types
-In-Reply-To: <49C4F6B3-D419-4035-B49D-1586912C670C@amacapital.net>
-Message-ID: <alpine.DEB.2.21.1906240019130.32342@nanos.tec.linutronix.de>
-References: <6920c5188f8658001af1fc56fd35b815706d300c.1561241273.git.luto@kernel.org> <alpine.DEB.2.21.1906231441500.32342@nanos.tec.linutronix.de> <CAHk-=whywzng7FLV9X67RPmHNnygK+7VJV+zh4njT6BA+h9tCw@mail.gmail.com> <alpine.DEB.2.21.1906231509440.32342@nanos.tec.linutronix.de>
- <49C4F6B3-D419-4035-B49D-1586912C670C@amacapital.net>
+To:     Sasha Levin <sashal@kernel.org>
+cc:     Michael Kelley <mikelley@microsoft.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>, linux-hyperv@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
+In-Reply-To: <20190623190929.GL2226@sasha-vm>
+Message-ID: <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <20190530141531.43462-19-vincenzo.frascino@arm.com> <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com> <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+ <20190614211710.GQ1513@sasha-vm> <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de> <20190623190929.GL2226@sasha-vm>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -51,26 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019, Andy Lutomirski wrote:
+Sasha,
 
+On Sun, 23 Jun 2019, Sasha Levin wrote:
+> On Sat, Jun 22, 2019 at 04:46:28PM +0200, Thomas Gleixner wrote:
+> > Folks, please stop chosing Cc lists as you like. We have well established
+> > rules for that. And please stop queueing random unreviewed patches in
+> > next. Next is not a playground for not ready and unreviewed stuff. No, the
+> > hyper-v inbreed Reviewed-by is not sufficient for anything x86 and
+> > clocksource related.
 > 
-> > On Jun 23, 2019, at 6:10 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> >> On Sun, 23 Jun 2019, Linus Torvalds wrote:
-> >> 
-> >> Andy added comments and changed the patch in other ways too, so I think
-> >> it's fine to have him as author, and my sign-off is just for the original
-> >> smaller patch.
-> > 
-> > Well, that will earn me a nastigram from the next checkers as it's not
-> > compliant to our SOB rules ....
-> > 
-> 
-> Feel free to add:
-> 
-> Originally-by: Linus ...
-> 
-> I had assumed the textual description was enough.
+> I'm sorry for this, you were supposed to be Cc'ed on these patches and I
+> see that you were not.
 
-Ha, completely forgot about Co-developed-by. That does the trick nicely.
+All good. I've vented steam and am back to normal pressure :)
 
+> > After chasing and looking at those patches, which have horrible subject
+> > lines and changelogs btw, I was not able to judge quickly whether that
+> > stuff is self contained or not. So no, I fixed up the fallout and rebased
+> > Vincenzos VDSO stuff on mainline w/o those hyperv changes simply because if
+> > they are not self contained they will break bisection badly.
+> > 
+> > I'm going to push out the VDSO series later today. That will nicely break
+
+Not yet, but soon :)
+
+> > in combination with the hyper-next branch. Stephen, please drop that and do
+> > not try to handle the fallout. That stuff needs to go through the proper
+> > channels or at least be acked/reviewed by the relevant maintainers. So the
+> > hyper-v folks can rebase themself and post it proper.
+> 
+> Okay, thank you. We'll rebase and resend.
+
+I have no objections if you collect hyper-v stuff, quite the contrary, but
+changes which touch other subsystems need to be coordinated upfront. That's
+all I'm asking for.
+
+Btw, that clocksource stuff looks good code wise, just the change logs need
+some care and after the VDSO stuff hits next we need to sort out the
+logistics. I hope these changes are completely self contained. If not we'll
+find a solution.
+
+Thanks,
+
+	tglx
