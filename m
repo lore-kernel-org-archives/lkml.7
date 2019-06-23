@@ -2,207 +2,87 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E222C48BE8
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114EBC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A262073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XBVVcAg4"
+	by mail.kernel.org (Postfix) with ESMTP id D993B2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 14:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFWOnU (ORCPT
+        id S1726667AbfFWOpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 10:43:20 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3909 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFWOnU (ORCPT
+        Sun, 23 Jun 2019 10:45:22 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34736 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFWOpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 10:43:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0f90050000>; Sun, 23 Jun 2019 07:43:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 07:43:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 07:43:18 -0700
-Received: from [10.25.72.175] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 23 Jun
- 2019 14:43:14 +0000
-Subject: Re: [PATCH V7 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20190622165143.11906-1-vidyas@nvidia.com>
- <20190622165143.11906-2-vidyas@nvidia.com>
- <PSXP216MB0662E297AC662E53D515141CAAE10@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <beef4f7f-e6e5-4735-7847-c04e608d54d5@nvidia.com>
-Date:   Sun, 23 Jun 2019 20:13:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 23 Jun 2019 10:45:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id k8so30130iot.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 07:45:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xOuGlUvj6Y52Av2r1WPq8pFEjxnJHawsCR+WxrVa7n0=;
+        b=q/qtM1WyMbsnFVPpgj/x2zzR232iovKQMQmie2/xod00BpPAnTkrgP+adkDCddNxw4
+         GNjp1jEsctTtARVaoz5zLjhkK3tNcW6fJHmmKOQTV0WT8e0Syv3GQKXPlkSNuNk/M7or
+         v5U7ypF/X9AWcUp5UTWYXT4QHPvuNKId7/kkLAchfUBNzqrJujt+IvnX3myDhXtBP+/Z
+         ZU1G1a+5/ZovXlf/IWuA9ai5fjWUQlpwSHkJEyWa9ek8XPN8ASIHu5NOkUABVc4FZqBm
+         jIgwhMiqDVYyFC2bbGPvzgtXRvnChZS95Hjj3eWYeBvougk3z1cC5TMA/AXCCBTA+Brl
+         S5PA==
+X-Gm-Message-State: APjAAAWl0B69aoEOT3j30jCQT0bP9eiejIVSiXSxXsOMe7UomijA3ffL
+        fGlGRxVt1yZwwzRMgAHETHE=
+X-Google-Smtp-Source: APXvYqwGxRtDkkC/HYSf0Xa19EOVzPy4PDH0ijGyOCA3nY1iJcjvQeSpvF80Hn9dksyXl8H0ioDvUQ==
+X-Received: by 2002:a02:c50a:: with SMTP id s10mr94304162jam.106.1561301121327;
+        Sun, 23 Jun 2019 07:45:21 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id k8sm8057458iob.78.2019.06.23.07.45.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 07:45:20 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: stmfx.h: typo in the header guard
+Date:   Sun, 23 Jun 2019 17:44:59 +0300
+Message-Id: <20190623144459.21608-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <PSXP216MB0662E297AC662E53D515141CAAE10@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561300997; bh=saBXV7wt7gyDAES5PloLCwidpM/IKpfUZ3VhqS4ILcc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XBVVcAg4Is58zuumIkfb7/ye9l0DfSxPCOkFaRMvIRu1v0Uuw4Qbhx/glm3N7r2OR
-         Od7B++INQJAMW6lpBZMjW2urlYGLugOfWZT6orhmhoBS9hbEqXpJrxnuvHuyTnfQGF
-         x0dlztRddRwrShc3EpH6EeC0JXxB3vZ3IpU5PItrikRDPFYthO3SgVuXBgAysabNfX
-         gGx0shBtLhPcK//bW0XZ5d0zmAZRzK7YFUub7k7AuucnDjVmomsqFFnGSdY9XYEFri
-         opAtgGtqSa125NLU/ruUnHSpi/xFNR148bp2yhwLg47LMLprOk3KnhwWs1qTjsiY9t
-         0SA4tJNxxMd0g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/2019 1:17 PM, Jingoo Han wrote:
-> On 6/23/19, 1:52 AM, Vidya Sagar wrote:
->>
->> Cleanup DBI read and write APIs by removing "__" (underscore) from their
->> names as there are no no-underscore versions and the underscore versions
->> are already doing what no-underscore versions typically do. It also removes
->> passing dbi/dbi2 base address as one of the arguments as the same can be
->> derived with in read and write APIs. Since dw_pcie_{readl/writel}_dbi()
->> APIs can't be used for ATU read/write as ATU base address could be
->> different from DBI base address, this patch attempts to implement
->> ATU read/write APIs using ATU base address without using
->> dw_pcie_{readl/writel}_dbi() APIs.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes from v6:
->> * Modified ATU read/write APIs to use implementation specific DBI read/write
->>    APIs if present.
->>
->> Changes from v5:
->> * Removed passing base address as one of the arguments as the same can be derived within
->>    the API itself.
->> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
->>
->> Changes from v4:
->> * This is a new patch in this series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 28 +++++------
->>   drivers/pci/controller/dwc/pcie-designware.h | 51 +++++++++++++-------
->>   2 files changed, 45 insertions(+), 34 deletions(-)
-> 
-> .....
-> 
->>   static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
->>   {
->> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
->> +	int ret;
->> +
->> +	if (pci->ops->write_dbi) {
->> +		pci->ops->write_dbi(pci, pci->atu_base, reg, 0x4, val);
->> +		return;
->> +	}
->> +
->> +	ret = dw_pcie_write(pci->atu_base + reg, 0x4, val);
->> +	if (ret)
->> +		dev_err(pci->dev, "Write ATU address failed\n");
->>   }
->>   
->>   static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
->>   {
->> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
->> +	int ret;
->> +	u32 val;
->> +
->> +	if (pci->ops->read_dbi)
->> +		return pci->ops->read_dbi(pci, pci->atu_base, reg, 0x4);
->> +
->> +	ret = dw_pcie_read(pci->atu_base + reg, 0x4, &val);
->> +	if (ret)
->> +		dev_err(pci->dev, "Read ATU address failed\n");
->> +
->> +	return val;
->>   }
-> 
-> Hmm. In cases of dbi and  dbi2, readb/readw/readl and writeb/writew/writel are
-> located in pcie-designware.h. These functions just call read/write which are located
-> in pcie-designware.c. For readability, would you write the code as below?
-> 
-> 1. For drivers/pci/controller/dwc/pcie-designware.h,
->      Just call dw_pcie_{write/read}_atu(), instead of implementing functions as below.
-> 
-> 	static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
-> 	{
-> 		return  dw_pcie_write_atu(pci, reg, 0x4, val);
-> 	}
-> 
-> 	static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)	
-> 	{
-> 		return  dw_pcie_read_atu(pci, reg, 0x4);
-> 	}
-> 
-> 2. For drivers/pci/controller/dwc/pcie-designware.c,
->      Please add new dw_pcie_{write/read}_atu() as below.
-> 
-> 	void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
-> 	{
-> 		int ret;
-> 
-> 		if (pci->ops->write_dbi) {
-> 			pci->ops->write_dbi(pci, pci->atu_base, reg, size, val);
-> 			return;
-> 		}
-> 
-> 		ret = dw_pcie_write(pci->atu_base + reg, size, val);
-> 		if (ret)
-> 			dev_err(pci->dev, "Write ATU address failed\n");
-> 	}
-> 
-> 	u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size)
-> 	{
-> 		int ret;
-> 		u32 val;
-> 
-> 		if (pci->ops->read_dbi)
-> 			return pci->ops->read_dbi(pci, pci->atu_base, reg, size);
-> 
-> 		ret = dw_pcie_read(pci->atu_base + reg, size, &val);
-> 		if (ret)
-> 			dev_err(pci->dev, "Read ATU address failed\n");
-> 
-> 		return val;
-> 	}
-> 
-> Thank you.
-> 
-> Best regards,
-> Jingoo Han
-Ok. I'll take care of it in next patch.
+The guard macro MFX_STMFX_H in the header stmfx.h
+doesn't match the #ifndef macro MFD_STMFX_H. The patch
+fixes the typo.
 
-> 
->>   
->>   static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
->> -- 
->> 2.17.1
-> 
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ include/linux/mfd/stmfx.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
+index d890595b89b6..3c67983678ec 100644
+--- a/include/linux/mfd/stmfx.h
++++ b/include/linux/mfd/stmfx.h
+@@ -5,7 +5,7 @@
+  */
+ 
+ #ifndef MFD_STMFX_H
+-#define MFX_STMFX_H
++#define MFD_STMFX_H
+ 
+ #include <linux/regmap.h>
+ 
+-- 
+2.21.0
 
