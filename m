@@ -2,99 +2,147 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D048C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6946EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610DA2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381AB205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0ZP1Du4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfFXByH (ORCPT
+        id S1726521AbfFXBz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:54:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38686 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfFXByH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:54:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7D4A30832CE;
-        Mon, 24 Jun 2019 01:54:06 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60D995D739;
-        Mon, 24 Jun 2019 01:54:03 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 09:53:59 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Tiezhu Yang <kernelpatch@126.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
-Subject: Re: [PATCH v2] kexec: fix warnig of crash_zero_bytes in crash.c
-Message-ID: <20190624015359.GC2976@dhcp-128-65.nay.redhat.com>
-References: <43d6fe3a.18e.16b814a09ba.Coremail.kernelpatch@126.com>
- <20190624013520.GA2976@dhcp-128-65.nay.redhat.com>
+        Sun, 23 Jun 2019 21:55:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34341 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXBz4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:55:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p17so10955507ljg.1;
+        Sun, 23 Jun 2019 18:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=d/7wNA8MAMSp7e/mZW/Vod5RtNn1ZWLvCZTV21PmCFE=;
+        b=L0ZP1Du4UJarUZc83p78D1vv5rbMa++Zecy9gf2C/sEmE38z1CUDYNZtbdqay4oXjv
+         wtksAbW8ZJBl1zkRqiyZxBgkX8zxclNP3TDtki7UUCskO8f0x8dF/zo+PGkI3o1Wnqi/
+         i6i1VOtCbFLD/F3Q2v741iVE01LGiwX1OIlGCx2rdKdMxEs8UUvQzcLOIZkHeFzPEMmf
+         O+7ntMgJr7LbUvO4wcmhMT1Nfm4+tdl01l7NalOAjFOQbmQ3xeWcBteQdGUGixM2iFP7
+         l+1oKfaS1UXi747QDN2CI6R7McQFdu+ARuSVc4sAmUOw+bz4W9mIzlxY4kcIkY8+Jjrs
+         6Vlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=d/7wNA8MAMSp7e/mZW/Vod5RtNn1ZWLvCZTV21PmCFE=;
+        b=eZjr3sCktWJDTIrLc0rBRoTeZ2d4QbmRI0P8IOZS4UWqt0pyU7djDWyxHsPV5GzsX6
+         hNmivaXrFz4nAeKJPTaXuq1Clf4clmwglvAVRV8Sk65jSZmK/3f0iCPM5N99byduvUxJ
+         MXJ+v7GClFYjNnsk8Qaz2MstWrI0+K2oPDlJhbe0rKuix/UNYJ11wC6LZsQp7RUX/mjG
+         Jjwnfh9nU0PIrtBj9RCzlvl54rU24ksnLFg6V0KVAx1CTZbyzVibh/C4cS+Hyg72/K42
+         23PL4duwgJV2EP3q8EkneumOPjY/YXUqxCGsSlU0eypzBPqAG7DM4COCV2hPY4B0roOZ
+         899Q==
+X-Gm-Message-State: APjAAAXoLoDZTga7CEoJJVbpDBKKf1vaRNHci3Uu1OT1WN8bUkecRpUX
+        F9tanAbAj0UVRlXDcElpZvD3LiDZ
+X-Google-Smtp-Source: APXvYqye4V5QSFOGkNtJMg/FAidBFWD3G9IlC1/a8d7S+Cona5FygRmeQ/8Dbd9tuc2t39l5UnZS1w==
+X-Received: by 2002:a2e:9250:: with SMTP id v16mr30382163ljg.89.1561326518772;
+        Sun, 23 Jun 2019 14:48:38 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 14:48:38 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 04/11] PM / devfreq: tegra30: Drop write-barrier
+Date:   Mon, 24 Jun 2019 00:46:51 +0300
+Message-Id: <20190623214658.11680-5-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
+References: <20190623214658.11680-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190624013520.GA2976@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 24 Jun 2019 01:54:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/19 at 09:35am, Dave Young wrote:
-> On 06/23/19 at 06:24am, Tiezhu Yang wrote:
-> > Fix the following sparse warning:
-> > 
-> > arch/x86/kernel/crash.c:59:15:
-> > warning: symbol 'crash_zero_bytes' was not declared. Should it be static?
-> > 
-> > First, make crash_zero_bytes static. In addition, crash_zero_bytes
-> > is used when CONFIG_KEXEC_FILE is set, so make it only available
-> > under CONFIG_KEXEC_FILE. Otherwise, if CONFIG_KEXEC_FILE is not set,
-> > the following warning will appear when make crash_zero_bytes static:
-> > 
-> > arch/x86/kernel/crash.c:59:22:
-> > warning: ‘crash_zero_bytes’ defined but not used [-Wunused-variable]
-> > 
-> > Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-> > Signed-off-by: Tiezhu Yang <kernelpatch@126.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  arch/x86/kernel/crash.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> > index 576b2e1..f13480e 100644
-> > --- a/arch/x86/kernel/crash.c
-> > +++ b/arch/x86/kernel/crash.c
-> > @@ -56,7 +56,9 @@ struct crash_memmap_data {
-> >   */
-> >  crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
-> >  EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
-> > -unsigned long crash_zero_bytes;
-> > +#ifdef CONFIG_KEXEC_FILE
-> > +static unsigned long crash_zero_bytes;
-> > +#endif
-> >  
-> >  static inline void cpu_crash_vmclear_loaded_vmcss(void)
-> >  {
-> > -- 
-> > 1.8.3.1
-> 
-> Acked-by: Dave Young <dyoung@redhat.com>
+There is no need in a write-barrier now, given that interrupt masking is
+handled by CPU's GIC now. Hence we know exactly that interrupt won't fire
+after stopping the devfreq's governor. In other cases we don't care about
+potential buffering of the writes to hardware and thus there is no need to
+stall CPU.
 
-BTW, a soft reminder, for kexec patches, it would be better to cc kexec mail
-list.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra30-devfreq.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-> 
-> Thanks
-> Dave
-> 
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 5e606ae3f238..4be7858c33bc 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -230,12 +230,6 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+ 		      ACTMON_DEV_LOWER_WMARK);
+ }
+ 
+-static void actmon_write_barrier(struct tegra_devfreq *tegra)
+-{
+-	/* ensure the update has reached the ACTMON */
+-	readl(tegra->regs + ACTMON_GLB_STATUS);
+-}
+-
+ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 			      struct tegra_devfreq_device *dev)
+ {
+@@ -287,8 +281,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
+ 
+ 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
+-
+-	actmon_write_barrier(tegra);
+ }
+ 
+ static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+@@ -376,8 +368,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+ 		tegra_devfreq_update_wmark(tegra, dev);
+ 	}
+ 
+-	actmon_write_barrier(tegra);
+-
+ 	return NOTIFY_OK;
+ }
+ 
+@@ -423,8 +413,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
+ 	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
+ 		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
+ 
+-	actmon_write_barrier(tegra);
+-
+ 	enable_irq(tegra->irq);
+ }
+ 
+@@ -439,8 +427,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+ 		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
+ 			      ACTMON_DEV_INTR_STATUS);
+ 	}
+-
+-	actmon_write_barrier(tegra);
+ }
+ 
+ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+-- 
+2.22.0
+
