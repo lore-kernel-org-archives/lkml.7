@@ -2,78 +2,166 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200C0C48BE4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E325FC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D6C2073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8193208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 16:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPkTDQYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfFWQmL (ORCPT
+        id S1726927AbfFWQmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 12:42:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42074 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfFWQmJ (ORCPT
+        Sun, 23 Jun 2019 12:42:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41192 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfFWQmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 12:42:09 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 752AE2613D9;
-        Sun, 23 Jun 2019 17:42:05 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5/5] media: vimc.rst: add vimc-streamer source documentation
-Date:   Sun, 23 Jun 2019 13:40:24 -0300
-Message-Id: <20190623164024.9836-5-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623164024.9836-1-andrealmeid@collabora.com>
-References: <20190623164024.9836-1-andrealmeid@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sun, 23 Jun 2019 12:42:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so6103234pff.8;
+        Sun, 23 Jun 2019 09:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GJ1/rKutIQEKHvyH14ecs6l1ZdLbW/7MgqbbW+zZyME=;
+        b=aPkTDQYg6YxMR3LTtRqUOO2PX5D4buJBQKeJG5SSksdp94O1WOG6qh7fzioBgPa3I9
+         hC6vdUBCy3i4vqfbfzBTA/md92U4B/cEKPIelHy0Q3bl9TkucGocmA290racdD5hqA+D
+         /l1E+fld70hWvvHqRU9W0Hl0SiUJelPC8gB4jRE1AXcm9za3kNhEYLxEjdVMP2lVRP/u
+         q68qtw9uV3ZNjoh+qa2qr3NpaKh/sVlNciRaVcdWxwiQLWsDJGeP9N42hO1pWYH9u6hW
+         wM1OpitX/5R8JL7GRo8ez064bZhvDxyKXToUaaYc1pEbJS8fEUhWqhXsCOJnA7JigVzr
+         RVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GJ1/rKutIQEKHvyH14ecs6l1ZdLbW/7MgqbbW+zZyME=;
+        b=Vg+8j1sC9a9om6KwtoNfhgP4khAd1lVmIqzrXGjVazokc0gIEOnTTPBplqOYZj+yN1
+         Dvi/eIAeccYo47ya+N7UaTBUwh6yildp8Jm9qJ6E249LwsdOCO2iOzi3R2g/1dUhZo/H
+         XfEqMD6MMOTGSgNFB7ULKrKKbCvrKlbyW4MWwXxYZ4jbmfNaZiYTnCQtVtTP3SovhyX/
+         TteF9enfs82+Zk3iFKlV566ZzpXXjYZG98G0wNfLYXW9ecEaP4BqKv/cW0XMB8UAsMil
+         TcjjTXgEkMKxgzDL9hopAvgmbGK/uo4sQR6hClHPsuqWVPYKeIAygb7pnx0Ov8d2siXM
+         qHng==
+X-Gm-Message-State: APjAAAUw0gbmuXWWwQN7i551sdkB4VlTVyAPwkOfh6ksUvvdNJNobkVj
+        vmdFD4p5s7SOxosk+Imb85k=
+X-Google-Smtp-Source: APXvYqzr3IL15+QRlPgzFQhfOuJbPNix+LH7PczxPb49B9YhZvIzUrQxfMsNEB8dxxedXBBzTMPQWw==
+X-Received: by 2002:a63:4553:: with SMTP id u19mr28484919pgk.420.1561308134980;
+        Sun, 23 Jun 2019 09:42:14 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id k16sm9059855pfa.87.2019.06.23.09.42.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Jun 2019 09:42:14 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        mchehab+samsung@kernel.org, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v4 02/11] dt-bindings: thermal: add binding document for h6 thermal controller
+Date:   Sun, 23 Jun 2019 12:41:57 -0400
+Message-Id: <20190623164206.7467-3-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
+In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since vimc-streamer.{c, h} are fully documented and conforming with the
-kernel-doc syntax, add those files to vimc.rst
+This patch adds binding document for allwinner h6 thermal controller.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
-Suggested-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- Documentation/media/v4l-drivers/vimc.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
 
-diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-index bece85867424..406417680db5 100644
---- a/Documentation/media/v4l-drivers/vimc.rst
-+++ b/Documentation/media/v4l-drivers/vimc.rst
-@@ -96,3 +96,14 @@ those arguments to each subdevice, not to the vimc module. For example::
-         Window size to calculate the mean. Note: the window size needs to be an
-         odd number, as the main pixel stays in the center of the window,
-         otherwise the next odd number is considered (the default value is 3).
+diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+new file mode 100644
+index 000000000000..2c5acc61ed03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+Source code documentation
-+-------------------------
++title: Allwinner SUN8I Thermal Controller Device Tree Bindings
 +
-+vimc-streamer
-+~~~~~~~~~~~~~
++maintainers:
++  - Yangtao Li <tiny.windzz@gmail.com>
 +
-+.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.h
-+   :internal:
++description: |-
++  This describes the device tree binding for the Allwinner thermal
++  controller which measures the on-SoC temperatures.
 +
-+.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.c
++properties:
++  compatible:
++    enum:
++      - allwinner,sun50i-h6-ths
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 1
++
++  clock-names:
++    const: bus
++
++  '#thermal-sensor-cells':
++    const: 1
++
++  nvmem-cells:
++    items:
++      - description: ths calibrate data
++
++  nvmem-cell-names:
++    items:
++      - const: calib
++
++required:
++  - compatible
++  - reg
++  - reset
++  - clocks
++  - clock-names
++  - interrupts
++  - '#thermal-sensor-cells'
++
++examples:
++  - |
++    ths: ths@5070400 {
++         compatible = "allwinner,sun50i-h6-ths";
++         reg = <0x05070400 0x100>;
++         clocks = <&ccu CLK_BUS_THS>;
++         clock-names = "bus";
++         resets = <&ccu RST_BUS_THS>;
++         interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++         nvmem-cells = <&tsen_calib>;
++         nvmem-cell-names = "calib";
++         #thermal-sensor-cells = <1>;
++    };
++
++...
 -- 
-2.22.0
+2.17.1
 
