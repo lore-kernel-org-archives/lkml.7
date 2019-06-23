@@ -2,208 +2,152 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711ECC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6164CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4452220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04120208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BS+Tea3z"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GOvz/2tt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfFXCTn (ORCPT
+        id S1727011AbfFXCVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:19:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33076 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfFXCTm (ORCPT
+        Sun, 23 Jun 2019 22:21:32 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:46304 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfFXCVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:19:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so10999673ljg.0;
-        Sun, 23 Jun 2019 19:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZZ3S4ko4rhzz11J2Xx7a4YmK+NWutFk+HFnNQWUEdvw=;
-        b=BS+Tea3zmzxoPU04xRAAaLl76KamQs6PwaEaGSRjZON+q2IyCRwnOgqQyE86X3uqnc
-         iGDTh4VflZhJiM3Bih7Xr+XtdtUMg4slnIxdUTenBStuoMmezkhGQ0LBXzMsDdQb6OX5
-         t4/LGiVuxH4VjULhZorsAcA6UpqIyhKnzSsjif8jTuyZ3LS3cgx7gPaMsgql0NwOUzBz
-         Qnkg3S4y9ZdoUbKcTensEBXnu9CYZxks78LyDF61nwadN1rWK/ZT26qPWm3r/s/HU8TV
-         CDXIkBUnGbjpNuXWjKV03bMymd9FDZCcVY3YpcbDfcYkcgmw/9cDNLAAZ9U9FDwmdoxw
-         ZJMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZZ3S4ko4rhzz11J2Xx7a4YmK+NWutFk+HFnNQWUEdvw=;
-        b=QTu0uSPLfHbinorEQpGWUywYl5cPIsRhV8UZrG9xWDARkyy6viJGw7KdAIjxgEFYua
-         AuXMdISwclSCIHaoV3qDo+6f/AvDOJUcuXbpNTWHD8pWzYsW9IbvL9vAjYOfN/pDkeXF
-         5BGJ9iXLw7hPZiUXkFSZFWHD27IPxe7xCgyvOBObQTVk9dI3M8/ASen1PutzVNRpE4AS
-         LW60sFGAmVEpqt0u7Qeh3lI/MYgLBBVdFlCQE3W31d85ip2EdXZLx6zNeJR9srkPtO9b
-         vU5O0tNB0br9JFpPdwSrHvgp21yRbh9Clj39isV6K0tt09tdjX2VzaFJjW4tydKruEGm
-         evUQ==
-X-Gm-Message-State: APjAAAVM84hn9B/2BYTLgymA9aRse6jtHDKEp8LJjpBBJk4EiAmIblK+
-        KrmgG3tpj7S2xWnzgMzpSNYeGjhW
-X-Google-Smtp-Source: APXvYqz/1pptBkM+S/YWwqSJbGbSxrxlVI4na5c/6wBwgdZ9y6LGS0uS1joFc+ryJ6iPGJRv2pBrCg==
-X-Received: by 2002:a2e:124c:: with SMTP id t73mr46668176lje.190.1561336318633;
-        Sun, 23 Jun 2019 17:31:58 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id y5sm1495146ljj.5.2019.06.23.17.31.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 17:31:58 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/10] memory: tegra20-emc: Drop setting EMC rate to max on probe
-Date:   Mon, 24 Jun 2019 03:31:24 +0300
-Message-Id: <20190624003132.29473-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 22:21:32 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190623235340epoutp040b6089afee5343ed78aae72ec7e5d614~q_QToS9f_0379103791epoutp04e
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:53:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190623235340epoutp040b6089afee5343ed78aae72ec7e5d614~q_QToS9f_0379103791epoutp04e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561334020;
+        bh=KFlrYEjo0jzFT6JMRF6jRvxqRSuR+ds4ksWexr+YB2o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GOvz/2ttBp4Eldyzsn53oFeHj4VXTa3etxCWoGOe1bQBIJNOo52vzY9yf8ydePLX4
+         t2TTI7Qsd/AilM3/AUe1xlywVvg0fglc8Wrh610C6riMc4Akw/Qq6msZZEMpC7S4P4
+         1oQViV0uUAF7cz/vdLsNFV1BrPkr2rlqYMqcsKYo=
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.155]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190623235335epcas1p16165e77ecc55e20326e25c95a6d4191b~q_QPD9YCp0120301203epcas1p1W;
+        Sun, 23 Jun 2019 23:53:35 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F6.AF.04257.FF0101D5; Mon, 24 Jun 2019 08:53:35 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190623235334epcas1p31f68310b57d9c565b60fa3672ba2e53c~q_QOKQRE32894228942epcas1p31;
+        Sun, 23 Jun 2019 23:53:34 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190623235334epsmtrp1bd8b149a93eb5a840b6fee088fd64d1f~q_QOJbSWr2617626176epsmtrp1f;
+        Sun, 23 Jun 2019 23:53:34 +0000 (GMT)
+X-AuditID: b6c32a38-5cbff700000010a1-f0-5d1010ff61a6
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5D.DF.03662.EF0101D5; Mon, 24 Jun 2019 08:53:34 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190623235334epsmtip268db8037d684736d45b287830296547e~q_QN8kWVF2077720777epsmtip25;
+        Sun, 23 Jun 2019 23:53:34 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+To:     =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        myungjoo.ham@samsung.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <871519f4-b653-e247-0afd-f7b1f29af8ae@samsung.com>
+Date:   Mon, 24 Jun 2019 08:56:09 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPJsWRmVeSWpSXmKPExsWy7bCmnu5/AYFYg6f9Ihbzj5xjtbi8aw6b
+        xdLrF5ksbjeuYLP4cbyP2aJ17xF2BzaPNfPWMHrsnHWX3WPTqk42j74tqxg9Pm+SC2CNyrbJ
+        SE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpASaEsMacU
+        KBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpecn2tlaGBgZApUmJCdcX//
+        V9aChVwVh3oesjQwPmLvYuTkkBAwkdi9bjJTFyMXh5DADkaJ/k+7WCGcT4wSZ3f+YIdwvjFK
+        /D8xhxGm5dXkecwQib2MEhvnX2UDSQgJvGeUaJye3MXIwSEsYCvxYDI/SFhEIE5iXttkFhCb
+        WSBDYsWV92Cr2QS0JPa/uAHWyi+gKHH1x2Ow+bwCdhKXNz9nBbFZBFQl3p57zQRiiwpESFze
+        sguqRlDi5MwnYDM5BVwkXm56xAoxX1zi1pP5TBC2vETz1tlgd0oIPGeTOH58HdQDLhLr38xg
+        grCFJV4d3wINCymJl/1tUHa1xMqTR9ggmjsYJbbsv8AKkTCW2L8UFGAcQBs0Jdbv0ocIK0rs
+        /D2XEWIxn8S7rz2sICUSArwSHW1CECXKEpcf3IVaKymxuL2TbQKj0iwk78xC8sIsJC/MQli2
+        gJFlFaNYakFxbnpqsWGBCXJkb2IEJ04tix2Me875HGIU4GBU4uEV2MAfK8SaWFZcmXuIUYKD
+        WUmElyeHJ1aINyWxsiq1KD++qDQntfgQoykwtCcyS4km5wOTel5JvKGpkbGxsYWJoZmpoaGS
+        OG88980YIYH0xJLU7NTUgtQimD4mDk6pBsYZvUXJgTcvdPsaeHZ+c5T9d/DLDGentodcmTOl
+        CkPOSH1wtvn8Tr3pboOWE3vwhBb7L68KPziVWM5Sz7U6/30O2/Pw8Hf2R7ZxMj/zcVjtXyfW
+        qbg/f+aOH42fTKd9n6r2RvRto10r4yLhp4+XaoV+uFyx5v+2g7aXuN/U65z5psIQyvNK/IUS
+        S3FGoqEWc1FxIgCpBcvisgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXvefgECswYdDQhbzj5xjtbi8aw6b
+        xdLrF5ksbjeuYLP4cbyP2aJ17xF2BzaPNfPWMHrsnHWX3WPTqk42j74tqxg9Pm+SC2CN4rJJ
+        Sc3JLEst0rdL4Mq4v/8ra8FCropDPQ9ZGhgfsXcxcnJICJhIvJo8j7mLkYtDSGA3o8Tpb1vZ
+        IBKSEtMuHgVKcADZwhKHDxdD1LxllPi99wgjSFxYwFbiwWR+kHIRgTiJiVv2s4LYzAIZEju+
+        LWGEqJ/OKNFz8i5Ygk1AS2L/ixtg8/kFFCWu/njMCGLzCthJXN78HKyGRUBV4u2510wgtqhA
+        hERf22w2iBpBiZMzn7CA2JwCLhIvNz2CWqYu8WfeJWYIW1zi1pP5TBC2vETz1tnMExiFZyFp
+        n4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiOIS2tHYwnTsQf
+        YhTgYFTi4RXYwB8rxJpYVlyZe4hRgoNZSYSXJ4cnVog3JbGyKrUoP76oNCe1+BCjNAeLkjiv
+        fP6xSCGB9MSS1OzU1ILUIpgsEwenVANjbVtZ1Nsq43sm6tlbUrbpnXxbXrFxUmXf2iUOZ167
+        6CeeM2De0OPRfbU/Nqkr/09tSf9HwboNmQFrmB+fvHR9faCm2PYUpqeT5ZmiGjR15JaU2MgW
+        TsucNtXyw+vQdRnZNwR5i8z51Bwt/0v2fbt/rk1RVX/JBSl/vansfL7PLm43CzfZvV+JpTgj
+        0VCLuag4EQDaHi34nQIAAA==
+X-CMS-MailID: 20190623235334epcas1p31f68310b57d9c565b60fa3672ba2e53c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190621111402epcas4p2f65fb1b6d3e83bd69bd129b27c90d295
+References: <CGME20190621111402epcas4p2f65fb1b6d3e83bd69bd129b27c90d295@epcas4p2.samsung.com>
+        <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory frequency scaling will be managed by tegra20-devfreq driver
-and PM QoS once all the prerequisite patches will get upstreamed.
-The parent clock is now managed by the clock driver and we also should
-assume that PLLM rate can't be changed on some devices (Galaxy Tab 10.1
-for example). Altogether there is no point in touching of clock's rate
-from the EMC driver.
+On 19. 6. 21. 오후 8:13, Paweł Chmiel wrote:
+> This small patchset adds support for Fairchild Semiconductor FSA9480
+> microUSB switch.
+> 
+> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> but it can be found also on other Samsung Aries (s5pv210) based devices.
+> 
+> Tomasz Figa (2):
+>   dt-bindings: extcon: Add support for fsa9480 switch
+>   extcon: Add fsa9480 extcon driver
+> 
+> Changes from v1:
+>   - Added newline at end of dt-bindings file
+>   - Removed interrupt-parent from dt-bindings file
+>   - Added Acked-by to dt-bindings patch
+>   - Remove license sentences from driver
+>   - Remove custom sysfs entries and manual switch code
+>   - Switch to using regmap api
+> 
+>  .../bindings/extcon/extcon-fsa9480.txt        |  19 +
+>  drivers/extcon/Kconfig                        |  12 +
+>  drivers/extcon/Makefile                       |   1 +
+>  drivers/extcon/extcon-fsa9480.c               | 395 ++++++++++++++++++
+>  4 files changed, 427 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+>  create mode 100644 drivers/extcon/extcon-fsa9480.c
+> 
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 78 +-----------------------------
- 1 file changed, 1 insertion(+), 77 deletions(-)
+Applied this series to extcon-next
+after checked the build warning on extcon-testing branch.
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 9ee5bef49e47..da8fa592b071 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -137,9 +137,6 @@ struct tegra_emc {
- 	struct device *dev;
- 	struct completion clk_handshake_complete;
- 	struct notifier_block clk_nb;
--	struct clk *backup_clk;
--	struct clk *emc_mux;
--	struct clk *pll_m;
- 	struct clk *clk;
- 	void __iomem *regs;
- 
-@@ -424,41 +421,6 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	return 0;
- }
- 
--static int emc_init(struct tegra_emc *emc, unsigned long rate)
--{
--	int err;
--
--	err = clk_set_parent(emc->emc_mux, emc->backup_clk);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to reparent to backup source: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_rate(emc->pll_m, rate);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to change pll_m rate: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_parent(emc->emc_mux, emc->pll_m);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to reparent to pll_m: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_rate(emc->clk, rate);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to change emc rate: %d\n", err);
--		return err;
--	}
--
--	return 0;
--}
--
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
-@@ -522,52 +484,14 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	emc->pll_m = clk_get_sys(NULL, "pll_m");
--	if (IS_ERR(emc->pll_m)) {
--		err = PTR_ERR(emc->pll_m);
--		dev_err(&pdev->dev, "failed to get pll_m clock: %d\n", err);
--		return err;
--	}
--
--	emc->backup_clk = clk_get_sys(NULL, "pll_p");
--	if (IS_ERR(emc->backup_clk)) {
--		err = PTR_ERR(emc->backup_clk);
--		dev_err(&pdev->dev, "failed to get pll_p clock: %d\n", err);
--		goto put_pll_m;
--	}
--
--	emc->emc_mux = clk_get_parent(emc->clk);
--	if (IS_ERR(emc->emc_mux)) {
--		err = PTR_ERR(emc->emc_mux);
--		dev_err(&pdev->dev, "failed to get emc_mux clock: %d\n", err);
--		goto put_backup;
--	}
--
- 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
- 			err);
--		goto put_backup;
--	}
--
--	/* set DRAM clock rate to maximum */
--	err = emc_init(emc, emc->timings[emc->num_timings - 1].rate);
--	if (err) {
--		dev_err(&pdev->dev, "failed to initialize EMC clock rate: %d\n",
--			err);
--		goto unreg_notifier;
-+		return err;
- 	}
- 
- 	return 0;
--
--unreg_notifier:
--	clk_notifier_unregister(emc->clk, &emc->clk_nb);
--put_backup:
--	clk_put(emc->backup_clk);
--put_pll_m:
--	clk_put(emc->pll_m);
--
--	return err;
- }
- 
- static const struct of_device_id tegra_emc_of_match[] = {
+Thanks.
+
 -- 
-2.22.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
