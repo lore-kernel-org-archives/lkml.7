@@ -2,123 +2,100 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49DEC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AFEC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2C12073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D07120675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 00:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hGZBty9v"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qGH0WBAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfFWAZb (ORCPT
+        id S1726417AbfFWAla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 20:25:31 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39263 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbfFWAZa (ORCPT
+        Sat, 22 Jun 2019 20:41:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57856 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfFWAla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 20:25:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 196so5135955pgc.6
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 17:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Muy8l67XTgQ8QvvYzm/lgbWW8wIRKwYpaJ4/hlcS4jk=;
-        b=hGZBty9vkwSEnFjKjjzvO41IQIGOS2M1st7Zs3Q2F5qYDxJa17E/2ppGWE/VoTbKE7
-         Ex+YYt8iotCN+AvqdKFQvogDBDELCpucsd4iGP9AfpIbPSn1IV8eFeA0d78v5BBaA1Yd
-         VBtAB4e4wegcGRAoCgrMEViWixlEWgGZpr8bU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Muy8l67XTgQ8QvvYzm/lgbWW8wIRKwYpaJ4/hlcS4jk=;
-        b=lwMbFpjhboz3pp+wxS8tk+5DY4tIB/0k7ARlQ52WJKwckReF6MN1yA8wC6D6d03ObR
-         YelmFiqYF3JJ7ACzkHh0TBbJKaUagxq3Gz394+l+DwQgAuXryTlAIC81AHR3dVpx4Op2
-         GscIYGo3Buphadf/+PHOAdSWM9n/KsuhvrjR/Z4rDmHKyxAVVMGuIiczMLbuqiehyJ2f
-         RCM37nAbVq5xYcpGWaf94GEAtp3FHZL7hSt7XSMQWP+OKC2F/enLZ68godWKEEKVos8p
-         4VJVaLzKL7vFrIOQtTs4y8FKq9ufIWikoOWK/rMqNmRDOU6GcUUS19DOTB1wMhXlxSFS
-         8OsA==
-X-Gm-Message-State: APjAAAXK5sTjNaGGa5F4nRXn9rPSTToKF8nMBS0ZN/a9UNwLmcBitW5S
-        xC0oq7lgR4a/8Uwrs11xKPIItw==
-X-Google-Smtp-Source: APXvYqyfE7pyqOmRt//qF5dntnKG8qFiDNfEU/crAJj6CQbY7HT06JFeATqZu/GBxAPBGY+3arfbxQ==
-X-Received: by 2002:a17:90b:d8a:: with SMTP id bg10mr15802946pjb.92.1561249530062;
-        Sat, 22 Jun 2019 17:25:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e20sm6764757pfi.35.2019.06.22.17.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Jun 2019 17:25:28 -0700 (PDT)
-Date:   Sat, 22 Jun 2019 17:25:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH V34 29/29] lockdown: Print current->comm in restriction
- messages
-Message-ID: <201906221724.EF1BA1D@keescook>
-References: <20190622000358.19895-1-matthewgarrett@google.com>
- <20190622000358.19895-30-matthewgarrett@google.com>
+        Sat, 22 Jun 2019 20:41:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5N0fN4F137368;
+        Sun, 23 Jun 2019 00:41:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=J+z+M4DxF8VeiH/SFm0jJi7hUA1gtP2EOoXI6xVLPGQ=;
+ b=qGH0WBAr0WvtrXmJgAbrSjGmz2SbYYAoVdsDmn4NlazAoKO0qSGVZB5MzTRwo6eCmNHu
+ F8fstYecG/qKVpPM1g0oaBrS1YdpbSBcoc18gwKT80jZcvTS0muKtHBlOfmbsegc9gfk
+ /LR4elJD/B4hBs95z1er/5zjJnmICj8lhGXejqTWWS6TmfVoYI2pIU+2LJzIbDoG2Lme
+ Kek4rSx/mH29CZZl5zQ9DcQCPDoMxSZAmGYZK6iKNvYzsvAjnXHXt/qZjZ4UV2wo1tFa
+ zsyRfX85ohrquFlpUlKzTjx/I6v8F5xTsY8E28Tfo7KqSYvmRG/EyLjDY2TRKeqXW4tG HA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t9brssrq2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 23 Jun 2019 00:41:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5N0fMKI155776;
+        Sun, 23 Jun 2019 00:41:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t9acb0fwb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 23 Jun 2019 00:41:22 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5N0fEuc021875;
+        Sun, 23 Jun 2019 00:41:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 22 Jun 2019 17:41:14 -0700
+To:     Eric Wheeler <bcache@lists.ewheeler.net>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        Eric Wheeler <git@linux.ewheeler.net>,
+        Eric Wheeler <bcache@linux.ewheeler.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list),
+        linux-bcache@vger.kernel.org (open list:BCACHE (BLOCK LAYER CACHE))
+Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
+        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
+Date:   Sat, 22 Jun 2019 20:41:11 -0400
+In-Reply-To: <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
+        (Eric Wheeler's message of "Sat, 22 Jun 2019 16:16:09 -0700")
+Message-ID: <yq1v9wxnnfc.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190622000358.19895-30-matthewgarrett@google.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9296 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=586
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906230004
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9296 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=641 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906230004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 05:03:58PM -0700, Matthew Garrett wrote:
-> Print the content of current->comm in messages generated by lockdown to
-> indicate a restriction that was hit.  This makes it a bit easier to find
-> out what caused the message.
-> 
-> The message now patterned something like:
-> 
->         Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> ---
->  security/lockdown/lockdown.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 98f9ee0026d5..9ca6f442fbc7 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -83,8 +83,8 @@ static int lockdown_is_locked_down(enum lockdown_reason what)
->  {	
->  	if ((kernel_locked_down >= what)) {
 
-To satisfy my paranoia, can you just add here:
+Eric,
 
-		if (WARN(what > LOCKDOWN_..._MAX))
-			return -EPERM;
+> While some drivers set queue_limits.io_opt (e.g., md raid5), there are
+> currently no SCSI/RAID controller drivers that do.
 
-With that:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  		if (lockdown_reasons[what])
-> -			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
-> -				  lockdown_reasons[what]);
-> +			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-> +				  current->comm, lockdown_reasons[what]);
->  		return -EPERM;
->  	}
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+That's not true. Lots of SCSI RAID devices report a stripe width.
 
 -- 
-Kees Cook
+Martin K. Petersen	Oracle Linux Engineering
