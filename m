@@ -2,103 +2,112 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C69C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B7CC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDEE20665
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DB120657
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 13:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pIstnD45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfFWNb6 (ORCPT
+        id S1726535AbfFWNut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 09:31:58 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:55019 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfFWNb6 (ORCPT
+        Sun, 23 Jun 2019 09:50:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50748 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFWNus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 09:31:58 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5NDVU9l019165;
-        Sun, 23 Jun 2019 22:31:30 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
- Sun, 23 Jun 2019 22:31:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5NDVTux019135
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 23 Jun 2019 22:31:29 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker
- board
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <joabreu@synopsys.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-References: <20190621180017.29646-1-katsuhiro@katsuster.net>
- <1871177.hjLhdHVgcu@phil>
- <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
- <20190622175508.GE8497@lunn.ch>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <8a006d47-a546-163f-0c3f-f35b0056ba3a@katsuster.net>
-Date:   Sun, 23 Jun 2019 22:31:29 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 23 Jun 2019 09:50:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c66so10327706wmf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 06:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zpwiXk85jpT08Y6ZBMcJ/wyE7pImTcgVQKw9N3i4sSU=;
+        b=pIstnD45O0Rbt6O7+GyPNJBPgVAt5/dwQalEToNACvICunCyRTvK8hIi90C5WVKjC6
+         xLmOlz4McRUgtNMbo2kHV94uRb4YT7Uoe6+iHtZ06CGQoixxDx5LWye1yh1H6WC4n20U
+         XhpMONoeVVseUwUdydycfbl1QLyOtpDArxQaDkIohmrurjF+YlIYbo/1aM0jgT8r64Rf
+         IHRtz2m3Dw3yXSndzBRZZ1T7MwMF1N3RHBCCLp56pY5Y2u5NIEhW5Gwtr63S1ATui8Sr
+         E6eHx8b2rLr8NvkUugyHZU0WQSwYlSAD+hybLfP+JDrB190a1AqSxTvIIKSumJ6LZ7B8
+         vPMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zpwiXk85jpT08Y6ZBMcJ/wyE7pImTcgVQKw9N3i4sSU=;
+        b=ga1MF8mnT30dthQ7aKt8WvAryZA0W1bvt8RM2zdcRZwQ5xwpa59ig+HJgvOQCl0j1A
+         G2FZA4TWDprugLzoBHw5mHC3y91eS20q9HTuPZQlArejRMVD6Nb/A/lZlMvmEeHywN19
+         sfFazkgtm4E9rdxXYG3ryvuK2cnfCi2/HuMiTitvCBnqeMPCuYt8I4WXG3qWgymheZlz
+         7G88pN31+0qSIXJcVQ3/2v952MawG8PKhsLPbOutp0hfclVwWytjRtLK8EYNP9TqpfDw
+         D3B88/37nsf1n71ItmYNgOyoPSMpj/Bil7Zi4nck0bO7koFfroBpIKqn8ehiFvT6jvKQ
+         XV7w==
+X-Gm-Message-State: APjAAAWCFBnymTwTCbp/xDWprTwzJfdCx+Tj0zdAn7W2rGHJLRA1V26A
+        Zgx9Fz2PjBef+UNHOVmU7EU=
+X-Google-Smtp-Source: APXvYqwXmn6kr1SRfH2fCMSytgNX6EiiGjtIWgPn87uzKD9/DS/oxvW4zlGNVhfB7+QquenCWiXuAQ==
+X-Received: by 2002:a7b:c84c:: with SMTP id c12mr11651885wml.70.1561297846416;
+        Sun, 23 Jun 2019 06:50:46 -0700 (PDT)
+Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
+        by smtp.gmail.com with ESMTPSA id p26sm20617422wrp.58.2019.06.23.06.50.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Jun 2019 06:50:45 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 15:50:38 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Robin van der Gracht <robin@protonic.nl>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] auxdisplay for v5.2-rc7
+Message-ID: <20190623135038.GA29791@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190622175508.GE8497@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Heiko, Andrew,
+Hi Linus,
 
-Thank you for comments. I found the commit that has regression:
-   74371272f97f net: stmmac: Convert to phylink and remove phylib logic
+A cleanup that was in -next for several weeks (before I added
+an Ack). It is late in the cycle, so pick it up if you feel
+like it!
 
-So I'll report it to netdev and stmmac guys.
+Cheers,
+Miguel
 
-Best Regards,
----
-Katsuhiro Suzuki
+The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
 
+  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
 
-On 2019/06/23 2:55, Andrew Lunn wrote:
-> On Sat, Jun 22, 2019 at 11:50:10PM +0900, Katsuhiro Suzuki wrote:
->> Hello,
-> 
-> Hi Katsuhiro
-> 
-> Please also report this to netdev, and the stmmac maintainers.
-> 
-> ./scripts/get_maintainer.pl -f drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> Giuseppe Cavallaro <peppe.cavallaro@st.com> (supporter:STMMAC ETHERNET DRIVER)
-> Alexandre Torgue <alexandre.torgue@st.com> (supporter:STMMAC ETHERNET DRIVER)
-> Jose Abreu <joabreu@synopsys.com> (supporter:STMMAC ETHERNET DRIVER)
-> "David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS)
-> Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 ARCHITECTURE)
-> netdev@vger.kernel.org (open list:STMMAC ETHERNET DRIVER)
-> linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE)
-> linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
-> linux-kernel@vger.kernel.org (open list)
-> 
->> I have not bisect commit of root cause yet... Is it better to bisect
->> and find problem instead of sending this patch?
-> 
-> My guess is that it is one of these three which broken it:
-> 
-> 74371272f97f net: stmmac: Convert to phylink and remove phylib logic
-> eeef2f6b9f6e net: stmmac: Start adding phylink support
-> 9ad372fc5aaf net: stmmac: Prepare to convert to phylink
-> 
-> 	     Andrew
-> 
+are available in the Git repository at:
 
+  https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.2-rc7
+
+for you to fetch changes up to f4bb1f895aa07dfcb96169192ff7c9154620df87:
+
+  auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero() (2019-06-20 15:06:24 +0200)
+
+----------------------------------------------------------------
+A cleanup for two drivers in auxdisplay:
+
+  - Convert to use vm_map_pages_zero()
+    From Souptick Joarder
+
+----------------------------------------------------------------
+Souptick Joarder (2):
+      auxdisplay/cfag12864bfb.c: Convert to use vm_map_pages_zero()
+      auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
+
+ drivers/auxdisplay/cfag12864bfb.c | 5 +++--
+ drivers/auxdisplay/ht16k33.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
