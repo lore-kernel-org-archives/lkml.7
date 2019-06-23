@@ -2,159 +2,258 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E71C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 03:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990B8C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08A22073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 03:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E45920679
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m959arvk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjEcrtZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfFWDSX (ORCPT
+        id S1726362AbfFWE2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Jun 2019 23:18:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34780 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfFWDSW (ORCPT
+        Sun, 23 Jun 2019 00:28:36 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39957 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfFWE2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Jun 2019 23:18:22 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so318564iot.1
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2019 20:18:22 -0700 (PDT)
+        Sun, 23 Jun 2019 00:28:35 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so9419422ljh.7;
+        Sat, 22 Jun 2019 21:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wt3xjQ5RAsPCKjNF8xOm70W9OHsmPMqo06u/Arlk64Q=;
-        b=m959arvkk90yZk7YXjrGbIxse8RaTIzcLbMNGr/tmwdgqes+XUcRnTxTeV4JncLNQc
-         YN5pM/vS5Mx/cU8yHEBxNHgfJl7IDi3LManX8AuuD2qAqDOqHwr7dG3yc4ag/kL96LKs
-         PAksfOvU1TdpSFiXwu/IVd/UOKig3L2tywLCPhsOfMaAeTwb/WYx/EqdQ6Dt4ofgaGKp
-         KmsQhMHUoIQABvO55MiiLXGy4esT+UdNA+v807NyOJKreIhhn7nXv40wb7nEysIiOagQ
-         EddjsN/v0nWnyommduqTlSYFceuo6C/o4GUrbCZ4qjQo77tqKi9QHMqds+85BQKabrv+
-         rUcg==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=Oo9cNc82J3NB8Wf3wFWueRKXEdY5g8r6dw07fnu/otY=;
+        b=VjEcrtZADQrkDe4car+3l/WpE1pNXOzWsdS09GNpkkT9K6tPPsdgi10MVkSKUluMHC
+         xkNBUDeg+KHRQI6QI5HPAx9JY1CLbqFp66QDbyZwU2+BYeJd9rnsMU/KzFo+nJ7G5WEv
+         65NrbEkIU5b1uz7mEwG6RQlEzac88NnaKfkFoa+xXI4CYVuFpm4L4lWj5eBl91lwSm+f
+         OK1clB0O+DNo1Yb9YAnOlxWLgoXktfqX3YhFfIQWXFQaHvC+CXZt8MdHQJG399V/NYz5
+         6ibUJ3yDNd8EjmHDQv9xL5fcwUWQPiTKBiV1oafGo/qK8k9DJ/sPu5sx5/eVv5VR2wyT
+         0l3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wt3xjQ5RAsPCKjNF8xOm70W9OHsmPMqo06u/Arlk64Q=;
-        b=DVk7FZVWVx820ddvoFw6pa05m49xNNFXpxXz8Pwmskhb5LiDM6rEDQt2PsvFINQPW6
-         TTA1hVa7G8KBHwcy52Cby7hsvsKHzHgtYjgSUPe8UERgPQhJ/d1MLyJnIWpdGq0uyr/B
-         9me2IQ4vPQ7czi5mDXlZ4MULwMT4KH+dp+LSvwISKT/J1T9f4agAg4lYoKByyxO/kRdH
-         +YqfRkNOb8kPqKHEM4KZ3hndQekUNFcL2xXy3JHO/m3/2hWbvDHL+NTqHSN94RO5pnLH
-         WQ7ghSX0+IS87MOUS3r84mTNie/0DdwfIm6htkoYJfhAUovAdarIfhKbJywkblJnJec3
-         +RzA==
-X-Gm-Message-State: APjAAAXh++RzQSJIh4tSC8W85VjmTBZEaFJ0DkrHchbL/B84JDYDRy7Z
-        D4LcVT7NWcjjvQlzFRmiGcTXxX8S5aY+pVjDAkM=
-X-Google-Smtp-Source: APXvYqyTHzwArTC4KiRT1IPX4CNm6uqu89+eIkg88AjtBGh1KAm8050QLwI3XoLcAOvV19Se5XCP89cuH9nV859/AYs=
-X-Received: by 2002:a5e:8412:: with SMTP id h18mr10275235ioj.268.1561259901755;
- Sat, 22 Jun 2019 20:18:21 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=Oo9cNc82J3NB8Wf3wFWueRKXEdY5g8r6dw07fnu/otY=;
+        b=RfNFIo2CfEOLk6EKkII1W8sYMB5nZBD58tgpBsBu+5911JTXTkNl9PzuwDTnZs/Zxf
+         ZuRGN1QaxeQj/TGMQnpzrf6oNYMxhvRmZphwrfsMJNePO/Lp4WU1gF8LleLwSDB5rBZs
+         CrWINeOC1vGadfaJw8lH4z1Pg080ojHpqFffLzBlLjoiF7LC7lTIJpDh5R7x4xsqBUr2
+         zlpwOgG2xYaf20vPykd8mOP2c0dclz/azZEITyHefeTdKCGvVAy/HNFUAC46Qu46Xtbp
+         K9S5oZWzu/QYyHpS+t27yFgzi2MOjTXK+gIr5pmbIgcCIkrSnwL/rnmDwMRNjoYRpoJu
+         nlTg==
+X-Gm-Message-State: APjAAAURKDI6seE5BuZ3BMh0MA5TVlB61oN2t1Bc7ES3/2k2p9cnO6fe
+        iatYCjPUJl/yxLeNbLwmzXhizbn2tzoLv3QkUaw=
+X-Google-Smtp-Source: APXvYqwRLGAAMnEfA3C7vLeOjvTiCm9F8jL0MsiSN61Vn76PvA4CY8WaoHwVFSVKRxlGi9PYOwY7wK8/zhh3E6KekaI=
+X-Received: by 2002:a2e:9198:: with SMTP id f24mr31667083ljg.221.1561264112772;
+ Sat, 22 Jun 2019 21:28:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561112433-5308-1-git-send-email-raymond.smith@arm.com> <CAKMK7uEjh+GrSy5AgbVLVQd1S5oJ8KFiWEUmxtMMVdcMSBtdCQ@mail.gmail.com>
-In-Reply-To: <CAKMK7uEjh+GrSy5AgbVLVQd1S5oJ8KFiWEUmxtMMVdcMSBtdCQ@mail.gmail.com>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Sun, 23 Jun 2019 11:18:10 +0800
-Message-ID: <CAKGbVbs2UB-nfwUAJxBhyuVg22a39Tx5BraUBvB5N7+PT=eQLA@mail.gmail.com>
-Subject: Re: [PATCH] drm/fourcc: Add Arm 16x16 block modifier
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Raymond Smith <Raymond.Smith@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "malidp@foss.arm.com" <malidp@foss.arm.com>, nd <nd@arm.com>
+References: <20190622003449.33707-1-saravanak@google.com> <20190622003449.33707-3-saravanak@google.com>
+ <CAGTfZH18SQXj_2TpUf7iQPzWrZ5RP8-OCb_t6fp7qhuutGWz5A@mail.gmail.com> <CAGETcx9Gi24bng_PCqc6=9S584va4hRc4HHZtBLevKHgYGSNDA@mail.gmail.com>
+In-Reply-To: <CAGETcx9Gi24bng_PCqc6=9S584va4hRc4HHZtBLevKHgYGSNDA@mail.gmail.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Sun, 23 Jun 2019 13:27:56 +0900
+Message-ID: <CAGTfZH2jK8s=5d_R7=kbUsPwE6s3fmz2_srZVyr32EU5qcB07Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] OPP: Add function to look up required OPP's for a
+ given OPP
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:27 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+Hi,
+
+2019=EB=85=84 6=EC=9B=94 23=EC=9D=BC (=EC=9D=BC) =EC=98=A4=EC=A0=84 6:42, S=
+aravana Kannan <saravanak@google.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On Fri, Jun 21, 2019 at 12:21 PM Raymond Smith <Raymond.Smith@arm.com> wrote:
+> On Sat, Jun 22, 2019 at 4:50 AM Chanwoo Choi <cwchoi00@gmail.com> wrote:
 > >
-> > Add the DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED modifier to
-> > denote the 16x16 block u-interleaved format used in Arm Utgard and
-> > Midgard GPUs.
+> > Hi,
 > >
-> > Signed-off-by: Raymond Smith <raymond.smith@arm.com>
-> > ---
-> >  include/uapi/drm/drm_fourcc.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
+> > Absolutely, I like this approach. I think that it is necessary to make
+> > the connection
+> > between frequencies of devices.
+>
+> Happy to hear that.
+>
+> > But, I have a question on below.
 > >
-> > diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> > index 3feeaa3..8ed7ecf 100644
-> > --- a/include/uapi/drm/drm_fourcc.h
-> > +++ b/include/uapi/drm/drm_fourcc.h
-> > @@ -743,6 +743,16 @@ extern "C" {
-> >  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
+> > 2019=EB=85=84 6=EC=9B=94 22=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 9:3=
+5, Saravana Kannan <saravanak@google.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+> > >
+> > > Add a function that allows looking up required OPPs given a source OP=
+P
+> > > table, destination OPP table and the source OPP.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++=
+++
+> > >  include/linux/pm_opp.h | 11 +++++++++
+> > >  2 files changed, 65 insertions(+)
+> > >
+> > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > > index 74c7bdc6f463..4f7870bffbf8 100644
+> > > --- a/drivers/opp/core.c
+> > > +++ b/drivers/opp/core.c
+> > > @@ -1830,6 +1830,60 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_=
+table *opp_table,
+> > >                 dev_err(virt_dev, "Failed to find required device ent=
+ry\n");
+> > >  }
+> > >
+> > > +/**
+> > > + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
+> > > + * @src_table: OPP table which has dst_table as one of its required =
+OPP table.
+> > > + * @dst_table: Required OPP table of the src_table.
+> > > + * @pstate: OPP of the src_table.
+> > > + *
+> > > + * This function returns the OPP (present in @dst_table) pointed out=
+ by the
+> > > + * "required-opps" property of the OPP (present in @src_table).
+> > > + *
+> > > + * The callers are required to call dev_pm_opp_put() for the returne=
+d OPP after
+> > > + * use.
+> > > + *
+> > > + * Return: destination table OPP on success, otherwise NULL on error=
+s.
+> > > + */
+> > > +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> > > +                                       struct opp_table *dst_table,
+> > > +                                       struct dev_pm_opp *src_opp)
+> > > +{
+> > > +       struct dev_pm_opp *opp, *dest_opp =3D NULL;
+> > > +       int i;
+> > > +
+> > > +       if (!src_table || !dst_table || !src_opp)
+> > > +               return NULL;
+> > > +
+> > > +       for (i =3D 0; i < src_table->required_opp_count; i++) {
+> > > +               if (src_table->required_opp_tables[i]->np =3D=3D dst_=
+table->np)
+> > > +                       break;
+> > > +       }
+> > > +
+> > > +       if (unlikely(i =3D=3D src_table->required_opp_count)) {
+> > > +               pr_err("%s: Couldn't find matching OPP table (%p: %p)=
+\n",
+> > > +                      __func__, src_table, dst_table);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       mutex_lock(&src_table->lock);
+> > > +
+> > > +       list_for_each_entry(opp, &src_table->opp_list, node) {
+> > > +               if (opp =3D=3D src_opp) {
+> > > +                       dest_opp =3D opp->required_opps[i];
 > >
-> >  /*
-> > + * Arm 16x16 Block U-Interleaved modifier
-> > + *
-> > + * This is used by Arm Mali Utgard and Midgard GPUs. It divides the image
-> > + * into 16x16 pixel blocks. Blocks are stored linearly in order, but pixels
-> > + * in the block are reordered.
-> > + */
-> > +#define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED \
-> > +       fourcc_mod_code(ARM, ((1ULL << 55) | 1))
->
-Thanks for the patch.
-
-> This seems to be an extremely random pick for a new number. What's the
-> thinking here? Aside from "doesnt match any of the afbc combos" ofc.
-> If you're already up to having thrown away 55bits, then it's not going
-> to last long really :-)
->
-> I think a good idea would be to reserve a bunch of the high bits as
-> some form of index (afbc would get index 0 for backwards compat). And
-> then the lower bits would be for free use for a given index/mode. And
-> the first mode is probably an enumeration, where possible modes simple
-> get enumerated without further flags or anything.
->
-This idea is like my previous patch:
-https://patchwork.kernel.org/patch/10852619/
-
-lima driver just need a unique modifier to represent this format, so this patch
-is enough for lima needs.
-
-But I'm also a little worry about the expansion of only reserve the top bit
-(55) for classification from the ARM point of view. A few more bit (at least 2
-for being able to represent 4 class of format) and more clear class/format
-fields division would be better.
-
-Thanks,
-Qiang
-
-
-
-
->
-> Also ofc needs acks from lima/panfrost people since I assume they'll
-> be using this, too.
->
-> Thanks, Daniel
->
-> > +
-> > +/*
-> >   * Allwinner tiled modifier
-> >   *
-> >   * This tiling mode is implemented by the VPU found on all Allwinner platforms,
-> > --
-> > 2.7.4
+> > Correct me if I am wrong. This patch assume that 'i' index is same on b=
+etween
+> > [1] and [2]. But in order to guarantee this assumption, all OPP entries
+> > in the same opp_table have to have the same number of 'required-opps' p=
+roperties
+> > and keep the sequence among 'required-opps' entries.
+> >
+> > [1] src_table->required_opp_tables[i]->np
+> > [2] opp->required_opps[I];
+> >
+> > For example, three OPP entries in the 'parent_bus_opp'
+> > have the different sequence of 'required-opps' and the different
+> > number of 'required-opps'. Is it no problem?
+> >
+> > parent_bus_opp: opp_table {
+> >     compatible =3D "operating-points-v2";
+> >
+> >     opp2 {
+> >         opp-hz =3D /bits/ 64 <200000>;
+> >         required-opps =3D <&child_bus_a_opp2>, <&child_bus_b_opp2>,
+> > <&child_bus_c_opp2>;
+> >     };
+> >
+> >     opp1 {
+> >         opp-hz =3D /bits/ 64 <200000>;
+> >         // change the sequence between child_bus_b_opp2  and child_bus_=
+c_opp2
+> >         required-opps =3D <&child_bus_a_opp2>, <&child_bus_c_opp2>,
+> > <&child_bus_b_opp2>
+> >     };
+> >
+> >     opp0 {
+> >         opp-hz =3D /bits/ 64 <200000>;
+> >         // missing 'child_bus_a_opp2'
+> >         required-opps =3D <&child_bus_c_opp2>, <&child_bus_b_opp2>
+> >     };
+> >
+> > }
 > >
 >
+> I get your question. If I'm not mistaken the OPP framework DT parsing
+> code makes the assumption that the required-opps list has the phandles
+> in the same order for each "row" in the OPP table. It actually only
+> looks at the first OPP entry to figure out the list of required OPP
+> tables.
+
+Thanks for description. It is the limitation of 'required-opps' until now.
+
 >
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> Technically one can write code to deal with random order of the
+> required-opp list, but doesn't seem like that's worth it because
+> there's no need to have that order all mixed up in DT. And even if
+> someone wants to add support for that, I don't think improving the DT
+> parsing to handle random order would be part of this patch series.
+
+I understand the existing ' required-opps' only consider the same sequence
+of entries which are included in the same OPP table.
+
+One more thing, 'required-opps' properties doesn't support
+the other OPP enters of the different OPP table. Is it right of 'required-o=
+pps'?
+
+Except for the random order, just each OPP might will requires
+the different 'required-opps' of different OPP table. Even if it is
+not related to random order, I think that this approach cannot
+support them.
+
+For example as following:
+- opp2 used the OPP entries of 'child_bus_A' and 'child_bus_B' opp-table.
+- opp1 used the OPP entries of 'child_bus_C' and 'child_bus_D' opp-table.
+
+parent_bus_opp: opp_table {
+    compatible =3D "operating-points-v2";
+
+     opp2 {
+         opp-hz =3D /bits/ 64 <200000>;
+         required-opps =3D <&child_bus_A_opp2>, <&child_bus_B_opp2>;
+    };
+
+   opp1 {
+         opp-hz =3D /bits/ 64 <200000>;
+         required-opps =3D <&child_bus_C_opp0>, <&child_bus_D_opp0>;
+    };
+};
+
+--=20
+Best Regards,
+Chanwoo Choi
