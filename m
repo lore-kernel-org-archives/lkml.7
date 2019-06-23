@@ -2,192 +2,156 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CDCC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B64C43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B0820663
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B2820679
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 10:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="c6ORLuCv"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DFuAqy07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfFWKND (ORCPT
+        id S1726486AbfFWKWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 06:13:03 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43636 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfFWKNC (ORCPT
+        Sun, 23 Jun 2019 06:22:39 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37431 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfFWKWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 06:13:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ge3SY9labvAxE4Yy2J2jXFLMiCj48qKbZn4VIaVWNWk=; b=c6ORLuCvwylMf7lS7gWuZTe9Z
-        ykpKX6JD6FLvJbiRcfvzKRx2d7NB57YMkdzigkEmEXZw1ONKUzFNENnY/3b1x8HYG/ARzFuDVDipw
-        kpCXtGlSRTNghKvGhKWHhLckjfynTM9pl3ccQuTGzjdR12o4MpTyysX1vUGcBIfjYGMmyu8sZ4YvM
-        WywCPiq/N20VzO5wlmyz8pJnt63l+wzZR5ljJWt4jTmNtFf8kYocVDyBMufgj4xwSiwnfDXKbOhE7
-        cdcTHAWOLddUbtL8Gfyvp7j/nFDUZtl61r4LHhseRQq89XgxixhL+/LE4WpKJZFWMzyn2oe/JjA8v
-        B9n5di/eA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59908)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hezUU-0000iC-1F; Sun, 23 Jun 2019 11:12:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hezUT-0004wn-1u; Sun, 23 Jun 2019 11:12:53 +0100
-Date:   Sun, 23 Jun 2019 11:12:52 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH v4 3/5] net: macb: add support for c45 PHY
-Message-ID: <20190623101252.olfxbls3phgxttcb@shell.armlinux.org.uk>
-References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
- <1561281797-13796-1-git-send-email-pthombar@cadence.com>
+        Sun, 23 Jun 2019 06:22:39 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5NAMOV02589435
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 23 Jun 2019 03:22:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5NAMOV02589435
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561285345;
+        bh=fL//r75TyoOH12BOusdMff8Y1ddZJgL7vjP9d2f+UKs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=DFuAqy07/H5VoPIWAKG0DcdQ51PjdgxOeRuhRho5zbpcz2HAVmU9RoeY1dDvE3/k9
+         fVv0El+zOgyxzimj+5yJlYWoC4GMbrSQ+AuDx0z49bZAc12f6CBCDQHQz+KGfJizuy
+         RerD05FE6yfMNzCNMmytgHJPO/WY2Do6jsqau0WabNxjmTpqDhx5bIvTVRJ+XBerUk
+         cBCBLVO4iUH9H/NMpxrCzy7h2K45jYqW37E18WeywcRGqNF2id3Jdy+yBh9ehFEu5l
+         zYY7jKpC8xe5kMc66d9Z0jedwPN+LD9H+fDJ/kaI8yK6HT++fnhfg+0cnlkSt4dq1e
+         /YWTqyTD3CuKA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5NAMODK2589431;
+        Sun, 23 Jun 2019 03:22:24 -0700
+Date:   Sun, 23 Jun 2019 03:22:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nathan Huckleberry <tipbot@zytor.com>
+Message-ID: <tip-a9314773a91a1d3b36270085246a6715a326ff00@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        ndesaulniers@google.com, hpa@zytor.com, nhuck@google.com
+Reply-To: tglx@linutronix.de, nhuck@google.com, ndesaulniers@google.com,
+          mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <20190614181604.112297-1-nhuck@google.com>
+References: <20190614181604.112297-1-nhuck@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] timer_list: Guard procfs specific code
+Git-Commit-ID: a9314773a91a1d3b36270085246a6715a326ff00
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <1561281797-13796-1-git-send-email-pthombar@cadence.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 10:23:17AM +0100, Parshuram Thombare wrote:
-> This patch modify MDIO read/write functions to support
-> communication with C45 PHY.
+Commit-ID:  a9314773a91a1d3b36270085246a6715a326ff00
+Gitweb:     https://git.kernel.org/tip/a9314773a91a1d3b36270085246a6715a326ff00
+Author:     Nathan Huckleberry <nhuck@google.com>
+AuthorDate: Fri, 14 Jun 2019 11:16:04 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Sun, 23 Jun 2019 00:08:52 +0200
 
-Which Clause 45 PHY are you using?
+timer_list: Guard procfs specific code
 
-> 
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
-> ---
->  drivers/net/ethernet/cadence/macb.h      | 15 ++++--
->  drivers/net/ethernet/cadence/macb_main.c | 61 +++++++++++++++++++-----
->  2 files changed, 61 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 6d268283c318..330da702b946 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -642,10 +642,17 @@
->  #define GEM_CLK_DIV96				5
->  
->  /* Constants for MAN register */
-> -#define MACB_MAN_SOF				1
-> -#define MACB_MAN_WRITE				1
-> -#define MACB_MAN_READ				2
-> -#define MACB_MAN_CODE				2
-> +#define MACB_MAN_C22_SOF                        1
-> +#define MACB_MAN_C22_WRITE                      1
-> +#define MACB_MAN_C22_READ                       2
-> +#define MACB_MAN_C22_CODE                       2
-> +
-> +#define MACB_MAN_C45_SOF                        0
-> +#define MACB_MAN_C45_ADDR                       0
-> +#define MACB_MAN_C45_WRITE                      1
-> +#define MACB_MAN_C45_POST_READ_INCR             2
-> +#define MACB_MAN_C45_READ                       3
-> +#define MACB_MAN_C45_CODE                       2
->  
->  /* Capability mask bits */
->  #define MACB_CAPS_ISR_CLEAR_ON_WRITE		BIT(0)
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 10d18b2cef31..94145e460e6e 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -341,11 +341,30 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
->  	if (status < 0)
->  		goto mdio_read_exit;
->  
-> -	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
-> -			      | MACB_BF(RW, MACB_MAN_READ)
-> -			      | MACB_BF(PHYA, mii_id)
-> -			      | MACB_BF(REGA, regnum)
-> -			      | MACB_BF(CODE, MACB_MAN_CODE)));
-> +	if (regnum & MII_ADDR_C45) {
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
-> +			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
-> +			    | MACB_BF(PHYA, mii_id)
-> +			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
-> +			    | MACB_BF(DATA, regnum & 0xFFFF)
-> +			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
-> +
-> +		status = macb_mdio_wait_for_idle(bp);
-> +		if (status < 0)
-> +			goto mdio_read_exit;
-> +
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
-> +			    | MACB_BF(RW, MACB_MAN_C45_READ)
-> +			    | MACB_BF(PHYA, mii_id)
-> +			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
-> +			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
-> +	} else {
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
-> +				| MACB_BF(RW, MACB_MAN_C22_READ)
-> +				| MACB_BF(PHYA, mii_id)
-> +				| MACB_BF(REGA, regnum)
-> +				| MACB_BF(CODE, MACB_MAN_C22_CODE)));
-> +	}
->  
->  	status = macb_mdio_wait_for_idle(bp);
->  	if (status < 0)
-> @@ -374,12 +393,32 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
->  	if (status < 0)
->  		goto mdio_write_exit;
->  
-> -	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
-> -			      | MACB_BF(RW, MACB_MAN_WRITE)
-> -			      | MACB_BF(PHYA, mii_id)
-> -			      | MACB_BF(REGA, regnum)
-> -			      | MACB_BF(CODE, MACB_MAN_CODE)
-> -			      | MACB_BF(DATA, value)));
-> +	if (regnum & MII_ADDR_C45) {
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
-> +			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
-> +			    | MACB_BF(PHYA, mii_id)
-> +			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
-> +			    | MACB_BF(DATA, regnum & 0xFFFF)
-> +			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
-> +
-> +		status = macb_mdio_wait_for_idle(bp);
-> +		if (status < 0)
-> +			goto mdio_write_exit;
-> +
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
-> +			    | MACB_BF(RW, MACB_MAN_C45_WRITE)
-> +			    | MACB_BF(PHYA, mii_id)
-> +			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
-> +			    | MACB_BF(CODE, MACB_MAN_C45_CODE)
-> +			    | MACB_BF(DATA, value)));
-> +	} else {
-> +		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
-> +				| MACB_BF(RW, MACB_MAN_C22_WRITE)
-> +				| MACB_BF(PHYA, mii_id)
-> +				| MACB_BF(REGA, regnum)
-> +				| MACB_BF(CODE, MACB_MAN_C22_CODE)
-> +				| MACB_BF(DATA, value)));
-> +	}
->  
->  	status = macb_mdio_wait_for_idle(bp);
->  	if (status < 0)
-> -- 
-> 2.17.1
-> 
-> 
+With CONFIG_PROC_FS=n the following warning is emitted:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+kernel/time/timer_list.c:361:36: warning: unused variable
+'timer_list_sops' [-Wunused-const-variable]
+   static const struct seq_operations timer_list_sops = {
+
+Add #ifdef guard around procfs specific code.
+
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: john.stultz@linaro.org
+Cc: sboyd@kernel.org
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/534
+Link: https://lkml.kernel.org/r/20190614181604.112297-1-nhuck@google.com
+
+---
+ kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index 98ba50dcb1b2..acb326f5f50a 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -282,23 +282,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
+ 	SEQ_printf(m, "\n");
+ }
+ 
+-static int timer_list_show(struct seq_file *m, void *v)
+-{
+-	struct timer_list_iter *iter = v;
+-
+-	if (iter->cpu == -1 && !iter->second_pass)
+-		timer_list_header(m, iter->now);
+-	else if (!iter->second_pass)
+-		print_cpu(m, iter->cpu, iter->now);
+-#ifdef CONFIG_GENERIC_CLOCKEVENTS
+-	else if (iter->cpu == -1 && iter->second_pass)
+-		timer_list_show_tickdevices_header(m);
+-	else
+-		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
+-#endif
+-	return 0;
+-}
+-
+ void sysrq_timer_list_show(void)
+ {
+ 	u64 now = ktime_to_ns(ktime_get());
+@@ -317,6 +300,24 @@ void sysrq_timer_list_show(void)
+ 	return;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static int timer_list_show(struct seq_file *m, void *v)
++{
++	struct timer_list_iter *iter = v;
++
++	if (iter->cpu == -1 && !iter->second_pass)
++		timer_list_header(m, iter->now);
++	else if (!iter->second_pass)
++		print_cpu(m, iter->cpu, iter->now);
++#ifdef CONFIG_GENERIC_CLOCKEVENTS
++	else if (iter->cpu == -1 && iter->second_pass)
++		timer_list_show_tickdevices_header(m);
++	else
++		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
++#endif
++	return 0;
++}
++
+ static void *move_iter(struct timer_list_iter *iter, loff_t offset)
+ {
+ 	for (; offset; offset--) {
+@@ -376,3 +377,4 @@ static int __init init_timer_list_procfs(void)
+ 	return 0;
+ }
+ __initcall(init_timer_list_procfs);
++#endif
