@@ -2,115 +2,89 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16991C43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71CEC43613
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24B320820
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prY5NPMj"
+	by mail.kernel.org (Postfix) with ESMTP id A0B432133F
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 15:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfFWPPB (ORCPT
+        id S1726871AbfFWPPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 11:15:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33575 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfFWPPA (ORCPT
+        Sun, 23 Jun 2019 11:15:09 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:43227 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726429AbfFWPPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 11:15:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so5444321plo.0;
-        Sun, 23 Jun 2019 08:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=x8vjNtHwOtOiYp+v5zcfCgEak2OUOTXNTlrGHys9wmc=;
-        b=prY5NPMjkWQ8IFspCac++UoQiVBiMhoieVp4FWcrCVEgMMyWl/cauItbgNbhSG0GHk
-         tP4CBpb/GIBmR0CQ9tBByyxfEUtOAMk+b/o2IkzNFU20UV3KGJWH89ZRkPmocq0LA0dv
-         LjPIZDcIPe1OsLX2O9OVgm6Hjz1tstE8/jvdUl32kNSuE4LVD186nseuEmCxcf1RUhr9
-         nSSM0RhF9kIw1bJeMpdO4T4FYsxJSU2YALWh/inwhTqO4BzCQ6o1BtcCKif3UKjaxH6Q
-         rHMHfvhlTQZv5Zirc9pYKdOb6nVV5SopNNmfabEwQ1dU+bSOn41lh4JbAp3lfde8+/dZ
-         FTjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=x8vjNtHwOtOiYp+v5zcfCgEak2OUOTXNTlrGHys9wmc=;
-        b=ZqfbgiWoFPgAqQCYnBXlIfHa6PxuWCANaJYBX+DGmZXjAIFA3WBSb0C7GW6rwQubMm
-         akC7yIn4G5pAobtBYoD01NqYu5phhS1gwxUwyERaq/AHGfxBsjH3v5Z67gwdnUqX79d8
-         +4TMxC7l4cWdYF97KTu6ig9BI+rR1PHTSVv6OdjuiX3lgEELsaXLoIe29gp09bmqOBmg
-         stQaKjt6lcE+0bb0ifFmGuvs1ZsTA7yd38IT9YLnfJk3L3PcnYtSlJ4JJiZqFIeBVJ3T
-         uU9KZ/VRTpF5iw2kc6HKbq0LkY+3bV9IqHNbb/A8v1dTGNTZDupgczcwGOUHjOp4v/cD
-         58Ag==
-X-Gm-Message-State: APjAAAX9aLz9v9jnxrzbdo/OXNTDHpS8RbZodq9xz/AP30a74A1A92Z8
-        XmOdaxspandI2EzvXp67LMs=
-X-Google-Smtp-Source: APXvYqxsTR3lNL33V7DnaOKPQ/zlcHAgAHS4ziDze8yeNHKWjnpGcM6F2nh0rNuYMTmiqnqh/Ngk8w==
-X-Received: by 2002:a17:902:d707:: with SMTP id w7mr25735197ply.128.1561302899620;
-        Sun, 23 Jun 2019 08:14:59 -0700 (PDT)
-Received: from debian.net.fpt ([1.55.47.94])
-        by smtp.gmail.com with ESMTPSA id p6sm8329194pgs.77.2019.06.23.08.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 08:14:58 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
-        songliubraving@fb.com, andrew@lunn.ch, peterz@infradead.org,
-        nsekhar@ti.com, ast@kernel.org, jolsa@redhat.com,
-        netdev@vger.kernel.org, gerg@uclinux.org,
-        lorenzo.pieralisi@arm.com, will@kernel.org,
-        linux-samsung-soc@vger.kernel.org, daniel@iogearbox.net,
-        tranmanphong@gmail.com, festevam@gmail.com,
-        gregory.clement@bootlin.com, allison@lohutok.net,
-        linux@armlinux.org.uk, krzk@kernel.org, haojian.zhuang@gmail.com,
-        bgolaszewski@baylibre.com, tony@atomide.com, mingo@redhat.com,
-        linux-imx@nxp.com, yhs@fb.com, sebastian.hesselbarth@gmail.com,
-        illusionist.neo@gmail.com, jason@lakedaemon.net,
-        liviu.dudau@arm.com, s.hauer@pengutronix.de, acme@kernel.org,
-        lkundrak@v3.sk, robert.jarzmik@free.fr, dmg@turingmachine.org,
-        swinslow@gmail.com, namhyung@kernel.org, tglx@linutronix.de,
-        linux-omap@vger.kernel.org, alexander.sverdlin@gmail.com,
-        linux-arm-kernel@lists.infradead.org, info@metux.net,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, hsweeten@visionengravers.com,
-        kgene@kernel.org, kernel@pengutronix.de, sudeep.holla@arm.com,
-        bpf@vger.kernel.org, shawnguo@kernel.org, kafai@fb.com,
-        daniel@zonque.org
-Subject: [PATCH 05/15] ARM: footbridge: cleanup cppcheck shifting error
-Date:   Sun, 23 Jun 2019 22:13:03 +0700
-Message-Id: <20190623151313.970-6-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190623151313.970-1-tranmanphong@gmail.com>
-References: <20190623151313.970-1-tranmanphong@gmail.com>
+        Sun, 23 Jun 2019 11:15:08 -0400
+Received: (qmail 25897 invoked by uid 500); 23 Jun 2019 11:15:06 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Jun 2019 11:15:06 -0400
+Date:   Sun, 23 Jun 2019 11:15:06 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Akira Yokosawa <akiyks@gmail.com>
+cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
+In-Reply-To: <91a9c6f8-7bbf-376d-b1e0-0e2693c84ee8@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1906231112300.24649-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[arch/arm/mach-footbridge/dc21285.c:236]: (error) Shifting signed 32-bit
-value by 31 bits is undefined behaviour
+On Sun, 23 Jun 2019, Akira Yokosawa wrote:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- arch/arm/mach-footbridge/dc21285.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Paul and Alan,
+> 
+> On 2019/06/22 8:54, Paul E. McKenney wrote:
+> > On Fri, Jun 21, 2019 at 10:25:23AM -0400, Alan Stern wrote:
+> >> On Fri, 21 Jun 2019, Andrea Parri wrote:
+> >>
+> >>> On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
+> >>>> Herbert Xu recently reported a problem concerning RCU and compiler
+> >>>> barriers.  In the course of discussing the problem, he put forth a
+> >>>> litmus test which illustrated a serious defect in the Linux Kernel
+> >>>> Memory Model's data-race-detection code.
+> 
+> I was not involved in the mail thread and wondering what the litmus test
+> looked like. Some searching of the archive has suggested that Alan presented
+> a properly formatted test based on Herbert's idea in [1].
+> 
+> [1]: https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
 
-diff --git a/arch/arm/mach-footbridge/dc21285.c b/arch/arm/mach-footbridge/dc21285.c
-index 8b81a17f675d..a6c86175e76c 100644
---- a/arch/arm/mach-footbridge/dc21285.c
-+++ b/arch/arm/mach-footbridge/dc21285.c
-@@ -230,7 +230,7 @@ static irqreturn_t dc21285_parity_irq(int irq, void *dev_id)
- 	printk("\n");
- 
- 	cmd = *CSR_PCICMD & 0xffff;
--	*CSR_PCICMD = cmd | 1 << 31;
-+	*CSR_PCICMD = cmd | 1U << 31;
- 
- 	/*
- 	 * back off this interrupt
--- 
-2.11.0
+Yes, that's it.  The test is also available at:
+
+https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
+
+Alan
+
+> If this is the case, adding the link (or message id) in the change
+> log would help people see the circumstances, I suppose.
+> Paul, can you amend the change log?
+> 
+> I ran herd7 on said litmus test at both "lkmm" and "dev" of -rcu and
+> confirmed that this patch fixes the result.
+> 
+> So,
+> 
+> Tested-by: Akira Yokosawa <akiyks@gmail.com>
+> 
+>         Thanks, Akira
 
