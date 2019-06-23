@@ -2,145 +2,122 @@ Return-Path: <SRS0=VFBv=UW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA3EC43613
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01E9C48BE8
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBE22073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B734620840
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Jun 2019 04:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="OwyE7NU/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o5URg5qN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfFWEk5 (ORCPT
+        id S1726386AbfFWEwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 00:40:57 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:52321 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfFWEk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 00:40:57 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 6486F6B5D5;
-        Sun, 23 Jun 2019 04:40:53 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v3 9/9] ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
-Date:   Sun, 23 Jun 2019 12:38:01 +0800
-Message-Id: <20190623043801.14040-10-icenowy@aosc.io>
-In-Reply-To: <20190623043801.14040-1-icenowy@aosc.io>
-References: <20190623043801.14040-1-icenowy@aosc.io>
+        Sun, 23 Jun 2019 00:52:39 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42565 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725294AbfFWEwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 00:52:38 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9AA9E21BBA;
+        Sun, 23 Jun 2019 00:52:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 23 Jun 2019 00:52:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=9
+        NUbYbNslNocPTKm5rsWXu6dHgqNp/Kvxs0srhYNSQw=; b=OwyE7NU/k07adyy12
+        1By5j31IokKVZcwUKMhK8elCau7ip58LbXEPus9kVWNEC6bVkH93BlRk0RRZ7HGh
+        NHl+TQ7irdPzd0NA8rsU5wlxH42Vw5Vs8o8NlACfnEvDZwdLY2vqPhErYpErvFxY
+        TwTMkCS98kW17cZsVWpawq9MYiY57M39qq7o7zSTyF0KYEhstWYDQK8DG7J/Hf1Y
+        /n/SrA70LvjoraYpGUhPcN9D964F2WjDlxhw8EYixiCgd6B2FlRWX69eELzY+ZbT
+        RXR6C5kRjU7Kb50TtgzXGRjfnbKlRF9wclQOevzr532NmXqQYuEEK5i6YiL+483E
+        mGo6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=9NUbYbNslNocPTKm5rsWXu6dHgqNp/Kvxs0srhYNS
+        Qw=; b=o5URg5qNzDsP2EbtutfyWRHWwHkJrAU0RRK6Ttnc/mgXJuG+CSewJ6kgv
+        +KW5XmVd6soRRuaEzCaPHx9I7+jsbpuGoMwMss2LU1IKFme0QHsTb04CT+FznUPd
+        9BYG3cDCGv/LdusWXas5jVNHX1ddm7Qhz8dV+daWzlKad3bzg8gWc2tEueSkIt0Y
+        k49N8sgY7kIjgrUDObPPt2r17mkl0wYToMiSbLZ396R6naiI5wH05x61yn7uYr1v
+        yhYB8Cxeqv/cizrI1YtHfApJ/en2qr7/1aXJeS2Cq+KN+aC3OUcTNIeVlI+pwZL3
+        IgxMmDQffqkvF3+bCooxkIVNK5p0Q==
+X-ME-Sender: <xms:kgUPXVYdUS_q3wFWy3rnWwATkrTLhjZlxGqfMPFEkxfBlPx79oHsfw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdelgdekkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjfgesthekredttderjeenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:kgUPXZEN17IYp-vR-QTG_JLR-iQnez2tZtwsLmxVV7Drmn63rCF0dA>
+    <xmx:kgUPXb3vWhWHQe6leCXkxjKRuVasg7nYbnHy4Ua9_pCu90wy8cccKA>
+    <xmx:kgUPXdzUHVFAeiGW_ZYHshPEQgs-lHcPyGaoHQgRJ2Fldcq226FsDw>
+    <xmx:kwUPXbirxeJqZP4WWRvFNDPVz9LNiobdfSVAWchoCuwtFbF6VjKZSg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 62157380076;
+        Sun, 23 Jun 2019 00:52:34 -0400 (EDT)
+Date:   Sun, 23 Jun 2019 06:52:32 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v5.2-rc5] Bluetooth: Fix regression with minimum
+ encryption key size alignment
+Message-ID: <20190623045232.GA30005@kroah.com>
+References: <20190622134701.7088-1-marcel@holtmann.org>
+ <20190622181349.8C8F320862@mail.kernel.org>
+ <F46C65F2-411F-4B24-BD3C-ED9F39F5E65E@holtmann.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <F46C65F2-411F-4B24-BD3C-ED9F39F5E65E@holtmann.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lichee zero plus is a core board made by Sipeed, which includes on-board
-TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-header, a microUSB slot and a gold finger connector for expansion. It
-can use either Sochip S3 or Allwinner S3L SoC.
+On Sat, Jun 22, 2019 at 08:21:07PM +0200, Marcel Holtmann wrote:
+> Hi Sasha,
+> 
+> > [This is an automated email]
+> > 
+> > This commit has been processed because it contains a "Fixes:" tag,
+> > fixing commit: d5bb334a8e17 Bluetooth: Align minimum encryption key size for LE and BR/EDR connections.
+> > 
+> > The bot has tested the following trees: v5.1.12, v4.19.53, v4.14.128, v4.9.182, v4.4.182.
+> > 
+> > v5.1.12: Build failed! Errors:
+> >    net/bluetooth/l2cap_core.c:1356:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
+> > 
+> > v4.19.53: Build failed! Errors:
+> >    net/bluetooth/l2cap_core.c:1355:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
+> > 
+> > v4.14.128: Build failed! Errors:
+> >    net/bluetooth/l2cap_core.c:1355:24: error: ‘HCI_MIN_ENC_KEY_SIZE’ undeclared (first use in this function); did you mean ‘SMP_MIN_ENC_KEY_SIZE’?
+> > 
+> > v4.9.182: Build OK!
+> > v4.4.182: Build OK!
+> > 
+> > How should we proceed with this patch?
+> 
+> either you reapply commit d5bb334a8e17 first or I have to send a version that combines both into a single commit for easy applying.
 
-Add the basic device tree for the core board, w/o optional onboard
-storage, and with S3 SoC.
+I can reapply it...
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-Changes in v3:
-- Drop common regulator DTSI usage and added vcc3v3 regulator.
+thanks,
 
- arch/arm/boot/dts/Makefile                    |  1 +
- .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
- .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 44 +++++++++++++++++++
- 3 files changed, 53 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
- create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c4742afe41a7..d24dec29245e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1113,6 +1113,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
- 	sun8i-r16-parrot.dtb \
- 	sun8i-r40-bananapi-m2-ultra.dtb \
-+	sun8i-s3-lichee-zero-plus.dtb \
- 	sun8i-t3-cqa3t-bv3.dtb \
- 	sun8i-v3s-licheepi-zero.dtb \
- 	sun8i-v3s-licheepi-zero-dock.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-new file mode 100644
-index 000000000000..7d2f6b145190
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-s3.dtsi"
-+#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
-diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-new file mode 100644
-index 000000000000..e68f738c3046
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&mmc0 {
-+	broken-cd;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
--- 
-2.21.0
-
+greg k-h
