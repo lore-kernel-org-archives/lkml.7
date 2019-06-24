@@ -2,118 +2,100 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7589DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1042C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5448920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836072146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfFXNSD (ORCPT
+        id S1729451AbfFXNTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:18:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51410 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728666AbfFXNSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:18:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8D1B7AFB7;
-        Mon, 24 Jun 2019 13:18:01 +0000 (UTC)
-Subject: Re: [PATCH 3/6] x86: Add nopv parameter to disable PV extensions
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
-        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
-        xen-devel@lists.xenproject.org
-References: <1561294903-6166-1-git-send-email-zhenzhong.duan@oracle.com>
- <1561294903-6166-3-git-send-email-zhenzhong.duan@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <9e60cea2-a15f-b816-9049-f22be14c04b2@suse.com>
-Date:   Mon, 24 Jun 2019 15:18:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 24 Jun 2019 09:19:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36841 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbfFXNTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:19:01 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfOrd-0002bh-O4; Mon, 24 Jun 2019 15:18:29 +0200
+Date:   Mon, 24 Jun 2019 15:18:28 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Vyukov <dvyukov@google.com>
+cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        amritha.nambiar@intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Miller <davem@davemloft.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ido Schimmel <idosch@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tyhicks@canonical.com, wanghai26@huawei.com, yuehaibing@huawei.com
+Subject: Re: WARNING: ODEBUG bug in netdev_freemem (2)
+In-Reply-To: <CACT4Y+bk1h+CFVdbbKau490Wjis8zt_ia8gVctGZ+bs=7qPk=Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1906241433020.32342@nanos.tec.linutronix.de>
+References: <000000000000d6a8ba058c0df076@google.com> <alpine.DEB.2.21.1906241130100.32342@nanos.tec.linutronix.de> <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com> <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
+ <CACT4Y+bk1h+CFVdbbKau490Wjis8zt_ia8gVctGZ+bs=7qPk=Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1561294903-6166-3-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.06.19 15:01, Zhenzhong Duan wrote:
-> In virtualization environment, PV extensions (drivers, interrupts,
-> timers, etc) are enabled in the majority of use cases which is the
-> best option.
+On Mon, 24 Jun 2019, Dmitry Vyukov wrote:
+> On Mon, Jun 24, 2019 at 2:08 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > >>> ------------[ cut here ]------------
+> > >>> ODEBUG: free active (active state 0) object type: timer_list hint:
+> > >>> delayed_work_timer_fn+0x0/0x90 arch/x86/include/asm/paravirt.h:767
+> > >>
+> > >> One of the cleaned up devices has left an active timer which belongs to a
+> > >> delayed work. That's all I can decode out of that splat. :(
+> > >
+> > > Hi Thomas,
+> > >
+> > > If ODEBUG would memorize full stack traces for object allocation
+> > > (using lib/stackdepot.c), it would make this splat actionable, right?
+> > > I've fixed https://bugzilla.kernel.org/show_bug.cgi?id=203969 for this.
+> > >
+> >
+> > Not sure this would help in this case as some netdev are allocated through a generic helper.
+> >
+> > The driver specific portion might not show up in the stack trace.
+> >
+> > It would be nice here to get the work queue function pointer,
+> > so that it gives us a clue which driver needs a fix.
+
+Hrm. Let me think about a way to achieve that after I handled that
+regression which is on my desk.
+
+> I see. But isn't the workqueue callback is cleanup_net in this case
+> and is in the stack?
 > 
-> However, in some cases (kexec not fully working, benchmarking)
-> we want to disable PV extensions. As such introduce the
-> 'nopv' parameter that will do it.
-> 
-> There is already 'xen_nopv' parameter for XEN platform but not for
-> others. 'xen_nopv' can then be removed with this change.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: xen-devel@lists.xenproject.org
-> ---
->   Documentation/admin-guide/kernel-parameters.txt |  4 ++++
->   arch/x86/kernel/cpu/hypervisor.c                | 11 +++++++++++
->   2 files changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 138f666..b352f36 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5268,6 +5268,10 @@
->   			improve timer resolution at the expense of processing
->   			more timer interrupts.
->   
-> +	nopv=		[X86]
-> +			Disables the PV optimizations forcing the guest to run
-> +			as generic guest with no PV drivers.
-> +
->   	xirc2ps_cs=	[NET,PCMCIA]
->   			Format:
->   			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-> diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-> index 479ca47..4f2c875 100644
-> --- a/arch/x86/kernel/cpu/hypervisor.c
-> +++ b/arch/x86/kernel/cpu/hypervisor.c
-> @@ -85,10 +85,21 @@ static void __init copy_array(const void *src, void *target, unsigned int size)
->   			to[i] = from[i];
->   }
->   
-> +static bool nopv;
-> +static __init int xen_parse_nopv(char *arg)
-> +{
-> +	nopv = true;
-> +	return 0;
-> +}
-> +early_param("nopv", xen_parse_nopv);
-> +
->   void __init init_hypervisor_platform(void)
->   {
->   	const struct hypervisor_x86 *h;
->   
-> +	if (nopv)
-> +		return;
-> +
+>   cleanup_net+0x3fb/0x960 net/core/net_namespace.c:553
+>   process_one_work+0x989/0x1790 kernel/workqueue.c:2269
 
-Oh, this is no good idea.
+That's the work which does the cleanup, but I doubt that this is part of
+the offending net_device.
 
-There are guest types which just won't work without pv interfaces, like
-Xen PV and Xen PVH. Letting them fail due to just a wrong command line
-parameter is not nice, especially as the failure might be very hard to
-track down to the issue for the user.
+Thanks,
 
-I guess you could add a "ignore_nopv" member to struct hypervisor_x86
-set to true for the mentioned guest types and call the detect functions
-only if nopv is false or ignore_nopv is true.
+	tglx
 
 
-Juergen
+
