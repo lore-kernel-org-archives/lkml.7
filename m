@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A939EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF31C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7511C20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C210216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371734;
-	bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+	s=default; t=1561371739;
+	bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fV/w3rHl5Jdfd5gmvQLDX3SBchTys7ltxC8I0G8kTtmaalRCWifMfO5pPh0MB+NQb
-	 GmJAqDvLS97CdFnOb8ZpAeyIsiiUKZVNQsK/gtif5ZWGsxuIfOwYHVzHjSChlGrqHe
-	 ddvSgus1onU6kBWbFoMs1sG3RfjfRPO5DGuho4D8=
+	b=K8+1gOlrylED8fURYeDkVOKJ8XmtkLouvtA/ZlP2fQ/L3gyeqTsFLOh06k7uaxb1N
+	 zUWnhwpn98/PgvU2gucFxobTHfOxUsTtGt23528aKAIadsYjtZH/XzuEnZr4QZu83O
+	 zvK6rwN2vTsKiF3OdrLkW/oO/6PWNSaGp3VO1cKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfFXKWH (ORCPT
+        id S1731095AbfFXKWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57870 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731032AbfFXKWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:22:04 -0400
+        id S1731074AbfFXKWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:22:09 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 159DC2146E;
-        Mon, 24 Jun 2019 10:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5001420645;
+        Mon, 24 Jun 2019 10:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371723;
-        bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+        s=default; t=1561371728;
+        bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSEQiSpnR1zbwi5BIkylSlDf7BgfOnz//hf0beUnH9obofYASLT5eV9dUm9lwlhnl
-         NOahKRhmVrhFh+icIOItmlu/aR6Zf2luV7mNDYIzn+7+QWq+T68BxDT4MFZZIc1E4D
-         g+cxwJfrMMRe9eRVusAp7lUzfRBw+VoscTBt1LH8=
+        b=zJDeu10mmKCzehf/OBBPnw6CCwKrtVwkQmC+fsthMo2jpENMUnlBRz3LqJYu/xeGh
+         4jeI3ro2w8NLcP7abqcN8BuGNBt2j1hfQjCzDz/oL8rb1jpQhy25dAOnGa7uWYaO+W
+         JNAqVD09zF8vzopknoarpyPUhSs5fCpCCgipysbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 5.1 110/121] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-Date:   Mon, 24 Jun 2019 17:57:22 +0800
-Message-Id: <20190624092326.298695374@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.1 112/121] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
+Date:   Mon, 24 Jun 2019 17:57:24 +0800
+Message-Id: <20190624092326.393367304@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,52 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Steve French <stfrench@microsoft.com>
 
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
 
-The minimum encryption key size for LE connections is 56 bits and to
-align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
-BR/EDR connections as well.
+Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
+as the number of simultaneous SMB3 requests grows (even though the client
+has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
+so that we can retry writes which fail with this status code.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Cc: stable@vger.kernel.org
+This (for example) fixes large file copies to Windows 10 on fast networks.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/hci_core.h |    3 +++
- net/bluetooth/hci_conn.c         |    8 ++++++++
- 2 files changed, 11 insertions(+)
+ fs/cifs/smb2maperror.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -190,6 +190,9 @@ struct adv_info {
- 
- #define HCI_MAX_SHORT_NAME_LENGTH	10
- 
-+/* Min encryption key size to match with SMP */
-+#define HCI_MIN_ENC_KEY_SIZE		7
-+
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
- 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
-+	 */
-+	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
-+		return 0;
-+
- 	return 1;
- }
- 
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -457,7 +457,7 @@ static const struct status_to_posix_erro
+ 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
+ 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
+ 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
+-	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
++	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
+ 				"STATUS_INSUFFICIENT_RESOURCES"},
+ 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
+ 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
 
 
