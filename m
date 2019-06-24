@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67400C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33108208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5E2208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370317;
-	bh=tZbksyN3QSkE1MgSqdFzUQ8G6opgQR4WnYp4JaIxeBw=;
+	s=default; t=1561370322;
+	bh=ujae7JQ+lu0jKDwdkiYlRT2lJU6O7ehCmL2a/FuCdj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qm2zqMpRAPfa/JgNSFEqYdAKfVz1zvDvB+lvUgQmW1U+pmvqW3iZCLLL/u5D42yOd
-	 +UhTn3KLY73BUBWZ+01yRiuWWgbfjOOtyifVRMltJA64CBx9b2xe3DYCGtIXLhMx8V
-	 S6rwWWC8RlCDVQCm9mCIF6CqK5DA7H283gU6n9pc=
+	b=xg/UWp+1KSk2d3pZFRL+JC+PS+7PZWYDVkPn1XuC1ckk1Z6Sdf7cL6xqEroPHI74B
+	 IVM9g21vbCbl3aD0bYaQG5t1Klqq8XeZO0ZHbvWrvKcp7lqPw4/VyvazB/Md8Hg0BE
+	 NuAL948b4ls594H7XoiN9AoER1ctD1wx+mJ+t64g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfFXJ6g (ORCPT
+        id S1729066AbfFXJ6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57170 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbfFXJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:33 -0400
+        id S1729038AbfFXJ6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:38 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD23205ED;
-        Mon, 24 Jun 2019 09:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E38205ED;
+        Mon, 24 Jun 2019 09:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370312;
-        bh=tZbksyN3QSkE1MgSqdFzUQ8G6opgQR4WnYp4JaIxeBw=;
+        s=default; t=1561370317;
+        bh=ujae7JQ+lu0jKDwdkiYlRT2lJU6O7ehCmL2a/FuCdj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8UkD/ntcRKftD3VICkpQvBVIn98oHlFNp/B5a5VTndnw5LX1lBzWL+XA1Lb0JekH
-         04QSLcEN5Vgxc5YTj1FkTW3VYQPA5H6JDBUouA5js7fzqbnf7OnGpAx0H/HWRmsaTV
-         XOMpsbH/+skkXPW/LsnwJDuyOKK8ODbdxUfjEjfo=
+        b=j0DaWepEGls/gpPWi+UmAcIReANu/WvFHGl/jmvlY/2hNL15G3n2VToKPOFuQ2k5N
+         xUqHONiu9FqakKbykva5T+7jvbcgdpSBlQaP19b+n7R/2pr2ozIEcjvsgSops/4/fJ
+         wFarbwAl6MBv2ShhIbgwXASSQnfM/0vf+LFxreU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/51] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
-Date:   Mon, 24 Jun 2019 17:56:44 +0800
-Message-Id: <20190624092309.485457817@linuxfoundation.org>
+Subject: [PATCH 4.14 28/51] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+Date:   Mon, 24 Jun 2019 17:56:46 +0800
+Message-Id: <20190624092309.643476580@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -60,41 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
+[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
 
-The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
-sample period of a running perf_event. Consequently, when calculating
-the next event period, the new period will only be considered after the
-previous one has overflowed.
+Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
+equals to 2.
 
-This patch changes the calculation of the remaining event ticks so that
-they are offset if the period has changed.
-
-See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
-response to PERF_EVENT_IOC_PERIOD") for details.
-
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/perf_event.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index eceb0215bdee..58ea64a29d5f 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -891,6 +891,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
- 	s64 period = hwc->sample_period;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 5208bf61df10..9ba699cbdbc5 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -1788,6 +1788,7 @@ static void mtk_poll_controller(struct net_device *dev)
  
-+	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
-+	if (unlikely(period != hwc->last_period))
-+		left = period - (hwc->last_period - left);
-+
- 	if (unlikely(left <= -period)) {
- 		left = period;
- 		local64_set(&hwc->period_left, left);
+ static int mtk_start_dma(struct mtk_eth *eth)
+ {
++	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
+ 	int err;
+ 
+ 	err = mtk_dma_init(eth);
+@@ -1804,7 +1805,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
+ 		MTK_QDMA_GLO_CFG);
+ 
+ 	mtk_w32(eth,
+-		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
++		MTK_RX_DMA_EN | rx_2b_offset |
+ 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
+ 		MTK_PDMA_GLO_CFG);
+ 
 -- 
 2.20.1
 
