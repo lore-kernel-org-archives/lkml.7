@@ -2,83 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AA1C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E72DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73489204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A1A208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:19:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8OxJ5hD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfFXHRr (ORCPT
+        id S1727240AbfFXHTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:17:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfFXHRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:17:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C6C7308FEC6;
-        Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B00115D739;
-        Mon, 24 Jun 2019 07:17:42 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 09:17:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-Message-ID: <20190624091740.1d9c6c1d.cohuck@redhat.com>
-In-Reply-To: <alpine.LFD.2.21.1906211817010.2388@schleppi>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-        <alpine.LFD.2.21.1906211817010.2388@schleppi>
-Organization: Red Hat GmbH
+        Mon, 24 Jun 2019 03:19:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36481 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfFXHTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:19:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f21so6627107pgi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QPAEHfwyfOjLp/c8rpixuI8ADZDNn2aJbjyiJvtOkdo=;
+        b=D8OxJ5hDzCPBUMggYfCNKwGemPJce4+u+TfYfAbR8MrtPwew9AeuDKQMqu8YxU3t47
+         SAx4jQYpXtZ6AEp4Nuct7lskoBwDi9vzvyTzjWQEtlXgbgoC089UdXSzWVc3CimUDwJk
+         GWxJAI97HZZVQHxxG56xQvY7sgif+RF/QHKs4EJDYsamYFiWJvjMBBde0zpDkGaZUboo
+         Zj8fzlk2e22lsjS6lCASD2aqIEZGaipyvHpfM/zws4+HQs5xM9B2fTiWaVMCCQlMg9aS
+         9otkd1IWKyQ0//+50kafrirm1sR8h+SvndhWpm93tRkfimZ+6osB1HxjxAcgU/hAH0zs
+         OLbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QPAEHfwyfOjLp/c8rpixuI8ADZDNn2aJbjyiJvtOkdo=;
+        b=FjIWRZQrCJG8zjA1jRuWnIJSB6Owt28EQp/VtKWsRCA6FuJwcm2WjaXGQGYuDxZmme
+         0N7brjWgHyOjakRjts1X03su/BewGFbxp62ZItuARbz+y///ZaWLfEUAassALtaRB1LI
+         uheLi4hYlZH5frJWzFGCMqybcPu8+9r9y7GErmTrZG5CG+PfLH+qTx52bsx3/u7qIBT2
+         xTe96ioJ4acHCTgOhJ7Z7n7KBivtWY9znxAVcsEAe+4gOu4U68ufpX1PzfqGmo9vi86H
+         FggN3n8h0OMLftEXF2l+GFEJHyEzB08QGtMINcg+miT8A14I65/xohusYaFTKC0tGV3X
+         3ryg==
+X-Gm-Message-State: APjAAAWigOtuk+mGT3ysxSIwdRHFrXE1lJlnYDCSSm2bct7ZiKORaIiF
+        cQ8PFeGiOKHLVc9YA3o5zSmkPw==
+X-Google-Smtp-Source: APXvYqzIgwcVlBKHTTwWRSeNdStEXG4H82G1BHRelc3PSTsht1dC5KsSDCo4jQ24mGQ9s86jMDAYUQ==
+X-Received: by 2002:a17:90a:4f0e:: with SMTP id p14mr12184025pjh.40.1561360740638;
+        Mon, 24 Jun 2019 00:19:00 -0700 (PDT)
+Received: from localhost ([122.172.211.128])
+        by smtp.gmail.com with ESMTPSA id n5sm21169200pgd.26.2019.06.24.00.18.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 00:18:59 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 12:48:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Marc Dietrich <marvin24@gmx.de>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] OPP: Fix crashing when current OPP has unsupportable
+ voltage
+Message-ID: <20190624071857.6ji4zc55qugpqnij@vireshk-i7>
+References: <20190623175053.26167-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190623175053.26167-1-digetx@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
-Sebastian Ott <sebott@linux.ibm.com> wrote:
+On 23-06-19, 20:50, Dmitry Osipenko wrote:
+> Fix NULL dereference caused by a typo in the code. In particular it
+> happens when CPU is running on a frequency which has unsupportable voltage
+> (by regulator) defined in the OPP table and a custom set_opp() callback is
+> being used. The problem was spotted during of testing of upcoming update
+> for the NVIDIA Tegra CPUFreq driver.
+> 
+> Cc: stable <stable@vger.kernel.org>
+> Fixes: 7e535993fa4f ("OPP: Separate out custom OPP handler specific code")
+> Reported-by: Marc Dietrich <marvin24@gmx.de>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/opp/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 9fda9a0ec016..89ec6aa220cf 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -685,7 +685,7 @@ static int _set_opp_custom(const struct opp_table *opp_table,
+>  
+>  	data->old_opp.rate = old_freq;
+>  	size = sizeof(*old_supply) * opp_table->regulator_count;
+> -	if (IS_ERR(old_supply))
+> +	if (!old_supply)
+>  		memset(data->old_opp.supplies, 0, size);
+>  	else
+>  		memcpy(data->old_opp.supplies, old_supply, size);
 
-> On Thu, 13 Jun 2019, Cornelia Huck wrote:
-> > Sometimes, we want to control which of the matching drivers
-> > binds to a subchannel device (e.g. for subchannels we want to
-> > handle via vfio-ccw).
-> > 
-> > For pci devices, a mechanism to do so has been introduced in
-> > 782a985d7af2 ("PCI: Introduce new device binding path using
-> > pci_dev.driver_override"). It makes sense to introduce the
-> > driver_override attribute for subchannel devices as well, so
-> > that we can easily extend the 'driverctl' tool (which makes
-> > use of the driver_override attribute for pci).
-> > 
-> > Note that unlike pci we still require a driver override to
-> > match the subchannel type; matching more than one subchannel
-> > type is probably not useful anyway.
-> > 
-> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
-> 
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> 
-> Should I take that via our git tree or do you have other patches depending 
-> on this one?
-> 
+While the change is fine, the commit log isn't. It isn't about
+unsupportable voltage but frequency. The frequency the CPU is
+currently running at, is not present in the OPP table and so there is
+no corresponding OPP, hence no voltage supplies.
 
-No, this patch is stand-alone; everything else is happening in user
-space, so taking it via your tree would be great. Thanks!
+I have applied this patch with following change log:
+
+commit 560d1bcad715c215e7ffe5d7cffe045974b623d0 (HEAD -> opp/linux-next)
+Author: Dmitry Osipenko <digetx@gmail.com>
+Date:   Sun Jun 23 20:50:53 2019 +0300
+
+    opp: Don't use IS_ERR on invalid supplies
+    
+    _set_opp_custom() receives a set of OPP supplies as its arguments and
+    the caller of it passes NULL when the supplies are not valid. But
+    _set_opp_custom(), by mistake, checks for error by performing
+    IS_ERR(old_supply) on it which will always evaluate to false.
+    
+    The problem was spotted during of testing of upcoming update for the
+    NVIDIA Tegra CPUFreq driver.
+    
+    Cc: stable <stable@vger.kernel.org>
+    Fixes: 7e535993fa4f ("OPP: Separate out custom OPP handler specific code")
+    Reported-by: Marc Dietrich <marvin24@gmx.de>
+    Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+    [ Viresh: Massaged changelog ]
+    Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/opp/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+-- 
+viresh
