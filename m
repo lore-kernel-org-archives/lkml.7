@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC043C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09047C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D64A21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FBD216E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371394;
-	bh=R3kte9HSML48BOOzKcfTRnplU35ZZNXwoKZwq5oQrNY=;
+	s=default; t=1561371400;
+	bh=ZoUvg6Cuj0gLOckE2E1pb8pVmMdC6IXEbv+tF/XOAV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRl/2nf7iR2nKOlcbsWX5nvJII6ew321O8VRMBY3OZHC664UNghv63xhPwGpvlVTh
-	 LWmdaUzMLmCA1NVnoSDTQPZNe3lCCdX1wE5ZUqQB+BdrQs/r2FsS6PuM8hBD/RaY0f
-	 /U49AQVYECl3z0WJ/M9CXt/ZBTXbW4rDh68I5rio=
+	b=04xRD/bvOqA+byNXAR80BpYhSuiH/w1Jew8XROX3mlHJ9NWAsNzMvDj6Ntda+V53i
+	 5LLhfFp+Tm4lrkZuJHURIrE+ajKhBFBwOGPM0b/3T0d65jftt1xxYQoIDrKpnUVmAm
+	 QAg+KMJhguAFhGA0AvIQv2WeV7VqNDa/S5QU1N+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbfFXKQd (ORCPT
+        id S1730774AbfFXKQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730745AbfFXKQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:30 -0400
+        id S1730759AbfFXKQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:35 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A25B205ED;
-        Mon, 24 Jun 2019 10:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C96F721473;
+        Mon, 24 Jun 2019 10:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371389;
-        bh=R3kte9HSML48BOOzKcfTRnplU35ZZNXwoKZwq5oQrNY=;
+        s=default; t=1561371395;
+        bh=ZoUvg6Cuj0gLOckE2E1pb8pVmMdC6IXEbv+tF/XOAV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDoljyoUSr9fk5S89fSIpDA/BYr/C2njJtJ+BdKMQ0+L5NIp9uI/ptNkocCBXH1bV
-         dX2HEb4PQSWiccUHmiqxbYGLB0rLiio/7xSBJe4aatGgqompAxX+yOyA6Iyo2pGDCs
-         dL0Jwdmx7F9fosNmuOnI9ZVCiOr8HeAcE5bF16jU=
+        b=fw+LhZGKx+1GB6Th3Zjyra0OgWQNqdTwEbqimPd5LCnajMQPLpfAaM2Xj1umuzarp
+         67NpV8ib+33pjCG3BlaP9LS/nddAjqJdKGlqpcviu1srZjbz5xunZjQUqwrafti03S
+         JDdIKeURdtXRdBqbtmJCRbLrN75dVb2G/afyKuLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Jaesoo Lee <jalee@purestorage.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 086/121] hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
-Date:   Mon, 24 Jun 2019 17:56:58 +0800
-Message-Id: <20190624092325.227711362@linuxfoundation.org>
+Subject: [PATCH 5.1 088/121] nvme: Fix u32 overflow in the number of namespace list calculation
+Date:   Mon, 24 Jun 2019 17:57:00 +0800
+Message-Id: <20190624092325.313690600@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,99 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4a60570dce658e3f8885bbcf852430b99f65aca5 ]
+[ Upstream commit c8e8c77b3bdbade6e26e8e76595f141ede12b692 ]
 
-Some chips have attributes which exist on more than one page but the
-attribute is not presently marked as paged. This causes the attributes
-to be generated with the same label, which makes it impossible for
-userspace to tell them apart.
+The Number of Namespaces (nn) field in the identify controller data structure is
+defined as u32 and the maximum allowed value in NVMe specification is
+0xFFFFFFFEUL. This change fixes the possible overflow of the DIV_ROUND_UP()
+operation used in nvme_scan_ns_list() by casting the nn to u64.
 
-Marking all such attributes as paged would result in the page suffix
-being added regardless of whether they were present on more than one
-page or not, which might break existing setups. Therefore, we add a
-second check which treats the attribute as paged, even if not marked as
-such, if it is present on multiple pages.
-
-Fixes: b4ce237b7f7d ("hwmon: (pmbus) Introduce infrastructure to detect sensors and limit registers")
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jaesoo Lee <jalee@purestorage.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/pmbus_core.c | 34 ++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+ drivers/nvme/host/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 2e2b5851139c..cd24b375df1e 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -1230,7 +1230,8 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
- 				      const struct pmbus_driver_info *info,
- 				      const char *name,
- 				      int index, int page,
--				      const struct pmbus_sensor_attr *attr)
-+				      const struct pmbus_sensor_attr *attr,
-+				      bool paged)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 35d2202ee2fd..3a390b2c7540 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3397,7 +3397,8 @@ static int nvme_scan_ns_list(struct nvme_ctrl *ctrl, unsigned nn)
  {
- 	struct pmbus_sensor *base;
- 	bool upper = !!(attr->gbit & 0xff00);	/* need to check STATUS_WORD */
-@@ -1238,7 +1239,7 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 	struct nvme_ns *ns;
+ 	__le32 *ns_list;
+-	unsigned i, j, nsid, prev = 0, num_lists = DIV_ROUND_UP(nn, 1024);
++	unsigned i, j, nsid, prev = 0;
++	unsigned num_lists = DIV_ROUND_UP_ULL((u64)nn, 1024);
+ 	int ret = 0;
  
- 	if (attr->label) {
- 		ret = pmbus_add_label(data, name, index, attr->label,
--				      attr->paged ? page + 1 : 0);
-+				      paged ? page + 1 : 0);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1271,6 +1272,30 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
- 	return 0;
- }
- 
-+static bool pmbus_sensor_is_paged(const struct pmbus_driver_info *info,
-+				  const struct pmbus_sensor_attr *attr)
-+{
-+	int p;
-+
-+	if (attr->paged)
-+		return true;
-+
-+	/*
-+	 * Some attributes may be present on more than one page despite
-+	 * not being marked with the paged attribute. If that is the case,
-+	 * then treat the sensor as being paged and add the page suffix to the
-+	 * attribute name.
-+	 * We don't just add the paged attribute to all such attributes, in
-+	 * order to maintain the un-suffixed labels in the case where the
-+	 * attribute is only on page 0.
-+	 */
-+	for (p = 1; p < info->pages; p++) {
-+		if (info->func[p] & attr->func)
-+			return true;
-+	}
-+	return false;
-+}
-+
- static int pmbus_add_sensor_attrs(struct i2c_client *client,
- 				  struct pmbus_data *data,
- 				  const char *name,
-@@ -1284,14 +1309,15 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
- 	index = 1;
- 	for (i = 0; i < nattrs; i++) {
- 		int page, pages;
-+		bool paged = pmbus_sensor_is_paged(info, attrs);
- 
--		pages = attrs->paged ? info->pages : 1;
-+		pages = paged ? info->pages : 1;
- 		for (page = 0; page < pages; page++) {
- 			if (!(info->func[page] & attrs->func))
- 				continue;
- 			ret = pmbus_add_sensor_attrs_one(client, data, info,
- 							 name, index, page,
--							 attrs);
-+							 attrs, paged);
- 			if (ret)
- 				return ret;
- 			index++;
+ 	ns_list = kzalloc(NVME_IDENTIFY_DATA_SIZE, GFP_KERNEL);
 -- 
 2.20.1
 
