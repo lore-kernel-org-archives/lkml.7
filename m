@@ -2,271 +2,102 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274F3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B90AC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4038208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561352853;
-	bh=lJObKbnxOH/e9b32wZv3giuefDbj7/1m9Gd+m7m2qNs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xm6tyKvMSE175hfaLTdEX92FEFXmN7YaRMnHWLY31P6/opC/9tkKZ8x1EXddNTi64
-	 UC5ZCt7uf/2B67aixeq+w8PsZCicoRIQOkcQsjUn5/FrF5Vdu5gzqrxb9P5NziI9XP
-	 HxRBkgyLtXk3UYM+RkfUjupUaQs7ozo32b/D2u+I=
+	by mail.kernel.org (Postfix) with ESMTP id 443302133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OktZxb05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfFXFHb (ORCPT
+        id S1727881AbfFXFJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:07:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbfFXFHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:07:30 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FEE208C3;
-        Mon, 24 Jun 2019 05:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561352849;
-        bh=lJObKbnxOH/e9b32wZv3giuefDbj7/1m9Gd+m7m2qNs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MlLP8CVtBLhOMwXG1sgTmFGt2cBiEx1CcNEVZxBuCuff6jc35Gvq5OXzJSsmHf96h
-         j2i+GHV4YvWC7jVsoaDuAyLFbOuZ5GmJfZ/JGL7sxeMg7/Z1AgvLK/Gp9HvfGH8Gme
-         GYHpj6foRM8ukCnOcRGiBp7Lp98QmsvL++e4/2i4=
-Date:   Sun, 23 Jun 2019 22:07:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 9 open syzbot bugs in sound subsystem
-Message-ID: <20190624050728.GB30702@sol.localdomain>
+        Mon, 24 Jun 2019 01:09:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45983 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfFXFJu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:09:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so6784388pfq.12
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 22:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RVY6qs2x//IRTjLWtMXFvlJbom1+urYYXoetqrm4oak=;
+        b=OktZxb05cA7jjdGotH5tWVi83rtdPg2lTEu1k0I13JUX5Cc7oGckdphOhmpETppIb/
+         WB/nd70i7joZsf6C/aoyjZglz4U0O2MHKtslPtrOacDf62vt9arL/Xbsjdb1f3l2OFUk
+         3bxvKb5zxBiSlia5bPgqP9/KmXTja+33FG2v/pZkgYSjv0U+SWbH/m3AbG2o5D/GLLQB
+         oAmRI6J8U8i3xHTTAMItZu79RJGBTeEDMaxcSXJEeiX5AGwjXJY9N3gBuieoajvHr/fX
+         R2UaNd/OCfk5AWAyMp77ZYZbYxaJ+tpVQD29b+5JU0/t1nzV6evqaSGn82ke1Agb20RK
+         pN/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RVY6qs2x//IRTjLWtMXFvlJbom1+urYYXoetqrm4oak=;
+        b=YHObqX8ZYgLqnEfxD8VXNDq83YtiOC3wjNuHPLPFLsujo1CuDsjfJGNBw/pgo+P/ho
+         E1r07n766L+xCNUeKOTMmFAPxRDM4Xd2qg9gysDfUDfilmte+jntEfDWfFq/zdaoYT/m
+         JJzecknUklzaSu657dxY41zcVGRDmCcvUmFA+5QEBfdTouKItwH+rPlNFAepi8bCCxUC
+         ru7X/8ATeRpazZDLpSXqpR75QoAzvzcYINnFr1HGEB+hglamcQBuOBRvzMT0ptmJU2uf
+         zG8GiU+icFYtZe9lcLzC4Fie+9+pOpO9bizjS7oua+kKZ7vEpc1CzljIIg/bppZQt1bx
+         JMyQ==
+X-Gm-Message-State: APjAAAX99/8S/0rCznIuLzUmklh3yjlH+5o3G9c6ZlX5cK5Iaj5q8Rtj
+        kq4t5E3bGdma5xCBSvVID/M=
+X-Google-Smtp-Source: APXvYqyhniW0jG8SeU16sLDlT8V11Ngp3qjDdLAvp2SYBIu1uSNmdXDBP623duvkPM2tJ6jFh/QtkA==
+X-Received: by 2002:a17:90a:2385:: with SMTP id g5mr23132372pje.12.1561352989891;
+        Sun, 23 Jun 2019 22:09:49 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id e63sm17545179pgc.62.2019.06.23.22.09.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 22:09:49 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     akpm@linux-foundation.org, urezki@gmail.com, rpenyaev@suse.de,
+        guro@fb.com, rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
+        aryabinin@virtuozzo.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] mm/vmalloc: fix a compile warning in mm
+Date:   Mon, 24 Jun 2019 13:09:37 +0800
+Message-Id: <20190624050937.6977-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better.]
+mm/vmalloc.c: In function ‘pcpu_get_vm_areas’:
+mm/vmalloc.c:976:4: warning: ‘lva’ may be used uninitialized in
+this function [-Wmaybe-uninitialized]
+insert_vmap_area_augment(lva, &va->rb_node,
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 9 of them as possibly being bugs in the sound subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+ mm/vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Of these 9 bugs, 1 was bisected to a commit from the following person:
-
-	Takashi Iwai <tiwai@suse.de>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the sound subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Write in default_read_copy_kernel
-Last occurred:      119 days ago
-Reported:           195 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=04933ddeeb1b542edf54b88ceccdac34de747a40
-Original thread:    https://lkml.kernel.org/lkml/0000000000004a6256057ca3b6bd@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 65766ee0bf7fe8b3be80e2e1c3ef54ad59b29476
-	Author: Takashi Iwai <tiwai@suse.de>
-	Date:   Fri Nov 9 10:59:45 2018 +0000
-
-	��ALSA: oss: Use kvzalloc() for local buffer allocations
-
-The original thread for this bug received 1 reply, 96 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+12f17c177de05efea72d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000004a6256057ca3b6bd@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: proc registration bug in snd_info_card_register
-Last occurred:      27 days ago
-Reported:           72 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0cf36d8457554bf03c3cacc44d31ff145a0c1a11
-Original thread:    https://lkml.kernel.org/lkml/0000000000007f693a058653d90c@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a sound USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2e782bf6a60d0fcb932d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007f693a058653d90c@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in snd_usb_motu_microbookii_communicate/usb_submit_urb
-Last occurred:      15 days ago
-Reported:           12 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=125081d1f7eba4b9b25f53aaae53176cd4abb2b7
-Original thread:    https://lkml.kernel.org/lkml/000000000000acb99a058b0d5741@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a sound USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000acb99a058b0d5741@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in snd_seq_write
-Last occurred:      57 days ago
-Reported:           300 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=33501520944e11adedf1c454eec4cb818bee16c8
-Original thread:    https://lkml.kernel.org/lkml/000000000000e5050205746dcbb0@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug received 1 reply, 300 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e5050205746dcbb0@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in check_and_subscribe_port
-Last occurred:      54 days ago
-Reported:           47 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2c039ed96840fcfe469c2c5c5fc0bef92e5c9a23
-Original thread:    https://lkml.kernel.org/lkml/0000000000008af53105884907e9@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+20ab495fadf081e8a2b0@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000008af53105884907e9@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: suspicious RCU usage in line6_pcm_acquire
-Last occurred:      28 days ago
-Reported:           59 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a0ea128a37bfe56208042c02d080873dcbdf69a0
-Original thread:    https://lkml.kernel.org/lkml/0000000000007cb1ee0587591549@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a sound USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+06b7a5a8c4acc0445995@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007cb1ee0587591549@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in wake_up_if_idle
-Last occurred:      101 days ago
-Reported:           237 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b1e300cd7b124fc83dd4199d4d1df26310111b0f
-Original thread:    https://lkml.kernel.org/lkml/00000000000066ab7105795f245e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2c1253bc508adef78a7f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000066ab7105795f245e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in snd_seq_write
-Last occurred:      95 days ago
-Reported:           300 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9366cef8455b032553567ce096a5b31d8307b7dc
-Original thread:    https://lkml.kernel.org/lkml/0000000000001f74de0574710d3e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001f74de0574710d3e@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in linear_transfer (2)
-Last occurred:      70 days ago
-Reported:           61 days ago
-Branches:           linux-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e76ec5e68d0556a5eed9c0565fd5535ecc60300b
-Original thread:    https://lkml.kernel.org/lkml/0000000000000f7c8105873507b5@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e28a58bb80f4c67a2b89@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000000f7c8105873507b5@google.com
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 4c9e150e5ad3..78c5617fdf3f 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -913,7 +913,7 @@ adjust_va_to_fit_type(struct vmap_area *va,
+ 	unsigned long nva_start_addr, unsigned long size,
+ 	enum fit_type type)
+ {
+-	struct vmap_area *lva;
++	struct vmap_area *lva = NULL;
+ 
+ 	if (type == FL_FIT_TYPE) {
+ 		/*
+-- 
+2.18.0
 
