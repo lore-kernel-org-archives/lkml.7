@@ -2,68 +2,68 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD08C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD3FC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FF1213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2923214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MApm63Q5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="tctRPNjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbfFXNOP (ORCPT
+        id S1730931AbfFXNOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:14:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38117 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730825AbfFXNOL (ORCPT
+        Mon, 24 Jun 2019 09:14:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37384 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730836AbfFXNOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:14:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so13320137wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:14:10 -0700 (PDT)
+        Mon, 24 Jun 2019 09:14:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f17so13346737wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=550rdQvPEpXRICt57j9lxMM5hxSHkZtM5UQc6a6drbE=;
-        b=MApm63Q5KkYtQWv/PSQalezO2BBDnpIijPrWRFHKBj7SA+98UuiveTqEwQtX429kTE
-         Nf5ie8av3/38lXA6GiaCdQoqNn1nhPThbBpKeSbS0gJ9oKhj0TfcF3c73PhbniIu3iiL
-         wSqHRqM90R7kZrCD3hMnkEt7pJt/C4kz7lLcogQApq6BssveU4OWFnMOvCKXttEx2aId
-         a6oB6n+4nGRsC214G3Ew24iYriZRk9MJ6wteIrMfHEwlzsmUS++7I6I6Z0clRTAvb4Q3
-         6MKkmgxi8rE+tRwcmRiGOzxjyTXuM/W/94DZWp30FHmjqs6ds0KGDEs7a8d3CUNILFt5
-         KF4A==
+        bh=4D3o5SEJKsvVBksV7qKTIddf2rG+0VEDDDbyrl2Tbrs=;
+        b=tctRPNjWrC2Vt84gqwVrLJlyUXsOUtGoAseuFGx4UAAS4tI2v37ZBitD/0A73cllC0
+         HU1E+DYtpMe8p2E7KijS3JKjI7jMsjvzcB6EuRgaG0NrcNS2Yhzs/NXa5W7El3nJBwC/
+         xC0OJcieyCLFNNtB36ffVb9NZxu0wOd34S39IZL1hs6B+IFlR98/oVeBbphjxDNPGguT
+         j/s87zbGUN9E3zHokCDjT6mTXMw7w0zoST6/kCfpj6K0CMri9sLs5gwRdtYzh2UmsOmS
+         vJhKkM6HD9/hQjhHXiiIyEeeup3cbREjdbNv+k5AVjKlHbRe0NfSTbuVZqYUi2dZuQnP
+         jZ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=550rdQvPEpXRICt57j9lxMM5hxSHkZtM5UQc6a6drbE=;
-        b=O6r7ngXqdFlJqMopWNhXkKW526ob4uNgQz7LNILXUCzUJEi+qe9ehO2F6W3y8CRap9
-         kvpH5OCn5ycZ6ubDfEOTluG1f9A/+tKimpNWLE679kDFTviUJ2ikbSgUilFpEQnP1AvX
-         zEUtCJgmIIvo2moGEON7Swje6lwTg9kF+6SXVSQrX3+iHubmKLY8q7oI596kevI+t6Oh
-         YmS17h8cymwUPCBoQA5md1khejAjQapP8PaLXsIoC+5bQxDBlbcvWoyZWM4pEVYKFGYu
-         0yQlz3U/bek7zkqAyMRszOYo/wtTdKsWrYbOPCMs2/DbsL1N5ogHlAUMqBW4Sj+8in1/
-         zj3A==
-X-Gm-Message-State: APjAAAVENnFisvDWGX2/lfMovkN5mUP0S5tKEJSFcP2zRRkQXZP0cyNX
-        MTFWmorqYV+KHRBPvtE4V0tOFA==
-X-Google-Smtp-Source: APXvYqxMfoGiYVcKiwFRikncCa+qI0TnCVmdSIl2dnveLE/Y9e5L/NveSMlQa58p67RnT6Ou8Hsfsw==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr15519108wml.97.1561382049688;
-        Mon, 24 Jun 2019 06:14:09 -0700 (PDT)
+        bh=4D3o5SEJKsvVBksV7qKTIddf2rG+0VEDDDbyrl2Tbrs=;
+        b=mVj08LpMM7h2Fkb5gNeFyIN5ciZV6+B4uGEoWMZ3qtNTh73lzEu6Dypix1tpc74U/h
+         1QKxDMsd+0GNqS2dSow8cKaDx1ImXkmL/bKgbzD4KPyHWmJYXD0eXviRjWev7FiYhgeL
+         e+Qq+8qilfpHxu5yEtjvXzx6GZXmtIOP8ixLE1j2uG4HT6Ikf02Tii3bX7Y69AdRGYK6
+         XBVg8GrZHV6cNovM4lcBjCFKzx35W26oA8JYJaF8o77siJoUt/BOua7qDfhWWk2eLUq5
+         UH6DeMLa7O+Nj4zFsDxsyZ1QO/O7JTPbAtQsMEq03e34kkWqJQseFuyWftxm2cEn6JZV
+         8mrA==
+X-Gm-Message-State: APjAAAWizjFU0ZMBE0aRAiXZQXzhyCYmN1FFcAicXFIzyQ2gDui1qQiK
+        2WzPEvySi3wkEwFBsJ5ynbCJig==
+X-Google-Smtp-Source: APXvYqwbRHzkbzEasV7zXLRLlOukqtmx2riVNvJZJOvWanztVmt5mbXS4yH2Y7UyFN3oIUMg2jYf5Q==
+X-Received: by 2002:a1c:6a06:: with SMTP id f6mr15926991wmc.159.1561382050517;
+        Mon, 24 Jun 2019 06:14:10 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id y2sm9535526wrl.4.2019.06.24.06.14.08
+        by smtp.gmail.com with ESMTPSA id y2sm9535526wrl.4.2019.06.24.06.14.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 06:14:09 -0700 (PDT)
+        Mon, 24 Jun 2019 06:14:10 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>,
         Kevin Hilman <khilman@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 08/10] ARM: davinci: dm644x: switch to using the clocksource driver
-Date:   Mon, 24 Jun 2019 15:13:49 +0200
-Message-Id: <20190624131351.3732-9-brgl@bgdev.pl>
+Subject: [PATCH 09/10] ARM: davinci: dm646x: switch to using the clocksource driver
+Date:   Mon, 24 Jun 2019 15:13:50 +0200
+Message-Id: <20190624131351.3732-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190624131351.3732-1-brgl@bgdev.pl>
 References: <20190624131351.3732-1-brgl@bgdev.pl>
@@ -76,20 +76,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We now have a proper clocksource driver for davinci. Switch the dm644x
+We now have a proper clocksource driver for davinci. Switch the dm646x
 platform to using it.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/dm644x.c | 24 +++++++++++++-----------
+ arch/arm/mach-davinci/dm646x.c | 24 +++++++++++++-----------
  1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index 7a6b5a48cae5..24988939ae46 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -27,7 +27,8 @@
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 97fe533726e9..2b628c31aef4 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -28,7 +28,8 @@
  #include <mach/cputype.h>
  #include <mach/mux.h>
  #include <mach/serial.h>
@@ -99,7 +99,7 @@ index 7a6b5a48cae5..24988939ae46 100644
  
  #include "asp.h"
  #include "davinci.h"
-@@ -561,15 +562,15 @@ static struct davinci_id dm644x_ids[] = {
+@@ -501,15 +502,15 @@ static struct davinci_id dm646x_ids[] = {
  };
  
  /*
@@ -110,11 +110,11 @@ index 7a6b5a48cae5..24988939ae46 100644
 + * Bottom half of timer0 is used for clockevent, top half is used for
 + * clocksource.
   */
--static struct davinci_timer_info dm644x_timer_info = {
+-static struct davinci_timer_info dm646x_timer_info = {
 -	.timers		= davinci_timer_instance,
 -	.clockevent_id	= T0_BOT,
 -	.clocksource_id	= T0_TOP,
-+static const struct davinci_timer_cfg dm644x_timer_cfg = {
++static const struct davinci_timer_cfg dm646x_timer_cfg = {
 +	.reg = DEFINE_RES_IO(DAVINCI_TIMER0_BASE, SZ_4K),
 +	.irq = {
 +		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_TINT0_TINT12)),
@@ -122,33 +122,33 @@ index 7a6b5a48cae5..24988939ae46 100644
 +	},
  };
  
- static struct plat_serial8250_port dm644x_serial0_platform_data[] = {
-@@ -647,7 +648,6 @@ static const struct davinci_soc_info davinci_soc_info_dm644x = {
+ static struct plat_serial8250_port dm646x_serial0_platform_data[] = {
+@@ -587,7 +588,6 @@ static const struct davinci_soc_info davinci_soc_info_dm646x = {
  	.pinmux_base		= DAVINCI_SYSTEM_MODULE_BASE,
- 	.pinmux_pins		= dm644x_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(dm644x_pins),
--	.timer_info		= &dm644x_timer_info,
- 	.emac_pdata		= &dm644x_emac_pdata,
- 	.sram_dma		= 0x00008000,
- 	.sram_len		= SZ_16K,
-@@ -669,6 +669,7 @@ void __init dm644x_init_time(void)
+ 	.pinmux_pins		= dm646x_pins,
+ 	.pinmux_pins_num	= ARRAY_SIZE(dm646x_pins),
+-	.timer_info		= &dm646x_timer_info,
+ 	.emac_pdata		= &dm646x_emac_pdata,
+ 	.sram_dma		= 0x10010000,
+ 	.sram_len		= SZ_32K,
+@@ -652,6 +652,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
  {
  	void __iomem *pll1, *psc;
  	struct clk *clk;
 +	int rv;
  
- 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM644X_REF_FREQ);
- 
-@@ -684,7 +685,8 @@ void __init dm644x_init_time(void)
+ 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, ref_clk_rate);
+ 	clk_register_fixed_rate(NULL, "aux_clkin", NULL, 0, aux_clkin_rate);
+@@ -668,7 +669,8 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
  		return;
  	}
  
 -	davinci_timer_init(clk);
-+	rv = davinci_timer_register(clk, &dm644x_timer_cfg);
++	rv = davinci_timer_register(clk, &dm646x_timer_cfg);
 +	WARN(rv, "Unable to register the timer: %d\n", rv);
  }
  
- static struct resource dm644x_pll2_resources[] = {
+ static struct resource dm646x_pll2_resources[] = {
 -- 
 2.21.0
 
