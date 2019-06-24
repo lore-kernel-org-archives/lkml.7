@@ -2,69 +2,106 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575BFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4CFC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F0E20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BE3205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D2uGrxuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfFXQXe (ORCPT
+        id S1729999AbfFXQYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:23:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5036 "EHLO mga09.intel.com"
+        Mon, 24 Jun 2019 12:24:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54368 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfFXQXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:23:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 09:23:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="182666147"
-Received: from akolosov-mobl1.ger.corp.intel.com ([10.249.33.80])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2019 09:23:31 -0700
-Message-ID: <8acf82b7066f260332f9353682d4b83e44b68b88.camel@linux.intel.com>
-Subject: Re: [PATCH] drivers: firmware: efi: fix gcc warning -Wint-conversion
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        tpmdd-devel@lists.sourceforge.net,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 Jun 2019 19:23:30 +0300
-In-Reply-To: <CACdnJusDaGkTAEWJ41+dGQxRWqxbgk8a_iNq5pCuGp=NsdEXgg@mail.gmail.com>
-References: <20190615040210.GA9112@hari-Inspiron-1545>
-         <CAKv+Gu9-wiJNxPsVn06dBSU8Gchg8LjV=mi0cThZUWywmt2xzQ@mail.gmail.com>
-         <CACdnJuudmE-MNuO7z87Mm65VaXbRzhOrBEpU5F=yC67uSLytGQ@mail.gmail.com>
-         <20190620213722.GA17841@linux.intel.com>
-         <CACdnJusDaGkTAEWJ41+dGQxRWqxbgk8a_iNq5pCuGp=NsdEXgg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1728531AbfFXQYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=fbuOEGD6/p3KGLV+SsGx2RFhZqUs0c/4MZswvhidVf4=; b=D2uGrxuEdFzruVC29WTvIkFpCi
+        bN7wchEmq/rvf1zT2YMyFEcF27QgmyFgbSsivPFALpo53XmgCKP0xOg5aL79oIMMZZJW+bXPWIN2q
+        Z4a5M+Mh2wBSH/YuO3dWLF0f0wHNGqfTwjrejeyYIudJJWMuetxRZA9BNAr3M/brhG30=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hfRlf-0006oM-P5; Mon, 24 Jun 2019 18:24:31 +0200
+Date:   Mon, 24 Jun 2019 18:24:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190624162431.GX31306@lunn.ch>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 15:00 -0700, Matthew Garrett wrote:
-> On Thu, Jun 20, 2019 at 2:37 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > Right! OK, I squashed just the fix to the earlier patch. Master and
-> > next are updated. Can you take a peek of [1] and see if it looks
-> > legit given all the fuzz around these changes? Then I'm confident
-> > enough to do the 5.3 PR.
+On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
+> Hi Andrew,
 > 
-> All looks good to me. Thanks!
+> The 06/24/2019 16:26, Andrew Lunn wrote:
+> > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
+> > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > > > these switch ports can be configured as CPU port (with follow-up patches).
+> > > > 
+> > > > This configuration may look prettier on DSA, but the main restriction here
+> > > > is that the entire functionality is provided by the ocelot driver which is a
+> > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > > > from ocelot to a separate dsa driver.
+> > > > 
+> > > 
+> > > We should probably make the ocelot driver a DSA driver then...
+> > An important part of DSA is being able to direct frames out specific
+> > ports when they ingress via the CPU port. Does the silicon support
+> > this? At the moment, i think it is using polled IO.
+> 
+> That is supported, it requires a bit of initial configuration of the Chip, but
+> nothing big (I believe this configuration is part of Claudiu's change-set).
+> 
+> But how do you envision this done?
+> 
+> - Let the existing SwitchDev driver and the DSA driver use a set of common
+>   functions.
+> - Convert the existing Ocelot driver from SwitchDev to DSA
+> - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
+>   Felix driver
+> 
+> My guess is the first one, but I would like to understand what you have in mind.
 
-Thank you! I'll send the PR now.
-
-/Jarkko
-
+I don't know the various architectures the switch is used in. But it
+does seem like a core library, and then a switchdev wrapper for Ocelot
+and a DSA wrapper for Felix would make sense.
+ 
+  Andrew
