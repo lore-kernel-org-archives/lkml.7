@@ -2,87 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348E2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4DEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F8C204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6E+fHAO"
+	by mail.kernel.org (Postfix) with ESMTP id F0255204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfFXMIz (ORCPT
+        id S1729930AbfFXMKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:08:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40138 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfFXMIy (ORCPT
+        Mon, 24 Jun 2019 08:10:04 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53011 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726351AbfFXMKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:08:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so13618551wre.7;
-        Mon, 24 Jun 2019 05:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5+aG5bq4j8Ni9WJIPjG3wZ6NCgkPpGLe+UT0IyDMSL8=;
-        b=M6E+fHAO/OiuGltg7eEHZPSq39J8E/PaoVFAlIKxs45osAuntq/gRSm5kymGZNCKjf
-         0npcBSzhSmXFn/pm+aJh/8Mrl2PNCi+O0nighTE3R6Jx5pmGgpZe/xlQdHegfeVJwU9f
-         LxnvuVaac71JQ1h5S8dkbrgOcbzPQeRKz+62HGoegBsEL/DoxuGWZUCpAWrPvCLgpCms
-         ExRvVMb/flNXOYKHN0t5U5VSezYhkQ/NdwO4j8R5HOgBG+ZWzF56I/ZQy+v4FPM5YB3L
-         8pWT9W11xmozp9lijIY8nP0i28GmsLp5lnjGCgBifpTdNE/a8ytcy9Boa4xgaWmk9Gb3
-         g8SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5+aG5bq4j8Ni9WJIPjG3wZ6NCgkPpGLe+UT0IyDMSL8=;
-        b=KomqYkiWU97akYgnqx1XK5H36E9u2uBkLLNLaWG5AEI/qO0WH2hkYp2/eEP4+2vopo
-         PjROTWF2lfbVV6PexU722SMA6SpSH2ZPsleDh5bAEZAFZQlGgnqwnQ+3foZbdqwrnbvd
-         9c453lCtUbGFLDIdy2tVN1fbeIik2DFb8ZomEEdLMKN35QAHuf/9Dyqxw6GUjWBChL4C
-         rbEoFUr2ENInORiFMsEu3QuI6juGwisr9Pncs9rolPeQqZuR/hjejuzCI+F6eBUIb3t1
-         H9k7X7P3ZKWi7JdRtOxa//ATeMnFPpDDUcL+IjBzgtprqL8/pODkaBuvGK/LSDO3C4ax
-         JR8w==
-X-Gm-Message-State: APjAAAVpWOjvCNUGk2k1CjChcW7UO7qsamcfe7iKtke3lBDJWu54o3Rb
-        fh4A9Cb+yT03wLj6sCk52nE=
-X-Google-Smtp-Source: APXvYqzPp23jbUf1aCFuoTjxkcr/57v3+kKSkmgp0cCJV8ep/XXuci3uBEj4W49UP8ozk7T/YuSUGg==
-X-Received: by 2002:a5d:554b:: with SMTP id g11mr631289wrw.10.1561378132293;
-        Mon, 24 Jun 2019 05:08:52 -0700 (PDT)
-Received: from [192.168.8.147] (59.249.23.93.rev.sfr.net. [93.23.249.59])
-        by smtp.gmail.com with ESMTPSA id z76sm14489260wmc.16.2019.06.24.05.08.49
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 05:08:51 -0700 (PDT)
-Subject: Re: WARNING: ODEBUG bug in netdev_freemem (2)
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzbot <syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        amritha.nambiar@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tyhicks@canonical.com, wanghai26@huawei.com, yuehaibing@huawei.com
-References: <000000000000d6a8ba058c0df076@google.com>
- <alpine.DEB.2.21.1906241130100.32342@nanos.tec.linutronix.de>
- <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
-Date:   Mon, 24 Jun 2019 14:08:49 +0200
+        Mon, 24 Jun 2019 08:10:04 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08198884|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.238094-0.0170177-0.744888;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.EpQVE7o_1561378197;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.EpQVE7o_1561378197)
+          by smtp.aliyun-inc.com(10.147.41.158);
+          Mon, 24 Jun 2019 20:09:58 +0800
+Subject: Re: [PATCH v2] mtd: spinand: read return badly if the last page has
+ bitflips
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Peter Pan <peterpandong@micron.com>,
+        Jeff Kletsky <git-commits@allycomm.com>
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <d406a968-a489-f457-2bde-1912618879fa@kontron.de>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <6e0a848a-9b26-d9ef-d3bc-6df9efa666a9@allwinnertech.com>
+Date:   Mon, 24 Jun 2019 20:10:05 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com>
+In-Reply-To: <d406a968-a489-f457-2bde-1912618879fa@kontron.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,55 +56,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+OK, thanks for your reviewing. I will resend right now.
 
-
-On 6/24/19 3:54 AM, Dmitry Vyukov wrote:
-> On Mon, Jun 24, 2019 at 11:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On 2019/6/24 PM3:37, Schrempf Frieder wrote:
+> On 20.06.19 03:00, liaoweixiong wrote:
+>> In case of the last page containing bitflips (ret > 0),
+>> spinand_mtd_read() will return that number of bitflips for the last
+>> page. But to me it looks like it should instead return max_bitflips like
+>> it does when the last page read returns with 0.
 >>
->> On Mon, 24 Jun 2019, syzbot wrote:
+>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+> 
+> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> This should probably be resent with the following tags:
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI 
+> NANDs")
+> 
+>> ---
+>>   drivers/mtd/nand/spi/core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->>> Hello,
->>>
->>> syzbot found the following crash on:
->>>
->>> HEAD commit:    fd6b99fa Merge branch 'akpm' (patches from Andrew)
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=144de256a00000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=c4521ac872a4ccc3afec
->>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>>
->>> Unfortunately, I don't have any reproducer for this crash yet.
->>>
->>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>> Reported-by: syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com
->>>
->>> device hsr_slave_0 left promiscuous mode
->>> team0 (unregistering): Port device team_slave_1 removed
->>> team0 (unregistering): Port device team_slave_0 removed
->>> bond0 (unregistering): Releasing backup interface bond_slave_1
->>> bond0 (unregistering): Releasing backup interface bond_slave_0
->>> bond0 (unregistering): Released all slaves
->>> ------------[ cut here ]------------
->>> ODEBUG: free active (active state 0) object type: timer_list hint:
->>> delayed_work_timer_fn+0x0/0x90 arch/x86/include/asm/paravirt.h:767
->>
->> One of the cleaned up devices has left an active timer which belongs to a
->> delayed work. That's all I can decode out of that splat. :(
-> 
-> Hi Thomas,
-> 
-> If ODEBUG would memorize full stack traces for object allocation
-> (using lib/stackdepot.c), it would make this splat actionable, right?
-> I've fixed https://bugzilla.kernel.org/show_bug.cgi?id=203969 for this.
-> 
+>> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+>> index 556bfdb..6b9388d 100644
+>> --- a/drivers/mtd/nand/spi/core.c
+>> +++ b/drivers/mtd/nand/spi/core.c
+>> @@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
+>>   		if (ret == -EBADMSG) {
+>>   			ecc_failed = true;
+>>   			mtd->ecc_stats.failed++;
+>> -			ret = 0;
+>>   		} else {
+>>   			mtd->ecc_stats.corrected += ret;
+>>   			max_bitflips = max_t(unsigned int, max_bitflips, ret);
+>>   		}
+>>   
+>> +		ret = 0;
+>>   		ops->retlen += iter.req.datalen;
+>>   		ops->oobretlen += iter.req.ooblen;
+>>   	}
 
-Not sure this would help in this case as some netdev are allocated through a generic helper.
-
-The driver specific portion might not show up in the stack trace.
-
-It would be nice here to get the work queue function pointer,
-so that it gives us a clue which driver needs a fix.
-
-
-
+-- 
+liaoweixiong
