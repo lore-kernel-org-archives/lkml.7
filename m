@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE2EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C069FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1163E20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E84820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371501;
-	bh=ZWzPHxVYO6d7ILI+35xWNGfP9V6kWW0cbdaUNlzXlDU=;
+	s=default; t=1561371506;
+	bh=dCYuUHsFqV7uKyvtqq6FlM4P/lhE4gHZNSKblgjLo6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMuVTmmUVvqP1Ripisj5s+3FM9ih7h0e+sl7E/8hFf+U8Md5g/KL/6GqcdCmE+RFL
-	 v8uz5Rdx6/vXfuI8k2uo5fOWM+JZ0VNhnLXSnRO1d70c4yNUb8XO7bWqVyFPLkxVwq
-	 f/oiYcN1cy+FG94tXzDErn6nm26o05G8H79em4ps=
+	b=MlcJRiZ9rOMAAozHjLzbVq9m9CuhTOupn9I2OxrYS3s+XTsdLZcG6JLbSPxKcPBD+
+	 FKxeR0Tb9fRGGIg6eZ+q5lBQAvDKe5AuNtKiAYgiLzibhdChISqdlm6HxNoJiSY7jx
+	 hlTPkpQb8Y2GJKF5s+sWkQsBoeCrDFSTJkUpzuyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfFXKST (ORCPT
+        id S1730071AbfFXKSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53958 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfFXKQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:27 -0400
+        id S1729957AbfFXKQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:14 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF272208E3;
-        Mon, 24 Jun 2019 10:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7769D20645;
+        Mon, 24 Jun 2019 10:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371387;
-        bh=ZWzPHxVYO6d7ILI+35xWNGfP9V6kWW0cbdaUNlzXlDU=;
+        s=default; t=1561371374;
+        bh=dCYuUHsFqV7uKyvtqq6FlM4P/lhE4gHZNSKblgjLo6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gjHDuDS5q969CBYr7xVYm6kH6H3AKJQC1ehb8wq3Gi2hejFNlppgwQWS1cuMeM9wM
-         DnDbXsOhCne9gVjLVxfg8veoSOPvBXWFZOAXhRuDo5UCtSOxMGx3hjCRl/D+aNivUh
-         U2qpDBJl5avr5SUIuXfIpk/t8jclDDHp77rf6KF8=
+        b=eMhDN5zzabyzv860nUqicoAPkO7ofjvIn0jqlWHZHvLh71yBBXfK0CObmD+QISFfT
+         2PTWb2dcW8FcLDP28ixdgxhFlAdUoshs7RusjsMWTbOL1iqpw0tIZHOzgcyFWVnlOC
+         B+Hu+arcuRlGrAZa8wfrSk5zkOq7uFW/rREEad2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Eduardo Valentin <eduval@amazon.com>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 085/121] hwmon: (core) add thermal sensors only if dev->of_node is present
-Date:   Mon, 24 Jun 2019 17:56:57 +0800
-Message-Id: <20190624092325.180202592@linuxfoundation.org>
+Subject: [PATCH 5.1 080/121] udmabuf: actually unmap the scatterlist
+Date:   Mon, 24 Jun 2019 17:56:52 +0800
+Message-Id: <20190624092324.958730722@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,60 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c41dd48e21fae3e55b3670ccf2eb562fc1f6a67d ]
+[ Upstream commit 283f1e383e91d96fe652fad549537ae15cf31d60 ]
 
-Drivers may register to hwmon and request for also registering
-with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
-some of these driver, e.g. marvell phy, may be probed from
-Device Tree or being dynamically allocated, and in the later
-case, it will not have a dev->of_node entry.
+unmap_udmabuf fails to actually unmap the scatterlist, leaving dangling
+mappings around.
 
-Registering with hwmon without the dev->of_node may result in
-different outcomes depending on the device tree, which may
-be a bit misleading. If the device tree blob has no 'thermal-zones'
-node, the *hwmon_device_register*() family functions are going
-to gracefully succeed, because of-thermal,
-*thermal_zone_of_sensor_register() return -ENODEV in this case,
-and the hwmon error path handles this error code as success to
-cover for the case where CONFIG_THERMAL_OF is not set.
-However, if the device tree blob has the 'thermal-zones'
-entry, the *hwmon_device_register*() will always fail on callers
-with no dev->of_node, propagating -EINVAL.
-
-If dev->of_node is not present, calling of-thermal does not
-make sense. For this reason, this patch checks first if the
-device has a of_node before going over the process of registering
-with the thermal subsystem of-thermal interface. And in this case,
-when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
-and no dev->of_node will still register with hwmon, but not with
-the thermal subsystem. If all the hwmon part bits are in place,
-the registration will succeed.
-
-Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: fbb0de795078 ("Add udmabuf misc device")
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190604202331.17482-1-l.stach@pengutronix.de
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma-buf/udmabuf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-index c22dc1e07911..c38883f748a1 100644
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -633,7 +633,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
- 	if (err)
- 		goto free_hwmon;
- 
--	if (dev && chip && chip->ops->read &&
-+	if (dev && dev->of_node && chip && chip->ops->read &&
- 	    chip->info[0]->type == hwmon_chip &&
- 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
- 		const struct hwmon_channel_info **info = chip->info;
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index cd57747286f2..9635897458a0 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -77,6 +77,7 @@ static void unmap_udmabuf(struct dma_buf_attachment *at,
+ 			  struct sg_table *sg,
+ 			  enum dma_data_direction direction)
+ {
++	dma_unmap_sg(at->dev, sg->sgl, sg->nents, direction);
+ 	sg_free_table(sg);
+ 	kfree(sg);
+ }
 -- 
 2.20.1
 
