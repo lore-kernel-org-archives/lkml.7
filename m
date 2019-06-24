@@ -2,53 +2,57 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CAC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5313C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB9E208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D34208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370272;
-	bh=ZDcPbPhpv7QesIOP6V8A3EIB5GehUV5YQtLVz9w1g38=;
+	s=default; t=1561370278;
+	bh=M2ODuiLtPrAiaUrOgynMafr0SgDtC+lDi9UWFMoPayI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrwBYy7N4J1TeQfUYChJsvMT6Anaq/MXTc5zOJ48tTGhB7m2B/DXWqcldFulyLtAd
-	 dNEoLB2/OckBAbWbyZpmuHQ8eY2HFbJLkbxT9HQN+JGtXzkhKvVbYxjsbO+CpAYrtd
-	 kNxQmxN5POdG253aRNpR+JfEkXa6ByMRYhUlIidQ=
+	b=NJEa95TR8maW1wlSYq/meWmHw6N6JV+9aQJm4G4jer0OS9s2bxqVkMLcDe2jrd1JR
+	 8B8UXU77whiKMNYmS+aAEHSfnpaRxBJFm8HrIL+hYuuqEgkG7t7MET5awUcEAEjl8Y
+	 /V+Mr2X6p9s/45FSKzkWeS626UVLMxUJ86OyTwLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfFXJ5v (ORCPT
+        id S1728901AbfFXJ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfFXJ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:57:47 -0400
+        id S1728322AbfFXJ5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:57:55 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54949208CA;
-        Mon, 24 Jun 2019 09:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A778208CA;
+        Mon, 24 Jun 2019 09:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370266;
-        bh=ZDcPbPhpv7QesIOP6V8A3EIB5GehUV5YQtLVz9w1g38=;
+        s=default; t=1561370274;
+        bh=M2ODuiLtPrAiaUrOgynMafr0SgDtC+lDi9UWFMoPayI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0JCLZg8JnTuLcW6rO0GvILwvAfmzaXROraATpwkXrRH+ZO+D4NDvpOhpNpZ975Xim
-         CJE6u6AoLTxfb67DS2IEN0ll9RzhQLNzZHJEdj1CXunis8gnScEDe7m0MlKm7AmXFq
-         2pNq30Cbst3UsviCAjEPrxOuseCSc9ZpVvDg8QdY=
+        b=h5kWNv0R3vr30c2hmw4YkCsNr7NxXStnip/oT8LO38Rn7LlFVPcp0j75mCiqPqNSo
+         e3Y8jv4qpy5V/RRNj7/71FQKOALzUnhk6fcvke8cqOJf9XpfgXp3TrxMOABrfRSyKD
+         /ciKfWLLx21GjHSdBp29aoB6y6Ua3fQ2H7uRH1no=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 10/51] Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
-Date:   Mon, 24 Jun 2019 17:56:28 +0800
-Message-Id: <20190624092307.611971368@linuxfoundation.org>
+        stable@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 13/51] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date:   Mon, 24 Jun 2019 17:56:31 +0800
+Message-Id: <20190624092307.932195316@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -61,61 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
 
-commit 7c7da40da1640ce6814dab1e8031b44e19e5a3f6 upstream.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
-In the case of compat syscall ioctl numbers for UI_BEGIN_FF_UPLOAD and
-UI_END_FF_UPLOAD need to be adjusted before being passed on
-uinput_ioctl_handler() since code built with -m32 will be passing
-slightly different values. Extend the code already covering
-UI_SET_PHYS to cover UI_BEGIN_FF_UPLOAD and UI_END_FF_UPLOAD as well.
-
-Reported-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/uinput.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -1012,13 +1012,31 @@ static long uinput_ioctl(struct file *fi
- 
- #ifdef CONFIG_COMPAT
- 
--#define UI_SET_PHYS_COMPAT	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+/*
-+ * These IOCTLs change their size and thus their numbers between
-+ * 32 and 64 bits.
-+ */
-+#define UI_SET_PHYS_COMPAT		\
-+	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+#define UI_BEGIN_FF_UPLOAD_COMPAT	\
-+	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload_compat)
-+#define UI_END_FF_UPLOAD_COMPAT		\
-+	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload_compat)
- 
- static long uinput_compat_ioctl(struct file *file,
- 				unsigned int cmd, unsigned long arg)
- {
--	if (cmd == UI_SET_PHYS_COMPAT)
-+	switch (cmd) {
-+	case UI_SET_PHYS_COMPAT:
- 		cmd = UI_SET_PHYS;
-+		break;
-+	case UI_BEGIN_FF_UPLOAD_COMPAT:
-+		cmd = UI_BEGIN_FF_UPLOAD;
-+		break;
-+	case UI_END_FF_UPLOAD_COMPAT:
-+		cmd = UI_END_FF_UPLOAD;
-+		break;
-+	}
- 
- 	return uinput_ioctl_handler(file, cmd, arg, compat_ptr(arg));
- }
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 8f627c200d60..c033ae45fe42 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -163,6 +163,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
+-- 
+2.20.1
+
 
 
