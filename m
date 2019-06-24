@@ -2,67 +2,70 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEE5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AABEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DDB2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22DB208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZxUTj92w"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O27JYQHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfFXI2W (ORCPT
+        id S1728033AbfFXI3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:28:22 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39337 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFXI2W (ORCPT
+        Mon, 24 Jun 2019 04:29:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39514 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfFXI3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:28:22 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so12682377otq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:28:21 -0700 (PDT)
+        Mon, 24 Jun 2019 04:29:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so12685841otq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=aOYWBoaLwTAQVgKv1wpzsu0smLvbq1hrhMNb9sUg/Dc=;
-        b=ZxUTj92wU6U7njtskwtF0VBplk2QFyERO4znO5hRAes3vk4U/+ZAR+RJoRI+jrwN6f
-         7tmfntz4sq7tD1SFggGDPT70Ui51nofjKjjXjWyCwyLjf+dZhPH22btOlR88Sjqy4LAW
-         3DgcApR0/zJi1WrAyf0SJQ/+G0+Z41ZCo3iUAbSVcGOVdQh/HcHuGrLQesvovM8/ZyYl
-         Jy7mpeVwOuTOidxAk1YV81iPgk3Lu/wtEDPmouMz44bbvMZTOKCyJW1QIBRBvQoiX4LC
-         IaESNxSDO1uDQsTqHGAmjtb/KWbrJ/vLxOmNolvST1XHvC4oRiBPBO/mZralck9/ffGP
-         No2Q==
+        bh=ko8aLEfz7VyLjGG2Rud4lWnzC784JMvOo3wvqWrCylY=;
+        b=O27JYQHjrIVYtYPY96KP6/xDcPJQgEaFAHlXqjg5fywCA5MavXzZsPvV4g/C96xkrp
+         u1113gVP75+1RepfG5TcDqwYMHtYYYaUOz8HYL5rsvLX9ka2UI9dPqkCf4WQ/XUqDNrH
+         03oTYPII0Gm/Dr9s6Yt9whFrHb1nXUBdx0+kF7k6tC78MXC/Vabo+KZCByPIFoETRLZW
+         TufrwEcpb5nF6inzvhBK0f6T9bNDbctr9r2KdzkW/4t/brO134v7819BJWt+wOLVJWTx
+         6b63YjzgWyLQ/3WQ6hfZU0RSthxVTZT6H+fI49zO4gZZOOL3zWQRx179ba7Bg1D2TiO7
+         1gwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aOYWBoaLwTAQVgKv1wpzsu0smLvbq1hrhMNb9sUg/Dc=;
-        b=KH8SsJLE7W8/dhPNyG/Cgt6qrFPlCVCTNrATJgAkakUa86iDh0+y6LyFcLOLbyDzfb
-         gXBAO3NuRg0vZHXp9HPhyWrjn8PDdoC+Z4mgG+wPmT9itrD0JyNKr2YRw1l3hm6skV2o
-         pSGWC6fCkWx2X03IiUhwJtYtGMHefCtDTC53YXooda3q3M5o7WXW6rGp7PUHFvZkrd18
-         BjLU6g950hWFYPwwq1Dw8wUUNrxunufpnBB3TXnYNjw2gtn2+tNev5NM+bH9v1q+B7ac
-         27hJXKZUHdq0UWL48PinSt/OHVkehZ+Ry/WuF2hNOX7B3/HGSDMQvFoeUH4wUA3Ig6t2
-         GJxg==
-X-Gm-Message-State: APjAAAXGCerutB4pyVPdPX4PTKAZjpvRg16367SqmMdA/yJwq7sj4255
-        qS0ZdyGcSfb67ROmlJXnsrb63tLiAdcfPRHmVQtRJw==
-X-Google-Smtp-Source: APXvYqxcbcfSBUXbkJ1410ov+h25xcs0mRqAI79f3B02ZRT3jscAE0QqdTlHmovtNMgUL2grby+vNCzzhAfvaGQ0J48=
-X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr66217365otr.256.1561364901506;
- Mon, 24 Jun 2019 01:28:21 -0700 (PDT)
+        bh=ko8aLEfz7VyLjGG2Rud4lWnzC784JMvOo3wvqWrCylY=;
+        b=t8Cdopjbvi6ge7fqa5s0aygBHX1tIqrHfs2n9l1wzGquQgoGqwdBk+sXid5rWdQEgY
+         JGrQREWl/JuJvX9VGjlC8dHiCKxWwnztnDK4mJxFKs+kb7+l1ENyjTX+mPUtQSIjLIVt
+         VnZrT/rwVFlvoXov3zOQ035Pl/HGzNF/QeUNfguUDdj3vcWROZMri4VvenG+Lacg+5WI
+         4bpayccXM+TuqDEMq293cOZ2DYJkJTawPF1TmhCrUNvqbrMaK+l0UC8WHKGOuTK8dRvT
+         sAfPx51fDGxeqq014R6ey0WZ+ciXHMBfOZjtMyQnLeLDMrLfN70D9WoKPUZJ50f916w8
+         OYeg==
+X-Gm-Message-State: APjAAAWV4VzugEfAR4KxNd5kPa1PgEa7DCi/CCzv+LxyK2OtNUgHW8tQ
+        aauu9AtcI240FqJpclTslfkuM03L1KoTVy0nzD/25OgE
+X-Google-Smtp-Source: APXvYqyDMtZ2MXAaR5ez0lNQhMjjgJFRQ44etX1glmyGsTzNbGz2M7BOeIyot5fGBxeHw0eh2LFK1mEXOseX0FkrGCE=
+X-Received: by 2002:a9d:7352:: with SMTP id l18mr16004836otk.292.1561364986392;
+ Mon, 24 Jun 2019 01:29:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617113109.24689-1-colin.king@canonical.com>
-In-Reply-To: <20190617113109.24689-1-colin.king@canonical.com>
+References: <20190221162627.3476-1-brgl@bgdev.pl> <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+In-Reply-To: <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 24 Jun 2019 10:28:10 +0200
-Message-ID: <CAMpxmJVxg2+2mdAQDSo5LTq=w7+ccXnwRmK+iz=4zkNhepE6pQ@mail.gmail.com>
-Subject: Re: [PATCH][next] clocksource: davinci-timer: fix memory leak of
- clockevent on error return
-To:     Colin King <colin.king@canonical.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Date:   Mon, 24 Jun 2019 10:29:35 +0200
+Message-ID: <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before devm_platform_ioremap_resource()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
         kernel-janitors@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -72,42 +75,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 17 cze 2019 o 13:31 Colin King <colin.king@canonical.com> napisa=C5=
+pt., 14 cze 2019 o 18:50 Markus Elfring <Markus.Elfring@web.de> napisa=C5=
 =82(a):
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 14 Jun 2019 17:45:13 +0200
 >
-> Currently when the call to request_irq falls there is a memory leak of
-> clockevent on the error return path. Fix this by kfree'ing clockevent.
+> Move the preprocessor statement =E2=80=9C#ifdef CONFIG_HAS_IOMEM=E2=80=9D=
+ so that
+> the corresponding scope for conditional compilation includes also comment=
+s
+> for this function implementation.
 >
-> Addresses-Coverity: ("Resource leak")
-> Fixes: fe3b8194f274 ("clocksource: davinci-timer: add support for clockev=
-ents")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 > ---
->  drivers/clocksource/timer-davinci.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/base/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/ti=
-mer-davinci.c
-> index a9ca02390b66..8512f12e250a 100644
-> --- a/drivers/clocksource/timer-davinci.c
-> +++ b/drivers/clocksource/timer-davinci.c
-> @@ -300,6 +300,7 @@ int __init davinci_timer_register(struct clk *clk,
->                          "clockevent/tim12", clockevent);
->         if (rv) {
->                 pr_err("Unable to request the clockevent interrupt");
-> +               kfree(clockevent);
->                 return rv;
->         }
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 4d1729853d1a..a5f40974a6ef 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platform_=
+device *dev,
+>         return NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_get_resource);
+> +#ifdef CONFIG_HAS_IOMEM
 >
+>  /**
+>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a p=
+latform
+> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+>   *        resource management
+>   * @index: resource index
+>   */
+> -#ifdef CONFIG_HAS_IOMEM
+>  void __iomem *devm_platform_ioremap_resource(struct platform_device *pde=
+v,
+>                                              unsigned int index)
+>  {
 > --
-> 2.20.1
+> 2.22.0
 >
 
-Hi Colin,
-
-I omitted the error checking in this driver on purpose - it doesn't
-make sense as the system won't boot without a timer.
+And what is the purpose of that?
 
 Bart
