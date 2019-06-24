@@ -2,140 +2,204 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB7EC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F694C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671D6205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561411062;
-	bh=zOBYbFXqM8DxgurbaRhW+kE+i14AA0Y+8NLki53wcTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=og+IfV8oJP57YqH+lx7O+QR3AjqYU04Slg4vn+18ILvJyA8MefwO2lz0feoRRt09O
-	 wtGhS2Lmay4bN4D67YfdZg5D20eQCcDhekuiThVYhEFXfe6CN8S4Gqp0162Z6VwXty
-	 RhuFr13OmsyGbPhylLxGIa1wbyM2J9Ya3PWZTu6M=
+	by mail.kernel.org (Postfix) with ESMTP id 38E0120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jJMeLtXU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NKmAxGgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbfFXVRl (ORCPT
+        id S1732259AbfFXVSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfFXVRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:17:40 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27569205F4;
-        Mon, 24 Jun 2019 21:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561411059;
-        bh=zOBYbFXqM8DxgurbaRhW+kE+i14AA0Y+8NLki53wcTA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=waLY1k8P6FJMdjUwsPgNvvgYFeQZXZwOIamcvkCbdQu289JkncbHHDtycSm65OapF
-         wNxNIidoA2Ym6QYRowuSqUwqDnkKWdaZ6Jp9BYufjGezsdPzE35lBd1goJUAZgBWIk
-         XJaGZnOk39lWQHd/QV5NV1bWE6h866lH8cfQ/pg0=
-Date:   Mon, 24 Jun 2019 14:17:37 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     syzbot <syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: lib/mpi: Fix karactx leak in mpi_powm
-Message-ID: <20190624211736.GA237341@gmail.com>
-References: <000000000000617b4a058c0cbd60@google.com>
- <20190624103226.fbjvc6eumu325ifw@gondor.apana.org.au>
+        Mon, 24 Jun 2019 17:18:13 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:29854 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726385AbfFXVSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 17:18:13 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OL3xIO030830;
+        Mon, 24 Jun 2019 14:17:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=XHYjB6xwKC2VbVPIGgcfPd1ROYigU8BTLpb1YSsXrfU=;
+ b=jJMeLtXUtabLMsNHXv39sQhoxtQwMNWcWt094AnXoXvzMKA+GdWNfV9Zi+06kgNub1FM
+ N//Z9gkQA+IZZmjtMv2DdAqCezS8TU6ABajllFvMdnxp5HPmCCUzq+zlPGu0P3Xu6Lfm
+ Qa029vGaXXEXtFh3N1we1mnwPVPKoc0fQZg= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tawbta6vx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 14:17:50 -0700
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 24 Jun 2019 14:17:49 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 24 Jun 2019 14:17:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XHYjB6xwKC2VbVPIGgcfPd1ROYigU8BTLpb1YSsXrfU=;
+ b=NKmAxGgRmo2XfeyjQ+s/FBVkQysRKp+QNVLgIc6W+c7aG+A5eyXn0SVlNM6up4rFm4vFh64cfurXpDMuLKtRTebY5/I4PTV86xzJEl1jaZ9beMssK0cwLlBtPwEIa0rrHtXhequNApqJA0+pg7cB7cZO+br77/dy0KNbKdzKJP0=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1566.namprd15.prod.outlook.com (10.173.234.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 21:17:48 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 21:17:48 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Hillf Danton <hdanton@sina.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 5/6] mm,thp: add read-only THP support for
+ (non-shmem)FS
+Thread-Topic: [PATCH v7 5/6] mm,thp: add read-only THP support for
+ (non-shmem)FS
+Thread-Index: AQHVKmE7SeDKx5ckAk2qpQWHcXeIzKarT8eA
+Date:   Mon, 24 Jun 2019 21:17:47 +0000
+Message-ID: <1A3A4BB5-C16B-4A11-AC90-420DDFE3D6F9@fb.com>
+References: <20190624074816.10992-1-hdanton@sina.com>
+In-Reply-To: <20190624074816.10992-1-hdanton@sina.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::2:78ae]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 818a18f6-d0f1-4088-783f-08d6f8e96852
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1566;
+x-ms-traffictypediagnostic: MWHPR15MB1566:
+x-microsoft-antispam-prvs: <MWHPR15MB1566F7DDD5828E5DF07338D0B3E00@MWHPR15MB1566.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(396003)(366004)(39860400002)(199004)(189003)(2616005)(6246003)(6436002)(476003)(6486002)(11346002)(6506007)(76176011)(6916009)(486006)(99286004)(6512007)(256004)(53546011)(446003)(33656002)(102836004)(186003)(14454004)(6116002)(316002)(54906003)(46003)(53936002)(8676002)(81166006)(2906002)(4326008)(229853002)(7736002)(305945005)(73956011)(66476007)(66556008)(57306001)(66946007)(478600001)(66446008)(86362001)(64756008)(76116006)(5660300002)(25786009)(50226002)(71190400001)(71200400001)(68736007)(81156014)(8936002)(36756003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1566;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hpC1tkx6C8df9LT6zNnjxjkU3txnSXjOFb/MHeotvGbWE65gGWDk3vpCpcGbXeskvLQfKoKBcjtL/taqbaLC08r1JKYaQiVQfXuA1Hef/gJNz6KTep+ERtGanqOA1/kaCTZM9vDU/pU65Aj+rpYZkHzTs200nW4+4UACYI3X2VKKytodtgeChGcASxA2dpsf+p87yB4GO/wlDqL5rPxONWgLINuBMEoVKq9nk3Q5q6PYlhqYcRaIYRxGCDc2mug73YrOIRlsGLw88wFKVeYAyfU5aTDGobvtJ7u8/Jsj/zsqlbCc/rtaZ+nH/RJTlJIThPnfZDH9Dw2qJQZFNKuNbt8oIbnXziXxmhiRsxWVop+eJdFLjfKXcsEXLlRzaAJOx2pEztESLN28w800hlZNghhGOiZ2UmoN4Qop2304Usk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9122F56767262C47B3E2DFDC81754ADF@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624103226.fbjvc6eumu325ifw@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 818a18f6-d0f1-4088-783f-08d6f8e96852
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 21:17:47.9966
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1566
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240168
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 06:32:26PM +0800, Herbert Xu wrote:
-> On Mon, Jun 24, 2019 at 12:27:08AM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17a8bfeaa00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f7baccc38dcc1e094e77
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171aa7e6a00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153306cea00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
-> 
-> The only memory leak that I can find is on the out-of-memory error
-> path:
-> 
-> ---8<---
-> Sometimes mpi_powm will leak karactx because a memory allocation
-> failure causes a bail-out that skips the freeing of karactx.  This
-> patch moves the freeing of karactx to the end of the function like
-> everything else so that it can't be skipped.
-> 
-> Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
-> Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/lib/mpi/mpi-pow.c b/lib/mpi/mpi-pow.c
-> index 82b19e4f1189..2fd7a46d55ec 100644
-> --- a/lib/mpi/mpi-pow.c
-> +++ b/lib/mpi/mpi-pow.c
-> @@ -24,6 +24,7 @@
->  int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
->  {
->  	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
-> +	struct karatsuba_ctx karactx = {};
->  	mpi_ptr_t xp_marker = NULL;
->  	mpi_ptr_t tspace = NULL;
->  	mpi_ptr_t rp, ep, mp, bp;
-> @@ -150,13 +151,11 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
->  		int c;
->  		mpi_limb_t e;
->  		mpi_limb_t carry_limb;
-> -		struct karatsuba_ctx karactx;
->  
->  		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
->  		if (!xp)
->  			goto enomem;
->  
-> -		memset(&karactx, 0, sizeof karactx);
->  		negative_result = (ep[0] & 1) && base->sign;
->  
->  		i = esize - 1;
-> @@ -281,8 +280,6 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
->  		if (mod_shift_cnt)
->  			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
->  		MPN_NORMALIZE(rp, rsize);
-> -
-> -		mpihelp_release_karatsuba_ctx(&karactx);
->  	}
->  
->  	if (negative_result && rsize) {
-> @@ -299,6 +296,7 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
->  leave:
->  	rc = 0;
->  enomem:
-> +	mpihelp_release_karatsuba_ctx(&karactx);
->  	if (assign_rp)
->  		mpi_assign_limb_space(res, rp, size);
->  	if (mp_marker)
-> -- 
 
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
 
-- Eric
+> On Jun 24, 2019, at 12:48 AM, Hillf Danton <hdanton@sina.com> wrote:
+>=20
+>=20
+> Hello
+>=20
+> On Mon, 24 Jun 2019 12:28:32 +0800 Song Liu wrote:
+>>=20
+>> Hi Hillf,
+>>=20
+>>> On Jun 23, 2019, at 8:16 PM, Hillf Danton <hdanton@sina.com> wrote:
+>>>=20
+>>>=20
+>>> Hello
+>>>=20
+>>> On Sun, 23 Jun 2019 13:48:47 +0800 Song Liu wrote:
+>>>> This patch is (hopefully) the first step to enable THP for non-shmem
+>>>> filesystems.
+>>>>=20
+>>>> This patch enables an application to put part of its text sections to =
+THP
+>>>> via madvise, for example:
+>>>>=20
+>>>>   madvise((void *)0x600000, 0x200000, MADV_HUGEPAGE);
+>>>>=20
+>>>> We tried to reuse the logic for THP on tmpfs.
+>>>>=20
+>>>> Currently, write is not supported for non-shmem THP. khugepaged will o=
+nly
+>>>> process vma with VM_DENYWRITE. The next patch will handle writes, whic=
+h
+>>>> would only happen when the vma with VM_DENYWRITE is unmapped.
+>>>>=20
+>>>> An EXPERIMENTAL config, READ_ONLY_THP_FOR_FS, is added to gate this
+>>>> feature.
+>>>>=20
+>>>> Acked-by: Rik van Riel <riel@surriel.com>
+>>>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>>>> ---
+>>>> mm/Kconfig      | 11 ++++++
+>>>> mm/filemap.c    |  4 +--
+>>>> mm/khugepaged.c | 90 ++++++++++++++++++++++++++++++++++++++++---------
+>>>> mm/rmap.c       | 12 ++++---
+>>>> 4 files changed, 96 insertions(+), 21 deletions(-)
+>>>>=20
+>>>> diff --git a/mm/Kconfig b/mm/Kconfig
+>>>> index f0c76ba47695..0a8fd589406d 100644
+>>>> --- a/mm/Kconfig
+>>>> +++ b/mm/Kconfig
+>>>> @@ -762,6 +762,17 @@ config GUP_BENCHMARK
+>>>>=20
+>>>> 	  See tools/testing/selftests/vm/gup_benchmark.c
+>>>>=20
+>>>> +config READ_ONLY_THP_FOR_FS
+>>>> +	bool "Read-only THP for filesystems (EXPERIMENTAL)"
+>>>> +	depends on TRANSPARENT_HUGE_PAGECACHE && SHMEM
+>>>> +
+>>> The ext4 mentioned in the cover letter, along with the subject line of
+>>> this patch, suggests the scissoring of SHMEM.
+>>=20
+>> We reuse khugepaged code for SHMEM, so the dependency does exist.
+>>=20
+> On the other hand I see collapse_file() and khugepaged_scan_file(), and
+> wonder if ext4 files can be handled by the new functions. If yes, we can
+> drop that dependency in the game of RO thp to make ext4 be ext4, and
+> shmem be shmem, as they are.
+
+Ext4 files can be handled by these functions. We will need fs specific
+code for writable THPs (in the future).=20
+
+In longer term, once the code (with write support) become more stable,=20
+we will drop this config. As of now, I think it is OK to depend on SHMEM.=20
+
+Thanks,
+Song
+
+
+
+
+
