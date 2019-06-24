@@ -2,136 +2,201 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B53AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AC1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59796208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D2F20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Xwn8yF/y";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="k/PfpX9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfFXEBa (ORCPT
+        id S1727751AbfFXECp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:01:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19099 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725769AbfFXEB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:01:28 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A030B2BC4CFD26FB6995;
-        Mon, 24 Jun 2019 12:01:24 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
- 12:01:13 +0800
-Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
- max_softirq_time_usecs
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <corbet@lwn.net>, <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>,
-        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
-        <dvyukov@google.com>, <feng.tang@intel.com>,
-        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
-        <linux@leemhuis.info>, <alex.popov@linux.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
-        Eric Dumazet <edumazet@google.com>
-References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
- <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com>
-Date:   Mon, 24 Jun 2019 12:01:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 24 Jun 2019 00:02:45 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10032 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725769AbfFXECp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 00:02:45 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O40NGh020672;
+        Sun, 23 Jun 2019 21:02:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=iUKCvBpWSJdxY1Yben+FHHvoYlCUtpM7nEVQFQxBbVY=;
+ b=Xwn8yF/ymnU40iHTikJb8udye0dfAhDRjxlxAyp7SmkukVzmWNQgS4swIcZyh6zqLBHK
+ MHV//00AqFA1uxRdH2BGTI0sUTk9dBhOlwouvbBdscIif9bkdrYKTNMIs5fzqvK67RFA
+ 2wD28BuHkWHEPSRTqGyO6I7b44CEr5xdwBk= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t9fmjmvqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 23 Jun 2019 21:02:23 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Sun, 23 Jun 2019 21:02:22 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Sun, 23 Jun 2019 21:02:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUKCvBpWSJdxY1Yben+FHHvoYlCUtpM7nEVQFQxBbVY=;
+ b=k/PfpX9qLbPwqldIWwRyqnwb6TYusX9lQSbp4UyaG8Y/3Bu964PipklW56K8+ySkYsNnT4ctmW4IgsG0MA1DcV2NRAMLmk5OmyPfSqUESAjrpm19Ekdf7LcX/3gZuXloSSLl4jgAsfj0BFI7uckK5ibNxgtcsoQVr2XiB48A5O8=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB3202.namprd15.prod.outlook.com (20.179.73.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 04:02:20 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 04:02:20 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Alexei Starovoitov <ast@fb.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Tejun Heo <tj@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next] bpf: fix cgroup bpf release synchronization
+Thread-Topic: [PATCH bpf-next] bpf: fix cgroup bpf release synchronization
+Thread-Index: AQHVKjTees07LGtTbkiqSncwtVU7j6aqJZyAgAAJMAA=
+Date:   Mon, 24 Jun 2019 04:02:20 +0000
+Message-ID: <20190624040211.GA10696@castle.dhcp.thefacebook.com>
+References: <20190624023051.4168487-1-guro@fb.com>
+ <91017042-1b59-6110-dfdd-13cfbbec1ae1@fb.com>
+In-Reply-To: <91017042-1b59-6110-dfdd-13cfbbec1ae1@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR06CA0004.namprd06.prod.outlook.com
+ (2603:10b6:301:39::17) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::1:4969]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83837ae1-4780-4444-d99e-08d6f858c153
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3202;
+x-ms-traffictypediagnostic: BN8PR15MB3202:
+x-microsoft-antispam-prvs: <BN8PR15MB32028BC9EEF6D3F5F62EFD9DBEE00@BN8PR15MB3202.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(71190400001)(71200400001)(53546011)(6506007)(8936002)(386003)(102836004)(81166006)(81156014)(186003)(229853002)(52116002)(6636002)(6436002)(86362001)(76176011)(33656002)(2906002)(6116002)(256004)(99286004)(6486002)(8676002)(11346002)(446003)(5024004)(14444005)(1076003)(6246003)(53936002)(73956011)(66946007)(46003)(478600001)(4326008)(54906003)(64756008)(66446008)(25786009)(6512007)(9686003)(66476007)(66556008)(7736002)(5660300002)(6862004)(316002)(68736007)(305945005)(486006)(14454004)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3202;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fbbiu9IS8c9cjLlrrPWGb4/swivMENAbfzLWkFjkB/LRTWPtLTm52RUCQP6aNPqLNFcgyDpURK7wS4epIjNRVg1DxBIlRj0ptDQalOSSszAdVVGalt9Y0hWwNN1M3co+g5pz4ovIuIttq6f5/UoC7K7H3P08gzbXnTfW6cLAfo3afZTA8Ezq4tnWNtm9mx3sX9uFRstXrskd6IsU/kqAP9elwsnRdFwxpj7b/TtM1mtc99jbFz1Xz2jDDRZZccaHDZQnlkXNW7lx/nbxUkLrssV3ijjJ3rDBj7cgpVHuD5vuIJaG5xCtgQEOR9dRfGMRufedq83aGVzoSWgXYVVxEwg3hlabim8Omwg0r7EuEQgtolAPMEkLCFLu2igJdfMI/ZruHqz5a2DH1dS9SKw295JMvmkm+9H7YKRikkOPDXc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DFE5A7730F46444C9CFC8429E91978C9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83837ae1-4780-4444-d99e-08d6f858c153
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 04:02:20.6980
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3202
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=898 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240032
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 23, 2019 at 08:29:21PM -0700, Alexei Starovoitov wrote:
+> On 6/23/19 7:30 PM, Roman Gushchin wrote:
+> > Since commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+> > from cgroup itself"), cgroup_bpf release occurs asynchronously
+> > (from a worker context), and before the release of the cgroup itself.
+> >=20
+> > This introduced a previously non-existing race between the release
+> > and update paths. E.g. if a leaf's cgroup_bpf is released and a new
+> > bpf program is attached to the one of ancestor cgroups at the same
+> > time. The race may result in double-free and other memory corruptions.
+> >=20
+> > To fix the problem, let's protect the body of cgroup_bpf_release()
+> > with cgroup_mutex, as it was effectively previously, when all this
+> > code was called from the cgroup release path with cgroup mutex held.
+> >=20
+> > Also make sure, that we don't leave already freed pointers to the
+> > effective prog arrays. Otherwise, they can be released again by
+> > the update path. It wasn't necessary before, because previously
+> > the update path couldn't see such a cgroup, as cgroup_bpf and cgroup
+> > itself were released together.
+>=20
+> I thought dying cgroup won't have any children cgroups ?
 
-ÔÚ 2019/6/24 0:38, Thomas Gleixner Ð´µÀ:
-> Zhiqiang,
->> controlled by sysadmins to copy with hardware changes over time.
-> 
-> So much for the theory. See below.
+It's not completely true, a dying cgroup can't have living children.
 
-Thanks for your reply.
-> 
->> Correspondingly, the MAX_SOFTIRQ_TIME should be able to be tunned by sysadmins,
->> who knows best about hardware performance, for excepted tradeoff between latence
->> and fairness.
->>
->> Here, we add sysctl variable max_softirq_time_usecs to replace MAX_SOFTIRQ_TIME
->> with 2ms default value.
-> 
-> ...
-> 
->>   */
->> -#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
->> +unsigned int __read_mostly max_softirq_time_usecs = 2000;
->>  #define MAX_SOFTIRQ_RESTART 10
->>
->>  #ifdef CONFIG_TRACE_IRQFLAGS
->> @@ -248,7 +249,8 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
->>
->>  asmlinkage __visible void __softirq_entry __do_softirq(void)
->>  {
->> -	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
->> +	unsigned long end = jiffies +
->> +		usecs_to_jiffies(max_softirq_time_usecs);
-> 
-> That's still jiffies based and therefore depends on CONFIG_HZ. Any budget
-> value will be rounded up to the next jiffie. So in case of HZ=100 and
-> time=1000us this will still result in 10ms of allowed loop time.
-> 
-> I'm not saying that we must use a more fine grained time source, but both
-> the changelog and the sysctl documentation are misleading.
-> 
-> If we keep it jiffies based, then microseconds do not make any sense. They
-> just give a false sense of controlability.
-> 
-> Keep also in mind that with jiffies the accuracy depends also on the
-> distance to the next tick when 'end' is evaluated. The next tick might be
-> imminent.
-> 
-> That's all information which needs to be in the documentation.
-> 
+> It should have been empty with no tasks inside it?
 
-Thanks again for your detailed advice.
-As your said, the max_softirq_time_usecs setting without explaining the
-relationship with CONFIG_HZ will give a false sense of controlability. And
-the time accuracy of jiffies will result in a certain difference between the
-max_softirq_time_usecs set value and the actual value, which is in one jiffies
-range.
+Right.
 
-I will add these infomation in the sysctl documentation and changelog in v2 patch.
+> Only some resources are still held?
 
->> +	{
->> +		.procname	= "max_softirq_time_usecs",
->> +		.data		= &max_softirq_time_usecs,
->> +		.maxlen		= sizeof(unsigned int),
->> +		.mode		= 0644,
->> +		.proc_handler   = proc_dointvec_minmax,
->> +		.extra1		= &zero,
->> +	},
-> 
-> Zero as the lower limit? That means it allows a single loop. Fine, but
-> needs to be documented as well.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> .
-> 
+Right.
 
+> mutex and zero init are highly suspicious.
+> It feels that cgroup_bpf_release is called too early.
+
+An alternative solution is to bump the refcounter on
+every update path, and explicitly skip de-bpf'ed cgroups.
+
+>=20
+> Thinking from another angle... if child cgroups can still attach then
+> this bpf_release is broken.
+
+Hm, what do you mean under attach? It's not possible to attach
+a new prog, but if a prog is attached to a parent cgroup,
+a pointer can spill through "effective" array.
+
+But I agree, it's broken. Update path should ignore such
+cgroups (cgroups, which cgroup_bpf was released). I'll take a look.
+
+> The code should be
+> calling __cgroup_bpf_detach() one by one to make sure
+> update_effective_progs() is called, since descendant are still
+> sort-of alive and can attach?
+
+Not sure I get you. Dying cgroup is a leaf cgroup.
+
+>=20
+> My money is on 'too early'.
+> May be cgroup is not dying ?
+> Just cgroup_sk_free() is called on the last socket and
+> this auto-detach logic got triggered incorrectly?
+
+So, once again, what's my picture:
+
+A
+A/B
+A/B/C
+
+cpu1:                               cpu2:
+rmdir C                             attach new prog to A
+C got dying                         update A, update B, update C...
+C's cgroup_bpf is released          C's effective progs is replaced with ne=
+w one
+                                    old is double freed
+
+It looks like it can be reproduced without any sockets.
+
+Thanks!
