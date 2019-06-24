@@ -2,154 +2,151 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFB5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E289C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A526D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD177208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gLaVosSK"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Sx1zahOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbfFXJtR (ORCPT
+        id S1728583AbfFXJtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:49:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44308 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfFXJtR (ORCPT
+        Mon, 24 Jun 2019 05:49:21 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:40080 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfFXJtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:49:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O9hSNr092560;
-        Mon, 24 Jun 2019 09:49:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=6KQBOb8kDteiRaAmKhWFG2uycaXZff/cbFNmgbb3afs=;
- b=gLaVosSKzNgFwu/dzLOasmWKAU6RF7pnKBJh3FK5PiQCiGGhiffmLidfxdqWVDhRMDy3
- C6Dct9zVB/I4MSRgjZwW+OhsHMZWZfFGYhWmW4fr3If6D8AAcdTWEDw6h7fzIAb9601c
- jPKXrzCF2prFGbdNckGXOEv2skGVfk0WmZZcTF+yNmw/OvyXHOd7ct7ct7UZZiMilx0k
- uEY86ICkgHjqzrKA0Ry7kHQdHIl9jND/UVd0uoURoG66XnxqIeffakJu16RNZizn2TOT
- J4BxzoEgLD4JKw0uvNHyEE8xl5jZj/F+GktoFBFGibp/+kBdeO3LaSfqxoC77DM2BNts 2Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pdc62-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 09:49:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O9lmoQ083074;
-        Mon, 24 Jun 2019 09:49:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2t99f36a0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 09:49:03 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5O9mx5D002113;
-        Mon, 24 Jun 2019 09:48:59 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 02:48:59 -0700
-Date:   Mon, 24 Jun 2019 12:48:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     maowenan <maowenan@huawei.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, alexander.deucher@amd.com,
-        christian.koenig@amd.com, David1.Zhou@amd.com,
-        julia.lawall@lip6.fr, kernel-janitors@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        jonathan.kim@amd.com, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH -next v3] drm/amdgpu: return 'ret' immediately if failed
- in amdgpu_pmu_init
-Message-ID: <20190624094850.GQ18776@kadam>
-References: <alpine.DEB.2.21.1906230809400.4961@hadrien>
- <20190624034532.135201-1-maowenan@huawei.com>
- <20190624083952.GO18776@kadam>
- <4795ba5c-8e41-e1e0-c96a-47fdda3995e3@huawei.com>
+        Mon, 24 Jun 2019 05:49:21 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
+   d="scan'208";a="38732937"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2019 02:49:19 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 24 Jun 2019 02:48:20 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 24 Jun 2019 02:49:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C8HHa/2TRhb8sNnLAXClmCsglpdLm2WMqRTras05AIM=;
+ b=Sx1zahOiEa0mZZTkbCgOZxsq8WkISVhET0R4crIqA65eW+nYPBHYfQoSUr/oqsXvvae7PfnDvESvlSm5+8U+qkiv/JdMkG6ZR1bGr7RnTKxBhRN8pY8X9Oqi7nVCXphd3v5sCGNlo7fZGZZm411+uZ5kEfk3F1ShPTGh2C519v4=
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
+ MWHPR11MB0030.namprd11.prod.outlook.com (10.164.204.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 09:49:17 +0000
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 09:49:17 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <palmer@sifive.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] net: macb: Kconfig: Rename Atmel to Cadence
+Thread-Topic: [PATCH 2/2] net: macb: Kconfig: Rename Atmel to Cadence
+Thread-Index: AQHVKnIWNTWzxb1PyUmXl3jea+egkA==
+Date:   Mon, 24 Jun 2019 09:49:16 +0000
+Message-ID: <0c714db9-a3c1-e89b-8889-e9cdb2ac6c52@microchip.com>
+References: <20190624061603.1704-1-palmer@sifive.com>
+ <20190624061603.1704-3-palmer@sifive.com>
+In-Reply-To: <20190624061603.1704-3-palmer@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0149.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1b::17) To MWHPR11MB1662.namprd11.prod.outlook.com
+ (2603:10b6:301:e::15)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bfb11cb9-dbaf-48f6-f4f5-08d6f88938af
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB0030;
+x-ms-traffictypediagnostic: MWHPR11MB0030:
+x-microsoft-antispam-prvs: <MWHPR11MB0030AFCFBC17EE00BE070234E0E00@MWHPR11MB0030.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(31696002)(6246003)(31686004)(71200400001)(71190400001)(386003)(53546011)(229853002)(6436002)(6486002)(6512007)(8936002)(2501003)(52116002)(66066001)(5660300002)(4326008)(99286004)(86362001)(76176011)(68736007)(25786009)(316002)(186003)(7736002)(476003)(26005)(6506007)(102836004)(110136005)(36756003)(2906002)(14454004)(8676002)(54906003)(305945005)(256004)(81166006)(66946007)(6116002)(14444005)(446003)(66446008)(64756008)(66556008)(81156014)(72206003)(66476007)(3846002)(73956011)(53936002)(11346002)(2616005)(478600001)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB0030;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sGge7R8gxYf452FtFmh4YZnOTz17xr0p0m1c1AcV4AKlUOlZfjm5GuATAEsvFvbQW9BmzQc3Yc9MwEp/kwQDgq/MlVrfvcpBY0WYNNaJkFXr+/wre3cpJacJ+0LcO/ogfR2iNiBQp/BbOga8BF3flnyTZwJX//BHkq5J+OsWDuVRbLXXEh4GQlJ3tPAY87XPA/DPhg+mJhf3B8NC0Kxw+dDR/2flslu+9AybdEPKJsyBY/urShPmdIdbCCe+Yjgf/Qx9VVCfEoSMu2HQbb50I8z+k4bC0/vGlAs8O86M0T2vSHQKZbm+PkEi5DkhNxp/2TcM2dLXp+QVpirOhJu4uMrgeBHzgbgFwJpFw/tj1KzsOhb2P3g0wZQJukP9fvUjyIl5d9u4eOqoY/Ss2smYM+hpiiqJENhYVohcFemFv3g=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4D8181CA2F84B6408EDD924C3BA214C4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4795ba5c-8e41-e1e0-c96a-47fdda3995e3@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240082
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfb11cb9-dbaf-48f6-f4f5-08d6f88938af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 09:49:16.8610
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:29:33PM +0800, maowenan wrote:
-> 
-> 
-> On 2019/6/24 16:39, Dan Carpenter wrote:
-> > On Mon, Jun 24, 2019 at 11:45:32AM +0800, Mao Wenan wrote:
-> >> There is one warning:
-> >> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
-> >> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-> >>   int ret = 0;
-> >>       ^
-> >> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
-> >> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
-> >> amdgpu_device_init()
-> >> 	r = amdgpu_pmu_init(adev);
-> >>
-> >> This patch is also to update the indenting on the arguments so they line up with the '('.
-> >>
-> >> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
-> >>
-> >> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> >> ---
-> >>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
-> >>  amdgpu_pmu_init().
-> >>  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
-> >>
-> >>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 7 +++++--
-> >>  1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> >> index 0e6dba9..b702322 100644
-> >> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> >> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> >> @@ -252,8 +252,11 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
-> >>  	case CHIP_VEGA20:
-> >>  		/* init df */
-> >>  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
-> >> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
-> >> -				       DF_V3_6_MAX_COUNTERS);
-> >> +							   "DF", "amdgpu_df",
-> >> +							   PERF_TYPE_AMDGPU_DF,
-> >> +							   DF_V3_6_MAX_COUNTERS);
-> >> +		if (ret)
-> >> +			return ret;
-> > 
-> > No no.  Sorry, the original indenting was correct and lined up with the
-> > '(' character in 'init_pmu_by_type(', that's the way it should be.  If
-> > we were to remove the "ret = " then we'd have to pull the arguments back
-> > as well.  I think this fix that Julia suggested is really the right so
-> > leave the indenting alone.
-> > 
-> 
-> > It looks like you've right aligned the arguments.  That's not the right
-> > way, the original was correct.
-> > 
-> After using 8 character for tab(thanks to Joe), the aligned here is wrong, yes, the original was correct.
-> 
-> so my v4 is only to change ret, don't change the indenting?
-> 
-
-Yes, please.  Sorry for my confusing email earlier.
-
-regards,
-dan carpenter
-
+T24gMjQvMDYvMjAxOSBhdCAwODoxNiwgUGFsbWVyIERhYmJlbHQgd3JvdGU6DQo+IEV4dGVybmFs
+IEUtTWFpbA0KPiANCj4gDQo+IFdoZW4gdG91Y2hpbmcgdGhlIEtjb25maWcgZm9yIHRoaXMgZHJp
+dmVyIEkgbm90aWNlZCB0aGF0IGJvdGggdGhlDQo+IEtjb25maWcgaGVscCB0ZXh0IGFuZCBhIGNv
+bW1lbnQgcmVmZXJyZWQgdG8gdGhpcyBiZWluZyBhbiBBdG1lbCBkcml2ZXIuDQo+IEFzIGZhciBh
+cyBJIGtub3csIHRoaXMgaXMgYSBDYWRlbmNlIGRyaXZlci4gIFRoZSBmaXggaXMganVzdA0KDQpJ
+bmRlZWQ6IHdhcyB3cml0dGVuIGFuZCB0aGVuIG1haW50YWluZWQgYnkgQXRtZWwgKG5vdyBNaWNy
+b2NoaXApIGZvciANCnllYXJzLi4uIFNvIEkgd291bGQgc2F5IHRoYXQgbW9yZSB0aGFuIGEgIkNh
+ZGVuY2UgZHJpdmVyIiBpdCdzIGEgZHJpdmVyIA0KdGhhdCBhcHBsaWVzIHRvIGEgQ2FkZW5jZSBw
+ZXJpcGhlcmFsLg0KDQpJIHdvbid0IGhvbGQgdGhlIHBhdGNoIGp1c3QgZm9yIHRoaXMgYXMgdGhl
+IHBhdGNoIG1ha2VzIHBlcmZlY3Qgc2Vuc2UsIA0KYnV0IHdvdWxkIGxvdmUgdGhhdCBpdCdzIGJl
+ZW4gaGlnaGxpZ2h0ZWQuLi4NCg0KPiBzL0F0bWVsL0NhZGVuY2UvLCBidXQgSSBkaWQgZ28gYW5k
+IHJlLXdyYXAgdGhlIEtjb25maWcgaGVscCB0ZXh0IGFzIHRoYXQNCj4gY2hhbmdlIGNhdXNlZCBp
+dCB0byBnbyBvdmVyIDgwIGNoYXJhY3RlcnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQYWxtZXIg
+RGFiYmVsdCA8cGFsbWVyQHNpZml2ZS5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbmV0L2V0aGVy
+bmV0L2NhZGVuY2UvS2NvbmZpZyB8IDYgKysrLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
+ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9jYWRlbmNlL0tjb25maWcgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNl
+L0tjb25maWcNCj4gaW5kZXggNzRlZTJiZmQyMzY5Li4yOWI2MTMyYjQxOGUgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJz
+L25ldC9ldGhlcm5ldC9jYWRlbmNlL0tjb25maWcNCj4gQEAgLTEsNiArMSw2IEBADQo+ICAgIyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+ICAgIw0KPiAtIyBBdG1lbCBk
+ZXZpY2UgY29uZmlndXJhdGlvbg0KPiArIyBDYWRlbmNlIGRldmljZSBjb25maWd1cmF0aW9uDQo+
+ICAgIw0KPiAgIA0KPiAgIGNvbmZpZyBORVRfVkVORE9SX0NBREVOQ0UNCj4gQEAgLTEzLDggKzEz
+LDggQEAgY29uZmlnIE5FVF9WRU5ET1JfQ0FERU5DRQ0KPiAgIAkgIElmIHVuc3VyZSwgc2F5IFku
+DQo+ICAgDQo+ICAgCSAgTm90ZSB0aGF0IHRoZSBhbnN3ZXIgdG8gdGhpcyBxdWVzdGlvbiBkb2Vz
+bid0IGRpcmVjdGx5IGFmZmVjdCB0aGUNCj4gLQkgIGtlcm5lbDogc2F5aW5nIE4gd2lsbCBqdXN0
+IGNhdXNlIHRoZSBjb25maWd1cmF0b3IgdG8gc2tpcCBhbGwNCj4gLQkgIHRoZSByZW1haW5pbmcg
+QXRtZWwgbmV0d29yayBjYXJkIHF1ZXN0aW9ucy4gSWYgeW91IHNheSBZLCB5b3Ugd2lsbCBiZQ0K
+PiArCSAga2VybmVsOiBzYXlpbmcgTiB3aWxsIGp1c3QgY2F1c2UgdGhlIGNvbmZpZ3VyYXRvciB0
+byBza2lwIGFsbCB0aGUNCj4gKwkgIHJlbWFpbmluZyBDYWRlbmNlIG5ldHdvcmsgY2FyZCBxdWVz
+dGlvbnMuIElmIHlvdSBzYXkgWSwgeW91IHdpbGwgYmUNCj4gICAJICBhc2tlZCBmb3IgeW91ciBz
+cGVjaWZpYyBjYXJkIGluIHRoZSBmb2xsb3dpbmcgcXVlc3Rpb25zLg0KPiAgIA0KPiAgIGlmIE5F
+VF9WRU5ET1JfQ0FERU5DRQ0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
