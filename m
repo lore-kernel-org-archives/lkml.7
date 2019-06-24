@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76213C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D37205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295E0213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370710;
-	bh=GdduGoebxResOs2KZ9dutZNRWAcnWTyZBPIAgOWiSIU=;
+	s=default; t=1561370716;
+	bh=azXS+mVt+1QX2Snrb45t6VAefaIOpyEK6Fpfa/x6Vpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YJ9WBvZlQb+5iPW4Y1MFF29Gw1HKNZqm3j8V4nFQvg9u7h+1NhH41kJN847+bdq2
-	 k/CqB9nzmZ8gs+cOs2eQFoedCrTZ/F3b6fVvKG27aHZARIOE6IjLk5u02h//XLGq56
-	 RSItt/apjoZxZAlSsdPJQKKzDiNDR58og/MWzMUE=
+	b=bqL8I/hYyGX+M0LGdfnLFMGJoEg4mtVgFKnukSScPfYtuWZJrRapDAopzZs/MFfp1
+	 IKIowU711crWvnH06jVgt1ms7muAltASg9fOYu/IcPwe5V+twWtBpyD8KcY2oaoLBp
+	 BWq5XYncPJZi7N4C6dSZdhnz8U2Qeu3In0Ek7XNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfFXKFJ (ORCPT
+        id S1729873AbfFXKFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbfFXKE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:58 -0400
+        id S1729852AbfFXKFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:04 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8085D213F2;
-        Mon, 24 Jun 2019 10:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D2C208E4;
+        Mon, 24 Jun 2019 10:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370698;
-        bh=GdduGoebxResOs2KZ9dutZNRWAcnWTyZBPIAgOWiSIU=;
+        s=default; t=1561370703;
+        bh=azXS+mVt+1QX2Snrb45t6VAefaIOpyEK6Fpfa/x6Vpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zarx5ukoMB/10VkPujR/Blew1K5HVkzkTah3/f4Zdvu1nfs2HR+gKQu5DJ4AvVrPF
-         HB6WADtPk7T1Jjm6J8l6xNmN/kr2lF9s0TVoSXPPtIEXuZMODH4anzGdbYOaGVov5r
-         uSGxVK6hrJIEgLH5s/F86qfu+JOHdgoLb+SLkgOU=
+        b=x6ZoJxGRuRzchSoZr0AlqcvjG6L69q7QZ1n/e9R3BaNjZk/+4J85c+JQLHMx52IoC
+         EP0dIlbslabRybNPsE5HRTovlmDchqaqb6dz+SMBZTEBr8dhNeao4uEo8AEi3dmwKX
+         yMMhUbdwxEPPbFJA4bly5/gCIFbWr52lqQbpVqtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "George G. Davis" <george_davis@mentor.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/90] scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
-Date:   Mon, 24 Jun 2019 17:56:49 +0800
-Message-Id: <20190624092317.966389889@linuxfoundation.org>
+Subject: [PATCH 4.19 61/90] scsi: smartpqi: unlock on error in pqi_submit_raid_request_synchronous()
+Date:   Mon, 24 Jun 2019 17:56:51 +0800
+Message-Id: <20190624092318.124668687@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,40 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4f45d62a52297b10ded963412a158685647ecdec ]
+[ Upstream commit cc8f52609bb4177febade24d11713e20c0893b0a ]
 
-The following error occurs for the `make ARCH=arm64 checkstack` case:
+We need to drop the "ctrl_info->sync_request_sem" lock before returning.
 
-aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
-perl ./scripts/checkstack.pl arm64
-wrong or unknown architecture "arm64"
-
-As suggested by Masahiro Yamada, fix the above error using regular
-expressions in the same way it was fixed for the `ARCH=x86` case via
-commit fda9f9903be6 ("scripts/checkstack.pl: automatically handle
-32-bit and 64-bit mode for ARCH=x86").
-
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 6c223761eb54 ("smartpqi: initial commit of Microsemi smartpqi driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkstack.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-index 34414c6efad6..a2c9e7f98e06 100755
---- a/scripts/checkstack.pl
-+++ b/scripts/checkstack.pl
-@@ -46,7 +46,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
- 	$x	= "[0-9a-f]";	# hex character
- 	$xs	= "[0-9a-f ]";	# hex character or space
- 	$funcre = qr/^$x* <(.*)>:$/;
--	if ($arch eq 'aarch64') {
-+	if ($arch =~ '^(aarch|arm)64$') {
- 		#ffffffc0006325cc:       a9bb7bfd        stp     x29, x30, [sp, #-80]!
- 		$re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
- 	} elsif ($arch eq 'arm') {
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 411d656f2530..98f2d076f938 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -3697,8 +3697,10 @@ static int pqi_submit_raid_request_synchronous(struct pqi_ctrl_info *ctrl_info,
+ 				return -ETIMEDOUT;
+ 			msecs_blocked =
+ 				jiffies_to_msecs(jiffies - start_jiffies);
+-			if (msecs_blocked >= timeout_msecs)
+-				return -ETIMEDOUT;
++			if (msecs_blocked >= timeout_msecs) {
++				rc = -ETIMEDOUT;
++				goto out;
++			}
+ 			timeout_msecs -= msecs_blocked;
+ 		}
+ 	}
 -- 
 2.20.1
 
