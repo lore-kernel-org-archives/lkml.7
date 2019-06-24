@@ -2,105 +2,237 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D00C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE89C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0891D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B9C20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732410AbfFXRYm (ORCPT
+        id S1732415AbfFXRZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:24:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:55380 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfFXRYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:24:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15500360;
-        Mon, 24 Jun 2019 10:24:39 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E30A3F718;
-        Mon, 24 Jun 2019 10:24:38 -0700 (PDT)
-Subject: Re: [PATCH] sched/core: silence a warning in sched_init()
-To:     Qian Cai <cai@lca.pw>, mingo@redhat.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <1561384781-12308-1-git-send-email-cai@lca.pw>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <83e9a20d-bec6-72dd-2210-e019339fdb2a@arm.com>
-Date:   Mon, 24 Jun 2019 18:24:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 24 Jun 2019 13:25:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728831AbfFXRZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:25:57 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OHGYXd084901
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:25:56 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb1vjjesc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:25:55 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 24 Jun 2019 18:25:54 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Jun 2019 18:25:49 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OHPmDg25559362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 17:25:48 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9798B2064;
+        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BE16B205F;
+        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 96E6516C3305; Mon, 24 Jun 2019 10:25:51 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 10:25:51 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Byungchul Park <byungchul.park@lge.com>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+Reply-To: paulmck@linux.ibm.com
+References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
+ <20190624164624.GA41314@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1561384781-12308-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624164624.GA41314@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062417-0052-0000-0000-000003D47B5B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011321; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01222690; UDB=6.00643381; IPR=6.01003850;
+ MB=3.00027447; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 17:25:52
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062417-0053-0000-0000-000061705D3F
+Message-Id: <20190624172551.GI26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2019 14:59, Qian Cai wrote:
-> Compiling a kernel with both FAIR_GROUP_SCHED=n and RT_GROUP_SCHED=n
-> will generate a warning using W=1,
+On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
+> On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
+> > Hello rcu folks,
+> > 
+> > I thought it'd better to announce it if those spawnings fail because of
+> > !rcu_scheduler_fully_active.
+> > 
+> > Of course, with the current code, it never happens though.
+> > 
+> > Thoughts?
 > 
-> kernel/sched/core.c: In function 'sched_init':
-> kernel/sched/core.c:5906:32: warning: variable 'ptr' set but not used
-> [-Wunused-but-set-variable]
->   unsigned long alloc_size = 0, ptr;
->                                 ^~~
+> It seems in the right spirit, but with your patch a warning always fires.
+> rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
+> from hotplug paths.
 > 
-> It apparently the maintainers don't like the proper fix [1] which
-> contains ugly idefs, so silence it by appending the __maybe_unused
-> attribute for it instead.
+> Warning splat stack looks like:
 > 
+> [    0.398767] Call Trace:
+> [    0.398775]  rcu_init+0x6aa/0x724
+> [    0.398779]  start_kernel+0x220/0x4a2
+> [    0.398780]  ? copy_bootdata+0x12/0xac
+> [    0.398782]  secondary_startup_64+0xa4/0xb0
 
-As you say, ifdefs are ugly. I try to stay away from them as much as
-possible (as you may have noticed with the NOHZ stuff). They just make
-code harder to read (I know someone who'd say "it's free code obfuscation"),
-and that is especially true in the patch you reference where it conditions
-variable declaration.
+Thank you both, and I will remove this from my testing queue.
 
-So it may not have been the "proper" fix after all...
+As Joel says, this is called at various points in the boot sequence, not
+all of which are far enough along to support spawning kthreads.
 
-> [1] https://lore.kernel.org/lkml/1559681162-5385-1-git-send-email-cai@lca.pw/
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  kernel/sched/core.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 874c427742a9..9bbad91b3f01 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -5903,7 +5903,10 @@ int in_sched_functions(unsigned long addr)
->  void __init sched_init(void)
->  {
->  	int i, j;
-> -	unsigned long alloc_size = 0, ptr;
-> +	unsigned long alloc_size = 0;
-> +
-> +	/* To silence a -Wunused-but-set-variable warning. */
-> +	unsigned long ptr __maybe_unused;
->  
+The real question here is "What types of bugs are we trying to defend
+against?"  But keeping in mind existing diagnostics.  For example, are
+there any kthreads for which a persistent failure to spawn would not
+emit any error message.  My belief is that any such persistent failure
+would result in either an in-kernel diagnostic or an rcutorture failure,
+but I might well be missing something.
 
-To be super nitpicky, I'd argue the __maybe_unused attribute should be
-placed before the variable name - the kernel/sched/* code goes with
-prefixing rather than postfixing (there is *one* exception in deadline.c),
-and I personally prefer prefixing as well (it just reads better).
+Thoughts?  Or, more to the point, tests demonstrating silence in face
+of such a persistent failure?
 
-To be (still, but slightly less) nitpicky, I'd remove the added newline
-(keep the variable declaration as a single block) and even remove the
-comment - it's redundant with the attribute.
+							Thanx, Paul
 
-With those changes:
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> > Thanks,
+> > Byungchul
+> > 
+> > ---8<---
+> > From 58a33a85c70f82c406319b4752af95cf6ceb73a3 Mon Sep 17 00:00:00 2001
+> > From: Byungchul Park <byungchul.park@lge.com>
+> > Date: Mon, 24 Jun 2019 17:08:26 +0900
+> > Subject: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+> > 
+> > In case that rcu ktheads cannot be spawned due to
+> > !rcu_scheduler_fully_active, it'd be better to anounce it.
+> > 
+> > While at it, because the return value of rcu_spawn_one_boost_kthread()
+> > is not used any longer, changed the return type from int to void.
+> > 
+> > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> > ---
+> >  kernel/rcu/tree_plugin.h | 31 +++++++++++++++++++------------
+> >  1 file changed, 19 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 1102765..7d74193 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+> >   * already exist.  We only create this kthread for preemptible RCU.
+> >   * Returns zero if all is well, a negated errno otherwise.
+> >   */
+> > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  {
+> >  	int rnp_index = rnp - rcu_get_root();
+> >  	unsigned long flags;
+> > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  	struct task_struct *t;
+> >  
+> >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > -		return 0;
+> > +		return;
+> >  
+> > -	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+> > -		return 0;
+> > +	if (rcu_rnp_online_cpus(rnp) == 0)
+> > +		return;
+> >  
+> >  	rcu_state.boost = 1;
+> >  	if (rnp->boost_kthread_task != NULL)
+> > -		return 0;
+> > +		return;
+> >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+> >  			   "rcub/%d", rnp_index);
+> >  	if (IS_ERR(t))
+> > -		return PTR_ERR(t);
+> > +		return;
+> >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> >  	rnp->boost_kthread_task = t;
+> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  	sp.sched_priority = kthread_prio;
+> >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+> >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+> > -	return 0;
+> >  }
+> >  
+> >  static void rcu_cpu_kthread_setup(unsigned int cpu)
+> > @@ -1264,8 +1263,12 @@ static void __init rcu_spawn_boost_kthreads(void)
+> >  		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
+> >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> >  		return;
+> > +
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> >  	rcu_for_each_leaf_node(rnp)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +		rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  static void rcu_prepare_kthreads(int cpu)
+> > @@ -1273,9 +1276,11 @@ static void rcu_prepare_kthreads(int cpu)
+> >  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> >  	struct rcu_node *rnp = rdp->mynode;
+> >  
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+> > -	if (rcu_scheduler_fully_active)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +	rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  #else /* #ifdef CONFIG_RCU_BOOST */
+> > @@ -2198,8 +2203,10 @@ static void rcu_spawn_one_nocb_kthread(int cpu)
+> >   */
+> >  static void rcu_spawn_cpu_nocb_kthread(int cpu)
+> >  {
+> > -	if (rcu_scheduler_fully_active)
+> > -		rcu_spawn_one_nocb_kthread(cpu);
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> > +	rcu_spawn_one_nocb_kthread(cpu);
+> >  }
+> >  
+> >  /*
+> > -- 
+> > 1.9.1
+> > 
 
->  	wait_bit_init();
->  
-> 
