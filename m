@@ -2,263 +2,155 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A50C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7632EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA38205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542D2205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfFXJ5X (ORCPT
+        id S1728862AbfFXJ51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 24 Jun 2019 05:57:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41013 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbfFXJ5X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 05:57:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:44900 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbfFXJ4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:56:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 183E6ED1;
-        Mon, 24 Jun 2019 02:56:18 -0700 (PDT)
-Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE2893F71E;
-        Mon, 24 Jun 2019 02:56:16 -0700 (PDT)
-From:   Raphael Gault <raphael.gault@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, julien.thierry@arm.com,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC V3 05/18] objtool: special: Adapt special section handling
-Date:   Mon, 24 Jun 2019 10:55:35 +0100
-Message-Id: <20190624095548.8578-6-raphael.gault@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624095548.8578-1-raphael.gault@arm.com>
-References: <20190624095548.8578-1-raphael.gault@arm.com>
+Received: by mail-pf1-f195.google.com with SMTP id m30so7203180pff.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:57:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8liBhKcb39ebbAYg76+t+P2qlg08D2vSZfhU2rq0AYs=;
+        b=lvXC4vM03w7KoGyRYzrKXpLjYNV6MUQncQm0RzLP1vfklVTvnCvH+xGn/F/jZy51XJ
+         2BgPUihM4pmDTsaXjVgvATwH/uNngGNst5yR64Yw3Y2+Dabc6DpFSK2H9TaSiEZWBuDj
+         EKca/Prr4oyeWSWpZ7LJ5oZh+RPheeTyETMVd7dwPTvIg8cJJOKlkD7K1vcQTkgxoogZ
+         Y8JpXZl+G4KM15HNYsiLc4JaCcI2gLHXQ/M0cGJKDdx2CX4JXcPLDDzl2wUfsQMk523K
+         r5jdxWrLGLZVUd/i1z8V471hK1U9e7x3CDv3VWAAGKmwRW3UuFTluKnFfySstWlRTuht
+         Eg1g==
+X-Gm-Message-State: APjAAAVGZiWVld/7KWikVRxTqW52LuMClbYrf8gk8SAPBgHz0iIzpj88
+        xv+KYAzWaLdTDIcD0haQZ317fA==
+X-Google-Smtp-Source: APXvYqyFQrSA1wMPdPgsWifOWQDxpwRq5Ylg5kqketQSIRe779u7+RaIij7d5ol+NsCyDV7NpzMzhw==
+X-Received: by 2002:a17:90a:8a17:: with SMTP id w23mr2129572pjn.139.1561370242621;
+        Mon, 24 Jun 2019 02:57:22 -0700 (PDT)
+Received: from localhost (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id x128sm18862198pfd.17.2019.06.24.02.57.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 02:57:22 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 02:57:22 -0700 (PDT)
+X-Google-Original-Date: Mon, 24 Jun 2019 02:57:17 PDT (-0700)
+Subject:     Re: [PATCH 2/2] net: macb: Kconfig: Rename Atmel to Cadence
+In-Reply-To: <0c714db9-a3c1-e89b-8889-e9cdb2ac6c52@microchip.com>
+CC:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Nicolas.Ferre@microchip.com
+Message-ID: <mhng-87f5f418-acd4-4a29-b82e-6dc574a4828a@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch abstracts the few architecture dependent tests that are
-perform when handling special section and switch tables. It enables any
-architecture to ignore a particular CPU feature or not to handle switch
-tables.
+On Mon, 24 Jun 2019 02:49:16 PDT (-0700), Nicolas.Ferre@microchip.com wrote:
+> On 24/06/2019 at 08:16, Palmer Dabbelt wrote:
+>> External E-Mail
+>> 
+>> 
+>> When touching the Kconfig for this driver I noticed that both the
+>> Kconfig help text and a comment referred to this being an Atmel driver.
+>> As far as I know, this is a Cadence driver.  The fix is just
+> 
+> Indeed: was written and then maintained by Atmel (now Microchip) for 
+> years... So I would say that more than a "Cadence driver" it's a driver 
+> that applies to a Cadence peripheral.
+> 
+> I won't hold the patch just for this as the patch makes perfect sense, 
+> but would love that it's been highlighted...
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
----
- tools/objtool/arch/arm64/Build                |  1 +
- tools/objtool/arch/arm64/arch_special.c       | 22 +++++++++++++++
- .../objtool/arch/arm64/include/arch_special.h | 10 +++++--
- tools/objtool/arch/x86/Build                  |  1 +
- tools/objtool/arch/x86/arch_special.c         | 28 +++++++++++++++++++
- tools/objtool/arch/x86/include/arch_special.h |  9 ++++++
- tools/objtool/check.c                         | 15 ++++++++--
- tools/objtool/special.c                       |  9 ++----
- tools/objtool/special.h                       |  3 ++
- 9 files changed, 87 insertions(+), 11 deletions(-)
- create mode 100644 tools/objtool/arch/arm64/arch_special.c
- create mode 100644 tools/objtool/arch/x86/arch_special.c
+OK, I don't mind changing it.  Does this look OK?  I have to submit a v2 anyway
+for the first patch.
 
-diff --git a/tools/objtool/arch/arm64/Build b/tools/objtool/arch/arm64/Build
-index bf7a32c2b9e9..3d09be745a84 100644
---- a/tools/objtool/arch/arm64/Build
-+++ b/tools/objtool/arch/arm64/Build
-@@ -1,3 +1,4 @@
-+objtool-y += arch_special.o
- objtool-y += decode.o
- objtool-y += orc_dump.o
- objtool-y += orc_gen.o
-diff --git a/tools/objtool/arch/arm64/arch_special.c b/tools/objtool/arch/arm64/arch_special.c
-new file mode 100644
-index 000000000000..a21d28876317
---- /dev/null
-+++ b/tools/objtool/arch/arm64/arch_special.c
-@@ -0,0 +1,22 @@
-+/*
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include "../../special.h"
-+#include "arch_special.h"
-+
-+void arch_force_alt_path(unsigned short feature,
-+			 bool uaccess,
-+			 struct special_alt *alt)
-+{
-+}
-diff --git a/tools/objtool/arch/arm64/include/arch_special.h b/tools/objtool/arch/arm64/include/arch_special.h
-index 63da775d0581..185103be8a51 100644
---- a/tools/objtool/arch/arm64/include/arch_special.h
-+++ b/tools/objtool/arch/arm64/include/arch_special.h
-@@ -30,7 +30,13 @@
- #define ALT_ORIG_LEN_OFFSET	10
- #define ALT_NEW_LEN_OFFSET	11
- 
--#define X86_FEATURE_POPCNT (4 * 32 + 23)
--#define X86_FEATURE_SMAP   (9 * 32 + 20)
-+static inline bool arch_should_ignore_feature(unsigned short feature)
-+{
-+	return false;
-+}
- 
-+static inline bool arch_support_switch_table(void)
-+{
-+	return false;
-+}
- #endif /* _ARM64_ARCH_SPECIAL_H */
-diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-index 1f11b45999d0..63e167775bc8 100644
---- a/tools/objtool/arch/x86/Build
-+++ b/tools/objtool/arch/x86/Build
-@@ -1,3 +1,4 @@
-+objtool-y += arch_special.o
- objtool-y += decode.o
- objtool-y += orc_dump.o
- objtool-y += orc_gen.o
-diff --git a/tools/objtool/arch/x86/arch_special.c b/tools/objtool/arch/x86/arch_special.c
-new file mode 100644
-index 000000000000..6583a1770bb2
---- /dev/null
-+++ b/tools/objtool/arch/x86/arch_special.c
-@@ -0,0 +1,28 @@
-+/*
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include "../../special.h"
-+#include "arch_special.h"
-+
-+void arch_force_alt_path(unsigned short feature,
-+			 bool uaccess,
-+			 struct special_alt *alt)
-+{
-+		if (feature == X86_FEATURE_SMAP) {
-+			if (uaccess)
-+				alt->skip_orig = true;
-+			else
-+				alt->skip_alt = true;
-+		}
-+}
-diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-index 424ce47013e3..fce2b1193194 100644
---- a/tools/objtool/arch/x86/include/arch_special.h
-+++ b/tools/objtool/arch/x86/include/arch_special.h
-@@ -33,4 +33,13 @@
- #define X86_FEATURE_POPCNT (4 * 32 + 23)
- #define X86_FEATURE_SMAP   (9 * 32 + 20)
- 
-+static inline bool arch_should_ignore_feature(unsigned short feature)
-+{
-+	return feature == X86_FEATURE_POPCNT;
-+}
-+
-+static inline bool arch_support_switch_table(void)
-+{
-+	return true;
-+}
- #endif /* _X86_ARCH_SPECIAL_H */
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 1a7ee85e9878..0fba7b70d73a 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -729,7 +729,7 @@ static int handle_group_alt(struct objtool_file *file,
- 		last_orig_insn = insn;
- 	}
- 
--	if (next_insn_same_sec(file, last_orig_insn)) {
-+	if (last_orig_insn && next_insn_same_sec(file, last_orig_insn)) {
- 		fake_jump = malloc(sizeof(*fake_jump));
- 		if (!fake_jump) {
- 			WARN("malloc failed");
-@@ -1045,6 +1045,17 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 		if (find_symbol_containing(rodata_sec, table_offset))
- 			continue;
- 
-+		/*
-+		 * If we are on arm64 architecture, we now that we
-+		 * are in presence of a switch table thanks to
-+		 * the `br <Xn>` insn. but we can't retrieve it yet.
-+		 * So we just ignore unreachable for this file.
-+		 */
-+		if (!arch_support_switch_table()) {
-+			file->ignore_unreachables = true;
-+			return NULL;
-+		}
-+
- 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
- 		if (rodata_rela) {
- 			/*
-@@ -1844,7 +1855,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 	insn = first;
- 	sec = insn->sec;
- 
--	if (insn->alt_group && list_empty(&insn->alts)) {
-+	if (!insn->visited && insn->alt_group && list_empty(&insn->alts)) {
- 		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
- 			  sec, insn->offset);
- 		return 1;
-diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index b8ccee1b5382..7a0092d6e5b3 100644
---- a/tools/objtool/special.c
-+++ b/tools/objtool/special.c
-@@ -81,7 +81,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
- 		 * feature path which is a "very very small percentage of
- 		 * machines".
- 		 */
--		if (feature == X86_FEATURE_POPCNT)
-+		if (arch_should_ignore_feature(feature))
- 			alt->skip_orig = true;
- 
- 		/*
-@@ -93,12 +93,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
- 		 * find paths that see the STAC but take the NOP instead of
- 		 * CLAC and the other way around.
- 		 */
--		if (feature == X86_FEATURE_SMAP) {
--			if (uaccess)
--				alt->skip_orig = true;
--			else
--				alt->skip_alt = true;
--		}
-+		arch_force_alt_path(feature, uaccess, alt);
- 	}
- 
- 	orig_rela = find_rela_by_dest(sec, offset + entry->orig);
-diff --git a/tools/objtool/special.h b/tools/objtool/special.h
-index 35061530e46e..90626a7e41cf 100644
---- a/tools/objtool/special.h
-+++ b/tools/objtool/special.h
-@@ -27,5 +27,8 @@ struct special_alt {
- };
- 
- int special_get_alts(struct elf *elf, struct list_head *alts);
-+void arch_force_alt_path(unsigned short feature,
-+			 bool uaccess,
-+			 struct special_alt *alt);
- 
- #endif /* _SPECIAL_H */
--- 
-2.17.1
+Author: Palmer Dabbelt <palmer@sifive.com>
+Date:   Sun Jun 23 23:04:14 2019 -0700
 
+    net: macb: Kconfig: Rename Atmel to Cadence
+
+    The help text makes it look like NET_VENDOR_CADENCE enables support for
+    Atmel devices, when in reality it's a driver written by Atmel that
+    supports Cadence devices.  This may confuse users that have this device
+    on a non-Atmel SoC.
+
+    The fix is just s/Atmel/Cadence/, but I did go and re-wrap the Kconfig
+    help text as that change caused it to go over 80 characters.
+
+    Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 74ee2bfd2369..29b6132b418e 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-# Atmel device configuration
++# Cadence device configuration
+ #
+
+ config NET_VENDOR_CADENCE
+@@ -13,8 +13,8 @@ config NET_VENDOR_CADENCE
+          If unsure, say Y.
+
+          Note that the answer to this question doesn't directly affect the
+-         kernel: saying N will just cause the configurator to skip all
+-         the remaining Atmel network card questions. If you say Y, you will be
++         kernel: saying N will just cause the configurator to skip all the
++         remaining Cadence network card questions. If you say Y, you will be
+          asked for your specific card in the following questions.
+
+ if NET_VENDOR_CADENCE
+
+> 
+>> s/Atmel/Cadence/, but I did go and re-wrap the Kconfig help text as that
+>> change caused it to go over 80 characters.
+>> 
+>> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+>> ---
+>>   drivers/net/ethernet/cadence/Kconfig | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+>> index 74ee2bfd2369..29b6132b418e 100644
+>> --- a/drivers/net/ethernet/cadence/Kconfig
+>> +++ b/drivers/net/ethernet/cadence/Kconfig
+>> @@ -1,6 +1,6 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>>   #
+>> -# Atmel device configuration
+>> +# Cadence device configuration
+>>   #
+>>   
+>>   config NET_VENDOR_CADENCE
+>> @@ -13,8 +13,8 @@ config NET_VENDOR_CADENCE
+>>   	  If unsure, say Y.
+>>   
+>>   	  Note that the answer to this question doesn't directly affect the
+>> -	  kernel: saying N will just cause the configurator to skip all
+>> -	  the remaining Atmel network card questions. If you say Y, you will be
+>> +	  kernel: saying N will just cause the configurator to skip all the
+>> +	  remaining Cadence network card questions. If you say Y, you will be
+>>   	  asked for your specific card in the following questions.
+>>   
+>>   if NET_VENDOR_CADENCE
+>> 
+> 
+> 
+> -- 
+> Nicolas Ferre
