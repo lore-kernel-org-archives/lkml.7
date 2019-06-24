@@ -2,83 +2,46 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06473C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E776AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5D0205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3332205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfFXGe3 (ORCPT
+        id S1727134AbfFXGfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:34:29 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:49827 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726472AbfFXGe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:34:29 -0400
-X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 02:34:27 EDT
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jun 2019 11:57:44 +0530
-X-IronPort-AV: E=McAfee;i="6000,8403,9297"; a="10448682"
-Received: from dhar-linux.qualcomm.com ([10.204.66.25])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Jun 2019 11:57:20 +0530
-Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
-        id 0BF223649; Mon, 24 Jun 2019 11:57:18 +0530 (IST)
-From:   Shubhashree Dhar <dhar@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org,
-        jshekhar@codeaurora.org
-Subject: drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date:   Mon, 24 Jun 2019 11:57:12 +0530
-Message-Id: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 24 Jun 2019 02:35:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:52771 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726312AbfFXGfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 02:35:48 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 3F22968AFE; Mon, 24 Jun 2019 08:35:16 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 08:35:16 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Fredrik Noring <noring@nocrew.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, laurentiu.tudor@nxp.com,
+        hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+Message-ID: <20190624063515.GA3296@lst.de>
+References: <20190529102843.13174-4-laurentiu.tudor@nxp.com> <20190605214622.GA22254@roeck-us.net> <20190611133223.GA30054@roeck-us.net> <20190611172654.GA2602@sx9> <20190611190343.GA18459@roeck-us.net> <20190613134033.GA2489@sx9> <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net> <20190613153414.GA909@sx9> <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net> <20190614142816.GA2574@sx9>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614142816.GA2574@sx9>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dpu encoder spinlock should be initialized during dpu encoder
-init instead of dpu encoder setup which is part of commit.
-There are chances that vblank control uses the uninitialized
-spinlock if not initialized during encoder init.
-
-Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
-Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 5f085b5..22938c7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
- 	if (ret)
- 		goto fail;
- 
--	spin_lock_init(&dpu_enc->enc_spinlock);
--
- 	atomic_set(&dpu_enc->frame_done_timeout, 0);
- 	timer_setup(&dpu_enc->frame_done_timer,
- 			dpu_encoder_frame_done_timeout, 0);
-@@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
- 
-+	spin_lock_init(&dpu_enc->enc_spinlock);
- 	dpu_enc->enabled = false;
- 
- 	return &dpu_enc->base;
--- 
-1.9.1
-
+Can you send me the patch formally so that I can queue it up for the
+dma-mapping tree?
