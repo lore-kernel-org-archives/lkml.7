@@ -2,57 +2,64 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A9FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD623C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2E8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7D0205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370917;
-	bh=fOvlLthS1MK46WfcNPVYkleqoAPilf+fyWhHYHhB55U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=spwNb/8g+SYsCIMa/6sNUKN6Rr3gLdUdTDuHZjuHJQhPU2MUhbOxo6Jmi0WwWPZQL
-	 LZLX8hxrA5oyRc3erwDxucIPPCcn0BYP/2Y3Mt0INjeJJ4DKUoHYLcSU93d9E+PF5V
-	 oqpFSm/zul4l4IVQQHwwycuIlgFBc4Qn72Lcjz2Y=
+	s=default; t=1561370922;
+	bh=3o0Jf2zd3+l44DNZj/KOdpBG6mcFTkMjnHdIdWa9KpI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NXcEoKFA97BlS8RVdJh4pRYNjmWWyyE1K98OF+Bp3X0Uq6/TNwGe8mhF2JzNX+Agi
+	 r89whmV0TqQYnX98Wnf0QukgJrAvJrANNRYbLNqyzMXDscxFOk/+41m5LWadchM9RY
+	 RI+WjsuzAJWZcF4jw5KcijWij3QIWHBpcz/r6Iw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfFXKIg (ORCPT
+        id S1727408AbfFXKIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41272 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730404AbfFXKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:09 -0400
+        id S1730410AbfFXKIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:13 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E355E205C9;
-        Mon, 24 Jun 2019 10:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B19A4205C9;
+        Mon, 24 Jun 2019 10:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370889;
-        bh=fOvlLthS1MK46WfcNPVYkleqoAPilf+fyWhHYHhB55U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNplICPL6mUyeThbWOr8DIgj+K2ZEuBh+r/tEXsZd5iG6JORxdmvpCCygaYlmc/i6
-         n1HVa597Pb4WQr5odVtHPwlBQpLmS95U8w8VUP2LFHu6j+QVvMLFAhmAjTNUjrVN03
-         qIVowgGUnJbd/5UPe/V8hygNGWbp2ph26bFN/fmM=
+        s=default; t=1561370892;
+        bh=3o0Jf2zd3+l44DNZj/KOdpBG6mcFTkMjnHdIdWa9KpI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bDJNPXpjG2EayrsK/7PAyFlX8xS6hC0f5kp4C6ZmNaUaMYyg9UBO8hO5+107EtUpG
+         Ao3ioS4Z2S1W9tduEdr0zOE9LzVPCtlgskzhNdMf/NxS5CwaJNzCuMDzN+xelckrjm
+         YzE9lACa3uR+42CG+B7KIqCHumCrxAWW+u3yLm+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 009/121] scsi: ufs: Avoid runtime suspend possibly being blocked forever
-Date:   Mon, 24 Jun 2019 17:55:41 +0800
-Message-Id: <20190624092321.121774629@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.1 000/121] 5.1.15-stable review
+Date:   Mon, 24 Jun 2019 17:55:32 +0800
+Message-Id: <20190624092320.652599624@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
-References: <20190624092320.652599624@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.1.15-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.1.15-rc1
+X-KernelTest-Deadline: 2019-06-26T09:23+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,69 +67,541 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+This is the start of the stable review cycle for the 5.1.15 release.
+There are 121 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 24e2e7a19f7e4b83d0d5189040d997bce3596473 upstream.
+Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
+Anything received after that time might be too late.
 
-UFS runtime suspend can be triggered after pm_runtime_enable() is invoked
-in ufshcd_pltfrm_init(). However if the first runtime suspend is triggered
-before binding ufs_hba structure to ufs device structure via
-platform_set_drvdata(), then UFS runtime suspend will be no longer
-triggered in the future because its dev->power.runtime_error was set in the
-first triggering and does not have any chance to be cleared.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.15-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+and the diffstat can be found below.
 
-To be more clear, dev->power.runtime_error is set if hba is NULL in
-ufshcd_runtime_suspend() which returns -EINVAL to rpm_callback() where
-dev->power.runtime_error is set as -EINVAL. In this case, any future
-rpm_suspend() for UFS device fails because rpm_check_suspend_allowed()
-fails due to non-zero
-dev->power.runtime_error.
+thanks,
 
-To resolve this issue, make sure the first UFS runtime suspend get valid
-"hba" in ufshcd_runtime_suspend(): Enable UFS runtime PM only after hba is
-successfully bound to UFS device structure.
+greg k-h
 
-Fixes: 62694735ca95 ([SCSI] ufs: Add runtime PM support for UFS host controller driver)
-Cc: stable@vger.kernel.org
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-------------
+Pseudo-Shortlog of commits:
 
----
- drivers/scsi/ufs/ufshcd-pltfrm.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.1.15-rc1
 
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -340,24 +340,21 @@ int ufshcd_pltfrm_init(struct platform_d
- 		goto dealloc_host;
- 	}
- 
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--
- 	ufshcd_init_lanes_per_dir(hba);
- 
- 	err = ufshcd_init(hba, mmio_base, irq);
- 	if (err) {
- 		dev_err(dev, "Initialization failed\n");
--		goto out_disable_rpm;
-+		goto dealloc_host;
- 	}
- 
- 	platform_set_drvdata(pdev, hba);
- 
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	return 0;
- 
--out_disable_rpm:
--	pm_runtime_disable(&pdev->dev);
--	pm_runtime_set_suspended(&pdev->dev);
- dealloc_host:
- 	ufshcd_dealloc_host(hba);
- out:
+James Morse <james.morse@arm.com>
+    x86/resctrl: Don't stop walking closids when a locksetup group is found
+
+Jouni Malinen <j@w1.fi>
+    mac80211: Do not use stack memory with scatterlist for GMAC
+
+Andy Strohman <andrew@andrewstrohman.com>
+    nl80211: fix station_info pertid memory leak
+
+Yu Wang <yyuwang@codeaurora.org>
+    mac80211: handle deauthentication/disassociation from TDLS peer
+
+Manikanta Pubbisetty <mpubbise@codeaurora.org>
+    {nl,mac}80211: allow 4addr AP operation on crypto controlled devices
+
+Johannes Berg <johannes.berg@intel.com>
+    mac80211: drop robust management frames from unknown TA
+
+Eric Biggers <ebiggers@google.com>
+    cfg80211: fix memory leak of wiphy device name
+
+Christian Brauner <christian@brauner.io>
+    fs/namespace: fix unprivileged mount propagation
+
+Andy Lutomirski <luto@kernel.org>
+    x86/vdso: Prevent segfaults due to hoisted vclock reads
+
+Steve French <stfrench@microsoft.com>
+    SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Fix regression with minimum encryption key size alignment
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: add requirements field in superblock
+
+Todd Kjos <tkjos@android.com>
+    binder: fix possible UAF when freeing buffer
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Don't clobber M/N values during fastset check
+
+Thomas Hellstrom <thellstrom@vmware.com>
+    drm/vmwgfx: Use the backdoor port if the HB port is not available
+
+Amir Goldstein <amir73il@gmail.com>
+    ovl: make i_ino consistent with st_ino in more cases
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86/mmu: Allocate PAE root array when using SVM's 32-bit NPT
+
+Anisse Astier <aastier@freebox.fr>
+    arm64: ssbd: explicitly depend on <linux/prctl.h>
+
+Anisse Astier <aastier@freebox.fr>
+    arm64/sve: <uapi/asm/ptrace.h> should not depend on <uapi/linux/prctl.h>
+
+Faiz Abbas <faiz_abbas@ti.com>
+    ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
+
+Faiz Abbas <faiz_abbas@ti.com>
+    ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
+
+Jan Kundrát <jan.kundrat@cesnet.cz>
+    ARM: mvebu_v7_defconfig: fix Ethernet on Clearfog
+
+Fabio Estevam <festevam@gmail.com>
+    ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc/bpf: use unsigned division instruction for 64-bit operations
+
+ShihPo Hung <shihpo.hung@sifive.com>
+    riscv: mm: synchronize MMU after pte change
+
+Willem de Bruijn <willemb@google.com>
+    can: purge socket error queue on sock destruct
+
+Joakim Zhang <qiangqing.zhang@nxp.com>
+    can: flexcan: fix timeout when set small bitrate
+
+Anssi Hannula <anssi.hannula@bitwise.fi>
+    can: xilinx_can: use correct bittiming_const for CAN FD core
+
+Naohiro Aota <naohiro.aota@wdc.com>
+    btrfs: start readahead also in seed devices
+
+Arnd Bergmann <arnd@arndb.de>
+    ovl: fix bogus -Wmaybe-unitialized warning
+
+Miklos Szeredi <mszeredi@redhat.com>
+    ovl: don't fail with disconnected lower NFS
+
+Amir Goldstein <amir73il@gmail.com>
+    ovl: detect overlapping layers
+
+Jaesoo Lee <jalee@purestorage.com>
+    nvme: Fix u32 overflow in the number of namespace list calculation
+
+Dave Martin <Dave.Martin@arm.com>
+    arm64: Silence gcc warnings about arch ABI drift
+
+Robert Hancock <hancock@sedsystems.ca>
+    hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
+
+Eduardo Valentin <eduval@amazon.com>
+    hwmon: (core) add thermal sensors only if dev->of_node is present
+
+Alexandra Winter <wintera@linux.ibm.com>
+    s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
+
+Julian Wiedmann <jwi@linux.ibm.com>
+    s390/qeth: check dst entry before use
+
+Julian Wiedmann <jwi@linux.ibm.com>
+    s390/qeth: handle limited IPv4 broadcast in L3 TX path
+
+Christian Brauner <christian@brauner.io>
+    tests: fix pidfd-test compilation
+
+Lucas Stach <l.stach@pengutronix.de>
+    udmabuf: actually unmap the scatterlist
+
+Miaohe Lin <linmiaohe@huawei.com>
+    net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is set
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    scsi: smartpqi: unlock on error in pqi_submit_raid_request_synchronous()
+
+Avri Altman <avri.altman@wdc.com>
+    scsi: ufs: Check that space was properly alloced in copy_query_response
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    net: phylink: avoid reducing support mask
+
+George G. Davis <george_davis@mentor.com>
+    scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
+
+Trevor Bourget <tgb.kernel@gmail.com>
+    kbuild: tar-pkg: enable communication with jobserver
+
+Minwoo Im <minwoo.im.dev@gmail.com>
+    nvmet: fix data_len to 0 for bdev-backed write_zeroes
+
+Robin Murphy <robin.murphy@arm.com>
+    drm/arm/hdlcd: Allow a bit of clock tolerance
+
+Robin Murphy <robin.murphy@arm.com>
+    drm/arm/hdlcd: Actually validate CRTC modes
+
+Wen He <wen.he_1@nxp.com>
+    drm/arm/mali-dp: Add a loop around the second set CVAL and try 5 times
+
+Xin Long <lucien.xin@gmail.com>
+    selftests: set sysctl bc_forwarding properly in router_broadcast.sh
+
+Sean Wang <sean.wang@mediatek.com>
+    net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+
+Sean Wang <sean.wang@mediatek.com>
+    net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
+
+Young Xiao <92siuyang@gmail.com>
+    sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+
+Gen Zhang <blackgod016574@gmail.com>
+    mdesc: fix a missing-check bug in get_vdev_port_node_info()
+
+Yonglong Liu <liuyonglong@huawei.com>
+    net: hns: Fix loopback test failed at copper ports
+
+Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+    net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+
+Vincent Chen <vincentc@andestech.com>
+    nds32: Avoid IEX status being incorrectly modified
+
+Naresh Kamboju <naresh.kamboju@linaro.org>
+    selftests: vm: install test_vmalloc.sh for run_vmtests
+
+Alakesh Haloi <alakesh.haloi@gmail.com>
+    userfaultfd: selftest: fix compiler warning
+
+Alex Shi <alex.shi@linux.alibaba.com>
+    kselftest/cgroup: fix incorrect test_core skip
+
+Alex Shi <alex.shi@linux.alibaba.com>
+    kselftest/cgroup: fix unexpected testing failure on test_core
+
+Alex Shi <alex.shi@linux.alibaba.com>
+    kselftest/cgroup: fix unexpected testing failure on test_memcontrol
+
+Guenter Roeck <linux@roeck-us.net>
+    xtensa: Fix section mismatch between memblock_reserve and mem_reserve
+
+Eric Biggers <ebiggers@google.com>
+    crypto: hmac - fix memory leak in hmac_init_tfm()
+
+YueHaibing <yuehaibing@huawei.com>
+    MIPS: uprobes: remove set but not used variable 'epc'
+
+Kamenee Arumugam <kamenee.arumugam@intel.com>
+    IB/hfi1: Validate page aligned for a given virtual address
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/rdmavt: Fix alloc_qpn() WARN_ON()
+
+Oded Gabbay <oded.gabbay@gmail.com>
+    habanalabs: fix bug in checking huge page optimization
+
+Helge Deller <deller@gmx.de>
+    parisc: Fix compiler warnings in float emulation code
+
+YueHaibing <yuehaibing@huawei.com>
+    parport: Fix mem leak in parport_register_dev_model
+
+Scott Wood <swood@redhat.com>
+    fpga: dfl: Add lockdep classes for pdata->lock
+
+Scott Wood <swood@redhat.com>
+    fpga: dfl: afu: Pass the correct device to dma_mapping_error()
+
+Wen Yang <wen.yang99@zte.com.cn>
+    fpga: stratix10-soc: fix use-after-free on s10_init()
+
+Masahiro Yamada <yamada.masahiro@socionext.com>
+    MIPS: mark ginvt() as __always_inline
+
+Jose Abreu <joabreu@synopsys.com>
+    ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
+
+Jose Abreu <joabreu@synopsys.com>
+    ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+
+Eric Long <eric.long@unisoc.com>
+    dmaengine: sprd: Fix the right place to configure 2-stage transfer
+
+Eric Long <eric.long@unisoc.com>
+    dmaengine: sprd: Fix block length overflow
+
+Eric Long <eric.long@unisoc.com>
+    dmaengine: sprd: Fix the incorrect start for 2-stage destination channels
+
+Baolin Wang <baolin.wang@linaro.org>
+    dmaengine: sprd: Add validation of current descriptor in irq handler
+
+Baolin Wang <baolin.wang@linaro.org>
+    dmaengine: sprd: Fix the possible crash when getting descriptor status
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    dmaengine: mediatek-cqdma: sleeping in atomic context
+
+Colin Ian King <colin.king@canonical.com>
+    dmaengine: dw-axi-dmac: fix null dereference when pointer first is null
+
+Paul Cercueil <paul@crapouillou.net>
+    dmaengine: jz4780: Fix transfers being ACKed too soon
+
+Vineet Gupta <vgupta@synopsys.com>
+    ARC: fix build warnings
+
+Kees Cook <keescook@chromium.org>
+    lkdtm/usercopy: Moves the KERNEL_DS test to non-canonical
+
+Douglas Anderson <dianders@chromium.org>
+    brcmfmac: sdio: Don't tune while the card is off
+
+Douglas Anderson <dianders@chromium.org>
+    brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+
+Douglas Anderson <dianders@chromium.org>
+    Revert "brcmfmac: disable command decode in sdio_aos"
+
+Mike Salvatore <mike.salvatore@canonical.com>
+    apparmor: reset pos on failure to unpack for various functions
+
+Jann Horn <jannh@google.com>
+    apparmor: enforce nullbyte at end of tag string
+
+John Johansen <john.johansen@canonical.com>
+    apparmor: fix PROFILE_MEDIATES for untrusted input
+
+Daniel Smith <danct12@disroot.org>
+    Input: silead - add MSSL0017 to acpi_device_id
+
+Andrey Smirnov <andrew.smirnov@gmail.com>
+    Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
+
+Alexander Mikhaylenko <exalm7659@gmail.com>
+    Input: synaptics - enable SMBus on ThinkPad E480 and E580
+
+Crt Mori <cmo@melexis.com>
+    iio: temperature: mlx90632 Relax the compatibility check
+
+Lorenzo Bianconi <lorenzo@kernel.org>
+    iio: imu: st_lsm6dsx: fix PM support for st_lsm6dsx i2c controller
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Silence txreq allocation warnings
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Correct tid qp rcd to match verbs context
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Avoid hardlockup with flushlist_lock
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Close PSM sdma_progress sleep window
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Validate fault injection opcode user input
+
+Ronnie Sahlberg <lsahlber@redhat.com>
+    cifs: fix GlobalMid_Lock bug in cifs_reconnect
+
+Ronnie Sahlberg <lsahlber@redhat.com>
+    cifs: add spinlock for the openFileList to cifsInodeInfo
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    usb: xhci: Don't try to recover an endpoint if port is in error state.
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: detect USB 3.2 capable host controllers correctly
+
+Peter Chen <peter.chen@nxp.com>
+    usb: chipidea: udc: workaround for endpoint conflict issue
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Avoid runtime suspend possibly being blocked forever
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: core: Prevent processing SDIO IRQs when the card is suspended
+
+Douglas Anderson <dianders@chromium.org>
+    mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+
+Douglas Anderson <dianders@chromium.org>
+    mmc: core: API to temporarily disable retuning for SDIO CRC errors
+
+jjian zhou <jjian.zhou@mediatek.com>
+    mmc: mediatek: fix SDIO IRQ detection issue
+
+jjian zhou <jjian.zhou@mediatek.com>
+    mmc: mediatek: fix SDIO IRQ interrupt handle flow
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    mmc: sdhi: disallow HS400 for M3-W ES1.2, RZ/G2M, and V3H
+
+Raul E Rangel <rrangel@chromium.org>
+    mmc: sdhci: sdhci-pci-o2micro: Correctly set bus width when tuning
+
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+    tracing: Silence GCC 9 array bounds warning
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arc/boot/dts/hsdk.dts                         |   4 +
+ arch/arc/include/asm/cmpxchg.h                     |  14 +-
+ arch/arc/mm/tlb.c                                  |  13 +-
+ arch/arm/boot/dts/am57xx-idk-common.dtsi           |   1 +
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi          |  40 ++---
+ arch/arm/configs/mvebu_v7_defconfig                |   1 +
+ arch/arm/mach-imx/cpuidle-imx6sx.c                 |   3 +-
+ arch/arm64/Makefile                                |   1 +
+ arch/arm64/include/uapi/asm/ptrace.h               |   8 +-
+ arch/arm64/kernel/ssbd.c                           |   1 +
+ arch/mips/include/asm/ginvt.h                      |   2 +-
+ arch/mips/kernel/uprobes.c                         |   3 -
+ arch/nds32/include/asm/bitfield.h                  |   2 +-
+ arch/nds32/include/asm/fpu.h                       |   2 +-
+ arch/nds32/include/asm/syscalls.h                  |   2 +-
+ arch/nds32/include/uapi/asm/fp_udfiex_crtl.h       |  16 ++
+ arch/nds32/include/uapi/asm/sigcontext.h           |  24 ++-
+ arch/nds32/include/uapi/asm/udftrap.h              |  13 --
+ arch/nds32/include/uapi/asm/unistd.h               |   4 +-
+ arch/nds32/kernel/fpu.c                            |  15 +-
+ arch/nds32/kernel/sys_nds32.c                      |  26 ++--
+ arch/parisc/math-emu/cnv_float.h                   |   8 +-
+ arch/powerpc/include/asm/ppc-opcode.h              |   1 +
+ arch/powerpc/net/bpf_jit.h                         |   2 +-
+ arch/powerpc/net/bpf_jit_comp64.c                  |   8 +-
+ arch/riscv/mm/fault.c                              |  13 ++
+ arch/sparc/kernel/mdesc.c                          |   2 +
+ arch/sparc/kernel/perf_event.c                     |   4 +
+ arch/x86/entry/vdso/vclock_gettime.c               |  15 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c             |   2 +-
+ arch/x86/kvm/mmu.c                                 |  16 +-
+ arch/xtensa/kernel/setup.c                         |   3 +-
+ crypto/hmac.c                                      |   4 +-
+ drivers/android/binder.c                           |  16 +-
+ drivers/dma-buf/udmabuf.c                          |   1 +
+ drivers/dma/dma-jz4780.c                           |  32 ++--
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c     |   3 +-
+ drivers/dma/mediatek/mtk-cqdma.c                   |   4 +-
+ drivers/dma/sprd-dma.c                             |  29 ++--
+ drivers/fpga/dfl-afu-dma-region.c                  |   2 +-
+ drivers/fpga/dfl.c                                 |  16 +-
+ drivers/fpga/stratix10-soc.c                       |   6 +-
+ drivers/gpu/drm/arm/hdlcd_crtc.c                   |  14 +-
+ drivers/gpu/drm/arm/malidp_drv.c                   |  13 +-
+ drivers/gpu/drm/i915/intel_display.c               |  38 +++--
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c                | 146 +++++++++++++++----
+ drivers/hwmon/hwmon.c                              |   2 +-
+ drivers/hwmon/pmbus/pmbus_core.c                   |  34 ++++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h            |   2 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       |  25 +++-
+ drivers/iio/temperature/mlx90632.c                 |   9 +-
+ drivers/infiniband/hw/hfi1/chip.c                  |  14 ++
+ drivers/infiniband/hw/hfi1/chip.h                  |   1 +
+ drivers/infiniband/hw/hfi1/fault.c                 |   5 +
+ drivers/infiniband/hw/hfi1/sdma.c                  |   9 +-
+ drivers/infiniband/hw/hfi1/tid_rdma.c              |   4 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c          |   3 +
+ drivers/infiniband/hw/hfi1/user_sdma.c             |  12 +-
+ drivers/infiniband/hw/hfi1/user_sdma.h             |   1 -
+ drivers/infiniband/hw/hfi1/verbs.c                 |   2 -
+ drivers/infiniband/hw/hfi1/verbs_txreq.c           |   2 +-
+ drivers/infiniband/hw/hfi1/verbs_txreq.h           |   3 +-
+ drivers/infiniband/hw/qib/qib_verbs.c              |   2 -
+ drivers/infiniband/sw/rdmavt/mr.c                  |   2 +
+ drivers/infiniband/sw/rdmavt/qp.c                  |   3 +-
+ drivers/input/misc/uinput.c                        |  22 ++-
+ drivers/input/mouse/synaptics.c                    |   2 +
+ drivers/input/touchscreen/silead.c                 |   1 +
+ drivers/misc/habanalabs/memory.c                   |   6 -
+ drivers/misc/lkdtm/usercopy.c                      |  10 +-
+ drivers/mmc/core/core.c                            |   5 +-
+ drivers/mmc/core/sdio.c                            |  13 +-
+ drivers/mmc/core/sdio_io.c                         |  77 ++++++++++
+ drivers/mmc/core/sdio_irq.c                        |   4 +
+ drivers/mmc/host/mtk-sd.c                          |  39 ++---
+ drivers/mmc/host/renesas_sdhi_core.c               |   9 +-
+ drivers/mmc/host/sdhci-pci-o2micro.c               |   5 +-
+ drivers/net/can/flexcan.c                          |   2 +-
+ drivers/net/can/xilinx_can.c                       |   2 +-
+ drivers/net/dsa/mv88e6xxx/chip.c                   |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   |   4 +
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c        |  15 +-
+ drivers/net/ipvlan/ipvlan_main.c                   |   2 +-
+ drivers/net/phy/phylink.c                          |  13 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/sdio.c    |  17 ++-
+ drivers/nvme/host/core.c                           |   3 +-
+ drivers/nvme/target/io-cmd-bdev.c                  |   1 +
+ drivers/parport/share.c                            |   2 +
+ drivers/s390/net/qeth_l2_main.c                    |   2 +-
+ drivers/s390/net/qeth_l3_main.c                    |  32 +++-
+ drivers/scsi/smartpqi/smartpqi_init.c              |   6 +-
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   |  11 +-
+ drivers/scsi/ufs/ufshcd.c                          |   3 +-
+ drivers/staging/erofs/erofs_fs.h                   |  13 +-
+ drivers/staging/erofs/internal.h                   |   2 +
+ drivers/staging/erofs/super.c                      |  19 +++
+ drivers/usb/chipidea/udc.c                         |  20 +++
+ drivers/usb/host/xhci-ring.c                       |  15 +-
+ drivers/usb/host/xhci.c                            |  25 +++-
+ drivers/usb/host/xhci.h                            |   9 ++
+ fs/btrfs/reada.c                                   |   5 +
+ fs/cifs/cifsfs.c                                   |   1 +
+ fs/cifs/cifsglob.h                                 |   5 +
+ fs/cifs/connect.c                                  |   2 +
+ fs/cifs/file.c                                     |   8 +-
+ fs/cifs/smb2maperror.c                             |   2 +-
+ fs/namespace.c                                     |   1 +
+ fs/overlayfs/inode.c                               |  60 +++++++-
+ fs/overlayfs/namei.c                               |   8 +
+ fs/overlayfs/overlayfs.h                           |   3 +
+ fs/overlayfs/ovl_entry.h                           |   6 +
+ fs/overlayfs/super.c                               | 161 ++++++++++++++++++---
+ fs/overlayfs/util.c                                |  12 ++
+ fs/pnode.c                                         |   1 -
+ include/linux/mmc/host.h                           |   1 +
+ include/linux/mmc/sdio_func.h                      |   6 +
+ include/net/bluetooth/hci_core.h                   |   3 +
+ include/net/cfg80211.h                             |   3 +-
+ kernel/trace/trace.c                               |   6 +-
+ kernel/trace/trace.h                               |  18 +++
+ kernel/trace/trace_kdb.c                           |   6 +-
+ net/bluetooth/hci_conn.c                           |  10 +-
+ net/bluetooth/l2cap_core.c                         |  33 ++++-
+ net/can/af_can.c                                   |   1 +
+ net/mac80211/ieee80211_i.h                         |   3 +
+ net/mac80211/mlme.c                                |  12 +-
+ net/mac80211/rx.c                                  |   2 +
+ net/mac80211/tdls.c                                |  23 +++
+ net/mac80211/util.c                                |   4 +-
+ net/mac80211/wpa.c                                 |   7 +-
+ net/wireless/core.c                                |   8 +-
+ net/wireless/nl80211.c                             |  12 +-
+ scripts/checkstack.pl                              |   2 +-
+ scripts/package/Makefile                           |   2 +-
+ security/apparmor/include/policy.h                 |  11 +-
+ security/apparmor/policy_unpack.c                  |  49 +++++--
+ tools/testing/selftests/cgroup/test_core.c         |   7 +-
+ tools/testing/selftests/cgroup/test_memcontrol.c   |   4 +
+ .../selftests/net/forwarding/router_broadcast.sh   |   5 +-
+ tools/testing/selftests/pidfd/pidfd_test.c         |   4 +
+ tools/testing/selftests/vm/Makefile                |   2 +
+ tools/testing/selftests/vm/userfaultfd.c           |   2 +-
+ 143 files changed, 1295 insertions(+), 371 deletions(-)
 
 
