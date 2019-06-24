@@ -2,104 +2,120 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BA6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79719C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52C920665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDC820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Z88sjk6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbfFXTEx (ORCPT
+        id S1730004AbfFXTFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:04:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40546 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729865AbfFXTEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:04:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B90AC30832E3;
-        Mon, 24 Jun 2019 19:04:47 +0000 (UTC)
-Received: from krava (ovpn-204-119.brq.redhat.com [10.40.204.119])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1666C5B687;
-        Mon, 24 Jun 2019 19:04:41 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 21:04:41 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Kyle Meyer <meyerk@hpe.com>, Kyle Meyer <kyle.meyer@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH v1] Increase MAX_NR_CPUS and MAX_CACHES
-Message-ID: <20190624190441.GB8743@krava>
-References: <20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
- <20190624185058.GC4181@kernel.org>
+        Mon, 24 Jun 2019 15:05:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45565 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729865AbfFXTFZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 15:05:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so15648562qtr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=AyuRS8Lwp7vEBwCUi0j+D6xyHz2b0vyBNyOhbTtwtYU=;
+        b=Z88sjk6Oy1WaO3+yCDQDFOSbz8ukF6kaN/e53K7UPw19c9G4PMe0KXNDQ/dKqFnmAd
+         shxS/mq9FNfhBZyQ1N7StT8XRemQpqA+DWEpZRLx8HYuRDM1LcZF3ad4u3N+MEEUbbVs
+         L89mZKHlHmWYcVoWMxIwO9TQn0z35be2TPvWCxBIFvfZEymZv+U7erpPcW1rrjKdgg/G
+         JUD5T+rmZ9+Oln1tBy8vI8dH1gwVHQO/w2jApOPAtPrzi1U49hfyDC5ANRj1HFzo8/XP
+         yqlbRBXHrgcii9xwRgeGGfWEdxKtgadBpMBv6xmtpcXRmRxv2mWl15B2K5XXGJayEIGD
+         xX8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=AyuRS8Lwp7vEBwCUi0j+D6xyHz2b0vyBNyOhbTtwtYU=;
+        b=qKJrYcaGZFp2LSIErJ8xyOJmGGFOlw9foQqVvvKLNrEXMkQm0Q6rd5wv49ALVQVjEv
+         6K+/BGYlwmtrDZbsrp+1aTu/urdfhuuqkaXsHwAaxbqJSvXWUCoPFMz/f1x2pa81mnTR
+         74Mo3csS78M9QFzBk4HdS3jSF8IaJNS7VvKRaVDv0XpqARYMHElxa9X8Wd+r9Hua2oi7
+         Lzx4nq/nwPJrqAINJEKgiulMJmTzA4FKgMIu6GgynK/ntca0IzZ0Qci/Y9RjDL5T1Nv1
+         bPXn6Lt1WVmLoUgfjlTmaeOP/IraDnLHTQV4jDQzoyU3iGUxEVWJEVuKV9Bc6n24kGhC
+         0ovA==
+X-Gm-Message-State: APjAAAX9jSjIvXTLfyRP33CgJc0aJHmFGxIhjtptz7pHeCmGlle4b/qu
+        wvqA+e/KYI0lSNILgPQJKL/Rqw==
+X-Google-Smtp-Source: APXvYqxxKgDZPrZjQ+nMk6dZ1YsT4ETp55XKhQk8ZqXTj/pbdZwyLqfTdPwdA59WtozoaqyvZJNf3Q==
+X-Received: by 2002:ac8:685:: with SMTP id f5mr57301924qth.9.1561403124388;
+        Mon, 24 Jun 2019 12:05:24 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e4sm7095824qtc.3.2019.06.24.12.05.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 12:05:24 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 12:05:19 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Xue Chaojing <xuechaojing@huawei.com>, <davem@davemloft.net>
+Cc:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>, <wulike1@huawei.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH net-next v2] hinic: implement the statistical interface
+ of ethtool
+Message-ID: <20190624120519.4ec22e19@cakuba.netronome.com>
+In-Reply-To: <20190624035012.7221-1-xuechaojing@huawei.com>
+References: <20190624035012.7221-1-xuechaojing@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624185058.GC4181@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 24 Jun 2019 19:04:52 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:50:58PM -0300, Arnaldo Carvalho de Melo wrote:
+On Mon, 24 Jun 2019 03:50:12 +0000, Xue Chaojing wrote:
+> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+> index be28a9a7f033..8d98f37c88a8 100644
+> --- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+> +++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+> @@ -438,6 +438,344 @@ static u32 hinic_get_rxfh_indir_size(struct net_device *netdev)
+>  	return HINIC_RSS_INDIR_SIZE;
+>  }
+>  
+> +#define ARRAY_LEN(arr) ((int)((int)sizeof(arr) / (int)sizeof(arr[0])))
+> +
+> +#define HINIC_NETDEV_STAT(_stat_item) { \
+> +	.name = #_stat_item, \
+> +	.size = FIELD_SIZEOF(struct rtnl_link_stats64, _stat_item), \
+> +	.offset = offsetof(struct rtnl_link_stats64, _stat_item) \
+> +}
+> +
+> +static struct hinic_stats hinic_netdev_stats[] = {
+> +	HINIC_NETDEV_STAT(rx_packets),
+> +	HINIC_NETDEV_STAT(tx_packets),
+> +	HINIC_NETDEV_STAT(rx_bytes),
+> +	HINIC_NETDEV_STAT(tx_bytes),
+> +	HINIC_NETDEV_STAT(rx_errors),
+> +	HINIC_NETDEV_STAT(tx_errors),
+> +	HINIC_NETDEV_STAT(rx_dropped),
+> +	HINIC_NETDEV_STAT(tx_dropped),
+> +	HINIC_NETDEV_STAT(multicast),
+> +	HINIC_NETDEV_STAT(collisions),
+> +	HINIC_NETDEV_STAT(rx_length_errors),
+> +	HINIC_NETDEV_STAT(rx_over_errors),
+> +	HINIC_NETDEV_STAT(rx_crc_errors),
+> +	HINIC_NETDEV_STAT(rx_frame_errors),
+> +	HINIC_NETDEV_STAT(rx_fifo_errors),
+> +	HINIC_NETDEV_STAT(rx_missed_errors),
+> +	HINIC_NETDEV_STAT(tx_aborted_errors),
+> +	HINIC_NETDEV_STAT(tx_carrier_errors),
+> +	HINIC_NETDEV_STAT(tx_fifo_errors),
+> +	HINIC_NETDEV_STAT(tx_heartbeat_errors),
+> +};
 
-SNIP
-
-> > diff --git a/samples/bpf/map_perf_test_user.c b/samples/bpf/map_perf_test_user.c
-> > index fe5564bff39b..da3c101ca776 100644
-> > --- a/samples/bpf/map_perf_test_user.c
-> > +++ b/samples/bpf/map_perf_test_user.c
-> > @@ -22,7 +22,7 @@
-> >  #include "bpf_load.h"
-> >  
-> >  #define TEST_BIT(t) (1U << (t))
-> > -#define MAX_NR_CPUS 1024
-> > +#define MAX_NR_CPUS 2048
-> >  
-> >  static __u64 time_get_ns(void)
-> >  {
-> > diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-> > index 711e009381ec..74d0124d38f3 100644
-> > --- a/tools/perf/perf.h
-> > +++ b/tools/perf/perf.h
-> > @@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
-> >  }
-> >  
-> >  #ifndef MAX_NR_CPUS
-> > -#define MAX_NR_CPUS			1024
-> > +#define MAX_NR_CPUS			2048
-> >  #endif
-> >  
-> >  extern const char *input_name;
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 06ddb6618ef3..abc9c2145efe 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -1121,7 +1121,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
-> >  	return 0;
-> >  }
-> >  
-> > -#define MAX_CACHES 2000
-> > +#define MAX_CACHES (MAX_NR_CPUS * 4)
-
-maybe we should re-do this via dynamic allocation ;-)
-but for now it's ok
-
-would be nice to have perf change separated, anyway for perf part:
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
+I think we wanted to stop duplicating standard netdev stats in ethtool
+-S.  Chaojing please post a patch to remove this part, the other stats
+are good.
