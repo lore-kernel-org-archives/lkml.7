@@ -2,120 +2,125 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2133FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838EDC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36802133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1C9212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="O33JM0SQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfFXL5B (ORCPT
+        id S1728069AbfFXL7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:57:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48688 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfFXL5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:57:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 04:57:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="161598821"
-Received: from eyasman-mobl.ger.corp.intel.com (HELO [10.249.90.21]) ([10.249.90.21])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jun 2019 04:56:59 -0700
-Subject: Re: [Intel-wired-lan] Opportunistic S0ix blocked by e1000e when
- ethernet is in use
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        jeffrey.t.kirsher@intel.com
-Cc:     intel-wired-lan@lists.osuosl.org,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <074E1145-A512-4835-9A6D-8FB6634DBD3C@canonical.com>
- <E2D5225B-D683-4895-AC4F-EE01C339262B@canonical.com>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <95f88f45-fd6c-52e4-de8c-2db1b4c6c04e@intel.com>
-Date:   Mon, 24 Jun 2019 14:56:58 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 24 Jun 2019 07:59:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35545 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfFXL7r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:59:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c6so13125480wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NISf2AF+teimA9xsNpoKX9LvLTU//qt9iSbtSvGhumw=;
+        b=O33JM0SQsoxgxG2UxDCzjJt5FATg92mACnzbJMOJ77sZn/u3/ZkeQMZe+44zyPFGFy
+         azEIg/a/j6bQ62w12aW1UhqEjbzphb6ucFWHtE/9KOXYAA/QBPc92y9/CFLB2p7VYxyE
+         KN/Lig39fYFeU5wlSB7JhOX/1StAcz9efFdJ1B/fOz0uU6k/ViJIuhFhgqYO9aDDDu1o
+         SWdMhVNBoh0scdsdFhZeX6GY31qP6jfT3DuVZeCd7OWql8DZJ4wBi8zTcHRjEhIATAWy
+         PxNsFyyX06R3vxUWF1CMot/Wi3UsysFBxit5k/umwYwAs8spQsp1WxgIZBkw3MD4Ybt7
+         iUqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NISf2AF+teimA9xsNpoKX9LvLTU//qt9iSbtSvGhumw=;
+        b=Rn8w/UPWC4sMRW0mJd3W8PtDzKuLKzRtMUXgfWJ0c0l+SPMGJLCOEgE3bsuYLvjDBQ
+         sDOG6EIKWf3rUvPaiyS0ZLA5l7Hby+cu3znE1Ihuo9NhUWADBJv7XM6I6yRvaYnt36LE
+         la14wqgJ01MVLAcMwOWe9LQJnos9V9yaMEF7tXG9XJtYKIMH2zDRBP2DA3EfJ1ylPMjx
+         YSY2C9GYzgiX8G5e7z9QYFB6HZFxRJucwx9Y4cKpXDVwWvXhIfWV9RgjT/zPrjHms5i3
+         5XGrIYFjSwoyLE1j8f/U+1NlzT2A6GzqyDSHm/TVI0x8BwdZyb0v0pZ3qlyymaQHTSNb
+         iUvQ==
+X-Gm-Message-State: APjAAAV2ITE5BhIph8wJqE09CUV6WcHOZt+da3sbq8TX38Y4KkEzVQBK
+        XaSH33HKtJYmHimB4YaB5nLnHw==
+X-Google-Smtp-Source: APXvYqzbvN//jhpLvthmB++J02P6cMJxBojLpsBGnGF5magVaxEUPJO2AWmZrViBtMYJg98kV8Cg3w==
+X-Received: by 2002:a1c:a6d3:: with SMTP id p202mr16445912wme.26.1561377584822;
+        Mon, 24 Jun 2019 04:59:44 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id l1sm32113168wrf.46.2019.06.24.04.59.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 04:59:44 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 13:59:43 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] CLONE_PIDFD: do not use the value pointed by
+ parent_tidptr
+Message-ID: <20190624115942.g6vyis3zy4ptt3fc@brauner.io>
+References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
+ <20190620110037.GA4998@altlinux.org>
+ <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
+ <20190621170613.GA26182@altlinux.org>
+ <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+ <20190623112717.GA20697@altlinux.org>
+ <20190624094940.24qrteybbcp25wq7@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <E2D5225B-D683-4895-AC4F-EE01C339262B@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190624094940.24qrteybbcp25wq7@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/2019 10:03, Kai-Heng Feng wrote:
-> Hi Jeffrey,
+On Mon, Jun 24, 2019 at 11:49:40AM +0200, Christian Brauner wrote:
+> On Sun, Jun 23, 2019 at 02:27:17PM +0300, Dmitry V. Levin wrote:
+> > Userspace needs a cheap and reliable way to tell whether CLONE_PIDFD
+> > is supported by the kernel or not.
+> > 
+> > While older kernels without CLONE_PIDFD support just leave unchanged
+> > the value pointed by parent_tidptr, current implementation fails with
+> > EINVAL if that value is non-zero.
+> > 
+> > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
+> > pointed by parent_tidptr also remains unchanged, which effectively
+> > means that userspace must either check CLONE_PIDFD support beforehand
+> > or ensure that fd 0 is not closed when invoking CLONE_PIDFD.
+> > 
+> > The check for pidfd == 0 was introduced during v5.2 release cycle
+> > by commit b3e583825266 ("clone: add CLONE_PIDFD") to ensure that
+> > CLONE_PIDFD could be potentially extended by passing in flags through
+> > the return argument.
+> > 
+> > However, that extension would look horrendous, and with introduction of
+> > clone3 syscall in v5.3 there is no need to extend legacy clone syscall
+> > this way.
+> > 
+> > So remove the pidfd == 0 check.  Userspace that needs to be portable
+> > to kernels without CLONE_PIDFD support is advised to initialize pidfd
+> > with -1 and check the pidfd value returned by CLONE_PIDFD.
+> > 
+> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 > 
-> at 19:08, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> Reviewed-by: Christian Brauner <christian@brauner.io>
 > 
->> Hi Jeffrey,
->>
->> There are several platforms that uses e1000e can’t enter Opportunistic 
->> S0ix (PC10) when the ethernet has a link partner.
->>
->> This behavior also exits in out-of-tree e1000e driver 3.4.2.1, but 
->> seems like 3.4.2.3 fixes the issue.
->>
->> A quick diff between the two versions shows that this code section may 
->> be our solution:
->>
->>         /* Read from EXTCNF_CTRL in e1000_acquire_swflag_ich8lan function
->>          * may occur during global reset and cause system hang.
->>          * Configuration space access creates the needed delay.
->>          * Write to E1000_STRAP RO register 
->> E1000_PCI_VENDOR_ID_REGISTER value
->>          * insures configuration space read is done before global reset.
->>          */
->>         pci_read_config_word(hw->adapter->pdev, 
->> E1000_PCI_VENDOR_ID_REGISTER,
->>                              &pci_cfg);
->>         ew32(STRAP, pci_cfg);
->>         e_dbg("Issuing a global reset to ich8lan\n");
->>         ew32(CTRL, (ctrl | E1000_CTRL_RST));
->>         /* cannot issue a flush here because it hangs the hardware */
->>         msleep(20);
->>
->>         /* Configuration space access improve HW level time sync 
->> mechanism.
->>          * Write to E1000_STRAP RO register E1000_PCI_VENDOR_ID_REGISTER
->>          * value to insure configuration space read is done
->>          * before any access to mac register.
->>          */
->>         pci_read_config_word(hw->adapter->pdev, 
->> E1000_PCI_VENDOR_ID_REGISTER,
->>                              &pci_cfg);
->>         ew32(STRAP, pci_cfg);
-> 
-> Turns out the "extra sauce” is not this part, it’s called “Dynamic LTR 
-> support”.
-> >>
->> Is there any plan to support this in the upstream kernel?
-> 
-> Is there any plan to support Dynamic LTR in upstream e1000e?
-> 
-Dynamic LTR is not stable solution. So, we can not put this solution to 
-upstream. I hope we will be able to fix this in HW for a future projects.
-S0ix support is under discussion with our architecture. We will try 
-enable S0ix in our e1000e OOT driver as first step.
-> Kai-Heng
-> 
->>
->> Kai-Heng
-> 
-> 
-> _______________________________________________
-> Intel-wired-lan mailing list
-> Intel-wired-lan@osuosl.org
-> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+> Thank you Dmitry, queueing this up for rc7.
 
-Thanks
-Sasha
+This is now sitting in
+
+https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=43754d05f235dd1b6c7f8ab9f42007770d721f10
+
+I reformulated the commit message a bit and gave it a Fixes tag. Dmitry,
+if you want you can take a look and tell me if that's acceptable to you.
+
+Thanks!
+Christian
