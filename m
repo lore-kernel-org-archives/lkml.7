@@ -2,114 +2,70 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADDC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548A9C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E7120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2927520665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mqK6FDiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbfFXV1s (ORCPT
+        id S1732283AbfFXV2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:27:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726331AbfFXV1r (ORCPT
+        Mon, 24 Jun 2019 17:28:10 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38584 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFXV2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:27:47 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OLME1c114076
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:27:46 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb3uuef0b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:27:46 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 24 Jun 2019 22:27:44 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Jun 2019 22:27:40 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OLRdCl50462832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 21:27:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70859A4057;
-        Mon, 24 Jun 2019 21:27:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68810A4040;
-        Mon, 24 Jun 2019 21:27:38 +0000 (GMT)
-Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 21:27:38 +0000 (GMT)
-Subject: Re: [PATCH V31 07/25] kexec_file: Restrict at runtime if the kernel
- is locked down
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>, Dave Young <dyoung@redhat.com>
-Cc:     James Morris <jmorris@namei.org>, Jiri Bohac <jbohac@suse.cz>,
-        Linux API <linux-api@vger.kernel.org>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 24 Jun 2019 17:27:37 -0400
-In-Reply-To: <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
-         <20190326182742.16950-8-matthewgarrett@google.com>
-         <20190621064340.GB4528@localhost.localdomain>
-         <CACdnJut=J1YTpM4s6g5XWCEs+=X0Jvf8otfMg+w=_oqSZmf01Q@mail.gmail.com>
-         <20190624015206.GB2976@dhcp-128-65.nay.redhat.com>
-         <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 24 Jun 2019 17:28:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561411688; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=Hlbcb6l9yiX+hOM4Bc0EQHzETkdFwe9zp7QRPnRT/04=;
+        b=mqK6FDiFCVc7CKkIbkgIdt5KBOsnx/uYHSkCQNZQDDDw6yZoqEQcE9+1MfcMvOrvGwTpl/
+        /p7Zm0jNVLX+tJrzQO4XeNWbae1263OFwD7Y9yp0Hjo+vLyFihIrIFQtIl0EMPPyZ7P56I
+        IIZzo6XnEAMpUM641oU/NyMkjDmGoUI=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] MAINTAINERS: Correct path to moved files
+Date:   Mon, 24 Jun 2019 23:27:51 +0200
+Message-Id: <20190624212752.6816-1-paul@crapouillou.net>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062421-0008-0000-0000-000002F6A77A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062421-0009-0000-0000-00002263D4EA
-Message-Id: <1561411657.4340.70.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthew,
+The driver was moved in commit 1838a7b31fcb ("mtd: rawnand: Move
+drivers for Ingenic SoCs to subfolder").
 
-On Mon, 2019-06-24 at 14:06 -0700, Matthew Garrett wrote:
-> On Sun, Jun 23, 2019 at 6:52 PM Dave Young <dyoung@redhat.com> wrote:
-> >
-> > On 06/21/19 at 01:18pm, Matthew Garrett wrote:
-> > > I don't think so - we want it to be possible to load images if they
-> > > have a valid signature.
-> >
-> > I know it works like this way because of the previous patch.  But from
-> > the patch log "When KEXEC_SIG is not enabled, kernel should not load
-> > images", it is simple to check it early for !IS_ENABLED(CONFIG_KEXEC_SIG) &&
-> > kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)  instead of depending
-> > on the late code to verify signature.  In that way, easier to
-> > understand the logic, no?
-> 
-> But that combination doesn't enforce signature validation? We can't
-> depend on !IS_ENABLED(CONFIG_KEXEC_SIG_FORCE) because then it'll
-> enforce signature validation even if lockdown is disabled.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I agree with Dave.  There should be a stub lockdown function to
-prevent enforcing lockdown when it isn't enabled.
-
-Mimi
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d0ed735994a5..dfedde2f5720 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7800,7 +7800,7 @@ INGENIC JZ4780 NAND DRIVER
+ M:	Harvey Hunt <harveyhuntnexus@gmail.com>
+ L:	linux-mtd@lists.infradead.org
+ S:	Maintained
+-F:	drivers/mtd/nand/raw/jz4780_*
++F:	drivers/mtd/nand/raw/ingenic/
+ 
+ INOTIFY
+ M:	Jan Kara <jack@suse.cz>
+-- 
+2.21.0.593.g511ec345e18
 
