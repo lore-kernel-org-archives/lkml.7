@@ -2,55 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25ADC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C12BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E74205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B03F205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371197;
-	bh=VgWhUrVJchQpsFI0+NHb7ob7Q1OZC/5JE8+uJDsX3fo=;
+	s=default; t=1561371204;
+	bh=eXUgI4O6QoYCbIFoByqbhrudnIe63+NDqbKQVSLvN9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=edDh0dhpy20GVB0VGjAzxbs7RRFgyhFx8awB67x2it69cJbLpXd/z97z/p7oBMoc2
-	 egmPfnAraeicqQFBQMuLf9UGvbOKPd3g6oILHe7q6cBusHM3xk6sI+tWvjMTrfQisC
-	 vACg9lJLfcCIGMW9g9h9d1YJqXoCN7+2RB58LEn4=
+	b=CuCP3laeVxdDaQ3pc0nRfTsnZNtBFE3Zwrk02M9P7dGDrHR4mehplgTORBsZNSD9r
+	 POpLf8EWMZGQxHBkOaAOIzMdBjamg3UDnzYOftfB2WL69EPHr6pEW6yhy+dJUmNc2R
+	 xkrKnqE3TO1hexpIAPpkGn6CMd+iaLeuZbcGxQ1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfFXKFF (ORCPT
+        id S1729727AbfFXKEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36730 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbfFXKE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:56 -0400
+        id S1728831AbfFXKE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:29 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2644208E3;
-        Mon, 24 Jun 2019 10:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5DD205ED;
+        Mon, 24 Jun 2019 10:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370695;
-        bh=VgWhUrVJchQpsFI0+NHb7ob7Q1OZC/5JE8+uJDsX3fo=;
+        s=default; t=1561370668;
+        bh=eXUgI4O6QoYCbIFoByqbhrudnIe63+NDqbKQVSLvN9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GNsWcQ6+qnlpYAewQG2/bf2IiiAVmvwIMNU5Z/6pTMChOsAY1hrvJ1nmY28YrYhQR
-         pOCegVquPtqQlNFJwAwYkZaDJhmJPKNEK/4RoREYB/54QJ35thCQs96D/v4xuLcnC5
-         3CFDUhyGD3mQ3/koBH5lMWlg6pxj+SQRBYdaXJPI=
+        b=W6XFVAGORZCru+NBlnUUMwFYNGjvLoG0t5XnfdqpfmwCXDGJJKy3Y4fSKEZtevac3
+         RXwqBFvJRGu5Yj4oo+JadOah9StJJMbNuFhEzKWL3LtvJFP9e+MMXGnfj3yHM198J+
+         h3btbXnr0BGX3zBb09+V363piCii6u9Cz4U4wRZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/90] nvmet: fix data_len to 0 for bdev-backed write_zeroes
-Date:   Mon, 24 Jun 2019 17:56:48 +0800
-Message-Id: <20190624092317.912727803@linuxfoundation.org>
+        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 12/90] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus width when tuning
+Date:   Mon, 24 Jun 2019 17:56:02 +0800
+Message-Id: <20190624092314.811321051@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -63,54 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3562f5d9f21e7779ae442a45197fed6cb247fd22 ]
+From: Raul E Rangel <rrangel@chromium.org>
 
-The WRITE ZEROES command has no data transfer so that we need to
-initialize the struct (nvmet_req *req)->data_len to 0x0.  While
-(nvmet_req *req)->transfer_len is initialized in nvmet_req_init(),
-data_len will be initialized by nowhere which might cause the failure
-with status code NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR randomly.  It's
-because nvmet_req_execute() checks like:
+commit 0f7b79a44e7d7dd3ef1f59758c1a341f217ff5e5 upstream.
 
-	if (unlikely(req->data_len != req->transfer_len)) {
-		req->error_loc = offsetof(struct nvme_common_command, dptr);
-		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR);
-	} else
-		req->execute(req);
+The O2Micro controller only supports tuning at 4-bits. So the host driver
+needs to change the bus width while tuning and then set it back when done.
 
-This patch fixes req->data_len not to be a randomly assigned by
-initializing it to 0x0 when preparing the command in
-nvmet_bdev_parse_io_cmd().
+There was a bug in the original implementation in that mmc->ios.bus_width
+also wasn't updated. Thus setting the incorrect blocksize in
+sdhci_send_tuning which results in a tuning failure.
 
-nvmet_file_parse_io_cmd() which is for file-backed I/O has already
-initialized the data_len field to 0x0, though.
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Fixes: 0086fc217d5d7 ("mmc: sdhci: Add support for O2 hardware tuning")
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/io-cmd-bdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-pci-o2micro.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index 7bc9f6240432..1096dd01ca22 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -239,6 +239,7 @@ u16 nvmet_bdev_parse_io_cmd(struct nvmet_req *req)
- 		return 0;
- 	case nvme_cmd_write_zeroes:
- 		req->execute = nvmet_bdev_execute_write_zeroes;
-+		req->data_len = 0;
- 		return 0;
- 	default:
- 		pr_err("unhandled cmd %d on qid %d\n", cmd->common.opcode,
--- 
-2.20.1
-
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -117,6 +117,7 @@ static int sdhci_o2_execute_tuning(struc
+ 	 */
+ 	if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
+ 		current_bus_width = mmc->ios.bus_width;
++		mmc->ios.bus_width = MMC_BUS_WIDTH_4;
+ 		sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
+ 	}
+ 
+@@ -128,8 +129,10 @@ static int sdhci_o2_execute_tuning(struc
+ 
+ 	sdhci_end_tuning(host);
+ 
+-	if (current_bus_width == MMC_BUS_WIDTH_8)
++	if (current_bus_width == MMC_BUS_WIDTH_8) {
++		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
+ 		sdhci_set_bus_width(host, current_bus_width);
++	}
+ 
+ 	host->flags &= ~SDHCI_HS400_TUNING;
+ 	return 0;
 
 
