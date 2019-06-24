@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AC02063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EDD205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371064;
-	bh=x9xZl6yC252+YAjdmdXwcc8dd6i6py5IJ2lgNuFN2e8=;
+	s=default; t=1561371071;
+	bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9+0sIvR8iweSFMqmmqc2bJAYbhLL4KDAXJG+jUL4skobZz36BfSpj0L1/TyvU08U
-	 NEfXU8b1pxuc6L6PZ+3IKTx+QtBKbAN4Juo0OlfCInFBXzWWbyim3XSgzhRjzh/vqO
-	 dc7Z+dq8phP0MTuy6AETWT7HaR16OB/ACdy9yrdA=
+	b=lawsrPF3EJvOh52NLjYYc48RCik6B4ohBDpV7HOg2fVcxRDa7KcyQCeuh+mC3V3Wg
+	 mO5cbQ75+tAchh+Tgy7ZUe9NOJGww0GCRcaLKNFwOQyo31sfZyWEzs0MmJFlSrBRHo
+	 VRstv5T6HPD+3WYmi4sLOXu+dt1FkN+iKtqPibT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfFXKHD (ORCPT
+        id S1730201AbfFXKGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbfFXKHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:00 -0400
+        id S1730183AbfFXKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:47 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FD72208E3;
-        Mon, 24 Jun 2019 10:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04702146F;
+        Mon, 24 Jun 2019 10:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370819;
-        bh=x9xZl6yC252+YAjdmdXwcc8dd6i6py5IJ2lgNuFN2e8=;
+        s=default; t=1561370806;
+        bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzUEXIrJekdKoDyA3qYzcOBsvEvjh4uIHDOboavT7x4w9IV0wK7HDC6GHJ4uVWLNR
-         ERl1baDSQtgU4mS7dT8bv8CRb/TzGpWXXeBY7glghHbtjoqF1tumrjP+JKmbaljFbZ
-         UMXfh1ACdlaw+RaAG1wNwaeDWcTcOIlzTyYYr9oA=
+        b=WkJy+Ui7A9DSCLlaa4c+id1r3GhoqR51y5KOeK8pQC2dax0X7dqy/x8IIi2E5h1nT
+         /y8ojuIOIIaKrY34K4OlSPR7IuQWraW4769+GgRY+gAFBUjQvgdsqhB1VFKZ3LIN7K
+         Q3SXtfAwPcZaF5v42IoLuI5oBEbiFPstKSyJilCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
         Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.1 013/121] cifs: add spinlock for the openFileList to cifsInodeInfo
-Date:   Mon, 24 Jun 2019 17:55:45 +0800
-Message-Id: <20190624092321.322715737@linuxfoundation.org>
+Subject: [PATCH 4.19 83/90] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
+Date:   Mon, 24 Jun 2019 17:57:13 +0800
+Message-Id: <20190624092319.358356765@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
-References: <20190624092320.652599624@linuxfoundation.org>
+In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
+References: <20190624092313.788773607@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,103 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit 487317c99477d00f22370625d53be3239febabbe upstream.
+commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
 
-We can not depend on the tcon->open_file_lock here since in multiuser mode
-we may have the same file/inode open via multiple different tcons.
+Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
+as the number of simultaneous SMB3 requests grows (even though the client
+has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
+so that we can retry writes which fail with this status code.
 
-The current code is race prone and will crash if one user deletes a file
-at the same time a different user opens/create the file.
+This (for example) fixes large file copies to Windows 10 on fast networks.
 
-To avoid this we need to have a spinlock attached to the inode and not the tcon.
-
-RHBZ:  1580165
-
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsfs.c   |    1 +
- fs/cifs/cifsglob.h |    5 +++++
- fs/cifs/file.c     |    8 ++++++--
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/cifs/smb2maperror.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -303,6 +303,7 @@ cifs_alloc_inode(struct super_block *sb)
- 	cifs_inode->uniqueid = 0;
- 	cifs_inode->createtime = 0;
- 	cifs_inode->epoch = 0;
-+	spin_lock_init(&cifs_inode->open_file_lock);
- 	generate_random_uuid(cifs_inode->lease_key);
- 
- 	/*
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1357,6 +1357,7 @@ struct cifsInodeInfo {
- 	struct rw_semaphore lock_sem;	/* protect the fields above */
- 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
- 	struct list_head openFileList;
-+	spinlock_t	open_file_lock;	/* protects openFileList */
- 	__u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
- 	unsigned int oplock;		/* oplock/lease level we have */
- 	unsigned int epoch;		/* used to track lease state changes */
-@@ -1760,10 +1761,14 @@ require use of the stronger protocol */
-  *  tcp_ses_lock protects:
-  *	list operations on tcp and SMB session lists
-  *  tcon->open_file_lock protects the list of open files hanging off the tcon
-+ *  inode->open_file_lock protects the openFileList hanging off the inode
-  *  cfile->file_info_lock protects counters and fields in cifs file struct
-  *  f_owner.lock protects certain per file struct operations
-  *  mapping->page_lock protects certain per page operations
-  *
-+ *  Note that the cifs_tcon.open_file_lock should be taken before
-+ *  not after the cifsInodeInfo.open_file_lock
-+ *
-  *  Semaphores
-  *  ----------
-  *  sesSem     operations on smb session
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -338,10 +338,12 @@ cifs_new_fileinfo(struct cifs_fid *fid,
- 	atomic_inc(&tcon->num_local_opens);
- 
- 	/* if readable file instance put first in list*/
-+	spin_lock(&cinode->open_file_lock);
- 	if (file->f_mode & FMODE_READ)
- 		list_add(&cfile->flist, &cinode->openFileList);
- 	else
- 		list_add_tail(&cfile->flist, &cinode->openFileList);
-+	spin_unlock(&cinode->open_file_lock);
- 	spin_unlock(&tcon->open_file_lock);
- 
- 	if (fid->purge_cache)
-@@ -413,7 +415,9 @@ void _cifsFileInfo_put(struct cifsFileIn
- 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
- 
- 	/* remove it from the lists */
-+	spin_lock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->flist);
-+	spin_unlock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->tlist);
- 	atomic_dec(&tcon->num_local_opens);
- 
-@@ -1950,9 +1954,9 @@ refind_writable:
- 			return 0;
- 		}
- 
--		spin_lock(&tcon->open_file_lock);
-+		spin_lock(&cifs_inode->open_file_lock);
- 		list_move_tail(&inv_file->flist, &cifs_inode->openFileList);
--		spin_unlock(&tcon->open_file_lock);
-+		spin_unlock(&cifs_inode->open_file_lock);
- 		cifsFileInfo_put(inv_file);
- 		++refind;
- 		inv_file = NULL;
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -457,7 +457,7 @@ static const struct status_to_posix_erro
+ 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
+ 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
+ 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
+-	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
++	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
+ 				"STATUS_INSUFFICIENT_RESOURCES"},
+ 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
+ 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
 
 
