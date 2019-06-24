@@ -2,147 +2,115 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C37BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF5EC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA232146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8098C20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbfFXOAF (ORCPT
+        id S1731749AbfFXOAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:00:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:51214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfFXOAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:00:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BD1E344;
-        Mon, 24 Jun 2019 07:00:03 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A6DC3F71E;
-        Mon, 24 Jun 2019 07:00:00 -0700 (PDT)
-Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
- implementation
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-5-vincenzo.frascino@arm.com>
- <20190624133607.GI29497@fuggles.cambridge.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <13d00991-aaa0-72f9-4556-1c92eceabd07@arm.com>
-Date:   Mon, 24 Jun 2019 14:59:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 24 Jun 2019 10:00:13 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41105 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfFXOAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:00:11 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1hfPVs-00064e-Ph; Mon, 24 Jun 2019 16:00:04 +0200
+Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1hfPVq-00043X-LZ; Mon, 24 Jun 2019 16:00:02 +0200
+Date:   Mon, 24 Jun 2019 16:00:02 +0200
+From:   Michael Grzeschik <mgr@pengutronix.de>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: linux-next: Signed-off-by missing for commit in the imx-mxs tree
+Message-ID: <20190624140002.s3au65gbsx6mtfkf@pengutronix.de>
+References: <20190624222359.62e92a15@canb.auug.org.au>
+ <20190624132056.GC16146@dragon>
 MIME-Version: 1.0
-In-Reply-To: <20190624133607.GI29497@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y4z6ot536bqzjjir"
+Content-Disposition: inline
+In-Reply-To: <20190624132056.GC16146@dragon>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:59:26 up 37 days, 20:17, 97 users,  load average: 0.17, 0.18,
+ 0.15
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--y4z6ot536bqzjjir
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 24/06/2019 14:36, Will Deacon wrote:
-> Hi Vincenzo,
-> 
-> On Fri, Jun 21, 2019 at 10:52:31AM +0100, Vincenzo Frascino wrote:
->> To take advantage of the commonly defined vdso interface for
->> gettimeofday the architectural code requires an adaptation.
->>
->> Re-implement the gettimeofday vdso in C in order to use lib/vdso.
->>
->> With the new implementation arm64 gains support for CLOCK_BOOTTIME
->> and CLOCK_TAI.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->> Tested-by: Shijith Thotton <sthotton@marvell.com>
->> Tested-by: Andre Przywara <andre.przywara@arm.com>
->> ---
->>  arch/arm64/Kconfig                         |   2 +
->>  arch/arm64/include/asm/vdso/gettimeofday.h |  86 ++++++
->>  arch/arm64/include/asm/vdso/vsyscall.h     |  53 ++++
->>  arch/arm64/include/asm/vdso_datapage.h     |  48 ---
->>  arch/arm64/kernel/asm-offsets.c            |  33 +-
->>  arch/arm64/kernel/vdso.c                   |  51 +---
->>  arch/arm64/kernel/vdso/Makefile            |  34 ++-
->>  arch/arm64/kernel/vdso/gettimeofday.S      | 334 ---------------------
->>  arch/arm64/kernel/vdso/vgettimeofday.c     |  28 ++
-> 
-> I'm concerned about an apparent semantic change introduced by your patch:
-> 
->> +static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
->> +{
->> +	u64 res;
->> +
->> +	asm volatile("mrs %0, cntvct_el0" : "=r" (res) :: "memory");
->> +
->> +	return res;
->> +}
-> 
-> vs:
-> 
->> -	.macro	get_clock_shifted_nsec res, cycle_last, mult
->> -	/* Read the virtual counter. */
->> -	isb
->> -	mrs	x_tmp, cntvct_el0
->> -	/* Calculate cycle delta and convert to ns. */
->> -	sub	\res, x_tmp, \cycle_last
->> -	/* We can only guarantee 56 bits of precision. */
->> -	movn	x_tmp, #0xff00, lsl #48
->> -	and	\res, x_tmp, \res
->> -	mul	\res, \res, \mult
->> -	/*
->> -	 * Fake address dependency from the value computed from the counter
->> -	 * register to subsequent data page accesses so that the sequence
->> -	 * locking also orders the read of the counter.
->> -	 */
->> -	and	x_tmp, \res, xzr
->> -	add	vdso_data, vdso_data, x_tmp
->> -	.endm
-> 
-> It looks like you're dropping both the preceding ISB (allowing the counter
-> value to be speculated) and also the subsequent dependency (allowing the
-> seq lock to be speculated). If I've missed them, apologies, but I couldn't
-> spot them elsewhere in this patch.
-> 
-> __arch_get_hw_counter should probably be identical to __arch_counter_get_cntvct
-> to avoid these problems. I guess we don't need to care about the case where
-> the counter is unstable, since we'll just disable the vDSO altogether on
-> such systems?
-> 
+On Mon, Jun 24, 2019 at 09:20:57PM +0800, Shawn Guo wrote:
+> On Mon, Jun 24, 2019 at 10:23:59PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Commit
+> >=20
+> >   9b5800c21b4d ("ARM: dts: imx6qdl-kontron-samx6i: add Kontron SMARC So=
+M Support")
+> >=20
+> > is missing a Signed-off-by from its author.
+>=20
+> Thanks for spotting it, Stephen.
+>=20
+> @Michael, would you please give your SoB?  Otherwise, I will have to
+> back out the patch.
 
-Oops, I forgot to mirror your patch that introduces this change. I will post a
-fix in reply to this email.
+Sure!
 
-> Will
-> 
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
--- 
-Regards,
-Vincenzo
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--y4z6ot536bqzjjir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAl0Q11wACgkQC+njFXoe
+LGTO+xAAoPqAWT2BExJub9eYcvbVPICjIkbbOJnzN672YZYWo37PratlGciyqv8r
+kS/qj27eHHtPytBd0gq77urfn9B/PYA/uDTiGUmPIKiYLyuZsASSadRnvrwjD0ke
+exHEOR+MoIkKRarCGr2Ir/mExiq3fb0r/11nJ7B7w2s6ska9ypXk7tL5d+fEa5Qe
+iNF5idfqJNoInqcDlRrzgv9fZ0B6aEEBMYIn3IXNBBuqjbziBJuWYi5qAdjCp/d4
+dHQTS9Jy5hHqW86D/G5mOuzGfLbf24ks3WK/KbKNWtoblQP1PWMRG5IT08pkqSKH
+RaYHjrBtCiae+Q73odZm9BXE/o33lJ+8LdADTKhcWdPG1Ksdm7lw/En64vrFhA8u
+m54CHj/s4wFYhTHyM2UOetf22AUeMyfpOEAV2swEFVg5KULaxLXKl96kma2kbvwI
+Aj4uqj+2Vh5tEqAfTMJvXC+fsUcQAo84DvCa27YfaEnXrgwx1amrab8TFiO73kV+
+5jmU4bhVGlmHBeiUO2Q/FG5M/1yZXO34TKodGbUWY52eJh8YSCudFoh+6i7N9sxC
+SP4vUJx4JbuX8+hfBK3SWtHS0XTDpUlLhZZpDnmOlVh/LxrTByoj7fNUyrKdxdD/
+RKGapGY/Y//1gZtQe3DpPyXrSYOIGPyRCEctsmxnDD8o6tFNcCQ=
+=Lah3
+-----END PGP SIGNATURE-----
+
+--y4z6ot536bqzjjir--
