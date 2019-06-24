@@ -2,84 +2,68 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7873C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D4BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C4421670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3C220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfFXMP6 (ORCPT
+        id S1728506AbfFXMQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:15:58 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:39186 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726524AbfFXMP6 (ORCPT
+        Mon, 24 Jun 2019 08:16:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39586 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfFXMQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:15:58 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09668445|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.121591-0.0103769-0.868032;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.EpQTmML_1561378543;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.EpQTmML_1561378543)
-          by smtp.aliyun-inc.com(10.147.41.138);
-          Mon, 24 Jun 2019 20:15:54 +0800
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.De>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [RESEND PATCH v2] mtd: spinand: read return badly if the last page has bitflips
-Date:   Mon, 24 Jun 2019 20:15:34 +0800
-Message-Id: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 24 Jun 2019 08:16:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hfNtx-0000ZK-Uf; Mon, 24 Jun 2019 12:16:50 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] RDMA/hns: fix spelling mistake "attatch" -> "attach"
+Date:   Mon, 24 Jun 2019 13:16:49 +0100
+Message-Id: <20190624121649.3281-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of the last page containing bitflips (ret > 0),
-spinand_mtd_read() will return that number of bitflips for the last
-page. But to me it looks like it should instead return max_bitflips like
-it does when the last page read returns with 0.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
-Acked-by: Boris Brezillon <boris.brezillon@collabora.com>
-Acked-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+There is a spelling mistake in an dev_err message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/mtd/nand/spi/core.c | 2 +-
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 556bfdb..6b9388d 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
- 		if (ret == -EBADMSG) {
- 			ecc_failed = true;
- 			mtd->ecc_stats.failed++;
--			ret = 0;
- 		} else {
- 			mtd->ecc_stats.corrected += ret;
- 			max_bitflips = max_t(unsigned int, max_bitflips, ret);
- 		}
- 
-+		ret = 0;
- 		ops->retlen += iter.req.datalen;
- 		ops->oobretlen += iter.req.ooblen;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index 99ec5d43b99b..13a1916b0cdc 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -858,7 +858,7 @@ static int hns_roce_create_qp_common(struct hns_roce_dev *hr_dev,
+ 	ret = hns_roce_mtr_attach(hr_dev, &hr_qp->mtr, buf_list,
+ 				  hr_qp->regions, hr_qp->region_cnt);
+ 	if (ret) {
+-		dev_err(dev, "mtr attatch error for create qp\n");
++		dev_err(dev, "mtr attach error for create qp\n");
+ 		goto err_mtr;
  	}
+ 
 -- 
-1.9.1
+2.20.1
 
