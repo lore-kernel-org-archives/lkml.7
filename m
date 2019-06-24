@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF098C48BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB25C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A753B2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C7D2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fMawuu3O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mAvADQ+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfFXFnd (ORCPT
+        id S1727316AbfFXFnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:43:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35358 "EHLO
+        Mon, 24 Jun 2019 01:43:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35624 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFXFnb (ORCPT
+        with ESMTP id S1726223AbfFXFnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:43:31 -0400
+        Mon, 24 Jun 2019 01:43:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vOVF1bL6OtEC3ny1W9eKFWhCTN+KLHMSW/CBbgd+PKs=; b=fMawuu3Opqat44vDe3HBjfC2NV
-        U5+fXW3mv7s7Jlh5elWKOcphZfFUedF1vGm+7MYpefOZ9keuy6mkobCiyuiWMY5CLEcGsBYr3epoG
-        m757TAQi2HxXtEeXw31FzGZsYfQbEb96/9Ia45hV6LD8/DMRBoIc4DCLBiY6bHE3E/pVumBkLBY5w
-        zQsrCXvA58a8v8QR10iyNRva5OtbMApi6LzDxtYh6XUzs8CFb1qIBB/sbzkWkI0sjoTbtb5hHeHM8
-        YgjPe0IwJKPuJTnzuw0MJiDrV8RqIWDzx9q3MB2qJlJKHNWksaE9721c9vrJkODjAmgxyXQOo4sY+
-        3XbUdhVw==;
+        bh=+l3vwi8bsor/tja9ZheW5y8DiiO/mW8k6zhZ4E83rTI=; b=mAvADQ+cwTdSv+lt/UrCLAQIca
+        0dD4dqEu4sMMNiFBL7leKtPj9jibj22MJ0jwgHB3KU5zu4mlrT2QfCgV56BTu/m9YZiG5Nr1uUm84
+        y1PwMD41gPqcy/8w1H7CcUsZnBbdXBxDp9rR/8b7435grnEb/8gn616L6xirlmp6IkDOHezq54Jci
+        M+NToc3yEOIoREpCO/yTJs29tuZDuvF0ETJp51nUCIKg/w2K4HNxKopP12CaHADIOpvmDhFTgD5Qr
+        WovcnekXgMnBwUh7ex4C90RWdFHYis/U2RnDWbeNGhclz0LrvcsC3mzmXItVAbQVafsOja8CpIj2P
+        g7pyPeTQ==;
 Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHlJ-0006Cb-Dy; Mon, 24 Jun 2019 05:43:29 +0000
+        id 1hfHlM-0006Fu-LS; Mon, 24 Jun 2019 05:43:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/17] irqchip/sifive-plic: set max threshold for ignored handlers
-Date:   Mon, 24 Jun 2019 07:42:58 +0200
-Message-Id: <20190624054311.30256-5-hch@lst.de>
+Subject: [PATCH 05/17] riscv: use CSR_SATP instead of the legacy sptbr name in switch_mm
+Date:   Mon, 24 Jun 2019 07:42:59 +0200
+Message-Id: <20190624054311.30256-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190624054311.30256-1-hch@lst.de>
 References: <20190624054311.30256-1-hch@lst.de>
@@ -58,55 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running in M-mode we still the S-mode plic handlers in the DT.
-Ignore them by setting the maximum threshold.
+Switch to our own constant for the satp register instead of using
+the old name from a legacy version of the privileged spec.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/irqchip/irq-sifive-plic.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/riscv/mm/context.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index cf755964f2f8..c72c036aea76 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -244,6 +244,7 @@ static int __init plic_init(struct device_node *node,
- 		struct plic_handler *handler;
- 		irq_hw_number_t hwirq;
- 		int cpu, hartid;
-+		u32 threshold = 0;
+diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+index 89ceb3cbe218..beeb5d7f92ea 100644
+--- a/arch/riscv/mm/context.c
++++ b/arch/riscv/mm/context.c
+@@ -57,12 +57,7 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	cpumask_clear_cpu(cpu, mm_cpumask(prev));
+ 	cpumask_set_cpu(cpu, mm_cpumask(next));
  
- 		if (of_irq_parse_one(node, i, &parent)) {
- 			pr_err("failed to parse parent for context %d.\n", i);
-@@ -266,10 +267,16 @@ static int __init plic_init(struct device_node *node,
- 			continue;
- 		}
+-	/*
+-	 * Use the old spbtr name instead of using the current satp
+-	 * name to support binutils 2.29 which doesn't know about the
+-	 * privileged ISA 1.10 yet.
+-	 */
+-	csr_write(sptbr, virt_to_pfn(next->pgd) | SATP_MODE);
++	csr_write(CSR_SATP, virt_to_pfn(next->pgd) | SATP_MODE);
+ 	local_flush_tlb_all();
  
-+		/*
-+		 * When running in M-mode we need to ignore the S-mode handler.
-+		 * Here we assume it always comes later, but that might be a
-+		 * little fragile.
-+		 */
- 		handler = per_cpu_ptr(&plic_handlers, cpu);
- 		if (handler->present) {
- 			pr_warn("handler already present for context %d.\n", i);
--			continue;
-+			threshold = 0xffffffff;
-+			goto done;
- 		}
- 
- 		handler->present = true;
-@@ -279,8 +286,9 @@ static int __init plic_init(struct device_node *node,
- 		handler->enable_base =
- 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
- 
-+done:
- 		/* priority must be > threshold to trigger an interrupt */
--		writel(0, handler->hart_base + CONTEXT_THRESHOLD);
-+		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
- 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
- 			plic_toggle(handler, hwirq, 0);
- 		nr_handlers++;
+ 	flush_icache_deferred(next);
 -- 
 2.20.1
 
