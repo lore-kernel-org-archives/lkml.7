@@ -2,186 +2,109 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C266AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9865FC4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9001B20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsJf5K+X"
+	by mail.kernel.org (Postfix) with ESMTP id 79FD820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732843AbfFXS0N (ORCPT
+        id S1732859AbfFXS0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:26:13 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36716 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfFXS0M (ORCPT
+        Mon, 24 Jun 2019 14:26:20 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39951 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfFXS0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:26:12 -0400
-Received: by mail-qt1-f195.google.com with SMTP id p15so15553823qtl.3;
-        Mon, 24 Jun 2019 11:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x9uoR+KIuE1II8mD60iebYIvLAFwPjD50xd1uMdBmX4=;
-        b=HsJf5K+XiynaUtH0EQHleY1DehgR5I73UNWc4B8ezA8f+JAS0PbGbiGzZgdWd6cQXy
-         wJmtHrGPeWD5KCUPKvtBWJfDuB93b+afyICO/Ix3bGKGbot2piuwd8nQckRFs3sVhv3F
-         4tr0dtv1KkJh9Efc5VGIWljCb4AHVAgdVcMcUwD5RSs6K70Hf539f0eJv7F8Mfe4Eux8
-         02kBt8M2tlsDqBN6o1CyI40spDnYU3pblJZF6PT2ITHApVLJR0wK5v8pERXKPTnFkTRb
-         jKzs9+7+ZRVHdZd047MqXUVhAaDM1vPpVYqXoHFdywewLzg1Jk6lDrdn/dlX178HBHBn
-         wsAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x9uoR+KIuE1II8mD60iebYIvLAFwPjD50xd1uMdBmX4=;
-        b=gilwWx9zS/qqUYYps17sgGvt/qPODa5UDc/+bafy6GEAtwZ6ofChpgE6Tlmz3F2Uxj
-         wboMAbjk4ijiYbTXcbAxBShonKEHNqa4AU0nfkAMuC6OswvSy1srVSvH7p4e19Ag48ka
-         Nd5FlvrhND6mbRNJbSXvZjb0fzIqjAZH29OXEXjieOMQbI7JatvJjHg/mham3b0dOmyc
-         aQ8cgVLKnCZbqw+fA1keFWj3yYlW31pv1TjHNF82iV7pKtVYgkpbaNm2CkvDtAKg6Gz1
-         kPQb9svCdIwWa7MJGzi5e/whrswDHUOFVXznuS9+WidOYsO/XVgaqJo4xXfHq+iLDMPa
-         2RQg==
-X-Gm-Message-State: APjAAAXr7DOJI8JyCBazS753vVKKagvw1w7p6X5VAgHTxyqQ9B8WDlah
-        K16UGvw6VYegYNSJ2zb2YSHUsIuRTU0H3uAZ9Eo=
-X-Google-Smtp-Source: APXvYqyX7Yqi62/9W21qqWsZBV0Zu1HZmK4IeRtasql6wmRV4UqjV0hD5sevr26Ix9vyKLwGEVpUKaKxqEg/Q5I8zVU=
-X-Received: by 2002:a0c:ae50:: with SMTP id z16mr57345303qvc.60.1561400771509;
- Mon, 24 Jun 2019 11:26:11 -0700 (PDT)
+        Mon, 24 Jun 2019 14:26:20 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4A0E5E0008;
+        Mon, 24 Jun 2019 18:26:15 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 20:26:14 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190624182614.GC5690@piout.net>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch>
 MIME-Version: 1.0
-References: <20190621084040.GU7221@shao2-debian> <20190621161039.GF1383@mini-arch>
- <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
- <20190621222745.GH1383@mini-arch> <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
-In-Reply-To: <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 24 Jun 2019 11:26:00 -0700
-Message-ID: <CAEf4BzaNBboGeU8xOxyW-aDzEPUQq-LidRzj8V08O=_TynkQOQ@mail.gmail.com>
-Subject: Re: [selftests/bpf] 69d96519db: kernel_selftests.bpf.test_socket_cookie.fail
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     Stanislav Fomichev <sdf@fomichev.me>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624162431.GX31306@lunn.ch>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 5:59 PM Rong Chen <rong.a.chen@intel.com> wrote:
->
-> On 6/22/19 6:27 AM, Stanislav Fomichev wrote:
-> > On 06/21, Andrii Nakryiko wrote:
-> >> )
-> >>
-> >> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> >>> On 06/21, kernel test robot wrote:
-> >>>> FYI, we noticed the following commit (built with gcc-7):
-> >>>>
-> >>>> commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
-> >>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> >>>>
-> >>>> in testcase: kernel_selftests
-> >>>> with following parameters:
-> >>>>
-> >>>>        group: kselftests-00
-> >>>>
-> >>>> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> >>>> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> >>>>
-> >>>>
-> >>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> >>>>
-> >>>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >>>>
-> >>>>
-> >>>> If you fix the issue, kindly add following tag
-> >>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >>>>
-> >>>> # selftests: bpf: test_socket_cookie
-> >>>> # libbpf: failed to create map (name: 'socket_cookies'): Invalid
-> >>>> # argument
-> >>> Another case of old clang trying to create a map that depends on BTF?
-> >>> Should we maybe switch those BTF checks in the kernel to return
-> >>> EOPNOTSUPP to make it easy to diagnose?
-> >> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
-> >>
-> >> libbpf: DATASEC '.maps' not found.
-> >>
-> >> So this must be something else. I just confirmed with clang version
-> >> 7.0.20180201 that for ./test_socket_cookie that's the first line
-> >> that's emitted on failure.
-> > Thanks for checking, I also took a look at the attached kernel_selftests.xz,
-> > here is what it has:
-> > 2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
-> > 2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
-> > ...
-> > # BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
-> > # BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
-> > ...
-> > # Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
-> > # failed to load test BTF: -2
-> > # Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
-> > # failed to load test BTF: -2
-> > ...
-> >
-> > And so on. So there is clearly an old clang that doesn't emit any
-> > BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
-> > linux-next, that's why it doesn't complain about missing/corrupt BTF.
+On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
+> On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
+> > Hi Andrew,
+> > 
+> > The 06/24/2019 16:26, Andrew Lunn wrote:
+> > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
+> > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > > > > these switch ports can be configured as CPU port (with follow-up patches).
+> > > > > 
+> > > > > This configuration may look prettier on DSA, but the main restriction here
+> > > > > is that the entire functionality is provided by the ocelot driver which is a
+> > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > > > > from ocelot to a separate dsa driver.
+> > > > > 
+> > > > 
+> > > > We should probably make the ocelot driver a DSA driver then...
+> > > An important part of DSA is being able to direct frames out specific
+> > > ports when they ingress via the CPU port. Does the silicon support
+> > > this? At the moment, i think it is using polled IO.
+> > 
+> > That is supported, it requires a bit of initial configuration of the Chip, but
+> > nothing big (I believe this configuration is part of Claudiu's change-set).
+> > 
+> > But how do you envision this done?
+> > 
+> > - Let the existing SwitchDev driver and the DSA driver use a set of common
+> >   functions.
+> > - Convert the existing Ocelot driver from SwitchDev to DSA
+> > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
+> >   Felix driver
+> > 
+> > My guess is the first one, but I would like to understand what you have in mind.
+> 
+> I don't know the various architectures the switch is used in. But it
+> does seem like a core library, and then a switchdev wrapper for Ocelot
+> and a DSA wrapper for Felix would make sense.
 
-Ah, ok, that would explain it. But in any case, clang 6&7 is too old.
-Clang 8 or better yet clang 9 (for global data, datasec/var-dependent
-stuff) would be great.
+Ocelot could also be used in a DSA setting where one port can be
+connected to an external MAC and be used to inject/extract frames
+to/from any other ports. In that case, the IFH would serve as the DSA
+tag.
 
-> >
-> > We need to convince lkp people to upgrade clang, otherwise, I suppose,
-> > we'll get more of these reportings after your recent df0b77925982 :-(
->
-> Thanks for the clarification, we'll upgrade clang asap.
 
-Thanks Rong!
-
->
-> Best Regards,
-> Rong Chen
->
->
-> >
-> >>>> # libbpf: failed to load object './socket_cookie_prog.o'
-> >>>> # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
-> >>>> # ./socket_cookie_prog.o
-> >>>> # FAILED
-> >>>> not ok 15 selftests: bpf: test_socket_cookie
-> >>>>
-> >>>>
-> >>>>
-> >>>>
-> >>>> To reproduce:
-> >>>>
-> >>>>          # build kernel
-> >>>>        cd linux
-> >>>>        cp config-5.2.0-rc2-00598-g69d9651 .config
-> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
-> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
-> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
-> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
-> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
-> >>>>
-> >>>>
-> >>>>          git clone https://github.com/intel/lkp-tests.git
-> >>>>          cd lkp-tests
-> >>>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> >>>>
-> >>>>
-> >>>>
-> >>>> Thanks,
-> >>>> Rong Chen
-> >>>>
-> >> <mega snip>
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
