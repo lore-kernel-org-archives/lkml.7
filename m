@@ -2,52 +2,57 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23CDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEE6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5F0208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75300213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370627;
-	bh=Ri3bG5IiphU/t3EBOLoYDeW4xgMSWfxp02qg6ArUHqo=;
+	s=default; t=1561370635;
+	bh=YRlpx/QN9AvG+vGwEI7FnNCcZuH5b1fOwowrRhX8TQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjPVtzVT5XKgXgLGNZjudg81bKCaTu/74E2V7FmyO+t3347ylZuJqLVHArvIr4toP
-	 7doHiB4NXhXYwf/vSa3wqEvjIKbMy0lCK/mrH0qMDprLpD2Ulm8Afiju1FiCyxnJFr
-	 mG7dnFzJegBnM1aS9pkW9ffhkLhb9YQwgTv5cgLE=
+	b=c58LbdTTleuBlUjHwtMefl+ALuGCQh04TCBgpcDUHbGHWhzgYbl+M+o4Bw3ma3DGB
+	 cH2oa1yf8t9FyXw9ppJiMBSQ8LurBIF0qL/1gKpQrVYJ9BPKVerMYqfw5TN0xJtkBv
+	 54xJgdd2ORSeRcBR+p/Zpaub8i/9tv4aQnSSPB0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfFXKDq (ORCPT
+        id S1729583AbfFXKDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34040 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbfFXKCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:02:47 -0400
+        id S1729570AbfFXKDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:52 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02268213F2;
-        Mon, 24 Jun 2019 10:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D847C208E4;
+        Mon, 24 Jun 2019 10:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370566;
-        bh=Ri3bG5IiphU/t3EBOLoYDeW4xgMSWfxp02qg6ArUHqo=;
+        s=default; t=1561370631;
+        bh=YRlpx/QN9AvG+vGwEI7FnNCcZuH5b1fOwowrRhX8TQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q0IxZGdnU2gL037uYCMe2vVOtDxmqUKlJjtTc7bU9OTs+ldHDyCKRDS8Sjgh1cR7k
-         6cuCeGaJlKjGtsJ+Ws+CeFYNGEIqREVTTLoh20lZzZ7fo+19ZW62xWO/6310DZc5Ta
-         jMDyFz02SncpbWQKPjMRmmC5kxeaS9VbbozGNj0Y=
+        b=MeOiOrv07FB6Wllr1C3qydjItsE7PksYuJllLEeFz2GP9WlhGxqb/q6CiUSY/czv7
+         hRD/8c6GN8pUvbV9ndcdNlf/Myo5hR/TTLb1VGrmem2u4xxDZRxUXvw6ov3Ifod/S7
+         Qix8kM2kS1M0NXctLsbryfGBJbzoF2IFpEluLTHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Crt Mori <cmo@melexis.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 22/90] iio: temperature: mlx90632 Relax the compatibility check
-Date:   Mon, 24 Jun 2019 17:56:12 +0800
-Message-Id: <20190624092315.510493018@linuxfoundation.org>
+        stable@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 33/90] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date:   Mon, 24 Jun 2019 17:56:23 +0800
+Message-Id: <20190624092316.489746293@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,56 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Crt Mori <cmo@melexis.com>
+[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
 
-commit 389fc70b60f534d679aea9a3f05146040ce20d77 upstream.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
-Register EE_VERSION contains mixture of calibration information and DSP
-version. So far, because calibrations were definite, the driver
-compatibility depended on whole contents, but in the newer production
-process the calibration part changes. Because of that, value in EE_VERSION
-will be changed and to avoid that calibration value is same as DSP version
-the MSB in calibration part was fixed to 1.
-That means existing calibrations (medical and consumer) will now have
-hex values (bits 8 to 15) of 83 and 84 respectively. Driver compatibility
-should be based only on DSP version part of the EE_VERSION (bits 0 to 7)
-register.
-
-Signed-off-by: Crt Mori <cmo@melexis.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/temperature/mlx90632.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/temperature/mlx90632.c
-+++ b/drivers/iio/temperature/mlx90632.c
-@@ -81,6 +81,8 @@
- /* Magic constants */
- #define MLX90632_ID_MEDICAL	0x0105 /* EEPROM DSPv5 Medical device id */
- #define MLX90632_ID_CONSUMER	0x0205 /* EEPROM DSPv5 Consumer device id */
-+#define MLX90632_DSP_VERSION	5 /* DSP version */
-+#define MLX90632_DSP_MASK	GENMASK(7, 0) /* DSP version in EE_VERSION */
- #define MLX90632_RESET_CMD	0x0006 /* Reset sensor (address or global) */
- #define MLX90632_REF_12		12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
- #define MLX90632_REF_3		12LL /**< ResCtrlRef value of Channel 3 */
-@@ -666,10 +668,13 @@ static int mlx90632_probe(struct i2c_cli
- 	} else if (read == MLX90632_ID_CONSUMER) {
- 		dev_dbg(&client->dev,
- 			"Detected Consumer EEPROM calibration %x\n", read);
-+	} else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
-+		dev_dbg(&client->dev,
-+			"Detected Unknown EEPROM calibration %x\n", read);
- 	} else {
- 		dev_err(&client->dev,
--			"EEPROM version mismatch %x (expected %x or %x)\n",
--			read, MLX90632_ID_CONSUMER, MLX90632_ID_MEDICAL);
-+			"Wrong DSP version %x (expected %x)\n",
-+			read, MLX90632_DSP_VERSION);
- 		return -EPROTONOSUPPORT;
- 	}
- 
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index ef149f59929a..f67f614ccb0e 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -175,6 +175,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
+-- 
+2.20.1
+
 
 
