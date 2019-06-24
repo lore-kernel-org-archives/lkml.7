@@ -2,78 +2,82 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFC8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F501C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1067205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="dKDvQAwp"
+	by mail.kernel.org (Postfix) with ESMTP id 13D0820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561393651;
+	bh=NGCvQfasyw2Dvd+0f5kMeX1GDlGQsRX0xZnViuUsN6U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NHRt67LYXrI/Khq8iG0bC7VBC3q0WKSYNbtf1dsjf5tQ0XrkOcdpMYENZpZuIBB2U
+	 RDeynWbEsNTruoUyoTHvjGv9lip+xh5ZhjfabFfNZBN8ZBJSGH1rue+ccLSFl4DWYj
+	 LXVScHR4XJmqXzJUxqjpxhTycdfID6xROp+1vxmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbfFXQ1H (ORCPT
+        id S1732110AbfFXQ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:27:07 -0400
-Received: from canardo.mork.no ([148.122.252.1]:56291 "EHLO canardo.mork.no"
+        Mon, 24 Jun 2019 12:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfFXQ1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:27:07 -0400
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x5OGQpI1008347
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 24 Jun 2019 18:26:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1561393612; bh=fLGEnw2Njzn9xoqzS5V4EDKFzf98/cQHM5dM1LpBLzA=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=dKDvQAwpJjFXmlAogZehs5GN9Y0cWRugc8cEv6J7slbl2Gp91bIw92D6f8xqQPH1C
-         2D1A6sM+SFV7PUESbRMLRQ8XCn1KbzQrGpeCn7dKGZ1MWCkmcPx5tg1DETysp/3GEE
-         pWXw8Nq+31CbbTfMV6RbuTVO7HvammQT1NNOkUL0=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
-        (envelope-from <bjorn@mork.no>)
-        id 1hfRnv-0008IY-E4; Mon, 24 Jun 2019 18:26:51 +0200
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
-        syzbot <syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: global-out-of-bounds Read in qmi_wwan_probe
-Organization: m
-References: <0000000000008f19f7058c10a633@google.com>
-        <871rzj6sww.fsf@miraculix.mork.no>
-Date:   Mon, 24 Jun 2019 18:26:51 +0200
-In-Reply-To: <871rzj6sww.fsf@miraculix.mork.no> (Hillf Danton's message of
-        "Mon, 24 Jun 2019 23:38:36 +0800")
-Message-ID: <87tvcf54qc.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1726393AbfFXQ13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:27:29 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD37820657;
+        Mon, 24 Jun 2019 16:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561393648;
+        bh=NGCvQfasyw2Dvd+0f5kMeX1GDlGQsRX0xZnViuUsN6U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uw9ookjg3azfCRvSEDTpj9uKwHEplhQMWpbdn/F08DMG753KLBEunNP20XNOudvTd
+         KiGVq2ma/ffje1wpZIY21Pr+9XxZ2wKnsDJSNrem4JFUUW+hSh8zCNBnnA7gb2Ka7q
+         34NOGjLeUhL+4M/YtT4ZAMRRVDDm2435CcMqvg70=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org
+Cc:     idryomov@gmail.com, zyan@redhat.com, sage@redhat.com,
+        agruenba@redhat.com
+Subject: [PATCH v4 0/3] ceph: don't NULL terminate virtual xattrs
+Date:   Mon, 24 Jun 2019 12:27:23 -0400
+Message-Id: <20190624162726.17413-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.100.3 at canardo
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hillf Danton <hdanton@sina.com> writes:
+v4: resurrect snprintf_noterm as static function that uses a
+    fixed-size intermediate buffer.
+    Return -E2BIG and WARN if the formatted string exceeds temp buffer.
+    make getxattr_cb callbacks return ssize_t.
+v3: switch to using an intermediate buffer for snprintf destination
+    add patch to fix ceph_vxattrcb_layout return value
+v2: drop bogus EXPORT_SYMBOL of static function
 
-> and wonder if the following works.
->
-> -	info =3D (void *)&id->driver_info;
-> +	info =3D (void *)id->driver_info;
+This is the 4th posting of this patchset. In this variant, we add a new
+variatic static function that uses an internal buffer and calls
+vsnprintf to do the formatting, and then memcpys the result into the
+buffer. This also adds a bit of type-sanity cleanup of the vxattr
+handling in general.
 
+Most of the rationale for this set is in the description of the last
+patch of the series.
 
-Doh! Right you are.  Thanks to both you and Andrey for quick and good
-help.
+Jeff Layton (3):
+  ceph: make getxattr_cb return ssize_t
+  ceph: return -ERANGE if virtual xattr value didn't fit in buffer
+  ceph: don't NULL terminate virtual xattrs
 
-We obviously have some bad code patterns here, since this apparently
-worked for Kristian by pure luck.
+ fs/ceph/xattr.c | 182 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 108 insertions(+), 74 deletions(-)
 
+-- 
+2.21.0
 
-Bj=C3=B8rn
