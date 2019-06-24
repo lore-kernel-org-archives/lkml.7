@@ -2,249 +2,158 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D4CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF5AC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4952054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iOat0pfR"
+	by mail.kernel.org (Postfix) with ESMTP id 97ED320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561395837;
+	bh=jD2uK5kCwexPBSnlloDzcLqIftPyzxTGZFnE/+MKxQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jzUTzfuZCM+Pd1UhqHZElgyuHlzu1EOV9R9syNwACMh+yBy+i02KxbYRBSq4qUeE5
+	 WOoFiwIqIFSdstmGemUWyO9tk4t3jd6UFRtNbs/4YUmWkA2D26fX0amt3G/+7b88rZ
+	 PJvYIVesW0r3SrJGMstiuS+UkRnDQngczPj/RwPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbfFXQ7Y (ORCPT
+        id S1730586AbfFXRD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:59:24 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35385 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfFXQ7Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:59:24 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190624165922euoutp0283aa14f6d68c5a1f10b665ddc66e3707~rMP26SbGQ0747807478euoutp02T
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:59:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190624165922euoutp0283aa14f6d68c5a1f10b665ddc66e3707~rMP26SbGQ0747807478euoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561395562;
-        bh=kKbJkzdhBU9lOffCTViCp1aEU1TW8YWN8Y4kXn1ZRL4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=iOat0pfRkwf6Iy+PoI4VeMCgYRdivwnlPVPrrmVdoPHVUvsflpZs2NTUTY4kbDDOC
-         72Tz2lSy/foDm1UUNoxvUeoYAXP5WTsHhu9x0jGy80seHJCVgHEZ4KBcZbXXr9s/2K
-         7WfO1tnxEN82zZbqvvwaAQCmH/Zmeui4Xr01IEZw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190624165921eucas1p16a47a6a7040ca2ea49be7dddc544b695~rMP2OhDNb0345903459eucas1p1q;
-        Mon, 24 Jun 2019 16:59:21 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 93.31.04325.961011D5; Mon, 24
-        Jun 2019 17:59:21 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190624165920eucas1p2ba62121bbb0242e38194d906a1511b61~rMP1IaHAP1830118301eucas1p2w;
-        Mon, 24 Jun 2019 16:59:20 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190624165919eusmtrp12e8a2919976610699a44a22fd2971452~rMP06VFsl2683826838eusmtrp1T;
-        Mon, 24 Jun 2019 16:59:19 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-87-5d110169b299
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E9.4A.04140.761011D5; Mon, 24
-        Jun 2019 17:59:19 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190624165919eusmtip1d5fa48fb01e17b2fd3abf44e76e35174~rMP0RXp0k3028730287eusmtip1h;
-        Mon, 24 Jun 2019 16:59:19 +0000 (GMT)
-Subject: Re: [PATCH 4/4] drm/sun4i: Enable DRM InfoFrame support on H6
-To:     Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "hjc@rock-chips.com" <hjc@rock-chips.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <025bb8b2-8e0d-65ba-a7cc-4d8078f90428@samsung.com>
-Date:   Mon, 24 Jun 2019 18:59:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Mon, 24 Jun 2019 13:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726920AbfFXRDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:03:55 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CD1720645;
+        Mon, 24 Jun 2019 17:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561395834;
+        bh=jD2uK5kCwexPBSnlloDzcLqIftPyzxTGZFnE/+MKxQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=flxl+4YatLVLP2cePA3e4X7Wh66OFz4Df7unTW3gX7IS3uVUqtmUW+bqjszBy3MvG
+         B5+DWZMnFBCVb3RpJ84i30TPyvr0bD5egtvEfqu+i+MV+3OoTkg4GQIa76HRa4YYRU
+         Rrf1OiPhakYPRzxa7pXFv2aNJhrv/KGzo07Sm2To=
+Date:   Mon, 24 Jun 2019 18:03:49 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        robh+dt <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Message-ID: <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+ <20190618175218.GH4270@fuggles.cambridge.arm.com>
+ <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v67T-nOqxkjekcc1ze9otVrzJb5KEtdJuMMk+dEGgAn1pQ@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGKsWRmVeSWpSXmKPExsWy7djPc7qZjIKxBo+/s1tc+fqezeL/o9es
-        FnMn1Vpc/f6S2eLkm6ssFj/btzBZdE5cwm5xedccNosHL/czWhzqi7b4eeg8k8X6Fn0HHo/3
-        N1rZPeatqfbY8Gg1q8fsjpmsHicmXGLyuN99nMnj76z9LB4HeiezeGy/No/Z4/MmuQCuKC6b
-        lNSczLLUIn27BK6M3R9eMRUcU6x4fVGjgfGGdBcjJ4eEgInEvmONTF2MXBxCAisYJS7uv8QG
-        4XxhlPix8y4LhPOZUeLc9W1AZRxgLQuvJ0DElzNK/L/zEaroLaPEtgc72EDmCgu4SWxctZS9
-        i5GdQ0QgVuJOLkgJs8ASFomuxl5WkBI2AU2Jv5tvgpXzCthJrFuwAsxmEVCVOLVlNguILSoQ
-        IfFl5yZGiBpBiZMzn4DFOQUCJWbPWQxWzywgL9G8dTYzhC0ucevJfLB3JAT+sks0vpnPAvGn
-        i8Scnm9sELawxKvjW9ghbBmJ05N7oGrqJe6vaGGGaO5glNi6YSczRMJa4vDxi6wg3zMDXb1+
-        lz5E2FFixyFQCIEChU/ixltBiBv4JCZtm84MEeaV6GgTgqhWlLh/divUQHGJpRe+sk1gVJqF
-        5LNZSL6ZheSbWQh7FzCyrGIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMbaf/Hf+6g3Hf
-        n6RDjAIcjEo8vAuOCMQKsSaWFVfmHmKU4GBWEuFdmggU4k1JrKxKLcqPLyrNSS0+xCjNwaIk
-        zlvN8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwJhuZxt15vqFD2ejHT/22E+Zcfl4aUX4lxtcHapO
-        70st9k88sy4p5PNu6zCfZSF/LJad2hfEv2Dn+dXBLWlSXlbSSSvFn92tZAsxr/uUol4e/Wj7
-        zEvCTd1ZN043/d24ttdS+VnT7J36rcfu6k92yyld3sSj5Nm/p4RVUyftgI5Usvrmd10/9yqx
-        FGckGmoxFxUnAgCXz8+raQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsVy+t/xu7rpjIKxBnN3Wlhc+fqezeL/o9es
-        FnMn1Vpc/f6S2eLkm6ssFj/btzBZdE5cwm5xedccNosHL/czWhzqi7b4eeg8k8X6Fn0HHo/3
-        N1rZPeatqfbY8Gg1q8fsjpmsHicmXGLyuN99nMnj76z9LB4HeiezeGy/No/Z4/MmuQCuKD2b
-        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2M3R9eMRUc
-        U6x4fVGjgfGGdBcjB4eEgInEwusJXYxcHEICSxkllu46z9TFyAkUF5fYPf8tM4QtLPHnWhcb
-        RNFrRol/01+CFQkLuElsXLWUHcQWEYiVOPlmLitIEbPAMhaJJ6dXMkJ0zGSWWLD9ICNIFZuA
-        psTfzTfZQGxeATuJdQtWgNksAqoSp7bMZgGxRQUiJGbvamCBqBGUODnzCZjNKRAoMXvOYrB6
-        ZgF1iT/zLjFD2PISzVtnQ9niEreezGeawCg0C0n7LCQts5C0zELSsoCRZRWjSGppcW56brGR
-        XnFibnFpXrpecn7uJkZgRG879nPLDsaud8GHGAU4GJV4eBccEYgVYk0sK67MPcQowcGsJMK7
-        NBEoxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAZJNXEm9oamhuYWlobmxubGahJM7bIXAw
-        RkggPbEkNTs1tSC1CKaPiYNTqoFxe535fFGpjVNPz2C8Gy7++tzPC5KlLGcD+A7r/bMSKni3
-        uF/o7Gxe+3WvP99+vK5Ubd3T8CPfG6b81pt0V3T7y8+H5pkdt15xpS1+jdI+3pQrc8VW7TVe
-        tGmz1xT356oZC1adbP/ys+842/bUF0sPszxSZoy4X/NW0vJQXPvlrilH1qqrTtlkHqjEUpyR
-        aKjFXFScCAB4lZGZ/gIAAA==
-X-CMS-MailID: 20190624165920eucas1p2ba62121bbb0242e38194d906a1511b61
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190624160742epcas3p291e57fd4a47043c67cb4fbe1ed301e2f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190624160742epcas3p291e57fd4a47043c67cb4fbe1ed301e2f
-References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-        <3f9e51d5-8ca5-a439-943c-26de92dd52fe@samsung.com>
-        <CAGb2v67FF3k9wZu7K+Z5yKFFeh8A_4iuEXfh+tO65UvVRfY-sA@mail.gmail.com>
-        <44611965.cJa5QBey4U@jernej-laptop>
-        <CGME20190624160742epcas3p291e57fd4a47043c67cb4fbe1ed301e2f@epcas3p2.samsung.com>
-        <CAGb2v67T-nOqxkjekcc1ze9otVrzJb5KEtdJuMMk+dEGgAn1pQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.06.2019 18:07, Chen-Yu Tsai wrote:
-> On Tue, Jun 25, 2019 at 12:03 AM Jernej Škrabec <jernej.skrabec@siol.net> wrote:
->> Dne ponedeljek, 24. junij 2019 ob 17:56:30 CEST je Chen-Yu Tsai napisal(a):
->>> On Mon, Jun 24, 2019 at 11:49 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>> On 24.06.2019 17:05, Jernej Škrabec wrote:
->>>>> Dne ponedeljek, 24. junij 2019 ob 17:03:31 CEST je Andrzej Hajda
->> napisal(a):
->>>>>> On 26.05.2019 23:20, Jonas Karlman wrote:
->>>>>>> This patch enables Dynamic Range and Mastering InfoFrame on H6.
->>>>>>>
->>>>>>> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>>>> Cc: Jernej Skrabec <jernej.skrabec@siol.net>
->>>>>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>>>>>> ---
->>>>>>>
->>>>>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 2 ++
->>>>>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
->>>>>>>  2 files changed, 3 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
->>>>>>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index
->>>>>>> 39d8509d96a0..b80164dd8ad8
->>>>>>> 100644
->>>>>>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
->>>>>>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
->>>>>>> @@ -189,6 +189,7 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
->>>>>>> struct device *master,>
->>>>>>>
->>>>>>>     sun8i_hdmi_phy_init(hdmi->phy);
->>>>>>>
->>>>>>>     plat_data->mode_valid = hdmi->quirks->mode_valid;
->>>>>>>
->>>>>>> +   plat_data->drm_infoframe = hdmi->quirks->drm_infoframe;
->>>>>>>
->>>>>>>     sun8i_hdmi_phy_set_ops(hdmi->phy, plat_data);
->>>>>>>
->>>>>>>     platform_set_drvdata(pdev, hdmi);
->>>>>>>
->>>>>>> @@ -255,6 +256,7 @@ static const struct sun8i_dw_hdmi_quirks
->>>>>>> sun8i_a83t_quirks = {>
->>>>>>>
->>>>>>>  static const struct sun8i_dw_hdmi_quirks sun50i_h6_quirks = {
->>>>>>>
->>>>>>>     .mode_valid = sun8i_dw_hdmi_mode_valid_h6,
->>>>>>>
->>>>>>> +   .drm_infoframe = true,
->>>>>>>
->>>>>>>  };
->>>>>>>
->>>>>>>  static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
->>>>>>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index
->>>>>>> 720c5aa8adc1..2a0ec08ee236
->>>>>>> 100644
->>>>>>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
->>>>>>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
->>>>>>> @@ -178,6 +178,7 @@ struct sun8i_dw_hdmi_quirks {
->>>>>>>
->>>>>>>     enum drm_mode_status (*mode_valid)(struct drm_connector
->>>>> *connector,
->>>>>
->>>>>>>                                        const struct
->>>>> drm_display_mode *mode);
->>>>>
->>>>>>>     unsigned int set_rate : 1;
->>>>>>>
->>>>>>> +   unsigned int drm_infoframe : 1;
->>>>>> Again, drm_infoframe suggests it contains inforframe, but in fact it
->>>>>> just informs infoframe can be used, so again my suggestion
->>>>>> use_drm_infoframe.
->>>>>>
->>>>>> Moreover bool type seems more appropriate here.
->>>>> checkpatch will give warning if bool is used.
->>>> Then I would say "fix/ignore checkpatch" :)
->>>>
->>>> But maybe there is a reason.
->>> Here's an old one from Linus: https://lkml.org/lkml/2013/9/1/154
->>>
->>> I'd say that bool in a struct is a waste of space compared to a 1 bit
->>> bitfield, especially when there already are other bitfields in the same
->>> struct.
->>>> Anyway I've tested and I do not see the warning, could you elaborate it.
->>> Maybe checkpatch.pl --strict?
->> It seems they removed that check:
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?
->> id=7967656ffbfa493f5546c0f1
->>
->> After reading that block of text, I'm not sure what would be prefered way for
->> this case.
-> This:
->
-> +If a structure has many true/false values, consider consolidating them into a
-> +bitfield with 1 bit members, or using an appropriate fixed width type, such as
-> +u8.
->
-> would suggest using a bitfield, or flags within a fixed width type?
+[+Krishna]
 
+Hi Vivek,
 
-OK, I have also guessed what kind of warning Jernej was writing about.
-And IMO it rather does not fit here:
+On Mon, Jun 24, 2019 at 03:58:32PM +0530, Vivek Gautam wrote:
+> On Tue, Jun 18, 2019 at 11:22 PM Will Deacon <will.deacon@arm.com> wrote:
+> > On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
+> > > On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> > > > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+> > > > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > > > index 0ad086da399c..3c3ad43eda97 100644
+> > > > > --- a/drivers/iommu/arm-smmu.c
+> > > > > +++ b/drivers/iommu/arm-smmu.c
+> > > > > @@ -39,6 +39,7 @@
+> > > > >   #include <linux/pci.h>
+> > > > >   #include <linux/platform_device.h>
+> > > > >   #include <linux/pm_runtime.h>
+> > > > > +#include <linux/qcom_scm.h>
+> > > > >   #include <linux/slab.h>
+> > > > >   #include <linux/spinlock.h>
+> > > > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
+> > > > >           u32                             features;
+> > > > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+> > > > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+> > > > >           u32                             options;
+> > > > >           enum arm_smmu_arch_version      version;
+> > > > >           enum arm_smmu_implementation    model;
+> > > > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+> > > > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
+> > > > >           { ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+> > > > > + { ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> > > > This should be added to the DT binding as well.
+> > >
+> > > Ah right. I missed that. Will add this and respin unless Robin and Will have
+> > > concerns with this change.
+> >
+> > My only concern really is whether it's safe for us to turn this off. It's
+> > clear that somebody went to a lot of effort to add this extra goodness to
+> > the IP, but your benchmarks suggest they never actually tried it out after
+> > they finished building it.
+> >
+> > Is there some downside I'm not seeing from disabling this stuff?
+> 
+> This wait-for-safe is a TLB invalidation enhancement to help display
+> and camera devices.
+> The SMMU hardware throttles the invalidations so that clients such as
+> display and camera can indicate when to start the invalidation.
+> So the SMMU essentially reduces the rate at which invalidations are
+> serviced from its queue. This also throttles the invalidations from
+> other masters too.
+> 
+> On sdm845, the software is expected to serialize the invalidation
+> command loading into SMMU invalidation FIFO using hardware locks
+> (downstream code [2]), and is also expected to throttle non-real time
+> clients while waiting for SAFE==1 (downstream code[2]). We don't do
+> any of these yet, and as per my understanding as this wait-for-safe is
+> enabled by the bootloader in a one time config, this logic reduces
+> performance of devices such as usb and ufs.
+> 
+> There's isn't any downside from disabling this logic until we have all
+> the pieces together from downstream in upstream kernels, and until we
+> have sdm845 devices that are running with full display/gfx stack
+> running. That's when we plan to revisit this and enable all the pieces
+> to get display and USB/UFS working with their optimum performance.
 
-- no concurrent writes,
+Generally, I'd agree that approaching this incrementally makes sense, but
+in this case you're adding new device-tree properties
+("qcom,smmu-500-fw-impl-safe-errata") in order to do so, which seems
+questionable if they're only going to be used in the short-term and will
+be obsolete once Linux knows how to drive the device properly.
 
-- no need for size/cache optimizations.
+Instead, I think this needs to be part of a separate file that is maintained
+by you, which follows on from the work that Krishna is doing for nvidia
+built on top of Robin's prototype patches:
 
-But since there are some controversies about bool in struct and file has
-already convention of bitfield I do not insist on it, you can keep it as is.
+http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
 
+Once we have that, you can key this behaviour off the compatible string
+rather than having to add quirk properties to reflect the transient needs of
+Linux.
 
-Regards
+Krishna -- how have you been getting on with the branch above?
 
-Andrzej
-
-
-
->
-> ChenYu
->
->
-
+Will
