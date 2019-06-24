@@ -2,299 +2,210 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB69C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5FCC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323902083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D152083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfFXIUs convert rfc822-to-8bit (ORCPT
+        id S1727670AbfFXIVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:20:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41178 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfFXIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:20:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 01:20:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
-   d="scan'208";a="359489354"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jun 2019 01:20:41 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 24 Jun 2019 01:20:40 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.185]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.76]) with mapi id 14.03.0439.000;
- Mon, 24 Jun 2019 16:20:38 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Thread-Topic: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Thread-Index: AQHVHsiVLTtm/WvGlEKSmQ2lKcl2F6ajfRGAgAC0NOCAAGOFgIABGcaQgAAh3QCABKzV8A==
-Date:   Mon, 24 Jun 2019 08:20:38 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
-        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
-        <20190619222647.72efc76a@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
-        <20190620150757.7b2fa405@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
- <20190621095740.41e6e98e@x1.home>
-In-Reply-To: <20190621095740.41e6e98e@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTZlZDhiNjUtNGY3ZC00NWY5LWJlMTAtNzM4ZWFjMWU4YWJjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiajJ1bUxoOUlLSk1xeThZbCs5MlZcL3R0dURLU0dUVHVsSndpTTVyVzJTbmU5d3pyUGlwM3Q0NU9yZUU2UTIyRkcifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 24 Jun 2019 04:21:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47038 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727632AbfFXIVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:21:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id s83so21032079iod.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:21:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=3wbx66XjtrNDKjy5yo1ONJmuibxwTL2Y/NDCfUz1CRc=;
+        b=AKqESxlAZteo5QYki9K585sj+KYEJvKuGBpt1NqWn+cA6j2wWSHSe9Sacnef9cy/vK
+         IDzbYRpIY0DtOMFy/X9yZKKQYiSkKDi5zl7wSdR3kpZ/duwgXoBXWO+xwfTOZECvDpGg
+         6L84HwWl/Ibua5YAAVekgeGcR/xmFq7VG6/lQ1lugRatEtfLx3yVq1E3qs63f8rImgOU
+         adLWnRnUzHN2ovsRsf/2bvz39Z1DPKtq7MhBDdrVd4To1sxOsZUhQuyT1XPIhDDr7uzs
+         u5hrLPgX+c7d7332u8bX56Cud7bYM3PGBUIGQh9IpJJrW9y3SXsYVAEfpgnZtFeYzqg+
+         af/A==
+X-Gm-Message-State: APjAAAX2pIwrNyShtGFkFD8uSk047BJ4nw3tbmv9ep14YF8lV2FUnb64
+        GU5dw4BUcAj1iSl4gpDe1Fc6RCls0kTXi+yqyK9MJLsmxc1Q
+X-Google-Smtp-Source: APXvYqzq26g+qUJSiKX+qhzG+N1V3GCN91+hK2RLY8R1V1u8qDa69oNKyOBTw/GDqrefBDH1udIPnevCMlG573olXu5T5S7Wb6+e
 MIME-Version: 1.0
+X-Received: by 2002:a6b:7b07:: with SMTP id l7mr14661964iop.225.1561364466648;
+ Mon, 24 Jun 2019 01:21:06 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 01:21:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000665152058c0d7ed9@google.com>
+Subject: INFO: task hung in io_uring_release
+From:   syzbot <syzbot+94324416c485d422fe15@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hello,
 
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Friday, June 21, 2019 11:58 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> 
-> On Fri, 21 Jun 2019 10:23:10 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > Hi Alex,
-> >
-> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > Sent: Friday, June 21, 2019 5:08 AM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > >
-> > > On Thu, 20 Jun 2019 13:00:34 +0000
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > Hi Alex,
-> > > >
-> > > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > > Sent: Thursday, June 20, 2019 12:27 PM
-> > > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > > > >
-> > > > > On Sat,  8 Jun 2019 21:21:11 +0800
-> > > > > Liu Yi L <yi.l.liu@intel.com> wrote:
-> > > > >
-> > > > > > This patch adds sample driver named vfio-mdev-pci. It is to wrap
-> > > > > > a PCI device as a mediated device. For a pci device, once bound
-> > > > > > to vfio-mdev-pci driver, user space access of this device will
-> > > > > > go through vfio mdev framework. The usage of the device follows
-> > > > > > mdev management method. e.g. user should create a mdev before
-> > > > > > exposing the device to user-space.
-> > [...]
-> > > >
-> > > > > However, the patch below just makes the mdev interface behave
-> > > > > correctly, I can't make it work on my system because commit
-> > > > > 7bd50f0cd2fd ("vfio/type1: Add domain at(de)taching group helpers")
-> > > >
-> > > > What error did you encounter. I tested the patch with a device in a
-> > > > singleton iommu group. I'm also searching a proper machine with
-> > > > multiple devices in an iommu group and test it.
-> > >
-> > > In vfio_iommu_type1, iommu backed mdev devices use the
-> > > iommu_attach_device() interface, which includes:
-> > >
-> > >         if (iommu_group_device_count(group) != 1)
-> > >                 goto out_unlock;
-> > >
-> > > So it's impossible to use with non-singleton groups currently.
-> >
-> > Hmmm, I think it is no longer good to use iommu_attach_device() for iommu
-> > backed mdev devices now. In this flow, the purpose here is to attach a device
-> > to a domain and no need to check whether the device is in a singleton iommu
-> > group. I think it would be better to use __iommu_attach_device() instead of
-> > iommu_attach_device().
-> 
-> That's a static and unexported, it's intentionally not an exposed
-> interface.  We can't attach devices in the same group to separate
-> domains allocated through iommu_domain_alloc(), this would violate the
-> iommu group isolation principles.
+syzbot found the following crash on:
 
-Go it. :-) Then not good to expose such interface. But to support devices in
-non-singleton iommu group, we need to have a new interface which doesn't
-count the devices but attach all the devices.
+HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1418bf0aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=94324416c485d422fe15
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-> > Also I found a potential mutex lock issue if using iommu_attach_device().
-> > In vfio_iommu_attach_group(), it uses iommu_group_for_each_dev() to loop
-> > all the devices in the group. It holds group->mutex. And then
-> vfio_mdev_attach_domain()
-> > calls iommu_attach_device() which also tries to get group->mutex. This would be
-> > an issue. If you are fine with it, I may post another patch for it. :-)
-> 
-> Gack, yes, please send a patch.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Would do it, may be together with the support of vfio-mdev-pci on devices in
-non-singleton iommu group.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+94324416c485d422fe15@syzkaller.appspotmail.com
 
-> 
-> > > > > used iommu_attach_device() rather than iommu_attach_group() for non-aux
-> > > > > mdev iommu_device.  Is there a requirement that the mdev parent device
-> > > > > is in a singleton iommu group?
-> > > >
-> > > > I don't think there should have such limitation. Per my understanding,
-> > > > vfio-mdev-pci should also be able to bind to devices which shares
-> > > > iommu group with other devices. vfio-pci works well for such devices.
-> > > > And since the two drivers share most of the codes, I think vfio-mdev-pci
-> > > > should naturally support it as well.
-> > >
-> > > Yes, the difference though is that vfio.c knows when devices are in the
-> > > same group, which mdev vfio.c only knows about the non-iommu backed
-> > > group, not the group that is actually used for the iommu backing.  So
-> > > we either need to enlighten vfio.c or further abstract those details in
-> > > vfio_iommu_type1.c.
-> >
-> > Not sure if it is necessary to introduce more changes to vfio.c or
-> > vfio_iommu_type1.c. If it's only for the scenario which two devices share an
-> > iommu_group, I guess it could be supported by using __iommu_attach_device()
-> > which has no device counting for the group. But maybe I missed something
-> > here. It would be great if you can elaborate a bit for it. :-)
-> 
-> We need to use the group semantics, there's a reason
-> __iommu_attach_device() is not exposed, it's an internal helper.  I
-> think there's no way around that we need to somewhere track the actual
-> group we're attaching to and have the smarts to re-use it for other
-> devices in the same group.
+INFO: task syz-executor.5:8634 blocked for more than 143 seconds.
+       Not tainted 5.2.0-rc5+ #3
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.5  D25632  8634   8224 0x00004004
+Call Trace:
+  context_switch kernel/sched/core.c:2818 [inline]
+  __schedule+0x658/0x9e0 kernel/sched/core.c:3445
+  schedule+0x131/0x1d0 kernel/sched/core.c:3509
+  schedule_timeout+0x9a/0x2b0 kernel/time/timer.c:1783
+  do_wait_for_common+0x35e/0x5a0 kernel/sched/completion.c:83
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x47/0x60 kernel/sched/completion.c:136
+  kthread_stop+0xb4/0x150 kernel/kthread.c:559
+  io_sq_thread_stop fs/io_uring.c:2252 [inline]
+  io_finish_async fs/io_uring.c:2259 [inline]
+  io_ring_ctx_free fs/io_uring.c:2770 [inline]
+  io_ring_ctx_wait_and_kill+0x268/0x880 fs/io_uring.c:2834
+  io_uring_release+0x5d/0x70 fs/io_uring.c:2842
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+  exit_to_usermode_loop arch/x86/entry/common.c:168 [inline]
+  prepare_exit_to_usermode+0x402/0x4f0 arch/x86/entry/common.c:199
+  syscall_return_slowpath+0x110/0x440 arch/x86/entry/common.c:279
+  do_syscall_64+0x126/0x140 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x412fb1
+Code: 80 3b 7c 0f 84 c7 02 00 00 c7 85 d0 00 00 00 00 00 00 00 48 8b 05 cf  
+a6 24 00 49 8b 14 24 41 b9 cb 2a 44 00 48 89 ee 48 89 df <48> 85 c0 4c 0f  
+45 c8 45 31 c0 31 c9 e8 0e 5b 00 00 85 c0 41 89 c7
+RSP: 002b:00007ffe7ee6a180 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000412fb1
+RDX: 0000001b2d920000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00000000f3a3e1f8 R09: 00000000f3a3e1fc
+R10: 00007ffe7ee6a260 R11: 0000000000000293 R12: 000000000075c9a0
+R13: 000000000075c9a0 R14: 0000000000024c00 R15: 000000000075bf2c
 
-Hmmm, exposing __iommu_attach_device() is not good, let's forget it. :-)
+Showing all locks held in the system:
+1 lock held by khungtaskd/1043:
+  #0: 00000000ec789630 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30  
+include/linux/rcupdate.h:207
+1 lock held by rsyslogd/8054:
+  #0: 00000000a1730567 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2e0  
+fs/file.c:801
+2 locks held by getty/8167:
+  #0: 000000000d85b796 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 000000006ecd2335 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8168:
+  #0: 000000005c58bd1f (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000158ead38 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8169:
+  #0: 000000003d373884 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 0000000026014169 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8170:
+  #0: 00000000ba3eabbd (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 0000000003284ce2 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8171:
+  #0: 000000009fcb2c0e (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000ac5d0da7 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8172:
+  #0: 000000003f4e772c (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 000000000c930b31 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/8173:
+  #0: 000000002a3615cf (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000dd5c3618 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
 
-> > > > > If this is a simplification, then
-> > > > > vfio-mdev-pci should not bind to devices where this is violated since
-> > > > > there's no way to use the device.  Can we support it though?
-> > > >
-> > > > yeah, I think we need to support it.
-> > > >
-> > > > > If I have two devices in the same group and bind them both to
-> > > > > vfio-mdev-pci, I end up with three groups, one for each mdev device and
-> > > > > the original physical device group.  vfio.c works with the mdev groups
-> > > > > and will try to match both groups to the container.  vfio_iommu_type1.c
-> > > > > also works with the mdev groups, except for the point where we actually
-> > > > > try to attach a group to a domain, which is the only window where we use
-> > > > > the iommu_device rather than the provided group, but we don't record
-> > > > > that anywhere.  Should struct vfio_group have a pointer to a reference
-> > > > > counted object that tracks the actual iommu_group attached, such that
-> > > > > we can determine that the group is already attached to the domain and
-> > > > > not try to attach again?
-> > > >
-> > > > Agreed, we need to avoid such duplicated attach. Instead of adding
-> > > > reference counted object in vfio_group. I'm also considering the logic
-> > > > below:
-> >
-> > Re-walked the code, I find the duplicated attach will happen on the vfio-mdev-pci
-> > device as vfio_mdev_attach_domain() only attaches the parent devices of
-> > iommu backed mdevs instead of all the devices within the physical iommu_group.
-> > While for a vfio-pci device, it will use iommu_attach_group() which attaches all the
-> > devices within the iommu backed group. The same with detach,
-> > vfio_mdev_detach_domain() detaches selective devices instead of all devices
-> within
-> > the iommu backed group.
-> 
-> Yep, that's not good, for the non-aux case we need to follow the usual
-> group semantics or else we're limited to singleton groups.
+=============================================
 
-yep.
+NMI backtrace for cpu 0
+CPU: 0 PID: 1043 Comm: khungtaskd Not tainted 5.2.0-rc5+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  nmi_cpu_backtrace+0x89/0x160 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x125/0x230 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xbb9/0xbd0 kernel/hung_task.c:289
+  kthread+0x325/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 2546 Comm: kworker/u4:4 Not tainted 5.2.0-rc5+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:31 [inline]
+RIP: 0010:atomic_read include/asm-generic/atomic-instrumented.h:27 [inline]
+RIP: 0010:rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:292 [inline]
+RIP: 0010:rcu_is_watching+0x62/0xa0 kernel/rcu/tree.c:872
+Code: 4c 89 f7 e8 70 50 4c 00 48 c7 c3 b8 5f 03 00 49 03 1e 48 89 df be 04  
+00 00 00 e8 89 25 4c 00 48 89 d8 48 c1 e8 03 42 8a 04 38 <84> c0 75 1e 8b  
+03 65 ff 0d 5d 72 9f 7e 74 0c 83 e0 02 d1 e8 5b 41
+RSP: 0018:ffff8880a10ffbe8 EFLAGS: 00000a02
+RAX: 1ffff11015d66b00 RBX: ffff8880aeb35fb8 RCX: ffffffff81628ad7
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880aeb35fb8
+RBP: ffff8880a10ffc00 R08: dffffc0000000000 R09: ffffed1015d66bf8
+R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: dffffc0000000000
+R13: ffff8880a93c9b00 R14: ffffffff8881f258 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c434bbb720 CR3: 000000008e6fa000 CR4: 00000000001406e0
+Call Trace:
+  rcu_read_lock include/linux/rcupdate.h:594 [inline]
+  batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:407 [inline]
+  batadv_nc_worker+0x115/0x600 net/batman-adv/network-coding.c:718
+  process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+  worker_thread+0xc01/0x1640 kernel/workqueue.c:2415
+  kthread+0x325/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-> 
-> > > >     /*
-> > > >       * Do this check in vfio_iommu_type1_attach_group(), after mdev_group
-> > > >       * is initialized.
-> > > >       */
-> > > >     if (vfio_group->mdev_group) {
-> > > >          /*
-> > > >            * vfio_group->mdev_group is true means vfio_group->iommu_group
-> > > >            * is not the actual iommu_group which is going to be attached to
-> > > >            * domain. To avoid duplicate iommu_group attach, needs to check if
-> > > >            * the actual iommu_group. vfio_get_parent_iommu_group() is a
-> > > >            * newly added helper function which returns the actual attach
-> > > >            * iommu_group going to be attached for this mdev group.
-> > > >               */
-> > > >          p_iommu_group = vfio_get_parent_iommu_group(
-> > > >                                                                          vfio_group->iommu_group);
-> > > >          list_for_each_entry(d, &iommu->domain_list, next) {
-> > > >                  if (find_iommu_group(d, p_iommu_group)) {
-> > > >                          mutex_unlock(&iommu->lock);
-> > > >                          // skip group attach;
-> > > >                  }
-> > > >          }
-> > >
-> > > We don't currently create a struct vfio_group for the parent, only for
-> > > the mdev iommu group.  The iommu_attach for an iommu backed mdev
-> > > doesn't leave any traces of where it is actually attached, we just
-> > > count on retracing our steps for the detach.  That's why I'm thinking
-> > > we need an object somewhere to track it and it needs to be reference
-> > > counted so that if both a vfio-mdev-pci device and a vfio-pci device
-> > > are using it, we leave it in place if either one is removed.
-> >
-> > Hmmm, here we are talking about tracking in iommu_group level though
-> > no good idea on where the object should  be placed yet. However, we may
-> > need to tack in device level as I mentioned in above paragraph. If not,
-> > there may be sequence issue. e.g. if vfio-mdev-pci device is attached
-> > firstly, then the object will be initialized, and when vfio-pci device is
-> > attached, we will find the attach should be skipped and just inc the ref count.
-> > But actually it should not be skipped since the vfio-mdev-pci attach does not
-> > attach all devices within the iommu backed group.
-> 
-> We can't do that though, the entire group needs to be attached.
 
-Agree, may be getting another interface which is similar with
-iommu_attach_device(), but works for devices which is in non-singleton
-groups. So the attach for iommu backed mdev will also result in a sound
-attach to all the devices which share iommu group with the parent device.
-This is just like vfio-pci devices. For the object for tracking purpose may be
-as below:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-struct vfio_iommu_object {
-	struct iommu_group *group;
-	struct kref kref;
-};
-
-And I think it should be per-domain and per-iommu backed group since
-aux-domain support allows a iommu backed group to be attached to
-multiple domains. I'm considering if it is ok to have a list in vfio_domain.
-Before each domain attach, vfio should do a check in the list if the iommu
-backed group has been attached already. For vfio-pci devices, use its iommu
-group to do a search in the list. For vfio-mdev-pci devices, use its parent
-devices iommu group to do a search. Thus avoid duplicate attach. Thoughts?
- 
-> > What's more, regards to sIOV case,  a parent devices may have multiple
-> > mdevs and the mdevs may be assigned to the same VM. Thus there will be multiple
-> > attach on this parent device. This also makes me believe track in device level would
-> > be better.
-> 
-> The aux domain support essentially specifies that the device can be
-> attached to multiple domains, so I think we're ok for device-level
-> group attach there, but not for bare iommu backed devices.  Thanks,
-
-Got it.
-
-Thanks,
-Yi Liu
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
