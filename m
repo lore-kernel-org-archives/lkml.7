@@ -2,52 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A60DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB43C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F337420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D475E20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371144;
-	bh=J3lk6Rg+8MdhODyh01OhUMDKDNclpoK0P14pEu19wDc=;
+	s=default; t=1561371150;
+	bh=SREwUm8J1kTp+qb9RpDj1Ff57Rw1vxR+PlbiFITmhdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQolWtLMf7MJYn6BwdD+HiQQaY/5l+rl55OgtRucN1L3xjDtqAi1MWqiQvLirvrwS
-	 PzTiWZS4YJ4NS64ckg6kiWOAusZv9Jph56e9rdxQ8D/xaPhJiczbhZZhQhrneglhwT
-	 ErZ0SxjRsDOQbrZ2kzx1UBcLjUe6UmzfNbMk6Ob8=
+	b=jtKyQLtdUvMTH7DxcIsF1ZZnS4DUT2b7vjom6nxHuPQ82ZJ2NHbmVnTlYZKL9+t9+
+	 EliOEUVYRTz6UjqBY8Tn3/w/hDcUjAfRgsHPUfm1ZxNoPGhAKj+t89TuPIPD+320os
+	 iaPW0W7PQMvb2SUSCQOkLQKWd//72CW78+jHsd0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfFXKF7 (ORCPT
+        id S1730556AbfFXKM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37970 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbfFXKFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:53 -0400
+        id S1730014AbfFXKFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:55 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11D32145D;
-        Mon, 24 Jun 2019 10:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02E42146F;
+        Mon, 24 Jun 2019 10:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370752;
-        bh=J3lk6Rg+8MdhODyh01OhUMDKDNclpoK0P14pEu19wDc=;
+        s=default; t=1561370755;
+        bh=SREwUm8J1kTp+qb9RpDj1Ff57Rw1vxR+PlbiFITmhdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ej6siDs5ms4gJ0R5tFjBZpR9fTcz7JP8V3LsqQTnjLcwcZ4uy7r5j1VGh6fsJ55Sr
-         ikFEJbxep1L5hbyhbMrn0SGVAXKlScfBLAusi5t6uzdECFwUijZzpYE51/RiRK/7IX
-         20OF1zoT+QPBQ2/4ZXLQDICT5jxobQG4HTE3pEIs=
+        b=Wb0k19n8HkUdayeccepnIUOLQUxW8riA2y0MWV6rw4dKkTZwd84UF7AjEQvTvHriN
+         mDpvIUhKowEnZc3oCEBR6xY6udl9KaqxbvqdZJhg672OUEZT5btqylvRJ8xu6NdMlf
+         nKDkgr6T4/WeLox6glFhqJbTLo7ei2QY2s3FnO5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Anisse Astier <aastier@freebox.fr>,
+        stable@vger.kernel.org, Anisse Astier <aastier@freebox.fr>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 77/90] arm64/sve: <uapi/asm/ptrace.h> should not depend on <uapi/linux/prctl.h>
-Date:   Mon, 24 Jun 2019 17:57:07 +0800
-Message-Id: <20190624092319.002811331@linuxfoundation.org>
+Subject: [PATCH 4.19 78/90] arm64: ssbd: explicitly depend on <linux/prctl.h>
+Date:   Mon, 24 Jun 2019 17:57:08 +0800
+Message-Id: <20190624092319.067481327@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,58 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anisse Astier <aastier@freebox.fr>
 
-commit 35341ca0614ab13e1ef34ad4f29a39e15ef31fa8 upstream.
+commit adeaa21a4b6954e878f3f7d1c5659ed9c1fe567a upstream.
 
-Pulling linux/prctl.h into asm/ptrace.h in the arm64 UAPI headers causes
-userspace build issues for any program (e.g. strace and qemu) that
-includes both <sys/prctl.h> and <linux/ptrace.h> when using musl libc:
+Fix ssbd.c which depends implicitly on asm/ptrace.h including
+linux/prctl.h (through for example linux/compat.h, then linux/time.h,
+linux/seqlock.h, linux/spinlock.h and linux/irqflags.h), and uses
+PR_SPEC* defines.
 
-  | error: redefinition of 'struct prctl_mm_map'
-  |  struct prctl_mm_map {
+This is an issue since we'll soon be removing the include from
+asm/ptrace.h.
 
-See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
-for a public example of people working around this issue.
-
-Although it's a bit grotty, fix this breakage by duplicating the prctl
-constant definitions. Since these are part of the kernel ABI, they
-cannot be changed in future and so it's not the end of the world to have
-them open-coded.
-
-Fixes: 43d4da2c45b2 ("arm64/sve: ptrace and ELF coredump support")
+Fixes: 9cdc0108baa8 ("arm64: ssbd: Add prctl interface for per-thread mitigation")
 Cc: stable@vger.kernel.org
-Acked-by: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: Anisse Astier <aastier@freebox.fr>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/uapi/asm/ptrace.h |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/arm64/kernel/ssbd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -64,8 +64,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--#include <linux/prctl.h>
--
- /*
-  * User structures for general purpose, floating point and debug registers.
+--- a/arch/arm64/kernel/ssbd.c
++++ b/arch/arm64/kernel/ssbd.c
+@@ -4,6 +4,7 @@
   */
-@@ -112,10 +110,10 @@ struct user_sve_header {
  
- /*
-  * Common SVE_PT_* flags:
-- * These must be kept in sync with prctl interface in <linux/ptrace.h>
-+ * These must be kept in sync with prctl interface in <linux/prctl.h>
-  */
--#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
--#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
-+#define SVE_PT_VL_INHERIT		((1 << 17) /* PR_SVE_VL_INHERIT */ >> 16)
-+#define SVE_PT_VL_ONEXEC		((1 << 18) /* PR_SVE_SET_VL_ONEXEC */ >> 16)
+ #include <linux/errno.h>
++#include <linux/prctl.h>
+ #include <linux/sched.h>
+ #include <linux/thread_info.h>
  
- 
- /*
 
 
