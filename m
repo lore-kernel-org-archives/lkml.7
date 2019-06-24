@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78519C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7015205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC37208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370309;
-	bh=iYtyVYN0qQk+nnWvLFrLp0Tx0AtoUE2TyWiogBWVQ54=;
+	s=default; t=1561370311;
+	bh=nE/1FQTySd98J+zFhzWiW+xhzSYcp2gbPb9bmQWUo2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsJmcAg0cicIU/q3RRzYpMIH8eNeqsQHuZRN6oFX9IWXTbSQ9UcniICyPv7aoj1E8
-	 JWqLF2j2483dCevxZxpvbyQ4LPqlrhZHbMoMT2UAOAYDhO0dFAEuCvL+1/2GLaWccT
-	 W5OBurHDI4Ey/Wy9Wwehq5IerBZDG4gdgBQf32Es=
+	b=ho56pg5o+zg1BSjysOagmeaw5TfjlulnTXDhWqQOq6obf3rhhJiN5ynrLhYq/YEXw
+	 yhAwGvEL0sOr7RwfW15g6m/+ErU+qBCcN/t1U66EzGScewdAOtKh8PzlMhNhxGvShj
+	 tu379r+OqscYEunLXOgZREMz3eafO1/ALh1g0RoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfFXJ61 (ORCPT
+        id S1729003AbfFXJ6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbfFXJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:25 -0400
+        id S1728988AbfFXJ61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:27 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B66D5208CA;
-        Mon, 24 Jun 2019 09:58:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E12F2133F;
+        Mon, 24 Jun 2019 09:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370304;
-        bh=iYtyVYN0qQk+nnWvLFrLp0Tx0AtoUE2TyWiogBWVQ54=;
+        s=default; t=1561370307;
+        bh=nE/1FQTySd98J+zFhzWiW+xhzSYcp2gbPb9bmQWUo2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rozWlK9yP0WnArYbrT5oMVf2mNZBdadz4wtqJJMdKNZ47OfSzaQqLQEdCsRzu31yW
-         dlyHjnZ3BcjQimL4cYF5HPbo7SMsDS3jWILpqfd5t27h+ZW6kTMFfCTm4dgz0yuor7
-         46vwTYd3rLe3cVss+wsrM5z0bx+bkI5WFdtCGYbQ=
+        b=ba02AmYmCY6OQOrYFkomkecXNIK3EOqh7rRO6D0U1NAu5Kfw+bP9rZe1GCpwFmpgy
+         MVzwS32QjtJ0nqbuCCEpUCM/4+xrwwbT0oHDQLJR7zMv8Sg4UamcVPpg98TTtpZ+YY
+         fiedLsZsF+uosA6N09VI66/e3y46ZBytXtBT2M88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/51] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
-Date:   Mon, 24 Jun 2019 17:56:41 +0800
-Message-Id: <20190624092309.005776678@linuxfoundation.org>
+Subject: [PATCH 4.14 24/51] net: hns: Fix loopback test failed at copper ports
+Date:   Mon, 24 Jun 2019 17:56:42 +0800
+Message-Id: <20190624092309.199330544@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -62,46 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
+[ Upstream commit 2e1f164861e500f4e068a9d909bbd3fcc7841483 ]
 
-When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
-message is logged:
+When doing a loopback test at copper ports, the serdes loopback
+and the phy loopback will fail, because of the adjust link had
+not finished, and phy not ready.
 
-failed to kill vid 0081/0 for device eth_cu_1000_4
+Adds sleep between adjust link and test process to fix it.
 
-This is caused by call from __vlan_vid_del() with vin set to zero, over
-call chain this results into _mv88e6xxx_port_vlan_del() called with
-vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
-
-On symmetric path moving port up, call goes through
-mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
-that returns -EOPNOTSUPP for zero vid.
-
-This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
-zero vid, then this error code is explicitly cleared in
-dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
-
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 172b13012e10..086603de1859 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1075,7 +1075,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
- 	int err;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+index 14df03f60e05..523d52fbaafe 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+@@ -338,6 +338,7 @@ static int __lb_setup(struct net_device *ndev,
+ static int __lb_up(struct net_device *ndev,
+ 		   enum hnae_loop loop_mode)
+ {
++#define NIC_LB_TEST_WAIT_PHY_LINK_TIME 300
+ 	struct hns_nic_priv *priv = netdev_priv(ndev);
+ 	struct hnae_handle *h = priv->ae_handle;
+ 	int speed, duplex;
+@@ -364,6 +365,9 @@ static int __lb_up(struct net_device *ndev,
  
- 	if (!vid)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
+ 	h->dev->ops->adjust_link(h, speed, duplex);
  
- 	entry->vid = vid - 1;
- 	entry->valid = false;
++	/* wait adjust link done and phy ready */
++	msleep(NIC_LB_TEST_WAIT_PHY_LINK_TIME);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
