@@ -2,357 +2,142 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E4FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8286FC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C34220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDIFKBMT"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="N+TLmvmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfFXC3K (ORCPT
+        id S1727179AbfFXCa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:29:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35649 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfFXC3J (ORCPT
+        Sun, 23 Jun 2019 22:30:58 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63420 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727095AbfFXCa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:29:09 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a25so8815803lfg.2;
-        Sun, 23 Jun 2019 19:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=txJ6ltK+o4XZvOBOK0sR3EXPwRsf613AS+zPJUilWDA=;
-        b=sDIFKBMTdaF7xqnl1DxiVo/LqdPrTPqv83cBA6NwL+uCZhYFISW58sod03fNLWZYzU
-         a1TgSzkptXkW/CLGGPyTFBcyVVo8QOL3VYlYWPaQgvCa4+LFPQcJ1yE2bLSJSw0ZQnpS
-         TXRU9d0WEhr37RTS/IvCtsFyoHBD+XChcZrvAyAjHxytyP8uEk9J8V6HNTiLYSaVwVL3
-         TUyudqMyXnWsJ3voLn9DVc86vtFV0mNdi/rlNa0I4MfIcK1Qz9ZlccYnVkXlZ9MeAb7Z
-         0PlB71lb2iLFvjZFdUUbQ33DfxWP8E7BKkAWOL+wn/WjkjtNbyxewWrNIa+PcKhuxX0V
-         ElJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=txJ6ltK+o4XZvOBOK0sR3EXPwRsf613AS+zPJUilWDA=;
-        b=VZHXjjT5oCeL4f9dvHZJWk6QkzltV2FXmcQmagjiY04k76XKTEHGvQsNaUvb+6EeHC
-         hGwlPXaNpq52TVBSzst9STFQ0PZurAVHwNGHgoTmB2oekb4aUntgZ5OmWhU4fOEsBIx0
-         fkyT2W0c116Bug1r+6M2QWWAfr4GbU4o0zN/m4J2q8ScsjEiyWZGipIWvhJmpBTDmDWt
-         w1Sy0n/vagi6tG4xi+5xh9x52L+cqE3vCCVMz51ReLYZnUMEs6OpJF5QY2SOUeT+xlU+
-         Amf/upcnbaTjYxq2AQHteG2/dZqWz9fCdvJTvVjV5/cRt76hJdS9LKKocfuPyx1ruZ/o
-         v93w==
-X-Gm-Message-State: APjAAAWKb22mxMMqWpDj+e7x4/mqOPX7NAZcYV/FPorInF4+w87M37U2
-        CGe/nA9RLMgVGmYYbUwJJhh+PWUA
-X-Google-Smtp-Source: APXvYqzM8sFZPRCczlI8EWF6sYPckzoJWWjSGM95mH68T+OCAO+465FWGeR2XEWxjCP0cGE+MH6dGQ==
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr50567743lfn.23.1561336322695;
-        Sun, 23 Jun 2019 17:32:02 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id y5sm1495146ljj.5.2019.06.23.17.32.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 17:32:02 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 06/10] dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory Controller
-Date:   Mon, 24 Jun 2019 03:31:28 +0300
-Message-Id: <20190624003132.29473-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 22:30:57 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O2TsmI019090
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 19:30:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=bpILMdP2uBYpNaxU5hQBPe9bYg5iEeP0N6JPrK/Suf4=;
+ b=N+TLmvmbpp7d3MgSj0rYFpGOd5VNGfg+7XMXrub4SvwIdvKToaOzdxqPcKY9L5ccZIWj
+ vqmg/ubcQaz5hPx8Omte5oBMVAxlJJHlBtn/mP0dLGXOgVZuAkZekKCDfdW/gEjuzKPQ
+ YipN0rsHwjOIoXFKz5h2McnsFuj2nUW+idM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t9hubvb1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 19:30:56 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 23 Jun 2019 19:30:55 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 7C8D6139E9C20; Sun, 23 Jun 2019 19:30:53 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Tejun Heo <tj@kernel.org>, <bpf@vger.kernel.org>
+CC:     <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH bpf-next] bpf: fix cgroup bpf release synchronization
+Date:   Sun, 23 Jun 2019 19:30:51 -0700
+Message-ID: <20190624023051.4168487-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=876 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240019
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
-The binding is based on the Tegra124 EMC binding since hardware is
-similar, although there are couple significant differences.
+Since commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+from cgroup itself"), cgroup_bpf release occurs asynchronously
+(from a worker context), and before the release of the cgroup itself.
 
-Note that the memory timing description is given in a platform-specific
-form because there is no detailed information on how to convert a
-typical-common DDR timing into the register values. The timing format is
-borrowed from downstream kernel, hence there is no hurdle in regards to
-upstreaming of memory timings for the boards.
+This introduced a previously non-existing race between the release
+and update paths. E.g. if a leaf's cgroup_bpf is released and a new
+bpf program is attached to the one of ancestor cgroups at the same
+time. The race may result in double-free and other memory corruptions.
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+To fix the problem, let's protect the body of cgroup_bpf_release()
+with cgroup_mutex, as it was effectively previously, when all this
+code was called from the cgroup release path with cgroup mutex held.
+
+Also make sure, that we don't leave already freed pointers to the
+effective prog arrays. Otherwise, they can be released again by
+the update path. It wasn't necessary before, because previously
+the update path couldn't see such a cgroup, as cgroup_bpf and cgroup
+itself were released together.
+
+Big thanks for Tejun Heo for discovering and debugging of this
+problem!
+
+Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
+cgroup itself")
+Reported-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- .../memory-controllers/nvidia,tegra30-emc.txt | 249 ++++++++++++++++++
- 1 file changed, 249 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
+ kernel/bpf/cgroup.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
-new file mode 100644
-index 000000000000..c2bc1dbcaa07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
-@@ -0,0 +1,249 @@
-+NVIDIA Tegra30 SoC EMC (external memory controller)
-+====================================================
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 1b65ab0df457..3128770c0f47 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -19,6 +19,8 @@
+ #include <linux/bpf-cgroup.h>
+ #include <net/sock.h>
+ 
++#include "../cgroup/cgroup-internal.h"
 +
-+Required properties :
-+- compatible : Should be "nvidia,tegra30-emc".
-+- reg : physical base address and length of the controller's registers.
-+- #address-cells : Should be 1
-+- #size-cells : Should be 0
-+- interrupts : Should contain EMC General interrupt.
-+- clocks : Should contain EMC clock.
-+- nvidia,memory-controller : phandle of the MC driver.
+ DEFINE_STATIC_KEY_FALSE(cgroup_bpf_enabled_key);
+ EXPORT_SYMBOL(cgroup_bpf_enabled_key);
+ 
+@@ -41,6 +43,8 @@ static void cgroup_bpf_release(struct work_struct *work)
+ 	struct bpf_prog_array *old_array;
+ 	unsigned int type;
+ 
++	mutex_lock(&cgroup_mutex);
 +
-+The node should contain a "emc-timings" subnode for each supported RAM type
-+(see field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address
-+being its RAM_CODE.
+ 	for (type = 0; type < ARRAY_SIZE(cgrp->bpf.progs); type++) {
+ 		struct list_head *progs = &cgrp->bpf.progs[type];
+ 		struct bpf_prog_list *pl, *tmp;
+@@ -57,10 +61,13 @@ static void cgroup_bpf_release(struct work_struct *work)
+ 		}
+ 		old_array = rcu_dereference_protected(
+ 				cgrp->bpf.effective[type],
+-				percpu_ref_is_dying(&cgrp->bpf.refcnt));
++				lockdep_is_held(&cgroup_mutex));
++		RCU_INIT_POINTER(cgrp->bpf.effective[type], NULL);
+ 		bpf_prog_array_free(old_array);
+ 	}
+ 
++	mutex_unlock(&cgroup_mutex);
 +
-+Required properties for "emc-timings" nodes :
-+- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is
-+used for.
-+
-+Each "emc-timings" node should contain a "timing" subnode for every supported
-+EMC clock rate. The "timing" subnodes should have the clock rate in Hz as
-+their unit address.
-+
-+Required properties for "timing" nodes :
-+- clock-frequency : Should contain the memory clock rate in Hz.
-+- The following properties contain EMC timing characterization values
-+(specified in the board documentation) :
-+  - nvidia,emc-auto-cal-interval : EMC_AUTO_CAL_INTERVAL
-+  - nvidia,emc-mode-1 : Mode Register 1
-+  - nvidia,emc-mode-2 : Mode Register 2
-+  - nvidia,emc-mode-reset : Mode Register 0
-+  - nvidia,emc-zcal-cnt-long : EMC_ZCAL_WAIT_CNT after clock change
-+  - nvidia,emc-cfg-dyn-self-ref : dynamic self-refresh enabled
-+  - nvidia,emc-cfg-periodic-qrst : FBIO "read" FIFO periodic resetting enabled
-+- nvidia,emc-configuration : EMC timing characterization data. These are the
-+registers (see section "18.13.2 EMC Registers" in the TRM) whose values need to
-+be specified, according to the board documentation:
-+
-+	EMC_RC
-+	EMC_RFC
-+	EMC_RAS
-+	EMC_RP
-+	EMC_R2W
-+	EMC_W2R
-+	EMC_R2P
-+	EMC_W2P
-+	EMC_RD_RCD
-+	EMC_WR_RCD
-+	EMC_RRD
-+	EMC_REXT
-+	EMC_WEXT
-+	EMC_WDV
-+	EMC_QUSE
-+	EMC_QRST
-+	EMC_QSAFE
-+	EMC_RDV
-+	EMC_REFRESH
-+	EMC_BURST_REFRESH_NUM
-+	EMC_PRE_REFRESH_REQ_CNT
-+	EMC_PDEX2WR
-+	EMC_PDEX2RD
-+	EMC_PCHG2PDEN
-+	EMC_ACT2PDEN
-+	EMC_AR2PDEN
-+	EMC_RW2PDEN
-+	EMC_TXSR
-+	EMC_TXSRDLL
-+	EMC_TCKE
-+	EMC_TFAW
-+	EMC_TRPAB
-+	EMC_TCLKSTABLE
-+	EMC_TCLKSTOP
-+	EMC_TREFBW
-+	EMC_QUSE_EXTRA
-+	EMC_FBIO_CFG6
-+	EMC_ODT_WRITE
-+	EMC_ODT_READ
-+	EMC_FBIO_CFG5
-+	EMC_CFG_DIG_DLL
-+	EMC_CFG_DIG_DLL_PERIOD
-+	EMC_DLL_XFORM_DQS0
-+	EMC_DLL_XFORM_DQS1
-+	EMC_DLL_XFORM_DQS2
-+	EMC_DLL_XFORM_DQS3
-+	EMC_DLL_XFORM_DQS4
-+	EMC_DLL_XFORM_DQS5
-+	EMC_DLL_XFORM_DQS6
-+	EMC_DLL_XFORM_DQS7
-+	EMC_DLL_XFORM_QUSE0
-+	EMC_DLL_XFORM_QUSE1
-+	EMC_DLL_XFORM_QUSE2
-+	EMC_DLL_XFORM_QUSE3
-+	EMC_DLL_XFORM_QUSE4
-+	EMC_DLL_XFORM_QUSE5
-+	EMC_DLL_XFORM_QUSE6
-+	EMC_DLL_XFORM_QUSE7
-+	EMC_DLI_TRIM_TXDQS0
-+	EMC_DLI_TRIM_TXDQS1
-+	EMC_DLI_TRIM_TXDQS2
-+	EMC_DLI_TRIM_TXDQS3
-+	EMC_DLI_TRIM_TXDQS4
-+	EMC_DLI_TRIM_TXDQS5
-+	EMC_DLI_TRIM_TXDQS6
-+	EMC_DLI_TRIM_TXDQS7
-+	EMC_DLL_XFORM_DQ0
-+	EMC_DLL_XFORM_DQ1
-+	EMC_DLL_XFORM_DQ2
-+	EMC_DLL_XFORM_DQ3
-+	EMC_XM2CMDPADCTRL
-+	EMC_XM2DQSPADCTRL2
-+	EMC_XM2DQPADCTRL2
-+	EMC_XM2CLKPADCTRL
-+	EMC_XM2COMPPADCTRL
-+	EMC_XM2VTTGENPADCTRL
-+	EMC_XM2VTTGENPADCTRL2
-+	EMC_XM2QUSEPADCTRL
-+	EMC_XM2DQSPADCTRL3
-+	EMC_CTT_TERM_CTRL
-+	EMC_ZCAL_INTERVAL
-+	EMC_ZCAL_WAIT_CNT
-+	EMC_MRS_WAIT_CNT
-+	EMC_AUTO_CAL_CONFIG
-+	EMC_CTT
-+	EMC_CTT_DURATION
-+	EMC_DYN_SELF_REF_CONTROL
-+	EMC_FBIO_SPARE
-+	EMC_CFG_RSV
-+
-+Example:
-+
-+	external-memory-controller {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		nvidia,memory-controller = <&mc>;
-+
-+		emc-timings-1 {
-+			nvidia,ram-code = <1>;
-+
-+			timing-667000000 {
-+				clock-frequency = <667000000>;
-+
-+				nvidia,emc-auto-cal-interval = <0x001fffff>;
-+				nvidia,emc-mode-1 = <0x80100002>;
-+				nvidia,emc-mode-2 = <0x80200018>;
-+				nvidia,emc-mode-reset = <0x80000b71>;
-+				nvidia,emc-zcal-cnt-long = <0x00000040>;
-+				nvidia,emc-cfg-dyn-self-ref = <0x00000000>;
-+				nvidia,emc-cfg-periodic-qrst = <0x00000001>;
-+
-+				nvidia,emc-configuration = <
-+					0x00000020 /* EMC_RC */
-+					0x0000006a /* EMC_RFC */
-+					0x00000017 /* EMC_RAS */
-+					0x00000007 /* EMC_RP */
-+					0x00000005 /* EMC_R2W */
-+					0x0000000c /* EMC_W2R */
-+					0x00000003 /* EMC_R2P */
-+					0x00000011 /* EMC_W2P */
-+					0x00000007 /* EMC_RD_RCD */
-+					0x00000007 /* EMC_WR_RCD */
-+					0x00000002 /* EMC_RRD */
-+					0x00000001 /* EMC_REXT */
-+					0x00000000 /* EMC_WEXT */
-+					0x00000007 /* EMC_WDV */
-+					0x0000000a /* EMC_QUSE */
-+					0x00000009 /* EMC_QRST */
-+					0x0000000b /* EMC_QSAFE */
-+					0x00000011 /* EMC_RDV */
-+					0x00001412 /* EMC_REFRESH */
-+					0x00000000 /* EMC_BURST_REFRESH_NUM */
-+					0x00000504 /* EMC_PRE_REFRESH_REQ_CNT */
-+					0x00000002 /* EMC_PDEX2WR */
-+					0x0000000e /* EMC_PDEX2RD */
-+					0x00000001 /* EMC_PCHG2PDEN */
-+					0x00000000 /* EMC_ACT2PDEN */
-+					0x0000000c /* EMC_AR2PDEN */
-+					0x00000016 /* EMC_RW2PDEN */
-+					0x00000072 /* EMC_TXSR */
-+					0x00000200 /* EMC_TXSRDLL */
-+					0x00000005 /* EMC_TCKE */
-+					0x00000015 /* EMC_TFAW */
-+					0x00000000 /* EMC_TRPAB */
-+					0x00000006 /* EMC_TCLKSTABLE */
-+					0x00000007 /* EMC_TCLKSTOP */
-+					0x00001453 /* EMC_TREFBW */
-+					0x0000000b /* EMC_QUSE_EXTRA */
-+					0x00000006 /* EMC_FBIO_CFG6 */
-+					0x00000000 /* EMC_ODT_WRITE */
-+					0x00000000 /* EMC_ODT_READ */
-+					0x00005088 /* EMC_FBIO_CFG5 */
-+					0xf00b0191 /* EMC_CFG_DIG_DLL */
-+					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
-+					0x00000008 /* EMC_DLL_XFORM_DQS0 */
-+					0x00000008 /* EMC_DLL_XFORM_DQS1 */
-+					0x00000008 /* EMC_DLL_XFORM_DQS2 */
-+					0x00000008 /* EMC_DLL_XFORM_DQS3 */
-+					0x0000000a /* EMC_DLL_XFORM_DQS4 */
-+					0x0000000a /* EMC_DLL_XFORM_DQS5 */
-+					0x0000000a /* EMC_DLL_XFORM_DQS6 */
-+					0x0000000a /* EMC_DLL_XFORM_DQS7 */
-+					0x00018000 /* EMC_DLL_XFORM_QUSE0 */
-+					0x00018000 /* EMC_DLL_XFORM_QUSE1 */
-+					0x00018000 /* EMC_DLL_XFORM_QUSE2 */
-+					0x00018000 /* EMC_DLL_XFORM_QUSE3 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
-+					0x0000000a /* EMC_DLL_XFORM_DQ0 */
-+					0x0000000a /* EMC_DLL_XFORM_DQ1 */
-+					0x0000000a /* EMC_DLL_XFORM_DQ2 */
-+					0x0000000a /* EMC_DLL_XFORM_DQ3 */
-+					0x000002a0 /* EMC_XM2CMDPADCTRL */
-+					0x0800013d /* EMC_XM2DQSPADCTRL2 */
-+					0x22220000 /* EMC_XM2DQPADCTRL2 */
-+					0x77fff884 /* EMC_XM2CLKPADCTRL */
-+					0x01f1f501 /* EMC_XM2COMPPADCTRL */
-+					0x07077404 /* EMC_XM2VTTGENPADCTRL */
-+					0x54000000 /* EMC_XM2VTTGENPADCTRL2 */
-+					0x080001e8 /* EMC_XM2QUSEPADCTRL */
-+					0x0c000021 /* EMC_XM2DQSPADCTRL3 */
-+					0x00000802 /* EMC_CTT_TERM_CTRL */
-+					0x00020000 /* EMC_ZCAL_INTERVAL */
-+					0x00000100 /* EMC_ZCAL_WAIT_CNT */
-+					0x0155000c /* EMC_MRS_WAIT_CNT */
-+					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
-+					0x00000000 /* EMC_CTT */
-+					0x00000000 /* EMC_CTT_DURATION */
-+					0x800028a5 /* EMC_DYN_SELF_REF_CONTROL */
-+					0xe8000000 /* EMC_FBIO_SPARE */
-+					0xff00ff49 /* EMC_CFG_RSV */
-+				>;
-+			};
-+		};
-+	};
+ 	percpu_ref_exit(&cgrp->bpf.refcnt);
+ 	cgroup_put(cgrp);
+ }
 -- 
-2.22.0
+2.21.0
 
