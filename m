@@ -2,53 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006DCC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AF0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8052146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8426205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370365;
-	bh=lQIVZkQGmXcK1EaMH+3xunD5I8bRDu8RrN8phKF5kMY=;
+	s=default; t=1561370367;
+	bh=o5lqBtLUiFv/iq/u1s40v6Xuha8XP3zaolDZQOU/YPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odstEbdh+bwjS9q98s2d9nVZgxxyE1iy8UVmxFkCv88h+GBsrNmGymi8HZxyj/jO8
-	 pXilDV1s5NrAXO8q5Zlg10CPYzOV+pdFBI61yjJHN9f9x+lyWshfCOG69r8I/UZMBq
-	 Iglz0XA+Sh9P0Z0tVmpJsZ5CrqyE3XtPdIDGa4LM=
+	b=ggAKUwX8YSV0cpC7Os8Rk5isKbSrsNDdX9t5KApLVDjcKtoecTCsaHnQpwuOjtnpf
+	 GCkBlg84asZSjpQbVu/9aRCScuQkf0tM8yv0UgnbIs/3x06cpMnmMb7bleRNkMklJZ
+	 NwuZON5bq6olDXGrueRNg1PeoND5FGoCjXWhF13Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfFXJ7Y (ORCPT
+        id S1729205AbfFXJ71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58352 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728673AbfFXJ7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:19 -0400
+        id S1728671AbfFXJ7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:25 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB27F21655;
-        Mon, 24 Jun 2019 09:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48888205ED;
+        Mon, 24 Jun 2019 09:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370358;
-        bh=lQIVZkQGmXcK1EaMH+3xunD5I8bRDu8RrN8phKF5kMY=;
+        s=default; t=1561370363;
+        bh=o5lqBtLUiFv/iq/u1s40v6Xuha8XP3zaolDZQOU/YPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGec/v7ZQBWWeZW/RzMVGa+dZu6Ui4oygYNC0KjciBD8ag/FOSZ/AZubXskvpOFyc
-         Da7dbJVQJIxqY0lf8p9Aq5mM4/SLbcUCN8yQgxmBHAV+kulCzgTEnjYPZZ3JVmK2TD
-         A0/CaL+EAzJoTwLeqpNHYdAWvEtyyVQVLo+d5JHk=
+        b=lfwnCAcOGQXI6/wcM+ZGmxaNx55mdLLgeUfieoUYPGFU4VE1hPqRvJvrSN2DR2X53
+         zQ35V3Wi5/sFjEQA6HysTEYb3PXkQ26tgZJtV+9V/OAJ6Zct0uZxRKNLvd8yPjksGl
+         oV2x7GUEecdNmxuapVrcmjF1Uxc6i3isjOIZIl3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Eduardo Valentin <eduval@amazon.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/51] hwmon: (core) add thermal sensors only if dev->of_node is present
-Date:   Mon, 24 Jun 2019 17:56:54 +0800
-Message-Id: <20190624092310.342420987@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 46/51] Bluetooth: Fix regression with minimum encryption key size alignment
+Date:   Mon, 24 Jun 2019 17:57:04 +0800
+Message-Id: <20190624092311.200143589@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -61,62 +59,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c41dd48e21fae3e55b3670ccf2eb562fc1f6a67d ]
+From: Marcel Holtmann <marcel@holtmann.org>
 
-Drivers may register to hwmon and request for also registering
-with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
-some of these driver, e.g. marvell phy, may be probed from
-Device Tree or being dynamically allocated, and in the later
-case, it will not have a dev->of_node entry.
+commit 693cd8ce3f882524a5d06f7800dd8492411877b3 upstream.
 
-Registering with hwmon without the dev->of_node may result in
-different outcomes depending on the device tree, which may
-be a bit misleading. If the device tree blob has no 'thermal-zones'
-node, the *hwmon_device_register*() family functions are going
-to gracefully succeed, because of-thermal,
-*thermal_zone_of_sensor_register() return -ENODEV in this case,
-and the hwmon error path handles this error code as success to
-cover for the case where CONFIG_THERMAL_OF is not set.
-However, if the device tree blob has the 'thermal-zones'
-entry, the *hwmon_device_register*() will always fail on callers
-with no dev->of_node, propagating -EINVAL.
+When trying to align the minimum encryption key size requirement for
+Bluetooth connections, it turns out doing this in a central location in
+the HCI connection handling code is not possible.
 
-If dev->of_node is not present, calling of-thermal does not
-make sense. For this reason, this patch checks first if the
-device has a of_node before going over the process of registering
-with the thermal subsystem of-thermal interface. And in this case,
-when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
-and no dev->of_node will still register with hwmon, but not with
-the thermal subsystem. If all the hwmon part bits are in place,
-the registration will succeed.
+Original Bluetooth version up to 2.0 used a security model where the
+L2CAP service would enforce authentication and encryption.  Starting
+with Bluetooth 2.1 and Secure Simple Pairing that model has changed into
+that the connection initiator is responsible for providing an encrypted
+ACL link before any L2CAP communication can happen.
 
-Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Now connecting Bluetooth 2.1 or later devices with Bluetooth 2.0 and
+before devices are causing a regression.  The encryption key size check
+needs to be moved out of the HCI connection handling into the L2CAP
+channel setup.
+
+To achieve this, the current check inside hci_conn_security() has been
+moved into l2cap_check_enc_key_size() helper function and then called
+from four decisions point inside L2CAP to cover all combinations of
+Secure Simple Pairing enabled devices and device using legacy pairing
+and legacy service security model.
+
+Fixes: d5bb334a8e17 ("Bluetooth: Align minimum encryption key size for LE and BR/EDR connections")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203643
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hwmon/hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_conn.c   |   18 +++++++++---------
+ net/bluetooth/l2cap_core.c |   33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 37 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-index c9790e2c3440..7b53065e9882 100644
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -608,7 +608,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
- 	if (err)
- 		goto free_hwmon;
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1165,14 +1165,6 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
  
--	if (dev && chip && chip->ops->read &&
-+	if (dev && dev->of_node && chip && chip->ops->read &&
- 	    chip->info[0]->type == hwmon_chip &&
- 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
- 		const struct hwmon_channel_info **info = chip->info;
--- 
-2.20.1
-
+-	/* The minimum encryption key size needs to be enforced by the
+-	 * host stack before establishing any L2CAP connections. The
+-	 * specification in theory allows a minimum of 1, but to align
+-	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+-	 */
+-	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
+-		return 0;
+-
+ 	return 1;
+ }
+ 
+@@ -1289,8 +1281,16 @@ auth:
+ 		return 0;
+ 
+ encrypt:
+-	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags))
++	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags)) {
++		/* Ensure that the encryption key size has been read,
++		 * otherwise stall the upper layer responses.
++		 */
++		if (!conn->enc_key_size)
++			return 0;
++
++		/* Nothing else needed, all requirements are met */
+ 		return 1;
++	}
+ 
+ 	hci_conn_encrypt(conn);
+ 	return 0;
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1340,6 +1340,21 @@ static void l2cap_request_info(struct l2
+ 		       sizeof(req), &req);
+ }
+ 
++static bool l2cap_check_enc_key_size(struct hci_conn *hcon)
++{
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 *
++	 * This check might also be called for unencrypted connections
++	 * that have no key size requirements. Ensure that the link is
++	 * actually encrypted before enforcing a key size.
++	 */
++	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
++		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
++}
++
+ static void l2cap_do_start(struct l2cap_chan *chan)
+ {
+ 	struct l2cap_conn *conn = chan->conn;
+@@ -1357,9 +1372,14 @@ static void l2cap_do_start(struct l2cap_
+ 	if (!(conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_DONE))
+ 		return;
+ 
+-	if (l2cap_chan_check_security(chan, true) &&
+-	    __l2cap_no_conn_pending(chan))
++	if (!l2cap_chan_check_security(chan, true) ||
++	    !__l2cap_no_conn_pending(chan))
++		return;
++
++	if (l2cap_check_enc_key_size(conn->hcon))
+ 		l2cap_start_connection(chan);
++	else
++		__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
+ }
+ 
+ static inline int l2cap_mode_supported(__u8 mode, __u32 feat_mask)
+@@ -1438,7 +1458,10 @@ static void l2cap_conn_start(struct l2ca
+ 				continue;
+ 			}
+ 
+-			l2cap_start_connection(chan);
++			if (l2cap_check_enc_key_size(conn->hcon))
++				l2cap_start_connection(chan);
++			else
++				l2cap_chan_close(chan, ECONNREFUSED);
+ 
+ 		} else if (chan->state == BT_CONNECT2) {
+ 			struct l2cap_conn_rsp rsp;
+@@ -7455,7 +7478,7 @@ static void l2cap_security_cfm(struct hc
+ 		}
+ 
+ 		if (chan->state == BT_CONNECT) {
+-			if (!status)
++			if (!status && l2cap_check_enc_key_size(hcon))
+ 				l2cap_start_connection(chan);
+ 			else
+ 				__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
+@@ -7464,7 +7487,7 @@ static void l2cap_security_cfm(struct hc
+ 			struct l2cap_conn_rsp rsp;
+ 			__u16 res, stat;
+ 
+-			if (!status) {
++			if (!status && l2cap_check_enc_key_size(hcon)) {
+ 				if (test_bit(FLAG_DEFER_SETUP, &chan->flags)) {
+ 					res = L2CAP_CR_PEND;
+ 					stat = L2CAP_CS_AUTHOR_PEND;
 
 
