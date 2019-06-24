@@ -2,81 +2,103 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88136C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC6AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7B42133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CDC2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbfFXMjw (ORCPT
+        id S1730393AbfFXMj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:39:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48242 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730243AbfFXMjt (ORCPT
+        Mon, 24 Jun 2019 08:39:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28592 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730345AbfFXMjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:39:49 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 549DF260ED4;
-        Mon, 24 Jun 2019 13:39:46 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 5/5] media: vimc.rst: add vimc-streamer source documentation
-Date:   Mon, 24 Jun 2019 09:37:29 -0300
-Message-Id: <20190624123729.5847-5-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624123729.5847-1-andrealmeid@collabora.com>
-References: <20190624123729.5847-1-andrealmeid@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 24 Jun 2019 08:39:47 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OCRUtx112829
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:39:46 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tax7dhkau-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:39:46 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 24 Jun 2019 13:39:44 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Jun 2019 13:39:40 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OCdd1e15860188
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 12:39:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B8D242049;
+        Mon, 24 Jun 2019 12:39:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 656E64203F;
+        Mon, 24 Jun 2019 12:39:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.5])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Jun 2019 12:39:38 +0000 (GMT)
+Subject: Re: [PATCH V10 1/3] IMA: Define a new hook to measure the kexec
+ boot command line arguments
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com
+Date:   Mon, 24 Jun 2019 08:39:27 -0400
+In-Reply-To: <20190624062331.388-2-prsriva02@gmail.com>
+References: <20190624062331.388-1-prsriva02@gmail.com>
+         <20190624062331.388-2-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062412-0016-0000-0000-0000028BE04C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062412-0017-0000-0000-000032E94C63
+Message-Id: <1561379967.4340.3.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since vimc-streamer.{c, h} are fully documented and conforming with the
-kernel-doc syntax, add those files to vimc.rst
+Hi Prakhar,
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
-Suggested-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
+On Sun, 2019-06-23 at 23:23 -0700, Prakhar Srivastava wrote:
+> Currently during soft reboot(kexec_file_load) boot command line
+> arguments are not measured. Define hooks needed to measure kexec
+> command line arguments during soft reboot(kexec_file_load).
+> 
+> - A new ima hook ima_kexec_cmdline is defined to be called by the
+> kexec code.
+> - A new function process_buffer_measurement is defined to measure
+> the buffer hash into the IMA measurement list.
+> - A new func policy KEXEC_CMDLINE is defined to control the
+>  measurement.[Suggested by Mimi]
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
 
-Changes in v2: none
+Thanks!  This patch set is now queued in the next-queued-testing
+branch for any last minute comments or Reviews/Acks, before being
+staged in the next-integrity branch.
 
- Documentation/media/v4l-drivers/vimc.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-index bece85867424..406417680db5 100644
---- a/Documentation/media/v4l-drivers/vimc.rst
-+++ b/Documentation/media/v4l-drivers/vimc.rst
-@@ -96,3 +96,14 @@ those arguments to each subdevice, not to the vimc module. For example::
-         Window size to calculate the mean. Note: the window size needs to be an
-         odd number, as the main pixel stays in the center of the window,
-         otherwise the next odd number is considered (the default value is 3).
-+
-+Source code documentation
-+-------------------------
-+
-+vimc-streamer
-+~~~~~~~~~~~~~
-+
-+.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.h
-+   :internal:
-+
-+.. kernel-doc:: drivers/media/platform/vimc/vimc-streamer.c
--- 
-2.22.0
+Mimi
 
