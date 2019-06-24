@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1157C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33281C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9091D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F47208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="GplmxMQC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="uiXaY8P5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfFXOZC (ORCPT
+        id S1728814AbfFXOZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:25:02 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64642 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbfFXOZB (ORCPT
+        Mon, 24 Jun 2019 10:25:05 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:7287 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728535AbfFXOZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:25:01 -0400
+        Mon, 24 Jun 2019 10:25:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
   t=1561386301; x=1592922301;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=NIX7oeNahvZftMI/3htiY+wKWhDyzf0/ATYBF/Yn4Qw=;
-  b=GplmxMQCoDtvLUtW2KOIXgNZfPKeXjY0Ju1DR0uLSjZuIEltIHgh4mAv
-   IIqXx+QMKK6v+CSCQbkzbYq7bZ6Y+rZ+Vpqsvfjlxa4pW6FCOmm2BJ/Cx
-   UDItsLqa14+wHX/nxQ7ZwVOs95zi5IZDzVRhrGQldx9WnuZ3GN3quG47h
-   U=;
+  bh=IiutmOqWx07Vhkhld9CusBzqI7cRQ/7MV7vdxiYNi+k=;
+  b=uiXaY8P5CpYcMlx8hnxvZnENQpqVYQqrG14OEa21N7Wa1JaXU1vSylsR
+   Eoq0WDVVCAW/jA0uN/r35CmdUxMXERc1G8t4h4wNg0Fh8nXHR8qPv5zKI
+   eDbP7Xft+rJ6snZzHDM9qi3guFL24ksYLEMuww8zQVvG0QFgmb+xxz4ho
+   k=;
 X-IronPort-AV: E=Sophos;i="5.62,412,1554768000"; 
-   d="scan'208";a="681742696"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 24 Jun 2019 14:24:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id BA7E3240C46;
-        Mon, 24 Jun 2019 14:24:52 +0000 (UTC)
-Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 24 Jun 2019 14:24:33 +0000
+   d="scan'208";a="812308123"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 24 Jun 2019 14:25:00 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 4C660A1B7D;
+        Mon, 24 Jun 2019 14:24:59 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 24 Jun 2019 14:24:43 +0000
 Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 24 Jun 2019 14:24:33 +0000
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 24 Jun 2019 14:24:43 +0000
 Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
  mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Mon, 24 Jun 2019 14:24:28 +0000
+ 15.0.1367.3 via Frontend Transport; Mon, 24 Jun 2019 14:24:38 +0000
 From:   Sam Caccavale <samcacc@amazon.de>
 CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
@@ -59,9 +59,9 @@ CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
         <x86@kernel.org>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [PATCH v3 2/5] Emulate simple x86 instructions in userspace
-Date:   Mon, 24 Jun 2019 16:24:11 +0200
-Message-ID: <20190624142414.22096-3-samcacc@amazon.de>
+Subject: [PATCH v3 4/5] Added build and install scripts
+Date:   Mon, 24 Jun 2019 16:24:13 +0200
+Message-ID: <20190624142414.22096-5-samcacc@amazon.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190624142414.22096-1-samcacc@amazon.de>
 References: <20190624142414.22096-1-samcacc@amazon.de>
@@ -73,383 +73,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added the minimal subset of code to run afl-harness with a binary file
-as input.  These bytes are used to populate the vcpu structure and then
-as an instruction stream for the emulator.  It does not attempt to handle
-exceptions and only supports very simple ops.
+install_afl.sh installs AFL locally and emits AFLPATH,
+build.sh, and run.sh build and run respectively
 
 ---
 
 v1 -> v2:
- - Removed a number of macros and moved them as static inline functions
-   in emulator_ops.h
+ - Introduced this patch
 
 v2 -> v3:
- - Removed commented out code
- - Moved changes to emulator_ops.h into the first patch
- - Moved addition of afl-many script to a later patch
- - Fixed a spelling mistake
+ - Moved non-essential development scripts to a later patch
 
 Signed-off-by: Sam Caccavale <samcacc@amazon.de>
 ---
- tools/fuzz/x86ie/emulator_ops.c | 325 +++++++++++++++++++++++++++++++-
- 1 file changed, 324 insertions(+), 1 deletion(-)
+ tools/fuzz/x86ie/scripts/afl-many       | 31 +++++++++++++++++++++++
+ tools/fuzz/x86ie/scripts/build.sh       | 33 +++++++++++++++++++++++++
+ tools/fuzz/x86ie/scripts/install_afl.sh | 17 +++++++++++++
+ tools/fuzz/x86ie/scripts/run.sh         | 10 ++++++++
+ 4 files changed, 91 insertions(+)
+ create mode 100755 tools/fuzz/x86ie/scripts/afl-many
+ create mode 100755 tools/fuzz/x86ie/scripts/build.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/run.sh
 
-diff --git a/tools/fuzz/x86ie/emulator_ops.c b/tools/fuzz/x86ie/emulator_ops.c
-index 55ae4e8fbd96..a15168ee40d2 100644
---- a/tools/fuzz/x86ie/emulator_ops.c
-+++ b/tools/fuzz/x86ie/emulator_ops.c
-@@ -29,17 +29,332 @@
- #include <asm/user_64.h>
- #include <asm/kvm.h>
- 
-+ulong emul_read_gpr(struct x86_emulate_ctxt *ctxt, unsigned int reg)
-+{
-+	assert(reg < number_of_gprs(ctxt));
-+	return get_state(ctxt)->vcpu.regs[reg];
+diff --git a/tools/fuzz/x86ie/scripts/afl-many b/tools/fuzz/x86ie/scripts/afl-many
+new file mode 100755
+index 000000000000..e55ff115a777
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/afl-many
+@@ -0,0 +1,31 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++# This is for running AFL over NPROC or `nproc` cores with normal AFL options ex:
++# ulimit -Sv $[21999999999 << 10]; ./tools/fuzz/x86ie/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/x86ie/afl-harness @@ 
++
++export AFL_NO_AFFINITY=1
++
++while [ -z "$sync_dir" ]; do
++  while getopts ":o:" opt; do
++    case "${opt}" in
++      o)
++        sync_dir="${OPTARG}"
++        ;;
++      *)
++        ;;
++    esac
++  done
++  ((OPTIND++))
++  [ $OPTIND -gt $# ] && break
++done
++
++# AFL/linux do some weird stuff with core affinity and will often run
++# N processes over < N virtual cores.  In order to avoid that, we taskset
++# each process to its own core.
++for i in $(seq 1 $(( ${NPROC:-$(nproc)} - 1)) ); do
++    taskset -c "$i" ./afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
++done
++taskset -c 0 ./afl-fuzz -M master $@ >/dev/null 2>&1 &
++
++watch -n1 "echo \"Executing '$AFLPATH/afl-fuzz $@' on ${NPROC:-$(nproc)} cores.\" && $AFLPATH/afl-whatsup -s ${sync_dir}"
++pkill afl-fuzz
+diff --git a/tools/fuzz/x86ie/scripts/build.sh b/tools/fuzz/x86ie/scripts/build.sh
+new file mode 100755
+index 000000000000..032762bf56ef
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/build.sh
+@@ -0,0 +1,33 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++# Run from root of linux via `./tools/fuzz/x86ie/scripts/build.sh`
++
++kernel_objects="arch/x86/kvm/emulate.o arch/x86/lib/retpoline.o lib/find_bit.o"
++
++disable() { sed -i -r "/\b$1\b/c\# $1" .config; }
++enable() { sed -i -r "/\b$1\b/c\\$1=y" .config; }
++
++make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} defconfig
++
++enable "CONFIG_DEBUG_INFO"
++enable "CONFIG_STACKPROTECTOR"
++
++yes ' ' | make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} $kernel_objects
++
++omit_arg () { args=$(echo "$args" | sed "s/ $1//g"); }
++add_arg () { args+=" $1"; }
++
++rebuild () {
++  args="$(head -1 $(dirname $1)/.$(basename $1).cmd | sed -e 's/.*:= //g')"
++  omit_arg "-mcmodel=kernel"
++  omit_arg "-mpreferred-stack-boundary=3"
++  add_arg "-fsanitize=address"
++  echo -e "Rebuilding $1 with \n$args"
++  eval "$args"
 +}
 +
-+void emul_write_gpr(struct x86_emulate_ctxt *ctxt, unsigned int reg, ulong val)
-+{
-+	assert(reg < number_of_gprs(ctxt));
-+	get_state(ctxt)->vcpu.regs[reg] = val;
-+}
++for object in $kernel_objects; do
++  rebuild $object
++done
 +
-+/* All read ops: */
++make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} tools/fuzz
+diff --git a/tools/fuzz/x86ie/scripts/install_afl.sh b/tools/fuzz/x86ie/scripts/install_afl.sh
+new file mode 100755
+index 000000000000..3bdbdf2a040b
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/install_afl.sh
+@@ -0,0 +1,17 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++# Can be run where ever, but usually run from linux root:
++# `source ./tools/fuzz/x86ie/scripts/install_afl.sh`
++# (must be sourced to get the AFLPATH envvar, otherwise set manually)
 +
-+static int _get_bytes(void *dst, struct state *state, unsigned int bytes,
-+		      char *callee)
-+{
-+	if (state->bytes_consumed + bytes > state->data_available) {
-+		fprintf(stderr, "Tried retrieving %d bytes\n", bytes);
-+		fprintf(stderr, "%s failed to retrieve bytes for %s.\n",
-+			__func__, callee);
-+		return X86EMUL_UNHANDLEABLE;
-+	}
++wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
++mkdir -p afl
++tar xzf afl-latest.tgz -C afl --strip-components 1
 +
-+	memcpy(dst, &state->data[state->bytes_consumed], bytes);
-+	return X86EMUL_CONTINUE;
-+}
++pushd afl
++set AFL_USE_ASAN
++make clean all
++export AFLPATH="$(pwd)"
++popd
 +
-+/*
-+ * The only function that any x86_emulate_ops should call to retrieve bytes.
-+ * See comments in struct state definition for more information.
-+ */
-+static int get_bytes_and_increment(void *dst, struct state *state,
-+				   unsigned int bytes, char *callee)
-+{
-+	int rc = _get_bytes(dst, state, bytes, callee);
++sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
+diff --git a/tools/fuzz/x86ie/scripts/run.sh b/tools/fuzz/x86ie/scripts/run.sh
+new file mode 100755
+index 000000000000..0571cd524c01
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/run.sh
+@@ -0,0 +1,10 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+	if (rc == X86EMUL_CONTINUE)
-+		state->bytes_consumed += bytes;
++FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}"
 +
-+	return rc;
-+}
++mkdir -p $FUZZDIR/in
++cp tools/fuzz/x86ie/rand_sample.bin $FUZZDIR/in
++mkdir -p $FUZZDIR/out
 +
-+/*
-+ * This is called by x86_decode_insn to fetch bytes.
-+ */
-+int emul_fetch(struct x86_emulate_ctxt *ctxt, unsigned long addr, void *val,
-+	       unsigned int bytes, struct x86_exception *fault)
-+{
-+	if (get_bytes_and_increment(val, get_state(ctxt), bytes,
-+		"emul_fetch") != X86EMUL_CONTINUE) {
-+		return X86EMUL_UNHANDLEABLE;
-+	}
-+
-+	return X86EMUL_CONTINUE;
-+}
-+
-+int emul_read_emulated(struct x86_emulate_ctxt *ctxt,
-+		       unsigned long addr, void *val, unsigned int bytes,
-+		       struct x86_exception *fault)
-+{
-+	if (get_bytes_and_increment(val, get_state(ctxt), bytes,
-+		"emul_read_emulated") != X86EMUL_CONTINUE) {
-+		return X86EMUL_UNHANDLEABLE;
-+	}
-+
-+	return X86EMUL_CONTINUE;
-+}
-+
-+int emul_write_emulated(struct x86_emulate_ctxt *ctxt,
-+		   unsigned long addr, const void *val,
-+		   unsigned int bytes,
-+		   struct x86_exception *fault)
-+{
-+	return X86EMUL_CONTINUE;
-+}
-+
-+ulong emul_get_cr(struct x86_emulate_ctxt *ctxt, int cr)
-+{
-+	return get_state(ctxt)->vcpu.cr[cr];
-+}
-+
-+int emul_set_cr(struct x86_emulate_ctxt *ctxt, int cr, ulong val)
-+{
-+	get_state(ctxt)->vcpu.cr[cr] = val;
-+	return 0;
-+}
-+
-+unsigned int emul_get_hflags(struct x86_emulate_ctxt *ctxt)
-+{
-+	return get_state(ctxt)->vcpu.rflags;
-+}
-+
-+void emul_set_hflags(struct x86_emulate_ctxt *ctxt, unsigned int hflags)
-+{
-+	get_state(ctxt)->vcpu.rflags = hflags;
-+}
-+
-+/* End of emulator ops */
-+
-+#define EMUL_OP(h) .h = emul_##h
-+const struct x86_emulate_ops all_emulator_ops = {
-+	EMUL_OP(read_gpr),
-+	EMUL_OP(write_gpr),
-+	EMUL_OP(fetch),
-+	EMUL_OP(read_emulated),
-+	EMUL_OP(write_emulated),
-+	EMUL_OP(get_cr),
-+	EMUL_OP(set_cr),
-+	EMUL_OP(get_hflags),
-+	EMUL_OP(set_hflags),
-+};
-+#undef EMUL_OP
-+
-+enum {
-+	HOOK_read_gpr,
-+	HOOK_write_gpr,
-+	HOOK_fetch,
-+	HOOK_read_emulated,
-+	HOOK_write_emulated,
-+	HOOK_get_cr,
-+	HOOK_set_cr,
-+	HOOK_get_hflags,
-+	HOOK_set_hflags
-+};
-+
-+/*
-+ * Disable an x86_emulate_op if options << HOOK_op is set.
-+ *
-+ * Expects options to be defined.
-+ */
-+#define MAYBE_DISABLE_HOOK(h)						\
-+	do {								\
-+		if (options & (1 << HOOK_##h)) {			\
-+			vcpu->ctxt.ops.h = NULL;			\
-+			debug("Disabling hook " #h "\n");		\
-+		}							\
-+	} while (0)
-+
-+/*
-+ * FROM XEN:
-+ *
-+ * Constrain input to architecturally-possible states where
-+ * the emulator relies on these
-+ *
-+ * In general we want the emulator to be as absolutely robust as
-+ * possible; which means that we want to minimize the number of things
-+ * it assumes about the input state.  Tesing this means minimizing and
-+ * removing as much of the input constraints as possible.
-+ *
-+ * So we only add constraints that (in general) have been proven to
-+ * cause crashes in the emulator.
-+ *
-+ * For future reference: other constraints which might be necessary at
-+ * some point:
-+ *
-+ * - EFER.LMA => !EFLAGS.NT
-+ * - In VM86 mode, force segment...
-+ *  - ...access rights to 0xf3
-+ *  - ...limits to 0xffff
-+ *  - ...bases to below 1Mb, 16-byte aligned
-+ *  - ...selectors to (base >> 4)
-+ */
-+static void sanitize_input(struct state *s)
-+{
-+	/*
-+	 * CR0.PG can't be set if CR0.PE isn't set.  Set is more interesting, so
-+	 * set PE if PG is set.
-+	 */
-+	if (s->vcpu.cr[0] & X86_CR0_PG)
-+		s->vcpu.cr[0] |= X86_CR0_PE;
-+
-+	/* EFLAGS.VM not available in long mode */
-+	if (s->ctxt.mode == X86EMUL_MODE_PROT64)
-+		s->vcpu.rflags &= ~X86_EFLAGS_VM;
-+
-+	/* EFLAGS.VM implies 16-bit mode */
-+	if (s->vcpu.rflags & X86_EFLAGS_VM) {
-+		s->vcpu.segments[x86_seg_cs].db = 0;
-+		s->vcpu.segments[x86_seg_ss].db = 0;
-+	}
-+}
-+
- void initialize_emulator(struct state *state)
- {
-+	reset_emulator(state);
-+	state->ctxt.ops = &all_emulator_ops;
-+
-+	/* See also sanitize_input, some hooks can't be disabled. */
-+	// MAYBE_DISABLE_HOOK(read_gpr);
-+
-+	sanitize_input(state);
-+}
-+
-+static const char *const x86emul_mode_string[] = {
-+	[X86EMUL_MODE_REAL] = "X86EMUL_MODE_REAL",
-+	[X86EMUL_MODE_VM86] = "X86EMUL_MODE_VM86",
-+	[X86EMUL_MODE_PROT16] = "X86EMUL_MODE_PROT16",
-+	[X86EMUL_MODE_PROT32] = "X86EMUL_MODE_PROT32",
-+	[X86EMUL_MODE_PROT64] = "X86EMUL_MODE_PROT64",
-+};
-+
-+static void dump_state_after(const char *desc, struct state *state)
-+{
-+	debug(" -- State after %s --\n", desc);
-+	debug("mode: %s\n", x86emul_mode_string[state->ctxt.mode]);
-+	debug(" cr0: %lx\n", state->vcpu.cr[0]);
-+	debug(" cr3: %lx\n", state->vcpu.cr[3]);
-+	debug(" cr4: %lx\n", state->vcpu.cr[4]);
-+
-+	debug("Decode _eip: %lu\n", state->ctxt._eip);
-+	debug("Emulate eip: %lu\n", state->ctxt.eip);
-+
-+	debug("\n");
- }
- 
-+static void init_emulate_ctxt(struct state *state)
-+{
-+	struct x86_emulate_ctxt *ctxt = &state->ctxt;
-+
-+	ctxt->eflags = ctxt->ops->get_hflags(ctxt);
-+	ctxt->tf = (ctxt->eflags & X86_EFLAGS_TF) != 0;
-+
-+	ctxt->mode = X86EMUL_MODE_PROT64; // TODO: eventually vary this
-+
-+	init_decode_cache(ctxt);
-+}
-+
-+
- int step_emulator(struct state *state)
- {
--	return 0;
-+	int rc;
-+	unsigned long prev_eip = state->ctxt._eip;
-+	unsigned long emul_offset;
-+	int decode_size = state->data_available - state->bytes_consumed;
-+
-+	/*
-+	 * This is annoing to have to explain the reasoning behind:
-+	 * ._eip is incremented by x86_decode_insn.  It will be > .eip between
-+	 * decoding and emulating.
-+	 * .eip is incremented by x86_emulate_insn.  It may be incremented
-+	 * beyond the length of instruction emulated E.G. if a jump is taken.
-+	 *
-+	 * If these are out of sync before emulating, then something is
-+	 * horribly wrong with the harness.
-+	 */
-+	assert(state->ctxt.eip == state->ctxt._eip);
-+
-+	if (decode_size <= 0) {
-+		debug("Out of instructions\n");
-+		return X86EMUL_UNHANDLEABLE;
-+	}
-+
-+	init_emulate_ctxt(state);
-+	state->ctxt.interruptibility = 0;
-+	state->ctxt.have_exception = false;
-+	state->ctxt.exception.vector = -1;
-+	state->ctxt.perm_ok = false;
-+	state->ctxt.ud = 0; // (emulation_type(0) & EMULTYPE_TRAP_UD);
-+
-+	/*
-+	 * When decoding with NULL, 0, the emulator will use the emul_fetch
-+	 * op which will almost always try to grab 15 bytes which may be more
-+	 * than are left in the stream.
-+	 *
-+	 * Calling x86_decode_insn from a buffer with a length causes it to
-+	 * directly memcpy `insn_len` bytes into the ctxt structure's 15 byte
-+	 * long buffer without any length check.
-+	 *
-+	 * We must specify a size to prevent the emulator from fetching more
-+	 * bytes than are left, and limit the size to <= 15 so that memcpy
-+	 * does not overflow.
-+	 */
-+	if (decode_size > 15)
-+		decode_size = 15;
-+
-+	rc = x86_decode_insn(&state->ctxt,
-+		&state->data[state->bytes_consumed], decode_size);
-+	assert(state->ctxt._eip - prev_eip > 0); // Only move forward.
-+	state->bytes_consumed += state->ctxt._eip - prev_eip;
-+
-+	debug("Decode result: %d\n", rc);
-+	if (rc != X86EMUL_CONTINUE)
-+		return rc;
-+
-+	emul_offset = state->ctxt._eip - state->ctxt.eip;
-+	debug("Instruction: ");
-+	print_n_bytes(&state->data[state->bytes_consumed - emul_offset],
-+		      emul_offset);
-+
-+	state->ctxt.exception.address = state->vcpu.cr[2];
-+
-+	// This is extraneous but explicit due to the above assert
-+	prev_eip = state->ctxt.eip;
-+	rc = x86_emulate_insn(&state->ctxt);
-+	debug("Emulation result: %d\n", rc);
-+	dump_state_after("emulating", state);
-+
-+	if (rc == -1) {
-+		return rc;
-+	} else if (state->ctxt.have_exception) {
-+		fprintf(stderr, "Emulator propagated exception: { ");
-+		fprintf(stderr, "vector: %d, ", state->ctxt.exception.vector);
-+		fprintf(stderr, "error code: %d }\n",
-+			state->ctxt.exception.error_code);
-+		rc = X86EMUL_UNHANDLEABLE;
-+	} else if (prev_eip == state->ctxt.eip) {
-+		fprintf(stderr, "ctxt.eip not advanced.\n");
-+		rc = X86EMUL_UNHANDLEABLE;
-+	}
-+
-+	if (state->bytes_consumed == state->data_available)
-+		debug("emulator is done\n");
-+
-+	return rc;
- }
- 
- int emulate_until_complete(struct state *state)
- {
-+	int count = 0;
-+
-+	do {
-+		count++;
-+	} while (step_emulator(state) == X86EMUL_CONTINUE);
-+
-+	debug("Emulated %d instructions\n", count);
- 	return 0;
- }
- 
-@@ -51,8 +366,16 @@ struct state *create_emulator(void)
- 
- void reset_emulator(struct state *state)
- {
-+	unsigned char *data = state->data;
-+	size_t data_available = state->data_available;
-+
-+	memset(state, 0, sizeof(struct state));
-+
-+	state->data = data;
-+	state->data_available = data_available;
- }
- 
- void free_emulator(struct state *state)
- {
-+	free(state);
- }
++screen bash -c "ulimit -Sv $[21999999999 << 10]; ./tools/fuzz/x86ie/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/x86ie/afl-harness @@"
 -- 
 2.17.1
 
