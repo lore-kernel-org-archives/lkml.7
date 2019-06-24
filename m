@@ -2,337 +2,157 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E97C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FECC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A07208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7BD208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yoVgT8H2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqahhA0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbfFXNmr (ORCPT
+        id S1731265AbfFXNnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:42:47 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34492 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbfFXNmq (ORCPT
+        Mon, 24 Jun 2019 09:43:01 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39732 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbfFXNnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:42:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Wk2E2hbyXCt+TOrKGBB1wIxvnluyqaqoXy1ft8z/Q3Y=; b=yoVgT8H2HAFoFlloNQyQeTsse
-        e+qOXn3FGJeuSjSkXyvxmVt05HKpNJ7IDXuS37CuioenCg6MYJbiOqr1/DBsuAEuVtHx4LERGuHUi
-        ZwYXDr2LHO34XG7aunLFu/fczTgYnvpxy0WWEze2CWDZToGo8HE4GeGwEtZOSxt2ih5hpN6WrUGs+
-        q2I7+d8EbMlpRpg6JqTTx2Qt3ftEcGB1Do8EiqZDguzMNNnpy/OtFwpY+bbF4l6p0hZoheNWJGRw/
-        uPrl/odW2bA6K88BbAPpieeBKi/C+kCazgApjCQBubcMpp20ieSU+FiISmC0cViTE/h8WqIg6znkG
-        24ZxrpCsg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58942)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hfPEz-0008IF-RW; Mon, 24 Jun 2019 14:42:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hfPEw-0006Kl-3e; Mon, 24 Jun 2019 14:42:34 +0100
-Date:   Mon, 24 Jun 2019 14:42:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190624134233.suowuortj5dcbxdg@shell.armlinux.org.uk>
-References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
- <1561378274-12357-1-git-send-email-pthombar@cadence.com>
+        Mon, 24 Jun 2019 09:43:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id r185so823616iod.6;
+        Mon, 24 Jun 2019 06:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JAY+HO+se6M27BJLGy2WaRXVtQjt3tup0p+M/AykcYU=;
+        b=WqahhA0vGT09ygQXdubtYD5Lz8cEW9fjhcYm97RgfF6N2/isRXcUjN3KMzuLlAScL2
+         uB1+yrJlpzeAGIVXLqeyKk4Vv85+P8jeJFXi+iruawOOdanDNRNg8aoHp1CPiDmlYVSC
+         6U6VpETeSl0kXNREKCfsI8At3rHRNCu0EpJHK/dETrHs2ALcqFSRc3oLzsWKipgN8xM/
+         T1+lJaRW9mkfN/FM8N2bu1xaMckb8WFtWM0ymwCaaUbnCX6j5Wl3/3Fcu7P6cZBagDZm
+         qF6gd2YkmuYRFi1rjW+ke9AcQTdaKKhb/17oQHB4k5i+20d0/O1EfWR42JOMSVp5noas
+         SpKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JAY+HO+se6M27BJLGy2WaRXVtQjt3tup0p+M/AykcYU=;
+        b=VYo1nZniLZ+uc3YiobzkbQh2s3ZTLPFBt9y5Dd+pRZ0E4zObzc8QOYpvN+6awrkbTd
+         7zBWcvLCT68O0PjaIQtL5R+M6Fm5SD8H6fNo8FLURY9aFHUuWvjSKVwSz+ifBmgooqAB
+         KcIRCnek2XJxx1BNJd+YXHMikXD+kowGv86o/u74GUsRd8KfqitLG79zxV1U5wN89Lye
+         07JsTtLcmT7nfUd/1bXrmnGTKJpgt7oITsXU7eQwJRc0YKU+wKNLJBcnJzy0RTJQ+4ps
+         uLAa4oQxeTfEtQMb5dPoUSRcbmjRkKnHhEY1iFoPywQOLNrrJwiZamLHhzo8g13l3/Kh
+         VE0w==
+X-Gm-Message-State: APjAAAWXdA8aNWkpIRWnXzW+wpqLlvOcsWIdVY7cWG98RPblV/XWFzE0
+        3xmQsHtGT0qNzjZDEHgYDaIVQ1NhR+KBz/XM9qI=
+X-Google-Smtp-Source: APXvYqypl0IrSyDO/f7SI42d4NpFHa/7OZX0jXNbFpUASMxwh2fx0mJgfs/qVOYaLSUhLwF6DwSrz304TPAq9G/BjWs=
+X-Received: by 2002:a5e:c30f:: with SMTP id a15mr8320747iok.246.1561383779652;
+ Mon, 24 Jun 2019 06:42:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561378274-12357-1-git-send-email-pthombar@cadence.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
+ <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
+ <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com>
+ <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com> <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
+ <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
+In-Reply-To: <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 24 Jun 2019 19:12:46 +0530
+Message-ID: <CANAwSgTymg=u8oJy4bOoREpY1DvVqav=FfdizumeUJMYhntKaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
+ configuration to Odroid XU3/XU4/HC1 family
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 01:11:14PM +0100, Parshuram Thombare wrote:
-> This patch add support for SGMII interface) and
-> 2.5Gbps MAC in Cadence ethernet controller driver.
-> 
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
-> ---
->  drivers/net/ethernet/cadence/macb.h      | 54 +++++++++++++-----
->  drivers/net/ethernet/cadence/macb_main.c | 72 ++++++++++++++++++++++--
->  2 files changed, 109 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 8629d345af31..6d268283c318 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -77,6 +77,7 @@
->  #define MACB_RBQPH		0x04D4
->  
->  /* GEM register offsets. */
-> +#define GEM_NCR			0x0000 /* Network Control */
->  #define GEM_NCFGR		0x0004 /* Network Config */
->  #define GEM_USRIO		0x000c /* User IO */
->  #define GEM_DMACFG		0x0010 /* DMA Configuration */
-> @@ -156,6 +157,7 @@
->  #define GEM_PEFTN		0x01f4 /* PTP Peer Event Frame Tx Ns */
->  #define GEM_PEFRSL		0x01f8 /* PTP Peer Event Frame Rx Sec Low */
->  #define GEM_PEFRN		0x01fc /* PTP Peer Event Frame Rx Ns */
-> +#define GEM_PCS_CTRL		0x0200 /* PCS Control */
->  #define GEM_DCFG1		0x0280 /* Design Config 1 */
->  #define GEM_DCFG2		0x0284 /* Design Config 2 */
->  #define GEM_DCFG3		0x0288 /* Design Config 3 */
-> @@ -271,6 +273,10 @@
->  #define MACB_IRXFCS_OFFSET	19
->  #define MACB_IRXFCS_SIZE	1
->  
-> +/* GEM specific NCR bitfields. */
-> +#define GEM_TWO_PT_FIVE_GIG_OFFSET	29
-> +#define GEM_TWO_PT_FIVE_GIG_SIZE	1
-> +
->  /* GEM specific NCFGR bitfields. */
->  #define GEM_GBE_OFFSET		10 /* Gigabit mode enable */
->  #define GEM_GBE_SIZE		1
-> @@ -323,6 +329,9 @@
->  #define MACB_MDIO_SIZE		1
->  #define MACB_IDLE_OFFSET	2 /* The PHY management logic is idle */
->  #define MACB_IDLE_SIZE		1
-> +#define MACB_DUPLEX_OFFSET	3
-> +#define MACB_DUPLEX_SIZE	1
-> +
->  
->  /* Bitfields in TSR */
->  #define MACB_UBR_OFFSET		0 /* Used bit read */
-> @@ -456,11 +465,17 @@
->  #define MACB_REV_OFFSET				0
->  #define MACB_REV_SIZE				16
->  
-> +/* Bitfields in PCS_CONTROL. */
-> +#define GEM_PCS_CTRL_RST_OFFSET			15
-> +#define GEM_PCS_CTRL_RST_SIZE			1
-> +
->  /* Bitfields in DCFG1. */
->  #define GEM_IRQCOR_OFFSET			23
->  #define GEM_IRQCOR_SIZE				1
->  #define GEM_DBWDEF_OFFSET			25
->  #define GEM_DBWDEF_SIZE				3
-> +#define GEM_NO_PCS_OFFSET			0
-> +#define GEM_NO_PCS_SIZE				1
->  
->  /* Bitfields in DCFG2. */
->  #define GEM_RX_PKT_BUFF_OFFSET			20
-> @@ -633,19 +648,32 @@
->  #define MACB_MAN_CODE				2
->  
->  /* Capability mask bits */
-> -#define MACB_CAPS_ISR_CLEAR_ON_WRITE		0x00000001
-> -#define MACB_CAPS_USRIO_HAS_CLKEN		0x00000002
-> -#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	0x00000004
-> -#define MACB_CAPS_NO_GIGABIT_HALF		0x00000008
-> -#define MACB_CAPS_USRIO_DISABLED		0x00000010
-> -#define MACB_CAPS_JUMBO				0x00000020
-> -#define MACB_CAPS_GEM_HAS_PTP			0x00000040
-> -#define MACB_CAPS_BD_RD_PREFETCH		0x00000080
-> -#define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
-> -#define MACB_CAPS_FIFO_MODE			0x10000000
-> -#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
-> -#define MACB_CAPS_SG_DISABLED			0x40000000
-> -#define MACB_CAPS_MACB_IS_GEM			0x80000000
-> +#define MACB_CAPS_ISR_CLEAR_ON_WRITE		BIT(0)
-> +#define MACB_CAPS_USRIO_HAS_CLKEN		BIT(1)
-> +#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	BIT(2)
-> +#define MACB_CAPS_NO_GIGABIT_HALF		BIT(3)
-> +#define MACB_CAPS_USRIO_DISABLED		BIT(4)
-> +#define MACB_CAPS_JUMBO				BIT(5)
-> +#define MACB_CAPS_GEM_HAS_PTP			BIT(6)
-> +#define MACB_CAPS_BD_RD_PREFETCH		BIT(7)
-> +#define MACB_CAPS_NEEDS_RSTONUBR		BIT(8)
-> +#define MACB_CAPS_FIFO_MODE			BIT(28)
-> +#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	BIT(29)
-> +#define MACB_CAPS_SG_DISABLED			BIT(30)
-> +#define MACB_CAPS_MACB_IS_GEM			BIT(31)
-> +#define MACB_CAPS_PCS				BIT(24)
-> +#define MACB_CAPS_MACB_IS_GEM_GXL		BIT(25)
-> +
-> +#define MACB_GEM7010_IDNUM			0x009
-> +#define MACB_GEM7014_IDNU			0x107
-> +#define MACB_GEM7014A_IDNUM			0x207
-> +#define MACB_GEM7016_IDNUM			0x10a
-> +#define MACB_GEM7017_IDNUM			0x00a
-> +#define MACB_GEM7017A_IDNUM			0x20a
-> +#define MACB_GEM7020_IDNUM			0x003
-> +#define MACB_GEM7021_IDNUM			0x00c
-> +#define MACB_GEM7021A_IDNUM			0x20c
-> +#define MACB_GEM7022_IDNUM			0x00b
->  
->  /* LSO settings */
->  #define MACB_LSO_UFO_ENABLE			0x01
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index ac5b233cd2e5..572691d948e9 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -445,6 +445,8 @@ static void gem_phylink_validate(struct phylink_config *pl_config,
->  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
->  
->  	switch (state->interface) {
-> +	case PHY_INTERFACE_MODE_NA:
-> +	case PHY_INTERFACE_MODE_SGMII:
->  	case PHY_INTERFACE_MODE_GMII:
->  	case PHY_INTERFACE_MODE_RGMII:
->  		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
-> @@ -480,10 +482,31 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
->  {
->  	struct net_device *netdev = to_net_dev(pl_config->dev);
->  	struct macb *bp = netdev_priv(netdev);
-> +	bool change_interface = bp->phy_interface != state->interface;
->  	unsigned long flags;
->  
->  	spin_lock_irqsave(&bp->lock, flags);
->  
-> +	if (change_interface) {
-> +		bp->phy_interface = state->interface;
-> +		gem_writel(bp, NCR, ~GEM_BIT(TWO_PT_FIVE_GIG) &
-> +			   gem_readl(bp, NCR));
+Hi Marek / Krzysztof,
 
-This could do with a comment, such as the one I gave in my example.
+On Mon, 24 Jun 2019 at 14:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 2019-06-24 09:41, Krzysztof Kozlowski wrote:
+> > On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> >> On 2019-06-23 18:02, Anand Moon wrote:
+> >>> Thanks for this patch. Please add my
+> >>>
+> >>> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> >>>
+> >>> [snip]
+> >>>
+> >>> Could you integrate below small changes into this patch.
+> >>> with these below changes suspend and resume work correctly at my end.
+> >>>
+> >>> [1] XU4_suspendresume.patch
+> >>>
+> >>> As per S2MPS11B PMIC 1.2.1 Regulator (Features)
+> >>> Fix the min max value for *Buck7* and *Buck8*
+> >>>
+> >>> -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
+> >>> -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
+> >> Could you elaborate why such change for Buck7 and Buck8 is needed?
+> > Anand has here valid point - the constraints in DTS do not match
+> > hardware manual. This leads to question whether voltage table in
+> > driver is proper... Another point is the voltage itself. The
+> > schematics describes them as at specific voltage (1.35 V and 2.0 V)
+> > but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
+> > the problem above.
+> >
+> >>> Also add suspend-off for *Buck9*
+> >>> Buck9 internally controls the power of USB hub.
+> >>> Adding suspend the this node help proper reset of USB hub on Odroid
+> >>> XU4 / HC1/ XU3
+> >>> during suspend and resume. Below it the logs from my testing.
+> >> Disabling Buck9 in suspend indeed reduces the power consumed by the
+> >> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
+> >> matches the results of OdroidXU3. Thanks for the hint!
+> > Although I did not get what is the difference in the logs (Anand
+> > pasted two logs but they look the same) but the power consumption is
+> > reason is good enough. I would be happy to put in the changelog entire
+> > consumption  difference. I can measure it on XU3-Lite but can you give
+> > me the XU4 (before and after)?\
+>
+>
+> HC1:
+>
+> next-20190620: 120mA (@5V)
+> this patchset: 72mA (@5V)
+> this patchset + fixup from Anand: 7-10mA (@5V)
+>
+> XU4 (SDcard):
+>
+> next-20190620: 88mA (@5V)
+> this patchset: 74mA (@5V), sometimes 42mA (@5V)
+> this patchset + fixup from Anand: 6-9mA (@5V)
+>
+>
+> XU4 (eMMC):
+>
+> next-20190620: 100mA (@5V)
+> this patchset: 72mA (@5V), sometimes 41mA (@5V)
+> this patchset + fixup from Anand: 6-9mA (@5V)
+>
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>
 
-> +
-> +		if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-> +			gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
-> +				   GEM_BIT(PCSSEL) |
-> +				   gem_readl(bp, NCFGR));
-> +		} else {
-> +			/* Disable SGMII mode and PCS */
-> +			gem_writel(bp, NCFGR, ~(GEM_BIT(SGMIIEN) |
-> +				   GEM_BIT(PCSSEL)) &
-> +				   gem_readl(bp, NCFGR));
-> +			/* Reset PCS */
-> +			gem_writel(bp, PCS_CTRL, gem_readl(bp, PCS_CTRL) |
-> +				   GEM_BIT(PCS_CTRL_RST));
-> +		}
-> +	}
+Thanks for this results.
 
-Good.
-
-> +
->  	if (!phylink_autoneg_inband(mode) &&
->  	    (bp->speed != state->speed ||
->  	     bp->duplex != state->duplex)) {
-> @@ -493,6 +516,7 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
->  		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
->  		if (macb_is_gem(bp))
->  			reg &= ~GEM_BIT(GBE);
-> +
-
-Useless change.
-
->  		if (state->duplex)
->  			reg |= MACB_BIT(FD);
->  
-> @@ -587,8 +611,8 @@ static int macb_mii_probe(struct net_device *dev)
->  	}
->  
->  	bp->link = 0;
-> -	bp->speed = 0;
-> -	bp->duplex = -1;
-> +	bp->speed = SPEED_UNKNOWN;
-> +	bp->duplex = DUPLEX_UNKNOWN;
->  
->  	return ret;
->  }
-> @@ -3337,6 +3361,22 @@ static void macb_configure_caps(struct macb *bp,
->  		dcfg = gem_readl(bp, DCFG1);
->  		if (GEM_BFEXT(IRQCOR, dcfg) == 0)
->  			bp->caps |= MACB_CAPS_ISR_CLEAR_ON_WRITE;
-> +		if (GEM_BFEXT(NO_PCS, dcfg) == 0)
-> +			bp->caps |= MACB_CAPS_PCS;
-> +		switch (MACB_BFEXT(IDNUM, macb_readl(bp, MID))) {
-> +		case MACB_GEM7016_IDNUM:
-> +		case MACB_GEM7017_IDNUM:
-> +		case MACB_GEM7017A_IDNUM:
-> +		case MACB_GEM7020_IDNUM:
-> +		case MACB_GEM7021_IDNUM:
-> +		case MACB_GEM7021A_IDNUM:
-> +		case MACB_GEM7022_IDNUM:
-> +			bp->caps |= MACB_CAPS_USRIO_DISABLED;
-> +			bp->caps |= MACB_CAPS_MACB_IS_GEM_GXL;
-> +			break;
-> +		default:
-> +			break;
-> +		}
->  		dcfg = gem_readl(bp, DCFG2);
->  		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
->  			bp->caps |= MACB_CAPS_FIFO_MODE;
-> @@ -4319,11 +4359,35 @@ static int macb_probe(struct platform_device *pdev)
->  	}
->  
->  	phy_mode = of_get_phy_mode(np);
-> -	if (phy_mode < 0)
-> +	if (phy_mode < 0) {
->  		/* not found in DT, MII by default */
->  		bp->phy_interface = PHY_INTERFACE_MODE_MII;
-> -	else
-> +	} else if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL) {
-> +		u32 interface_supported = 1;
-> +
-> +		if (phy_mode == PHY_INTERFACE_MODE_SGMII) {
-> +			if (!(bp->caps & MACB_CAPS_PCS))
-> +				interface_supported = 0;
-
-So if bp->caps does not have MACB_CAPS_PCS set, then SGMII mode is not
-supported?
-
-In which case, gem_phylink_validate() must clear the support mask when
-SGMII mode is requested to indicate that the interface mode is not
-supported.
-
-The same goes for _all_ other PHY link modes that the hardware does not
-actually support, such as PHY_INTERFACE_MODE_10GKR...
-
-> +		} else if (phy_mode == PHY_INTERFACE_MODE_GMII ||
-> +			   phy_mode == PHY_INTERFACE_MODE_RGMII) {
-> +			if (!macb_is_gem(bp))
-> +				interface_supported = 0;
-> +		} else if (phy_mode != PHY_INTERFACE_MODE_RMII &&
-> +			   phy_mode != PHY_INTERFACE_MODE_MII) {
-> +			/* Add new mode before this */
-> +			interface_supported = 0;
-> +		}
-
-... and the same goes for these too.
-
-> +
-> +		if (!interface_supported) {
-> +			netdev_err(dev, "Phy mode %s not supported",
-> +				   phy_modes(phy_mode));
-> +			goto err_out_free_netdev;
-> +		}
-> +
-> +		bp->phy_interface = phy_mode;
-> +	} else {
->  		bp->phy_interface = phy_mode;
-> +	}
->  
->  	/* IP specific init */
->  	err = init(pdev);
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Best Regards
+-Anand
