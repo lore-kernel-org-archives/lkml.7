@@ -2,159 +2,98 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F76C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFABC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BA620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Jkq7HmHO";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="YerRWkBk"
+	by mail.kernel.org (Postfix) with ESMTP id 75BA020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561372413;
+	bh=XdDXsy0FUsAQasU9sgQ7z5ymRov7zhDTsXYLIODdN4g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AaKfPsVk75ZTaccR0EER3oyF4PtpF1U92Aak7Im5J7O8tvQcDqjwtWIp+sBI+AKcx
+	 RyIM14S7O2/DoGhGMYRU3+KwR4/q89wpylIDejvrWdq7efkMkfakKhAW/2nv4BcJB+
+	 AVSRGapYo4SUUwupY7bXQ0/d5XWv8SYLIbsECjO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfFXKcu (ORCPT
+        id S1729080AbfFXKdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:32:50 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:10232 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726716AbfFXKcu (ORCPT
+        Mon, 24 Jun 2019 06:33:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45492 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfFXKdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:32:50 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OASfF9016582;
-        Mon, 24 Jun 2019 03:32:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=SIzodM/1O8sKxUQR7RXb+TWq6k8pVWUGxSWg3o6QMlg=;
- b=Jkq7HmHO7gg/WNn8k4i7FtitF59kTPtNEW2v7d5r4PYYZr4jxzjkzdEvxuuhQZP3CEka
- Fpe6k8F3xDdVWwx2Uu7mO5qkvEqFGtfu9f2heZ4fLUXdrVARlxOunhWQU86RuErpElMu
- wUvbwJvmX/kTCbGkB9IR1Ct90IObsQZ/5CgO6013pu0YC1lpCF7VV/W+2iCLOTc1JBrR
- 5vOR6yWvaAvPZLyDGb47zqnz7LhZX4Z2F1WyMa9vbKdcmppgUSXqkVmMEpsVof6xom0X
- K3rWtMnIofLoDW/pHirWO1MnXyU1q0MBuzx21rZpynmn+2Ezt+jnrMfIUY5CIcaofqvq 7w== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2051.outbound.protection.outlook.com [104.47.37.51])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t9fwtqgq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jun 2019 03:32:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SIzodM/1O8sKxUQR7RXb+TWq6k8pVWUGxSWg3o6QMlg=;
- b=YerRWkBk3PSF+klJNEjKH1bSAzsUfl4FczLTQvdYRJKytGB3zwD5fXy89//SBPDqYddVvdw3TPviD2R22scABO72ikQ6qrE2CgRCxrrGWVZKzb3LKNwsXofmoci2ZI/JER9ABoWW8kuf4FZXpEpnOZW3N6eiieSP9d0an6s22OE=
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
- CO2PR07MB2568.namprd07.prod.outlook.com (10.166.92.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 10:32:36 +0000
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1987.014; Mon, 24 Jun 2019
- 10:32:36 +0000
-From:   Parshuram Raju Thombare <pthombar@cadence.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: RE: [PATCH v4 2/5] net: macb: add support for sgmii MAC-PHY interface
-Thread-Topic: [PATCH v4 2/5] net: macb: add support for sgmii MAC-PHY
- interface
-Thread-Index: AQHVKaVHMt019Pka20mPugoFl8ah06apBQMAgAFRdiCAADaTgIAABQ5QgAAICQCAAAGfcA==
-Date:   Mon, 24 Jun 2019 10:32:36 +0000
-Message-ID: <CO2PR07MB246978081887C195B9005039C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
-References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
- <1561281781-13479-1-git-send-email-pthombar@cadence.com>
- <20190623101224.nzwodgfo6vvv65cx@shell.armlinux.org.uk>
- <CO2PR07MB246931C79F736F39D0523D3BC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
- <20190624093533.4vhvjmqqrucq2ixf@shell.armlinux.org.uk>
- <CO2PR07MB24699250A3773DE76B6D2E9EC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
- <20190624102224.6gudxxdaz43wrlcc@shell.armlinux.org.uk>
-In-Reply-To: <20190624102224.6gudxxdaz43wrlcc@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy01ZjlmMjU2Zi05NjZiLTExZTktODRmOS0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcNWY5ZjI1NzEtOTY2Yi0xMWU5LTg0ZjktMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIxNTEwIiB0PSIxMzIwNTg0NTk1MzE2NTgwMTIiIGg9IjhRcFpVZ28ydkprMDhMRXNBQ1V1UUdHbFBOOD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b8176837-9008-472e-2ae5-08d6f88f4653
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2568;
-x-ms-traffictypediagnostic: CO2PR07MB2568:
-x-microsoft-antispam-prvs: <CO2PR07MB25686FC60470809BBA1F7D3AC1E00@CO2PR07MB2568.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(136003)(396003)(366004)(199004)(189003)(36092001)(5660300002)(478600001)(6506007)(53936002)(33656002)(81156014)(68736007)(86362001)(3846002)(256004)(8676002)(81166006)(7736002)(229853002)(2906002)(446003)(78486014)(66446008)(11346002)(66476007)(486006)(6916009)(66556008)(71190400001)(71200400001)(476003)(73956011)(76116006)(99286004)(64756008)(66946007)(54906003)(76176011)(102836004)(55016002)(9686003)(7696005)(25786009)(107886003)(74316002)(6246003)(6116002)(6436002)(316002)(66066001)(55236004)(4326008)(8936002)(14454004)(52536014)(186003)(26005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2568;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: g/M9/9XOj2li40GgixmF1n+sJTEQgJTj3Xo2k3mHedCuAZyB+YJfSP/nvmamypgas8odzN6Nqha6z1kgxxra+WBONFBYO9HfhqogyL+Yt/96pWnuwNEsIawSt4gamNqOrFtSD17+F4bmKW1sMW0oriAJMLayIlMa9X6f1+vLpkuCimssa424olT5ALaKUrWRjc0CojQq967yYzt6yob78SHecHk97N3p1ayrc7Rc6Jb99H5okVwpB6mPOHPRFdlqy7Ajmcgn27ZLIrvFPoYNw6UTLCmTKqV6rp8EE9Nx8oob1Fmt9PsBCoNnt7w3u531PJPJN13RUMEz2ApEkeACKDwCgp5wZMyCtTR5x2+3zWtpeo+iTTUIxcD8a3886RYkEPJp07LEaloN4hzFDLHzawpZyLLR12ur7sRxws+5p/k=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Jun 2019 06:33:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ji+LEzct1gO+rOUVMv9h3wg1RMldLFrUw4bQiH9G5ho=; b=iLuLhSOpmo6D8kgU3V7uAJluY
+        wMIfFofNzeYXOzbFw/B8nKOQhZjGHzJyNHjrBAPxMjJUT00VKvqLpW/lV3r7LU0evHsvXtAiTqqUE
+        eLcF2i1Bd824sdMtNXZgAoeWTzhn4RZBMDK722T2Pd1gU/cZXCS7y75AvI6Rno1tsCFq9wu7NH119
+        g8h9W/YzABEnfhJmF6BVXVHS+ievQpq1n+JD8bq0plJto7xLTwE9MlT/P6LT9dswNT4yWq3cEBKw+
+        8i/HKdbFmLDdlhiLd9BT0qbs1ToC6FvbgA5p/poh66m/iIa+T2F1K0gEl5JXns4I0d5533QIwjH5O
+        E7hYj6ILw==;
+Received: from [179.95.45.115] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfMHz-0008JI-2d; Mon, 24 Jun 2019 10:33:31 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hfMHw-0005PY-Kh; Mon, 24 Jun 2019 07:33:28 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2] hrtimer: Use a bullet for the returns bullet list
+Date:   Mon, 24 Jun 2019 07:33:26 -0300
+Message-Id: <74ddad7dac331b4e5ce4a90e15c8a49e3a16d2ac.1561372382.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8176837-9008-472e-2ae5-08d6f88f4653
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 10:32:36.2380
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2568
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240089
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> >Sorry, this reply doesn't answer my question.  I'm not asking about
->> >bp->speed and bp->duplex.  I'm asking:
->> >1) why you are initialising bp->phy_interface here
->> >2) you to consider the impact that has on the mac_config() implementati=
-on
->> >  you are proposing
->> > because I think it's buggy.
->> bp->phy_interface is to store phy mode value from device tree. This is u=
-sed
->later
->> to know what phy interface user has selected for PHY-MAC. Same is used
->> to configure MAC correctly and based on your suggestion code is
->> added to handle PHY dynamically changing phy interface, in which
->> case bp->phy_interface is also updated. Though it may not be what user
->> want,
->> if phy interface is totally decided by PHY and is anyway going to be dif=
-ferent
->> from what user has selected in DT, initializing it here doesn't make sen=
-se.
->> But in case of PHY not changing phy_interface dynamically bp-
->>phy_interface need to be initialized with value from DT.
->When phylink_start() is called, you will receive a mac_config() call to
->configure the MAC for the initial operating settings, which will include
->the current PHY interface mode.  This will initially be whatever
->interface mode was passed in to phylink_create().
-Yes, and same bp->phy_interface is passed to phylink_create().
-We need this to know what phy interface is selected by user.
+That gets rid of this warning:
 
-Regards,
-Parshuram Thombare
+	./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blank line; unexpected unindent.
+
+and displays nicely both at the source code and at the produced
+documentation.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ kernel/time/hrtimer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index edb230aba3d1..5ee77f1a8a92 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1114,9 +1114,10 @@ EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
+  * @timer:	hrtimer to stop
+  *
+  * Returns:
+- *  0 when the timer was not active
+- *  1 when the timer was active
+- * -1 when the timer is currently executing the callback function and
++ *
++ *  *  0 when the timer was not active
++ *  *  1 when the timer was active
++ *  * -1 when the timer is currently executing the callback function and
+  *    cannot be stopped
+  */
+ int hrtimer_try_to_cancel(struct hrtimer *timer)
+-- 
+2.21.0
+
+
