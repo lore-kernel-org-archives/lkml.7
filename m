@@ -2,97 +2,243 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A591AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41299C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C03A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F7620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfFXT5O (ORCPT
+        id S1731242AbfFXT5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:57:14 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:48617 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfFXT5N (ORCPT
+        Mon, 24 Jun 2019 15:57:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727282AbfFXT5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:57:13 -0400
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 874FF240005;
-        Mon, 24 Jun 2019 19:57:05 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 21:57:05 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Message-ID: <20190624195705.GD5690@piout.net>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
+        Mon, 24 Jun 2019 15:57:37 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OJuqR7068710;
+        Mon, 24 Jun 2019 15:56:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb4e2hqxc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 15:56:59 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5OJuwXL069377;
+        Mon, 24 Jun 2019 15:56:58 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb4e2hqwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 15:56:58 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5OJsw1l022275;
+        Mon, 24 Jun 2019 19:56:57 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2t9by6rj46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 19:56:57 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OJuuSF63242568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 19:56:56 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26B39C6057;
+        Mon, 24 Jun 2019 19:56:56 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F754C6055;
+        Mon, 24 Jun 2019 19:56:51 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.209.86])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon, 24 Jun 2019 19:56:51 +0000 (GMT)
+References: <20190611062817.18412-1-bauerman@linux.ibm.com> <20190611062817.18412-3-bauerman@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v11 02/13] PKCS#7: Refactor verify_pkcs7_signature()
+In-reply-to: <20190611062817.18412-3-bauerman@linux.ibm.com>
+Date:   Mon, 24 Jun 2019 16:56:49 -0300
+Message-ID: <87h88ekb9a.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2019 11:51:26+1000, Finn Thain wrote:
-> Some machines store local time in the Real Time Clock. The hard-coded
-> "UTC" string is wrong on those machines so just omit that string.
-> Update the log parser so it doesn't require the string "UTC".
-> 
 
-I don't agree, hctossys will always think the RTC is in UTC. If you
-store local time in the RTC, then you are probably not using hctosys
-because it definitively doesn't know about the timezone and will
-incorrectly set the system time. That information is usually kept in
-/etc/adjtime.
+Hello David,
 
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+AFAIK Mimi is happy with this patch set, but I still need acks from
+maintainers of other subsystems that my changes touch before she can
+accept it.
+
+Are this patch and the next one ("PKCS#7: Introduce pkcs7_get_digest()")
+OK from your PoV?
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+
+> IMA will need to verify a PKCS#7 signature which has already been parsed.
+> For this reason, factor out the code which does that from
+> verify_pkcs7_signature() into a new function which takes a struct
+> pkcs7_message instead of a data buffer.
+>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
 > ---
->  drivers/rtc/hctosys.c             | 2 +-
->  tools/power/pm-graph/bootgraph.py | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
-> index ff2092a0d38c..2270eca23203 100644
-> --- a/drivers/rtc/hctosys.c
-> +++ b/drivers/rtc/hctosys.c
-> @@ -58,7 +58,7 @@ static int __init rtc_hctosys(void)
->  
->  	err = do_settimeofday64(&tv64);
->  
-> -	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
-> +	dev_info(rtc->dev.parent, "setting system clock to %ptR (%lld)\n",
->  		 &tm, (long long)tv64.tv_sec);
->  
->  err_read:
-> diff --git a/tools/power/pm-graph/bootgraph.py b/tools/power/pm-graph/bootgraph.py
-> index 6dae57041537..5a045d1cb879 100755
-> --- a/tools/power/pm-graph/bootgraph.py
-> +++ b/tools/power/pm-graph/bootgraph.py
-> @@ -333,7 +333,7 @@ def parseKernelLog():
->  			if(not sysvals.stamp['kernel']):
->  				sysvals.stamp['kernel'] = sysvals.kernelVersion(msg)
->  			continue
-> -		m = re.match('.* setting system clock to (?P<t>.*) UTC.*', msg)
-> +		m = re.match('.* setting system clock to (?P<t>.*) (?:UTC )?\(.*', msg)
->  		if(m):
->  			bt = datetime.strptime(m.group('t'), '%Y-%m-%d %H:%M:%S')
->  			bt = bt - timedelta(seconds=int(ktime))
-> -- 
-> 2.21.0
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  certs/system_keyring.c       | 61 ++++++++++++++++++++++++++----------
+>  include/linux/verification.h | 10 ++++++
+>  2 files changed, 55 insertions(+), 16 deletions(-)
+>
+> diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+> index c05c29ae4d5d..4ba82e52e4b4 100644
+> --- a/certs/system_keyring.c
+> +++ b/certs/system_keyring.c
+> @@ -194,33 +194,27 @@ late_initcall(load_system_certificate_list);
+>  #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
+>
+>  /**
+> - * verify_pkcs7_signature - Verify a PKCS#7-based signature on system data.
+> + * verify_pkcs7_message_sig - Verify a PKCS#7-based signature on system data.
+>   * @data: The data to be verified (NULL if expecting internal data).
+>   * @len: Size of @data.
+> - * @raw_pkcs7: The PKCS#7 message that is the signature.
+> - * @pkcs7_len: The size of @raw_pkcs7.
+> + * @pkcs7: The PKCS#7 message that is the signature.
+>   * @trusted_keys: Trusted keys to use (NULL for builtin trusted keys only,
+>   *					(void *)1UL for all trusted keys).
+>   * @usage: The use to which the key is being put.
+>   * @view_content: Callback to gain access to content.
+>   * @ctx: Context for callback.
+>   */
+> -int verify_pkcs7_signature(const void *data, size_t len,
+> -			   const void *raw_pkcs7, size_t pkcs7_len,
+> -			   struct key *trusted_keys,
+> -			   enum key_being_used_for usage,
+> -			   int (*view_content)(void *ctx,
+> -					       const void *data, size_t len,
+> -					       size_t asn1hdrlen),
+> -			   void *ctx)
+> +int verify_pkcs7_message_sig(const void *data, size_t len,
+> +			     struct pkcs7_message *pkcs7,
+> +			     struct key *trusted_keys,
+> +			     enum key_being_used_for usage,
+> +			     int (*view_content)(void *ctx,
+> +						 const void *data, size_t len,
+> +						 size_t asn1hdrlen),
+> +			     void *ctx)
+>  {
+> -	struct pkcs7_message *pkcs7;
+>  	int ret;
+>
+> -	pkcs7 = pkcs7_parse_message(raw_pkcs7, pkcs7_len);
+> -	if (IS_ERR(pkcs7))
+> -		return PTR_ERR(pkcs7);
+> -
+>  	/* The data should be detached - so we need to supply it. */
+>  	if (data && pkcs7_supply_detached_data(pkcs7, data, len) < 0) {
+>  		pr_err("PKCS#7 signature with non-detached data\n");
+> @@ -273,6 +267,41 @@ int verify_pkcs7_signature(const void *data, size_t len,
+>  	}
+>
+>  error:
+> +	pr_devel("<==%s() = %d\n", __func__, ret);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * verify_pkcs7_signature - Verify a PKCS#7-based signature on system data.
+> + * @data: The data to be verified (NULL if expecting internal data).
+> + * @len: Size of @data.
+> + * @raw_pkcs7: The PKCS#7 message that is the signature.
+> + * @pkcs7_len: The size of @raw_pkcs7.
+> + * @trusted_keys: Trusted keys to use (NULL for builtin trusted keys only,
+> + *					(void *)1UL for all trusted keys).
+> + * @usage: The use to which the key is being put.
+> + * @view_content: Callback to gain access to content.
+> + * @ctx: Context for callback.
+> + */
+> +int verify_pkcs7_signature(const void *data, size_t len,
+> +			   const void *raw_pkcs7, size_t pkcs7_len,
+> +			   struct key *trusted_keys,
+> +			   enum key_being_used_for usage,
+> +			   int (*view_content)(void *ctx,
+> +					       const void *data, size_t len,
+> +					       size_t asn1hdrlen),
+> +			   void *ctx)
+> +{
+> +	struct pkcs7_message *pkcs7;
+> +	int ret;
+> +
+> +	pkcs7 = pkcs7_parse_message(raw_pkcs7, pkcs7_len);
+> +	if (IS_ERR(pkcs7))
+> +		return PTR_ERR(pkcs7);
+> +
+> +	ret = verify_pkcs7_message_sig(data, len, pkcs7, trusted_keys, usage,
+> +				       view_content, ctx);
+> +
+>  	pkcs7_free_message(pkcs7);
+>  	pr_devel("<==%s() = %d\n", __func__, ret);
+>  	return ret;
+> diff --git a/include/linux/verification.h b/include/linux/verification.h
+> index 018fb5f13d44..5e1d41f2b336 100644
+> --- a/include/linux/verification.h
+> +++ b/include/linux/verification.h
+> @@ -36,6 +36,7 @@ extern const char *const key_being_used_for[NR__KEY_BEING_USED_FOR];
+>  #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
+>
+>  struct key;
+> +struct pkcs7_message;
+>
+>  extern int verify_pkcs7_signature(const void *data, size_t len,
+>  				  const void *raw_pkcs7, size_t pkcs7_len,
+> @@ -45,6 +46,15 @@ extern int verify_pkcs7_signature(const void *data, size_t len,
+>  						      const void *data, size_t len,
+>  						      size_t asn1hdrlen),
+>  				  void *ctx);
+> +extern int verify_pkcs7_message_sig(const void *data, size_t len,
+> +				    struct pkcs7_message *pkcs7,
+> +				    struct key *trusted_keys,
+> +				    enum key_being_used_for usage,
+> +				    int (*view_content)(void *ctx,
+> +							const void *data,
+> +							size_t len,
+> +							size_t asn1hdrlen),
+> +				    void *ctx);
+>
+>  #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+>  extern int verify_pefile_signature(const void *pebuf, unsigned pelen,
