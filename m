@@ -2,135 +2,124 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDB2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDABC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583C92145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88A220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACXES/EF"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JPNxft3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfFXLYV (ORCPT
+        id S1729805AbfFXLY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:24:21 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35196 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbfFXLYU (ORCPT
+        Mon, 24 Jun 2019 07:24:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40501 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfFXLY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:24:20 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so12265343ljh.2;
-        Mon, 24 Jun 2019 04:24:18 -0700 (PDT)
+        Mon, 24 Jun 2019 07:24:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so6941548pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8gvk5GASPNCFWbApHpT04KBTfKEWcp0twApXx08UPkI=;
-        b=ACXES/EFhB7Ih+WhhqABVOb0QduIc2PoED54Mb7dYfi6+j+CrruI8UBaIhc7JLjOv9
-         Wq9vT/sPfsFWvm1Pg+Exrq/cCEbCyB3SqyN4ivOvJ6oTtqbU9oZEXn4gB4rvFj3zc5dA
-         S0OFuam3sMUk+pVbh0SaDc/ATZjoeZ/V5ILqYCYbRB7ckCtDcPOW3lES/tMuCQraf7UB
-         DNdBt/xgW4O223gofyhmfHgjVaJvFWWIPuYR47pqVRvPpCjRW1z2J/oEcXY6v8abmcTP
-         BNpb9Fn0vHSs0Y2xe5AJa6xYjy4DbxtcvwNioBhPpSKKWt+YtWUj+6qr6AFhwopoi9tr
-         aPbg==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=cPO95tQ02ItJUXKI0dlIoUOx9gg/Y99XsbDXMsh4yyo=;
+        b=JPNxft3APis+w63JZCUevjDC4FQtwDYcNWMo5bWBOLjBiw7leJlkdff0ToQiDXNy2f
+         eT1qyEHIOFYlUtBmnICfl7Zj0PoedCNri3AuuzCCnTGCUbEuEbj0JbIug0kQyGBFpVJ5
+         rB3WESNwo3RlmIwwBJnJGiLlzTfYcKWoW4ih19orBUKAa8r+BoiDPTYueKGYmcu1ivb3
+         5mKHWuYgG7+5Rd03JpM/cjyHTsPrrQw+Q6ZfhC6geHyGgDIasIhWCKikRNPLmuGBNfwh
+         XQ5F9jl+vPPyoOst6mRAMO1qlj/AASwLG3jdugDZfjqkZIjvsxjAtkgHqpESO75owI1e
+         WWyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8gvk5GASPNCFWbApHpT04KBTfKEWcp0twApXx08UPkI=;
-        b=Cz+gn6lrUBlOsKI5dBC8MT3YPU/Ujy3UsTyYKtwl+RWniNInng8YqXKwZE6lHe4mJA
-         BzEXhgbl/i9ZtwZB3wI50MXN+zPd3CZIHbuh5kP3F9csvKu4IHp3HVyqTHycpc++H8B0
-         glVdkSOSG0NaObl84qXzPN/Kkjy6HNXSTxIiCYkjwVUPMjH4JllGWdvW9B2+ZjSI3yzI
-         CFQ078MRQ6rBnrpEY8VyelyAmFt2T2zPLqBZgZoIIbrUiTZsY9Vaoy2ocHjDtRq5kRIA
-         x48pB/qTnMKk7m1HZBgu2EDdkd9C1BQX/udgh39Pk4k1O2vyK8nv5UfWzw/gCc19/KNB
-         zbEQ==
-X-Gm-Message-State: APjAAAUi0ojxah1CoWTbkXzp0+IWVWenKzJ+QkAJ/rb/QW9A24Dg4rRt
-        ibn/wqoA3OvRlKDn/WLNVy4=
-X-Google-Smtp-Source: APXvYqy/7ZQc8jeydT38n1bqGoa/x+R4Uqit0gUF/G9MnVl5l4eo+qFmEQ+Hhix8WVAr09HpbTQktw==
-X-Received: by 2002:a2e:9c43:: with SMTP id t3mr16672742ljj.157.1561375458294;
-        Mon, 24 Jun 2019 04:24:18 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id v139sm1530806lfa.69.2019.06.24.04.24.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 04:24:17 -0700 (PDT)
-Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-To:     myungjoo.ham@samsung.com
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-References: <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
- <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
- <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
- <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p3>
- <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
-Date:   Mon, 24 Jun 2019 14:24:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cPO95tQ02ItJUXKI0dlIoUOx9gg/Y99XsbDXMsh4yyo=;
+        b=iIVCnQol9u3ot1Z4W+sC9FhcdHM1HnZlLHV6qtc0hSQI4C9USyT1YT1o0Y8ynPJKwN
+         MosjTo9zWNjx7LUe3UAWMnzHGjHYIorn8ksmbNo853qWk/Xth9F5Rh87bTuBBomR+C8E
+         XVTP98/hemph7WqXE60vkVaL6uOCtPCKXxwL0KNvAaBitwbc7eCK8zixL6js9idFg5M7
+         vkPpW4ef9I6QSc5x949RYXUZ75JiXYfhoXssbKvXz0dBr/a1OgVwu1Fh6QJBluAn1nw3
+         hM83pOBvgJdiR4zkcmTZ/KbDkvPO4n4NFycJ/fwMwFkAca8piH+8nG4Ido1veK56n08y
+         N/yA==
+X-Gm-Message-State: APjAAAVTrglSKIldHJpk6BIjDgTvtLfE/6milh12vDAvZWriZd/YhCo+
+        NN8bQsa/iQzsHWoL0euPGMzixA==
+X-Google-Smtp-Source: APXvYqxMZQ4aLs+DdHurIPQVyUtL6Vwf4JhyCVXzEEUkRFr418zSvSkIzfy4Hf9658l7TWn9tUBPlg==
+X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr23689463pje.123.1561375467383;
+        Mon, 24 Jun 2019 04:24:27 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id b24sm10635119pfd.98.2019.06.24.04.24.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Jun 2019 04:24:26 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, paul.walmsley@sifive.com,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu,
+        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] riscv: dts: Re-organize SPI DT nodes
+Date:   Mon, 24 Jun 2019 16:54:13 +0530
+Message-Id: <1561375453-3135-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.06.2019 14:11, MyungJoo Ham пишет:
->>
->> --------- Original Message ---------
->> Sender : Dmitry Osipenko <digetx@gmail.com>
->>
->> 24.06.2019 10:34, MyungJoo Ham пишет:
->>>>
->>>> A question:
->>>>
->>>> Does this driver support Tegra20 as well?
->>>> I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
->>>> according to /drivers/soc/tegra/Kconfig.
->>>>
->>>
->>> For this matter, how about updating your 13/16 patch as follows?
->>>
-> []
->>
->> Good call! I'll update this patch following yours suggestion, thanks.
-> 
-> Or, you may approve the modified commits here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=for-next
+As per the General convention, define only device DT node in SOC DTSi
+file with status = "disabled" and enable device in Board DTS file with
+status = "okay"
 
-Looks almost good to me!
+Reported-by: Anup Patel <anup@brainfault.org>
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 3 +++
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 1 +
+ 2 files changed, 4 insertions(+)
 
-I just recalled that there is also a 64bit variant of Tegra124, the Tegra132. Hence
-the Tegra30+ Kconfig entry should look like this (it's also worthy to break the lines
-for readability):
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 4e8fbde..270f6e8 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -203,6 +203,7 @@
+ 			interrupt-parent = <&plic0>;
+ 			interrupts = <51>;
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
++			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
+@@ -213,6 +214,7 @@
+ 			interrupt-parent = <&plic0>;
+ 			interrupts = <52>;
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
++			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
+@@ -222,6 +224,7 @@
+ 			interrupt-parent = <&plic0>;
+ 			interrupts = <6>;
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
++			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 4da8870..73e2af6 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -43,6 +43,7 @@
+ };
+ 
+ &qspi0 {
++	status = "okay";
+ 	flash@0 {
+ 		compatible = "issi,is25wp256", "jedec,spi-nor";
+ 		reg = <0>;
+-- 
+1.9.1
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index ccb1a68c4b51..bd2efbc27725 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -94,7 +94,10 @@ config ARM_EXYNOS_BUS_DEVFREQ
-
- config ARM_TEGRA_DEVFREQ
-        tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
--       depends on ARCH_TEGRA || COMPILE_TEST
-+       depends on ARCH_TEGRA_3x_SOC  || ARCH_TEGRA_114_SOC || \
-+                  ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \
-+                  ARCH_TEGRA_210_SOC || \
-+                  COMPILE_TEST
-        select PM_OPP
-        help
-          This adds the DEVFREQ driver for the Tegra family of SoCs.
-
-Could you please adjust the patches like I'm suggesting? I'll approve yours change
-then and won't re-spin the first batch of the patches.
