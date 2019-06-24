@@ -2,122 +2,133 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A077C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E12FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E6120665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Val/xFIc"
+	by mail.kernel.org (Postfix) with ESMTP id 1D89A20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561394339;
+	bh=H5s9B+mWHa8fAAlANY+QSB05sWH1ftBeHONchoanyss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=p55meTJawB+co/KBAsHysgn7F2jYJk9zcSI9TQn4sg/Ytabjuc42Ec9GHKMzq9MRj
+	 +otzY4fXME2JvdsmHysVakTWAPQ2OFS/t9FLxmS+rcypFq7b5cqeCssl+gX41qqvEo
+	 nQ/qlfVzwV4BbWjJdFvYIe3muVTVjrqoRnZDukYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbfFXQiS (ORCPT
+        id S1729837AbfFXQi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:38:18 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50640 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfFXQiR (ORCPT
+        Mon, 24 Jun 2019 12:38:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58138 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfFXQi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:38:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OGYBIm140014;
-        Mon, 24 Jun 2019 16:36:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=HA99AMTfTSc28plQQ/cp41x7Nn4dwb3FKNRresvoez8=;
- b=Val/xFIcmXfnvXdGrQBd2uUMZYObEi3W8WIlY6oMUJIKvjldL9xYJIbr4X8m/8PfUkNP
- RhH7NFaRejnXOwK4OrHcHI49LEDw30Z0srM0V+BtgIV6OV/ooJ8YuV1XwJC9gXt//xWz
- Q0bSRiqdmELhNdVSkCIZr87TrKLwiGMPLZJNCBd7weSod/LyeYSIITLeuy/oyb0/36Pk
- joZS32wTTBm4Xftsq9fhk9nHXmjGPPxMMMzommCPqRpU1cRv8ZoyAI6/8dXnLZ2krssP
- nfR6QpxDK+AWnV/OvlFkpdglsTrJTTQAP82qwXJGdU82OAjIBZeAn2VIxNce6Btsj8Q4 7Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t9cyq7dxf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:36:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OGZS5o040090;
-        Mon, 24 Jun 2019 16:36:51 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t9acbktrd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Jun 2019 16:36:51 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5OGaodY042889;
-        Mon, 24 Jun 2019 16:36:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acbktr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:36:50 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OGaiFC016783;
-        Mon, 24 Jun 2019 16:36:44 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 09:36:44 -0700
-Date:   Mon, 24 Jun 2019 09:36:42 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/7] vfs: flush and wait for io when setting the
- immutable flag via SETFLAGS
-Message-ID: <20190624163642.GT5387@magnolia>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
- <156116142734.1664939.5074567130774423066.stgit@magnolia>
- <20190624153358.GH32376@quack2.suse.cz>
+        Mon, 24 Jun 2019 12:38:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fY1uicw44jx44qL4fNl32lhk7YJ+D/1JLgTlaHjUDKg=; b=X/gGuMjIdfzOOqUQIRE98lBM8
+        hQJ/bXQjAv+k3udNbi95nJ1/gufdyY5py1gC7U+WAQHzoM0Ln6sIYtbupQ39CQlULhoQ/UyYEb7IG
+        YeXmW2/8XhLDS4FP6sFxS2sB22txPlNU3jpuu/FN1ZppX+4ExMwDh9PBvRxcYBu4c1mt0j0tVV7Vx
+        Xivr/9G0/IY9FiZVWLWYjAMsJGXuMR7FvmzTGXKxbIccY9AIdfr7XJHKnro49rCD2VjXwl1/Xav2O
+        mBIHOWiOZqawA+qOwgPJH3uOZb0nZ1UxM7oafp8dKlXGhqtDAhIOk/AHiwNrlh+JMta0ZdvO7nKD4
+        VYBICpYzQ==;
+Received: from 177.205.71.220.dynamic.adsl.gvt.net.br ([177.205.71.220] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfRzc-0001LO-7X; Mon, 24 Jun 2019 16:38:56 +0000
+Date:   Mon, 24 Jun 2019 13:38:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
+Message-ID: <20190624133852.4a31c597@coco.lan>
+In-Reply-To: <20190624082950.5e338d37@lwn.net>
+References: <20190621235159.6992-1-corbet@lwn.net>
+        <20190621235159.6992-2-corbet@lwn.net>
+        <20190621220046.3de30d9d@coco.lan>
+        <20190622084346.28c7c748@lwn.net>
+        <20190622144610.26b7d99c@coco.lan>
+        <20190624082950.5e338d37@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624153358.GH32376@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=682 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240131
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:33:58PM +0200, Jan Kara wrote:
-> On Fri 21-06-19 16:57:07, Darrick J. Wong wrote:
-> > +/*
-> > + * Flush file data before changing attributes.  Caller must hold any locks
-> > + * required to prevent further writes to this file until we're done setting
-> > + * flags.
-> > + */
-> > +static inline int inode_flush_data(struct inode *inode)
-> > +{
-> > +	inode_dio_wait(inode);
-> > +	return filemap_write_and_wait(inode->i_mapping);
-> > +}
+Em Mon, 24 Jun 2019 08:29:50 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> On Sat, 22 Jun 2019 14:46:10 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 > 
-> BTW, how about calling this function inode_drain_writes() instead? The
-> 'flush_data' part is more a detail of implementation of write draining than
-> what we need to do to set immutable flag.
-
-Ok, that's a much better description of what the function does.
-
---D
-
+> > > > .. c:function:: int ioctl( int fd, int request, void *argp )
+> > > >     :name: v4l2-ioctl      
+> > > 
+> > > Some digging around didn't turn up any documentation for :name:, but it
+> > > seems to prevent ioctl() from going into the list of functions that can be
+> > > cross-referenced.     
+> > 
+> > It took me a while to discover this way to be able to re-define the
+> > name of a symbol at the C domain, but I'm pretty sure I read this
+> > somewhere at the Sphinx docs (or perhaps on some bug track or Stack
+> > Overflow).
+> > 
+> > I don't remember exactly where I get it, but I guess it is related to
+> > this:
+> > 
+> > 	http://docutils.sourceforge.net/docs/howto/rst-roles.html
+> >   
+> > > I wonder if the same should be done for the others?    
+> > 
+> > Sure.  
 > 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> It actually occurs to me that it might be better to keep the skip list and
+> maybe expand it.  There are vast numbers of places where people write
+> open() or whatever(), and there is no point in even trying to
+> cross-reference them. 
+
+Yeah, subsystems will likely have their own "man pages" for for sysctls.
+
+Both the dvb and the v4l2 ones are part of what used to be the DocBook
+manpages for those syscalls. If I'm not mistaken, we ended by expanded 
+the same approach for the media controller, for CEC and for RC.
+
+> I should do some tests, it might even make a
+> measurable difference in the build time to skip them :)  And in any case,
+> somebody is bound to put one of those common names into the namespace in
+> the future, recreating the current problem.
+
+There is one way of keeping it while avoiding troubles: you could
+create internal names, for example using the current dir, auto-adding
+the ":name:" tag when a declaration conflict rises. Not sure how
+easy/hard would be to implement it.
+
+Btw, at get_abi.pl, I had to do a trick like that, as some symbols
+have a "local context". The good thing at ABI files is that the context
+is clear: it is valid only between "What:" and "Description:" fields.
+
+Also, as it is a single script that parses the entire ABI (it takes
+on ~0.1 seconds to parse everything and store internally on my machine),
+the logic there detects when an existing symbol is re-used on a different
+context. When this happens, it adds a random char at the end of the
+internal reference, while keeping the original name[1].
+
+[1] on the the highly unlikely event that the new name still repeats,
+it adds a new random char - until the name gets different.
+
+Probably doing it at automarkup won't be that simple, but it could
+work.
+
+Thanks,
+Mauro
