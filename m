@@ -2,55 +2,54 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C184DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C60C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4D2205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9272063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371016;
-	bh=InnUAcskl1+Nq8HujBZuuO9oVUwRKPIL3VUFQVlFKk8=;
+	s=default; t=1561371022;
+	bh=DUFMgnssTbGIMl+18y8NzDV0gu9yv0m/to1vbGlRUpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BrQ90GaCmTh5Lh/v2YSA8Q4gqZTZ3SvXVP+0dXFE62br7MBh/E4UY4/Z0km/AU6EH
-	 kpJicuvD4PB7fnc5uX6dVllRzT7xNqQQBhf3YiIPjFyOfP5Q7HZe2IDmwp1n+8+p2E
-	 rPlGAflEcU2FC2R/n7GBGWewP/obn5NwfVX0lrVQ=
+	b=vRMv3EQzpS/SbAHFFCP4mrPdlLF6SOQ6XwdC50iiCSzyb4sMAh7VS408D0F4Gsgm4
+	 aT1Ktq9DgHKMIcMwX2OuSZxlBOFhVKu4G99cd2LvYzh+5aV4LWHLr4hcLcNBET64fc
+	 GR26URrdZULwwDo5HE6jWG2P7AJQSSeQJTiFcnCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfFXKKP (ORCPT
+        id S1730405AbfFXKIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbfFXKIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:20 -0400
+        id S1730366AbfFXKHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:51 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA0C2089F;
-        Mon, 24 Jun 2019 10:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B6E8205C9;
+        Mon, 24 Jun 2019 10:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370900;
-        bh=InnUAcskl1+Nq8HujBZuuO9oVUwRKPIL3VUFQVlFKk8=;
+        s=default; t=1561370870;
+        bh=DUFMgnssTbGIMl+18y8NzDV0gu9yv0m/to1vbGlRUpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3U5ysA1VK5fDL+uHbRMIGDo+RYoHST4c8srAPY2HrrGBpJOKAOElM6n6gUzdC/8J
-         qu81Z4Gcu79av5HryD+gAjkGK3/z36IGFGrMNRe0ML2EIb9NBeQdy/RXv10dNMAYsU
-         F3/nOEDBOf+eNVugWbnINPzG1gpg3LNkMYV529Oo=
+        b=rZhfKS3Scp1N6zylS4XwD2lGMCQpbTIrzKNYnUFaOM9NNuEoQJv6QAM2cBm1gLO0d
+         JV9okF+HKjP9Io2zvdHoP3NNwt5xLrn9fIaKJj8ZWtgo9+KMM9ivza1Thia/7POSDQ
+         BsYa3bAVTfs3uoGxhfz0BnHxKwvmtgWUOqeVwEoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 043/121] MIPS: mark ginvt() as __always_inline
-Date:   Mon, 24 Jun 2019 17:56:15 +0800
-Message-Id: <20190624092322.981619939@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 030/121] brcmfmac: sdio: Dont tune while the card is off
+Date:   Mon, 24 Jun 2019 17:56:02 +0800
+Message-Id: <20190624092322.370827148@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -63,37 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6074c33c6b2eabc70867ef76d57ca256e9ea9da7 ]
+From: Douglas Anderson <dianders@chromium.org>
 
-To meet the 'i' (immediate) constraint for the asm operands,
-this function must be always inlined.
+commit 65dade6044079a5c206fd1803642ff420061417a upstream.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When Broadcom SDIO cards are idled they go to sleep and a whole
+separate subsystem takes over their SDIO communication.  This is the
+Always-On-Subsystem (AOS) and it can't handle tuning requests.
+
+Specifically, as tested on rk3288-veyron-minnie (which reports having
+BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
+when "on = 1" (aka we're transition from sleep to wake) by whacking:
+  bus->sdiodev->func1->card->host->need_retune = 1
+...then I can often see tuning fail.  In this case dw_mmc reports "All
+phases bad!").  Note that I don't get 100% failure, presumably because
+sometimes the card itself has already transitioned away from the AOS
+itself by the time we try to wake it up.  If I force retuning when "on
+= 0" (AKA force retuning right before sending the command to go to
+sleep) then retuning is always OK.
+
+NOTE: we need _both_ this patch and the patch to avoid triggering
+tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
+sdio: Disable auto-tuning around commands expected to fail").  Though
+both patches handle issues with Broadcom's AOS, the problems are
+distinct:
+1. We want to defer (but not ignore) asynchronous (like
+   timer-requested) tuning requests till the card is awake.  However,
+   we want to ignore CRC errors during the transition, we don't want
+   to queue deferred tuning request.
+2. You could imagine that the AOS could implement retuning but we
+   could still get errors while transitioning in and out of the AOS.
+   Similarly you could imagine a seamless transition into and out of
+   the AOS (with no CRC errors) even if the AOS couldn't handle
+   tuning.
+
+ALSO NOTE: presumably there is never a desperate need to retune in
+order to wake up the card, since doing so is impossible.  Luckily the
+only way the card can get into sleep state is if we had a good enough
+tuning to send it the command to put it into sleep, so presumably that
+"good enough" tuning is enough to wake us up, at least with a few
+retries.
+
+Cc: stable@vger.kernel.org #v4.18+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/include/asm/ginvt.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/mips/include/asm/ginvt.h b/arch/mips/include/asm/ginvt.h
-index 49c6dbe37338..6eb7c2b94dc7 100644
---- a/arch/mips/include/asm/ginvt.h
-+++ b/arch/mips/include/asm/ginvt.h
-@@ -19,7 +19,7 @@ _ASM_MACRO_1R1I(ginvt, rs, type,
- # define _ASM_SET_GINV
- #endif
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -678,6 +678,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio
  
--static inline void ginvt(unsigned long addr, enum ginvt_type type)
-+static __always_inline void ginvt(unsigned long addr, enum ginvt_type type)
- {
- 	asm volatile(
- 		".set	push\n"
--- 
-2.20.1
-
+ 	sdio_retune_crc_disable(bus->sdiodev->func1);
+ 
++	/* Cannot re-tune if device is asleep; defer till we're awake */
++	if (on)
++		sdio_retune_hold_now(bus->sdiodev->func1);
++
+ 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+ 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+ 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+@@ -738,6 +742,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio
+ 	if (try_cnt > MAX_KSO_ATTEMPTS)
+ 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ 
++	if (on)
++		sdio_retune_release(bus->sdiodev->func1);
++
+ 	sdio_retune_crc_enable(bus->sdiodev->func1);
+ 
+ 	return err;
 
 
