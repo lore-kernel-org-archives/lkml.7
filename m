@@ -2,99 +2,399 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379D9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A0520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVeSXiVs"
+	by mail.kernel.org (Postfix) with ESMTP id ED52D20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfFXTtk (ORCPT
+        id S1729710AbfFXTw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:49:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40722 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbfFXTtj (ORCPT
+        Mon, 24 Jun 2019 15:52:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37978 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728330AbfFXTw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:49:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so4834940ioc.7;
-        Mon, 24 Jun 2019 12:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NZu4O00NPZleuCWXITSxnWW1rGLa66653MvVC+wHLmw=;
-        b=jVeSXiVsHVu2ouD9U37An682AZzAmmkFDiJ+LkM6/EftdC972P9MeMDquhfc5L4lZL
-         j18MoUvN4XjKZXE8rOAlSmSh2ypQaGsQoNcsFVIgUXlQDhNWGg0oUi9l+paz44faPa3+
-         7pEB3QBX417I/pQ+SqxPYr+HKmEHMeM8Jy5nKjXEC88TEMrlxO01uMszzLY9Li5eIOBt
-         q+Kju30heEn6reuItzwtS+hr+qVrMPOrn7MbwoleSpbDniuYdJtHhFZjPnTmf+jmD8MS
-         lf4UlMnZew435rZg9jB3TiwL33OJLG1VQlSaLpWEO+3P/OpW1E6aF9XKP52g89geYsfX
-         dVqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NZu4O00NPZleuCWXITSxnWW1rGLa66653MvVC+wHLmw=;
-        b=lVkKH6ziGeWS1YGXBuqHOtlS9aX0D0bfhylGJLDaCRUHKPVZHgJc35bRMzFVU9I9Iy
-         d9wMRe/sl203f7mIHlWTJ8jF+Yxacew2uvGMrF2KCAmngs2LgzhHZy218MYnpdmveql1
-         aIygR8Zt+e32kG13S0ABGNHuAPq5PPiKJOOCKnooD+vvjMXAlBEJ4/kGptRGQfeAOy65
-         Md7Z6TvAwneX1otjyc8wqJ/LOsqNPZedrZo6QLsCSVOXf99yIZbYCqghmnAScR0MeLuE
-         nImUctd4ODJCNivC35jtxJA0qjtCEoutL0EktM7fOCOhBcTxRw+IqJL+3+eKpCYiSjPW
-         bwVw==
-X-Gm-Message-State: APjAAAU6FcO0+uY658J2mBXMPS1vyjIaKdxq37+Xx0QBjzo8oUzBepBE
-        IDBS7bPx2mJ96jGHJB69j/BQp5Mi
-X-Google-Smtp-Source: APXvYqwxzKpMjHARD9RmDR1Id9qihaizxqLIei0rShn3JXXydBhIZ5G7UVmfyA/1PL1Yfe9SW0G+Cg==
-X-Received: by 2002:a5e:8508:: with SMTP id i8mr17447890ioj.108.1561405778305;
-        Mon, 24 Jun 2019 12:49:38 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:f558:9f3d:eff4:2876? ([2601:282:800:fd80:f558:9f3d:eff4:2876])
-        by smtp.googlemail.com with ESMTPSA id e188sm18389354ioa.3.2019.06.24.12.49.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 12:49:37 -0700 (PDT)
-Subject: Re: [PATCH net-next] ipv4: enable route flushing in network
- namespaces
-To:     Christian Brauner <christian@brauner.io>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20190624132923.16792-1-christian@brauner.io>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <56ed92eb-14db-789a-c226-cdf8a5862e61@gmail.com>
-Date:   Mon, 24 Jun 2019 13:49:33 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Mon, 24 Jun 2019 15:52:27 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OJlWEQ054263
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:52:25 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb1vjqx6v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:52:25 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Mon, 24 Jun 2019 20:52:24 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Jun 2019 20:52:18 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OJqHtw38404584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 19:52:17 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 501DFC6055;
+        Mon, 24 Jun 2019 19:52:17 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF23AC605B;
+        Mon, 24 Jun 2019 19:52:12 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.209.86])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon, 24 Jun 2019 19:52:11 +0000 (GMT)
+References: <20190611062817.18412-1-bauerman@linux.ibm.com> <20190611062817.18412-2-bauerman@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v11 01/13] MODSIGN: Export module signature definitions
+In-reply-to: <20190611062817.18412-2-bauerman@linux.ibm.com>
+Date:   Mon, 24 Jun 2019 16:52:09 -0300
 MIME-Version: 1.0
-In-Reply-To: <20190624132923.16792-1-christian@brauner.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19062419-0016-0000-0000-000009C64D7D
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011322; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01222738; UDB=6.00643410; IPR=6.01003899;
+ MB=3.00027449; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 19:52:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062419-0017-0000-0000-000043C4ABE1
+Message-Id: <87imsukbh2.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 7:29 AM, Christian Brauner wrote:
-> Tools such as vpnc try to flush routes when run inside network
-> namespaces by writing 1 into /proc/sys/net/ipv4/route/flush. This
-> currently does not work because flush is not enabled in non-initial
-> network namespaces.
-> Since routes are per network namespace it is safe to enable
-> /proc/sys/net/ipv4/route/flush in there.
-> 
-> Link: https://github.com/lxc/lxd/issues/4257
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
->  net/ipv4/route.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
 
-why not teach vpnc to use rtnetlink and then add a flush option to
-RTM_DELROUTE?
+Hello Jessica,
+
+AFAIK Mimi is happy with this patch set, but I still need acks from
+maintainers of other subsystems that my changes touch before she can
+accept it.
+
+Is this patch OK from your PoV?
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+
+> IMA will use the module_signature format for append signatures, so export
+> the relevant definitions and factor out the code which verifies that the
+> appended signature trailer is valid.
+>
+> Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
+> and be able to use mod_check_sig() without having to depend on either
+> CONFIG_MODULE_SIG or CONFIG_MODULES.
+>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> ---
+>  include/linux/module.h           |  3 --
+>  include/linux/module_signature.h | 44 +++++++++++++++++++++++++
+>  init/Kconfig                     |  6 +++-
+>  kernel/Makefile                  |  1 +
+>  kernel/module.c                  |  1 +
+>  kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
+>  kernel/module_signing.c          | 56 +++++---------------------------
+>  scripts/Makefile                 |  2 +-
+>  8 files changed, 106 insertions(+), 53 deletions(-)
+>
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 188998d3dca9..aa56f531cf1e 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -25,9 +25,6 @@
+>  #include <linux/percpu.h>
+>  #include <asm/module.h>
+>
+> -/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
+> -#define MODULE_SIG_STRING "~Module signature appended~\n"
+> -
+>  /* Not Yet Implemented */
+>  #define MODULE_SUPPORTED_DEVICE(name)
+>
+> diff --git a/include/linux/module_signature.h b/include/linux/module_signature.h
+> new file mode 100644
+> index 000000000000..523617fc5b6a
+> --- /dev/null
+> +++ b/include/linux/module_signature.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Module signature handling.
+> + *
+> + * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
+> + * Written by David Howells (dhowells@redhat.com)
+> + */
+> +
+> +#ifndef _LINUX_MODULE_SIGNATURE_H
+> +#define _LINUX_MODULE_SIGNATURE_H
+> +
+> +/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
+> +#define MODULE_SIG_STRING "~Module signature appended~\n"
+> +
+> +enum pkey_id_type {
+> +	PKEY_ID_PGP,		/* OpenPGP generated key ID */
+> +	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
+> +	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
+> +};
+> +
+> +/*
+> + * Module signature information block.
+> + *
+> + * The constituents of the signature section are, in order:
+> + *
+> + *	- Signer's name
+> + *	- Key identifier
+> + *	- Signature data
+> + *	- Information block
+> + */
+> +struct module_signature {
+> +	u8	algo;		/* Public-key crypto algorithm [0] */
+> +	u8	hash;		/* Digest algorithm [0] */
+> +	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
+> +	u8	signer_len;	/* Length of signer's name [0] */
+> +	u8	key_id_len;	/* Length of key identifier [0] */
+> +	u8	__pad[3];
+> +	__be32	sig_len;	/* Length of signature data */
+> +};
+> +
+> +int mod_check_sig(const struct module_signature *ms, size_t file_len,
+> +		  const char *name);
+> +
+> +#endif /* _LINUX_MODULE_SIGNATURE_H */
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 8b9ffe236e4f..c2286a3c74c5 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1852,6 +1852,10 @@ config BASE_SMALL
+>  	default 0 if BASE_FULL
+>  	default 1 if !BASE_FULL
+>
+> +config MODULE_SIG_FORMAT
+> +	def_bool n
+> +	select SYSTEM_DATA_VERIFICATION
+> +
+>  menuconfig MODULES
+>  	bool "Enable loadable module support"
+>  	option modules
+> @@ -1929,7 +1933,7 @@ config MODULE_SRCVERSION_ALL
+>  config MODULE_SIG
+>  	bool "Module signature verification"
+>  	depends on MODULES
+> -	select SYSTEM_DATA_VERIFICATION
+> +	select MODULE_SIG_FORMAT
+>  	help
+>  	  Check modules for valid signatures upon load: the signature
+>  	  is simply appended to the module. For more information see
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index 33824f0385b3..f29ae2997a43 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -58,6 +58,7 @@ endif
+>  obj-$(CONFIG_UID16) += uid16.o
+>  obj-$(CONFIG_MODULES) += module.o
+>  obj-$(CONFIG_MODULE_SIG) += module_signing.o
+> +obj-$(CONFIG_MODULE_SIG_FORMAT) += module_signature.o
+>  obj-$(CONFIG_KALLSYMS) += kallsyms.o
+>  obj-$(CONFIG_BSD_PROCESS_ACCT) += acct.o
+>  obj-$(CONFIG_CRASH_CORE) += crash_core.o
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 6e6712b3aaf5..2712f4d217f5 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/export.h>
+>  #include <linux/extable.h>
+>  #include <linux/moduleloader.h>
+> +#include <linux/module_signature.h>
+>  #include <linux/trace_events.h>
+>  #include <linux/init.h>
+>  #include <linux/kallsyms.h>
+> diff --git a/kernel/module_signature.c b/kernel/module_signature.c
+> new file mode 100644
+> index 000000000000..4224a1086b7d
+> --- /dev/null
+> +++ b/kernel/module_signature.c
+> @@ -0,0 +1,46 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Module signature checker
+> + *
+> + * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
+> + * Written by David Howells (dhowells@redhat.com)
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/printk.h>
+> +#include <linux/module_signature.h>
+> +#include <asm/byteorder.h>
+> +
+> +/**
+> + * mod_check_sig - check that the given signature is sane
+> + *
+> + * @ms:		Signature to check.
+> + * @file_len:	Size of the file to which @ms is appended.
+> + * @name:	What is being checked. Used for error messages.
+> + */
+> +int mod_check_sig(const struct module_signature *ms, size_t file_len,
+> +		  const char *name)
+> +{
+> +	if (be32_to_cpu(ms->sig_len) >= file_len - sizeof(*ms))
+> +		return -EBADMSG;
+> +
+> +	if (ms->id_type != PKEY_ID_PKCS7) {
+> +		pr_err("%s: Module is not signed with expected PKCS#7 message\n",
+> +		       name);
+> +		return -ENOPKG;
+> +	}
+> +
+> +	if (ms->algo != 0 ||
+> +	    ms->hash != 0 ||
+> +	    ms->signer_len != 0 ||
+> +	    ms->key_id_len != 0 ||
+> +	    ms->__pad[0] != 0 ||
+> +	    ms->__pad[1] != 0 ||
+> +	    ms->__pad[2] != 0) {
+> +		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
+> +		       name);
+> +		return -EBADMSG;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+> index 6b9a926fd86b..cdd04a6b8074 100644
+> --- a/kernel/module_signing.c
+> +++ b/kernel/module_signing.c
+> @@ -11,37 +11,13 @@
+>
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+> +#include <linux/module.h>
+> +#include <linux/module_signature.h>
+>  #include <linux/string.h>
+>  #include <linux/verification.h>
+>  #include <crypto/public_key.h>
+>  #include "module-internal.h"
+>
+> -enum pkey_id_type {
+> -	PKEY_ID_PGP,		/* OpenPGP generated key ID */
+> -	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
+> -	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
+> -};
+> -
+> -/*
+> - * Module signature information block.
+> - *
+> - * The constituents of the signature section are, in order:
+> - *
+> - *	- Signer's name
+> - *	- Key identifier
+> - *	- Signature data
+> - *	- Information block
+> - */
+> -struct module_signature {
+> -	u8	algo;		/* Public-key crypto algorithm [0] */
+> -	u8	hash;		/* Digest algorithm [0] */
+> -	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
+> -	u8	signer_len;	/* Length of signer's name [0] */
+> -	u8	key_id_len;	/* Length of key identifier [0] */
+> -	u8	__pad[3];
+> -	__be32	sig_len;	/* Length of signature data */
+> -};
+> -
+>  /*
+>   * Verify the signature on a module.
+>   */
+> @@ -49,6 +25,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>  {
+>  	struct module_signature ms;
+>  	size_t sig_len, modlen = info->len;
+> +	int ret;
+>
+>  	pr_devel("==>%s(,%zu)\n", __func__, modlen);
+>
+> @@ -56,32 +33,15 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>  		return -EBADMSG;
+>
+>  	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
+> -	modlen -= sizeof(ms);
+> +
+> +	ret = mod_check_sig(&ms, modlen, info->name);
+> +	if (ret)
+> +		return ret;
+>
+>  	sig_len = be32_to_cpu(ms.sig_len);
+> -	if (sig_len >= modlen)
+> -		return -EBADMSG;
+> -	modlen -= sig_len;
+> +	modlen -= sig_len + sizeof(ms);
+>  	info->len = modlen;
+>
+> -	if (ms.id_type != PKEY_ID_PKCS7) {
+> -		pr_err("%s: Module is not signed with expected PKCS#7 message\n",
+> -		       info->name);
+> -		return -ENOPKG;
+> -	}
+> -
+> -	if (ms.algo != 0 ||
+> -	    ms.hash != 0 ||
+> -	    ms.signer_len != 0 ||
+> -	    ms.key_id_len != 0 ||
+> -	    ms.__pad[0] != 0 ||
+> -	    ms.__pad[1] != 0 ||
+> -	    ms.__pad[2] != 0) {
+> -		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
+> -		       info->name);
+> -		return -EBADMSG;
+> -	}
+> -
+>  	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+>  				      VERIFY_USE_SECONDARY_KEYRING,
+>  				      VERIFYING_MODULE_SIGNATURE,
+> diff --git a/scripts/Makefile b/scripts/Makefile
+> index 9d442ee050bd..52098b080ab7 100644
+> --- a/scripts/Makefile
+> +++ b/scripts/Makefile
+> @@ -17,7 +17,7 @@ hostprogs-$(CONFIG_VT)           += conmakehash
+>  hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
+>  hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
+>  hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
+> -hostprogs-$(CONFIG_MODULE_SIG)	 += sign-file
+> +hostprogs-$(CONFIG_MODULE_SIG_FORMAT) += sign-file
+>  hostprogs-$(CONFIG_SYSTEM_TRUSTED_KEYRING) += extract-cert
+>  hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
+>
 
