@@ -2,115 +2,92 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97475C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73204C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE1320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561414117;
-	bh=dy7uDZ+s0jJhQj5LYz6HtlMtLfkofeu8zE7uCiKKKh0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f0IVYWgInLYT+v2MTDOrLCn9va/i41vM5Jqc9w2681nAmYBGpzO4W331MacuRukfn
-	 det8rDm2xx3kIInYoH351neQqVpo3rhoU94PlOl17nmrlH8PyMhGXEZcySIUojjb+0
-	 hPC3MKTv/fxObuWra8btqsj4OJdnKRjmrSUFurI8=
+	by mail.kernel.org (Postfix) with ESMTP id 4827420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mdb29tXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfFXWIg (ORCPT
+        id S1726951AbfFXWNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:08:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33550 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfFXWIf (ORCPT
+        Mon, 24 Jun 2019 18:13:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37602 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfFXWNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:08:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i4so15379359otk.0;
-        Mon, 24 Jun 2019 15:08:35 -0700 (PDT)
+        Mon, 24 Jun 2019 18:13:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 131so14159943ljf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E6ucUb/4G6TX7U6IlvaXO7Noph77Huv96zwgj/iVbk4=;
+        b=Mdb29tXw/X8t1nTGw1Tb/az/GIy3MBpx/mG9kBd3XormoeMtZIiNk11sY5SclYB087
+         C4XYpgkY6bBM5A1LgC+8ChSE8+hNnU/P6pDAwmHzzKztl4+9pGlxydZkItv+oZMfKfUh
+         eJoCleDb/9fpZjoJJW99YaiZgFBCS5YnLl40mGgfl3C4X9D6QqPNnu7BJnshXGGDg+vm
+         R9XtYGNyVdy5alZNZIwaHwAsmqrVCzdLhDdeMEh2Ulfg3Jz1LQqx08VSyPa0eGTuvAF1
+         oBpQjRHm08vzaaolL5N3HfBcXBSaJidGyvBdAS7/ByxXCq4MsuGqdIGvpYxc4v4J+wRy
+         o7Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4iGRYLuRVzU9YzxqK6jPghJ0dUfb/GOU2YwLj9C9w2k=;
-        b=RNcFy/0uSvwaxnUUc70zCSSrriH1l1vXjMt2Xo7uPCjaW3BGZGGzh2lMypb2YdoXaf
-         9+K1LT4hQJpd7o612iT2ud9ovmSHUpW8Ol8UO8UAJutJhqIvo6JYSxyUlBREq0bmg08i
-         Vtyh0VglSpG7whXr00x96tp4yMZzIceGHKmh5QZ4j3Hq2jyl2xmcphZwMxHVmI37lrbU
-         u7ZdSmYu1OVUvqFgFrteglJwiIv7lWy7Ze/TATtFyDFJjJq/XYz0WZNI4V3OmF63bWXF
-         RB5PCARpBRg5+TUMMdSp/XnVXU73ym0lw9SBe+RQ8uabopvUjLC3LPm90smFOmnWg/a7
-         0oaA==
-X-Gm-Message-State: APjAAAXqCfh+Aci3GlXycTrsKo0iazsK8wUvyB5SEz77rPSMKeydO0HY
-        zjN+CVzRUx9kzwzPjv5XpiXimEibClTaj2s7rsg=
-X-Google-Smtp-Source: APXvYqwgzCf5b4E6QZBa9WMG2t/ihRyD3pwVSm4UHJaeDdPUJynzus7tlNl3NtRerTvrfgtAyOk/8J4fnig5t+KEUgI=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr18253366otn.266.1561414115009;
- Mon, 24 Jun 2019 15:08:35 -0700 (PDT)
+        bh=E6ucUb/4G6TX7U6IlvaXO7Noph77Huv96zwgj/iVbk4=;
+        b=Ez1dIGqRX+uBqWKS6m46kfE43MgXyx9N5jw1Pfo3veJ4ETYQOUDpSvsfKllHCdIcAP
+         mYfQlnTXaD4BguApyFWL4K9pXf96eZAeNYN0uTk2e3808oNaGN/1Et4nwF5j4lxqTF99
+         ndJc7jzOpGCOEGJgyBdvMQNuE8bi/nwxu9eqrs/3aQxIniJLia/CNm5yYPCvkxBbTEhP
+         khWHcnE4uURdUVxuXudDNvVtERrjr7Uw2jmhlS37LRvF8F1AZGlaWP+pNvd9ICqZ90ha
+         x0lx4WN5uTtWzBAOPAtn5NyZAT1c1dNpWl9A6LDbiqFibZKkMnGi5If32Hez1iJh5VrV
+         pI4w==
+X-Gm-Message-State: APjAAAWOne5Jh8xZ+Iu7VcfoJzd8ofhdTstkh8MNDgdkTa0j6ALmKAgR
+        l4AXkh/rRzlm/Ht/LarmKehq0kXsH4S2HSZuSaRnsw==
+X-Google-Smtp-Source: APXvYqzuILOmlRlfzB4LigJuOFz6xkIbsL4hLOVKc/1qZByIgUnbCmOIDWO1UqiLgRGGrL9IShuXg3gaJHpmgCB46gU=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr59447382ljg.62.1561414402129;
+ Mon, 24 Jun 2019 15:13:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190624131715.1857-1-daniel.lezcano@linaro.org> <20190624131715.1857-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20190624131715.1857-2-daniel.lezcano@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Jun 2019 00:08:24 +0200
-Message-ID: <CAJZ5v0hMGMETyJyLxCKxiGOojAhmJ+Crioj7Gw_2wA+YUAS9QQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] thermal/drivers/cpu_cooling: Unregister with the policy
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
-        <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
+In-Reply-To: <20190624215649.8939-11-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 00:13:10 +0200
+Message-ID: <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
+Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
+ to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-) On Mon, Jun 24, 2019 at 3:17 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
+
+> Convert the tpo,tpg110 panel binding to DT schema.
 >
-> Currently the function cpufreq_cooling_register() returns a cooling
-> device pointer which is used back as a pointer to call the function
-> cpufreq_cooling_unregister(). Even if it is correct, it would make
-> sense to not leak the structure inside a cpufreq driver and keep the
-> code thermal code self-encapsulate. Moreover, that forces to add an
-> extra variable in each driver using this function.
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-[cut]
+Awesome, fixed up the MAINATINERS entry and applied and
+pushed for DRM next with my Reviewed-by.
 
-> @@ -667,9 +667,9 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
->         np = of_get_cpu_node(data->policy->cpu, NULL);
->
->         if (!np || !of_find_property(np, "#cooling-cells", NULL)) {
-> -               data->cdev = cpufreq_cooling_register(data->policy);
-> -               if (IS_ERR(data->cdev)) {
-> -                       ret = PTR_ERR(data->cdev);
-> +               cdev = cpufreq_cooling_register(data->policy);
-
-It looks like after the changes in this patch the only reason for
-returning (struct thermal_cooling_device *) from
-cpufreq_cooling_register() is error checking, but it would be much
-more straightforward to return int for this purpose.
-
-Moreover, that would prevent the callers of it from doing incorrect
-things with the returned pointers (like using it to unregister the
-cooling device).
-
-> +               if (IS_ERR(cdev)) {
-> +                       ret = PTR_ERR(cdev);
->                         cpufreq_cpu_put(data->policy);
->                         return ret;
->                 }
+Yours,
+Linus Walleij
