@@ -2,91 +2,94 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A272DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A258C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F14D2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594F1205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561391085;
+	bh=7Jt7rUpCp3dXBK8HQ+SmNDCCUj1JSeZ3i8KBPoRDdwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L+3sGLmskB3z1PF7E1B0S3KtrPuEC9B1mA/9gChU2jYNreqOP/AUtxaCOWM9d6GKf
+	 OsdbCtBUkHyrtBHjD9atc6Djrd2Lr4JS8EnACPJN7i9obA7CTafP+x5GnDL7dxcYRF
+	 51ZEcNc+Fazk4f+B1cIf3cmTYFEhKRkbouW9btKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfFXPnO (ORCPT
+        id S1731286AbfFXPoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:43:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39290 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfFXPnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:43:13 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfR79-0000Pc-UN; Mon, 24 Jun 2019 17:42:40 +0200
-Date:   Mon, 24 Jun 2019 17:42:39 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Weiping Zhang <zhangweiping@didiglobal.com>
-cc:     axboe@kernel.dk, Tejun Heo <tj@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, bvanassche@acm.org,
-        keith.busch@intel.com, minwoo.im.dev@gmail.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous
- affinity set
-In-Reply-To: <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
-Message-ID: <alpine.DEB.2.21.1906241740320.32342@nanos.tec.linutronix.de>
-References: <cover.1561385989.git.zhangweiping@didiglobal.com> <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 24 Jun 2019 11:44:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbfFXPon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 11:44:43 -0400
+Received: from localhost (mobile-166-177-251-191.mycingular.net [166.177.251.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F512054F;
+        Mon, 24 Jun 2019 15:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561391082;
+        bh=7Jt7rUpCp3dXBK8HQ+SmNDCCUj1JSeZ3i8KBPoRDdwk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kX253NfTTtyouxOS1RZK2ORnfaf0USw4oBL5rt3Za3DEUC+ByPjKeXv/Jbfr/bPE1
+         nVRmlumHIELavHZHLA7oi/1Fo2SiZPDMENCa4l1fR6UrVZr0Vk83GMTqHSLX6yAziL
+         1gvwwwJgNqOFBcAba7OI37PsO8wdWRwlZ9z+Vuj4=
+Date:   Mon, 24 Jun 2019 23:41:45 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/121] 5.1.15-stable review
+Message-ID: <20190624154145.GA30572@kroah.com>
+References: <20190624092320.652599624@linuxfoundation.org>
+ <a37d3054-c0a4-da0f-8316-051f0ce293ca@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a37d3054-c0a4-da0f-8316-051f0ce293ca@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Weiping Zhang wrote:
-
-> The driver may implement multiple affinity set, and some of
-> are empty, for this case we just skip them.
-
-Why? What's the point of creating empty sets? Just because is not a real
-good justification.
-
-Leaving the patch for Ming.
-
-Thanks,
-
-	tglx
-
-> Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-> ---
->  kernel/irq/affinity.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Mon, Jun 24, 2019 at 05:48:34AM -0700, Guenter Roeck wrote:
+> On 6/24/19 2:55 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.1.15 release.
+> > There are 121 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
+> > Anything received after that time might be too late.
+> > 
 > 
-> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-> index f18cd5aa33e8..6d964fe0fbd8 100644
-> --- a/kernel/irq/affinity.c
-> +++ b/kernel/irq/affinity.c
-> @@ -295,6 +295,10 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
->  		unsigned int this_vecs = affd->set_size[i];
->  		int ret;
->  
-> +		/* skip empty affinity set */
-> +		if (this_vecs == 0)
-> +			continue;
-> +
->  		ret = irq_build_affinity_masks(affd, curvec, this_vecs,
->  					       curvec, masks);
->  		if (ret) {
-> -- 
-> 2.14.1
+> Early feedback:
 > 
-> 
+> Building nds32:allmodconfig ... failed
+> --------------
+> Error log:
+> arch/nds32/math-emu/fpuemu.c: In function 'fpu_emu':
+> arch/nds32/math-emu/fpuemu.c:308:48: error: 'FPCSR_mskALLE_NO_UDFE' undeclared (first use in this function); did you mean 'FPCSR_mskALLE_NO_UDF_IEXE'?
+>   if (((fpu_reg->fpcsr << 5) & fpu_reg->fpcsr & FPCSR_mskALLE_NO_UDFE) ||
+>                                                 ^~~~~~~~~~~~~~~~~~~~~
+>                                                 FPCSR_mskALLE_NO_UDF_IEXE
+> arch/nds32/math-emu/fpuemu.c:308:48: note: each undeclared identifier is reported only once for each function it appears in
+> arch/nds32/math-emu/fpuemu.c:309:52: error: 'struct fpu_struct' has no member named 'UDF_trap'; did you mean 'UDF_IEX_trap'?
+>       ((fpu_reg->fpcsr & FPCSR_mskUDF) && (fpu_reg->UDF_trap)))
+>                                                     ^~~~~~~~
+>                                                     UDF_IEX_trap
+
+Now dropped nds32 patch that caused this, and pushed out an -rc2
+release.
+
+thanks
+
+greg k-h
