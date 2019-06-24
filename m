@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59260C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ABFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B2B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC58213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370344;
-	bh=aOrGG1cBOahIihJ05bmyAadfSEbi8NCeOcF5KGQ0zE0=;
+	s=default; t=1561370349;
+	bh=JLVeObjHjzNKx1lln9DG18Z8xT0aOW4ZUEfxrfdGs3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5wJ2IX+sLcF4otisupylONagWUguULVvXqMW23mOxnRiqmwh3ft0EydrZDximu+g
-	 nDAtC/4Yjj/NUMWjC+XEvm+gaWUMt3C42pumYHPc0O9FSlf0CQa9Bcx0zQSbwLZRLC
-	 L0u7zI2i9fOQcnx+oY/H4nvzmFnpfFIMRY2aUYCU=
+	b=Khu9mD4vE3yifhj83aDUJ4IfM8VyFekCOQaBw6y2HTXJLHeG5rd4r5UbBSiYeoGyd
+	 sD+Zt/weQBa21cOHUDpIERWryVIa3rjpy9fv+FBCEo1SfZtasANNWH6rlpb8UraB/0
+	 3pWwEG4qn5c9hoaPLhzbfuMdVykdT9Edhic/35to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfFXJ7C (ORCPT
+        id S1729151AbfFXJ7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbfFXJ67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:59 -0400
+        id S1729120AbfFXJ7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:02 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1118214C6;
-        Mon, 24 Jun 2019 09:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7AB205ED;
+        Mon, 24 Jun 2019 09:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370339;
-        bh=aOrGG1cBOahIihJ05bmyAadfSEbi8NCeOcF5KGQ0zE0=;
+        s=default; t=1561370342;
+        bh=JLVeObjHjzNKx1lln9DG18Z8xT0aOW4ZUEfxrfdGs3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeH04u/v0Rz1kfjjIVVx+cepQiMCtPVUgv4TpjUyWc+ypXVL14f+LMexOyuxFfl8E
-         jqnZxZOehH+Xt+BX2SurdRWyUY9K55zRSuE+be9/0zVIAOanjleApsfLLZWkNfL8ly
-         /hnXrJksMWqZi/YTMsNhaZU2LhsYGOfy3NQCZ4mo=
+        b=GjrDDwEdYBiiUqJcGF3XMFRjIo3rJn8kIRyNSpp6Y5CSWTruAbdK6EbY8Y11I45d0
+         jrDItPkNsDK07iSoXrbtzKJn3noim3xxd2ZxrZx4/3mNiB7zIbbIxLzzXEmbofenf+
+         T3cOuRDe7cvHSiWP+0Dg1MSIlQDAJYMYjjgn64o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 04/51] net: phy: broadcom: Use strlcpy() for ethtool::get_strings
-Date:   Mon, 24 Jun 2019 17:56:22 +0800
-Message-Id: <20190624092306.418859848@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 05/51] mmc: core: Prevent processing SDIO IRQs when the card is suspended
+Date:   Mon, 24 Jun 2019 17:56:23 +0800
+Message-Id: <20190624092306.562108995@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -59,37 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit 8a17eefa235f73b60c0ca7d397d2e4f66f85f413 upstream.
+commit 83293386bc95cf5e9f0c0175794455835bd1cb4a upstream.
 
-Our statistics strings are allocated at initialization without being
-bound to a specific size, yet, we would copy ETH_GSTRING_LEN bytes using
-memcpy() which would create out of bounds accesses, this was flagged by
-KASAN. Replace this with strlcpy() to make sure we are bound the source
-buffer size and we also always NUL-terminate strings.
+Processing of SDIO IRQs must obviously be prevented while the card is
+system suspended, otherwise we may end up trying to communicate with an
+uninitialized SDIO card.
 
-Fixes: 820ee17b8d3b ("net: phy: broadcom: Add support code for reading PHY counters")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reports throughout the years shows that this is not only a theoretical
+problem, but a real issue. So, let's finally fix this problem, by keeping
+track of the state for the card and bail out before processing the SDIO
+IRQ, in case the card is suspended.
+
+Cc: stable@vger.kernel.org
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/phy/bcm-phy-lib.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/core/sdio.c     |   13 ++++++++++++-
+ drivers/mmc/core/sdio_irq.c |    4 ++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/bcm-phy-lib.c
-+++ b/drivers/net/phy/bcm-phy-lib.c
-@@ -341,8 +341,8 @@ void bcm_phy_get_strings(struct phy_devi
- 	unsigned int i;
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -907,6 +907,10 @@ static int mmc_sdio_pre_suspend(struct m
+  */
+ static int mmc_sdio_suspend(struct mmc_host *host)
+ {
++	/* Prevent processing of SDIO IRQs in suspended state. */
++	mmc_card_set_suspended(host->card);
++	cancel_delayed_work_sync(&host->sdio_irq_work);
++
+ 	mmc_claim_host(host);
  
- 	for (i = 0; i < ARRAY_SIZE(bcm_phy_hw_stats); i++)
--		memcpy(data + i * ETH_GSTRING_LEN,
--		       bcm_phy_hw_stats[i].string, ETH_GSTRING_LEN);
-+		strlcpy(data + i * ETH_GSTRING_LEN,
-+			bcm_phy_hw_stats[i].string, ETH_GSTRING_LEN);
- }
- EXPORT_SYMBOL_GPL(bcm_phy_get_strings);
+ 	if (mmc_card_keep_power(host) && mmc_card_wake_sdio_irq(host))
+@@ -962,13 +966,20 @@ static int mmc_sdio_resume(struct mmc_ho
+ 		err = sdio_enable_4bit_bus(host->card);
+ 	}
  
+-	if (!err && host->sdio_irqs) {
++	if (err)
++		goto out;
++
++	/* Allow SDIO IRQs to be processed again. */
++	mmc_card_clr_suspended(host->card);
++
++	if (host->sdio_irqs) {
+ 		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
+ 			wake_up_process(host->sdio_irq_thread);
+ 		else if (host->caps & MMC_CAP_SDIO_IRQ)
+ 			host->ops->enable_sdio_irq(host, 1);
+ 	}
+ 
++out:
+ 	mmc_release_host(host);
+ 
+ 	host->pm_flags &= ~MMC_PM_KEEP_POWER;
+--- a/drivers/mmc/core/sdio_irq.c
++++ b/drivers/mmc/core/sdio_irq.c
+@@ -38,6 +38,10 @@ static int process_sdio_pending_irqs(str
+ 	unsigned char pending;
+ 	struct sdio_func *func;
+ 
++	/* Don't process SDIO IRQs if the card is suspended. */
++	if (mmc_card_suspended(card))
++		return 0;
++
+ 	/*
+ 	 * Optimization, if there is only 1 function interrupt registered
+ 	 * and we know an IRQ was signaled then call irq handler directly.
 
 
