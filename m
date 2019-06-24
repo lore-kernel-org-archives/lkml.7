@@ -2,129 +2,107 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56473C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38DCC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C89208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1DF20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QF0oV63M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfFXDTl (ORCPT
+        id S1727575AbfFXDXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:19:41 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:41682 "EHLO mail5.wrs.com"
+        Sun, 23 Jun 2019 23:23:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:37979 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfFXDTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:19:41 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x5O3HmLU005347
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Sun, 23 Jun 2019 20:18:03 -0700
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 23 Jun 2019 20:17:41 -0700
-From:   <zhe.he@windriver.com>
-To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
-        <davem@davemloft.net>, <netfilter-devel@vger.kernel.org>,
-        <coreteam@netfilter.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
-Subject: [PATCH] netfilter: Fix remainder of pseudo-header protocol 0
-Date:   Mon, 24 Jun 2019 11:17:38 +0800
-Message-ID: <1561346258-272481-1-git-send-email-zhe.he@windriver.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726502AbfFXDXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:23:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XF4Z0wy9z9s4Y;
+        Mon, 24 Jun 2019 13:23:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561346623;
+        bh=Ld51LDvZP5MLJdlUGJjSgMBhQwTnBRPHw/iDQzFTbA0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QF0oV63MZSkWDnakhYVD3xnb7VcUtkw8rAdMkDWwZ8JDMgFSdapMBlpIGx9Dx3oi3
+         Ug1Fd1nJwZ9/PkGa6YiLlff1wvvKR2g3d/XcYtmoJAZioJV618+pNBgTpWAA/NPKpW
+         gExi8z3D4pIiApU9XFDhB6wJSYcwBar57DT8lcofRXBS/+Gm+hPgYduKuYyN0xs3vt
+         rVflnV7pnwc20sT3Ji5+npjFuEeQDO2+nEcN/tyuw6BRAXeLSnnnvYTLIOfVi5Jgan
+         VwzYTDZsXoXAjCWx2oVLyAixcSAftd7IeZOJQOUMBNxEtGWvN4BR8LIxFSss3f6zLE
+         FT/ctlHrmla6w==
+Date:   Mon, 24 Jun 2019 13:23:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: linux-next: manual merge of the spi-nor tree with Linus' tree
+Message-ID: <20190624132341.7cdf1214@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/CsJE6n9rHzX00k4CQHfkzhe"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+--Sig_/CsJE6n9rHzX00k4CQHfkzhe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Since v5.1-rc1, some types of packets do not get unreachable reply with the
-following iptables setting. Fox example,
+Hi all,
 
-$ iptables -A INPUT -p icmp --icmp-type 8 -j REJECT
-$ ping 127.0.0.1 -c 1
-PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
-— 127.0.0.1 ping statistics —
-1 packets transmitted, 0 received, 100% packet loss, time 0ms
+Today's linux-next merge of the spi-nor tree got a conflict in:
 
-We should have got the following reply from command line, but we did not.
-From 127.0.0.1 icmp_seq=1 Destination Port Unreachable
+  drivers/mtd/spi-nor/stm32-quadspi.c
 
-Yi Zhao reported it and narrowed it down to:
-7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it"),
+between commit:
 
-This is because nf_ip_checksum still expects pseudo-header protocol type 0 for
-packets that are of neither TCP or UDP, and thus ICMP packets are mistakenly
-treated as TCP/UDP.
+  caab277b1de0 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
+rule 234")
 
-This patch corrects the conditions in nf_ip_checksum and all other places that
-still call it with protocol 0.
+from Linus' tree and commit:
 
-Fixes: 7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it")
-Reported-by: Yi Zhao <yi.zhao@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
- net/netfilter/nf_conntrack_proto_icmp.c | 2 +-
- net/netfilter/nf_nat_proto.c            | 2 +-
- net/netfilter/utils.c                   | 5 +++--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+  df6bd6c002a4 ("mtd: spi-nor: stm32: remove the driver as it was replaced =
+by spi-stm32-qspi.c")
 
-diff --git a/net/netfilter/nf_conntrack_proto_icmp.c b/net/netfilter/nf_conntrack_proto_icmp.c
-index a824367..dd53e2b 100644
---- a/net/netfilter/nf_conntrack_proto_icmp.c
-+++ b/net/netfilter/nf_conntrack_proto_icmp.c
-@@ -218,7 +218,7 @@ int nf_conntrack_icmpv4_error(struct nf_conn *tmpl,
- 	/* See ip_conntrack_proto_tcp.c */
- 	if (state->net->ct.sysctl_checksum &&
- 	    state->hook == NF_INET_PRE_ROUTING &&
--	    nf_ip_checksum(skb, state->hook, dataoff, 0)) {
-+	    nf_ip_checksum(skb, state->hook, dataoff, IPPROTO_ICMP)) {
- 		icmp_error_log(skb, state, "bad hw icmp checksum");
- 		return -NF_ACCEPT;
- 	}
-diff --git a/net/netfilter/nf_nat_proto.c b/net/netfilter/nf_nat_proto.c
-index 07da077..83a24cc 100644
---- a/net/netfilter/nf_nat_proto.c
-+++ b/net/netfilter/nf_nat_proto.c
-@@ -564,7 +564,7 @@ int nf_nat_icmp_reply_translation(struct sk_buff *skb,
- 
- 	if (!skb_make_writable(skb, hdrlen + sizeof(*inside)))
- 		return 0;
--	if (nf_ip_checksum(skb, hooknum, hdrlen, 0))
-+	if (nf_ip_checksum(skb, hooknum, hdrlen, IPPROTO_ICMP))
- 		return 0;
- 
- 	inside = (void *)skb->data + hdrlen;
-diff --git a/net/netfilter/utils.c b/net/netfilter/utils.c
-index 06dc555..51b454d 100644
---- a/net/netfilter/utils.c
-+++ b/net/netfilter/utils.c
-@@ -17,7 +17,8 @@ __sum16 nf_ip_checksum(struct sk_buff *skb, unsigned int hook,
- 	case CHECKSUM_COMPLETE:
- 		if (hook != NF_INET_PRE_ROUTING && hook != NF_INET_LOCAL_IN)
- 			break;
--		if ((protocol == 0 && !csum_fold(skb->csum)) ||
-+		if ((protocol != IPPROTO_TCP && protocol != IPPROTO_UDP &&
-+		    !csum_fold(skb->csum)) ||
- 		    !csum_tcpudp_magic(iph->saddr, iph->daddr,
- 				       skb->len - dataoff, protocol,
- 				       skb->csum)) {
-@@ -26,7 +27,7 @@ __sum16 nf_ip_checksum(struct sk_buff *skb, unsigned int hook,
- 		}
- 		/* fall through */
- 	case CHECKSUM_NONE:
--		if (protocol == 0)
-+		if (protocol != IPPROTO_TCP && protocol != IPPROTO_UDP)
- 			skb->csum = 0;
- 		else
- 			skb->csum = csum_tcpudp_nofold(iph->saddr, iph->daddr,
--- 
-2.7.4
+from the spi-nor tree.
 
+I fixed it up (I removed the file) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CsJE6n9rHzX00k4CQHfkzhe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QQj0ACgkQAVBC80lX
+0Gyk8Af+KoY3oPRcY/pacom9JBsnThTy4deUQQ/D5Er7/NWm2T6LKFm3kdVPiuzw
+TLXULV7BB6iXO01ENcE6joZwKe2BBQHbhIg3LSZv5kCrwak7y1vaFi37SSca0Md9
+tGkmG76WSN7Ab2AUKLWKUYxmg20R5So5GB+p0qqUJmENrSTnJYD/fOPRpWc8QSdY
+UDTMHuqmakOPP9osBCWGlj5lBFavyMYRwc6HitrHFx8H8smuZcqs9yNsiBQ0a+AZ
+mfJyanphRHNBh+h2P0VXwG6AZSJQvXgkfmHbd25t2XTj8jE/dqFeYC0PvU8zxKtA
+4YbwbjfiNVNgsqlXGkPjXBS8eM0PIw==
+=/yQ1
+-----END PGP SIGNATURE-----
+
+--Sig_/CsJE6n9rHzX00k4CQHfkzhe--
