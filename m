@@ -2,133 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8686C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38AFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942DA20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCE420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="D2hxx5AG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U0oLeFIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfFXTAy (ORCPT
+        id S1729863AbfFXTBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:00:54 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:52242 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727014AbfFXTAy (ORCPT
+        Mon, 24 Jun 2019 15:01:30 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40870 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfFXTB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:00:54 -0400
-X-Greylist: delayed 13714 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 15:00:52 EDT
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OEwF7E011278;
-        Mon, 24 Jun 2019 11:11:46 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2059.outbound.protection.outlook.com [104.47.41.59])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2t9e37ecjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jun 2019 11:11:46 -0400
+        Mon, 24 Jun 2019 15:01:29 -0400
+Received: by mail-io1-f67.google.com with SMTP id n5so4523834ioc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w3/zpiXDFuWHWdfqeOJQsM73tB1qPBmjulD0aDXV9nQ=;
- b=D2hxx5AGkji8pAPUE7YhVTAyt8MiDtdRi5tfzQzd3ftjElI2r8SOOAdtXjmAdYf+Ae9dOabfJApCs+SZSG26FxDS51fhGBDY3hXbUsow/KCTtWhFkPgUIwn6+mOkQKnmDEFgGBLX3kGmbx0tv6mn8tZEPaK0AsEDwhIy00WuCQM=
-Received: from MWHPR03CA0020.namprd03.prod.outlook.com (2603:10b6:300:117::30)
- by BLUPR03MB549.namprd03.prod.outlook.com (2a01:111:e400:880::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13; Mon, 24 Jun
- 2019 15:11:44 +0000
-Received: from SN1NAM02FT063.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::202) by MWHPR03CA0020.outlook.office365.com
- (2603:10b6:300:117::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2008.16 via Frontend
- Transport; Mon, 24 Jun 2019 15:11:44 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT063.mail.protection.outlook.com (10.152.72.213) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Mon, 24 Jun 2019 15:11:43 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5OFBfs5010081
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 24 Jun 2019 08:11:41 -0700
-Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Mon, 24 Jun 2019
- 11:11:41 -0400
-From:   Stefan Popa <stefan.popa@analog.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stefan.popa@analog.com>
-Subject: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for clock-names
-Date:   Mon, 24 Jun 2019 18:11:37 +0300
-Message-ID: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: git-send-email 2.7.4
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vaLAv5uruC5N6GIJ3Ca+8odIT2de0GG0bR3H9unYxL4=;
+        b=U0oLeFIheqRkMaEDOA7ytntbjmAbd7b/ZvXK9QB17ojsD1bnHJimSSiJPNfZdF0lcu
+         bQBXC6gmBJG147ncDrZzV76gmcDtZOfUG3wankkay8U/d/i6vE2jh5suu3A3YgoK/FoO
+         CNqIpqNB3MqPg13DyW9IJakTWthuii4a+EvIs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vaLAv5uruC5N6GIJ3Ca+8odIT2de0GG0bR3H9unYxL4=;
+        b=O6eWrwjV0KJ0i/XYEpp8+/GSxfThqX7XL3sUE5o88oDvECSMhIn4331lBbi+G3BrzE
+         Q6EGRVNa7zeGp+BUIOAzrDNls0Nx0u/iue2E6OjgkmKFga4u6e1xde4MbaU4V47W/9wj
+         NYv0Jm42lEb6mYE1m8QcsEl6Yqefr0ZWQxIGTiLMhtWxzRDL/OgMdWE/DmFRKRlma4n0
+         wzTrD8eghFfWd/H4VRk0sCn1SisxrHl9acVn2Tsn0WyZivwT9Pt4peg2Hn/zB0dC2/hg
+         3kcmbv8jAq+KrF3ceFZrJO2oWE6rsLANahhdVjmkF/L7g+rpdtO0u5Mz2N10kUketj59
+         uOOQ==
+X-Gm-Message-State: APjAAAU355SnfUikrm/XM3WP5k54JOdAdt5NVcwF+P7OwBA+CxF+pTSV
+        OxwGdTlCadJ1PuhfddxcD+idxg==
+X-Google-Smtp-Source: APXvYqxeFZ2DuzMyCo/FkqOBaG6DyhR5EthZVkIKPGiAh0uomSOuKADzGpO6gIKGDrxbiNxU78fifw==
+X-Received: by 2002:a5d:948a:: with SMTP id v10mr16481899ioj.103.1561402888853;
+        Mon, 24 Jun 2019 12:01:28 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id n17sm12577120iog.63.2019.06.24.12.01.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Jun 2019 12:01:28 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        djkurtz@chromium.org, dtor@google.com, sjg@chromium.org,
+        yuehaibing@huawei.com, colin.king@canonical.com,
+        dan.carpenter@oracle.com, Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v2 1/2] platform/chrome: wilco_ec: Fix unreleased lock in event_read()
+Date:   Mon, 24 Jun 2019 13:00:40 -0600
+Message-Id: <20190624190040.132120-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(136003)(376002)(2980300002)(199004)(189003)(51416003)(4744005)(476003)(426003)(36756003)(2906002)(16586007)(126002)(50466002)(70586007)(2616005)(70206006)(186003)(5660300002)(336012)(106002)(110136005)(54906003)(44832011)(48376002)(486006)(316002)(6666004)(356004)(72206003)(478600001)(7416002)(7696005)(8936002)(4326008)(47776003)(8676002)(50226002)(7636002)(246002)(305945005)(77096007)(26005)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR03MB549;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 026178c4-5672-48af-b8c5-08d6f8b64485
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BLUPR03MB549;
-X-MS-TrafficTypeDiagnostic: BLUPR03MB549:
-X-Microsoft-Antispam-PRVS: <BLUPR03MB549A7F542545801DDB7DE9F9DE00@BLUPR03MB549.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-Forefront-PRVS: 007814487B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: YrE5tGuUGmgHnSlaKpOJuTInXW/2YDLHVyi/hBkzGian0fU1eSJouVTAD2xlUFuLApq5cyIo+IYY3LH5hGcTKVxiOgjQntM9JU+mhDYDYaXyQqxeGPPpRKSe50CxDCg7GTO2dVA88fDBbAGuEvjpoB+xOvZLiTwXDXoKuYZBLpD3R7ooZ0q40qGCeLGKJSDknNjslPFT3C+mIM2hI4R34+vSVYWTQEoQs/PjdBRKlHtluOsPv8E+l3KWS88ZxFwxhpJZjeDwc8cY9MGk72QE6R33Jjpvk6Y+jt6wP4KKr22xR/38qLxDrbUE/rFqmVZybmQyN06uAjW2mIRaQ0mvLVwkzmh8+B/XTckgSg2Qo+Ri+T1vSS4pssZRH7oyxLJmvMKwVTq8UHiz+cdTfNWWK7cNzgj/4ytumMvOWkZ/khE=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 15:11:43.1900
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 026178c4-5672-48af-b8c5-08d6f8b64485
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR03MB549
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240122
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dt-schema can be used for clock-names property.
+When copying an event to userspace failed, the event queue
+lock was never released. This fixes that.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Nick Crews <ncrews@chromium.org>
 ---
- Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/chrome/wilco_ec/event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-index d7adf074..8a2a8f6 100644
---- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -27,9 +27,8 @@ properties:
-     maxItems: 1
- 
-   clock-names:
--    description:
--      Must be "clkin"
--    maxItems: 1
-+    items:
-+      - clkin
- 
- required:
-   - compatible
+diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/chrome/wilco_ec/event.c
+index 4d2776f77dbd..1eed55681598 100644
+--- a/drivers/platform/chrome/wilco_ec/event.c
++++ b/drivers/platform/chrome/wilco_ec/event.c
+@@ -342,7 +342,7 @@ static ssize_t event_read(struct file *filp, char __user *buf, size_t count,
+ 				 struct ec_event_entry, list);
+ 	n_bytes_written = entry->size;
+ 	if (copy_to_user(buf, &entry->event, n_bytes_written))
+-		return -EFAULT;
++		n_bytes_written = -EFAULT;
+ 	list_del(&entry->list);
+ 	kfree(entry);
+ 	dev_data->num_events--;
 -- 
-2.7.4
+2.20.1
 
