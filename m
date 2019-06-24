@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1311CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F16FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27602089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF73205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371366;
-	bh=6F0uQCMTnlWtg++gfb6hQFg+O79tkm8+jbu/aXD6iy0=;
+	s=default; t=1561371370;
+	bh=v+IwFrdi4BQ08J+jykljVYxNyUuhyTGsvKuAF//izhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLHDsC59QpZZ1Cl0acGWYz5yxa2K+ghXFppM2s7QTJr1yP7c8U0QCLQfQ1lCyWSdI
-	 OgZ2gQ5GFc8jLtwsEXsxe0S/m+jMHYtMdJabv0bzxN9/i8MWQgPkcVIxZCWcJA18nC
-	 e1l6GuBgwsyG82ApHG99YdMto1p7yLi/EFtmEeCQ=
+	b=s2X9xMF5mW5i+9CiKrlucOj/j0qS1tzs4CToI9Ogb5dEte2AZ8neZZxY3MtK3X+Th
+	 kKURj6pupBSnCJvJXTj4JZXov6ASnhSqI14MjkHIvVTKoA6hxFEaHd8MPB5ozeq+X+
+	 9orydGW2LJ7MCAOCX9914vBPiUzvhnpDfaMicTEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfFXKQF (ORCPT
+        id S1730668AbfFXKQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfFXKQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:04 -0400
+        id S1729670AbfFXKQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:06 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8D9205ED;
-        Mon, 24 Jun 2019 10:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCA1205ED;
+        Mon, 24 Jun 2019 10:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371363;
-        bh=6F0uQCMTnlWtg++gfb6hQFg+O79tkm8+jbu/aXD6iy0=;
+        s=default; t=1561371365;
+        bh=v+IwFrdi4BQ08J+jykljVYxNyUuhyTGsvKuAF//izhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+IsMYwGVz1NtBOkYeSFfihKOPqlY4NEXotNZ5PGexyU+75Y1Lp8+VJQ+F7tc37en
-         jf/NuvdOU6xukKLUTxnfURJLxFzurkQBZaQFsuAzJdnKOu0WCpK8D55RmRqLUUAgCc
-         UQKji1eed6298ZjNzXhA+JN6DOc6OUHAPC/EyLiE=
+        b=mfSAw1m5LXUBZ5rNaUbF3uhRaXeHBWqjMtgEnBB2Py4zdYloGK8OXoe3pdIYFUKwx
+         N7TFbs+tV38yLdiZpGP7WDXBFncVHrORQOsQFwUfSdk0fuVoHpodQePwFbTUT2lwYw
+         esdW0LV9V4aglx4LLFfzJzLwMciHLWFg6j6vuJQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Long <eric.long@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 040/121] dmaengine: sprd: Fix the right place to configure 2-stage transfer
-Date:   Mon, 24 Jun 2019 17:56:12 +0800
-Message-Id: <20190624092322.847607054@linuxfoundation.org>
+        stable@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 041/121] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date:   Mon, 24 Jun 2019 17:56:13 +0800
+Message-Id: <20190624092322.893406687@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,50 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c434e377dad1dec05cad1870ce21bc539e1e024f ]
+[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
 
-Move the 2-stage configuration before configuring the link-list mode,
-since we will use some 2-stage configuration to fill the link-list
-configuration.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
-Signed-off-by: Eric Long <eric.long@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index a01c23246632..01abed5cde49 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -911,6 +911,12 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 		schan->linklist.virt_addr = 0;
- 	}
- 
-+	/* Set channel mode and trigger mode for 2-stage transfer */
-+	schan->chn_mode =
-+		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
-+	schan->trg_mode =
-+		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
-+
- 	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
- 	if (!sdesc)
- 		return NULL;
-@@ -944,12 +950,6 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 		}
- 	}
- 
--	/* Set channel mode and trigger mode for 2-stage transfer */
--	schan->chn_mode =
--		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
--	schan->trg_mode =
--		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
--
- 	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, src, dst, len,
- 				 dir, flags, slave_cfg);
- 	if (ret) {
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 7425bb0f2d1b..699f372b2a6f 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
 -- 
 2.20.1
 
