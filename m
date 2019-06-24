@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CE0C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC043C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D36A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D64A21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371398;
-	bh=u9ikIP5L99GRe36W5rzHf05qB7Fpqvh4EkLSJK7oRMA=;
+	s=default; t=1561371394;
+	bh=R3kte9HSML48BOOzKcfTRnplU35ZZNXwoKZwq5oQrNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJ2bauIrHR3h2RbTu+wyl+Ku7KYqZvj2YogNjInBT/azwIY5ANGyyeFoY70YllEUj
-	 YdenzOdq+/b42wuyYKY4PF4xRkPP0dT4AedksjmMNadOxN3bYTc4gaNPmxu0AL/+JB
-	 mk2iIIiWVLxPDvxMj8ZMAN/JD/J7GXpx0hkQu3SU=
+	b=pRl/2nf7iR2nKOlcbsWX5nvJII6ew321O8VRMBY3OZHC664UNghv63xhPwGpvlVTh
+	 LWmdaUzMLmCA1NVnoSDTQPZNe3lCCdX1wE5ZUqQB+BdrQs/r2FsS6PuM8hBD/RaY0f
+	 /U49AQVYECl3z0WJ/M9CXt/ZBTXbW4rDh68I5rio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbfFXKQh (ORCPT
+        id S1730756AbfFXKQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730754AbfFXKQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 06:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730745AbfFXKQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:30 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 168E92089F;
-        Mon, 24 Jun 2019 10:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A25B205ED;
+        Mon, 24 Jun 2019 10:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371392;
-        bh=u9ikIP5L99GRe36W5rzHf05qB7Fpqvh4EkLSJK7oRMA=;
+        s=default; t=1561371389;
+        bh=R3kte9HSML48BOOzKcfTRnplU35ZZNXwoKZwq5oQrNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yMltW8/8pBn5VOmrVBpAqO9VRdgMogGH4Skqr/tYOwgYwHgNlUfbzI8bhBwhLgiHJ
-         yyqwKwIPzL089/tF5YBPdnRqtUOpHdI55KJg0f1bfkxV3kyyNAv67kwMmU+QG5PwzN
-         TWO/IdsBWgkJvJguadlRdvRQMfjD2kO78hVtB/b8=
+        b=SDoljyoUSr9fk5S89fSIpDA/BYr/C2njJtJ+BdKMQ0+L5NIp9uI/ptNkocCBXH1bV
+         dX2HEb4PQSWiccUHmiqxbYGLB0rLiio/7xSBJe4aatGgqompAxX+yOyA6Iyo2pGDCs
+         dL0Jwdmx7F9fosNmuOnI9ZVCiOr8HeAcE5bF16jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 087/121] arm64: Silence gcc warnings about arch ABI drift
-Date:   Mon, 24 Jun 2019 17:56:59 +0800
-Message-Id: <20190624092325.272683883@linuxfoundation.org>
+Subject: [PATCH 5.1 086/121] hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
+Date:   Mon, 24 Jun 2019 17:56:58 +0800
+Message-Id: <20190624092325.227711362@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,44 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebcc5928c5d925b1c8d968d9c89cdb0d0186db17 ]
+[ Upstream commit 4a60570dce658e3f8885bbcf852430b99f65aca5 ]
 
-Since GCC 9, the compiler warns about evolution of the
-platform-specific ABI, in particular relating for the marshaling of
-certain structures involving bitfields.
+Some chips have attributes which exist on more than one page but the
+attribute is not presently marked as paged. This causes the attributes
+to be generated with the same label, which makes it impossible for
+userspace to tell them apart.
 
-The kernel is a standalone binary, and of course nobody would be
-so stupid as to expose structs containing bitfields as function
-arguments in ABI.  (Passing a pointer to such a struct, however
-inadvisable, should be unaffected by this change.  perf and various
-drivers rely on that.)
+Marking all such attributes as paged would result in the page suffix
+being added regardless of whether they were present on more than one
+page or not, which might break existing setups. Therefore, we add a
+second check which treats the attribute as paged, even if not marked as
+such, if it is present on multiple pages.
 
-So these warnings do more harm than good: turn them off.
-
-We may miss warnings about future ABI drift, but that's too bad.
-Future ABI breaks of this class will have to be debugged and fixed
-the traditional way unless the compiler evolves finer-grained
-diagnostics.
-
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: b4ce237b7f7d ("hwmon: (pmbus) Introduce infrastructure to detect sensors and limit registers")
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hwmon/pmbus/pmbus_core.c | 34 ++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index b025304bde46..8fbd583b18e1 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -51,6 +51,7 @@ endif
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 2e2b5851139c..cd24b375df1e 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -1230,7 +1230,8 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 				      const struct pmbus_driver_info *info,
+ 				      const char *name,
+ 				      int index, int page,
+-				      const struct pmbus_sensor_attr *attr)
++				      const struct pmbus_sensor_attr *attr,
++				      bool paged)
+ {
+ 	struct pmbus_sensor *base;
+ 	bool upper = !!(attr->gbit & 0xff00);	/* need to check STATUS_WORD */
+@@ -1238,7 +1239,7 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
  
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
-+KBUILD_CFLAGS	+= -Wno-psabi
- KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
+ 	if (attr->label) {
+ 		ret = pmbus_add_label(data, name, index, attr->label,
+-				      attr->paged ? page + 1 : 0);
++				      paged ? page + 1 : 0);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1271,6 +1272,30 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 	return 0;
+ }
  
- KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
++static bool pmbus_sensor_is_paged(const struct pmbus_driver_info *info,
++				  const struct pmbus_sensor_attr *attr)
++{
++	int p;
++
++	if (attr->paged)
++		return true;
++
++	/*
++	 * Some attributes may be present on more than one page despite
++	 * not being marked with the paged attribute. If that is the case,
++	 * then treat the sensor as being paged and add the page suffix to the
++	 * attribute name.
++	 * We don't just add the paged attribute to all such attributes, in
++	 * order to maintain the un-suffixed labels in the case where the
++	 * attribute is only on page 0.
++	 */
++	for (p = 1; p < info->pages; p++) {
++		if (info->func[p] & attr->func)
++			return true;
++	}
++	return false;
++}
++
+ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 				  struct pmbus_data *data,
+ 				  const char *name,
+@@ -1284,14 +1309,15 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 	index = 1;
+ 	for (i = 0; i < nattrs; i++) {
+ 		int page, pages;
++		bool paged = pmbus_sensor_is_paged(info, attrs);
+ 
+-		pages = attrs->paged ? info->pages : 1;
++		pages = paged ? info->pages : 1;
+ 		for (page = 0; page < pages; page++) {
+ 			if (!(info->func[page] & attrs->func))
+ 				continue;
+ 			ret = pmbus_add_sensor_attrs_one(client, data, info,
+ 							 name, index, page,
+-							 attrs);
++							 attrs, paged);
+ 			if (ret)
+ 				return ret;
+ 			index++;
 -- 
 2.20.1
 
