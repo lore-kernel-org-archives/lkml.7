@@ -2,198 +2,112 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8859C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E911C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F8D20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2027920645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tTbnK/vS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fss0sMaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbfFXPPd (ORCPT
+        id S1729235AbfFXPTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:15:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56876 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfFXPPc (ORCPT
+        Mon, 24 Jun 2019 11:19:05 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42533 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFXPTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:15:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFECoq071721;
-        Mon, 24 Jun 2019 15:15:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=K2nF3E6XseZb+sJVbpB/EPZWQ5pUv4zPKdLyAreNOeQ=;
- b=tTbnK/vSuSa/WFsaptNDxZHOGxUMqS8lmHdzq0BRMVHDBGNihqRcZwy7kJVr8k6ag7RL
- X0FIAd02B28xMSzH+fRqWndtIb7Qw/Um9Mqamdp9nUtdjxj9vaVcpJh1z9N+vihDaH90
- Uej6lAZjeSzXYFFtLwsbrh2JTcXgM1yOCvCesULk6OlXMsJNUsMStk17Z1RnI4TiXA7u
- dQya6dyibkajKJgk96csInRebW5GNNeq0m6qcJn/MEvUzrWMtmzakakVu6I9Z3mXL6NI
- EYvFTPHiWPKPmnTV1eXVR5hqYH3kXFGoY5LHfyBIG184Hkdse1xBtXt2+dH3/EDLyowK WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyq7023-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 15:15:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFEkLB095843;
-        Mon, 24 Jun 2019 15:15:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tn1ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 15:15:01 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OFF0xw004130;
-        Mon, 24 Jun 2019 15:15:00 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 08:14:59 -0700
-Date:   Mon, 24 Jun 2019 08:14:58 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/12] xfs: simplify xfs_chain_bio
-Message-ID: <20190624151458.GI5387@magnolia>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-3-hch@lst.de>
+        Mon, 24 Jun 2019 11:19:05 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so13874512otn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vGAZaIMWrZDEIWanvXMbB1hgAeVc7diLVZDQfS9ghPc=;
+        b=Fss0sMaGJF3Y4FoyVnJKt9/yDLgJeUdWrZvaCo+g5PpQm8xGB3qmJWzr0j1BFfcJ7T
+         2iVZKoJPb7fBWLfcv4ZHSNa4DdPDkzEY4tTE2wZgot97mWs9so/DP/O6Dq/a78hlcIAZ
+         ppU7ArJYxlOw8ppWDdI1+PYV5wprBv3DC1SuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vGAZaIMWrZDEIWanvXMbB1hgAeVc7diLVZDQfS9ghPc=;
+        b=PeTLbhSAjWb0o2lxSpJlZQVSvtkWHAdfXTDV13Ot+9MS0kX7VDs7qQzmA/62qVtWCh
+         +BG3TS8VdO5FsNooLxrPO5zTcSkkXzq/f9RfNk//31fpLa6aGBSqt947wG0fOixfnWGY
+         w/e0i9mTY8ZZ+eNpkWBM6jf1Le49BZUvXVKe4yJ9a812diup9DHEYb3g+O4fBNxs4feF
+         xNIWbu2Mwy4gdHRmEvhTc+k3+u622ybQrMokT2xa5dDIa9ygt/BRk37wa37aHFejbWaM
+         rPAdK6dLu5HG2uJfVRsH/L8+Mr5OXuvQh0Djpc9+4nCSGYShYGRFq8gdBoUeEAzT8CnP
+         4P4Q==
+X-Gm-Message-State: APjAAAU20c2P3iQyRjHZBmqlDphDUAeN6yaMnshScA7YQuftJjkgawF6
+        bgNDC9JjMVJVJ14MKv6/yhDL7qDWkGA=
+X-Google-Smtp-Source: APXvYqyL8OZi7PqpyFBoE8v/r6F62d+fcdpo9WErNSqJufZPugzvieWis4Dstqw4KWikiYKjIQg/zw==
+X-Received: by 2002:a9d:529:: with SMTP id 38mr13895681otw.145.1561389543817;
+        Mon, 24 Jun 2019 08:19:03 -0700 (PDT)
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com. [209.85.167.179])
+        by smtp.gmail.com with ESMTPSA id x128sm4460819oig.54.2019.06.24.08.19.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 08:19:03 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id a128so10083377oib.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:19:02 -0700 (PDT)
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr10336864oif.148.1561389542365;
+ Mon, 24 Jun 2019 08:19:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-3-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240123
+References: <201906220821.144PfQAY%lkp@intel.com> <20190622005547.GA65190@lkp-kbuild08>
+In-Reply-To: <20190622005547.GA65190@lkp-kbuild08>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Mon, 24 Jun 2019 09:18:51 -0600
+X-Gmail-Original-Message-ID: <CAHX4x848FRQD9Fy9G88RsCgWtZFF3pugx7ZmKmY+STF2wwTN=A@mail.gmail.com>
+Message-ID: <CAHX4x848FRQD9Fy9G88RsCgWtZFF3pugx7ZmKmY+STF2wwTN=A@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_lpc: fix stream_open.cocci warnings
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kbuild-all@01.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:43AM +0200, Christoph Hellwig wrote:
-> Move setting up operation and write hint to xfs_alloc_ioend, and
-> then just copy over all needed information from the previous bio
-> in xfs_chain_bio and stop passing various parameters to it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+I applied this in the new version as well.
 
-I always thought it was a little odd that we were still setting bio
-fields in the submission function...
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
+On Fri, Jun 21, 2019 at 6:55 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> From: kbuild test robot <lkp@intel.com>
+>
+> drivers/platform/chrome/wilco_ec/event.c:270:1-17: WARNING: event_fops: .read() has stream semantic; safe to change nonseekable_open -> stream_open.
+>
+> Generated by: scripts/coccinelle/api/stream_open.cocci
+>
+> Fixes: 22c040fa21b6 ("platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 > ---
->  fs/xfs/xfs_aops.c | 35 +++++++++++++++++------------------
->  1 file changed, 17 insertions(+), 18 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index a6f0f4761a37..9cceb90e77c5 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -665,7 +665,6 @@ xfs_submit_ioend(
->  
->  	ioend->io_bio->bi_private = ioend;
->  	ioend->io_bio->bi_end_io = xfs_end_bio;
-> -	ioend->io_bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
->  
->  	/*
->  	 * If we are failing the IO now, just mark the ioend with an
-> @@ -679,7 +678,6 @@ xfs_submit_ioend(
->  		return status;
->  	}
->  
-> -	ioend->io_bio->bi_write_hint = ioend->io_inode->i_write_hint;
->  	submit_bio(ioend->io_bio);
->  	return 0;
->  }
-> @@ -691,7 +689,8 @@ xfs_alloc_ioend(
->  	xfs_exntst_t		state,
->  	xfs_off_t		offset,
->  	struct block_device	*bdev,
-> -	sector_t		sector)
-> +	sector_t		sector,
-> +	struct writeback_control *wbc)
->  {
->  	struct xfs_ioend	*ioend;
->  	struct bio		*bio;
-> @@ -699,6 +698,8 @@ xfs_alloc_ioend(
->  	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_PAGES, &xfs_ioend_bioset);
->  	bio_set_dev(bio, bdev);
->  	bio->bi_iter.bi_sector = sector;
-> +	bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
-> +	bio->bi_write_hint = inode->i_write_hint;
->  
->  	ioend = container_of(bio, struct xfs_ioend, io_inline_bio);
->  	INIT_LIST_HEAD(&ioend->io_list);
-> @@ -719,24 +720,22 @@ xfs_alloc_ioend(
->   * so that the bi_private linkage is set up in the right direction for the
->   * traversal in xfs_destroy_ioend().
->   */
-> -static void
-> +static struct bio *
->  xfs_chain_bio(
-> -	struct xfs_ioend	*ioend,
-> -	struct writeback_control *wbc,
-> -	struct block_device	*bdev,
-> -	sector_t		sector)
-> +	struct bio		*prev)
->  {
->  	struct bio *new;
->  
->  	new = bio_alloc(GFP_NOFS, BIO_MAX_PAGES);
-> -	bio_set_dev(new, bdev);
-> -	new->bi_iter.bi_sector = sector;
-> -	bio_chain(ioend->io_bio, new);
-> -	bio_get(ioend->io_bio);		/* for xfs_destroy_ioend */
-> -	ioend->io_bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
-> -	ioend->io_bio->bi_write_hint = ioend->io_inode->i_write_hint;
-> -	submit_bio(ioend->io_bio);
-> -	ioend->io_bio = new;
-> +	bio_copy_dev(new, prev);
-> +	new->bi_iter.bi_sector = bio_end_sector(prev);
-> +	new->bi_opf = prev->bi_opf;
-> +	new->bi_write_hint = prev->bi_write_hint;
-> +
-> +	bio_chain(prev, new);
-> +	bio_get(prev);		/* for xfs_destroy_ioend */
-> +	submit_bio(prev);
-> +	return new;
->  }
->  
->  /*
-> @@ -771,14 +770,14 @@ xfs_add_to_ioend(
->  		if (wpc->ioend)
->  			list_add(&wpc->ioend->io_list, iolist);
->  		wpc->ioend = xfs_alloc_ioend(inode, wpc->fork,
-> -				wpc->imap.br_state, offset, bdev, sector);
-> +				wpc->imap.br_state, offset, bdev, sector, wbc);
->  	}
->  
->  	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff, true)) {
->  		if (iop)
->  			atomic_inc(&iop->write_count);
->  		if (bio_full(wpc->ioend->io_bio))
-> -			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
-> +			wpc->ioend->io_bio = xfs_chain_bio(wpc->ioend->io_bio);
->  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
->  	}
->  
-> -- 
-> 2.20.1
-> 
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
+> head:   9eecd07b34507de9d6a9c264d13d30e1ee5fabe8
+> commit: 22c040fa21b604b9b3d88645e108fb2f0a74474b [21/22] platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime
+>
+> Please take the patch only if it's a positive warning. Thanks!
+>
+>  event.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -267,7 +267,7 @@ static int event_open(struct inode *inod
+>
+>         /* Increase refcount on device so dev_data is not freed */
+>         get_device(&dev_data->dev);
+> -       nonseekable_open(inode, filp);
+> +       stream_open(inode, filp);
+>         filp->private_data = dev_data;
+>
+>         return 0;
