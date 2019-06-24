@@ -2,87 +2,151 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F001DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC9820449
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AFF212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UZF7L0Ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfFXLQe (ORCPT
+        id S1729183AbfFXLTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:16:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19064 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727953AbfFXLQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:16:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 722C6F7675D79B1559C7;
-        Mon, 24 Jun 2019 19:16:29 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 24 Jun 2019 19:16:22 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <dan.carpenter@oracle.com>, <julia.lawall@lip6.fr>
-CC:     <kernel-janitors@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <jonathan.kim@amd.com>,
-        Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed in amdgpu_pmu_init
-Date:   Mon, 24 Jun 2019 19:23:18 +0800
-Message-ID: <20190624112318.149299-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190624094850.GQ18776@kadam>
-References: <20190624094850.GQ18776@kadam>
+        Mon, 24 Jun 2019 07:19:07 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60808 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfFXLTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:19:07 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BFAF6323;
+        Mon, 24 Jun 2019 13:19:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1561375144;
+        bh=B6Kyd/rtGoZ/rniG3OdECkB1xfXOxJ86TGPqPhSRnd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UZF7L0OtkFEm3c6C+yr3wAtoXGqgyjsN+/jO8N8+hVRxpmtdm0UeHhiq9u/KmNJ53
+         tf5FCstcqBXEsD1X9/2hGyciTHm324pnEmUb6nl1k81izWnQWdxWrOro6z+BInLdNX
+         RsH6bRzDPzqY1b5vj7Nmpm6VW2dI+bpQdY6UkrM4=
+Date:   Mon, 24 Jun 2019 14:16:36 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>
+Subject: Re: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
+Message-ID: <20190624111636.GB5737@pendragon.ideasonboard.com>
+References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+ <085dc3be-20e5-b2fe-4c02-bf4a4d1473da@baylibre.com>
+ <20190621090125.GX12905@phenom.ffwll.local>
+ <20190623233017.GI6124@pendragon.ideasonboard.com>
+ <58243243-fbd8-e67b-a050-baa9757be43e@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <58243243-fbd8-e67b-a050-baa9757be43e@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one warning:
-drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
-drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-  int ret = 0;
-      ^
-amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
-which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
-amdgpu_device_init()
-	r = amdgpu_pmu_init(adev);
+Hi Neil,
 
-Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+On Mon, Jun 24, 2019 at 10:19:34AM +0200, Neil Armstrong wrote:
+> Hi Daniel, Laurent, Andrzej,
+> 
+> On 24/06/2019 01:30, Laurent Pinchart wrote:
+> > On Fri, Jun 21, 2019 at 11:01:25AM +0200, Daniel Vetter wrote:
+> >> On Thu, Jun 20, 2019 at 04:40:12PM +0200, Neil Armstrong wrote:
+> >>> Hi Andrzej,
+> >>>
+> >>> Gentle ping, could you review the dw-hdmi changes here ?
+> >>
+> >> btw not sure you absolutely need review from Andrzej, we're currently a
+> >> bit undersupplied with bridge reviewers I think ... Better to ramp up
+> >> more.
+> > 
+> > I try to review DRM bridge patches when possible, but dw-hdmi is a
+> > special case. I was told by the supplier of an SoC datasheet that
+> > contains the HDMI encoder IP core documentation that Synopsys required
+> > them to route all contributions made based on that documentation through
+> > Synopsys' internal legal review before publishing them. I thus decided
+> > to not contribute to the driver anymore, at least for areas that require
+> > access to documentation.
+> 
+> I'd like to propose myself as co-maintainer of the DRM bridge subsystem if
+> everybody agrees, following the excellent work Laurent and Andrzej did.
+> I have a very little knowledge of DSI, & other bridge drivers, but I'll do
+> my best.
+> 
+> For the dw-hdmi driver, we have a big roadmap including :
+> - HDR (this patchset)
+> - HDCP 1/2
+> - YUV420, YUV422, YUV44, 10bit/12bit/16bit HDMI output
+> - Enhanced audio support and ELD notification to ASoC
+> ...
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
- amdgpu_pmu_init().
- v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
- v3->v4: delete the indenting for init_pmu_by_type() arguments. The original indenting is correct.
+You're more than welcome as a DRM bridge maintainer, especially given
+that you have just volunteered to implement bridge states and format
+negotiation, right ? ;-)
 
- drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Having a more active maintainer/reviewer team would be needed, at least for
+> the dw-hdmi bridge.
+> 
+> I'll also propose Jonas Karlman <jonas@kwiboo.se> as reviewer since he is very
+> active for the multimedia support on RockChip, Allwinner and Amlogic SoCs.
+> I'll also propose Jernej Skrabec@siol.net <jernej.skrabec@siol.net>, if he wants,
+> as reviewer since he is very active on the Allwinner SoCs side.
+> 
+> >>> On 26/05/2019 23:18, Jonas Karlman wrote:
+> >>>> Add support for HDR metadata using the hdr_output_metadata connector property,
+> >>>> configure Dynamic Range and Mastering InfoFrame accordingly.
+> >>>>
+> >>>> A drm_infoframe flag is added to dw_hdmi_plat_data that platform drivers
+> >>>> can use to signal when Dynamic Range and Mastering infoframes is supported.
+> >>>> This flag is needed because Amlogic GXBB and GXL report same DW-HDMI version,
+> >>>> and only GXL support DRM InfoFrame.
+> >>>>
+> >>>> The first patch add functionality to configure DRM InfoFrame based on the
+> >>>> hdr_output_metadata connector property.
+> >>>>
+> >>>> The remaining patches sets the drm_infoframe flag on some SoCs supporting
+> >>>> Dynamic Range and Mastering InfoFrame.
+> >>>>
+> >>>> Note that this was based on top of drm-misc-next and Neil Armstrong's
+> >>>> "drm/meson: Add support for HDMI2.0 YUV420 4k60" series at [1]
+> >>>>
+> >>>> [1] https://patchwork.freedesktop.org/series/58725/#rev2
+> >>>>
+> >>>> Jonas Karlman (4):
+> >>>>   drm/bridge: dw-hdmi: Add Dynamic Range and Mastering InfoFrame support
+> >>>>   drm/rockchip: Enable DRM InfoFrame support on RK3328 and RK3399
+> >>>>   drm/meson: Enable DRM InfoFrame support on GXL, GXM and G12A
+> >>>>   drm/sun4i: Enable DRM InfoFrame support on H6
+> >>>>
+> >>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 109 ++++++++++++++++++++
+> >>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h   |  37 +++++++
+> >>>>  drivers/gpu/drm/meson/meson_dw_hdmi.c       |   5 +
+> >>>>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |   2 +
+> >>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c       |   2 +
+> >>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h       |   1 +
+> >>>>  include/drm/bridge/dw_hdmi.h                |   1 +
+> >>>>  7 files changed, 157 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-index 0e6dba9f60f0..c98cf77a37f3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-@@ -254,6 +254,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
- 		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
- 				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
- 				       DF_V3_6_MAX_COUNTERS);
-+		if (ret)
-+			return ret;
- 
- 		/* other pmu types go here*/
- 		break;
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
