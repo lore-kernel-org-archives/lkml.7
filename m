@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24077C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289AAC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE122089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E926F20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370862;
-	bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
+	s=default; t=1561370866;
+	bh=lPFa3FZ2IJL5Jre6SYhyJDYntvwt2w0C2DFyXpPrB7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukhG7baVEkQZQjtB3Hr7uGSRcxlEvzQVdTmczv2y6Q+oxGRiI0DmCFrPXDIpXL0Nk
-	 yeWddol+nWCIeFfzqLnnFGZLWWD3CO/dY7R6saKHVTzAqbrIARrsj8i4sNve45u25t
-	 1Vj69YFXFBkJDEcfa6SkWpbJ1JPLwwzx8rGzNgjE=
+	b=UFX1w+K584jXK0sgC/5Eo5la0EpT5jlatsxrVVZT5EjME4+RawbK5zPqckuXWT5/D
+	 SThTdpR8TeMhLVT+bGh5sed+dFJpKkd/2YVCl88RG9cCzsDNQUCHV7VDOAGaldcCmf
+	 NN3BzSr0+xn2+zaBGdfh4bNGB1jEe4tIeQPTsbKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfFXKHk (ORCPT
+        id S1729699AbfFXKHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbfFXKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:27 -0400
+        id S1729947AbfFXKHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:32 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15AF20644;
-        Mon, 24 Jun 2019 10:07:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B59C208E3;
+        Mon, 24 Jun 2019 10:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370846;
-        bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
+        s=default; t=1561370851;
+        bh=lPFa3FZ2IJL5Jre6SYhyJDYntvwt2w0C2DFyXpPrB7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9K+vd/VJT6RKJJFP1bXm1USd/bRsg/AIBfqGyfqyfNEqbO+kA9rmPIRqEu9IN/na
-         yv4CQcUiP+MhHTuvMtK59C7jEKs6rOCpbfkzQHXao7l17a3St9o7hrlONyykiizXB4
-         9loolnoutBDgNqscUkFF/JYoDiDeEMzWim4nXRMU=
+        b=IH+m/lFdNBBkW8tAom72+rFHUwIDYAywqUBucZfExYZL3ILev8ujBIEORvLkcQYo9
+         U8F9IHBPhzl58TN7qhbOJGKnqaakmK1VgIyslb0ewyR6c40h5O5qB/Y3ZVnVVwIbkf
+         ilkHN3MPn8XphHAi2rsrImkwhg1Uu2OkxcpM1o7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Mikhaylenko <exalm7659@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Daniel Smith <danct12@disroot.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.1 022/121] Input: synaptics - enable SMBus on ThinkPad E480 and E580
-Date:   Mon, 24 Jun 2019 17:55:54 +0800
-Message-Id: <20190624092321.782587200@linuxfoundation.org>
+Subject: [PATCH 5.1 024/121] Input: silead - add MSSL0017 to acpi_device_id
+Date:   Mon, 24 Jun 2019 17:55:56 +0800
+Message-Id: <20190624092321.922852625@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,36 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Mikhaylenko <exalm7659@gmail.com>
+From: Daniel Smith <danct12@disroot.org>
 
-commit 9843f3e08e2144724be7148e08d77a195dea257a upstream.
+commit 0e658060e5fc50dc282885dc424a94b5d95547e5 upstream.
 
-They are capable of using intertouch and it works well with
-psmouse.synaptics_intertouch=1, so add them to the list.
+On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
 
-Without it, scrolling and gestures are jumpy, three-finger pinch gesture
-doesn't work and three- or four-finger swipes sometimes get stuck.
-
-Signed-off-by: Alexander Mikhaylenko <exalm7659@gmail.com>
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Daniel Smith <danct12@disroot.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/input/touchscreen/silead.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -179,6 +179,8 @@ static const char * const smbus_pnp_ids[
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
- 	"LEN200f", /* T450s */
-+	"LEN2054", /* E480 */
-+	"LEN2055", /* E580 */
- 	"SYN3052", /* HP EliteBook 840 G4 */
- 	"SYN3221", /* HP 15-ay000 */
- 	NULL
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -617,6 +617,7 @@ static const struct acpi_device_id silea
+ 	{ "MSSL1680", 0 },
+ 	{ "MSSL0001", 0 },
+ 	{ "MSSL0002", 0 },
++	{ "MSSL0017", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
 
 
