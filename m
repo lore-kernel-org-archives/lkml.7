@@ -2,233 +2,214 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BA5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983B8C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB6620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5193020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bDtECx7J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBFFjWT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfFXWaX (ORCPT
+        id S1727307AbfFXWbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:30:23 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50238 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727152AbfFXWaT (ORCPT
+        Mon, 24 Jun 2019 18:31:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41011 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfFXWbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:30:19 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OMIE4x000694
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:30:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=1YmphlJ3H8jOCDJ7k4G2S7xvfsjoBsLcepmZ6MADQ8Y=;
- b=bDtECx7JjGTraAQgcG+LiSc0bC+DOB+jM2yn4IYkK2W7vzJreSCkFUik5nANicKPctGH
- GEVwBJchObVFymR3+HxGxfiY0ESoyufbZdV3sAYjbm4gpcIuIgq1f+GyrXDCCZutciMc
- 81z1y+YcZ+IWajUeJ1ItDgGTxIa7xRIEgMg= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2tb6j2g6a8-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:30:18 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 15:30:16 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id E384862E206E; Mon, 24 Jun 2019 15:30:11 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
-        <akpm@linux-foundation.org>, <hdanton@sina.com>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v8 6/6] mm,thp: avoid writes to file with THP in pagecache
-Date:   Mon, 24 Jun 2019 15:29:51 -0700
-Message-ID: <20190624222951.37076-7-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624222951.37076-1-songliubraving@fb.com>
-References: <20190624222951.37076-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Mon, 24 Jun 2019 18:31:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so8299743pff.8;
+        Mon, 24 Jun 2019 15:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sDhvHfU4nGf0uonBKZjM1IEpg98UHFSrxt5pp3t51DY=;
+        b=UBFFjWT7LOuvou/845a+CpgFGAlCRZd/d++Vvm5MbyCdmOB6uDYUhbEZ46v6N5zAw3
+         0UAgIHRt3RaI/dlynHv55AsUjRAHWaonVi1wqTPvZuJlfiVMJJaRb/cin9Mr6NFkvdui
+         nMZFmNk5xoI1k5S4W6grKEW9L7l6u4bAOKTmk2n3X40eN33za1M+v5xtKsmz2r0RlxaS
+         J/QNi8p8XnVGYuKm29TwOxkfYfEtV/KSzg4sNpuwsumcNAq+lyBhZBAMiasEmDfIq1es
+         rynDtul/z1NJoxaykKAPa4ue4pVR9POUH59gfeo/PDuHR83srjLeTwgpIzp+R8hWqoIJ
+         WMjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sDhvHfU4nGf0uonBKZjM1IEpg98UHFSrxt5pp3t51DY=;
+        b=o0fgnHQdD1BCEWJXMBsSEuqUaUFIdPE6Bp/N33bSyg3sgMFZ/xNJoR0d1qHB6mO7o2
+         d/tiH6VwEWo0SmNNBOBjAXMpGnnjms9Qq3xhywjjOdqP/OrUnoODqVf5vp4sKy/pvdIN
+         ydGJQv3gV6eG8sZxzEio4VrD+BZWxQ5G5IRm2K2seEj9SZ4MWueGU/TtcbIivOtObrpe
+         oA9+Kt0v+LUJcKx7Mn64VV69yTshrtXQiOYlnT8HPoTlsf3yGJoOQuvMBTFn/rRPag8l
+         BEaJhx3bavBhsyX5OTYQiEhmoAjCzHbnGeVIJLq6b0rrJDBbYSBOON51UJy1dHu+Q7ML
+         ONBQ==
+X-Gm-Message-State: APjAAAVT08rZ5SectYDUzIxYRn49mTD5rRFKOZVnUWtdKW+ChmqFx2kZ
+        xlvwC8vfCi1R0lovBLhLbI0=
+X-Google-Smtp-Source: APXvYqxBVF71hCnhocjdmBxf48aLLf2UsC8HofCR0uK+Bz9FPmtB5MKqsbtad7nULsExdR7GNFUqVQ==
+X-Received: by 2002:a17:90a:346c:: with SMTP id o99mr26952184pjb.20.1561415469102;
+        Mon, 24 Jun 2019 15:31:09 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id m11sm398116pjv.21.2019.06.24.15.31.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 15:31:08 -0700 (PDT)
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+ <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
+ <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
+Date:   Mon, 24 Jun 2019 15:31:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240176
-X-FB-Internal: deliver
+In-Reply-To: <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous patch, an application could put part of its text section in
-THP via madvise(). These THPs will be protected from writes when the
-application is still running (TXTBSY). However, after the application
-exits, the file is available for writes.
+On 6/23/19 7:52 PM, Masami Hiramatsu wrote:
+> Hi Frank,
+> 
+> Thank you for your comment!
+> 
+> On Sun, 23 Jun 2019 12:58:45 -0700
+> Frank Rowand <frowand.list@gmail.com> wrote:
+> 
+>> Hi Masami,
+>>
+>> On 6/21/19 9:18 AM, Masami Hiramatsu wrote:
+>>> Hi,
+>>>
+>>> Here is an RFC series of patches to add boot-time tracing using
+>>> devicetree.
+>>>
+>>> Currently, kernel support boot-time tracing using kernel command-line
+>>> parameters. But that is very limited because of limited expressions
+>>> and limited length of command line. Recently, useful features like
+>>> histogram, synthetic events, etc. are being added to ftrace, but it is
+>>> clear that we can not expand command-line options to support these
+>>> features.
+>>
+>> "it is clear that we can not expand command-line options" needs a fuller
+>> explanation.  And maybe further exploration.
+> 
+> Indeed. As an example of tracing settings in the first mail, even for simple
+> use-case,  the trace command is long and complicated. I think it is hard to
+> express that as 1-liner kernel command line. But devicetree looks very good
+> for expressing structured data. That is great and I like it :)
 
-This patch avoids writes to file THP by dropping page cache for the file
-when the file is open for write. A new counter nr_thps is added to struct
-address_space. In do_last(), if the file is open for write and nr_thps
-is non-zero, we drop page cache for the whole file.
+But you could extend the command line paradigm to meet your needs.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- fs/inode.c         |  2 ++
- fs/namei.c         | 23 ++++++++++++++++++++++-
- include/linux/fs.h | 28 ++++++++++++++++++++++++++++
- mm/filemap.c       |  1 +
- mm/khugepaged.c    |  4 +++-
- 5 files changed, 56 insertions(+), 2 deletions(-)
+> 
+>>>
+>>> Hoever, I've found that there is a devicetree which can pass more
+>>> structured commands to kernel at boot time :) The devicetree is usually
+>>> used for dscribing hardware configuration, but I think we can expand it
+>>
+>> Devicetree is standardized and documented as hardware description.
+> 
+> Yes, at this moment. Can't we talk about some future things?> 
+>>> for software configuration too (e.g. AOSP and OPTEE already introduced
+>>> firmware node.) Also, grub and qemu already supports loading devicetree,
+>>> so we can use it not only on embedded devices but also on x86 PC too.
+>>
+>> Devicetree is NOT for configuration information.  This has been discussed
+>> over and over again in mail lists, at various conferences, and was also an
+>> entire session at plumbers a few years ago:
+>>
+>>    https://elinux.org/Device_tree_future#Linux_Plumbers_2016_Device_Tree_Track
+> 
+> Thanks, I'll check that.
+> 
+>>
+>> There is one part of device tree that does allow non-hardware description,
+>> which is the "chosen" node which is provided to allow communication between
+>> the bootloader and the kernel.
+> 
+> Ah, "chosen" will be suit for me :)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index df6542ec3b88..7f27a5fd147b 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -181,6 +181,8 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
- 	mapping->flags = 0;
- 	mapping->wb_err = 0;
- 	atomic_set(&mapping->i_mmap_writable, 0);
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS))
-+		atomic_set(&mapping->nr_thps, 0);
- 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
- 	mapping->private_data = NULL;
- 	mapping->writeback_index = 0;
-diff --git a/fs/namei.c b/fs/namei.c
-index 20831c2fbb34..3d95e94029cc 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3249,6 +3249,23 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 	return error;
- }
- 
-+/*
-+ * The file is open for write, so it is not mmapped with VM_DENYWRITE. If
-+ * it still has THP in page cache, drop the whole file from pagecache
-+ * before processing writes. This helps us avoid handling write back of
-+ * THP for now.
-+ */
-+static inline void release_file_thp(struct file *file)
-+{
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) {
-+		struct inode *inode = file_inode(file);
-+
-+		if (inode_is_open_for_write(inode) &&
-+		    filemap_nr_thps(inode->i_mapping))
-+			truncate_pagecache(inode, 0);
-+	}
-+}
-+
- /*
-  * Handle the last step of open()
-  */
-@@ -3418,7 +3435,11 @@ static int do_last(struct nameidata *nd,
- 		goto out;
- opened:
- 	error = ima_file_check(file, op->acc_mode);
--	if (!error && will_truncate)
-+	if (error)
-+		goto out;
-+
-+	release_file_thp(file);
-+	if (will_truncate)
- 		error = handle_truncate(file);
- out:
- 	if (unlikely(error > 0)) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f7fdfe93e25d..20443d63692e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -427,6 +427,7 @@ int pagecache_write_end(struct file *, struct address_space *mapping,
-  * @i_pages: Cached pages.
-  * @gfp_mask: Memory allocation flags to use for allocating pages.
-  * @i_mmap_writable: Number of VM_SHARED mappings.
-+ * @nr_thps: Number of THPs in the pagecache (non-shmem only).
-  * @i_mmap: Tree of private and shared mappings.
-  * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
-  * @nrpages: Number of page entries, protected by the i_pages lock.
-@@ -444,6 +445,10 @@ struct address_space {
- 	struct xarray		i_pages;
- 	gfp_t			gfp_mask;
- 	atomic_t		i_mmap_writable;
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	/* number of thp, only for non-shmem files */
-+	atomic_t		nr_thps;
-+#endif
- 	struct rb_root_cached	i_mmap;
- 	struct rw_semaphore	i_mmap_rwsem;
- 	unsigned long		nrpages;
-@@ -2790,6 +2795,29 @@ static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
- 	return errseq_sample(&mapping->wb_err);
- }
- 
-+static inline int filemap_nr_thps(struct address_space *mapping)
-+{
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS))
-+		return atomic_read(&mapping->nr_thps);
-+	return 0;
-+}
-+
-+static inline void filemap_nr_thps_inc(struct address_space *mapping)
-+{
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS))
-+		atomic_inc(&mapping->nr_thps);
-+	else
-+		WARN_ON_ONCE(1);
-+}
-+
-+static inline void filemap_nr_thps_dec(struct address_space *mapping)
-+{
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS))
-+		atomic_dec(&mapping->nr_thps);
-+	else
-+		WARN_ON_ONCE(1);
-+}
-+
- extern int vfs_fsync_range(struct file *file, loff_t start, loff_t end,
- 			   int datasync);
- extern int vfs_fsync(struct file *file, int datasync);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index e79ceccdc6df..a8e86c136381 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -205,6 +205,7 @@ static void unaccount_page_cache_page(struct address_space *mapping,
- 			__dec_node_page_state(page, NR_SHMEM_THPS);
- 	} else if (PageTransHuge(page)) {
- 		__dec_node_page_state(page, NR_FILE_THPS);
-+		filemap_nr_thps_dec(mapping);
- 	}
- 
- 	/*
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index acbbbeaa083c..0bbc6be51197 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1503,8 +1503,10 @@ static void collapse_file(struct mm_struct *mm,
- 
- 	if (is_shmem)
- 		__inc_node_page_state(new_page, NR_SHMEM_THPS);
--	else
-+	else {
- 		__inc_node_page_state(new_page, NR_FILE_THPS);
-+		filemap_nr_thps_inc(mapping);
-+	}
- 
- 	if (nr_none) {
- 		struct zone *zone = page_zone(new_page);
--- 
-2.17.1
+No.  This is not communicating boot loader information.
+
+> 
+>> There clearly are many use cases for providing configuration information
+>> and other types of data to a booting kernel.  I have been encouraging
+>> people to come up with an additional boot time communication channel or
+>> data object to support this use case.  So far, no serious proposal that
+>> I am aware of.
+> 
+> Hmm, then, can we add "ftrace" node under "chosen" node?
+> It seems that "chosen" is supporting some (flat) properties, and I would
+> like to add a tree of nodes for describing per-event setting.
+> 
+> What about something like below? (do we need "compatible" ?)
+> 
+> chosen {
+> 	linux,ftrace {
+> 		tp-printk;
+> 		buffer-size-kb = <400>;
+> 		event0 {
+> 			event = "...";
+> 		};
+> 	};
+> };
+> 
+> [..]
+>>>
+>>> I would like to discuss on some points about this idea.
+>>>
+>>> - Can we use devicetree for configuring kernel dynamically?
+>>
+>> No.  Sorry.
+>>
+>> My understanding of this proposal is that it is intended to better
+>> support boot time kernel and driver debugging.  As an alternate
+>> implementation, could you compile the ftrace configuration information
+>> directly into a kernel data structure?  It seems like it would not be
+>> very difficult to populate the data structure data via a few macros.
+> 
+> No, that is not what I intended. My intention was to trace boot up
+> process "without recompiling kernel", but with a structured data.
+
+That is debugging.  Or if you want to be pedantic, a complex performance
+measurement of the boot process (more than holding a stopwatch in your
+hand).
+
+Recompiling a single object file (containing the ftrace command data)
+and re-linking the kernel is not a big price in that context).  Or if
+you create a new communication channel, you will have the cost of
+creating that data object (certainly not much different than compiling
+a devicetree) and have the bootloader provide the ftrace data object
+to the kernel.
+
+> 
+> For such purpose, we have to implement a tool to parse and pack the
+> data and a channel to load it at earlier stage in bootloader. And
+> those are already done by devicetree. Thus I thought I could get a
+> piggyback on devicetree.
+
+Devicetree is not the universal dumping ground for communicating
+information to a booting kernel.  Please create another communication
+channel.
+
+> 
+> Thank you,
+> 
 
