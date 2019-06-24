@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ACEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1812C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3CB2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF5B2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370935;
-	bh=2TP3r5xznyJnJfnmlmOMCaIIiMp7BmAFP6fZzIgNNA0=;
+	s=default; t=1561370938;
+	bh=jIlfMerZzWk/pZXDKx+h7+Fdu6ct/+sUeYQ0rQ9U/ck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cP0x/5+N/uGYmzZpZNBRaT1Uu/MpfdKfhxqGvUNXZPhbjGuXIY4YwXKyY/ujUxDXO
-	 1J3llHucsS5cOx1IpeSgmTw/JgFgwXIRvbXkjKDk5TK1UXIEqyIGs8j+6xMtdow6XZ
-	 tJvmMYr9IL0RI3fVjJMWE93K1l3/lO6KwqyJH+gc=
+	b=Z+R5KgBFdMCwz3HYCTtxOAiASHcf7Mt6GJpfQP4CC8VYGJ5XFhGCUr/sq+OZuxpjq
+	 vVesz40yTpp31IMT0KWf3Tz9sVtwLBsdq6QPciucit3fCdQsWUc+X/eEK5bXCcjqwM
+	 UOMAzcQhbt6AzaxddW9UFcVYJ1r2Xz2HvlFa5PlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfFXKIy (ORCPT
+        id S1730570AbfFXKI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbfFXKIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:48 -0400
+        id S1730177AbfFXKIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:50 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF77205C9;
-        Mon, 24 Jun 2019 10:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF31A2089F;
+        Mon, 24 Jun 2019 10:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370926;
-        bh=2TP3r5xznyJnJfnmlmOMCaIIiMp7BmAFP6fZzIgNNA0=;
+        s=default; t=1561370929;
+        bh=jIlfMerZzWk/pZXDKx+h7+Fdu6ct/+sUeYQ0rQ9U/ck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=of3T9shRz3RVy5xBvgxJqDWnrjX9ixW4dqXEG7/WAhMbmV+VzWlop+aLy4uyCEns9
-         EMoCTp4fFPm2AMp3oAAi7yoSykMGYlZycCHDqizgobXzn5pmptAC0ZsUzFbLbQfggJ
-         HUOfBvEZdBgdetObfZTA//ZlTjaZaoIYnrLcNraU=
+        b=hlpEIVD6s13S8Pcz8QCdGsN7UAExAJAV09LiOvkF4K4DIU61C+GQsg1lK6p77k0dW
+         WFRvUzYRR5ZrfbEXlrhzcBcfRDsR+t1fsBwPdtU3DOpIottvdYkFUWke5/qXceCpQa
+         aiItkwjBH3DlaF6hjd7o6SDUgZYDiDDcKHwLbKqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Collier <josh.d.collier@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>,
         Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 052/121] IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
-Date:   Mon, 24 Jun 2019 17:56:24 +0800
-Message-Id: <20190624092323.392296360@linuxfoundation.org>
+Subject: [PATCH 5.1 053/121] IB/hfi1: Validate page aligned for a given virtual address
+Date:   Mon, 24 Jun 2019 17:56:25 +0800
+Message-Id: <20190624092323.432996036@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -62,64 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 35164f5259a47ea756fa1deb3e463ac2a4f10dc9 ]
+[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
 
-The command 'ibv_devinfo -v' reports 0 for max_mr.
+User applications can register memory regions for TID buffers that are not
+aligned on page boundaries. Hfi1 is expected to pin those pages in memory
+and cache the pages with mmu_rb. The rb tree will fail to insert pages
+that are not aligned correctly.
 
-Fix by assigning the query values after the mr lkey_table has been built
-rather than early on in the driver.
+Validate whether a given virtual address is page aligned before pinning.
 
-Fixes: 7b1e2099adc8 ("IB/rdmavt: Move memory registration into rdmavt")
-Reviewed-by: Josh Collier <josh.d.collier@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
 Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/verbs.c    | 2 --
- drivers/infiniband/hw/qib/qib_verbs.c | 2 --
- drivers/infiniband/sw/rdmavt/mr.c     | 2 ++
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-index 55a56b3d7f83..ea68eeba3f22 100644
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -1355,8 +1355,6 @@ static void hfi1_fill_device_attr(struct hfi1_devdata *dd)
- 	rdi->dparms.props.max_cq = hfi1_max_cqs;
- 	rdi->dparms.props.max_ah = hfi1_max_ahs;
- 	rdi->dparms.props.max_cqe = hfi1_max_cqes;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_pd = hfi1_max_pds;
- 	rdi->dparms.props.max_qp_rd_atom = HFI1_MAX_RDMA_ATOMIC;
-diff --git a/drivers/infiniband/hw/qib/qib_verbs.c b/drivers/infiniband/hw/qib/qib_verbs.c
-index 5ff32d32c61c..2c4e569ce438 100644
---- a/drivers/infiniband/hw/qib/qib_verbs.c
-+++ b/drivers/infiniband/hw/qib/qib_verbs.c
-@@ -1459,8 +1459,6 @@ static void qib_fill_device_attr(struct qib_devdata *dd)
- 	rdi->dparms.props.max_cq = ib_qib_max_cqs;
- 	rdi->dparms.props.max_cqe = ib_qib_max_cqes;
- 	rdi->dparms.props.max_ah = ib_qib_max_ahs;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_qp_rd_atom = QIB_MAX_RDMA_ATOMIC;
- 	rdi->dparms.props.max_qp_init_rd_atom = 255;
-diff --git a/drivers/infiniband/sw/rdmavt/mr.c b/drivers/infiniband/sw/rdmavt/mr.c
-index 0bb6e39dd03a..b04d2173e3f4 100644
---- a/drivers/infiniband/sw/rdmavt/mr.c
-+++ b/drivers/infiniband/sw/rdmavt/mr.c
-@@ -96,6 +96,8 @@ int rvt_driver_mr_init(struct rvt_dev_info *rdi)
- 	for (i = 0; i < rdi->lkey_table.max; i++)
- 		RCU_INIT_POINTER(rdi->lkey_table.table[i], NULL);
+diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+index 0cd71ce7cc71..3592a9ec155e 100644
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	u32 *tidlist = NULL;
+ 	struct tid_user_buf *tidbuf;
  
-+	rdi->dparms.props.max_mr = rdi->lkey_table.max;
-+	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	return 0;
- }
- 
++	if (!PAGE_ALIGNED(tinfo->vaddr))
++		return -EINVAL;
++
+ 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
+ 	if (!tidbuf)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
