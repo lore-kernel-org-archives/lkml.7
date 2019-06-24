@@ -2,168 +2,143 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FFFC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80807C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0107D20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E5620652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="A3LbihFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbfFXPfj (ORCPT
+        id S1730609AbfFXPg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:35:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36009 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfFXPfj (ORCPT
+        Mon, 24 Jun 2019 11:36:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40325 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFXPgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:35:39 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r6so13956799oti.3;
-        Mon, 24 Jun 2019 08:35:39 -0700 (PDT)
+        Mon, 24 Jun 2019 11:36:25 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so7115861pla.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=upsId6Vhif+67AuSTB0k4laTu+PhcFeGh6g0cqmGnTY=;
+        b=A3LbihFiTe9ZG3DU1IAcQmfPF7GqeiQGPZCCXikYXnQq2a/E7wkelz5+Ozr5k2wfO8
+         kk7xhaGXLO9Fg9BgudhryLQnqb70N4e8cSrcrkvDkJCare25vJA6yyv51RgyAl1eu41C
+         hcBcyWF767a1VIOT28pDx0SQ4euR09KTjw2Azq6CONRdqHcT42iGx2FNKvIbrkAmz2pV
+         V3DV1rVI+dKvpOvdcVJfrZObTIO+HI6DCK25gLGYh4l6/3tTwG3E0sNp0BKNs2WNMhBB
+         U2fp5hUmDxS04b1sfkx2HD9iFgKDn4cEyIUu87/VpcTUvych47ytJG6Aae/kcccNUPw3
+         QFcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDs8l0EqS99acnWR7VOY7oZc27cA1C7UyoMqytNjurQ=;
-        b=JR3hBzXMaRo6CTAjNnpok4EDPJgfGl8o1GfVDUn2zxDojA6vxPpWSOQj3l1NLs1LKY
-         FjiAg6fTKAl/3ojfNA6Nt6vyUHNS71uAatvGrhbfELc3FdtaFlmqy6CMBASKPt9+koPm
-         OnbiqBJOyLpf1zRlQ8l6+6LZPfr6/AL9SJ3BcbLFNPAymMGJ69HDPq6vZyMC3zCIiG4L
-         by1jf9gQRBRpUNUxB2pf5ab/2p1HnuotWAQXdtDZlg92yOhMVGRyCMfnELVdhO4h++ZS
-         lbB+G/MMpWl8Nz1g1BDh19Xm2Kt+XCk1Mr+2VoXaFlJljevdaIktSL2WE7aK9DjzBJgn
-         RfRg==
-X-Gm-Message-State: APjAAAUvPe6kPWcapGPbsolKagjln++q/zshAu7hqLU6uzqtkrOSlDdt
-        v+lf+QBV10wV+qMKe+HXXxGi8CJf5C3i0roYnB2RJB4c
-X-Google-Smtp-Source: APXvYqyCfTccALRL7UUQdCywFtvUJdVbHF8z4IjuBjMFvn94y0cAWWP2IP8qtQBBYVSaFzJ0isSgfKa/yy7C3VUHaN4=
-X-Received: by 2002:a9d:69ce:: with SMTP id v14mr17440403oto.39.1561390538697;
- Mon, 24 Jun 2019 08:35:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=upsId6Vhif+67AuSTB0k4laTu+PhcFeGh6g0cqmGnTY=;
+        b=jHGA4hDcs/pzcgvgy4wKHI/7ki8+QXzpjYA9/h3W7Hv3fV3X78wYa38EYC6kzOV9B1
+         TcmBJBu7mid7vxdpjBIvZzhfwkCdIjFg9+CaBNP8BNu/ihtiyUmhnJKGvirq0uZd74vN
+         xKcut5up5huVMhdsIDEEOry+3GA/3Ns8vVEFtxyKghYjJLnvjhoYU3jJWBmMwbOgJUjB
+         clYjXCvR9xfLH5fwF1guJdZuE6CJhbsNEikAVn6rXGMD1JGJGWnGsuHtizgfsWbWU4mm
+         FiANgef4bjwAxD3zkLrEj2Em1cFJC4bMuDjKg/ml9WuFFdKGCTdHWeIqclj9WkrOcwzj
+         kbOw==
+X-Gm-Message-State: APjAAAUoHORQOoBpgCZ942aEN/RUo88B9xMJ4M3fk0wXKHd8OGAvh5fJ
+        pDfd6QI07xz5EUah9TiTSFu+YQ==
+X-Google-Smtp-Source: APXvYqzlVdtYCEtp+WwmRDQsKjoJOLdH7qTXsLIxNx9SjFlPbqhHNTujte9mWbck0bwYR3rk+NToPQ==
+X-Received: by 2002:a17:902:9b94:: with SMTP id y20mr133470830plp.260.1561390585039;
+        Mon, 24 Jun 2019 08:36:25 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id y193sm11282875pgd.41.2019.06.24.08.36.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 08:36:24 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 08:36:18 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Octavio Alvarez <octallk1@alvarezp.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiang Biao <jiang.biao2@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Dou Liyang <douly.fnst@cn.fujitsu.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Mirko Lindner <mlindner@marvell.com>
+Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
+Message-ID: <20190624083618.28cfd30a@hermes.lan>
+In-Reply-To: <alpine.DEB.2.21.1906231448540.32342@nanos.tec.linutronix.de>
+References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org>
+        <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org>
+        <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
+        <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
+        <alpine.DEB.2.21.1906221523340.5503@nanos.tec.linutronix.de>
+        <alpine.DEB.2.21.1906231448540.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190620062420.11650-1-sr@denx.de> <CAMuHMdXMpS_pg9N0qSW=Li0QavAMRG79RJcS4s0w6NTCxv_zzg@mail.gmail.com>
- <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
-In-Reply-To: <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Jun 2019 17:35:26 +0200
-Message-ID: <CAMuHMdWeX6=SuSPVUB=WaYMsUbrmg5sraM=APeXsqr_Yv6u4AA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v9] serial: mctrl_gpio: Check if GPIO property exisits
- before requesting it
-To:     Stefan Roese <sr@denx.de>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefan,
+On Sun, 23 Jun 2019 14:54:13 +0200 (CEST)
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-On Mon, Jun 24, 2019 at 5:29 PM Stefan Roese <sr@denx.de> wrote:
-> On 24.06.19 10:42, Geert Uytterhoeven wrote:
-> > On Thu, Jun 20, 2019 at 8:24 AM Stefan Roese <sr@denx.de> wrote:
-> >> This patch adds a check for the GPIOs property existence, before the
-> >> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
-> >> support is added (2nd patch in this patch series) on x86 platforms using
-> >> ACPI.
-> >>
-> >> Here Mika's comments from 2016-08-09:
-> >>
-> >> "
-> >> I noticed that with v4.8-rc1 serial console of some of our Broxton
-> >> systems does not work properly anymore. I'm able to see output but input
-> >> does not work.
-> >>
-> >> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
-> >> ("tty/serial/8250: use mctrl_gpio helpers").
-> >>
-> >> The reason why it fails is that in ACPI we do not have names for GPIOs
-> >> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
-> >> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
-> >> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
-> >> UART device in Broxton has following (simplified) ACPI description:
-> >>
-> >>      Device (URT4)
-> >>      {
-> >>          ...
-> >>          Name (_CRS, ResourceTemplate () {
-> >>              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-> >>                      "\\_SB.GPO0", 0x00, ResourceConsumer)
-> >>              {
-> >>                  0x003A
-> >>              }
-> >>              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-> >>                      "\\_SB.GPO0", 0x00, ResourceConsumer)
-> >>              {
-> >>                  0x003D
-> >>              }
-> >>          })
-> >>
-> >> In this case it finds the first GPIO (0x003A which happens to be RX pin
-> >> for that UART), turns it into GPIO which then breaks input for the UART
-> >> device. This also breaks systems with bluetooth connected to UART (those
-> >> typically have some GPIOs in their _CRS).
-> >>
-> >> Any ideas how to fix this?
-> >>
-> >> We cannot just drop the _CRS index lookup fallback because that would
-> >> break many existing machines out there so maybe we can limit this to
-> >> only DT enabled machines. Or alternatively probe if the property first
-> >> exists before trying to acquire the GPIOs (using
-> >> device_property_present()).
-> >> "
-> >>
-> >> This patch implements the fix suggested by Mika in his statement above.
-> >>
-> >> Signed-off-by: Stefan Roese <sr@denx.de>
+> Octavio,
+> 
+> On Sat, 22 Jun 2019, Thomas Gleixner wrote:
+> > On Wed, 19 Jun 2019, Octavio Alvarez wrote:  
+> > > On 6/13/19 3:45 PM, Thomas Gleixner wrote:  
+> > > > Can you please provide the content of /proc/interrupts with the driver
+> > > > loaded and working after boot (don't hibernate) for the following kernels:
+> > > >   
+> > > 
+> > > $ cat linux-master-after-boot.txt
+> > >            CPU0       CPU1       CPU2       CPU3  
+> >   
+> > >  27:          1          0          0          0   PCI-MSI 3145728-edge eth0  
+> >   
+> > > >    Linus upstream + revert  
+> > > 
+> > > $ cat linux-master-reverted-after-boot.txt
+> > >            CPU0       CPU1       CPU2       CPU3  
+> >   
+> > >  27:          1          0          0          0   PCI-MSI 3145728-edge eth0  
+> >    
+> > > Meanwhile, here it is for 4.9, which is the latest Debian-provided kernel and
+> > > worked:
+> > > 
+> > > $ cat linux-4.9-after-boot.txt
+> > >            CPU0       CPU1       CPU2       CPU3  
+> >   
+> > >  24:          1          0          0          0   PCI-MSI 3145728-edge eth0  
+> >    
+> > > I will keep trying 4.14, unless you say otherwise.  
+> > 
+> > It would be interesting though I don't expect too much data.
+> > 
+> > So all of the above use PCI/MSI. That's at least a data point. I need to
+> > stare into that driver again to figure out why this might make a
+> > difference, but right now I'm lost.  
+> 
+> One other data point you could provide please:
+> 
+>  Load the driver on Linus master with the following module parameter:
+> 
+>    disable_msi=1
+> 
+> That switches to INTx usage. Does the machine resume proper with that?
+> 
+> Thanks,
+> 
+> 	tglx
 
-> >> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> >> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
 
-> >> @@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
-> >>
-> >>          for (i = 0; i < UART_GPIO_MAX; i++) {
-> >>                  enum gpiod_flags flags;
-> >> +               char *gpio_str;
-> >> +               bool present;
-> >> +
-> >> +               /* Check if GPIO property exists and continue if not */
-> >> +               gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
-> >> +                                    mctrl_gpios_desc[i].name);
-> >
-> > This will silently break DTBs using "(cts|dsr|dcd|rng|rts|dtr)-gpio" instead
-> > of "(cts|dsr|dcd|rng|rts|dtr)-gpios".
->
-> Should both options be supported ("cts-gpio" vs "cts-gpios")?
-> Documentation/devicetree/bindings/serial/serial.txt only mentions
-> the "-gpios" variant.
-
-Well, the "-gpio" variant is deprecated, but still supported by
-devm_gpiod_get_index_optional(), and there are active users in upstream
-DTS files.
-
-My main objection is (trying to) replicate the matching logic inside
-gpiolib.c, causing subtle semantic differences. And keeping it consistent,
-of course.
-
-It would be nice if this could be fixed inside acpi_find_gpio(), so
-users don't need to be updated.  There may be other subsystems where
-the difference between DT and ACPI may cause issues, unbeknownst.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Suspend/resume and hibernation issues are often related to BIOS issues.
