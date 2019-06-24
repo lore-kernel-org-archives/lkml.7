@@ -2,116 +2,93 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65526C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EBFC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4142F208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC32C2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfFXJ3u (ORCPT
+        id S1728101AbfFXJaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:29:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726632AbfFXJ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:29:50 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0BEF76D46187D21E210D;
-        Mon, 24 Jun 2019 17:29:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
- 17:29:46 +0800
-Subject: Re: [PATCH -next v3] drm/amdgpu: return 'ret' immediately if failed
- in amdgpu_pmu_init
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-References: <alpine.DEB.2.21.1906230809400.4961@hadrien>
- <20190624034532.135201-1-maowenan@huawei.com> <20190624083952.GO18776@kadam>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <julia.lawall@lip6.fr>, <kernel-janitors@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <jonathan.kim@amd.com>, Joe Perches <joe@perches.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <4795ba5c-8e41-e1e0-c96a-47fdda3995e3@huawei.com>
-Date:   Mon, 24 Jun 2019 17:29:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 24 Jun 2019 05:30:09 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46784 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfFXJaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:30:09 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 789321dd4d6a6982; Mon, 24 Jun 2019 11:30:07 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of IS_ENABLED macro
+Date:   Mon, 24 Jun 2019 11:30:07 +0200
+Message-ID: <2097869.93pjHihJNk@kreacher>
+In-Reply-To: <b817a599-6564-b3d0-9c91-59c3fd5b5eb1@linaro.org>
+References: <20190621132302.30414-1-daniel.lezcano@linaro.org> <CAJZ5v0j0q+Z+FRpVuj39ML_c5ijo-veMMMSANdoDz1ZxAK3RgQ@mail.gmail.com> <b817a599-6564-b3d0-9c91-59c3fd5b5eb1@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190624083952.GO18776@kadam>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Monday, June 24, 2019 11:22:19 AM CEST Daniel Lezcano wrote:
+> On 22/06/2019 11:12, Rafael J. Wysocki wrote:
+> > On Fri, Jun 21, 2019 at 3:23 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> The functions stub already exist for the condition the IS_ENABLED
+> >> is trying to avoid.
+> >>
+> >> Remove the IS_ENABLED macros as they are pointless.
+> > 
+> > AFAICS, the IS_ENABLED checks are an optimization to avoid generating
+> > pointless code (including a branch) in case CONFIG_CPU_THERMAL is not
+> > set.
+> > 
+> > Why do you think that it is not useful?
+> 
+> I agree but I'm not a big fan of IS_ENABLED macros in the code when it
+> is possible to avoid them.
+> 
+> What about adding a stub for that like:
+
+Well,
+
+> #ifdef CPU_THERMAL
+> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+> {
+> 	return drv->flags & CPUFREQ_IS_COOLING_DEV;
+> }
+> #else
+> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+> {
+> 	return 0;
+> }
+> #endif
+
+This may as well be defined as
+
+static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+{
+	return IS_ENABLED(CPU_THERMAL) && drv->flags & CPUFREQ_IS_COOLING_DEV;
+}
+
+which is fewer lines of code.
+
+And I would call it something like cpufreq_thermal_control_enabled().
 
 
-On 2019/6/24 16:39, Dan Carpenter wrote:
-> On Mon, Jun 24, 2019 at 11:45:32AM +0800, Mao Wenan wrote:
->> There is one warning:
->> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
->> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->>   int ret = 0;
->>       ^
->> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
->> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
->> amdgpu_device_init()
->> 	r = amdgpu_pmu_init(adev);
->>
->> This patch is also to update the indenting on the arguments so they line up with the '('.
->>
->> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
->>  amdgpu_pmu_init().
->>  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
->>
->>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> index 0e6dba9..b702322 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
->> @@ -252,8 +252,11 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
->>  	case CHIP_VEGA20:
->>  		/* init df */
->>  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
->> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
->> -				       DF_V3_6_MAX_COUNTERS);
->> +							   "DF", "amdgpu_df",
->> +							   PERF_TYPE_AMDGPU_DF,
->> +							   DF_V3_6_MAX_COUNTERS);
->> +		if (ret)
->> +			return ret;
-> 
-> No no.  Sorry, the original indenting was correct and lined up with the
-> '(' character in 'init_pmu_by_type(', that's the way it should be.  If
-> we were to remove the "ret = " then we'd have to pull the arguments back
-> as well.  I think this fix that Julia suggested is really the right so
-> leave the indenting alone.
-> 
-
-> It looks like you've right aligned the arguments.  That's not the right
-> way, the original was correct.
-> 
-After using 8 character for tab(thanks to Joe), the aligned here is wrong, yes, the original was correct.
-
-so my v4 is only to change ret, don't change the indenting?
-
-> regards,
-> dan carpenter
-> 
-> 
-> .
-> 
 
