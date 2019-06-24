@@ -2,53 +2,53 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C8EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DFCC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0400212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EE5208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370787;
-	bh=ZHYoei1ZCnZqajMUa/p2U0Po247LHUMa2Rwe3ML0Df8=;
+	s=default; t=1561370792;
+	bh=AZ4hQFbDbc3e4yABmB6vYKoy2RI/A6f6SK1Pel/zyrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/pIeSMtziEn/S1E0hFV/00WqjU17hMc0K9Tr/Y74fQ9UM3v1U8+4pREXyACoJI2J
-	 8z0uZC1rLLnpm6Xg8Ehrt/e7Vcc7epQSkYwvd5Nc1Y8bln0LdmVf003Dry7QgW4mO4
-	 bNmDhpmplFQ7qoRcNy6qlY5xAraN203/gRSpeaz0=
+	b=zAHFC4a8+s/h2gHrLfU3etmSsfBK0z1GWkKD34zgMO4rwJmAQSXM7nhuVim6u/oo8
+	 Ss6I34KzFaey1IdONg5gCQTvYk+/984tU6Ag0CqqsD+7sVVuvJfJ+O9QmAGgOekV4s
+	 RdX4coBEMyMr62BDS7PGXB5w79HBVbP2U4eX8J9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfFXKG0 (ORCPT
+        id S1730124AbfFXKGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38508 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbfFXKGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:23 -0400
+        id S1730104AbfFXKG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:28 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A057F212F5;
-        Mon, 24 Jun 2019 10:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1898208E3;
+        Mon, 24 Jun 2019 10:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370782;
-        bh=ZHYoei1ZCnZqajMUa/p2U0Po247LHUMa2Rwe3ML0Df8=;
+        s=default; t=1561370787;
+        bh=AZ4hQFbDbc3e4yABmB6vYKoy2RI/A6f6SK1Pel/zyrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alVFt2YEvKlksk5r0P5l3on9fzixwhZ3LpVZKNhRcLZ9NabT2+Gae0fzydbQjQwwy
-         mlDo5KzFHMsqP9eC2iwSHeKeCfVCb5Uk4iL9byxI3+LhZ1JInDGguVeyF/tAZeE4Xa
-         FR6xrviLjyE7Hu4QeCJBWMmqx7HnrWekkLkbFwCc=
+        b=BySj56OqvfJ9jLCLOgsXWAD9L+zQfhNk0fKFlEo+t6S/hApgZPu+FVJwhDTm25YHi
+         kpBl8bxaXbxAdgr6PmIZ1VKxiKLkMejbMuh69JYDJdTr+u3Pkrsq6sLc6CLoHfsYHX
+         pIg74Bd/w/RnCdFo28Z3HqMg9wN2KtaTr/g5BuZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/90] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
-Date:   Mon, 24 Jun 2019 17:56:44 +0800
-Message-Id: <20190624092317.700704954@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7fddca22578bc67c3fe4@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 84/90] cfg80211: fix memory leak of wiphy device name
+Date:   Mon, 24 Jun 2019 17:57:14 +0800
+Message-Id: <20190624092319.410368076@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,42 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
+From: Eric Biggers <ebiggers@google.com>
 
-Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
-equals to 2.
+commit 4f488fbca2a86cc7714a128952eead92cac279ab upstream.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In wiphy_new_nm(), if an error occurs after dev_set_name() and
+device_initialize() have already been called, it's necessary to call
+put_device() (via wiphy_free()) to avoid a memory leak.
+
+Reported-by: syzbot+7fddca22578bc67c3fe4@syzkaller.appspotmail.com
+Fixes: 1f87f7d3a3b4 ("cfg80211: add rfkill support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/wireless/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 0c70fb345f83..1d55f014725e 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1784,6 +1784,7 @@ static void mtk_poll_controller(struct net_device *dev)
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -498,7 +498,7 @@ use_default_name:
+ 				   &rdev->rfkill_ops, rdev);
  
- static int mtk_start_dma(struct mtk_eth *eth)
- {
-+	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
- 	int err;
+ 	if (!rdev->rfkill) {
+-		kfree(rdev);
++		wiphy_free(&rdev->wiphy);
+ 		return NULL;
+ 	}
  
- 	err = mtk_dma_init(eth);
-@@ -1800,7 +1801,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 		MTK_QDMA_GLO_CFG);
- 
- 	mtk_w32(eth,
--		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
-+		MTK_RX_DMA_EN | rx_2b_offset |
- 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
- 		MTK_PDMA_GLO_CFG);
- 
--- 
-2.20.1
-
 
 
