@@ -2,78 +2,75 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6C1C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA90C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFAF920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDE520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732475AbfFXR3a (ORCPT
+        id S1732483AbfFXRaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:29:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:58092 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfFXR33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:29:29 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5520C15065090;
-        Mon, 24 Jun 2019 10:29:28 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 10:29:27 -0700 (PDT)
-Message-Id: <20190624.102927.1268781741493594465.davem@davemloft.net>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com,
-        wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190620134748.17866-1-megous@megous.com>
-References: <20190620134748.17866-1-megous@megous.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 10:29:29 -0700 (PDT)
+        Mon, 24 Jun 2019 13:30:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:55464 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbfFXRaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:30:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75C6B360;
+        Mon, 24 Jun 2019 10:30:12 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A90D43F718;
+        Mon, 24 Jun 2019 10:30:10 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 18:30:08 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 2/4] x86/entry: Simplify _TIF_SYSCALL_EMU handling
+Message-ID: <20190624173008.GJ29120@arrakis.emea.arm.com>
+References: <20190523090618.13410-3-sudeep.holla@arm.com>
+ <20190611145627.23229-1-sudeep.holla@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611145627.23229-1-sudeep.holla@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: megous@megous.com
-Date: Thu, 20 Jun 2019 15:47:42 +0200
-
-> From: Ondrej Jirman <megous@megous.com>
+On Tue, Jun 11, 2019 at 03:56:27PM +0100, Sudeep Holla wrote:
+> The usage of emulated and _TIF_SYSCALL_EMU flags in syscall_trace_enter
+> is more complicated than required.
 > 
-> This series implements support for Xunlong Orange Pi 3 board.
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/x86/entry/common.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
 > 
-> - ethernet support (patches 1-3)
-> - HDMI support (patches 4-6)
+> Hi Catalin,
 > 
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
-> 
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
+> I assume you can now pick up this patch.
 
-This is a mixture of networking and non-networking changes so it really
-can't go through my tree.
+I can, unless Thomas picks it up through the tip tree (there is no
+dependency on the other patches in this series, which I already queued
+via arm64).
 
-I wonder how you expect this series to be merged?
-
-Thanks.
+-- 
+Catalin
