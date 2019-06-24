@@ -2,188 +2,202 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8685CC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAA2C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E3620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:05:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WVw0EoU/"
+	by mail.kernel.org (Postfix) with ESMTP id 37D7520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfFXXFI (ORCPT
+        id S1728078AbfFXXJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:05:08 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:33447 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfFXXFH (ORCPT
+        Mon, 24 Jun 2019 19:09:41 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58549 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728045AbfFXXJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:05:07 -0400
-Received: by mail-ua1-f67.google.com with SMTP id f20so6365229ual.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UUo1KrRDh5d7CTBF6eaNp9PxHrRcB6qM3gI926f1TeA=;
-        b=WVw0EoU/h/EqUukaJvGtqujV+cXiSxfpwlH2O1mjOPjBOWZm7X31Fi0BEpRrTWYB9o
-         o3CdLbtue0bwaz7Vgm1UpKlE0E0fSuldvTbmZ5qdmnnWwc+B2pMoaALrgyVv/folYTdx
-         o5vrcJW2m//kZ2EHqvUqM4fL2R7S887YcxtaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UUo1KrRDh5d7CTBF6eaNp9PxHrRcB6qM3gI926f1TeA=;
-        b=hJZyUWLIpm1rFK8R9SKWuZiJXwkdhO5rkpjpchWHZuSI9kCyyWzLy17ntRlkYdJv6H
-         1df8lr901RrnJorBSOra/zmjUv4hr8kqgF2gbX/fGXgNg6XVFQwbFcaJwJXnBA/P206N
-         l83sO3IGpNNMlNTgXEwmxT/ORZISDhrWEKRey3xnvzouTyUeHYEwS+pLUwIlGoavioEy
-         pBvhGBzW865kBvIgdllnmh2/6d+VjiCC896l1w1F9G6rFQwTGQts1eX4hOU/3f7lRxK4
-         OpOmfwE8iYe4cRbiid3Ng3A/tlW0FMml+DIR72e/TMNCFgisJFetu0ZdQcveraET+FQ+
-         54Zw==
-X-Gm-Message-State: APjAAAUqPQkdWwekf+reiLUTejPoTZV/CwkwhYMueyLp+5GpcAgnQWkr
-        pToJ6xifs5JtzxnkjHawV/+7pb9RNB8/0axzak2yDg2SXzQ=
-X-Google-Smtp-Source: APXvYqzGrtkWF399TOCeEibm6SiwufJW+tbfw85UkDFZQy9sMXwWQnNPBCZCk62frDzlYpVuKPp8w75505JQWMBjpNM=
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr30915038uad.15.1561417505834;
- Mon, 24 Jun 2019 16:05:05 -0700 (PDT)
+        Mon, 24 Jun 2019 19:09:41 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id d4c091cf0ca37d7c; Tue, 25 Jun 2019 01:09:37 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
+Date:   Tue, 25 Jun 2019 01:09:36 +0200
+Message-ID: <2287147.DxjcvLeq6l@kreacher>
+In-Reply-To: <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
+References: <1668247.RaJIPSxJUN@kreacher> <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com> <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190622034105.188454-1-dbasehore@chromium.org> <20190622034105.188454-3-dbasehore@chromium.org>
-In-Reply-To: <20190622034105.188454-3-dbasehore@chromium.org>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Mon, 24 Jun 2019 16:04:54 -0700
-Message-ID: <CAGAzgsrhS_nsXqf83ivZS5qcfT+Ss0=pzshH_i2+-Hd1iVNgNA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] drm/panel: set display info in panel attach
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 8:41 PM Derek Basehore <dbasehore@chromium.org> wrote:
->
-> Devicetree systems can set panel orientation via a panel binding, but
-> there's no way, as is, to propagate this setting to the connector,
-> where the property need to be added.
-> To address this, this patch sets orientation, as well as other fixed
-> values for the panel, in the drm_panel_attach function. These values
-> are stored from probe in the drm_panel struct.
->
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->  drivers/gpu/drm/drm_panel.c | 28 ++++++++++++++++++++++++++++
->  include/drm/drm_panel.h     | 14 ++++++++++++++
->  2 files changed, 42 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> index 507099af4b57..5690fca30236 100644
-> --- a/drivers/gpu/drm/drm_panel.c
-> +++ b/drivers/gpu/drm/drm_panel.c
-> @@ -104,11 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
->   */
->  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
->  {
-> +       struct drm_display_info *info;
-> +
->         if (panel->connector)
->                 return -EBUSY;
->
->         panel->connector = connector;
->         panel->drm = connector->dev;
-> +       info = &connector->display_info;
-> +       info->width_mm = panel->width_mm;
-> +       info->height_mm = panel->height_mm;
-> +       info->bpc = panel->bpc;
-> +       info->panel_orientation = panel->orientation;
-> +       info->bus_flags = panel->bus_flags;
-> +       if (panel->bus_formats)
-> +               drm_display_info_set_bus_formats(&connector->display_info,
-> +                                                panel->bus_formats,
-> +                                                panel->num_bus_formats);
->
->         return 0;
->  }
-> @@ -128,6 +140,22 @@ EXPORT_SYMBOL(drm_panel_attach);
->   */
->  int drm_panel_detach(struct drm_panel *panel)
->  {
-> +       struct drm_display_info *info;
-> +
-> +       if (!panel->connector)
-> +               goto out;
-> +
-> +       info = &panel->connector->display_info;
-> +       info->width_mm = 0;
-> +       info->height_mm = 0;
-> +       info->bpc = 0;
-> +       info->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> +       info->bus_flags = 0;
-> +       kfree(info->bus_formats);
-> +       info->bus_formats = NULL;
-> +       info->num_bus_formats = 0;
-> +
-> +out:
->         panel->connector = NULL;
->         panel->drm = NULL;
->
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index 3564952f1a4f..760ca5865962 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -37,6 +37,8 @@ struct display_timing;
->   * struct drm_panel_funcs - perform operations on a given panel
->   * @disable: disable panel (turn off back light, etc.)
->   * @unprepare: turn off panel
-> + * @detach: detach panel->connector (clear internal state, etc.)
-> + * @attach: attach panel->connector (update internal state, etc.)
->   * @prepare: turn on panel and perform set up
->   * @enable: enable panel (turn on back light, etc.)
->   * @get_modes: add modes to the connector that the panel is attached to and
-> @@ -93,6 +95,18 @@ struct drm_panel {
->
->         const struct drm_panel_funcs *funcs;
->
-> +       /*
-> +        * panel information to be set in the connector when the panel is
-> +        * attached.
-> +        */
-> +       unsigned int width_mm;
-> +       unsigned int height_mm;
-> +       unsigned int bpc;
-> +       int orientation;
-> +       const u32 *bus_formats;
-> +       unsigned int num_bus_formats;
-> +       u32 bus_flags;
+On Tuesday, June 25, 2019 12:20:26 AM CEST Rafael J. Wysocki wrote:
+> On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> > >
+> > > Hi Rafael,
+> > >
+> > > On 13/06/2019 22:59, Rafael J. Wysocki wrote:
+> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+> > > > attempted to avoid a problem with devices whose drivers want them to
+> > > > stay in D0 over suspend-to-idle and resume, but it did not go as far
+> > > > as it should with that.
+> > > >
+> > > > Namely, first of all, the power state of a PCI bridge with a
+> > > > downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
+> > > > sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
+> > > > transactions on its secondary bus), but that is not actively enforced
+> > > > during system-wide PM transitions, so use the skip_bus_pm flag
+> > > > introduced by commit d491f2b75237 for that.
+> > > >
+> > > > Second, the configuration of devices left in D0 (whatever the reason)
+> > > > during suspend-to-idle need not be changed and attempting to put them
+> > > > into D0 again by force is pointless, so explicitly avoid doing that.
+> > > >
+> > > > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+> > > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > >
+> > > I have noticed a regression in both the mainline and -next branches on
+> > > one of our boards when testing suspend. The bisect is point to this
+> > > commit and reverting on top of mainline does fix the problem. So far I
+> > > have not looked at this in close detail but kernel log is showing ...
+> >
+> > Can you please collect a log like that, but with dynamic debug in
+> > pci-driver.c enabled?
+> >
+> > Note that reverting this commit is rather out of the question, so we
+> > need to get to the bottom of the failure.
+> 
+> I suspect that there is a problem with the pm_suspend_via_firmware()
+> check which returns 'false' on the affected board, but the platform
+> actually removes power from devices left in D0 during suspend.
+> 
+> I guess it would be more appropriate to check something like
+> pm_suspend_no_platform() which would return 'true' in the
+> suspend-to-idle patch w/ ACPI.
 
-Should probably put these in a struct to ensure the connector and
-panel have the same data types. Will do in a following patch if we
-stay with this.
+So I wonder if the patch below makes any difference?
 
-> +
->         struct list_head list;
->  };
->
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+---
+ drivers/pci/pci-driver.c |    8 ++++----
+ include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
+ kernel/power/suspend.c   |    3 +++
+ 3 files changed, 31 insertions(+), 6 deletions(-)
+
+Index: linux-pm/include/linux/suspend.h
+===================================================================
+--- linux-pm.orig/include/linux/suspend.h
++++ linux-pm/include/linux/suspend.h
+@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
+ 
+ extern unsigned int pm_suspend_global_flags;
+ 
+-#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
+-#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
++#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
++#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
++#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
+ 
+ static inline void pm_suspend_clear_flags(void)
+ {
+@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
+ 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
+ }
+ 
++static inline void pm_set_suspend_no_platform(void)
++{
++	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
++}
++
+ /**
+  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
+  *
+@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
+ 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
+ }
+ 
++/**
++ * pm_suspend_no_platform - Check if platform may change device power states.
++ *
++ * To be called during system-wide power management transitions to sleep states
++ * or during the subsequent system-wide transitions back to the working state.
++ *
++ * Return 'true' if the power states of devices remain under full control of the
++ * kernel throughout the system-wide suspend and resume cycle in progress (that
++ * is, if a device is put into a certain power state during suspend, it can be
++ * expected to remain in that state during resume).
++ */
++static inline bool pm_suspend_no_platform(void)
++{
++	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
++}
++
+ /* Suspend-to-idle state machnine. */
+ enum s2idle_states {
+ 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
+ 
+ 	pm_suspend_target_state = state;
+ 
++	if (state == PM_SUSPEND_TO_IDLE)
++		pm_set_suspend_no_platform();
++
+ 	error = platform_suspend_begin(state);
+ 	if (error)
+ 		goto Close;
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -870,7 +870,7 @@ static int pci_pm_suspend_noirq(struct d
+ 			pci_dev->bus->self->skip_bus_pm = true;
+ 	}
+ 
+-	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
++	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
+ 		dev_dbg(dev, "PCI PM: Skipped\n");
+ 		goto Fixup;
+ 	}
+@@ -925,10 +925,10 @@ static int pci_pm_resume_noirq(struct de
+ 	/*
+ 	 * In the suspend-to-idle case, devices left in D0 during suspend will
+ 	 * stay in D0, so it is not necessary to restore or update their
+-	 * configuration here and attempting to put them into D0 again may
+-	 * confuse some firmware, so avoid doing that.
++	 * configuration here and attempting to put them into D0 again is
++	 * pointless, so avoid doing that.
+ 	 */
+-	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
++	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
+ 		pci_pm_default_resume_early(pci_dev);
+ 
+ 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+
+
+
