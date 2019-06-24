@@ -2,55 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5928AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82389C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D032146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C7220645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371435;
-	bh=+KfCsSf9cYDwN4DOPUvD9G5PeFr0B/VpnI23mCJ6rCo=;
+	s=default; t=1561371440;
+	bh=VUru6ZPh216BdAHCYLYH+RFIWY6SIvlGVpx5BvcCHi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIHhoeSYF8wSEZJVbHEveFauAXe8akA0s3AdlGFbhOvbUwLsjRVdG9qBG3PzdBseT
-	 g5gi8MxvQtG/muP2+udbXanWdJ8SyGGs5xDqh+iVjRmsCM4y5nJfRMNnvggn9rihPU
-	 LaHN03ErK/PSE20m2J7orPAD2U8nZKQ5wk9YZNGY=
+	b=viPkDiVNt3A15z6Pd4R/SqbeapmrUZKILwX5w5SIl0yVFL9265yfcapaZToli6sXA
+	 DfkdgKJI4kRKGOmrZq3+dRWWiYiiWivXTxZSOQokB3oESoLV75N6u6By3NNJzzsAXP
+	 +Q16SjH7Lwr5PLs3wQcL8EzpnZoc8XS+IjEgbxF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfFXKRN (ORCPT
+        id S1730927AbfFXKRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54784 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730892AbfFXKRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:17:10 -0400
+        id S1730912AbfFXKRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:17:14 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39DE208E3;
-        Mon, 24 Jun 2019 10:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C745208E4;
+        Mon, 24 Jun 2019 10:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371430;
-        bh=+KfCsSf9cYDwN4DOPUvD9G5PeFr0B/VpnI23mCJ6rCo=;
+        s=default; t=1561371432;
+        bh=VUru6ZPh216BdAHCYLYH+RFIWY6SIvlGVpx5BvcCHi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TibkNip2Gqab86yhOPYctryX60N4azhWXvm5b6P4U4ywISFY1qiQWv0zM5s2c0ly7
-         JSySHoZw2XnGknG4iY2hrpMi3Hn7kK8k57OrvbP3VTq6F1vFwXPXWtNDtppsIeqH4L
-         RvXrTKWEQoYOS4OLWKRXHOWPhGqsXYfULli12+tA=
+        b=doNGUMQGvxp7F87sdbELoQ7AN8wWzKSM3c1p+njPFpnhH2ZOu1Q2BAFGP4xGPb7dg
+         KiaYHgtVbdNogUQGY5/34Z71po2YeCpFT1avYFp6/ISgulyc/YgpUq/+LuZJJoqQID
+         RpNSqbLn/lsTYqA9ZQwsCyzyXbDNqpSJqvSGdMAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 073/121] nvmet: fix data_len to 0 for bdev-backed write_zeroes
-Date:   Mon, 24 Jun 2019 17:56:45 +0800
-Message-Id: <20190624092324.637277726@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.1 100/121] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
+Date:   Mon, 24 Jun 2019 17:57:12 +0800
+Message-Id: <20190624092325.835268215@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -63,54 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3562f5d9f21e7779ae442a45197fed6cb247fd22 ]
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-The WRITE ZEROES command has no data transfer so that we need to
-initialize the struct (nvmet_req *req)->data_len to 0x0.  While
-(nvmet_req *req)->transfer_len is initialized in nvmet_req_init(),
-data_len will be initialized by nowhere which might cause the failure
-with status code NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR randomly.  It's
-because nvmet_req_execute() checks like:
+commit c3c0b70cd3f801bded7a548198ee1c9851a0ca82 upstream.
 
-	if (unlikely(req->data_len != req->transfer_len)) {
-		req->error_loc = offsetof(struct nvme_common_command, dptr);
-		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR);
-	} else
-		req->execute(req);
+Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
+dra76x data manual[1]. The new iodelay values will have better marginality
+and should prevent issues in corner cases.
 
-This patch fixes req->data_len not to be a randomly assigned by
-initializing it to 0x0 when preparing the command in
-nvmet_bdev_parse_io_cmd().
+Also this particular pinctrl-array is using spaces instead of tabs for
+spacing between the values and the comments. Fix this as well.
 
-nvmet_file_parse_io_cmd() which is for file-backed I/O has already
-initialized the data_len field to 0x0, though.
+[1] http://www.ti.com/lit/ds/symlink/dra76p.pdf
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+[tony@atomide.com: updated description with a bit more info]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/target/io-cmd-bdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi |   40 +++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index a065dbfc43b1..a77fd8674ecf 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -295,6 +295,7 @@ u16 nvmet_bdev_parse_io_cmd(struct nvmet_req *req)
- 		return 0;
- 	case nvme_cmd_write_zeroes:
- 		req->execute = nvmet_bdev_execute_write_zeroes;
-+		req->data_len = 0;
- 		return 0;
- 	default:
- 		pr_err("unhandled cmd %d on qid %d\n", cmd->common.opcode,
--- 
-2.20.1
-
+--- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
++++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+@@ -22,7 +22,7 @@
+  *
+  * Datamanual Revisions:
+  *
+- * DRA76x Silicon Revision 1.0: SPRS993A, Revised July 2017
++ * DRA76x Silicon Revision 1.0: SPRS993E, Revised December 2018
+  *
+  */
+ 
+@@ -169,25 +169,25 @@
+ 	/* Corresponds to MMC2_HS200_MANUAL1 in datamanual */
+ 	mmc2_iodelay_hs200_conf: mmc2_iodelay_hs200_conf {
+ 		pinctrl-pin-array = <
+-			0x190 A_DELAY_PS(384) G_DELAY_PS(0)       /* CFG_GPMC_A19_OEN */
+-			0x194 A_DELAY_PS(0) G_DELAY_PS(174)       /* CFG_GPMC_A19_OUT */
+-			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)       /* CFG_GPMC_A20_OEN */
+-			0x1ac A_DELAY_PS(85) G_DELAY_PS(0)        /* CFG_GPMC_A20_OUT */
+-			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)       /* CFG_GPMC_A21_OEN */
+-			0x1b8 A_DELAY_PS(139) G_DELAY_PS(0)       /* CFG_GPMC_A21_OUT */
+-			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)       /* CFG_GPMC_A22_OEN */
+-			0x1c4 A_DELAY_PS(69) G_DELAY_PS(0)        /* CFG_GPMC_A22_OUT */
+-			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	  /* CFG_GPMC_A23_OUT */
+-			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)       /* CFG_GPMC_A24_OEN */
+-			0x1dc A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A24_OUT */
+-			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)       /* CFG_GPMC_A25_OEN */
+-			0x1e8 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A25_OUT */
+-			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)       /* CFG_GPMC_A26_OEN */
+-			0x1f4 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A26_OUT */
+-			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)       /* CFG_GPMC_A27_OEN */
+-			0x200 A_DELAY_PS(36) G_DELAY_PS(0)        /* CFG_GPMC_A27_OUT */
+-			0x364 A_DELAY_PS(759) G_DELAY_PS(0)       /* CFG_GPMC_CS1_OEN */
+-			0x368 A_DELAY_PS(72) G_DELAY_PS(0)        /* CFG_GPMC_CS1_OUT */
++			0x190 A_DELAY_PS(384) G_DELAY_PS(0)	/* CFG_GPMC_A19_OEN */
++			0x194 A_DELAY_PS(350) G_DELAY_PS(174)	/* CFG_GPMC_A19_OUT */
++			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)	/* CFG_GPMC_A20_OEN */
++			0x1ac A_DELAY_PS(335) G_DELAY_PS(0)	/* CFG_GPMC_A20_OUT */
++			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)	/* CFG_GPMC_A21_OEN */
++			0x1b8 A_DELAY_PS(339) G_DELAY_PS(0)	/* CFG_GPMC_A21_OUT */
++			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)	/* CFG_GPMC_A22_OEN */
++			0x1c4 A_DELAY_PS(219) G_DELAY_PS(0)	/* CFG_GPMC_A22_OUT */
++			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	/* CFG_GPMC_A23_OUT */
++			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)	/* CFG_GPMC_A24_OEN */
++			0x1dc A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A24_OUT */
++			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)	/* CFG_GPMC_A25_OEN */
++			0x1e8 A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A25_OUT */
++			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)	/* CFG_GPMC_A26_OEN */
++			0x1f4 A_DELAY_PS(200) G_DELAY_PS(0)	/* CFG_GPMC_A26_OUT */
++			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)	/* CFG_GPMC_A27_OEN */
++			0x200 A_DELAY_PS(236) G_DELAY_PS(0)	/* CFG_GPMC_A27_OUT */
++			0x364 A_DELAY_PS(759) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OEN */
++			0x368 A_DELAY_PS(372) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OUT */
+ 	      >;
+ 	};
+ 
 
 
