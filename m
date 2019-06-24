@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8059BC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564102063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AC02063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371060;
-	bh=je1vLrKWnM/bj32LZD1mrdl09fLzwnEMwHCse+h9qzo=;
+	s=default; t=1561371064;
+	bh=x9xZl6yC252+YAjdmdXwcc8dd6i6py5IJ2lgNuFN2e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySKjND+JEOIBpEn4/BFsV9tMlcebj87I/TQiublXxUxygAy5MU0Jz0+MmtWzVQjXr
-	 0/hmk2Va+OE0hmwWeh9noatYSTSwHQI48VhRKTg6m2HOgiKdFUn3bhHLNCM39ovF9q
-	 E5fAggo6cKwYwjUicoGkR1PhVIC1FyVCCr53sjQI=
+	b=K9+0sIvR8iweSFMqmmqc2bJAYbhLL4KDAXJG+jUL4skobZz36BfSpj0L1/TyvU08U
+	 NEfXU8b1pxuc6L6PZ+3IKTx+QtBKbAN4Juo0OlfCInFBXzWWbyim3XSgzhRjzh/vqO
+	 dc7Z+dq8phP0MTuy6AETWT7HaR16OB/ACdy9yrdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbfFXKHM (ORCPT
+        id S1730244AbfFXKHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbfFXKHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:08 -0400
+        id S1730231AbfFXKHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:00 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319D62089F;
-        Mon, 24 Jun 2019 10:07:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD72208E3;
+        Mon, 24 Jun 2019 10:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370827;
-        bh=je1vLrKWnM/bj32LZD1mrdl09fLzwnEMwHCse+h9qzo=;
+        s=default; t=1561370819;
+        bh=x9xZl6yC252+YAjdmdXwcc8dd6i6py5IJ2lgNuFN2e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjjcAd2iVz+cYgRLPbYJGzqTktAi7Dk7Gal8s5SrlOPvXjw8L4isg4bFQV7h2Urnz
-         YeCN0br7SZjh0KHBH5sNGZuhGu7U3lNv0ADiUyPf24BrPPQmh9AraribTIvlPYus2u
-         C55VGQedw4vZCvCJkvYwxs2FwwQ3zhWLTAtHoqGw=
+        b=zzUEXIrJekdKoDyA3qYzcOBsvEvjh4uIHDOboavT7x4w9IV0wK7HDC6GHJ4uVWLNR
+         ERl1baDSQtgU4mS7dT8bv8CRb/TzGpWXXeBY7glghHbtjoqF1tumrjP+JKmbaljFbZ
+         UMXfh1ACdlaw+RaAG1wNwaeDWcTcOIlzTyYYr9oA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary Leshner <Gary.S.Leshner@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.1 016/121] IB/hfi1: Close PSM sdma_progress sleep window
-Date:   Mon, 24 Jun 2019 17:55:48 +0800
-Message-Id: <20190624092321.455363908@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.1 013/121] cifs: add spinlock for the openFileList to cifsInodeInfo
+Date:   Mon, 24 Jun 2019 17:55:45 +0800
+Message-Id: <20190624092321.322715737@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,85 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit da9de5f8527f4b9efc82f967d29a583318c034c7 upstream.
+commit 487317c99477d00f22370625d53be3239febabbe upstream.
 
-The call to sdma_progress() is called outside the wait lock.
+We can not depend on the tcon->open_file_lock here since in multiuser mode
+we may have the same file/inode open via multiple different tcons.
 
-In this case, there is a race condition where sdma_progress() can return
-false and the sdma_engine can idle.  If that happens, there will be no
-more sdma interrupts to cause the wakeup and the user_sdma xmit will hang.
+The current code is race prone and will crash if one user deletes a file
+at the same time a different user opens/create the file.
 
-Fix by moving the lock to enclose the sdma_progress() call.
+To avoid this we need to have a spinlock attached to the inode and not the tcon.
 
-Also, delete busycount. The need for this was removed by:
-commit bcad29137a97 ("IB/hfi1: Serve the most starved iowait entry first")
+RHBZ:  1580165
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Gary Leshner <Gary.S.Leshner@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/user_sdma.c |   12 ++++--------
- drivers/infiniband/hw/hfi1/user_sdma.h |    1 -
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ fs/cifs/cifsfs.c   |    1 +
+ fs/cifs/cifsglob.h |    5 +++++
+ fs/cifs/file.c     |    8 ++++++--
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/user_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.c
-@@ -130,20 +130,16 @@ static int defer_packet_queue(
- {
- 	struct hfi1_user_sdma_pkt_q *pq =
- 		container_of(wait->iow, struct hfi1_user_sdma_pkt_q, busy);
--	struct user_sdma_txreq *tx =
--		container_of(txreq, struct user_sdma_txreq, txreq);
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -303,6 +303,7 @@ cifs_alloc_inode(struct super_block *sb)
+ 	cifs_inode->uniqueid = 0;
+ 	cifs_inode->createtime = 0;
+ 	cifs_inode->epoch = 0;
++	spin_lock_init(&cifs_inode->open_file_lock);
+ 	generate_random_uuid(cifs_inode->lease_key);
  
--	if (sdma_progress(sde, seq, txreq)) {
--		if (tx->busycount++ < MAX_DEFER_RETRY_COUNT)
--			goto eagain;
--	}
-+	write_seqlock(&sde->waitlock);
-+	if (sdma_progress(sde, seq, txreq))
-+		goto eagain;
  	/*
- 	 * We are assuming that if the list is enqueued somewhere, it
- 	 * is to the dmawait list since that is the only place where
- 	 * it is supposed to be enqueued.
- 	 */
- 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
--	write_seqlock(&sde->waitlock);
- 	if (list_empty(&pq->busy.list)) {
- 		iowait_get_priority(&pq->busy);
- 		iowait_queue(pkts_sent, &pq->busy, &sde->dmawait);
-@@ -151,6 +147,7 @@ static int defer_packet_queue(
- 	write_sequnlock(&sde->waitlock);
- 	return -EBUSY;
- eagain:
-+	write_sequnlock(&sde->waitlock);
- 	return -EAGAIN;
- }
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1357,6 +1357,7 @@ struct cifsInodeInfo {
+ 	struct rw_semaphore lock_sem;	/* protect the fields above */
+ 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
+ 	struct list_head openFileList;
++	spinlock_t	open_file_lock;	/* protects openFileList */
+ 	__u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
+ 	unsigned int oplock;		/* oplock/lease level we have */
+ 	unsigned int epoch;		/* used to track lease state changes */
+@@ -1760,10 +1761,14 @@ require use of the stronger protocol */
+  *  tcp_ses_lock protects:
+  *	list operations on tcp and SMB session lists
+  *  tcon->open_file_lock protects the list of open files hanging off the tcon
++ *  inode->open_file_lock protects the openFileList hanging off the inode
+  *  cfile->file_info_lock protects counters and fields in cifs file struct
+  *  f_owner.lock protects certain per file struct operations
+  *  mapping->page_lock protects certain per page operations
+  *
++ *  Note that the cifs_tcon.open_file_lock should be taken before
++ *  not after the cifsInodeInfo.open_file_lock
++ *
+  *  Semaphores
+  *  ----------
+  *  sesSem     operations on smb session
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -338,10 +338,12 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 	atomic_inc(&tcon->num_local_opens);
  
-@@ -804,7 +801,6 @@ static int user_sdma_send_pkts(struct us
+ 	/* if readable file instance put first in list*/
++	spin_lock(&cinode->open_file_lock);
+ 	if (file->f_mode & FMODE_READ)
+ 		list_add(&cfile->flist, &cinode->openFileList);
+ 	else
+ 		list_add_tail(&cfile->flist, &cinode->openFileList);
++	spin_unlock(&cinode->open_file_lock);
+ 	spin_unlock(&tcon->open_file_lock);
  
- 		tx->flags = 0;
- 		tx->req = req;
--		tx->busycount = 0;
- 		INIT_LIST_HEAD(&tx->list);
+ 	if (fid->purge_cache)
+@@ -413,7 +415,9 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
  
- 		/*
---- a/drivers/infiniband/hw/hfi1/user_sdma.h
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.h
-@@ -245,7 +245,6 @@ struct user_sdma_txreq {
- 	struct list_head list;
- 	struct user_sdma_request *req;
- 	u16 flags;
--	unsigned int busycount;
- 	u16 seqnum;
- };
+ 	/* remove it from the lists */
++	spin_lock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->flist);
++	spin_unlock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->tlist);
+ 	atomic_dec(&tcon->num_local_opens);
  
+@@ -1950,9 +1954,9 @@ refind_writable:
+ 			return 0;
+ 		}
+ 
+-		spin_lock(&tcon->open_file_lock);
++		spin_lock(&cifs_inode->open_file_lock);
+ 		list_move_tail(&inv_file->flist, &cifs_inode->openFileList);
+-		spin_unlock(&tcon->open_file_lock);
++		spin_unlock(&cifs_inode->open_file_lock);
+ 		cifsFileInfo_put(inv_file);
+ 		++refind;
+ 		inv_file = NULL;
 
 
