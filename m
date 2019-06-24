@@ -2,165 +2,99 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B551C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937F8C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D843720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561413335;
-	bh=PxtjgRKSu+INqSvWpNxnOY8lcAJlPMuRESa7/R0WLIA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Tw0CHr/e3UJyeYzawA2XcRYbvW3QLlzkXFn3CeJDwdBUZPMoMXjmDkoD7LclFRDB+
-	 tzduhpQGkngTzylyxoYSUf1FkuHaLaGcXW3PsB81n16AoU9p4xFG7bXN3Kw8u8/1Hy
-	 7vsb3EUCn5xOoa5WEzuubLDWL6SYOeeAsO8nei+I=
+	by mail.kernel.org (Postfix) with ESMTP id 65D2D20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732500AbfFXVze (ORCPT
+        id S1730105AbfFXV6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:55:34 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38020 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfFXVze (ORCPT
+        Mon, 24 Jun 2019 17:58:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54186 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfFXV6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:55:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d17so15151547oth.5;
-        Mon, 24 Jun 2019 14:55:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bXXOeQr1nr3EJjM+4QD/VWYIWuMniD/p0glIK58q2lw=;
-        b=iLduze51oJSQC3mBlxRVCefqeKdDry2HKzymKu7DNq8H4uxyLj7ja8zpDhFn+u1/0z
-         SCY0H0xVegN45hW7HN0EJrcAxjgXVwHoWsj59JKb8YPjnyrMDMmVefBMQUE5ySUa4YZC
-         CrCCkN198lwGldFeebUDjpsV46e774353lEEEcUWsk2EYt6xi418jlhk2nvD8adH1VQ6
-         qMX8Gew8ZosEv08k5U6+k5sR3X0j0nq6IvVbKmFLKamarn5EVUkIQzlm15h2qJio/RKG
-         lVtYns5yf0Krj7qUF3vSXUUgDdofx1FN9K+nm7JHqwnOQTWsUr2mmEdUukdzbERypi1K
-         YkSQ==
-X-Gm-Message-State: APjAAAW6L867WqZo1w1HCkj8Su8WqxbpPQUGZ/gadkgahs+u9KQ9AU3e
-        18OK4pHCUmm6qB1B35YdQS6528AEusg30hhtdyI=
-X-Google-Smtp-Source: APXvYqxCIMnyIAm/Gne6dT6ugsoyr5ed6v2aWDRBi4esuv9pa5hFlWjlNphmOgrvGiS9NWQiyxoCmcL1ZDid2/BHWuk=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr66359894oto.118.1561413332973;
- Mon, 24 Jun 2019 14:55:32 -0700 (PDT)
+        Mon, 24 Jun 2019 17:58:08 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hfWyS-0007FY-EG; Mon, 24 Jun 2019 21:58:04 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] media: vivid: fix potential integer overflow on left shift
+Date:   Mon, 24 Jun 2019 22:58:04 +0100
+Message-Id: <20190624215804.12122-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
- <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
- <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
- <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
- <CANA+-vCBW=P=dpJGfcKTt7SoNKzWcpP5pwZHSDMU6MkwBKoC9A@mail.gmail.com>
- <20190624073659.GA13957@kroah.com> <CAJWu+orGgYwnC+ya13+KtdNrH7ZjvmKL8625m=msVZd0==dq9A@mail.gmail.com>
-In-Reply-To: <CAJWu+orGgYwnC+ya13+KtdNrH7ZjvmKL8625m=msVZd0==dq9A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 24 Jun 2019 23:55:21 +0200
-Message-ID: <CAJZ5v0jeYRx=9stkGbJZgvyQz=Wp2CBkyTwOkJ2Y61AEE6sMdg@mail.gmail.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:27 PM Joel Fernandes <joelaf@google.com> wrote:
->
-> On Mon, Jun 24, 2019 at 3:37 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Jun 23, 2019 at 06:48:43PM -0700, Tri Vo wrote:
-> > > On Wed, Jun 19, 2019 at 1:35 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Wed, Jun 19, 2019 at 1:52 AM Joel Fernandes <joelaf@google.com> wrote:
-> > > > >
-> > > > > On Tue, Jun 18, 2019 at 7:15 PM Tri Vo <trong@android.com> wrote:
-> > > > > [snip]
-> > > > > > > > > >
-> > > > > > > > > > Android userspace reading wakeup_sources is not ideal because:
-> > > > > > > > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
-> > > > > > > > > > not guaranteed to be backward/forward compatible.
-> > > > > > > > > > - This file requires debugfs to be mounted, which itself is
-> > > > > > > > > > undesirable for security reasons.
-> > > > > > > > > >
-> > > > > > > > > > To address these problems, we want to contribute a way to expose these
-> > > > > > > > > > statistics that doesn't depend on debugfs.
-> > > > > > > > > >
-> > > > > > > > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
-> > > > > > > > > > Or maybe implement eBPF-based solution? What do you think?
-> > > > > > > >
-> > > > > > > > We are going through Android's out-of-tree kernel dependencies along with
-> > > > > > > > userspace APIs that are not necessarily considered "stable and forever
-> > > > > > > > supported" upstream. The debugfs dependencies showed up on our radar as a
-> > > > > > > > result and so we are wondering if we should worry about changes in debugfs
-> > > > > > > > interface and hence the question(s) below.
-> > > > > > > >
-> > > > > > > > So, can we rely on /d/wakeup_sources to be considered a userspace API and
-> > > > > > > > hence maintained stable as we do for other /proc and /sys entries?
-> > > > > > > >
-> > > > > > > > If yes, then we will go ahead and add tests for this in LTP or
-> > > > > > > > somewhere else suitable.
-> > > > > > >
-> > > > > > > No, debugfs is not ABI.
-> > > > > > >
-> > > > > > > > If no, then we would love to hear suggestions for any changes that need to be
-> > > > > > > > made or we simply just move the debugfs entry into somewhere like
-> > > > > > > > /sys/power/ ?
-> > > > > > >
-> > > > > > > No, moving that entire file from debugfs into sysfs is not an option either.
-> > > > > > >
-> > > > > > > The statistics for the wakeup sources associated with devices are already there
-> > > > > > > under /sys/devices/.../power/ , but I guess you want all wakeup sources?
-> > > > > > >
-> > > > > > > That would require adding a kobject to struct wakeup_source and exposing
-> > > > > > > all of the statistics as separate attributes under it.  In which case it would be
-> > > > > > > good to replace the existing wakeup statistics under /sys/devices/.../power/
-> > > > > > > with symbolic links to the attributes under the wakeup_source kobject.
-> > > > > >
-> > > > > > Thanks for your input, Rafael! Your suggestion makes sense. I'll work
-> > > > > > on a patch for this.
-> > > > >
-> > > > > Does that entail making each wake up source, a new sysfs node under a
-> > > > > particular device, and then adding stats under that new node?
-> > > >
-> > > > Not under a device, because there are wakeup source objects without
-> > > > associated devices.
-> > > >
-> > > > It is conceivable to have a "wakeup_sources" directory under
-> > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
-> > > >
-> > > > Then, instead of exposing wakeup statistics directly under
-> > > > /sys/devices/.../power/, there can be symbolic links from there to the
-> > > > new wakeup source nodes under "wakeup_sources" (so as to avoid
-> > > > exposing the same data in two different places in sysfs, which may be
-> > > > confusing).
-> > >
-> > > This may be a dumb question. Is it appropriate to make symbolic links
-> > > in sysfs from one attribute to another attribute? For example,
-> > > /sys/devices/.../power/wakeup_count ->
-> > > /sys/power/wakeup_sources/.../wakeup_count.
-> >
-> > Why? would you want that?
->
-> This sounds like what Rafael suggested (quoted above), right?
+From: Colin Ian King <colin.king@canonical.com>
 
-I did, basically to avoid exposing the same information in two places
-via different code paths.
+There is a potential integer overflow when int 2 is left shifted
+as this is evaluated using 32 bit arithmetic but is being used in
+a context that expects an expression of type s64.  Fix this by
+shifting 2ULL to avoid a 32 bit overflow.
 
-I tend to forget about this limitation, sorry for the confusion.
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: 8a99e9faa131 ("media: vivid: add HDMI (dis)connect RX emulation")
+Fixes: 79a792dafac6 ("media: vivid: add HDMI (dis)connect TX emulation")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/media/platform/vivid/vivid-ctrls.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-That's not a big deal, though, the attributes under
-/sys/devices/.../power/ just need to stay the way they are (for
-backwards compatibility).
+diff --git a/drivers/media/platform/vivid/vivid-ctrls.c b/drivers/media/platform/vivid/vivid-ctrls.c
+index 3e916c8befb7..8f340cfd6993 100644
+--- a/drivers/media/platform/vivid/vivid-ctrls.c
++++ b/drivers/media/platform/vivid/vivid-ctrls.c
+@@ -1634,8 +1634,8 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
+ 			0, V4L2_DV_RGB_RANGE_AUTO);
+ 		dev->ctrl_rx_power_present = v4l2_ctrl_new_std(hdl_vid_cap,
+ 			NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0,
+-			(2 << (dev->num_hdmi_inputs - 1)) - 1, 0,
+-			(2 << (dev->num_hdmi_inputs - 1)) - 1);
++			(2ULL << (dev->num_hdmi_inputs - 1)) - 1, 0,
++			(2ULL << (dev->num_hdmi_inputs - 1)) - 1);
+ 
+ 	}
+ 	if (dev->num_hdmi_outputs) {
+@@ -1653,16 +1653,16 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
+ 			&vivid_ctrl_display_present, NULL);
+ 		dev->ctrl_tx_hotplug = v4l2_ctrl_new_std(hdl_vid_out,
+ 			NULL, V4L2_CID_DV_TX_HOTPLUG, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1);
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1, 0,
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1);
+ 		dev->ctrl_tx_rxsense = v4l2_ctrl_new_std(hdl_vid_out,
+ 			NULL, V4L2_CID_DV_TX_RXSENSE, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1);
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1, 0,
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1);
+ 		dev->ctrl_tx_edid_present = v4l2_ctrl_new_std(hdl_vid_out,
+ 			NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
+-			(2 << (dev->num_hdmi_outputs - 1)) - 1);
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1, 0,
++			(2ULL << (dev->num_hdmi_outputs - 1)) - 1);
+ 	}
+ 	if ((dev->has_vid_cap && dev->has_vid_out) ||
+ 	    (dev->has_vbi_cap && dev->has_vbi_out))
+-- 
+2.20.1
+
