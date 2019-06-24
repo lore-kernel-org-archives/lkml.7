@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474E5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CE0C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D02621473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D36A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371392;
-	bh=H7KcwCPzwp32GeAwrWEZjLk6EOetBgEastjIgXmS3yQ=;
+	s=default; t=1561371398;
+	bh=u9ikIP5L99GRe36W5rzHf05qB7Fpqvh4EkLSJK7oRMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zit4aEYNNq+AMRcniI8UDDglCuOrHUF8Q2grl4gXheCgWYKp74U3Z2pXmY6hr8sOX
-	 UxWxIFH+BZk1zPX48iYqDakhm/JJ3ogIl0t0r5QVznNatqFcOay0aTPzmJIXNAYG/8
-	 +jZuCw0VL/w4WEZCPYdM4gl7GrKgN3hR5V4BgyMk=
+	b=xJ2bauIrHR3h2RbTu+wyl+Ku7KYqZvj2YogNjInBT/azwIY5ANGyyeFoY70YllEUj
+	 YdenzOdq+/b42wuyYKY4PF4xRkPP0dT4AedksjmMNadOxN3bYTc4gaNPmxu0AL/+JB
+	 mk2iIIiWVLxPDvxMj8ZMAN/JD/J7GXpx0hkQu3SU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfFXKQa (ORCPT
+        id S1730766AbfFXKQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730716AbfFXKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:23 -0400
+        id S1730754AbfFXKQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:33 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E7FC205ED;
-        Mon, 24 Jun 2019 10:16:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 168E92089F;
+        Mon, 24 Jun 2019 10:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371382;
-        bh=H7KcwCPzwp32GeAwrWEZjLk6EOetBgEastjIgXmS3yQ=;
+        s=default; t=1561371392;
+        bh=u9ikIP5L99GRe36W5rzHf05qB7Fpqvh4EkLSJK7oRMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPzakvMUuUBJ9dPhT8epxeu3+tgryp52op+iBRU7xb5lf6YpyQQe3PWx8b6geIh7S
-         vy9i1NXIVx0rLDK3+7Js60fu949yqeZZpP64Qr0j/lT0R/SqWXXay4Eirif04LI6Pr
-         eqXxOcrLDPUzyi5AjSO0GiT8SykxQgW83k+5W+/E=
+        b=yMltW8/8pBn5VOmrVBpAqO9VRdgMogGH4Skqr/tYOwgYwHgNlUfbzI8bhBwhLgiHJ
+         yyqwKwIPzL089/tF5YBPdnRqtUOpHdI55KJg0f1bfkxV3kyyNAv67kwMmU+QG5PwzN
+         TWO/IdsBWgkJvJguadlRdvRQMfjD2kO78hVtB/b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 083/121] s390/qeth: check dst entry before use
-Date:   Mon, 24 Jun 2019 17:56:55 +0800
-Message-Id: <20190624092325.085560220@linuxfoundation.org>
+Subject: [PATCH 5.1 087/121] arm64: Silence gcc warnings about arch ABI drift
+Date:   Mon, 24 Jun 2019 17:56:59 +0800
+Message-Id: <20190624092325.272683883@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,100 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0cd6783d3c7d40be165d1f3c811cedf0e3dfcdf1 ]
+[ Upstream commit ebcc5928c5d925b1c8d968d9c89cdb0d0186db17 ]
 
-While qeth_l3 uses netif_keep_dst() to hold onto the dst, a skb's dst
-may still have been obsoleted (via dst_dev_put()) by the time that we
-end up using it. The dst then points to the loopback interface, which
-means the neighbour lookup in qeth_l3_get_cast_type() determines a bogus
-cast type of RTN_BROADCAST.
-For IQD interfaces this causes us to place such skbs on the wrong
-HW queue, resulting in TX errors.
+Since GCC 9, the compiler warns about evolution of the
+platform-specific ABI, in particular relating for the marshaling of
+certain structures involving bitfields.
 
-Fix-up the various call sites to first validate the dst entry with
-dst_check(), and fall back accordingly.
+The kernel is a standalone binary, and of course nobody would be
+so stupid as to expose structs containing bitfields as function
+arguments in ABI.  (Passing a pointer to such a struct, however
+inadvisable, should be unaffected by this change.  perf and various
+drivers rely on that.)
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So these warnings do more harm than good: turn them off.
+
+We may miss warnings about future ABI drift, but that's too bad.
+Future ABI breaks of this class will have to be debugged and fixed
+the traditional way unless the compiler evolves finer-grained
+diagnostics.
+
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l3_main.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ arch/arm64/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index cb641fd303d3..93a5748036de 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -1883,13 +1883,20 @@ static int qeth_l3_do_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index b025304bde46..8fbd583b18e1 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -51,6 +51,7 @@ endif
  
- static int qeth_l3_get_cast_type(struct sk_buff *skb)
- {
-+	int ipv = qeth_get_ip_version(skb);
- 	struct neighbour *n = NULL;
- 	struct dst_entry *dst;
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
++KBUILD_CFLAGS	+= -Wno-psabi
+ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
  
- 	rcu_read_lock();
- 	dst = skb_dst(skb);
--	if (dst)
--		n = dst_neigh_lookup_skb(dst, skb);
-+	if (dst) {
-+		struct rt6_info *rt = (struct rt6_info *) dst;
-+
-+		dst = dst_check(dst, (ipv == 6) ? rt6_get_cookie(rt) : 0);
-+		if (dst)
-+			n = dst_neigh_lookup_skb(dst, skb);
-+	}
-+
- 	if (n) {
- 		int cast_type = n->type;
- 
-@@ -1904,7 +1911,7 @@ static int qeth_l3_get_cast_type(struct sk_buff *skb)
- 	rcu_read_unlock();
- 
- 	/* no neighbour (eg AF_PACKET), fall back to target's IP address ... */
--	switch (qeth_get_ip_version(skb)) {
-+	switch (ipv) {
- 	case 4:
- 		if (ipv4_is_lbcast(ip_hdr(skb)->daddr))
- 			return RTN_BROADCAST;
-@@ -1943,6 +1950,7 @@ static void qeth_l3_fill_header(struct qeth_qdio_out_q *queue,
- 	struct qeth_hdr_layer3 *l3_hdr = &hdr->hdr.l3;
- 	struct vlan_ethhdr *veth = vlan_eth_hdr(skb);
- 	struct qeth_card *card = queue->card;
-+	struct dst_entry *dst;
- 
- 	hdr->hdr.l3.length = data_len;
- 
-@@ -1993,15 +2001,27 @@ static void qeth_l3_fill_header(struct qeth_qdio_out_q *queue,
- 
- 	hdr->hdr.l3.flags = qeth_l3_cast_type_to_flag(cast_type);
- 	rcu_read_lock();
-+	dst = skb_dst(skb);
-+
- 	if (ipv == 4) {
--		struct rtable *rt = skb_rtable(skb);
-+		struct rtable *rt;
-+
-+		if (dst)
-+			dst = dst_check(dst, 0);
-+		rt = (struct rtable *) dst;
- 
- 		*((__be32 *) &hdr->hdr.l3.next_hop.ipv4.addr) = (rt) ?
- 				rt_nexthop(rt, ip_hdr(skb)->daddr) :
- 				ip_hdr(skb)->daddr;
- 	} else {
- 		/* IPv6 */
--		const struct rt6_info *rt = skb_rt6_info(skb);
-+		struct rt6_info *rt;
-+
-+		if (dst) {
-+			rt = (struct rt6_info *) dst;
-+			dst = dst_check(dst, rt6_get_cookie(rt));
-+		}
-+		rt = (struct rt6_info *) dst;
- 
- 		if (rt && !ipv6_addr_any(&rt->rt6i_gateway))
- 			l3_hdr->next_hop.ipv6_addr = rt->rt6i_gateway;
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
 -- 
 2.20.1
 
