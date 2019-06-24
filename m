@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD340C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3702C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888F8214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BDD208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370401;
-	bh=o9feKfxPZvibdB5icEli4TLI3ch2T7CbYL+KrybYP9I=;
+	s=default; t=1561370403;
+	bh=30UQfNx5V5qlH97nqNcpVbRoZDxwq1XOiz803BNOLlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c4Usa7K7wA0xSFlfb4YNiUMHEdBoNi0KUjOh5MTEt0yZ1qi1rrbE73HRk8nkDDGvR
-	 W4KxiTKLXALUNZpeDghpkMGZMjhOAj8nP/m2JJ/4edWMU3wfAY/Z/UHlqqwdCeMwc+
-	 VkqYChL4yhL0J+EVtGB1JKx5p8fIUDbTB1gNPjds=
+	b=09tx3LydoEoHEtJLW5DyO7r5pfqIQABtDW3rGAS6c/qq21SM/xpZEXzFNPaU7R+BT
+	 zXrFvV9quc7jPKRTKnF4HqHYRWNkP1fxKRpihsbVrQQZC1KREFfXouG6ueXvVLSfRm
+	 S/uKOczn/GL6j6hJOVooUw2EYRoQgY5NVBTwTqOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfFXJ77 (ORCPT
+        id S1728746AbfFXKAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59392 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbfFXJ74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:56 -0400
+        id S1729351AbfFXJ77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:59 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46AF1213F2;
-        Mon, 24 Jun 2019 09:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B7C214C6;
+        Mon, 24 Jun 2019 09:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370395;
-        bh=o9feKfxPZvibdB5icEli4TLI3ch2T7CbYL+KrybYP9I=;
+        s=default; t=1561370398;
+        bh=30UQfNx5V5qlH97nqNcpVbRoZDxwq1XOiz803BNOLlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IWf/VnGzt6UUoQEDhJdCjwDTIfo0k9wEitcjAxUpP2SrZUYUabsiS/wj/gEJK5UJV
-         My+VXzHW0E7dBIlnKVBJclrrtTrx0Mw4RgQfoYxi5EF4wwkKxWJFHkeMWW+As6SA1Z
-         cLbsNTp1hmHL1qs69c54q8Ng64NlQ0LxnqyFdqeU=
+        b=1uRUFxJQhBJ9a5UYJDn8WLaLjtJJUiq0JGlF3YjxZ5reom4tK2+2Dqc2k5VaTouJp
+         cTkRVSDCXzNbdgADyBwf2sH+P4d/cmVStkXP3QeInHKgm7XTDoneeSCzYg2BIqeMZm
+         ed4YTUb/nrhxgv5Kvcy0Q716J96TXNOio903LGek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.14 43/51] ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
-Date:   Mon, 24 Jun 2019 17:57:01 +0800
-Message-Id: <20190624092310.942090089@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.14 44/51] ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
+Date:   Mon, 24 Jun 2019 17:57:02 +0800
+Message-Id: <20190624092311.047822964@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -62,52 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-commit b25af2ff7c07bd19af74e3f64ff82e2880d13d81 upstream.
+commit 88a748419b84187fd1da05637b8e5928b04a1e06 upstream.
 
-Since commit 1e434b703248 ("ARM: imx: update the cpu power up timing
-setting on i.mx6sx") some characters loss is noticed on i.MX6ULL UART
-as reported by Christoph Niedermaier.
+If UHS speed modes are enabled, a compatible SD card switches down to
+1.8V during enumeration. If after this a software reboot/crash takes
+place and on-chip ROM tries to enumerate the SD card, the difference in
+IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
 
-The intention of such commit was to increase the SW2ISO field for i.MX6SX
-only, but since cpuidle-imx6sx is also used on i.MX6UL/i.MX6ULL this caused
-unintended side effects on other SoCs.
+The fix for this is to have support for power cycling the card in
+hardware (with a PORz/soft-reset line causing a power cycle of the
+card). Since am571x-, am572x- and am574x-idk don't have this
+capability, disable voltage switching for these boards.
 
-Fix this problem by keeping the original SW2ISO value for i.MX6UL/i.MX6ULL
-and only increase SW2ISO in the i.MX6SX case.
+The major effect of this is that the maximum supported speed
+mode is now high speed(50 MHz) down from SDR104(200 MHz).
 
-Cc: stable@vger.kernel.org
-Fixes: 1e434b703248 ("ARM: imx: update the cpu power up timing setting on i.mx6sx")
-Reported-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Tested-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/cpuidle-imx6sx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am57xx-idk-common.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-@@ -15,6 +15,7 @@
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -405,6 +405,7 @@
+ 	vqmmc-supply = <&ldo1_reg>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
++	no-1-8-v;
+ };
  
- #include "common.h"
- #include "cpuidle.h"
-+#include "hardware.h"
- 
- static int imx6sx_idle_finish(unsigned long val)
- {
-@@ -108,7 +109,7 @@ int __init imx6sx_cpuidle_init(void)
- 	 * except for power up sw2iso which need to be
- 	 * larger than LDO ramp up time.
- 	 */
--	imx_gpc_set_arm_power_up_timing(0xf, 1);
-+	imx_gpc_set_arm_power_up_timing(cpu_is_imx6sx() ? 0xf : 0x2, 1);
- 	imx_gpc_set_arm_power_down_timing(1, 1);
- 
- 	return cpuidle_register(&imx6sx_cpuidle_driver, NULL);
+ &mmc2 {
 
 
