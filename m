@@ -2,52 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74BDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62465C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28A721473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369BE208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370726;
-	bh=JnnPt4jzV+wGPPsHcZgFqR7TkJCurgQAYoVCh5BMDfg=;
+	s=default; t=1561370731;
+	bh=eBOPclAZ8mS+XH4bfLm+2ME/n8GaAMKlpxOiRgILpy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkFX14JqKTzEg/eopocOTheJXTvYggjAhLzOnOjY4fiyHEeZP7//92NBwbMovyubt
-	 glyj1UtOajxo4Opzd6f9xvoqYvFMO0M+QmM8wiv0lwk2x6uHY0p2bHBYV4vH4vcexQ
-	 aUuriQTLGdW6TXb8IxkLo82Gi5MiHnMU4rtRNV6M=
+	b=QN8l4iQg55YM+zmtogslDns0YzYKRAAbMke770bWT6RZ/eEUPMN901bGEQplg69/t
+	 bhQ/RXaqsagREuSzCYhdMIXsxfVSBQJWtpG6GP9X7KxM2gO0EZOnoPx7QhenV9b9T3
+	 IkJa5r2gJVy5IItqM0ShWlTzZ73pU5uJrpEJwMSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfFXKFZ (ORCPT
+        id S1729942AbfFXKFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbfFXKFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:20 -0400
+        id S1729921AbfFXKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:26 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F61208E3;
-        Mon, 24 Jun 2019 10:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04E33208E3;
+        Mon, 24 Jun 2019 10:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370719;
-        bh=JnnPt4jzV+wGPPsHcZgFqR7TkJCurgQAYoVCh5BMDfg=;
+        s=default; t=1561370725;
+        bh=eBOPclAZ8mS+XH4bfLm+2ME/n8GaAMKlpxOiRgILpy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qp3pl9jfm0pXPEc4TWrBQFfeMxs13dA26KcQsNcxgcKDsiCqbCp+0DSnLZjVgfZx
-         71z9GXNZXV1DPf4dYHOu47j4JjgGduj3AM267TccjYOS9dlyndingUTHToJTJcQEZR
-         zcB/Wp4HdShSQycTP39AcbFOPLw3cG1cTt0gGh7Y=
+        b=Li9Nx4Bn+Tw79sHggwGJLa9o0LPGubM7xBsRqDU4PaQAkif48trye/VP9/pMiXwIn
+         jPLQAM9Uo2EmB9xEJQN2eATz3IaNGF613nHpy1reunzzF78j/hxtNzNVA4NmVndME8
+         sssDkBSH06TDqDC+PIicB5266zraJKhZL+pAOWHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 66/90] arm64: Silence gcc warnings about arch ABI drift
-Date:   Mon, 24 Jun 2019 17:56:56 +0800
-Message-Id: <20190624092318.394884410@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 68/90] btrfs: start readahead also in seed devices
+Date:   Mon, 24 Jun 2019 17:56:58 +0800
+Message-Id: <20190624092318.500006081@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,46 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebcc5928c5d925b1c8d968d9c89cdb0d0186db17 ]
+From: Naohiro Aota <naohiro.aota@wdc.com>
 
-Since GCC 9, the compiler warns about evolution of the
-platform-specific ABI, in particular relating for the marshaling of
-certain structures involving bitfields.
+commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
 
-The kernel is a standalone binary, and of course nobody would be
-so stupid as to expose structs containing bitfields as function
-arguments in ABI.  (Passing a pointer to such a struct, however
-inadvisable, should be unaffected by this change.  perf and various
-drivers rely on that.)
+Currently, btrfs does not consult seed devices to start readahead. As a
+result, if readahead zone is added to the seed devices, btrfs_reada_wait()
+indefinitely wait for the reada_ctl to finish.
 
-So these warnings do more harm than good: turn them off.
+You can reproduce the hung by modifying btrfs/163 to have larger initial
+file size (e.g. xfs_io pwrite 4M instead of current 256K).
 
-We may miss warnings about future ABI drift, but that's too bad.
-Future ABI breaks of this class will have to be debugged and fixed
-the traditional way unless the compiler evolves finer-grained
-diagnostics.
+Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
+Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
+Cc: stable@vger.kernel.org # 3.2+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/reada.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 35649ee8ad56..c12ff63265a9 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -51,6 +51,7 @@ endif
+--- a/fs/btrfs/reada.c
++++ b/fs/btrfs/reada.c
+@@ -745,6 +745,7 @@ static void __reada_start_machine(struct
+ 	u64 total = 0;
+ 	int i;
  
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
-+KBUILD_CFLAGS	+= -Wno-psabi
- KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
++again:
+ 	do {
+ 		enqueued = 0;
+ 		mutex_lock(&fs_devices->device_list_mutex);
+@@ -756,6 +757,10 @@ static void __reada_start_machine(struct
+ 		mutex_unlock(&fs_devices->device_list_mutex);
+ 		total += enqueued;
+ 	} while (enqueued && total < 10000);
++	if (fs_devices->seed) {
++		fs_devices = fs_devices->seed;
++		goto again;
++	}
  
- KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
--- 
-2.20.1
-
+ 	if (enqueued == 0)
+ 		return;
 
 
