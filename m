@@ -2,470 +2,120 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AFCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11A4C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5092089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857ED208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561362104;
+	bh=L6gUqCG8drdlw0JNPTw4WV1Q9+mlMVk9+r+rpW2w7AE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bgrUHxMBj3ErNb58lUyi5qd/wbl51voRDioMI68DysudxYlNzsUDykrcr+IQPzvO3
+	 Aehexkd/ijm7EV4cmQ6QsUQm5BGE8thS392oeshVhI8qxRK6NtTsK/T0vdZOiY74mW
+	 K12OAriGjhxlu1H+kzICe2nosH4Za0GXL53Ac0TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfFXHjs (ORCPT
+        id S1727919AbfFXHlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:39:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57604 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfFXHjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:39:48 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2EEB02B3136D2B09CB17;
-        Mon, 24 Jun 2019 15:39:45 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 24 Jun
- 2019 15:39:39 +0800
-Subject: Re: [PATCH v2 5/8] staging: erofs: introduce generic decompression
- backend
-To:     Gao Xiang <gaoxiang25@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>
-References: <20190620160719.240682-1-gaoxiang25@huawei.com>
- <20190620160719.240682-6-gaoxiang25@huawei.com>
- <4e3a822e-1c18-122e-9eb1-c4eaf0204e63@huawei.com>
- <348e6203-b1be-1579-dbe9-cbf1a906af6f@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <3414cc67-fd03-7896-7075-ee7beaae66e7@huawei.com>
-Date:   Mon, 24 Jun 2019 15:39:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 24 Jun 2019 03:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFXHlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:41:42 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCDB8208CA;
+        Mon, 24 Jun 2019 07:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561362101;
+        bh=L6gUqCG8drdlw0JNPTw4WV1Q9+mlMVk9+r+rpW2w7AE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2qjE1E6++y+RdD7bONTE2cclIYxf/d21bmpIOBDi5ItxCTulU6+cCP4QmSQYO6Q99
+         YIp4tfIVt/RGRZdcKgp4rTNKKLxQx8VeMV8NJBA7JpbJSx9t0sPtfTX5tbxN5YUqPf
+         EWglztaz5Ph5WxfmAmG0DeQeohJ89YkYuATaiUtk=
+Received: by mail-lj1-f177.google.com with SMTP id p17so11612660ljg.1;
+        Mon, 24 Jun 2019 00:41:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAWy02DJO3EKyZyRNz48xUG3DS+Bka/xPuEooUDBY9j3omCL+DBo
+        OzH02R35294DViDwAZGcejAixRiQ4RZ9ylKB5+0=
+X-Google-Smtp-Source: APXvYqyRaeX7TDpnwHIcIB85B+1Xs+snbFiN+OxL0vV5dvoDI7HDxPRSomSVeOWM1E7yFBBSG3qrtNjtyuH0wVO/59s=
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr28115717ljg.80.1561362099155;
+ Mon, 24 Jun 2019 00:41:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <348e6203-b1be-1579-dbe9-cbf1a906af6f@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
+ <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
+ <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com> <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
+In-Reply-To: <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 24 Jun 2019 09:41:27 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
+Message-ID: <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
+ configuration to Odroid XU3/XU4/HC1 family
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/21 18:42, Gao Xiang wrote:
-> Hi Chao,
-> 
-> On 2019/6/21 17:46, Chao Yu wrote:
->> On 2019/6/21 0:07, Gao Xiang wrote:
->>> This patch adds a new generic decompression framework
->>> in order to replace the old LZ4-specific decompression code.
->>>
->>> Even though LZ4 is still the only supported algorithm, yet
->>> it is more cleaner and easy to integrate new algorithm than
->>> the old almost hard-coded decompression backend.
->>>
->>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->>> ---
->>>  drivers/staging/erofs/Makefile       |   2 +-
->>>  drivers/staging/erofs/compress.h     |  21 ++
->>>  drivers/staging/erofs/decompressor.c | 307 +++++++++++++++++++++++++++
->>>  3 files changed, 329 insertions(+), 1 deletion(-)
->>>  create mode 100644 drivers/staging/erofs/decompressor.c
->>>
->>> diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
->>> index 84b412c7a991..adeb5d6e2668 100644
->>> --- a/drivers/staging/erofs/Makefile
->>> +++ b/drivers/staging/erofs/Makefile
->>> @@ -9,5 +9,5 @@ obj-$(CONFIG_EROFS_FS) += erofs.o
->>>  ccflags-y += -I $(srctree)/$(src)/include
->>>  erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
->>>  erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
->>> -erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o
->>> +erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o decompressor.o
->>>  
->>> diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
->>> index 1dcfc3b35118..ebeccb1f4eae 100644
->>> --- a/drivers/staging/erofs/compress.h
->>> +++ b/drivers/staging/erofs/compress.h
->>> @@ -9,6 +9,24 @@
->>>  #ifndef __EROFS_FS_COMPRESS_H
->>>  #define __EROFS_FS_COMPRESS_H
->>>  
->>> +#include "internal.h"
->>> +
->>> +enum {
->>> +	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
->>> +	Z_EROFS_COMPRESSION_RUNTIME_MAX
->>> +};
->>> +
->>> +struct z_erofs_decompress_req {
->>> +	struct page **in, **out;
->>> +
->>> +	unsigned short pageofs_out;
->>> +	unsigned int inputsize, outputsize;
->>> +
->>> +	/* indicate the algorithm will be used for decompression */
->>> +	unsigned int alg;
->>> +	bool inplace_io, partial_decoding;
->>> +};
->>> +
->>>  /*
->>>   * - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
->>>   * used to mark temporary allocated pages from other
->>> @@ -36,5 +54,8 @@ static inline bool z_erofs_put_stagingpage(struct list_head *pagepool,
->>>  	return true;
->>>  }
->>>  
->>> +int z_erofs_decompress(struct z_erofs_decompress_req *rq,
->>> +		       struct list_head *pagepool);
->>> +
->>>  #endif
->>>  
->>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
->>> new file mode 100644
->>> index 000000000000..c68d17b579e0
->>> --- /dev/null
->>> +++ b/drivers/staging/erofs/decompressor.c
->>> @@ -0,0 +1,307 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * linux/drivers/staging/erofs/decompressor.c
->>> + *
->>> + * Copyright (C) 2019 HUAWEI, Inc.
->>> + *             http://www.huawei.com/
->>> + * Created by Gao Xiang <gaoxiang25@huawei.com>
->>> + */
->>> +#include "compress.h"
->>> +#include <linux/lz4.h>
->>> +
->>> +#ifndef LZ4_DISTANCE_MAX	/* history window size */
->>> +#define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
->>> +#endif
->>> +
->>> +#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
->>> +
->>> +struct z_erofs_decompressor {
->>> +	/*
->>> +	 * if destpages have sparsed pages, fill them with bounce pages.
->>> +	 * it also check whether destpages indicate continuous physical memory.
->>> +	 */
->>> +	int (*prepare_destpages)(struct z_erofs_decompress_req *rq,
->>> +				 struct list_head *pagepool);
->>> +	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out);
->>> +	char *name;
->>> +};
->>> +
->>> +static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
->>> +				 struct list_head *pagepool)
->>> +{
->>> +	const unsigned int nr =
->>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
->>> +	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
->>> +	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
->>> +					  BITS_PER_LONG)] = { 0 };
->>> +	void *kaddr = NULL;
->>> +	unsigned int i, j, k;
->>> +
->>> +	for (i = 0; i < nr; ++i) {
->>> +		struct page *const page = rq->out[i];
->>> +
->>> +		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
->>> +		if (availables[j])
->>> +			__set_bit(j, unused);
->>> +
->>> +		if (page) {
->>> +			if (kaddr) {
->>> +				if (kaddr + PAGE_SIZE == page_address(page))
->>> +					kaddr += PAGE_SIZE;
->>> +				else
->>> +					kaddr = NULL;
->>> +			} else if (!i) {
->>> +				kaddr = page_address(page);
->>> +			}
->>> +			continue;
->>> +		}
->>> +		kaddr = NULL;
->>> +
->>> +		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
->>> +		if (k < LZ4_MAX_DISTANCE_PAGES) {
->>> +			j = k;
->>> +			get_page(availables[j]);
->>> +		} else {
->>> +			DBG_BUGON(availables[j]);
->>> +
->>> +			if (!list_empty(pagepool)) {
->>> +				availables[j] = lru_to_page(pagepool);
->>> +				list_del(&availables[j]->lru);
->>> +				DBG_BUGON(page_ref_count(availables[j]) != 1);
->>> +			} else {
->>> +				availables[j] = alloc_pages(GFP_KERNEL, 0);
->>> +				if (!availables[j])
->>> +					return -ENOMEM;
->>> +			}
->>> +			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
->>
->> Could we use __stagingpage_alloc() instead opened codes, there is something
->> different in between them though.
-> 
-> It was written "on propose" since the problem is that currently __stagingpage_alloc()
-> will allocate all pages in GFP_NOFAIL case, but memory allocation failure is accepted
-> here, therefore I open code to aim at introducing new decompression backend.
-> 
-> I will submit another patch after this series to clean up all staging page allocation
-> cases later, which was already on my scheduling list. :)
+On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Anand,
+>
+> On 2019-06-23 18:02, Anand Moon wrote:
+> > Thanks for this patch. Please add my
+> >
+> > Tested-by: Anand Moon <linux.amoon@gmail.com>
+> >
+> > [snip]
+> >
+> > Could you integrate below small changes into this patch.
+> > with these below changes suspend and resume work correctly at my end.
+> >
+> > [1] XU4_suspendresume.patch
+> >
+> > As per S2MPS11B PMIC 1.2.1 Regulator (Features)
+> > Fix the min max value for *Buck7* and *Buck8*
+> >
+> > -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
+> > -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
+>
+> Could you elaborate why such change for Buck7 and Buck8 is needed?
 
-Hi Xiang,
+Anand has here valid point - the constraints in DTS do not match
+hardware manual. This leads to question whether voltage table in
+driver is proper... Another point is the voltage itself. The
+schematics describes them as at specific voltage (1.35 V and 2.0 V)
+but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
+the problem above.
 
-Yes, I noticed that there is something different in between __stagingpage_alloc
-and opened codes, I think we can change __stagingpage_alloc to accept extra
-parameters for different requirement.
+>
+> > Also add suspend-off for *Buck9*
+> > Buck9 internally controls the power of USB hub.
+> > Adding suspend the this node help proper reset of USB hub on Odroid
+> > XU4 / HC1/ XU3
+> > during suspend and resume. Below it the logs from my testing.
+>
+> Disabling Buck9 in suspend indeed reduces the power consumed by the
+> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
+> matches the results of OdroidXU3. Thanks for the hint!
 
-But, anyway, I agreed with you that we can clean up with additional patch later. :)
+Although I did not get what is the difference in the logs (Anand
+pasted two logs but they look the same) but the power consumption is
+reason is good enough. I would be happy to put in the changelog entire
+consumption  difference. I can measure it on XU3-Lite but can you give
+me the XU4 (before and after)?
 
-Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->>
->> Thanks,
->>
->>> +		}
->>> +		rq->out[i] = availables[j];
->>> +		__clear_bit(j, unused);
->>> +	}
->>> +	return kaddr ? 1 : 0;
->>> +}
->>> +
->>> +static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
->>> +				       u8 *src, unsigned int pageofs_in)
->>> +{
->>> +	/*
->>> +	 * if in-place decompression is ongoing, those decompressed
->>> +	 * pages should be copied in order to avoid being overlapped.
->>> +	 */
->>> +	struct page **in = rq->in;
->>> +	u8 *const tmp = erofs_get_pcpubuf(0);
->>> +	u8 *tmpp = tmp;
->>> +	unsigned int inlen = rq->inputsize - pageofs_in;
->>> +	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
->>> +
->>> +	while (tmpp < tmp + inlen) {
->>> +		if (!src)
->>> +			src = kmap_atomic(*in);
->>> +		memcpy(tmpp, src + pageofs_in, count);
->>> +		kunmap_atomic(src);
->>> +		src = NULL;
->>> +		tmpp += count;
->>> +		pageofs_in = 0;
->>> +		count = PAGE_SIZE;
->>> +		++in;
->>> +	}
->>> +	return tmp;
->>> +}
->>> +
->>> +static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
->>> +{
->>> +	unsigned int inputmargin, inlen;
->>> +	u8 *src;
->>> +	bool copied;
->>> +	int ret;
->>> +
->>> +	if (rq->inputsize > PAGE_SIZE)
->>> +		return -ENOTSUPP;
->>> +
->>> +	src = kmap_atomic(*rq->in);
->>> +	inputmargin = 0;
->>> +	while (!src[inputmargin & ~PAGE_MASK])
->>> +		if (!(++inputmargin & ~PAGE_MASK))
->>> +			break;
->>> +
->>> +	if (inputmargin >= rq->inputsize) {
->>> +		kunmap_atomic(src);
->>> +		return -EIO;
->>> +	}
->>> +
->>> +	copied = false;
->>> +	inlen = rq->inputsize - inputmargin;
->>> +	if (rq->inplace_io) {
->>> +		src = generic_copy_inplace_data(rq, src, inputmargin);
->>> +		inputmargin = 0;
->>> +		copied = true;
->>> +	}
->>> +
->>> +	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
->>> +					  inlen, rq->outputsize,
->>> +					  rq->outputsize);
->>> +	if (ret < 0) {
->>> +		errln("%s, failed to decompress, in[%p, %u, %u] out[%p, %u]",
->>> +		      __func__, src + inputmargin, inlen, inputmargin,
->>> +		      out, rq->outputsize);
->>> +		WARN_ON(1);
->>> +		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
->>> +			       16, 1, src + inputmargin, inlen, true);
->>> +		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
->>> +			       16, 1, out, rq->outputsize, true);
->>> +		ret = -EIO;
->>> +	}
->>> +
->>> +	if (copied)
->>> +		erofs_put_pcpubuf(src);
->>> +	else
->>> +		kunmap_atomic(src);
->>> +	return ret;
->>> +}
->>> +
->>> +static struct z_erofs_decompressor decompressors[] = {
->>> +	[Z_EROFS_COMPRESSION_SHIFTED] = {
->>> +		.name = "shifted"
->>> +	},
->>> +	[Z_EROFS_COMPRESSION_LZ4] = {
->>> +		.prepare_destpages = lz4_prepare_destpages,
->>> +		.decompress = lz4_decompress,
->>> +		.name = "lz4"
->>> +	},
->>> +};
->>> +
->>> +static void copy_from_pcpubuf(struct page **out, const char *dst,
->>> +			      unsigned short pageofs_out,
->>> +			      unsigned int outputsize)
->>> +{
->>> +	const char *end = dst + outputsize;
->>> +	const unsigned int righthalf = PAGE_SIZE - pageofs_out;
->>> +	const char *cur = dst - pageofs_out;
->>> +
->>> +	while (cur < end) {
->>> +		struct page *const page = *out++;
->>> +
->>> +		if (page) {
->>> +			char *buf = kmap_atomic(page);
->>> +
->>> +			if (cur >= dst) {
->>> +				memcpy(buf, cur, min_t(uint, PAGE_SIZE,
->>> +						       end - cur));
->>> +			} else {
->>> +				memcpy(buf + pageofs_out, cur + pageofs_out,
->>> +				       min_t(uint, righthalf, end - cur));
->>> +			}
->>> +			kunmap_atomic(buf);
->>> +		}
->>> +		cur += PAGE_SIZE;
->>> +	}
->>> +}
->>> +
->>> +static int decompress_generic(struct z_erofs_decompress_req *rq,
->>> +			      struct list_head *pagepool)
->>> +{
->>> +	const unsigned int nrpages_out =
->>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
->>> +	const struct z_erofs_decompressor *alg = decompressors + rq->alg;
->>> +	unsigned int dst_maptype;
->>> +	void *dst;
->>> +	int ret;
->>> +
->>> +	if (nrpages_out == 1 && !rq->inplace_io) {
->>> +		DBG_BUGON(!*rq->out);
->>> +		dst = kmap_atomic(*rq->out);
->>> +		dst_maptype = 0;
->>> +		goto dstmap_out;
->>> +	}
->>> +
->>> +	/*
->>> +	 * For the case of small output size (especially much less
->>> +	 * than PAGE_SIZE), memcpy the decompressed data rather than
->>> +	 * compressed data is preferred.
->>> +	 */
->>> +	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
->>> +		dst = erofs_get_pcpubuf(0);
->>> +
->>> +		rq->inplace_io = false;
->>> +		ret = alg->decompress(rq, dst);
->>> +		if (!ret)
->>> +			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
->>> +					  rq->outputsize);
->>> +
->>> +		erofs_put_pcpubuf(dst);
->>> +		return ret;
->>> +	}
->>> +
->>> +	ret = alg->prepare_destpages(rq, pagepool);
->>> +	if (ret < 0) {
->>> +		return ret;
->>> +	} else if (ret) {
->>> +		dst = page_address(*rq->out);
->>> +		dst_maptype = 1;
->>> +		goto dstmap_out;
->>> +	}
->>> +
->>> +	dst = erofs_vmap(rq->out, nrpages_out);
->>> +	if (!dst)
->>> +		return -ENOMEM;
->>> +	dst_maptype = 2;
->>> +
->>> +dstmap_out:
->>> +	ret = alg->decompress(rq, dst + rq->pageofs_out);
->>> +
->>> +	if (!dst_maptype)
->>> +		kunmap_atomic(dst);
->>> +	else if (dst_maptype == 2)
->>> +		erofs_vunmap(dst, nrpages_out);
->>> +	return ret;
->>> +}
->>> +
->>> +static int shifted_decompress(const struct z_erofs_decompress_req *rq,
->>> +			      struct list_head *pagepool)
->>> +{
->>> +	const unsigned int nrpages_out =
->>> +		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
->>> +	const unsigned int righthalf = PAGE_SIZE - rq->pageofs_out;
->>> +	unsigned char *src, *dst;
->>> +
->>> +	if (nrpages_out > 2) {
->>> +		DBG_BUGON(1);
->>> +		return -EIO;
->>> +	}
->>> +
->>> +	if (rq->out[0] == *rq->in) {
->>> +		DBG_BUGON(nrpages_out != 1);
->>> +		return 0;
->>> +	}
->>> +
->>> +	src = kmap_atomic(*rq->in);
->>> +	if (!rq->out[0]) {
->>> +		dst = NULL;
->>> +	} else {
->>> +		dst = kmap_atomic(rq->out[0]);
->>> +		memcpy(dst + rq->pageofs_out, src, righthalf);
->>> +	}
->>> +
->>> +	if (rq->out[1] == *rq->in) {
->>> +		memmove(src, src + righthalf, rq->pageofs_out);
->>> +	} else if (nrpages_out == 2) {
->>> +		if (dst)
->>> +			kunmap_atomic(dst);
->>> +		DBG_BUGON(!rq->out[1]);
->>> +		dst = kmap_atomic(rq->out[1]);
->>> +		memcpy(dst, src + righthalf, rq->pageofs_out);
->>> +	}
->>> +	if (dst)
->>> +		kunmap_atomic(dst);
->>> +	kunmap_atomic(src);
->>> +	return 0;
->>> +}
->>> +
->>> +int z_erofs_decompress(struct z_erofs_decompress_req *rq,
->>> +		       struct list_head *pagepool)
->>> +{
->>> +	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED)
->>> +		return shifted_decompress(rq, pagepool);
->>> +	return decompress_generic(rq, pagepool);
->>> +}
->>> +
->>>
-> .
-> 
+Best regards,
+Krzysztof
