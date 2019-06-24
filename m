@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34EEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EF7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B971A20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925602089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371445;
-	bh=ywxrxoFTOsh/Ojn1ACIcc0LeWwbqwSqBK72Jfd6p7i0=;
+	s=default; t=1561371449;
+	bh=joX4oBxgWRfbTYhg0szXbGlMdRkBFd2o4j+rCTRn/x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/4B/vLE5MLfdF8BJv8+xP6SB82Lsx7GNUb+i8DmuyeUTX6E0Rm5rLua//qvZ4Dan
-	 HgZj/NVMqVQt+WPiqmloZq/2bFrDgoFhw29QxSrjwLSPvo7xgOGoB3S0nPyGZqXwjv
-	 CNDg89SI89KRf2GPv7x/I2OpV/jZB6hCWUGY4A70=
+	b=dM/LOr1KWiPB8MajDnWqL51LibHal22UKVwXj2y3K1B0vDn0C51mvxM740rFXgax0
+	 Y9hExbEuwVQ1LY6I9QrHnXgqtsWLdqp4gUdHzSpitJ/iZH+De0rLrVqPk71PSUgBIT
+	 r2p4sSmfJn7/976tS2eS8TSaIexRE/HnYmVL4EgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfFXKRY (ORCPT
+        id S1730979AbfFXKR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:17:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbfFXKRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:17:21 -0400
+        id S1730957AbfFXKRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:17:24 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB822089F;
-        Mon, 24 Jun 2019 10:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BAA1205C9;
+        Mon, 24 Jun 2019 10:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371441;
-        bh=ywxrxoFTOsh/Ojn1ACIcc0LeWwbqwSqBK72Jfd6p7i0=;
+        s=default; t=1561371443;
+        bh=joX4oBxgWRfbTYhg0szXbGlMdRkBFd2o4j+rCTRn/x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCV/wNUOAEZkxt1yrN7igJPViS8kgJPab414heSqI5ja88Exw9j6HHtBif8D/Kiq3
-         KUWG9Cfs8RPKtmAlHi2C5aqdEBIpiU0mLNPj5JUlE3ZG2U/2KW48FbktI7pAl3OSlh
-         VFc9iRTTg3J71XDEvOWiby9pMq3Mjpdv6+PmdFwQ=
+        b=xawQ68yENsmVl3rZNFD96qhvJV6X9rsrDEQFxn2ZaNKullWoQC/635w7HMAm6rSzX
+         TyCkaJr2uKC7piN0MttcMXEIeJbNgtn6DXg+c6Q2ZcEsDm9ayr7KkhLlssNV8X+Fy4
+         2kkQC1Op3dyBfCSfggmHn5J4Nkm3OOeSQL386eTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anisse Astier <aastier@freebox.fr>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.1 103/121] arm64: ssbd: explicitly depend on <linux/prctl.h>
-Date:   Mon, 24 Jun 2019 17:57:15 +0800
-Message-Id: <20190624092325.971109924@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Palecek <jpalecek@web.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 104/121] KVM: x86/mmu: Allocate PAE root array when using SVMs 32-bit NPT
+Date:   Mon, 24 Jun 2019 17:57:16 +0800
+Message-Id: <20190624092326.022031366@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,37 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anisse Astier <aastier@freebox.fr>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit adeaa21a4b6954e878f3f7d1c5659ed9c1fe567a upstream.
+commit b6b80c78af838bef17501416d5d383fedab0010a upstream.
 
-Fix ssbd.c which depends implicitly on asm/ptrace.h including
-linux/prctl.h (through for example linux/compat.h, then linux/time.h,
-linux/seqlock.h, linux/spinlock.h and linux/irqflags.h), and uses
-PR_SPEC* defines.
+SVM's Nested Page Tables (NPT) reuses x86 paging for the host-controlled
+page walk.  For 32-bit KVM, this means PAE paging is used even when TDP
+is enabled, i.e. the PAE root array needs to be allocated.
 
-This is an issue since we'll soon be removing the include from
-asm/ptrace.h.
-
-Fixes: 9cdc0108baa8 ("arm64: ssbd: Add prctl interface for per-thread mitigation")
+Fixes: ee6268ba3a68 ("KVM: x86: Skip pae_root shadow allocation if tdp enabled")
 Cc: stable@vger.kernel.org
-Signed-off-by: Anisse Astier <aastier@freebox.fr>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reported-by: Jiri Palecek <jpalecek@web.de>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/ssbd.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmu.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/kernel/ssbd.c
-+++ b/arch/arm64/kernel/ssbd.c
-@@ -5,6 +5,7 @@
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5591,14 +5591,18 @@ static int alloc_mmu_pages(struct kvm_vc
+ 	struct page *page;
+ 	int i;
  
- #include <linux/compat.h>
- #include <linux/errno.h>
-+#include <linux/prctl.h>
- #include <linux/sched.h>
- #include <linux/sched/task_stack.h>
- #include <linux/thread_info.h>
+-	if (tdp_enabled)
+-		return 0;
+-
+ 	/*
+-	 * When emulating 32-bit mode, cr3 is only 32 bits even on x86_64.
+-	 * Therefore we need to allocate shadow page tables in the first
+-	 * 4GB of memory, which happens to fit the DMA32 zone.
++	 * When using PAE paging, the four PDPTEs are treated as 'root' pages,
++	 * while the PDP table is a per-vCPU construct that's allocated at MMU
++	 * creation.  When emulating 32-bit mode, cr3 is only 32 bits even on
++	 * x86_64.  Therefore we need to allocate the PDP table in the first
++	 * 4GB of memory, which happens to fit the DMA32 zone.  Except for
++	 * SVM's 32-bit NPT support, TDP paging doesn't use PAE paging and can
++	 * skip allocating the PDP table.
+ 	 */
++	if (tdp_enabled && kvm_x86_ops->get_tdp_level(vcpu) > PT32E_ROOT_LEVEL)
++		return 0;
++
+ 	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_DMA32);
+ 	if (!page)
+ 		return -ENOMEM;
 
 
