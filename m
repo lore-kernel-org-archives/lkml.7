@@ -2,138 +2,123 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A3C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14AD6208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFC92083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdD5hTA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfFXEfA (ORCPT
+        id S1727853AbfFXEjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:35:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55666 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbfFXEfA (ORCPT
+        Mon, 24 Jun 2019 00:39:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39724 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfFXEjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:35:00 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O4WOQs060473
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:34:59 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tag07m2tw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:34:59 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 24 Jun 2019 05:34:58 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Jun 2019 05:34:53 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5O4YqoP52494796
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 04:34:52 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C40EFB205F;
-        Mon, 24 Jun 2019 04:34:52 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2072B2064;
-        Mon, 24 Jun 2019 04:34:52 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.233.94])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 04:34:52 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9B35016C3305; Sun, 23 Jun 2019 21:34:55 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 21:34:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
-Reply-To: paulmck@linux.ibm.com
-References: <91a9c6f8-7bbf-376d-b1e0-0e2693c84ee8@gmail.com>
- <Pine.LNX.4.44L0.1906231112300.24649-100000@netrider.rowland.org>
+        Mon, 24 Jun 2019 00:39:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z23so11829855wma.4;
+        Sun, 23 Jun 2019 21:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YNELeqsO3ONkBzigACa9WgfAHnyRLEL6gV/TACazJzc=;
+        b=GdD5hTA7BPb+tN5+F5Hd9Yjg3qpZhl/UDMGlGoEM7GFhcuPKCjk0fDtp6trqGu4LaZ
+         lvZ6ASMBEqBCwbDlZLWIct7GQlpvDPbQscSsh0OGcsO4nqEikUUVnb7hxe5h5ecAQ/+x
+         y5TX9lYlEQ0vRsrCzItt5ktQhH1F7Ffl0oWXTHP3u6/1e6hJZt3fg4VsTKqFGQru2cbt
+         uKaRHBxTbjBYrVvT22A/wpLycOGrxVzAPdHu+5NLjZcmhOpgXnoXjWQgIBW+r1UTZbB2
+         GEGIA5M5eZdYF+nUXT9aGHwjfZKMhZh6p7EasfxgJiJDES+T896MTBibUgxQSzVKnbxQ
+         PwRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YNELeqsO3ONkBzigACa9WgfAHnyRLEL6gV/TACazJzc=;
+        b=fR8N2L45m3hsik+bLgELB585Der7xf5N9/N3jUFE8nB+cIP8OrXMu0y3oxrDDIDYlN
+         R2KgmkLVltKlxmFYzrnXRupgL6X+K/dBBAISEotUg3AwPDh8JlW7wMg4hOta3H5dnq42
+         EAw2DV6nOX0P51KGUMpNZlnxFqehA/QvIEr8h0hi8aXMwVVPVspidsZktNzUKpBlJr3m
+         LjdFZ2GjT9D8+pIwricOeQKGHenuW4qXkIQmB+CpabCAtEpdTsp8Hfub5WogV3p9H6pM
+         osrhqZeMZYf5cK7J1gyr6ckGff/Vod3jKwKftITJxRXa6Sf4IRiUPaCVMtpBq6tVwiMA
+         vJPg==
+X-Gm-Message-State: APjAAAWxX1uMDi3BAHqPwQRYzBjrzlgNbolrfHc9+uBkZtHY6DQBHWvX
+        nSqXNFXBiwwFwGEnMk0EnrlQSr7mW1wcAUfZIMc=
+X-Google-Smtp-Source: APXvYqznBNXnEw5RZZ4tdgedDsRQHsK/vADIWjCrMTGOLQKAhTXeCoBTP+DgQlTl5assRWvi5M/A6fTORvagJxDrfCU=
+X-Received: by 2002:a05:600c:230b:: with SMTP id 11mr13181852wmo.85.1561351150527;
+ Sun, 23 Jun 2019 21:39:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906231112300.24649-100000@netrider.rowland.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062404-0072-0000-0000-0000043FDB4C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011318; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01222444; UDB=6.00643227; IPR=6.01003593;
- MB=3.00027438; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 04:34:57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062404-0073-0000-0000-00004CAFF662
-Message-Id: <20190624043455.GB26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240037
+References: <000000000000a7776f058a3ce9db@google.com> <178c7ee0-46b7-8334-ef98-e530eb60a2cf@gmail.com>
+ <CACT4Y+ZqM84Ny22p7=J6vVXG7XOkqVN_jjkb87DNetNCFQRFBQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+ZqM84Ny22p7=J6vVXG7XOkqVN_jjkb87DNetNCFQRFBQ@mail.gmail.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Mon, 24 Jun 2019 12:38:59 +0800
+Message-ID: <CADvbK_f0kZOZRUQ3eWNMiOUTC_JE6xsrdX2VzsHsAXKrq3D8ig@mail.gmail.com>
+Subject: Re: KASAN: user-memory-access Read in ip6_hold_safe (3)
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     David Ahern <dsahern@gmail.com>,
+        syzbot <syzbot+a5b6e01ec8116d046842@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 11:15:06AM -0400, Alan Stern wrote:
-> On Sun, 23 Jun 2019, Akira Yokosawa wrote:
-> 
-> > Hi Paul and Alan,
-> > 
-> > On 2019/06/22 8:54, Paul E. McKenney wrote:
-> > > On Fri, Jun 21, 2019 at 10:25:23AM -0400, Alan Stern wrote:
-> > >> On Fri, 21 Jun 2019, Andrea Parri wrote:
-> > >>
-> > >>> On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
-> > >>>> Herbert Xu recently reported a problem concerning RCU and compiler
-> > >>>> barriers.  In the course of discussing the problem, he put forth a
-> > >>>> litmus test which illustrated a serious defect in the Linux Kernel
-> > >>>> Memory Model's data-race-detection code.
-> > 
-> > I was not involved in the mail thread and wondering what the litmus test
-> > looked like. Some searching of the archive has suggested that Alan presented
-> > a properly formatted test based on Herbert's idea in [1].
-> > 
-> > [1]: https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
-> 
-> Yes, that's it.  The test is also available at:
-> 
-> https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
-> 
-> Alan
-> 
-> > If this is the case, adding the link (or message id) in the change
-> > log would help people see the circumstances, I suppose.
-> > Paul, can you amend the change log?
-> > 
-> > I ran herd7 on said litmus test at both "lkmm" and "dev" of -rcu and
-> > confirmed that this patch fixes the result.
-> > 
-> > So,
-> > 
-> > Tested-by: Akira Yokosawa <akiyks@gmail.com>
+On Mon, Jun 3, 2019 at 2:57 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Sat, Jun 1, 2019 at 7:15 PM David Ahern <dsahern@gmail.com> wrote:
+> >
+> > On 6/1/19 12:05 AM, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    dfb569f2 net: ll_temac: Fix compile error
+> > > git tree:       net-next
+> > syzbot team:
+> >
+> > Is there any way to know the history of syzbot runs to determine that
+> > crash X did not happen at commit Y but does happen at commit Z? That
+> > narrows the window when trying to find where a regression occurs.
+>
+> Hi David,
+>
+> All info is available on the dashboard:
+>
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a5b6e01ec8116d046842
+>
+> We don't keep any private info on top of that.
+>
+> This crash happened 129 times in the past 9 days. This suggests this
+> is not a previous memory corruption, these usually happen at most few
+> times.
+> The first one was:
+>
+> 2019/05/24 15:33 net-next dfb569f2
+>
+> Then it was joined by bpf-next:
+>
+> ci-upstream-bpf-next-kasan-gce 2019/06/01 15:51 bpf-next 0462eaac
+>
+> Since it happens a dozen of times per day, most likely it was
+> introduced into net-next around dfb569f2 (syzbot should do new builds
+> every ~12h, minus broken trees).
 
-Thank you both!  I will apply these changes tomorrow morning, Pacific Time.
+I think all these pcpu memory corruptions can be marked as Fixed-by:
 
-							Thanx, Paul
+commit c3bcde026684c62d7a2b6f626dc7cf763833875c
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Mon Jun 17 21:34:15 2019 +0800
 
+    tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
