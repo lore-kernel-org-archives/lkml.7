@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B185C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E972C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716EB214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223F1214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370809;
-	bh=bxey2rwk++jtpJu495cC/IHaS19uDxvBIZR0mgEDZzY=;
+	s=default; t=1561370815;
+	bh=/lLAJYDQGzK0dJdUaekE5OmOKBa+Yz4MjnphOvkmKyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=seRqEv96VwODGhFpl4cWV3PGw2yaocG2KPa44KH9gyD6hjkpAi0p0vRJc+l5Y1uOB
-	 43L5kXF9KC/ITtQAX/lfsgvKNFnh9LnL2LT0em02p7Gj/9Isb0Bwu5H9JbUY4Tmddl
-	 qTrVHiNMmAEjcpzwk4Wfyqs3/yfXyML/h7seoNm0=
+	b=StJihqNUQO71FY6SaE8+wvIj5/gAGfTxjULwYBKEJVwnSFsEJ9yY10YjAPdxP35Eb
+	 HqMGoGvhkb/z6lTgc5CXvv3p+96vrC93JhLPKHB+K4T76H3Kljr39cNeD4KJRBGF/L
+	 hiQMCz3AoH5UjMWRaLNFCrKW34pjoCGK1le5BTWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbfFXKGs (ORCPT
+        id S1730213AbfFXKGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730147AbfFXKGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:44 -0400
+        id S1729599AbfFXKGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:50 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 501B8208E3;
-        Mon, 24 Jun 2019 10:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982B421473;
+        Mon, 24 Jun 2019 10:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370803;
-        bh=bxey2rwk++jtpJu495cC/IHaS19uDxvBIZR0mgEDZzY=;
+        s=default; t=1561370809;
+        bh=/lLAJYDQGzK0dJdUaekE5OmOKBa+Yz4MjnphOvkmKyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vhXiPr0zaQTsM2NfiXoCJA2G/NAt4KnePT1Y2QyLYrE6zIFC6QiMQR1Wz61wKGbep
-         ARrtJ9u2j6Yh6XB9cE2Qcr8cEeFJ/8kmZKAWq7vRVNWXmQmWLcAPtplZGdLTWw13u2
-         u5CGK6M4O6ZfEeOEA24u3iAhM0RhJMst9pitwV64=
+        b=W8cr9Jrl3Vy75fBe8bMzIIAlD/QYBOdqg+CImhixtREjER+nGpZ+UHaoCkKiIinJ8
+         9c9lv9g4bdNBEEX9/i+tTs+oycbiKohMhDkS3/8onL+mQFrII/mMdZwXe/55ZnagWA
+         Em+HLCF5ybRsMGcMGorPPzf333NUyiSFfN+rcOyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Avin <hpa@zytor.com>
-Subject: [PATCH 4.19 90/90] x86/resctrl: Dont stop walking closids when a locksetup group is found
-Date:   Mon, 24 Jun 2019 17:57:20 +0800
-Message-Id: <20190624092319.758717564@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.1 001/121] tracing: Silence GCC 9 array bounds warning
+Date:   Mon, 24 Jun 2019 17:55:33 +0800
+Message-Id: <20190624092320.733047084@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
-References: <20190624092313.788773607@linuxfoundation.org>
+In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
+References: <20190624092320.652599624@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,51 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-commit 87d3aa28f345bea77c396855fa5d5fec4c24461f upstream.
+commit 0c97bf863efce63d6ab7971dad811601e6171d2f upstream.
 
-When a new control group is created __init_one_rdt_domain() walks all
-the other closids to calculate the sets of used and unused bits.
+Starting with GCC 9, -Warray-bounds detects cases when memset is called
+starting on a member of a struct but the size to be cleared ends up
+writing over further members.
 
-If it discovers a pseudo_locksetup group, it breaks out of the loop.  This
-means any later closid doesn't get its used bits added to used_b.  These
-bits will then get set in unused_b, and added to the new control group's
-configuration, even if they were marked as exclusive for a later closid.
+Such a call happens in the trace code to clear, at once, all members
+after and including `seq` on struct trace_iterator:
 
-When encountering a pseudo_locksetup group, we should continue. This is
-because "a resource group enters 'pseudo-locked' mode after the schemata is
-written while the resource group is in 'pseudo-locksetup' mode." When we
-find a pseudo_locksetup group, its configuration is expected to be
-overwritten, we can skip it.
+    In function 'memset',
+        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
+    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
+    [8505, 8560] from the object at 'iter' is out of the bounds of
+    referenced subobject 'seq' with type 'struct trace_seq' at offset
+    4368 [-Warray-bounds]
+      344 |  return __builtin_memset(p, c, size);
+          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: dfe9674b04ff6 ("x86/intel_rdt: Enable entering of pseudo-locksetup mode")
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H Peter Avin <hpa@zytor.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190603172531.178830-1-james.morse@arm.com
-[Dropped comment due to lack of space]
-Signed-off-by: James Morse <james.morse@arm.com>
+In order to avoid GCC complaining about it, we compute the address
+ourselves by adding the offsetof distance instead of referring
+directly to the member.
+
+Since there are two places doing this clear (trace.c and trace_kdb.c),
+take the chance to move the workaround into a single place in
+the internal header.
+
+Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
+
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+[ Removed unnecessary parenthesis around "iter" ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c     |    6 +-----
+ kernel/trace/trace.h     |   18 ++++++++++++++++++
+ kernel/trace/trace_kdb.c |    6 +-----
+ 3 files changed, 20 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -2379,7 +2379,7 @@ static int rdtgroup_init_alloc(struct rd
- 				if (closid_allocated(i) && i != closid) {
- 					mode = rdtgroup_mode_by_closid(i);
- 					if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
--						break;
-+						continue;
- 					used_b |= *ctrl;
- 					if (mode == RDT_MODE_SHAREABLE)
- 						d->new_ctrl |= *ctrl;
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8627,12 +8627,8 @@ void ftrace_dump(enum ftrace_dump_mode o
+ 
+ 		cnt++;
+ 
+-		/* reset all but tr, trace, and overruns */
+-		memset(&iter.seq, 0,
+-		       sizeof(struct trace_iterator) -
+-		       offsetof(struct trace_iterator, seq));
++		trace_iterator_reset(&iter);
+ 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-		iter.pos = -1;
+ 
+ 		if (trace_find_next_entry_inc(&iter) != NULL) {
+ 			int ret;
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1964,4 +1964,22 @@ static inline void tracer_hardirqs_off(u
+ 
+ extern struct trace_iterator *tracepoint_print_iter;
+ 
++/*
++ * Reset the state of the trace_iterator so that it can read consumed data.
++ * Normally, the trace_iterator is used for reading the data when it is not
++ * consumed, and must retain state.
++ */
++static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
++{
++	const size_t offset = offsetof(struct trace_iterator, seq);
++
++	/*
++	 * Keep gcc from complaining about overwriting more than just one
++	 * member in the structure.
++	 */
++	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
++
++	iter->pos = -1;
++}
++
+ #endif /* _LINUX_KERNEL_TRACE_H */
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -41,12 +41,8 @@ static void ftrace_dump_buf(int skip_lin
+ 
+ 	kdb_printf("Dumping ftrace buffer:\n");
+ 
+-	/* reset all but tr, trace, and overruns */
+-	memset(&iter.seq, 0,
+-		   sizeof(struct trace_iterator) -
+-		   offsetof(struct trace_iterator, seq));
++	trace_iterator_reset(&iter);
+ 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-	iter.pos = -1;
+ 
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
 
 
