@@ -2,252 +2,145 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C511C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B537BC4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6CE2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEFB2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJMPYKCc"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="4wnzatpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfFXIHD (ORCPT
+        id S1727186AbfFXIJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:07:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32898 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFXIHC (ORCPT
+        Mon, 24 Jun 2019 04:09:35 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:24676 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726481AbfFXIJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:07:02 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h19so13635352wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:07:00 -0700 (PDT)
+        Mon, 24 Jun 2019 04:09:35 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O88PRw025043;
+        Mon, 24 Jun 2019 04:09:12 -0400
+Received: from nam05-by2-obe.outbound.protection.outlook.com (mail-by2nam05lp2055.outbound.protection.outlook.com [104.47.50.55])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2t9h86cqs6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 04:09:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V2Khsz88+K+VINNLIfEeL8PKE1M3cSt+v1bYdXdfOmk=;
-        b=rJMPYKCce3xb6K92lZt52spzZfmCrnqBvcBdcOQW/Z6PGKl7aYQk5YJd4/GPBFjqCv
-         QmsPLHTXiBO1Nyjaf8bgnpBb9+1WWk+gwa8ROa3NU8kEbVVZQeLfBMImmRRwUs5gBrXv
-         bDOMujz81I8gw25thbhPmPWen9T6axUAYtcqN4lXYYql56iBr0PjxD+VRQD36YXdq5Fp
-         JUnLS93UoMvLGtNzNBpibrx27rNZ1u0R3dXDW8JsyW1Aemo7Qqkh2c+k2TGJALHpStzM
-         N7LFdRnlH1IzL/Yh2mzDyzslue3OVOeIqzmWaNOidwGalIdtPJfeJDG2BzGVUGS1aT1F
-         Es3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=V2Khsz88+K+VINNLIfEeL8PKE1M3cSt+v1bYdXdfOmk=;
-        b=pzjQqb4rpqCc4o8wCeRve8yWjU4ThaIXbzON4rvK+PHBBfcpuTw+tvdHm8BX1F8lqZ
-         C4QG3lQ5TLDgaOoSVNvTQIyWAriTH07V6qCPdyqz7jQvVJO3slRvBkgezZ/fDDtjXwGH
-         acFHkXN8qn37s0ssUGBbhKagO/0Yjwo/rF5VBZCAH47k+UdaFFVbj2nLpoUCnS+NUtcj
-         L3HvTmgaT3haEv/BtD6K8giv5TnUB/1/1FmrG1Z9Rj+JmORQLa3OSvDDxcYbwsctqR+o
-         uwW2B+KSXoeqsgarCMrLcwu9XSyLad1WCDzRiyRd/kqkDC7D4TtwmkAZOGdXyp9AjxDr
-         EnsA==
-X-Gm-Message-State: APjAAAXgaIe51RsLorqRUegV55dKpoRMduZb80bQop9bSEWxCctUasrY
-        2NG0As6iZXUmKN6Qa1DLAX6XxA==
-X-Google-Smtp-Source: APXvYqx/RnU7WfKSZ6hbEClosUclv+7AmzLzZXGVpy5i+kmDWG6qda1MKvAB6RprWj+W3poxMWWEcA==
-X-Received: by 2002:a1c:7d56:: with SMTP id y83mr14935807wmc.77.1561363619195;
-        Mon, 24 Jun 2019 01:06:59 -0700 (PDT)
-Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
-        by smtp.googlemail.com with ESMTPSA id l1sm9878205wmg.13.2019.06.24.01.06.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 01:06:58 -0700 (PDT)
-Subject: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
- Microchip PIT64B support
-To:     Claudiu.Beznea@microchip.com, alexandre.belloni@bootlin.com
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com,
-        robh+dt@kernel.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, arnd.bergmann@linaro.org
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
- <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
- <20190408121141.GK7480@piout.net>
- <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
- <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
- <5e3d783e-7bcc-64c1-c814-eaf99a6aa205@microchip.com>
- <845acd59-665a-4d0a-3da8-2ba605600928@linaro.org>
- <34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1ebaa306-8a7f-fd58-56e0-a61b767357f7@linaro.org>
-Date:   Mon, 24 Jun 2019 10:06:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kw9XZWHXnjFo/2Xi0CM4TgJxFVpNoMjwC82UF/Mevn8=;
+ b=4wnzatpBpsZ6nPCONUTq3J2OJEJku90xmds0ILc6uWTR0EcRusmEBqDB8Gk13qJrAGdEFbu9836DHsXIoBAkBQF8mesI/r+x5IHn1yXo3n8TLNioY5+J9uDOjhL8y8kr9szp57hIwIcvuUTS6slPo2QxMBAOFwE9WlLFy7wY+/Y=
+Received: from BN6PR03CA0017.namprd03.prod.outlook.com (10.168.230.155) by
+ BY2PR03MB554.namprd03.prod.outlook.com (10.141.141.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 08:09:10 +0000
+Received: from BL2NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::206) by BN6PR03CA0017.outlook.office365.com
+ (2603:10b6:404:23::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13 via Frontend
+ Transport; Mon, 24 Jun 2019 08:09:09 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT038.mail.protection.outlook.com (10.152.77.25) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Mon, 24 Jun 2019 08:09:09 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5O898Cp019134
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 24 Jun 2019 01:09:08 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 24 Jun 2019 04:09:07 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V3 1/5] iio: adc: ad7124: Remove input number limitation
+Date:   Mon, 24 Jun 2019 11:08:41 +0300
+Message-ID: <20190624080845.18537-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(199004)(189003)(54534003)(37524003)(8936002)(8676002)(2906002)(48376002)(478600001)(6916009)(2616005)(50466002)(305945005)(47776003)(70586007)(70206006)(246002)(336012)(426003)(44832011)(7636002)(72206003)(476003)(126002)(36756003)(486006)(4326008)(5660300002)(186003)(26005)(77096007)(7696005)(356004)(6666004)(86362001)(51416003)(107886003)(1076003)(2351001)(50226002)(316002)(54906003)(106002)(16586007);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB554;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f3e0922e-52c0-4a6c-8a3b-08d6f87b3c13
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BY2PR03MB554;
+X-MS-TrafficTypeDiagnostic: BY2PR03MB554:
+X-Microsoft-Antispam-PRVS: <BY2PR03MB554454228689B6F33EBF2C481E00@BY2PR03MB554.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 007814487B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: cZu0Kju0Nr1qgHmM/PxMm1YcKCKi+vo7o1JoziMkKlChQ8LSJifEuQ1AtevqflW85w2UFtmZZv3sRDeD0onZg3k00U1lPSS0pe7aXYelriuu6pGayM1/3a2uq6V0ATH71Y80hhdAG/Gckn9OrdB+BO8fYXNd1hF43+1MPP8iiXd8Q8XiS2gRziRRRac9bGVQmUCalRfjsCcM5a9H7RmthycydUo+nhdWuk1GhTTx99srCFaSvMJIppLLSF4KBoLd0i2E1ZVddILrg3p23kY8PAV0xcIx5TL5F7ZnQmsH0ASU4i/R+dDLgTL1ssE2beStYeRgGCz5Qs79rDBFe8PPcQCnLulTfoyZMD+0viUyRGbfaIc0i82BUjdQJ7JVwnGHYbyVnHeDGOkw5zcP5wckoVPUhnT0YN1PatyMTus/d7Y=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 08:09:09.1082
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3e0922e-52c0-4a6c-8a3b-08d6f87b3c13
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB554
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=819 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2019 12:34, Claudiu.Beznea@microchip.com wrote:
-> Hi Daniel,
-> 
-> On 20.06.2019 11:53, Daniel Lezcano wrote:
->> Hi Claudiu,
->>
->> sorry for the late reply.
-> 
-> No problem, I understand.
-> 
->>
->>
->> On 13/06/2019 16:12, Claudiu.Beznea@microchip.com wrote:
->>> Hi Daniel,
->>>
->>> On 31.05.2019 13:41, Daniel Lezcano wrote:
->>>>
->>>> Hi Claudiu,
->>>>
->>>>
->>>> On 30/05/2019 09:46, Claudiu.Beznea@microchip.com wrote:
->>>>> Hi Daniel,
->>>>>
->>>>> Taking into account the discussion on this tread and the fact that we have
->>>>> no answer from Rob on this topic (I'm talking about [1]), what do you think
->>>>> it would be best for this driver to be accepted the soonest? Would it be OK
->>>>> for you to mimic the approach done by:
->>>>>
->>>>> drivers/clocksource/timer-integrator-ap.c
->>>>>
->>>>> with the following bindings in DT:
->>>>>
->>>>> aliases {
->>>>> 	arm,timer-primary = &timer2;
->>>>> 	arm,timer-secondary = &timer1;
->>>>> };
->>>>>
->>>>> also in PIT64B driver?
->>>>>
->>>>> Or do you think re-spinning the Alexandre's patches at [2] (which seems to
->>>>> me like the generic way to do it) would be better?
->>>>
->>>> This hardware / OS connection problem is getting really annoying for
->>>> everyone and this pattern is repeating itself since several years. It is
->>>> time we fix it properly.
->>>>
->>>> The first solution looks hackish from my POV. The second approach looks
->>>> nicer and generic as you say. So I would vote for [2]
->>>> flagging approach proposed by Mark [3].
->>>
->>> With this flagging approach this would mean a kind unification of
->>> clocksource and clockevent functionalities under a single one, right? So
->>> that the driver would register to the above layers only one device w/ 2
->>> functionalities (clocksource and clockevent)? Please correct me if I'm
->>> wrong? If so, from my point of view this would require major re-working of
->>> clocksource and clockevent subsystems. Correctly if I wrongly understood,
->>> please.
->>
->> Well, actually I was not expecting to change all the framework but just
->> pass a flag to the probe function telling if the node is for a
->> clocksource, a clockevent or both.
->>
-> 
-> Giving so, whit these proposals I'm thinking at having something like this,
-> using Alexandre's new macros from [2] and passing a bitmask to timer's
-> probing functions (in the above example adapted only for pit64b driver
-> introduced in this thread):
+The driver limits the user to use only 4/8 differential inputs, but this
+device has the option to use pseudo-differential channels. This will
+increase the number of channels to be equal with the number of inputs so 8
+channels for ad7124-4 and 16 for ad7124-8.
 
-Yes basically that is what I had in mind. Thanks for taking care of
-that. However after seeing the code I realize the impact is larger than
-expected as all the TIMER_OF_DECLARE will be impacted.
+This patch removes the check between channel nodes and num_inputs value.
 
-AFAICT, this driver can be converted to the timer-of API. So I think it
-makes sense to keep this contained in the API.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
 
-In the function timer_of_init(), we can add the parsing of the node and
-set the timer-of flags with:
+Changelog v2:
+- nothing changed here
 
-#define TIMER_OF_IS_CLOCKSOURCE	 0x8
-#define TIMER_OF_IS_CLOCKEVENT  0x10
+Changelog v3:
+- nothing changed here
 
-In addition the API:
+ drivers/iio/adc/ad7124.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-int timer_of_is_clocksource(struct timer_of *to)
-{
-	return (to & TIMER_OF_IS_CLOCKSOURCE);
-}
-int timer_of_is_clockevents(struct timer_of *to)
-{
-	return (to & TIMER_OF_IS_CLOCKEVENT);
-}
-
-
-
-
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 659ef37d5fe8..810234db9c0d 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			goto err;
+ 
+-		if (ain[0] >= st->chip_info->num_inputs ||
+-		    ain[1] >= st->chip_info->num_inputs) {
+-			dev_err(indio_dev->dev.parent,
+-				"Input pin number out of range.\n");
+-			ret = -EINVAL;
+-			goto err;
+-		}
+ 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
+ 						  AD7124_CHANNEL_AINM(ain[1]);
+ 		st->channel_config[channel].bipolar =
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
 
