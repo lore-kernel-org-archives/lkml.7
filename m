@@ -2,54 +2,53 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91205C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E61BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3A5208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB2B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370671;
-	bh=3rtSL/c/4C9S8Ce/tdeE9tMTBn05hu6OGsoopWkk47w=;
+	s=default; t=1561370675;
+	bh=KHO38U2dHAzaozzkX+x+gHyMcZPA45/LPjh9bicnzVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KdoclTM7biQcJomUr98Nz+kZ07fXCciYhPcuWff7vFYtLj+Ud4z4cGpUF8ZeC0Qng
-	 ikt4I1FYQ0cnFVpTqwWalDon1H0w3GaLWjmUQ5J7rx6eljsU0RUjHH5wRH0K0uD8ik
-	 H50dZHQea/CGGKyTIWwGTPpXd+n4943K7K56JeDw=
+	b=wBFN41mMs4PVXpVNKosFTxm1+9kgB9JOEtVtpWeNp1CwJjr+4qeXDrhoYBsN7ukhl
+	 h9o2a/i0ZS268aYUwVPstV3r2RgfUgcG6yzuODXlg2CE/eGsxFq38dpUByQwGHva3z
+	 E7GZ0JRmSAYn+Sh/e3n2LHQ5OaBGuOWoAaXPUuHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfFXKEa (ORCPT
+        id S1729739AbfFXKEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfFXKE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:26 -0400
+        id S1729720AbfFXKEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:32 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78EC3208E4;
-        Mon, 24 Jun 2019 10:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D242E205ED;
+        Mon, 24 Jun 2019 10:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370665;
-        bh=3rtSL/c/4C9S8Ce/tdeE9tMTBn05hu6OGsoopWkk47w=;
+        s=default; t=1561370671;
+        bh=KHO38U2dHAzaozzkX+x+gHyMcZPA45/LPjh9bicnzVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qswu1nKdr82fPzSEceN9Z4Ab5TkvbD44/LlEC4QmnmlGP1/1qQPnGf5KH6oCyMxTA
-         p+yhzlDK2488sw0yEGC7MKIeh2DP4+cKLD/DDcagIe4I0FCW9v6sXwKCwMA9wMr1cN
-         qNFqz9M70I6GCmNhK1HP8cmbHwUtwoTUW1ggTBy0=
+        b=E64Rim/HdfZcXH39rs+gtfkjLQD3TvgT4dqLh3o97JduIdEdI4bjePQQVictqDmyL
+         spDjLLlf7Kllw6IPWpo6GPP2hFPXvzZupv81Yj8kzDWiOpCDlwDygpLOTJ9RlpxsUq
+         zTOql04cqx7XRgJ6wm3EP5kir5o3RDh+UWGdRd8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/90] s390/ap: rework assembler functions to use unions for in/out register variables
-Date:   Mon, 24 Jun 2019 17:56:01 +0800
-Message-Id: <20190624092314.738302736@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 13/90] mmc: core: API to temporarily disable retuning for SDIO CRC errors
+Date:   Mon, 24 Jun 2019 17:56:03 +0800
+Message-Id: <20190624092314.890271230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,85 +61,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 159491f3b509bd8101199944dc7b0673b881c734 ]
+From: Douglas Anderson <dianders@chromium.org>
 
-The inline assembler functions ap_aqic() and ap_qact() used two
-variables declared on the very same register. One variable was for
-input only, the other for output. Looks like newer versions of the gcc
-don't like this. Anyway it is a better coding to use one variable
-(which may have a union data type) on one register for input and
-output. So this patch introduces unions and uses only one variable now
-for input and output for GR1 for the PQAP(QACT) and PQAP(QIC)
-invocation.
+commit 0a55f4ab9678413a01e740c86e9367ba0c612b36 upstream.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Normally when the MMC core sees an "-EILSEQ" error returned by a host
+controller then it will trigger a retuning of the card.  This is
+generally a good idea.
+
+However, if a command is expected to sometimes cause transfer errors
+then these transfer errors shouldn't cause a re-tuning.  This
+re-tuning will be a needless waste of time.  One example case where a
+transfer is expected to cause errors is when transitioning between
+idle (sometimes referred to as "sleep" in Broadcom code) and active
+state on certain Broadcom WiFi SDIO cards.  Specifically if the card
+was already transitioning between states when the command was sent it
+could cause an error on the SDIO bus.
+
+Let's add an API that the SDIO function drivers can call that will
+temporarily disable the auto-tuning functionality.  Then we can add a
+call to this in the Broadcom WiFi driver and any other driver that
+might have similar needs.
+
+NOTE: this makes the assumption that the card is already tuned well
+enough that it's OK to disable the auto-retuning during one of these
+error-prone situations.  Presumably the driver code performing the
+error-prone transfer knows how to recover / retry from errors.  ...and
+after we can get back to a state where transfers are no longer
+error-prone then we can enable the auto-retuning again.  If we truly
+find ourselves in a case where the card needs to be retuned sometimes
+to handle one of these error-prone transfers then we can always try a
+few transfers first without auto-retuning and then re-try with
+auto-retuning if the first few fail.
+
+Without this change on rk3288-veyron-minnie I periodically see this in
+the logs of a machine just sitting there idle:
+  dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
+
+Cc: stable@vger.kernel.org #v4.18+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/ap.h | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/mmc/core/core.c       |    5 +++--
+ drivers/mmc/core/sdio_io.c    |   37 +++++++++++++++++++++++++++++++++++++
+ include/linux/mmc/host.h      |    1 +
+ include/linux/mmc/sdio_func.h |    3 +++
+ 4 files changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/ap.h b/arch/s390/include/asm/ap.h
-index 8c00fd509c45..1a6a7092d942 100644
---- a/arch/s390/include/asm/ap.h
-+++ b/arch/s390/include/asm/ap.h
-@@ -221,16 +221,22 @@ static inline struct ap_queue_status ap_aqic(ap_qid_t qid,
- 					     void *ind)
- {
- 	register unsigned long reg0 asm ("0") = qid | (3UL << 24);
--	register struct ap_qirq_ctrl reg1_in asm ("1") = qirqctrl;
--	register struct ap_queue_status reg1_out asm ("1");
-+	register union {
-+		unsigned long value;
-+		struct ap_qirq_ctrl qirqctrl;
-+		struct ap_queue_status status;
-+	} reg1 asm ("1");
- 	register void *reg2 asm ("2") = ind;
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -144,8 +144,9 @@ void mmc_request_done(struct mmc_host *h
+ 	int err = cmd->error;
  
-+	reg1.qirqctrl = qirqctrl;
-+
- 	asm volatile(
- 		".long 0xb2af0000"		/* PQAP(AQIC) */
--		: "=d" (reg1_out)
--		: "d" (reg0), "d" (reg1_in), "d" (reg2)
-+		: "+d" (reg1)
-+		: "d" (reg0), "d" (reg2)
- 		: "cc");
--	return reg1_out;
-+
-+	return reg1.status;
+ 	/* Flag re-tuning needed on CRC errors */
+-	if ((cmd->opcode != MMC_SEND_TUNING_BLOCK &&
+-	    cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
++	if (cmd->opcode != MMC_SEND_TUNING_BLOCK &&
++	    cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200 &&
++	    !host->retune_crc_disable &&
+ 	    (err == -EILSEQ || (mrq->sbc && mrq->sbc->error == -EILSEQ) ||
+ 	    (mrq->data && mrq->data->error == -EILSEQ) ||
+ 	    (mrq->stop && mrq->stop->error == -EILSEQ)))
+--- a/drivers/mmc/core/sdio_io.c
++++ b/drivers/mmc/core/sdio_io.c
+@@ -725,3 +725,40 @@ int sdio_set_host_pm_flags(struct sdio_f
+ 	return 0;
  }
- 
- /*
-@@ -264,17 +270,21 @@ static inline struct ap_queue_status ap_qact(ap_qid_t qid, int ifbit,
- {
- 	register unsigned long reg0 asm ("0") = qid | (5UL << 24)
- 		| ((ifbit & 0x01) << 22);
--	register unsigned long reg1_in asm ("1") = apinfo->val;
--	register struct ap_queue_status reg1_out asm ("1");
-+	register union {
-+		unsigned long value;
-+		struct ap_queue_status status;
-+	} reg1 asm ("1");
- 	register unsigned long reg2 asm ("2");
- 
-+	reg1.value = apinfo->val;
+ EXPORT_SYMBOL_GPL(sdio_set_host_pm_flags);
 +
- 	asm volatile(
- 		".long 0xb2af0000"		/* PQAP(QACT) */
--		: "+d" (reg1_in), "=d" (reg1_out), "=d" (reg2)
-+		: "+d" (reg1), "=d" (reg2)
- 		: "d" (reg0)
- 		: "cc");
- 	apinfo->val = reg2;
--	return reg1_out;
-+	return reg1.status;
- }
++/**
++ *	sdio_retune_crc_disable - temporarily disable retuning on CRC errors
++ *	@func: SDIO function attached to host
++ *
++ *	If the SDIO card is known to be in a state where it might produce
++ *	CRC errors on the bus in response to commands (like if we know it is
++ *	transitioning between power states), an SDIO function driver can
++ *	call this function to temporarily disable the SD/MMC core behavior of
++ *	triggering an automatic retuning.
++ *
++ *	This function should be called while the host is claimed and the host
++ *	should remain claimed until sdio_retune_crc_enable() is called.
++ *	Specifically, the expected sequence of calls is:
++ *	- sdio_claim_host()
++ *	- sdio_retune_crc_disable()
++ *	- some number of calls like sdio_writeb() and sdio_readb()
++ *	- sdio_retune_crc_enable()
++ *	- sdio_release_host()
++ */
++void sdio_retune_crc_disable(struct sdio_func *func)
++{
++	func->card->host->retune_crc_disable = true;
++}
++EXPORT_SYMBOL_GPL(sdio_retune_crc_disable);
++
++/**
++ *	sdio_retune_crc_enable - re-enable retuning on CRC errors
++ *	@func: SDIO function attached to host
++ *
++ *	This is the compement to sdio_retune_crc_disable().
++ */
++void sdio_retune_crc_enable(struct sdio_func *func)
++{
++	func->card->host->retune_crc_disable = false;
++}
++EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -395,6 +395,7 @@ struct mmc_host {
+ 	unsigned int		retune_now:1;	/* do re-tuning at next req */
+ 	unsigned int		retune_paused:1; /* re-tuning is temporarily disabled */
+ 	unsigned int		use_blk_mq:1;	/* use blk-mq */
++	unsigned int		retune_crc_disable:1; /* don't trigger retune upon crc */
  
- /**
--- 
-2.20.1
-
+ 	int			rescan_disable;	/* disable card detection */
+ 	int			rescan_entered;	/* used with nonremovable devices */
+--- a/include/linux/mmc/sdio_func.h
++++ b/include/linux/mmc/sdio_func.h
+@@ -159,4 +159,7 @@ extern void sdio_f0_writeb(struct sdio_f
+ extern mmc_pm_flag_t sdio_get_host_pm_caps(struct sdio_func *func);
+ extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
+ 
++extern void sdio_retune_crc_disable(struct sdio_func *func);
++extern void sdio_retune_crc_enable(struct sdio_func *func);
++
+ #endif /* LINUX_MMC_SDIO_FUNC_H */
 
 
