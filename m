@@ -2,96 +2,104 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB66CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0BFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00872133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T7DpsKTa"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB6520652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfFXLbk (ORCPT
+        id S1728900AbfFXLhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:31:40 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33774 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfFXLbj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:31:39 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54BBD323;
-        Mon, 24 Jun 2019 13:31:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1561375898;
-        bh=TTMoZ7L0TvwNHbazuq/zwIiZIs9paL/P68Ui7Cjouyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T7DpsKTaR9/3ZvSzOgeS4b4LBK0i6+ZgRoYkX5bXOyfnMgVGltTTwbeRfO5UvHdJq
-         +WxmuSTy/Ntp1eSlzg0Rdq0nSpBDb65EAdSVbztbt2xVD/0emnxYtHgwrKngW9SgVO
-         A+JWXhl8xhRUcE54OrD9xsC0Z9pII1FxMorvqcDs=
-Date:   Mon, 24 Jun 2019 14:31:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Jonas Karlman <jonas@kwiboo.se>,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH] MAINTAINERS: Update Maintainers and Reviewers of DRM
- Bridge Drivers
-Message-ID: <20190624113119.GD5737@pendragon.ideasonboard.com>
-References: <20190624090851.17859-1-narmstrong@baylibre.com>
+        Mon, 24 Jun 2019 07:37:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727608AbfFXLhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:37:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0EF03AE79;
+        Mon, 24 Jun 2019 11:37:40 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DBCD31E2F23; Mon, 24 Jun 2019 13:37:37 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 13:37:37 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/7] vfs: flush and wait for io when setting the
+ immutable flag via SETFLAGS
+Message-ID: <20190624113737.GG32376@quack2.suse.cz>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+ <156116142734.1664939.5074567130774423066.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190624090851.17859-1-narmstrong@baylibre.com>
+In-Reply-To: <156116142734.1664939.5074567130774423066.stgit@magnolia>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
-
-Thank you for the patch.
-
-On Mon, Jun 24, 2019 at 11:08:51AM +0200, Neil Armstrong wrote:
-> Add myself as co-maintainer of DRM Bridge Drivers then add Jonas Karlman
-> and Jernej Škrabec as Reviewers of DRM Bridge Drivers.
+On Fri 21-06-19 16:57:07, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Jonas Karlman <jonas@kwiboo.se>
-> Cc: Andrzej Hajda <a.hajda@samsung.com>
-> Cc: Jernej Škrabec <jernej.skrabec@siol.net>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  MAINTAINERS | 3 +++
->  1 file changed, 3 insertions(+)
+> When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
+> need to ensure that userspace can't continue to write the file after the
+> file becomes immutable.  To make that happen, we have to flush all the
+> dirty pagecache pages to disk to ensure that we can fail a page fault on
+> a mmap'd region, wait for pending directio to complete, and hope the
+> caller locked out any new writes by holding the inode lock.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2abf6d28db64..dd8dacc61e79 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5253,7 +5253,10 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
->  
->  DRM DRIVERS FOR BRIDGE CHIPS
->  M:	Andrzej Hajda <a.hajda@samsung.com>
-> +M:	Neil Armstrong <narmstrong@baylibre.com>
->  R:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +R:	Jonas Karlman <jonas@kwiboo.se>
-> +R:	Jernej Skrabec <jernej.skrabec@siol.net>
->  S:	Maintained
->  T:	git git://anongit.freedesktop.org/drm/drm-misc
->  F:	drivers/gpu/drm/bridge/
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
+Seeing the way this worked out, is there a reason to have separate
+vfs_ioc_setflags_flush_data() instead of folding the functionality in
+vfs_ioc_setflags_check() (possibly renaming it to
+vfs_ioc_setflags_prepare() to indicate it does already some changes)? I
+don't see any place that would need these two separated...
+
+> +/*
+> + * Flush all pending IO and dirty mappings before setting S_IMMUTABLE on an
+> + * inode via FS_IOC_SETFLAGS.  If the flush fails we'll clear the flag before
+> + * returning error.
+> + *
+> + * Note: the caller should be holding i_mutex, or else be sure that
+> + * they have exclusive access to the inode structure.
+> + */
+> +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
+> +{
+> +	int ret;
+> +
+> +	if (!vfs_ioc_setflags_need_flush(inode, flags))
+> +		return 0;
+> +
+> +	inode_set_flags(inode, S_IMMUTABLE, S_IMMUTABLE);
+> +	ret = inode_flush_data(inode);
+> +	if (ret)
+> +		inode_set_flags(inode, 0, S_IMMUTABLE);
+> +	return ret;
+> +}
+
+Also this sets S_IMMUTABLE whenever vfs_ioc_setflags_need_flush() returns
+true. That is currently the right thing but seems like a landmine waiting
+to trip? So I'd just drop the vfs_ioc_setflags_need_flush() abstraction to
+make it clear what's going on.
+
+								Honza
 -- 
-Regards,
-
-Laurent Pinchart
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
