@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9EDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CE5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C6B20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792DE20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ChS7ei37"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fpnySevv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbfFXP3B (ORCPT
+        id S1730922AbfFXP3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:29:01 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46678 "EHLO
+        Mon, 24 Jun 2019 11:29:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46706 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfFXP3A (ORCPT
+        with ESMTP id S1728981AbfFXP3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:29:00 -0400
+        Mon, 24 Jun 2019 11:29:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oAjztfS6a11nHbhHo7uC7mDxqHgIvw/jJlFzaOoft6c=; b=ChS7ei37kxum+rWJw+kFlBTPO
-        C/scV2A8FYJo+q7aUFx1PkEmzzt4b5EVV6M1jdpQvr0Gx1lO5RSYlbIId/xZJ25JZx0WNvctgqNzO
-        rAUAboJM7X/Gu3T9M4213MrJRQ7Q/mQ7kswh7gpnMJQh/fxuH2dMJbUPXd3UZUsdk8yWXjFSqLxks
-        20EGrtd6HZnSY8b2S3g+12cmGcfsy0QRYFRXsxS2cf+9CzDBGrqe7U3RJUNo92vPmuQ+UtysgfdZB
-        OIBKgc7xSf41vYlypspPOuf7je/fafDmAxpYAMEVwHpSvsnctIKIuJET9jDFXJoMNBfVMo73uzyy5
-        0pMuLoOBA==;
+         bh=AuLQsK9hRO1fb6NJfONFwxIOQIE7npgOk1R+t9Ub7ts=; b=fpnySevvVrhdEBV3ijKCActWC
+        po7uhKBUpY4QCcVXmmR9NaA+6bVOAV590rzFfaNrM6SKMf6ymxCOx0ZRMdpTY/bcw2H/VxokqTNgW
+        ytMc4jvWg9ZZrcWnHFEqOc6uO6ZjGsfJRjvLkNdlM+OeWxU2masdu2fQ4Pu1y8CI/VV8zoTjwMzEk
+        IAubmlQGQWwJtTASH66B5tlNGXkYYWfyiKFfDYAWNDIvKAmd9VCw5gu3CCyhEz0VyZ9q21C27hdze
+        xXHOcZbM8Py+ijx++l8yICyG3kqfcGt1MuE/4okPB2dyrUaRsnlruaJtxwoftAx33TKuiHjyJMe8T
+        w/LGXMdfw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfQsj-0000ti-6T; Mon, 24 Jun 2019 15:27:47 +0000
+        id 1hfQtH-0000uH-7d; Mon, 24 Jun 2019 15:28:19 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C2D8720A585BA; Mon, 24 Jun 2019 17:27:43 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 17:27:43 +0200
+        id 1EA9120A585BA; Mon, 24 Jun 2019 17:28:18 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 17:28:18 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Phong Tran <tranmanphong@gmail.com>
 Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
@@ -63,26 +63,31 @@ Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
         swinslow@gmail.com, tglx@linutronix.de, tony@atomide.com,
         will@kernel.org, yhs@fb.com
 Subject: Re: [PATCH V2 00/15] cleanup cppcheck signed shifting errors
-Message-ID: <20190624152743.GG3436@hirez.programming.kicks-ass.net>
+Message-ID: <20190624152818.GX3463@hirez.programming.kicks-ass.net>
 References: <20190623151313.970-1-tranmanphong@gmail.com>
  <20190624135105.15579-1-tranmanphong@gmail.com>
+ <20190624152743.GG3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624135105.15579-1-tranmanphong@gmail.com>
+In-Reply-To: <20190624152743.GG3436@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 08:50:50PM +0700, Phong Tran wrote:
-> There are errors with cppcheck 
+On Mon, Jun 24, 2019 at 05:27:43PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 24, 2019 at 08:50:50PM +0700, Phong Tran wrote:
+> > There are errors with cppcheck 
+> > 
+> > "Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
 > 
-> "Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
+> As I've already told you; your checker is bad. That is not in face
 
-As I've already told you; your checker is bad. That is not in face
-undefined behaviour in the kernel.
+Bah, fact, typing hard.
 
-That's not to say you shouldn't clean up the code, but don't give broken
-checkout output as a reason.
+> undefined behaviour in the kernel.
+> 
+> That's not to say you shouldn't clean up the code, but don't give broken
+> checkout output as a reason.
