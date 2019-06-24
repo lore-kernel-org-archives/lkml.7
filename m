@@ -2,260 +2,111 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9843C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9417DC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BFF20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6982220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="laV3jsqX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VixCw8al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfFXX5f (ORCPT
+        id S1729029AbfFXX5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:57:35 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:39311 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbfFXX5a (ORCPT
+        Mon, 24 Jun 2019 19:57:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40266 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbfFXX5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:57:30 -0400
-Received: by mail-pg1-f201.google.com with SMTP id v6so10356074pgh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:57:30 -0700 (PDT)
+        Mon, 24 Jun 2019 19:57:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so7928361pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=AvvLLB8A0iI06VA1j5j+vTzVvGJk1Op1AW1IdCduR9s=;
-        b=laV3jsqXk7tQgx/M2ghVE2rpd2papyjM29Q9rcnqLLdX6k3Ks7PPI4uu6JNGAvLCj5
-         Jkrb2gnArJr/LMtJa741+MnmgKUgLoHQWUIszZEzh9FhL5hVldYSrLmXRAm1CqIkXf3I
-         DdAaKCoN52jYmAizGlXvbvOcM3cevF34NmC+/k/1Vi0uxwhnsKaETpOyDHqjeOJkEcL8
-         VgREBK03CBAZ3bPR+4M4ebEBgO+hBcki+nTyyB1piJK9jF96q/I8kYmfMfkEisXFg9eM
-         YdVY2gIzOXihi68d0EeCgg2CF7BGDW6cRRkfzaR8DYv9hBJEMemvspyWKwMC8nYSYC62
-         tslQ==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EWd21nCYRg84WSpQXPJVjMWkNm03qaZe3d9MXyHClVQ=;
+        b=VixCw8alxWT8K/HkqFguASctouXsEzuvGCOYHVmqElcW1gPxiFCLXr4OqaKIgDJMy6
+         obWkNElQtEOdY3xStj24EvWfHFe0/QhmKxc4Z40jG6CK1oFp81qTPtPf0Z785HnxCeuu
+         eGYYJAxjQANiTFI45yD3g7KrzKJXrF5KpABVczo1mIdp0qcW23MxygKmrxVc8Tw81c1u
+         5PG3/4guxe+rapHj+Jx60WDyoxmYNODoXvxP+wzEZWyfFEyzVWhUowfiW6f48RlhXJs/
+         AS1GILpY4010jYJK8dkYTcMfKBVV14EQ4G95SBS6nFQHcngiIJapeiD0MsuNEpdM/38+
+         /Fsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=AvvLLB8A0iI06VA1j5j+vTzVvGJk1Op1AW1IdCduR9s=;
-        b=HvseKj1010Zj4jbSw0Ow08wxqzAsVnV4sdxuVLK3V9gG1ja609tiiDlLP8kaSeB3YJ
-         rQzu8NW7J8cwTTxWQEZ/vjoeWYKkw6eeUQUQ8jmhaKMs1FQD35jE8i7VHFlO2t797YEz
-         OQacUWKzR6d/we1P+iETOz3wwgEV28unonPA+dNJHDZKz+PNGSKE/cuB/SmzghMYOH12
-         z6fsfiTLQ1qb6jQFmdivwvkLMk43GE04pJEgAsRhfPQhJerJPbN093Rz4qt/X/TThZlE
-         VWz4QKtUYLGCC9e4L/QAG1kGNj6MOZuVhP51W2vnCurWhRgzoZ20n6G4MLmwcpBEuWj/
-         oO2g==
-X-Gm-Message-State: APjAAAUv36lyC8+03RrLne0F62SagQocKsij801X8YQNmnBGlrXVYcjX
-        TqWZWAw0udROmcb4knGyhuo3ggi2CdZ4mhDo
-X-Google-Smtp-Source: APXvYqwciweaPxQBqIDKxYnTBrKlbUTohzpzGvfyPxaGOGrQzq4SzlUgMih0FyyS7RPyykctxIJwYsnCe44fPOfI
-X-Received: by 2002:a63:9143:: with SMTP id l64mr24700877pge.65.1561420649647;
- Mon, 24 Jun 2019 16:57:29 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:57:20 -0700
-In-Reply-To: <20190624235720.167067-1-allanzhang@google.com>
-Message-Id: <20190624235720.167067-3-allanzhang@google.com>
-Mime-Version: 1.0
-References: <20190624235720.167067-1-allanzhang@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3 2/2] bpf: Add selftests for bpf_perf_event_output
-From:   allanzhang <allanzhang@google.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     allanzhang <allanzhang@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EWd21nCYRg84WSpQXPJVjMWkNm03qaZe3d9MXyHClVQ=;
+        b=ewr/Uzg7u+FbyFja03YCdNv2J6nfYFI+vYU7BTLZqjfpTcrga3N+KTJACCEo0zvKpL
+         n6YQVbnwBNgc7BcamkhcAhydiya/Ckq742llVttd8ERxClv8sZZYfl8cKO/jqGy1MeJB
+         LEmXzkjmDOtcgWTNVHySy/xfL0Og3+VpSTXDZnjdc+SSkwDOjPKDrJLamPNAChfmECiy
+         SzBfLUCTfYkXuxmVUuca00hu12ChXzZsC59Z1tsD2lVvlHMJ5fFm9eBXP7a5STISN4JZ
+         uGlpJJ/g7ggGZGRYGYju1djS1JxpByIKaM9JEGpDTkIj9I7rdUuTJt4WSZWgol6cM2xC
+         R82A==
+X-Gm-Message-State: APjAAAXL9VeuRxYcl7N1hp0n62c+gQepWHtbVA2dcGbo63/QFqu6JjDW
+        DncbCgbldVDymgXBREcmtXAQzw==
+X-Google-Smtp-Source: APXvYqzAaa6PoOBFZTIRVOfw04tMBXd+p/jLR9GMhGwwnBp89+8nJwsBf+HuB1ozjSetHRkQSaJUdA==
+X-Received: by 2002:a63:de50:: with SMTP id y16mr19184127pgi.431.1561420666183;
+        Mon, 24 Jun 2019 16:57:46 -0700 (PDT)
+Received: from nuc7.sifive.com ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id 125sm1335727pfg.23.2019.06.24.16.57.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Jun 2019 16:57:45 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        palmer@sifive.com, paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH] nvme-pci: Avoid leak if pci_p2pmem_virt_to_bus() returns null
+Date:   Mon, 24 Jun 2019 16:57:22 -0700
+Message-Id: <1561420642-21186-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Software event output is only enabled by a few prog types.
-This test is to ensure that all supported types are enbled for
-bpf_perf_event_output sucessfully.
+Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem()
+to free the memory it allocated using pci_alloc_p2pmem()
+in case pci_p2pmem_virt_to_bus() returns null.
 
-Signed-off-by: allanzhang <allanzhang@google.com>
+Make sure not to call pci_free_p2pmem() if pci_alloc_p2pmem()
+returned null which can happen if CONFIG_PCI_P2PDMA is not
+configured.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 ---
- tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
- .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
- 2 files changed, 126 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+ drivers/nvme/host/pci.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index c5514daf8865..901a188e1eea 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -50,7 +50,7 @@
- #define MAX_INSNS	BPF_MAXINSNS
- #define MAX_TEST_INSNS	1000000
- #define MAX_FIXUPS	8
--#define MAX_NR_MAPS	18
-+#define MAX_NR_MAPS	19
- #define MAX_TEST_RUNS	8
- #define POINTER_VALUE	0xcafe4all
- #define TEST_DATA_LEN	64
-@@ -84,6 +84,7 @@ struct bpf_test {
- 	int fixup_map_array_wo[MAX_FIXUPS];
- 	int fixup_map_array_small[MAX_FIXUPS];
- 	int fixup_sk_storage_map[MAX_FIXUPS];
-+	int fixup_map_event_output[MAX_FIXUPS];
- 	const char *errstr;
- 	const char *errstr_unpriv;
- 	uint32_t retval, retval_unpriv, insn_processed;
-@@ -604,6 +605,28 @@ static int create_sk_storage_map(void)
- 	return fd;
- }
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 524d6bd6d095..5dfa067f6506 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
  
-+static int create_event_output_map(void)
-+{
-+	struct bpf_create_map_attr attr = {
-+		.name = "test_map",
-+		.map_type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
-+		.key_size = 4,
-+		.value_size = 4,
-+		.max_entries = 1,
-+	};
-+	int fd, btf_fd;
+ 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+ 		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
+-		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+-						nvmeq->sq_cmds);
+-		if (nvmeq->sq_dma_addr) {
+-			set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+-			return 0; 
++		if (nvmeq->sq_cmds) {
++			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
++							nvmeq->sq_cmds);
++			if (nvmeq->sq_dma_addr) {
++				set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
++				return 0;
++			}
 +
-+	btf_fd = load_btf();
-+	if (btf_fd < 0)
-+		return -1;
-+	attr.btf_fd = btf_fd;
-+	fd = bpf_create_map_xattr(&attr);
-+	close(attr.btf_fd);
-+	if (fd < 0)
-+		printf("Failed to create event_output\n");
-+	return fd;
-+}
-+
- static char bpf_vlog[UINT_MAX >> 8];
- 
- static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
-@@ -627,6 +650,7 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
- 	int *fixup_map_array_wo = test->fixup_map_array_wo;
- 	int *fixup_map_array_small = test->fixup_map_array_small;
- 	int *fixup_sk_storage_map = test->fixup_sk_storage_map;
-+	int *fixup_map_event_output = test->fixup_map_event_output;
- 
- 	if (test->fill_helper) {
- 		test->fill_insns = calloc(MAX_TEST_INSNS, sizeof(struct bpf_insn));
-@@ -788,6 +812,13 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
- 			fixup_sk_storage_map++;
- 		} while (*fixup_sk_storage_map);
++			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
+ 		}
  	}
-+	if (*fixup_map_event_output) {
-+		map_fds[18] = create_event_output_map();
-+		do {
-+			prog[*fixup_map_event_output].imm = map_fds[18];
-+			fixup_map_event_output++;
-+		} while (*fixup_map_event_output);
-+	}
- }
  
- static int set_admin(bool admin)
-diff --git a/tools/testing/selftests/bpf/verifier/event_output.c b/tools/testing/selftests/bpf/verifier/event_output.c
-new file mode 100644
-index 000000000000..b25eabcfaa56
---- /dev/null
-+++ b/tools/testing/selftests/bpf/verifier/event_output.c
-@@ -0,0 +1,94 @@
-+/* instructions used to output a skb based software event, produced
-+ * from code snippet:
-+struct TMP {
-+  uint64_t tmp;
-+} tt;
-+tt.tmp = 5;
-+bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
-+		      &tt, sizeof(tt));
-+return 1;
-+
-+the bpf assembly from llvm is:
-+       0:       b7 02 00 00 05 00 00 00         r2 = 5
-+       1:       7b 2a f8 ff 00 00 00 00         *(u64 *)(r10 - 8) = r2
-+       2:       bf a4 00 00 00 00 00 00         r4 = r10
-+       3:       07 04 00 00 f8 ff ff ff         r4 += -8
-+       4:       18 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00    r2 = 0ll
-+       6:       b7 03 00 00 00 00 00 00         r3 = 0
-+       7:       b7 05 00 00 08 00 00 00         r5 = 8
-+       8:       85 00 00 00 19 00 00 00         call 25
-+       9:       b7 00 00 00 01 00 00 00         r0 = 1
-+      10:       95 00 00 00 00 00 00 00         exit
-+
-+    The reason I put the code here instead of fill_helpers is that map fixup is
-+    against the insns, instead of filled prog.
-+*/
-+
-+#define __PERF_EVENT_INSNS__					\
-+	BPF_MOV64_IMM(BPF_REG_2, 5),				\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -8),		\
-+	BPF_MOV64_REG(BPF_REG_4, BPF_REG_10),			\
-+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_4, -8),			\
-+	BPF_LD_MAP_FD(BPF_REG_2, 0),				\
-+	BPF_MOV64_IMM(BPF_REG_3, 0),				\
-+	BPF_MOV64_IMM(BPF_REG_5, 8),				\
-+	BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,		\
-+		     BPF_FUNC_perf_event_output),		\
-+	BPF_MOV64_IMM(BPF_REG_0, 1),				\
-+	BPF_EXIT_INSN(),
-+{
-+	"perfevent for sockops",
-+	.insns = { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_SOCK_OPS,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for tc",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for lwt out",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_LWT_OUT,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for xdp",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_XDP,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for socket filter",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_SOCKET_FILTER,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for sk_skb",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_SK_SKB,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
-+{
-+	"perfevent for cgroup skb",
-+	.insns =  { __PERF_EVENT_INSNS__ },
-+	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
-+	.fixup_map_event_output = { 4 },
-+	.result = ACCEPT,
-+	.retval = 1,
-+},
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.7.4
 
