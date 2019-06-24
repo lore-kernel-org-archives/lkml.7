@@ -2,87 +2,68 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CF4C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F24CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB0220665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF4420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732175AbfFXQjV (ORCPT
+        id S1729796AbfFXQjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:39:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727182AbfFXQjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:39:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7134EAE74;
-        Mon, 24 Jun 2019 16:39:19 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C9BA31E2F23; Mon, 24 Jun 2019 18:39:18 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 18:39:18 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, dsterba@suse.com, clm@fb.com,
-        josef@toxicpanda.com, axboe@kernel.dk, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/9] blkcg, writeback: Add wbc->no_wbc_acct
-Message-ID: <20190624163918.GL32376@quack2.suse.cz>
-References: <20190615182453.843275-1-tj@kernel.org>
- <20190615182453.843275-3-tj@kernel.org>
- <20190620152145.GL30243@quack2.suse.cz>
- <20190620170250.GL657710@devbig004.ftw2.facebook.com>
- <20190624082129.GA32376@quack2.suse.cz>
- <20190624125856.GO657710@devbig004.ftw2.facebook.com>
+        Mon, 24 Jun 2019 12:39:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47516 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfFXQjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:39:45 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hfS0N-00067P-Fk; Mon, 24 Jun 2019 16:39:43 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cifs: fix typo in debug message with struct field ia_valid
+Date:   Mon, 24 Jun 2019 17:39:43 +0100
+Message-Id: <20190624163943.6721-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624125856.GO657710@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 24-06-19 05:58:56, Tejun Heo wrote:
-> Hello, Jan.
-> 
-> On Mon, Jun 24, 2019 at 10:21:30AM +0200, Jan Kara wrote:
-> > OK, now I understand. Just one more question: So effectively, you are using
-> > wbc->no_wbc_acct to pass information from btrfs code to btrfs code telling
-> > it whether IO should or should not be accounted with wbc_account_io().
-> 
-> Yes.
-> 
-> > Wouldn't it make more sense to just pass this information internally
-> > within btrfs? Granted, if this mechanism gets more widespread use by other
-> > filesystems, then probably using wbc flag makes more sense. But I'm not
-> > sure if this isn't a premature generalization...
-> 
-> The btrfs async issuers end up using generic writeback path and uses
-> the generic wbc owner mechanisms so that ios are attached to the right
-> cgroup too.  So, I kinda prefer to provide a generic mechanism from
-> wbc side.
+From: Colin Ian King <colin.king@canonical.com>
 
-OK, I can live with that. We just have to be kind of careful so that people
-just don't sprinkle no_wbc_acct writeback around because they don't know
-better. Maybe you could at least add comment to no_wbc_acct mentioning that
-this is for the cases where writeback has already been accounted for?
+Field ia_valid is being debugged with the field name iavalid, fix this.
 
-> That said, the names are a bit misleading and I think it'd
-> be better to rename them to something more explicit, e.g. sth along
-> the line of wbc_update_cgroup_owner() and wbc->no_cgroup_owner.  What
-> do you think?
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/cifs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, renaming would probably make things clearer as well.
-
-								Honza
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index d7cc62252634..06a4892e9973 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2415,7 +2415,7 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
+ 
+ 	xid = get_xid();
+ 
+-	cifs_dbg(FYI, "setattr on file %pd attrs->iavalid 0x%x\n",
++	cifs_dbg(FYI, "setattr on file %pd attrs->ia_valid 0x%x\n",
+ 		 direntry, attrs->ia_valid);
+ 
+ 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NO_PERM)
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
