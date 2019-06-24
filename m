@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289AAC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E926F20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C4B208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370866;
-	bh=lPFa3FZ2IJL5Jre6SYhyJDYntvwt2w0C2DFyXpPrB7M=;
+	s=default; t=1561370871;
+	bh=d/cT9knU3Q7SoiUiMZRHfIV+IRBC2ybsYASLgBI09oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFX1w+K584jXK0sgC/5Eo5la0EpT5jlatsxrVVZT5EjME4+RawbK5zPqckuXWT5/D
-	 SThTdpR8TeMhLVT+bGh5sed+dFJpKkd/2YVCl88RG9cCzsDNQUCHV7VDOAGaldcCmf
-	 NN3BzSr0+xn2+zaBGdfh4bNGB1jEe4tIeQPTsbKI=
+	b=SwluUPa8s4pIFlqi07McmDaHBLR/SBNDH/vqG1lONDH460lx1QP8LZTHs8kdUyOHy
+	 5z62/Ui42fZAKz4YjopOycM2q3lTjszduvDXy7mftaMmmUXLDaJWCbp8isGSqCPBLO
+	 GrH/MURVUWlxce3vrfTGEvjqeywIJEUCxjrb9BcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbfFXKHo (ORCPT
+        id S1729980AbfFXKHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbfFXKHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:32 -0400
+        id S1729814AbfFXKHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:35 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B59C208E3;
-        Mon, 24 Jun 2019 10:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0728205C9;
+        Mon, 24 Jun 2019 10:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370851;
-        bh=lPFa3FZ2IJL5Jre6SYhyJDYntvwt2w0C2DFyXpPrB7M=;
+        s=default; t=1561370854;
+        bh=d/cT9knU3Q7SoiUiMZRHfIV+IRBC2ybsYASLgBI09oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IH+m/lFdNBBkW8tAom72+rFHUwIDYAywqUBucZfExYZL3ILev8ujBIEORvLkcQYo9
-         U8F9IHBPhzl58TN7qhbOJGKnqaakmK1VgIyslb0ewyR6c40h5O5qB/Y3ZVnVVwIbkf
-         ilkHN3MPn8XphHAi2rsrImkwhg1Uu2OkxcpM1o7g=
+        b=DGyL/7v3s8G3K7qJwgCQ6I0wuuGIuaOM8tqXilH3wRB7YK2aaIe+07xq9HkY1KWD9
+         x3F8IYfHKT/nOgihGtvIyXFwrVJ3Fa/ppdxCvhD0FGGqe7VDx1C9s2TI8etl7v2z+k
+         VAhIzqQRB514btzY000OM7/tqhGdAzQvGD9wUS+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Smith <danct12@disroot.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.1 024/121] Input: silead - add MSSL0017 to acpi_device_id
-Date:   Mon, 24 Jun 2019 17:55:56 +0800
-Message-Id: <20190624092321.922852625@linuxfoundation.org>
+        stable@vger.kernel.org, John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 5.1 025/121] apparmor: fix PROFILE_MEDIATES for untrusted input
+Date:   Mon, 24 Jun 2019 17:55:57 +0800
+Message-Id: <20190624092321.992568736@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,31 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Smith <danct12@disroot.org>
+From: John Johansen <john.johansen@canonical.com>
 
-commit 0e658060e5fc50dc282885dc424a94b5d95547e5 upstream.
+commit 23375b13f98c5464c2b4d15f983cc062940f1f4e upstream.
 
-On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
+While commit 11c236b89d7c2 ("apparmor: add a default null dfa") ensure
+every profile has a policy.dfa it does not resize the policy.start[]
+to have entries for every possible start value. Which means
+PROFILE_MEDIATES is not safe to use on untrusted input. Unforunately
+commit b9590ad4c4f2 ("apparmor: remove POLICY_MEDIATES_SAFE") did not
+take into account the start value usage.
 
-Signed-off-by: Daniel Smith <danct12@disroot.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+The input string in profile_query_cb() is user controlled and is not
+properly checked to be within the limited start[] entries, even worse
+it can't be as userspace policy is allowed to make us of entries types
+the kernel does not know about. This mean usespace can currently cause
+the kernel to access memory up to 240 entries beyond the start array
+bounds.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: b9590ad4c4f2 ("apparmor: remove POLICY_MEDIATES_SAFE")
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/silead.c |    1 +
- 1 file changed, 1 insertion(+)
+ security/apparmor/include/policy.h |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -617,6 +617,7 @@ static const struct acpi_device_id silea
- 	{ "MSSL1680", 0 },
- 	{ "MSSL0001", 0 },
- 	{ "MSSL0002", 0 },
-+	{ "MSSL0017", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
+--- a/security/apparmor/include/policy.h
++++ b/security/apparmor/include/policy.h
+@@ -217,7 +217,16 @@ static inline struct aa_profile *aa_get_
+ 	return labels_profile(aa_get_newest_label(&p->label));
+ }
+ 
+-#define PROFILE_MEDIATES(P, T)  ((P)->policy.start[(unsigned char) (T)])
++static inline unsigned int PROFILE_MEDIATES(struct aa_profile *profile,
++					    unsigned char class)
++{
++	if (class <= AA_CLASS_LAST)
++		return profile->policy.start[class];
++	else
++		return aa_dfa_match_len(profile->policy.dfa,
++					profile->policy.start[0], &class, 1);
++}
++
+ static inline unsigned int PROFILE_MEDIATES_AF(struct aa_profile *profile,
+ 					       u16 AF) {
+ 	unsigned int state = PROFILE_MEDIATES(profile, AA_CLASS_NET);
 
 
