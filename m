@@ -2,259 +2,90 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC07EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501DDC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24A5208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22938205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="baaTIpEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfFXHFk (ORCPT
+        id S1727654AbfFXHLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:05:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54712 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726340AbfFXHFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:05:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A9FDEAEEC;
-        Mon, 24 Jun 2019 07:05:37 +0000 (UTC)
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for
- hardware raid5/6
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     linux-block@vger.kernel.org, Eric Wheeler <git@linux.ewheeler.net>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BCACHE (BLOCK LAYER CACHE)" <linux-bcache@vger.kernel.org>
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
- <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
-Date:   Mon, 24 Jun 2019 15:05:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Mon, 24 Jun 2019 03:11:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51544 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfFXHLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RQ35CdI7OgSCvNIJDvf1p+BfUv8hYylGCi0q85yv+Yw=; b=baaTIpENIFYajuYTAHyVtoJWM
+        a1DUikSr096fgOD3KX66qiitLLwEMKxstZe8F41v2bSIUYioz/6i/Vb3pW05jvnSnC5RPE6dMcTgk
+        FedZTCJIKdzczm2PnKEbJfSoyTfz35zM5fMJsM0iTkOxlNBkJIIR1i0sUUDu1qFJyoqUqf5O1fwMa
+        l74AR53sr2mYYr4dztHj0eXb6WjQaYg+uj0apZv4X+6qDpy7TCzvXnv803NPjM0irg441yMX68Br0
+        7M3ZzB6dbVUOAGX2i68AXvhyavS/LvKi+Yk7Gl2BqJiPyfGlLda1wsZU/Dj3y2X8MalupSjMainTx
+        eExFIV/+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfJ8O-0002ZO-91; Mon, 24 Jun 2019 07:11:24 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D17A920A021ED; Mon, 24 Jun 2019 09:11:21 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 09:11:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
+        songliubraving@fb.com, andrew@lunn.ch, nsekhar@ti.com,
+        ast@kernel.org, jolsa@redhat.com, netdev@vger.kernel.org,
+        gerg@uclinux.org, lorenzo.pieralisi@arm.com, will@kernel.org,
+        linux-samsung-soc@vger.kernel.org, daniel@iogearbox.net,
+        festevam@gmail.com, gregory.clement@bootlin.com,
+        allison@lohutok.net, linux@armlinux.org.uk, krzk@kernel.org,
+        haojian.zhuang@gmail.com, bgolaszewski@baylibre.com,
+        tony@atomide.com, mingo@redhat.com, linux-imx@nxp.com, yhs@fb.com,
+        sebastian.hesselbarth@gmail.com, illusionist.neo@gmail.com,
+        jason@lakedaemon.net, liviu.dudau@arm.com, s.hauer@pengutronix.de,
+        acme@kernel.org, lkundrak@v3.sk, robert.jarzmik@free.fr,
+        dmg@turingmachine.org, swinslow@gmail.com, namhyung@kernel.org,
+        tglx@linutronix.de, linux-omap@vger.kernel.org,
+        alexander.sverdlin@gmail.com, linux-arm-kernel@lists.infradead.org,
+        info@metux.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        hsweeten@visionengravers.com, kgene@kernel.org,
+        kernel@pengutronix.de, sudeep.holla@arm.com, bpf@vger.kernel.org,
+        shawnguo@kernel.org, kafai@fb.com, daniel@zonque.org
+Subject: Re: [PATCH 01/15] arm: perf: cleanup cppcheck shifting error
+Message-ID: <20190624071121.GN3436@hirez.programming.kicks-ass.net>
+References: <20190623151313.970-1-tranmanphong@gmail.com>
+ <20190623151313.970-2-tranmanphong@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190623151313.970-2-tranmanphong@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/23 7:16 上午, Eric Wheeler wrote:
-> From: Eric Wheeler <git@linux.ewheeler.net>
+On Sun, Jun 23, 2019 at 10:12:59PM +0700, Phong Tran wrote:
+> fix "Shifting signed 32-bit value by 31 bits is undefined behaviour
+> errors"
 > 
-> While some drivers set queue_limits.io_opt (e.g., md raid5), there are
-> currently no SCSI/RAID controller drivers that do.  Previously stripe_size
-> and partial_stripes_expensive were read-only values and could not be
-> tuned by users (eg, for hardware RAID5/6).
-> 
-> This patch enables users to save the optimal IO size via sysfs through
-> the backing device attributes stripe_size and partial_stripes_expensive
-> into the bcache superblock.
-> 
-> Superblock changes are backwards-compatable:
-> 
-> *  partial_stripes_expensive: One bit was used in the superblock flags field
-> 
-> *  stripe_size: There are eight 64-bit "pad" fields for future use in
->    the superblock which default to 0; from those, 32-bits are now used
->    to save the stripe_size and load at device registration time.
-> 
-> Signed-off-by: Eric Wheeler <bcache@linux.ewheeler.net>
+> [arch/arm/kernel/perf_event_v7.c:1080]: (error) Shifting signed 32-bit
+> value by 31 bits is undefined behaviour
+> [arch/arm/kernel/perf_event_v7.c:1436]: (error) Shifting signed 32-bit
+> value by 31 bits is undefined behaviour
+> [arch/arm/kernel/perf_event_v7.c:1783]: (error) Shifting signed 32-bit
+> value by 31 bits is undefined behaviour
 
-Hi Eric,
-
-In general I am OK with this patch. Since Peter comments lots of SCSI
-RAID devices reports a stripe width, could you please list the hardware
-raid devices which don't list stripe size ? Then we can make decision
-whether it is necessary to have such option enabled.
-
-Another point is, this patch changes struct cache_sb, it is no problem
-to change on-disk format. I plan to update the super block version soon,
-to store more configuration persistently into super block. stripe_size
-can be added to cache_sb with other on-disk changes.
-
-Thanks.
-
-Coly Li
-
-
-> ---
->  Documentation/admin-guide/bcache.rst | 21 +++++++++++++++++++++
->  drivers/md/bcache/super.c            | 15 ++++++++++++++-
->  drivers/md/bcache/sysfs.c            | 33 +++++++++++++++++++++++++++++++--
->  include/uapi/linux/bcache.h          |  6 ++++--
->  4 files changed, 70 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/bcache.rst b/Documentation/admin-guide/bcache.rst
-> index c0ce64d..ef82022 100644
-> --- a/Documentation/admin-guide/bcache.rst
-> +++ b/Documentation/admin-guide/bcache.rst
-> @@ -420,6 +420,12 @@ dirty_data
->  label
->    Name of underlying device.
->  
-> +partial_stripes_expensive
-> +  Flag to bcache that partial or unaligned stripe_size'd
-> +  writes to the backing device are expensive (e.g., RAID5/6 incur
-> +  read-copy-write). Writing this sysfs attribute updates the superblock
-> +  and also takes effect immediately.  See also stripe_size, below.
-> +
->  readahead
->    Size of readahead that should be performed.  Defaults to 0.  If set to e.g.
->    1M, it will round cache miss reads up to that size, but without overlapping
-> @@ -458,6 +464,21 @@ stop
->    Write to this file to shut down the bcache device and close the backing
->    device.
->  
-> +stripe_size
-> +  The stripe size in bytes of the backing device for optimial
-> +  write performance (also known as the "stride width"). This is set
-> +  automatically when using a device driver sets blk_limits_io_opt
-> +  (e.g., md, rbd, skd, zram, virtio_blk).  No hardware RAID controller
-> +  sets blk_limits_io_opt as of 2019-06-15, so configure this to suit
-> +  your needs.  Note that you must unregister and re-register the backing
-> +  device after making a change to stripe_size.
-> +
-> +  Where N is the number of data disks,
-> +    RAID5: stripe_size = (N-1)*RAID_CHUNK_SIZE.
-> +    RAID6: stripe_size = (N-2)*RAID_CHUNK_SIZE.
-> +
-> +  See also partial_stripes_expensive, above.
-> +
->  writeback_delay
->    When dirty data is written to the cache and it previously did not contain
->    any, waits some number of seconds before initiating writeback. Defaults to
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index 1b63ac8..d0b9501 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -80,6 +80,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
->  
->  	sb->flags		= le64_to_cpu(s->flags);
->  	sb->seq			= le64_to_cpu(s->seq);
-> +	sb->stripe_size		= le32_to_cpu(s->stripe_size);
->  	sb->last_mount		= le32_to_cpu(s->last_mount);
->  	sb->first_bucket	= le16_to_cpu(s->first_bucket);
->  	sb->keys		= le16_to_cpu(s->keys);
-> @@ -221,6 +222,7 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
->  
->  	out->flags		= cpu_to_le64(sb->flags);
->  	out->seq		= cpu_to_le64(sb->seq);
-> +	out->stripe_size	= cpu_to_le32(sb->stripe_size);
->  
->  	out->last_mount		= cpu_to_le32(sb->last_mount);
->  	out->first_bucket	= cpu_to_le16(sb->first_bucket);
-> @@ -1258,7 +1260,18 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
->  
->  	dc->disk.stripe_size = q->limits.io_opt >> 9;
->  
-> -	if (dc->disk.stripe_size)
-> +	if (dc->sb.stripe_size) {
-> +		if (dc->disk.stripe_size &&
-> +		    dc->disk.stripe_size != dc->sb.stripe_size) {
-> +			pr_warn("superblock stripe_size (%d) overrides bdev stripe_size (%d)\n",
-> +				(int)dc->sb.stripe_size,
-> +				(int)dc->disk.stripe_size);
-> +		}
-> +
-> +		dc->disk.stripe_size = dc->sb.stripe_size;
-> +		dc->partial_stripes_expensive =
-> +			(unsigned int)BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb);
-> +	} else if (dc->disk.stripe_size)
->  		dc->partial_stripes_expensive =
->  			q->limits.raid_partial_stripes_expensive;
->  
-> diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-> index bfb437f..4ebca52 100644
-> --- a/drivers/md/bcache/sysfs.c
-> +++ b/drivers/md/bcache/sysfs.c
-> @@ -111,8 +111,8 @@
->  rw_attribute(writeback_rate_minimum);
->  read_attribute(writeback_rate_debug);
->  
-> -read_attribute(stripe_size);
-> -read_attribute(partial_stripes_expensive);
-> +rw_attribute(stripe_size);
-> +rw_attribute(partial_stripes_expensive);
->  
->  rw_attribute(synchronous);
->  rw_attribute(journal_delay_ms);
-> @@ -343,6 +343,35 @@ static ssize_t bch_snprint_string_list(char *buf,
->  		}
->  	}
->  
-> +	if (attr == &sysfs_stripe_size) {
-> +		int v = strtoul_or_return(buf);
-> +
-> +		if (v & 0x1FF) {
-> +			pr_err("stripe_size must be a muliple of 512-byte sectors");
-> +			return -EINVAL;
-> +		}
-> +
-> +		v >>= 9;
-> +
-> +		if (v != dc->sb.stripe_size) {
-> +			dc->sb.stripe_size = v;
-> +			pr_info("stripe_size=%d, re-register to take effect.",
-> +				v<<9);
-> +			bch_write_bdev_super(dc, NULL);
-> +		} else
-> +			pr_info("stripe_size is already set to %d.", v<<9);
-> +	}
-> +
-> +	if (attr == &sysfs_partial_stripes_expensive) {
-> +		int v = strtoul_or_return(buf);
-> +
-> +		if (v != BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb)) {
-> +			SET_BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb, v);
-> +			dc->partial_stripes_expensive = v;
-> +			bch_write_bdev_super(dc, NULL);
-> +		}
-> +	}
-> +
->  	if (attr == &sysfs_stop_when_cache_set_failed) {
->  		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
->  		if (v < 0)
-> diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
-> index 5d4f58e..ee60914 100644
-> --- a/include/uapi/linux/bcache.h
-> +++ b/include/uapi/linux/bcache.h
-> @@ -172,7 +172,9 @@ struct cache_sb {
->  
->  	__u64			flags;
->  	__u64			seq;
-> -	__u64			pad[8];
-> +	__u32			stripe_size;
-> +	__u32			pad_u32;
-> +	__u64			pad_u64[7];
->  
->  	union {
->  	struct {
-> @@ -230,7 +232,7 @@ static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
->  #define BDEV_STATE_CLEAN		1U
->  #define BDEV_STATE_DIRTY		2U
->  #define BDEV_STATE_STALE		3U
-> -
-> +BITMASK(BDEV_PARTIAL_STRIPES_EXPENSIVE,	struct cache_sb, flags, 60, 1);
->  /*
->   * Magic numbers
->   *
-> 
-
-
--- 
-
-Coly Li
+I don't think that is true; the kernel uses -fno-strict-overflow (which
+implies -fwrapv) and that takes away all the signed UB.
