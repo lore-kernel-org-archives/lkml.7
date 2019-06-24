@@ -2,82 +2,136 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6CDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B53AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2912B208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59796208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfFXEB0 (ORCPT
+        id S1727741AbfFXEBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:01:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59142 "EHLO huawei.com"
+        Mon, 24 Jun 2019 00:01:30 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19099 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725267AbfFXEB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:01:26 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5AA599E7CDD25E43015C;
-        Mon, 24 Jun 2019 12:01:23 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
- 12:01:12 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <sdf@google.com>, <jianbol@mellanox.com>,
-        <jiri@mellanox.com>, <mirq-linux@rere.qmqm.pl>,
-        <willemb@google.com>, <sdf@fomichev.me>, <jiri@resnulli.us>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] flow_dissector: Fix vlan header offset in __skb_flow_dissect
-Date:   Mon, 24 Jun 2019 11:49:13 +0800
-Message-ID: <20190624034913.40328-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190622.161955.2030310177158651781.davem@davemloft.net>
-References: <20190622.161955.2030310177158651781.davem@davemloft.net>
+        id S1725769AbfFXEB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 00:01:28 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A030B2BC4CFD26FB6995;
+        Mon, 24 Jun 2019 12:01:24 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
+ 12:01:13 +0800
+Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <corbet@lwn.net>, <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>,
+        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
+        <dvyukov@google.com>, <feng.tang@intel.com>,
+        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
+        <linux@leemhuis.info>, <alex.popov@linux.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+ <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com>
+Date:   Mon, 24 Jun 2019 12:01:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+In-Reply-To: <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.225.177]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We build vlan on top of bonding interface, which vlan offload
-is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
-BOND_XMIT_POLICY_ENCAP34.
 
-__skb_flow_dissect() fails to get information from protocol headers
-encapsulated within vlan, because 'nhoff' is points to IP header,
-so bond hashing is based on layer 2 info, which fails to distribute
-packets across slaves.
+ÔÚ 2019/6/24 0:38, Thomas Gleixner Ð´µÀ:
+> Zhiqiang,
+>> controlled by sysadmins to copy with hardware changes over time.
+> 
+> So much for the theory. See below.
 
-Fixes: d5709f7ab776 ("flow_dissector: For stripped vlan, get vlan info from skb->vlan_tci")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: remove redundant spaces
----
- net/core/flow_dissector.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for your reply.
+> 
+>> Correspondingly, the MAX_SOFTIRQ_TIME should be able to be tunned by sysadmins,
+>> who knows best about hardware performance, for excepted tradeoff between latence
+>> and fairness.
+>>
+>> Here, we add sysctl variable max_softirq_time_usecs to replace MAX_SOFTIRQ_TIME
+>> with 2ms default value.
+> 
+> ...
+> 
+>>   */
+>> -#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
+>> +unsigned int __read_mostly max_softirq_time_usecs = 2000;
+>>  #define MAX_SOFTIRQ_RESTART 10
+>>
+>>  #ifdef CONFIG_TRACE_IRQFLAGS
+>> @@ -248,7 +249,8 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
+>>
+>>  asmlinkage __visible void __softirq_entry __do_softirq(void)
+>>  {
+>> -	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
+>> +	unsigned long end = jiffies +
+>> +		usecs_to_jiffies(max_softirq_time_usecs);
+> 
+> That's still jiffies based and therefore depends on CONFIG_HZ. Any budget
+> value will be rounded up to the next jiffie. So in case of HZ=100 and
+> time=1000us this will still result in 10ms of allowed loop time.
+> 
+> I'm not saying that we must use a more fine grained time source, but both
+> the changelog and the sysctl documentation are misleading.
+> 
+> If we keep it jiffies based, then microseconds do not make any sense. They
+> just give a false sense of controlability.
+> 
+> Keep also in mind that with jiffies the accuracy depends also on the
+> distance to the next tick when 'end' is evaluated. The next tick might be
+> imminent.
+> 
+> That's all information which needs to be in the documentation.
+> 
 
-diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-index 01ad60b..ff85934 100644
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -998,6 +998,9 @@ bool __skb_flow_dissect(const struct net *net,
- 		    skb && skb_vlan_tag_present(skb)) {
- 			proto = skb->protocol;
- 		} else {
-+			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
-+				nhoff -= sizeof(*vlan);
-+
- 			vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
- 						    data, hlen, &_vlan);
- 			if (!vlan) {
--- 
-2.7.4
+Thanks again for your detailed advice.
+As your said, the max_softirq_time_usecs setting without explaining the
+relationship with CONFIG_HZ will give a false sense of controlability. And
+the time accuracy of jiffies will result in a certain difference between the
+max_softirq_time_usecs set value and the actual value, which is in one jiffies
+range.
 
+I will add these infomation in the sysctl documentation and changelog in v2 patch.
+
+>> +	{
+>> +		.procname	= "max_softirq_time_usecs",
+>> +		.data		= &max_softirq_time_usecs,
+>> +		.maxlen		= sizeof(unsigned int),
+>> +		.mode		= 0644,
+>> +		.proc_handler   = proc_dointvec_minmax,
+>> +		.extra1		= &zero,
+>> +	},
+> 
+> Zero as the lower limit? That means it allows a single loop. Fine, but
+> needs to be documented as well.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> .
+> 
 
