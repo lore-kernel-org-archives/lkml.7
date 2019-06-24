@@ -2,130 +2,190 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BD7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EE8212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Aw1qVF90"
+	by mail.kernel.org (Postfix) with ESMTP id CA394213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfFXOJO (ORCPT
+        id S1731811AbfFXOJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:09:14 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:43886 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731756AbfFXOJM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:09:12 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OE8ZFb004224;
-        Mon, 24 Jun 2019 10:08:48 -0400
-Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2057.outbound.protection.outlook.com [104.47.49.57])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2t9e63dupf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jun 2019 10:08:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tbtYM6TFQdOxKuLzKw5MOPPqicJtbW7agMipMrUmpEE=;
- b=Aw1qVF90vKKQBnGt21mkS05mR2Y4HUbMwTxOnlJx+RiaLXcNkMdraFmpxoLH9BuIH2JBeRijUsHLdfrMbiWaSpjMPmkfTfiOc2g17wSMTM+NzL9cyiR6xGwtgqjwO8dRBik7OqRdymW5QuuIjpBIImVJetTqvhCDaEeiH7MY2Ps=
-Received: from DM6PR03MB3658.namprd03.prod.outlook.com (20.176.85.151) by
- DM6PR03MB4412.namprd03.prod.outlook.com (20.178.25.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Mon, 24 Jun 2019 14:08:46 +0000
-Received: from DM6PR03MB3658.namprd03.prod.outlook.com
- ([fe80::3d04:7ea3:14e6:de91]) by DM6PR03MB3658.namprd03.prod.outlook.com
- ([fe80::3d04:7ea3:14e6:de91%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 14:08:46 +0000
-From:   "Caprioru, Mircea" <Mircea.Caprioru@analog.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 4/5] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Thread-Topic: [PATCH V3 4/5] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Thread-Index: AQHVKmQnaX7c8Zkm3k6sgnGGJOqaBKaq0qgAgAAFKwA=
-Date:   Mon, 24 Jun 2019 14:08:46 +0000
-Message-ID: <6d9ae527d98c77812d5d261419db3e1ddd5e0e2e.camel@analog.com>
-References: <20190624080845.18537-1-mircea.caprioru@analog.com>
-         <20190624080845.18537-4-mircea.caprioru@analog.com>
-         <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b438869-c3c2-42a6-3a6c-08d6f8ad794e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR03MB4412;
-x-ms-traffictypediagnostic: DM6PR03MB4412:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR03MB4412648EA90994299E985C1581E00@DM6PR03MB4412.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1091;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(54534003)(199004)(189003)(2616005)(68736007)(8936002)(2906002)(316002)(186003)(4326008)(81156014)(81166006)(3846002)(86362001)(8676002)(54906003)(66066001)(102836004)(53546011)(6506007)(26005)(229853002)(76176011)(6116002)(99286004)(53936002)(36756003)(66946007)(66476007)(66556008)(64756008)(66446008)(76116006)(73956011)(91956017)(6436002)(25786009)(6486002)(118296001)(6512007)(71190400001)(71200400001)(486006)(6246003)(5660300002)(14454004)(305945005)(478600001)(446003)(72206003)(256004)(11346002)(476003)(7736002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4412;H:DM6PR03MB3658.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EIuw3d45G2dYf1vgG8YcAa+RlsJgnpv64iEGHIub1r/jy93mM2Pb1hxPCIqYzU2qGd/KJ9XgBdTBge4a7EpPFULoCG6pTSC8wz81O4J9vAiv/uew7wBHb8M5+VWf7JQixp7GYUB1RiYwCs6oHxRBhpo6pAbDkkVYhI6qSwdzCoYvnXKLags2Ed1B5y3+fn/4aaicLyixnBYSSanraiHfC5VRv8JL9HjNTBpMtnkrRfa9nQMqKj3IHodAa4ZIeb5JO0VCe5WBC35+/vFiZp7SmTLXASQXatTnfqRpLx8NkvpRT2TvvX6xJUjwKJbiklOg0+DhSQvb04YojYONLZHFw3vb9BKeu1PbUKSTtSi3+Pz6U5GvubAzVVoPLZu9E7IwTEhZbCM+sTjxidHESXSpjbTsca+yMbu1KOtU2doH5hg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9548103C6EA45F488CC1EB5B5F0929A9@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 10:09:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42680 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbfFXOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:09:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F4EE3079B8F;
+        Mon, 24 Jun 2019 14:09:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD7291001B07;
+        Mon, 24 Jun 2019 14:09:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 03/25] vfs: Allow fsinfo() to query what's in an fs_context
+ [ver #14]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Jun 2019 15:09:14 +0100
+Message-ID: <156138535407.25627.15015993364565647650.stgit@warthog.procyon.org.uk>
+In-Reply-To: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b438869-c3c2-42a6-3a6c-08d6f8ad794e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:08:46.5945
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mircea.Caprioru@analog.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4412
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240116
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 24 Jun 2019 14:09:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA2LTI0IGF0IDA3OjUwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gDQo+IE9uIE1vbiwgSnVuIDI0LCAyMDE5IGF0IDI6MDkgQU0gTWly
-Y2VhIENhcHJpb3J1DQo+IDxtaXJjZWEuY2FwcmlvcnVAYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4g
-DQo+ID4gQ29udmVydCBBRDcxMjQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiB0byBZQU1MIGZvcm1h
-dC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXJjZWEgQ2FwcmlvcnUgPG1pcmNlYS5jYXBy
-aW9ydUBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZWxvZyB2MjoNCj4gPiAt
-IG1vZGlmaWVkIFNQRFggbGljZW5zZSB0byBHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZQ0KPiA+IC0g
-YWRkZWQgcmVnZXggZm9yIGEgcmFuZ2UgZnJvbSAwIHRvIDE1DQo+ID4gLSBhZGRlZCBtaW5pbXVt
-IGFuZCBtYXhpbXVtIGNvbnN0cmFpbnRzIGZvciByZWcgcHJvcGVydHkNCj4gPiAtIHNldCB0eXBl
-IGFuZCByYW5nZSBvZiB2YWx1ZXMgZm9yIGFkaSxyZWZlcmVuY2Utc2VsZWN0IHByb3BlcnR5DQo+
-ID4gLSB1c2VkIGl0ZW1zIGZvciBkaWZmLWNoYW5uZWxzIHByb3BlcnR5DQo+ID4gLSBzZXQgYmlw
-b2xhciwgYWRpLGJ1ZmZlcmVkLXBvc2l0aXZlIGFuZCBuZWdhdGl2ZSB0byB0eXBlOiBib29sZWFu
-DQo+ID4gDQo+ID4gQ2hhbmdlbG9nIHYzOg0KPiA+IC0gbW92ZWQgYWRpLGJ1ZmZlcmVkLXBvc2l0
-aXZlIGFuZCBuZWdhdGl2ZSBwcm9wZXJ0aWVzIHRvIG93biBjb21taXQNCj4gPiANCj4gPiAgLi4u
-L2JpbmRpbmdzL2lpby9hZGMvYWRpLGFkNzEyNC55YW1sICAgICAgICAgIHwgMTQ0DQo+ID4gKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNDQgaW5zZXJ0aW9ucygrKQ0K
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaWlvL2FkYy9hZGksYWQ3MTI0LnlhbWwNCj4gDQo+IFRoZSBzdWJqZWN0IHNheXMgJ0Nv
-bnZlcnQnLCBidXQgd2hlcmUncyB0aGUgcmVtb3ZhbCBvZiB0aGUgb2xkDQo+IGJpbmRpbmc/DQo+
-IA0KPiBSb2INCg0KWW91IGFyZSByaWdodCBJIHdhcyBub3Qgc3VyZSBpZiBJIHNob3VsZCBhbHNv
-IHJlbW92ZSB0aGUgb2xkIGJpbmRpbmcuDQpJJ2xsIGRvIGEgdjQgdG8gZGVsZXRlIGl0IGluIHRo
-aXMgcGF0Y2guDQoNClRoYW5rcywNCk1pcmNlYQ0K
+Allow fsinfo() to be used to query the filesystem attached to an fs_context
+once a superblock has been created or if it comes from fspick().
+
+The caller must specify AT_FSINFO_FROM_FSOPEN in the parameters and must
+supply the fd from fsopen() as dfd and must set filename to NULL.
+
+This is done with something like:
+
+	fd = fsopen("ext4", 0);
+	...
+	struct fsinfo_params params = {
+		.at_flags = AT_FSINFO_FROM_FSOPEN;
+		...
+	};
+	fsinfo(fd, NULL, &params, ...);
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/fsinfo.c                |   46 +++++++++++++++++++++++++++++++++++++++++++-
+ fs/statfs.c                |    2 +-
+ include/uapi/linux/fcntl.h |    2 ++
+ 3 files changed, 48 insertions(+), 2 deletions(-)
+
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 49b46f96dda3..c24701f994d1 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -8,6 +8,7 @@
+ #include <linux/security.h>
+ #include <linux/uaccess.h>
+ #include <linux/fsinfo.h>
++#include <linux/fs_context.h>
+ #include <uapi/linux/mount.h>
+ #include "internal.h"
+ 
+@@ -340,6 +341,42 @@ static int vfs_fsinfo_fd(unsigned int fd, struct fsinfo_kparams *params)
+ 	return ret;
+ }
+ 
++/*
++ * Allow access to an fs_context object as created by fsopen() or fspick().
++ */
++static int vfs_fsinfo_fscontext(int fd, struct fsinfo_kparams *params)
++{
++	struct fs_context *fc;
++	struct fd f = fdget(fd);
++	int ret;
++
++	if (!f.file)
++		return -EBADF;
++
++	ret = -EINVAL;
++	if (f.file->f_op == &fscontext_fops)
++		goto out_f;
++	ret = -EOPNOTSUPP;
++	if (fc->ops == &legacy_fs_context_ops)
++		goto out_f;
++
++	ret = mutex_lock_interruptible(&fc->uapi_mutex);
++	if (ret == 0) {
++		ret = -EIO;
++		if (fc->root) {
++			struct path path = { .dentry = fc->root };
++
++			ret = vfs_fsinfo(&path, params);
++		}
++
++		mutex_unlock(&fc->uapi_mutex);
++	}
++
++out_f:
++	fdput(f);
++	return ret;
++}
++
+ /*
+  * Return buffer information by requestable attribute.
+  *
+@@ -445,6 +482,9 @@ SYSCALL_DEFINE5(fsinfo,
+ 		params.request = user_params.request;
+ 		params.Nth = user_params.Nth;
+ 		params.Mth = user_params.Mth;
++
++		if ((params.at_flags & AT_FSINFO_FROM_FSOPEN) && filename)
++			return -EINVAL;
+ 	} else {
+ 		params.request = FSINFO_ATTR_STATFS;
+ 	}
+@@ -453,6 +493,8 @@ SYSCALL_DEFINE5(fsinfo,
+ 		user_buf_size = 0;
+ 		user_buffer = NULL;
+ 	}
++	if ((params.at_flags & AT_FSINFO_FROM_FSOPEN) && filename)
++		return -EINVAL;
+ 
+ 	/* Allocate an appropriately-sized buffer.  We will truncate the
+ 	 * contents when we write the contents back to userspace.
+@@ -500,7 +542,9 @@ SYSCALL_DEFINE5(fsinfo,
+ 	if (!params.buffer)
+ 		goto error_scratch;
+ 
+-	if (filename)
++	if (params.at_flags & AT_FSINFO_FROM_FSOPEN)
++		ret = vfs_fsinfo_fscontext(dfd, &params);
++	else if (filename)
+ 		ret = vfs_fsinfo_path(dfd, filename, &params);
+ 	else
+ 		ret = vfs_fsinfo_fd(dfd, &params);
+diff --git a/fs/statfs.c b/fs/statfs.c
+index eea7af6f2f22..b9b63d9f4f24 100644
+--- a/fs/statfs.c
++++ b/fs/statfs.c
+@@ -86,7 +86,7 @@ int vfs_statfs(const struct path *path, struct kstatfs *buf)
+ 	int error;
+ 
+ 	error = statfs_by_dentry(path->dentry, buf);
+-	if (!error)
++	if (!error && path->mnt)
+ 		buf->f_flags = calculate_f_flags(path->mnt);
+ 	return error;
+ }
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index 1d338357df8a..6a2402a8fa30 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -91,6 +91,8 @@
+ #define AT_STATX_FORCE_SYNC	0x2000	/* - Force the attributes to be sync'd with the server */
+ #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
+ 
++#define AT_FSINFO_FROM_FSOPEN	0x2000	/* Examine the fs_context attached to dfd by fsopen() */
++
+ #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+ 
+ 
+
