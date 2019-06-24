@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A151C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24077C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319D12089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE122089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370854;
-	bh=eqDiC7uw4aHI9ltVmJT8s7BR2BPcj1F4cyesq98jjX4=;
+	s=default; t=1561370862;
+	bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXjiqjYqi+dv3ObYzWccWCjspETprtNa3zLufXqQZ95YYVjKiqZ3iySFaVs2zNn1b
-	 2rSXtxkN0tLQpv9ZpiN0BxETpKGo9ZLfk7WeGYiHByXJSGS5opfnIoCnEJT3aJi+op
-	 2sCY6OBwHidyubDg6hs9h+Ff/ZX2+ToEBaj/DxbU=
+	b=ukhG7baVEkQZQjtB3Hr7uGSRcxlEvzQVdTmczv2y6Q+oxGRiI0DmCFrPXDIpXL0Nk
+	 yeWddol+nWCIeFfzqLnnFGZLWWD3CO/dY7R6saKHVTzAqbrIARrsj8i4sNve45u25t
+	 1Vj69YFXFBkJDEcfa6SkWpbJ1JPLwwzx8rGzNgjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfFXKHc (ORCPT
+        id S1730343AbfFXKHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39886 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbfFXKHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:24 -0400
+        id S1730309AbfFXKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:27 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC4E205C9;
-        Mon, 24 Jun 2019 10:07:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C15AF20644;
+        Mon, 24 Jun 2019 10:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370843;
-        bh=eqDiC7uw4aHI9ltVmJT8s7BR2BPcj1F4cyesq98jjX4=;
+        s=default; t=1561370846;
+        bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Be69bap9EVS+miKjuCYy85WtY8oGXlb0p7Vu8M0/0pfpZOqm/3WoQBnJaRcDxMOWT
-         pHusdRr0CFsVC96iB5Q1dYHkQUex2FfzWtRRPCB8OZrBgbUW5jFCwOceOPoSNB3IMN
-         q1y1Yrfqw6XwcSRv+tdbYrYZH/MvuyNKsBOAaQRg=
+        b=Y9K+vd/VJT6RKJJFP1bXm1USd/bRsg/AIBfqGyfqyfNEqbO+kA9rmPIRqEu9IN/na
+         yv4CQcUiP+MhHTuvMtK59C7jEKs6rOCpbfkzQHXao7l17a3St9o7hrlONyykiizXB4
+         9loolnoutBDgNqscUkFF/JYoDiDeEMzWim4nXRMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Crt Mori <cmo@melexis.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.1 021/121] iio: temperature: mlx90632 Relax the compatibility check
-Date:   Mon, 24 Jun 2019 17:55:53 +0800
-Message-Id: <20190624092321.716751808@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Mikhaylenko <exalm7659@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.1 022/121] Input: synaptics - enable SMBus on ThinkPad E480 and E580
+Date:   Mon, 24 Jun 2019 17:55:54 +0800
+Message-Id: <20190624092321.782587200@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,56 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Crt Mori <cmo@melexis.com>
+From: Alexander Mikhaylenko <exalm7659@gmail.com>
 
-commit 389fc70b60f534d679aea9a3f05146040ce20d77 upstream.
+commit 9843f3e08e2144724be7148e08d77a195dea257a upstream.
 
-Register EE_VERSION contains mixture of calibration information and DSP
-version. So far, because calibrations were definite, the driver
-compatibility depended on whole contents, but in the newer production
-process the calibration part changes. Because of that, value in EE_VERSION
-will be changed and to avoid that calibration value is same as DSP version
-the MSB in calibration part was fixed to 1.
-That means existing calibrations (medical and consumer) will now have
-hex values (bits 8 to 15) of 83 and 84 respectively. Driver compatibility
-should be based only on DSP version part of the EE_VERSION (bits 0 to 7)
-register.
+They are capable of using intertouch and it works well with
+psmouse.synaptics_intertouch=1, so add them to the list.
 
-Signed-off-by: Crt Mori <cmo@melexis.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Without it, scrolling and gestures are jumpy, three-finger pinch gesture
+doesn't work and three- or four-finger swipes sometimes get stuck.
+
+Signed-off-by: Alexander Mikhaylenko <exalm7659@gmail.com>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/temperature/mlx90632.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/input/mouse/synaptics.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/iio/temperature/mlx90632.c
-+++ b/drivers/iio/temperature/mlx90632.c
-@@ -81,6 +81,8 @@
- /* Magic constants */
- #define MLX90632_ID_MEDICAL	0x0105 /* EEPROM DSPv5 Medical device id */
- #define MLX90632_ID_CONSUMER	0x0205 /* EEPROM DSPv5 Consumer device id */
-+#define MLX90632_DSP_VERSION	5 /* DSP version */
-+#define MLX90632_DSP_MASK	GENMASK(7, 0) /* DSP version in EE_VERSION */
- #define MLX90632_RESET_CMD	0x0006 /* Reset sensor (address or global) */
- #define MLX90632_REF_12		12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
- #define MLX90632_REF_3		12LL /**< ResCtrlRef value of Channel 3 */
-@@ -667,10 +669,13 @@ static int mlx90632_probe(struct i2c_cli
- 	} else if (read == MLX90632_ID_CONSUMER) {
- 		dev_dbg(&client->dev,
- 			"Detected Consumer EEPROM calibration %x\n", read);
-+	} else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
-+		dev_dbg(&client->dev,
-+			"Detected Unknown EEPROM calibration %x\n", read);
- 	} else {
- 		dev_err(&client->dev,
--			"EEPROM version mismatch %x (expected %x or %x)\n",
--			read, MLX90632_ID_CONSUMER, MLX90632_ID_MEDICAL);
-+			"Wrong DSP version %x (expected %x)\n",
-+			read, MLX90632_DSP_VERSION);
- 		return -EPROTONOSUPPORT;
- 	}
- 
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -179,6 +179,8 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN200f", /* T450s */
++	"LEN2054", /* E480 */
++	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
+ 	NULL
 
 
