@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5D5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8374C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0201208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E07E20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370510;
-	bh=fZy+owkQ5DaOdc0dKydq3l2GUL2bV94BCin+fLxZW88=;
+	s=default; t=1561370516;
+	bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8hHfjNl/IsREDYsLPBbhxahVNTaG9lSZkifnKca0l2a3vOWXG1YVxHXsJkYHKFAY
-	 jKBxS7cz2o50m8e5WEZmRo+H2lB/YpArQG5zh1tA1Bgh0N82bzzaAmJ/B8bTN3FhJg
-	 ufUzbfNeEVOd/OWz6YQJmJFuyD+b/gi/WyMA4TVk=
+	b=bU0mxt2OnsTFngyoZ+sfB+6IbggyKuDKDQeDt93pmKdHQxrmxO2YDVrjE2oBFCogF
+	 2GtWzK0sOIfCh3X7CEdtcET/JwQpIpJQq5Nuup0UUpXvd9cnYhDL+480V0RG2HHoCA
+	 UUzKNd7GY3X0Xyk/K+joUbHFGpRK8DZXL3/bJgCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfFXKBs (ORCPT
+        id S1729048AbfFXKBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfFXJ6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:09 -0400
+        id S1728921AbfFXJ6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:04 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87FE208CA;
-        Mon, 24 Jun 2019 09:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D151208E4;
+        Mon, 24 Jun 2019 09:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370288;
-        bh=fZy+owkQ5DaOdc0dKydq3l2GUL2bV94BCin+fLxZW88=;
+        s=default; t=1561370283;
+        bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n93NU2bp71BnSDvVPa8Rlc0VEFWaLwSEWCQjFJJ9P0WEFiRQVEe+zC0ie7Cfzq5mn
-         7mmJfUghRBVy1UOuxsxf1HIJRTpUrExN3z5oXgoVQ79ZmDmMV7TcgytRZ9MQ2xHXli
-         5Fd/om31o6Vx72+XIgGJ/iAGjsIC/He70IYsro0o=
+        b=DiUhP5T86wfu7o3gi94ztNWh2jIvl6iWGo2nh1+WjaD4yRMu3/Z+AtjckfysW3J1B
+         mnBFfWxUvF89KQEAn+5XmKPmTuc3Dreqrx+K4+5q9U6wi4XM5wbX9Cqq7r8DforwXT
+         C7jya8kkura1Ic07Tq8ikva1BHZTBOjGAI1gky6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/51] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
-Date:   Mon, 24 Jun 2019 17:56:36 +0800
-Message-Id: <20190624092308.365340411@linuxfoundation.org>
+Subject: [PATCH 4.14 16/51] parisc: Fix compiler warnings in float emulation code
+Date:   Mon, 24 Jun 2019 17:56:34 +0800
+Message-Id: <20190624092308.168299518@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -63,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
+[ Upstream commit 6b98d9134e14f5ef4bcf64b27eedf484ed19a1ec ]
 
-By code inspection, the freeze_work is never canceled.
+Avoid such compiler warnings:
+arch/parisc/math-emu/cnv_float.h:71:27: warning: ‘<<’ in boolean context, did you mean ‘<’ ? [-Wint-in-bool-context]
+     ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
+arch/parisc/math-emu/fcnvxf.c:257:6: note: in expansion of macro ‘Dint_isinexact_to_sgl’
+  if (Dint_isinexact_to_sgl(srcp1,srcp2)) {
 
-Fix by adding a cancel_work_sync in the shutdown path to insure it is no
-longer running.
-
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/chip.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/math-emu/cnv_float.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index db33ad985a12..69a79fdfa23e 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -9823,6 +9823,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
+diff --git a/arch/parisc/math-emu/cnv_float.h b/arch/parisc/math-emu/cnv_float.h
+index 933423fa5144..b0db61188a61 100644
+--- a/arch/parisc/math-emu/cnv_float.h
++++ b/arch/parisc/math-emu/cnv_float.h
+@@ -60,19 +60,19 @@
+     ((exponent < (SGL_P - 1)) ?				\
+      (Sall(sgl_value) << (SGL_EXP_LENGTH + 1 + exponent)) : FALSE)
  
- 	/* disable the port */
- 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
-+	cancel_work_sync(&ppd->freeze_work);
- }
+-#define Int_isinexact_to_sgl(int_value)	(int_value << 33 - SGL_EXP_LENGTH)
++#define Int_isinexact_to_sgl(int_value)	((int_value << 33 - SGL_EXP_LENGTH) != 0)
  
- static inline int init_cpu_counters(struct hfi1_devdata *dd)
+ #define Sgl_roundnearest_from_int(int_value,sgl_value)			\
+     if (int_value & 1<<(SGL_EXP_LENGTH - 2))   /* round bit */		\
+-    	if ((int_value << 34 - SGL_EXP_LENGTH) || Slow(sgl_value))	\
++	if (((int_value << 34 - SGL_EXP_LENGTH) != 0) || Slow(sgl_value)) \
+ 		Sall(sgl_value)++
+ 
+ #define Dint_isinexact_to_sgl(dint_valueA,dint_valueB)		\
+-    ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
++    (((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) != 0) || Dintp2(dint_valueB))
+ 
+ #define Sgl_roundnearest_from_dint(dint_valueA,dint_valueB,sgl_value)	\
+     if (Dintp1(dint_valueA) & 1<<(SGL_EXP_LENGTH - 2)) 			\
+-    	if ((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) ||		\
++	if (((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) != 0) ||	\
+     	Dintp2(dint_valueB) || Slow(sgl_value)) Sall(sgl_value)++
+ 
+ #define Dint_isinexact_to_dbl(dint_value) 	\
 -- 
 2.20.1
 
