@@ -2,115 +2,157 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF22C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8712020673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEWHPIM+"
+	by mail.kernel.org (Postfix) with ESMTP id DE4502054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfFXCCr (ORCPT
+        id S1726876AbfFXCFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:02:47 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36795 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfFXCCq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:02:46 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i21so10943540ljj.3;
-        Sun, 23 Jun 2019 19:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OpRgBHIbpOuAIRmC5hAbsG+gtGfST0EqR1Mz8i1XFZM=;
-        b=UEWHPIM+R5z0E3Vplag65jH9IWmRu9wJa1nac4dklpzcPXmjG2fcEVQAAwTskqlKYy
-         b8HncNdkOjk/MrtZmo+fb51cMIKolRAWYBlBJ07PFWFE4TqjErGBCImCjbv7W+hjc+qL
-         utZHi6XMY00Xmd4CGOwEBzOMP2mBVRNFfYQLcBSlkb5f7R8VQspzeub2Ux0NQfgRRc1L
-         4i/aJwtlv5ByK9HFttuMmj6md7UKZJKvVB4QVUZ2CcV/TFfCWx5smKPwRTIEPa7vF7w1
-         1M1jukjBUwKS7VGH159PX22M2FMaStEUUk6B0VfyxGCT/aHN0QHQ75yjdZXkbB+LmN2O
-         0NXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OpRgBHIbpOuAIRmC5hAbsG+gtGfST0EqR1Mz8i1XFZM=;
-        b=F6LP05d3d8TXxLwqR6nScJ2K8h7cO8zU4bfp5FXHMMcAC/AXLIGbdwo1qOQ26JnWX7
-         HQGCq39SNR8/yFfDFKkfiPu4bP6wpzqQHEzqTx//JD8+QoCzpfLF6JiH/6QzSMRnrTTI
-         TuuoLpxMo4+yOJ4JrP4W1iji3lFUGwtlfP+h2iHzNI/lsSGzImDFixbwZHfNUqDu4rjD
-         YsLraJmiIW/bwEZ+e05naOhKG5ii+4KuzrcfDZSyiPi1hchyaSnuQEfBO5QXQWCVBLZV
-         BfEHHNrVbrweSXktbS6lf/jGUpAp2KDrRzwNdruN85d5j/OXQl915RQYFkiKTV6PhQ9Z
-         Z7BQ==
-X-Gm-Message-State: APjAAAUnQ8Ki79/gCjJjy+Nb8fFTiwW9D56n5KmiEKrkAl7ZdBw4Y8n5
-        UJrnMo8olvFrOy9pBZX4AnGkg41p
-X-Google-Smtp-Source: APXvYqwOIUx48Ioz//gnowWELX2etqP+2SsH3RYNkIRjAlKOq3WdHRPiGHQeDullIbpvvxD5qqopEA==
-X-Received: by 2002:a2e:92c6:: with SMTP id k6mr4167363ljh.148.1561336327043;
-        Sun, 23 Jun 2019 17:32:07 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id y5sm1495146ljj.5.2019.06.23.17.32.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 17:32:06 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/10] ARM: dts: tegra30: Add External Memory Controller node
-Date:   Mon, 24 Jun 2019 03:31:32 +0300
-Message-Id: <20190624003132.29473-11-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 22:05:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38790 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfFXCFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 22:05:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2019 17:59:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,410,1557212400"; 
+   d="scan'208";a="163444402"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga003.jf.intel.com with ESMTP; 23 Jun 2019 17:59:28 -0700
+Subject: Re: [selftests/bpf] 69d96519db:
+ kernel_selftests.bpf.test_socket_cookie.fail
+To:     Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        bpf <bpf@vger.kernel.org>, lkp@01.org
+References: <20190621084040.GU7221@shao2-debian>
+ <20190621161039.GF1383@mini-arch>
+ <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
+ <20190621222745.GH1383@mini-arch>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
+Date:   Mon, 24 Jun 2019 08:59:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190621222745.GH1383@mini-arch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add External Memory Controller node to the device-tree.
+On 6/22/19 6:27 AM, Stanislav Fomichev wrote:
+> On 06/21, Andrii Nakryiko wrote:
+>> )
+>>
+>> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+>>> On 06/21, kernel test robot wrote:
+>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>
+>>>> commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
+>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>>
+>>>> in testcase: kernel_selftests
+>>>> with following parameters:
+>>>>
+>>>>        group: kselftests-00
+>>>>
+>>>> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+>>>> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+>>>>
+>>>>
+>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
+>>>>
+>>>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>>>>
+>>>>
+>>>> If you fix the issue, kindly add following tag
+>>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>>>>
+>>>> # selftests: bpf: test_socket_cookie
+>>>> # libbpf: failed to create map (name: 'socket_cookies'): Invalid
+>>>> # argument
+>>> Another case of old clang trying to create a map that depends on BTF?
+>>> Should we maybe switch those BTF checks in the kernel to return
+>>> EOPNOTSUPP to make it easy to diagnose?
+>> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
+>>
+>> libbpf: DATASEC '.maps' not found.
+>>
+>> So this must be something else. I just confirmed with clang version
+>> 7.0.20180201 that for ./test_socket_cookie that's the first line
+>> that's emitted on failure.
+> Thanks for checking, I also took a look at the attached kernel_selftests.xz,
+> here is what it has:
+> 2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
+> 2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
+> ...
+> # BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
+> # BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
+> ...
+> # Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
+> # failed to load test BTF: -2
+> # Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
+> # failed to load test BTF: -2
+> ...
+>
+> And so on. So there is clearly an old clang that doesn't emit any
+> BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
+> linux-next, that's why it doesn't complain about missing/corrupt BTF.
+>
+> We need to convince lkp people to upgrade clang, otherwise, I suppose,
+> we'll get more of these reportings after your recent df0b77925982 :-(
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra30.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Thanks for the clarification, we'll upgrade clang asap.
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..92c4aeafab29 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -732,6 +732,17 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	memory-controller@7000f400 {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		nvidia,memory-controller = <&mc>;
-+	};
-+
- 	fuse@7000f800 {
- 		compatible = "nvidia,tegra30-efuse";
- 		reg = <0x7000f800 0x400>;
--- 
-2.22.0
+Best Regards,
+Rong Chen
 
+
+>
+>>>> # libbpf: failed to load object './socket_cookie_prog.o'
+>>>> # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
+>>>> # ./socket_cookie_prog.o
+>>>> # FAILED
+>>>> not ok 15 selftests: bpf: test_socket_cookie
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> To reproduce:
+>>>>
+>>>>          # build kernel
+>>>>        cd linux
+>>>>        cp config-5.2.0-rc2-00598-g69d9651 .config
+>>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
+>>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
+>>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
+>>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
+>>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
+>>>>
+>>>>
+>>>>          git clone https://github.com/intel/lkp-tests.git
+>>>>          cd lkp-tests
+>>>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+>>>>
+>>>>
+>>>>
+>>>> Thanks,
+>>>> Rong Chen
+>>>>
+>> <mega snip>
