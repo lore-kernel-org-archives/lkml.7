@@ -2,75 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC83C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348E2C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1082133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F8C204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h9pJqog2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="c/cNt6ab"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6E+fHAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfFXMIK (ORCPT
+        id S1729917AbfFXMIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:08:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34036 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfFXMIJ (ORCPT
+        Mon, 24 Jun 2019 08:08:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40138 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfFXMIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:08:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D7F77609F3; Mon, 24 Jun 2019 12:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561378087;
-        bh=9ujNcqd3Jlk3Z/TiNKetSI2m/c0UKKDThlftDiCds6c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h9pJqog2KLZX2/CZvlRhbXHEzNCMAQzo5TGj+iu443rfjrQ+4njhrLR9DW7ewOPn3
-         DBUzKIXYZWR4KGP6jytD6O6kyVWHNhTgfCztOyv2QVOYo5v1n0bUPWCWtxPr9xVyFS
-         arKJsBlfFCr4f+mRJjy78JBCZiiGHlOSf+s5Pgv4=
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E619660741;
-        Mon, 24 Jun 2019 12:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561378086;
-        bh=9ujNcqd3Jlk3Z/TiNKetSI2m/c0UKKDThlftDiCds6c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c/cNt6ab0JnsACEdMUTWK8p12ZkhjGvGmOB4Z0EKau0tn0Y9V+YljIe2zNvb9ELjB
-         k8cL6vc0otLqpc3sFowUcEv+qu1D1Qw+4MRHw7oMNl3QESYStoAdTHXebgyJGpfoBd
-         YLUX/tzSnLy4okEaUFilCKJNyX9y1oRkC/TpdIF8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E619660741
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1981742.H2rzviYcjI@debian64>
- <96fd8992-e333-6b3b-15c0-2845984120aa@codeaurora.org>
- <2600627.FlAEz51UtF@debian64>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <e2a447f8-6024-0369-f698-2027b6edcf9e@codeaurora.org>
-Date:   Mon, 24 Jun 2019 17:38:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 24 Jun 2019 08:08:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so13618551wre.7;
+        Mon, 24 Jun 2019 05:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5+aG5bq4j8Ni9WJIPjG3wZ6NCgkPpGLe+UT0IyDMSL8=;
+        b=M6E+fHAO/OiuGltg7eEHZPSq39J8E/PaoVFAlIKxs45osAuntq/gRSm5kymGZNCKjf
+         0npcBSzhSmXFn/pm+aJh/8Mrl2PNCi+O0nighTE3R6Jx5pmGgpZe/xlQdHegfeVJwU9f
+         LxnvuVaac71JQ1h5S8dkbrgOcbzPQeRKz+62HGoegBsEL/DoxuGWZUCpAWrPvCLgpCms
+         ExRvVMb/flNXOYKHN0t5U5VSezYhkQ/NdwO4j8R5HOgBG+ZWzF56I/ZQy+v4FPM5YB3L
+         8pWT9W11xmozp9lijIY8nP0i28GmsLp5lnjGCgBifpTdNE/a8ytcy9Boa4xgaWmk9Gb3
+         g8SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5+aG5bq4j8Ni9WJIPjG3wZ6NCgkPpGLe+UT0IyDMSL8=;
+        b=KomqYkiWU97akYgnqx1XK5H36E9u2uBkLLNLaWG5AEI/qO0WH2hkYp2/eEP4+2vopo
+         PjROTWF2lfbVV6PexU722SMA6SpSH2ZPsleDh5bAEZAFZQlGgnqwnQ+3foZbdqwrnbvd
+         9c453lCtUbGFLDIdy2tVN1fbeIik2DFb8ZomEEdLMKN35QAHuf/9Dyqxw6GUjWBChL4C
+         rbEoFUr2ENInORiFMsEu3QuI6juGwisr9Pncs9rolPeQqZuR/hjejuzCI+F6eBUIb3t1
+         H9k7X7P3ZKWi7JdRtOxa//ATeMnFPpDDUcL+IjBzgtprqL8/pODkaBuvGK/LSDO3C4ax
+         JR8w==
+X-Gm-Message-State: APjAAAVpWOjvCNUGk2k1CjChcW7UO7qsamcfe7iKtke3lBDJWu54o3Rb
+        fh4A9Cb+yT03wLj6sCk52nE=
+X-Google-Smtp-Source: APXvYqzPp23jbUf1aCFuoTjxkcr/57v3+kKSkmgp0cCJV8ep/XXuci3uBEj4W49UP8ozk7T/YuSUGg==
+X-Received: by 2002:a5d:554b:: with SMTP id g11mr631289wrw.10.1561378132293;
+        Mon, 24 Jun 2019 05:08:52 -0700 (PDT)
+Received: from [192.168.8.147] (59.249.23.93.rev.sfr.net. [93.23.249.59])
+        by smtp.gmail.com with ESMTPSA id z76sm14489260wmc.16.2019.06.24.05.08.49
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 05:08:51 -0700 (PDT)
+Subject: Re: WARNING: ODEBUG bug in netdev_freemem (2)
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        amritha.nambiar@intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Miller <davem@davemloft.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ido Schimmel <idosch@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tyhicks@canonical.com, wanghai26@huawei.com, yuehaibing@huawei.com
+References: <000000000000d6a8ba058c0df076@google.com>
+ <alpine.DEB.2.21.1906241130100.32342@nanos.tec.linutronix.de>
+ <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
+Date:   Mon, 24 Jun 2019 14:08:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <2600627.FlAEz51UtF@debian64>
+In-Reply-To: <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,173 +91,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
 
-On 6/20/2019 9:02 PM, Christian Lamparter wrote:
-> Hello Sricharan,
-> 
-> On Wednesday, June 19, 2019 4:42:11 PM CEST Sricharan R wrote:
->> On 6/15/2019 2:11 AM, Christian Lamparter wrote:
->>> On Wednesday, June 12, 2019 11:48:48 AM CEST Sricharan R wrote:
->>>> Hi Christian,
->>>>
->>>> On 6/10/2019 5:45 PM, Christian Lamparter wrote:
->>>>> On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
->>>>>> Hi Christian,
->>>>>>
->>>>>> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
->>>>>>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
->>>>>>>>
->>>>>>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
->>>>>>>> CP01 evaluation board.
->>>>>>>>
->>>>>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->>>>>>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>>>>>>>
->>>>>>>> +       clocks {
->>>>>>>> +               sleep_clk: sleep_clk {
->>>>>>>> +                       compatible = "fixed-clock";
->>>>>>>> +                       clock-frequency = <32000>;
->>>>>>>> +                       #clock-cells = <0>;
->>>>>>>> +               };
->>>>>>>> +
->>>>>>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
->>>>>>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
->>>>>>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
->>>>>>> declares them at 32000 Hz. Since you probably have access to the BOM and
->>>>>>> datasheets. Can you please confirm what's the real clock frequency for
->>>>>>> the IPQ6018.
->>>>>>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
->>>>>>>
->>>>>>
->>>>>> What exactly is the issue that you faced ?
->>>>>> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
->>>>>
->>>>> We need just a confirmation.
->>>>>
->>>>> Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
->>>>>
->>>>> |		sleep_clk: sleep_clk {
->>>>> |			compatible = "fixed-clock";
->>>>> |			clock-frequency = <32768>;
->>>>> |			#clock-cells = <0>;
->>>>> |		};
->>>>>
->>>>> <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
->>>>>
->>>>> Which makes sense, because all previous Qualcomm Atheros MIPS and the
->>>>> future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
->>>>>
->>>>> For example: The AR9344 derives the clock from the 25MHz/40MHz external
->>>>> oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
->>>>> Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
->>>>> depending whenever the external reference crystal has 40MHz or 25MHz.
->>>>> (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
->>>>> in "10.19.11 Derived RTC Clock". 
->>>>>
->>>>> For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
->>>>> <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
->>>>> "I was only able to verify for IPQ8072 that it had a 32.768 KHz
->>>>> sleep clock." 
->>>>>
->>>>> So this is pretty much "why there is an issue", it's confusing.
->>>>> Is possible can you please look if there are (fixed) divisors values
->>>>> listed in the documentation or the registers and bits that the values
->>>>> are stored in? Because then we could just calculate it. 
->>>>>
->>>>
->>>> Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
->>>> from an external 38.4MHZ crystal, it is 32.768 KHZ.
->>> That's really valuable information to have. Thank you!
->>>
->>>> Somehow the clk freq plan etc seems to mention them only as .032 MHZ and misses
->>>> out. That means i will correct the patch for 32768 and probably the
->>>> ipq8074.dtsi as well
->>>
->>> Ok, there's one more issue that Paul found (at least with the IPQ4019),
->>> https://patchwork.ozlabs.org/patch/1099482
->>>
->>> it seems that the "sleep_clk" node in the qcom-ipq4019.dtsi is not used by
->>> the gcc-ipq4019.c clk driver. this causes both wifi rtc_clks and the usb sleep
->>> clks to dangle in the /sys/kernel/debug/clk/clk_summary (from a RT-AC58U)
->>>
->>>    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
->>> ----------------------------------------------------------------------------------------
->>>  xo                                       9            9    48000000          0 0
->>>  [...]
->>>  sleep_clk                                1            1       32768          0 0  
->>>  gcc_wcss5g_rtc_clk                       1            1           0          0 0  
->>>  gcc_wcss2g_rtc_clk                       1            1           0          0 0  
->>>  gcc_usb3_sleep_clk                       1            1           0          0 0  
->>>  gcc_usb2_sleep_clk                       1            1           0          0 0  
->>>
->>> with his patch the /sys/kernel/debug/clk/clk_summary looks "better" 
->>>
->>> (something like this:)
->>>
->>>    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
->>> ----------------------------------------------------------------------------------------
->>>  xo                                       9            9    48000000          0 0
->>>  [...] 
->>>  gcc_sleep_clk_src                        5            5       32000          0 0  
->>>     gcc_wcss5g_rtc_clk                    1            1       32000          0 0  
->>>     gcc_wcss2g_rtc_clk                    1            1       32000          0 0  
->>>     gcc_usb3_sleep_clk                    1            1       32000          0 0  
->>>     gcc_usb2_sleep_clk                    1            1       32000          0 0  
->>>
->>> but judging from your comment "SLEEP_CLK is derived from an
->>> external 38.4MHZ crystal" the gcc_sleep_clk_src / sleep_clk
->>> should have xo as the parent. so the ideal output should be:
->>>
->>>    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
->>> ----------------------------------------------------------------------------------------
->>>  xo                                      10           10    48000000          0 0
->>>  [...] 
->>>     gcc_sleep_clk                         5            5       32768          0 0  
->>>        gcc_wcss5g_rtc_clk                 1            1       32768          0 0  
->>>        gcc_wcss2g_rtc_clk                 1            1       32768          0 0  
->>>        gcc_usb3_sleep_clk                 1            1       32768          0 0  
->>>        gcc_usb2_sleep_clk                 1            1       32768          0 0  
->>>
->>> or am I missing/skipping over something important? 
->>>
+
+On 6/24/19 3:54 AM, Dmitry Vyukov wrote:
+> On Mon, Jun 24, 2019 at 11:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >>
->> Sorry for the delayed response. So what i said above (32768 clk) looks
->> like true only for ipq8074. For ipq4019, looks like 32000.
+>> On Mon, 24 Jun 2019, syzbot wrote:
 >>
->> That means, there is still some thing unclear. I am checking for precise
->> information from HW team for ipq4019/8074/6018. Please hang on, will
->> update you asap.
+>>> Hello,
+>>>
+>>> syzbot found the following crash on:
+>>>
+>>> HEAD commit:    fd6b99fa Merge branch 'akpm' (patches from Andrew)
+>>> git tree:       upstream
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=144de256a00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=c4521ac872a4ccc3afec
+>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>>
+>>> Unfortunately, I don't have any reproducer for this crash yet.
+>>>
+>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>> Reported-by: syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com
+>>>
+>>> device hsr_slave_0 left promiscuous mode
+>>> team0 (unregistering): Port device team_slave_1 removed
+>>> team0 (unregistering): Port device team_slave_0 removed
+>>> bond0 (unregistering): Releasing backup interface bond_slave_1
+>>> bond0 (unregistering): Releasing backup interface bond_slave_0
+>>> bond0 (unregistering): Released all slaves
+>>> ------------[ cut here ]------------
+>>> ODEBUG: free active (active state 0) object type: timer_list hint:
+>>> delayed_work_timer_fn+0x0/0x90 arch/x86/include/asm/paravirt.h:767
+>>
+>> One of the cleaned up devices has left an active timer which belongs to a
+>> delayed work. That's all I can decode out of that splat. :(
 > 
-> Thank you for looking this up! I'll definitely stick around for the final
-> verdict.
+> Hi Thomas,
+> 
+> If ODEBUG would memorize full stack traces for object allocation
+> (using lib/stackdepot.c), it would make this splat actionable, right?
+> I've fixed https://bugzilla.kernel.org/show_bug.cgi?id=203969 for this.
 > 
 
-So the HW guys responded and as per that, ipq4019/ipq6018 it is 32000.
-It is derived from a 48M wifi refclk
+Not sure this would help in this case as some netdev are allocated through a generic helper.
 
-48M wifi ref clk -> [/2 divider] -> [/750 divider] -> sleep_clk (32000)
+The driver specific portion might not show up in the stack trace.
 
-In case of ipq8074, it is derived from the pmic and 32768.
+It would be nice here to get the work queue function pointer,
+so that it gives us a clue which driver needs a fix.
 
 
-> Also, I think the "xo" clk of your IPQ6018 dts should get the
-> "always-on;" property (any maybe sleep_clk as well?).
-> 
-> Paul discovered that the QSDK had this extra commit
-> <https://lore.kernel.org/patchwork/patch/1089385/>
-> (Maybe the changeid can help you look it up internally)
-> 
-> For IPQ4019, this enables the high resolution with a 1ns resolution
-> instead of 10ms.
-> 
 
-ho ok, this patch is needed.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
