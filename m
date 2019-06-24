@@ -2,93 +2,79 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4A9C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2A8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94044208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9366D208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfFXOgl (ORCPT
+        id S1729108AbfFXOgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:36:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19068 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727170AbfFXOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:36:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0CD4920D55B641FA4EB3;
-        Mon, 24 Jun 2019 22:36:37 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 24 Jun 2019 22:36:27 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <xuwei5@huawei.com>
-CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <arnd@arndb.de>, <olof@lixom.net>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 0/6] Fixes for HiSilicon LPC driver and logical PIO code
-Date:   Mon, 24 Jun 2019 22:35:02 +0800
-Message-ID: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+        Mon, 24 Jun 2019 10:36:51 -0400
+Received: from sleepmap.de ([85.10.206.218]:43998 "EHLO mail.sleepmap.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728985AbfFXOgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:36:49 -0400
+Date:   Mon, 24 Jun 2019 16:36:46 +0200
+From:   David Runge <dave@sleepmap.de>
+To:     John Kacur <jkacur@redhat.com>
+Cc:     Linux RT Users <linux-rt-users@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Clark Williams <williams@redhat.com>
+Subject: Re: [ANNOUNCE] New release rt-tests-1.4
+Message-ID: <20190624143646.GX20165@dvzrv.localdomain>
+References: <alpine.LFD.2.21.1906201444220.6702@planxty>
+ <20190621065807.GJ20165@dvzrv.localdomain>
+ <alpine.LFD.2.21.1906211407410.3661@planxty>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="j13PAD5Nz8dz2ik7"
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1906211407410.3661@planxty>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported in [1], the hisi-lpc driver has certain issues in handling
-logical PIO regions, specifically unregistering regions.
 
-This series add a method to unregister a logical PIO region, and fixes up
-the driver to use them.
+--j13PAD5Nz8dz2ik7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-RCU usage in logical PIO code looks to always have been broken, so that
-is fixed also. This is not a major fix as the list which RCU protects
-would be rarely modified.
+On 2019-06-21 14:08:01 (+0200), John Kacur wrote:
+> I just pushed the tags, let me know if you can see them now.
+Whoops, forgot to answer!
 
-There is another patch to simplify logical PIO registration, made possible
-by the fixes.
+Yes, already pushed the new package. Thank you! :)
 
-At this point, there are still separate ongoing discussions about how to
-stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
+Best,
+David
 
-Hopefully this series can go through the arm soc tree and the maintainers
-have no issue with that. I'm talking specifically about the logical PIO
-code, which went through PCI tree on only previous upstreaming.
+--=20
+https://sleepmap.de
 
-Cc. linux-pci@vger.kernel.org
+--j13PAD5Nz8dz2ik7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
-[2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+-----BEGIN PGP SIGNATURE-----
 
-Changes since v1:
-- Add more reasoning in RCU fix patch
-- Create separate patch to change LOGIC_PIO_CPU_MMIO registration to
-  accomodate unregistration
+iQIzBAABCAAdFiEEkb2IFf4AQPp/9daHVMKPT/WhqUkFAl0Q3/4ACgkQVMKPT/Wh
+qUlR4xAAlrPVvdheEv5HRnV2BsVSdbAmSpdSN+lMadsgYQFSkoquFlIeKiFDDPry
+c00G1+F47mPpf4SzhI9zwN98ibsHBzNnLQ/Aj4MmGhwjzQ/t6Q3jMLDFlYLOKJjD
+YvuYJy5xHcQNNPBmtuCsiUiC5ZUUueMHDKERi6jUK7C0Ji0faitiomRuPPkppZUI
+4AMPESl48AGQYZ3bexxSgaxsM+YmO9s38Vv++cU2TT+qTuXsXd3B8ShTG6tiY7Nj
+/W6YEs4lwYpEYXy6lEleLat913fTn8qcD+AqPpnLpfTB1RBxTzM7m+nK2MhX5sCs
+iMb66xuWdiAtwgFl6L5AkpB4z008fdpWS+WAkp1d7aiVROwxt2Pi/MvyXQY11g/m
+k/qJvxHwluIt5duIda0iP4eGiodbgaLYJ9m3zjHrCvqufJ/eiRp+tgzH/VpIpdV6
+JYDmv+ThZnTrE2lVinOQwoZjsU8jcKDTTWn031Ks//70czlgq7FkJOzoHt3GG2RC
+2PwzbHp5iSbjIwXCQdpOTOXhjKuqSv3HtNCf5mUE/js3+ge8a1EWWl89RRVUguRh
+LalwdHr2UQhrr2oIu6L2ln2m0P0Jr3LbDBa0voy6JbA7lGPTdgEWomQ7ibJXsTYB
+KYiHV31VoMK3tRk1pwjQ6y7J1Oz4A7jdjgD0UmSn0mwrIkOuido=
+=MXJN
+-----END PGP SIGNATURE-----
 
-John Garry (6):
-  lib: logic_pio: Fix RCU usage
-  lib: logic_pio: Avoid possible overlap for unregistering regions
-  lib: logic_pio: Add logic_pio_unregister_range()
-  bus: hisi_lpc: Unregister logical PIO range to avoid potential
-    use-after-free
-  bus: hisi_lpc: Add .remove method to avoid driver unbind crash
-  lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
-    registration
-
- drivers/bus/hisi_lpc.c    | 43 +++++++++++++++++---
- include/linux/logic_pio.h |  1 +
- lib/logic_pio.c           | 86 +++++++++++++++++++++++++++------------
- 3 files changed, 99 insertions(+), 31 deletions(-)
-
--- 
-2.17.1
-
+--j13PAD5Nz8dz2ik7--
