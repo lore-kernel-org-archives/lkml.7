@@ -2,133 +2,147 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88E9C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2ECC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A018E2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF9A208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Y2tiIQZw"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="L3+4oA+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731329AbfFXNtZ (ORCPT
+        id S1731337AbfFXNuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:49:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37402 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730435AbfFXNtY (ORCPT
+        Mon, 24 Jun 2019 09:50:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53363 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfFXNuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:49:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v14so14009841wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:49:24 -0700 (PDT)
+        Mon, 24 Jun 2019 09:50:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x15so12870980wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=rsdGK2qnX79rTvs0ljNXRm1xbFRSbM8T7vFuJMDh/e4=;
-        b=Y2tiIQZwBrjoPLeq3Rv0KfJCpIb+su9vtzZU4xXl4jeBRjs2aSiX0vpl3DmBFrc3XA
-         AAN3mK5Ju8rd5DhZr3DDBqGcchmQlUXxeGY3ypb5EZKknZkeUUjLWVqcd5Z1RM6FtIcy
-         8fyFEJlJW2dw+FbWJgoYfPl5XGmJxeXo1eUjRLeQbu5zidjUgCKL2flBaZ3rr26LNBhE
-         nS8jzzI1f5+kwATJP9w96MmBHywPO8qfWk9CZ8RE+xHUctiLnZ/n+KbxQZx1Sl8LRVFN
-         Ou39dJirN1zI71ePA2LcSxCxo6jHY0j++wiDDkOQaunwXkelmFvCY04HdJTNAvcEuJVr
-         8j/Q==
+        bh=D4DjKhaJXWAcFaHULT8Zn9bt97FGVDTogkGCO3mVhww=;
+        b=L3+4oA+lklMFId3a+K4s1lbQz8lfC1jKbU/8fqFCiBIs/PIwKb+e9ikmlolc9VPVIa
+         FE59+E+se4ULjwA7pZMEWJRcWW266Y9/THR37nNy3C8Z9ShArChMLN6FJtGfUjXZYJUY
+         cMOlzCLXEgA1QFRo9w+NvQS71+dn71fjAhvY6AkD+lFwy43PchpCfNocxDGInrBpS12y
+         exPpeucAKilYlsBFaDjsQBBsCwJ6k8xHnh8J5Plp2LhASJ2K1AtKfuNZnutf9B+F4yof
+         FR/Uc97Ph0wxyM6imYUSD28AnrDt58buFZpT3RuZIutFUN70+y73l5U9ZHpfrVB/Y9Pe
+         8XFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rsdGK2qnX79rTvs0ljNXRm1xbFRSbM8T7vFuJMDh/e4=;
-        b=D8fiMg6Cj6bbTJ1gX/WNpj4bicJUclg40ekjoT3gFYxPVvXAUnrEinoZ/vftDWHNe4
-         o24/n6hcrRZyeT2Ory7n1xDPcgIxgUH4DaCACg1c14JOkUdfF9g+XrAAV0LwqJpaceNQ
-         QlhLpurd1Zu2QpFUr98X/462mmodg0jl8CSjggqse81tW7PyYVEJfyUKE6khKOnLKlAT
-         ju1VFcRJrAVuYbaBegFhMShFxq9cT+hBd7TJ3vxP9FVHnf7QUfSVUNnsQG2MRsX0mLMH
-         2Vcm3HlahXlLxBK4VKxG6FPvjw+Ebn9Yhsw92p69OZb3+fe4ZFC9tsIMsfUNfkizo/SY
-         Kyvg==
-X-Gm-Message-State: APjAAAV5DzC0Tdc4nJ2XyE3gnZdwgSJsC+fISLUl2JUHNc0AMJ0056rV
-        TAsqBftu68XfNC1W0fNaLPQGxw==
-X-Google-Smtp-Source: APXvYqxuquNMvAAfZG4V+M7gpFHzpGXJ5ZSbCV/2x8yFdbcJooCiejxG1/KTzrKxWTetVLKjvMmGgg==
-X-Received: by 2002:a5d:67cd:: with SMTP id n13mr98450455wrw.138.1561384163510;
-        Mon, 24 Jun 2019 06:49:23 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id s8sm13760952wra.55.2019.06.24.06.49.22
+        bh=D4DjKhaJXWAcFaHULT8Zn9bt97FGVDTogkGCO3mVhww=;
+        b=m5ZU0hOGtNblVQ9cisQwEXeSxjDbGyXwEWFx2ylR0CKxdleB+4rNExti4anzA2wC48
+         ZQ8mv28nMTuaEJvsPcCMTo6iYusd+gtJTCCwcG9UBI5Gs8c9xYyAPM9vnKuoNfZAVfNZ
+         8uiMZ80kpcs3K7bLmBkdPmkLP/mPY/B12cfKQ+scTphIYU5PCAW58j88xU7bE8cn7oKQ
+         1HX9ygSE8e30fhmSemXYH/Q+yxwypBwmPwI/VaB8CX3kuoJVe3Juh5/If0rHJ63dCAw8
+         CgCPh/Ow6ssHIjR5fBgZX0GmLrYEuP5VuyakqnVsHJdRZcj57WLmuX/0qk8xSHuVHHrB
+         NUDQ==
+X-Gm-Message-State: APjAAAWATgA35a22kA7VrNZKj7SahDIVpLisGTXhXeVbwIyxGQ/T10pX
+        v9eeuIwjCY8zZlJXZ95qKZqqPA==
+X-Google-Smtp-Source: APXvYqyMEn90cp6R9MWMj/HJmzulUNmcokEq3zfm9OmaA0vTRaK1wb0kEC559DwYAMjQKSXHIW3mug==
+X-Received: by 2002:a1c:5f09:: with SMTP id t9mr17082582wmb.112.1561384208642;
+        Mon, 24 Jun 2019 06:50:08 -0700 (PDT)
+Received: from localhost (ip-89-176-222-26.net.upcbroadband.cz. [89.176.222.26])
+        by smtp.gmail.com with ESMTPSA id v4sm9256542wmg.22.2019.06.24.06.50.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 06:49:22 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 15:49:22 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] CLONE_PIDFD: do not use the value pointed by
- parent_tidptr
-Message-ID: <20190624134921.mvgabuz3mgmpuu3n@brauner.io>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
- <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
- <20190621170613.GA26182@altlinux.org>
- <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
- <20190623112717.GA20697@altlinux.org>
- <20190624094940.24qrteybbcp25wq7@brauner.io>
- <20190624115942.g6vyis3zy4ptt3fc@brauner.io>
- <20190624134531.GB6010@altlinux.org>
+        Mon, 24 Jun 2019 06:50:08 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 15:50:07 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Yuehaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        sdf@google.com, jianbol@mellanox.com, jiri@mellanox.com,
+        mirq-linux@rere.qmqm.pl, willemb@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] flow_dissector: Fix vlan header offset in
+ __skb_flow_dissect
+Message-ID: <20190624135007.GA17673@nanopsycho>
+References: <20190619160132.38416-1-yuehaibing@huawei.com>
+ <20190619183938.GA19111@mini-arch>
+ <00a5d09f-a23e-661f-60c0-75fba6227451@huawei.com>
+ <20190621003317.GE1383@mini-arch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624134531.GB6010@altlinux.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190621003317.GE1383@mini-arch>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:45:31PM +0300, Dmitry V. Levin wrote:
-> On Mon, Jun 24, 2019 at 01:59:43PM +0200, Christian Brauner wrote:
-> > On Mon, Jun 24, 2019 at 11:49:40AM +0200, Christian Brauner wrote:
-> > > On Sun, Jun 23, 2019 at 02:27:17PM +0300, Dmitry V. Levin wrote:
-> > > > Userspace needs a cheap and reliable way to tell whether CLONE_PIDFD
-> > > > is supported by the kernel or not.
-> > > > 
-> > > > While older kernels without CLONE_PIDFD support just leave unchanged
-> > > > the value pointed by parent_tidptr, current implementation fails with
-> > > > EINVAL if that value is non-zero.
-> > > > 
-> > > > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
-> > > > pointed by parent_tidptr also remains unchanged, which effectively
-> > > > means that userspace must either check CLONE_PIDFD support beforehand
-> > > > or ensure that fd 0 is not closed when invoking CLONE_PIDFD.
-> > > > 
-> > > > The check for pidfd == 0 was introduced during v5.2 release cycle
-> > > > by commit b3e583825266 ("clone: add CLONE_PIDFD") to ensure that
-> > > > CLONE_PIDFD could be potentially extended by passing in flags through
-> > > > the return argument.
-> > > > 
-> > > > However, that extension would look horrendous, and with introduction of
-> > > > clone3 syscall in v5.3 there is no need to extend legacy clone syscall
-> > > > this way.
-> > > > 
-> > > > So remove the pidfd == 0 check.  Userspace that needs to be portable
-> > > > to kernels without CLONE_PIDFD support is advised to initialize pidfd
-> > > > with -1 and check the pidfd value returned by CLONE_PIDFD.
-> > > > 
-> > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> > > 
-> > > Reviewed-by: Christian Brauner <christian@brauner.io>
-> > > 
-> > > Thank you Dmitry, queueing this up for rc7.
-> > 
-> > This is now sitting in
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=43754d05f235dd1b6c7f8ab9f42007770d721f10
-> > 
-> > I reformulated the commit message a bit and gave it a Fixes tag. Dmitry,
-> > if you want you can take a look and tell me if that's acceptable to you.
-> 
-> s/Old kernel that only support/Old kernels that only support/
+Fri, Jun 21, 2019 at 02:33:17AM CEST, sdf@fomichev.me wrote:
+>On 06/20, Yuehaibing wrote:
+>> On 2019/6/20 2:39, Stanislav Fomichev wrote:
+>> > On 06/20, YueHaibing wrote:
+>> >> We build vlan on top of bonding interface, which vlan offload
+>> >> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+>> >> BOND_XMIT_POLICY_ENCAP34.
+>> >>
+>> >> __skb_flow_dissect() fails to get information from protocol headers
+>> >> encapsulated within vlan, because 'nhoff' is points to IP header,
+>> >> so bond hashing is based on layer 2 info, which fails to distribute
+>> >> packets across slaves.
+>> >>
+>> >> Fixes: d5709f7ab776 ("flow_dissector: For stripped vlan, get vlan info from skb->vlan_tci")
+>> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> >> ---
+>> >>  net/core/flow_dissector.c | 3 +++
+>> >>  1 file changed, 3 insertions(+)
+>> >>
+>> >> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+>> >> index 415b95f..2a52abb 100644
+>> >> --- a/net/core/flow_dissector.c
+>> >> +++ b/net/core/flow_dissector.c
+>> >> @@ -785,6 +785,9 @@ bool __skb_flow_dissect(const struct sk_buff *skb,
+>> >>  		    skb && skb_vlan_tag_present(skb)) {
+>> >>  			proto = skb->protocol;
+>> >>  		} else {
+>> >> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
+>> >> +				nhoff -=  sizeof(*vlan);
+>> >> +
+>> > Should we instead fix the place where the skb is allocated to properly
+>> > pull vlan (skb_vlan_untag)? I'm not sure this particular place is
+>> > supposed to work with an skb. Having an skb with nhoff pointing to
+>> > IP header but missing skb_vlan_tag_present() when with
+>> > proto==ETH_P_8021xx seems weird.
+>> 
+>> The skb is a forwarded vxlan packet, it send through vlan interface like this:
+>> 
+>>    vlan_dev_hard_start_xmit
+>>     --> __vlan_hwaccel_put_tag //vlan_tci and VLAN_TAG_PRESENT is set
+>>     --> dev_queue_xmit
+>>         --> validate_xmit_skb
+>>           --> validate_xmit_vlan // vlan_hw_offload_capable is false
+>>              --> __vlan_hwaccel_push_inside //here skb_push vlan_hlen, then clear skb->tci
+>> 
+>>     --> bond_start_xmit
+>>        --> bond_xmit_hash
+>>          --> __skb_flow_dissect // nhoff point to IP header
+>>             -->  case htons(ETH_P_8021Q)
+>>             // skb_vlan_tag_present is false, so
+>>               vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan), //vlan point to ip header wrongly
+>I see, so bonding device propagates hw VLAN support from the slaves.
+>If one of the slaves doesn't have it, its disabled for the bond device.
+>Any idea why we do that? Why not pass skbs to the slave devices
+>instead and let them handle the hw/sw vlan implementation?
 
-Fixed.
+Probably due to historical reasons. It is indeed not needed to push the
+vlan header. We should rather have the vlan_tci filled all the way down
+to the transmitting netdevice. So the bonding/team should have the
+NETIF_F_HW_VLAN_CTAG_TX and NETIF_F_HW_VLAN_STAG_TX flags always on.
+That seems to be the correct fix to me.
 
-Thanks!
-Christian
+
+>I see the propagation was added in 278339a42a1b 10 years ago and
+>I don't see any rationale in the commit description.
+>Somebody with more context should probably chime in :-)
