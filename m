@@ -2,109 +2,111 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91126C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286A2C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698E520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cJBb3LyG"
+	by mail.kernel.org (Postfix) with ESMTP id 0B04D20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfFXNzz (ORCPT
+        id S1731567AbfFXN4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:55:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42802 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbfFXNzy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:55:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x17so14004249wrl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4arsaGDEjSkzwzRA/N3Hrna2lOLzq+94osMUbrje5jk=;
-        b=cJBb3LyGWz6a+ZF24Q16t+Jq3jubo4POkzoEuwTFa4igkYIIZ4CrGKhq/VBGSLDgV+
-         R7Qz58xlo8mcgCaXGv296xJUBZk0kWkrSICXHD+irx4lidxzIbN8xeAzmwBMImqBYIpY
-         eKFlA/0ylT8ZbBmEkDh730eMD4FA8fcWvKTGfH4JHJLvK+2niN/exKVnrdWX/8BhWAz4
-         bZ2BbBnoA8Mr6mt2PHPtpxxftqUTUr2xGiNQoaqGGYpEUiqP7/4eyzizTnR9LgxPrsPr
-         x8q9l52SIByDD9HRQrHa5Lq2pgJt2cdno3mf8cN1oJgNelLCxmbQs+mZSVmwfkhnre+z
-         rPNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4arsaGDEjSkzwzRA/N3Hrna2lOLzq+94osMUbrje5jk=;
-        b=mYxf6S1VfnDdzpNZx61wC7NFZHrnzpOlzlIQYpjInHD8jKJEEuPB8zTGif9RsYXJtx
-         nzJIwzs5166bDtX9bl5yVRpmrFmjXWwmySI5gEnlbsBlNYd+75y4eIuxX+GPHndxd9pH
-         s0Gm1Wh6/iGqCaEfPd4lKuiG+0vMnJu+/kJ1qdGfRfXVX+yPIuX57lrMgdm4DDmzBqW2
-         EOElhGHi4m3FLv7m8Y6FK7H9X5Wi0ctAhKft4qTHXs4VB2QPRYPfzsllpriTy5x7VBqu
-         BSVHLYbqHXgyYLGR6VyV9VOGuHFOwxhq5tR3P1L6azPKrmzh336LU3MIbpchCdpw1Ieu
-         kcog==
-X-Gm-Message-State: APjAAAXPxIEhQa9S4Ch0nVq4/skLsoZXr28jR8MlRp5W6R2Dz5qWRLEr
-        gZ4WXSjLluC+gKmNVpe5EDTKKw==
-X-Google-Smtp-Source: APXvYqxyF5Zhdd0NS3TPvQio00kP/UH+k9ryunX9HaO9qRhzgHE2KVHkhfUxKG/64BxafxMuhrmCmQ==
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr49233669wrp.353.1561384552634;
-        Mon, 24 Jun 2019 06:55:52 -0700 (PDT)
-Received: from ziepe.ca ([66.187.232.66])
-        by smtp.gmail.com with ESMTPSA id q20sm25473349wra.36.2019.06.24.06.55.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Jun 2019 06:55:52 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hfPRm-0002Fc-Bp; Mon, 24 Jun 2019 10:55:50 -0300
-Date:   Mon, 24 Jun 2019 10:55:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190624135550.GB8268@ziepe.ca>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
- <20190620193353.GF19891@ziepe.ca>
- <20190624073126.GB3954@lst.de>
- <20190624134641.GA8268@ziepe.ca>
- <20190624135024.GA11248@lst.de>
+        Mon, 24 Jun 2019 09:56:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:51050 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727732AbfFXN4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:56:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6DF344;
+        Mon, 24 Jun 2019 06:56:29 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58ED3F71E;
+        Mon, 24 Jun 2019 06:56:26 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 14:56:24 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v7 01/25] kernel: Standardize vdso_datapage
+Message-ID: <20190624135624.GB29120@arrakis.emea.arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-2-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624135024.GA11248@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190621095252.32307-2-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:50:24PM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 24, 2019 at 10:46:41AM -0300, Jason Gunthorpe wrote:
-> > BTW, it is not just offset right? It is possible that the IOMMU can
-> > generate unique dma_addr_t values for each device?? Simple offset is
-> > just something we saw in certain embedded cases, IIRC.
+On Fri, Jun 21, 2019 at 10:52:28AM +0100, Vincenzo Frascino wrote:
+> In an effort to unify the common code for managing the vdso library in
+> between all the architectures that support it, this patch tries to
+> provide a common format for the vdso datapage.
 > 
-> Yes, it could.  If we are trying to do P2P between two devices on
-> different root ports and with the IOMMU enabled we'll generate
-> a new bus address for the BAR on the other side dynamically everytime
-> we map.
+> As a result of this, this patch generalized the data structures in vgtod.h
+> from x86 private includes to general includes (include/vdso).
+> 
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Tested-by: Shijith Thotton <sthotton@marvell.com>
+> Tested-by: Andre Przywara <andre.przywara@arm.com>
 
-Even with the same root port if ACS is turned on could behave like this.
+Minor clean-up patch (on top of the tip timers/vdso branch):
 
-It is only a very narrow case where you can take shortcuts with
-dma_addr_t, and I don't think shortcuts like are are appropriate for
-the mainline kernel..
+------------8<------------------------------
+From 2e09fa6fca341b3ec7ecaf0b67a313a167bb4ff2 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Mon, 24 Jun 2019 12:19:23 +0100
+Subject: [PATCH] vdso: Remove superfluous #ifdef __KERNEL__ in
+ vdso/datapage.h
 
-Jason
+With the move to UAPI headers, such #ifdefs are no longer necessary.
+
+Fixes: 361f8aee9b09 ("vdso: Define standardized vdso_datapage")
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ include/vdso/datapage.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index e6eb36c3d54f..2e302c0f41f7 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -2,8 +2,6 @@
+ #ifndef __VDSO_DATAPAGE_H
+ #define __VDSO_DATAPAGE_H
+ 
+-#ifdef __KERNEL__
+-
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/bits.h>
+@@ -88,6 +86,4 @@ extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
+-#endif /* __KERNEL__ */
+-
+ #endif /* __VDSO_DATAPAGE_H */
