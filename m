@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B214BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589D1C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB47213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3DA20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370679;
-	bh=G3VghlHuhV17ROShXCPAGydoKabEC4qFB4PEIl/ZNz8=;
+	s=default; t=1561370681;
+	bh=TZPaRkPROyoay+S6+8vlutN8XMG7y/b8GH5AwoiUKc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAvoezQOCiSC+nlUDPPLMIaWyMYREFZof0ua1ROQeeADAYecHou2+ZJudBeNS0Ybh
-	 7Rfb5O66HnmhYExlRo/IG2zM5qIijlZ7gQ67kcsU61I033hVyiQMGGUyR3iiMCif+d
-	 39ef0+VEvg5FH0GP60OI3sLnjU+MmOBAI10+AjE8=
+	b=ieDBL3h2mIAbjE2B4lgz2q5x+SnrHwy+WHxtlFgoGb8ejrHwRdGqo1pIVCXGKZYER
+	 GbY49GLbn2erRjGcL9ibx5JYRSseboD81KgpXrt2jSgw5GLJoKwo+inCT0CP0y9/vY
+	 8g75P7yxa0pAYcUFwCfDhSy8bG+8nPTOxCX2CgrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfFXKEi (ORCPT
+        id S1729763AbfFXKEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729736AbfFXKEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:35 -0400
+        id S1729743AbfFXKEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:37 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857E4205ED;
-        Mon, 24 Jun 2019 10:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5BB205ED;
+        Mon, 24 Jun 2019 10:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370674;
-        bh=G3VghlHuhV17ROShXCPAGydoKabEC4qFB4PEIl/ZNz8=;
+        s=default; t=1561370676;
+        bh=TZPaRkPROyoay+S6+8vlutN8XMG7y/b8GH5AwoiUKc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcX//l6QuG9j1EmM1mnH5XBrapFy/NGNNnPxmrM6RppBzqyZPz9nDhotkHKYUc69l
-         yGnikmol9sJyRYp286pUp/u4Ze/hxvig4rZcGIkchGVHekoVXG3ykl+9r7strG/bgs
-         8QEFPRCO6I+P8vZ11ZuFC7NO6Vqo5RjTRgkneF8M=
+        b=rLpdph86UbZ3UNptUn7KNC8fwD7nQkp+fewC2ss0hintVf2keZpDs1AxeMauK1f/j
+         jCooI52nJ+DoH8ZsiDImDgsiKk/0LL2x5Mg8sBQXWDPQ7ER3W49wd1+fHUVOm1ahBZ
+         1VqtbwJANN9qon+Mo4nmDOhLxkb1tiqQ01dGLWuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 14/90] mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
-Date:   Mon, 24 Jun 2019 17:56:04 +0800
-Message-Id: <20190624092314.948277415@linuxfoundation.org>
+Subject: [PATCH 4.19 15/90] mmc: core: Prevent processing SDIO IRQs when the card is suspended
+Date:   Mon, 24 Jun 2019 17:56:05 +0800
+Message-Id: <20190624092315.035472958@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,89 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit b4c9f938d542d5f88c501744d2d12fad4fd2915f upstream.
+commit 83293386bc95cf5e9f0c0175794455835bd1cb4a upstream.
 
-We want SDIO drivers to be able to temporarily stop retuning when the
-driver knows that the SDIO card is not in a state where retuning will
-work (maybe because the card is asleep).  We'll move the relevant
-functions to a place where drivers can call them.
+Processing of SDIO IRQs must obviously be prevented while the card is
+system suspended, otherwise we may end up trying to communicate with an
+uninitialized SDIO card.
 
-Cc: stable@vger.kernel.org #v4.18+
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Reports throughout the years shows that this is not only a theoretical
+problem, but a real issue. So, let's finally fix this problem, by keeping
+track of the state for the card and bail out before processing the SDIO
+IRQ, in case the card is suspended.
+
+Cc: stable@vger.kernel.org
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/sdio_io.c    |   40 ++++++++++++++++++++++++++++++++++++++++
- include/linux/mmc/sdio_func.h |    3 +++
- 2 files changed, 43 insertions(+)
+ drivers/mmc/core/sdio.c     |   13 ++++++++++++-
+ drivers/mmc/core/sdio_irq.c |    4 ++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/core/sdio_io.c
-+++ b/drivers/mmc/core/sdio_io.c
-@@ -18,6 +18,7 @@
- #include "sdio_ops.h"
- #include "core.h"
- #include "card.h"
-+#include "host.h"
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -934,6 +934,10 @@ static int mmc_sdio_pre_suspend(struct m
+  */
+ static int mmc_sdio_suspend(struct mmc_host *host)
+ {
++	/* Prevent processing of SDIO IRQs in suspended state. */
++	mmc_card_set_suspended(host->card);
++	cancel_delayed_work_sync(&host->sdio_irq_work);
++
+ 	mmc_claim_host(host);
  
- /**
-  *	sdio_claim_host - exclusively claim a bus for a certain SDIO function
-@@ -762,3 +763,42 @@ void sdio_retune_crc_enable(struct sdio_
- 	func->card->host->retune_crc_disable = false;
- }
- EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
-+
-+/**
-+ *	sdio_retune_hold_now - start deferring retuning requests till release
-+ *	@func: SDIO function attached to host
-+ *
-+ *	This function can be called if it's currently a bad time to do
-+ *	a retune of the SDIO card.  Retune requests made during this time
-+ *	will be held and we'll actually do the retune sometime after the
-+ *	release.
-+ *
-+ *	This function could be useful if an SDIO card is in a power state
-+ *	where it can respond to a small subset of commands that doesn't
-+ *	include the retuning command.  Care should be taken when using
-+ *	this function since (presumably) the retuning request we might be
-+ *	deferring was made for a good reason.
-+ *
-+ *	This function should be called while the host is claimed.
-+ */
-+void sdio_retune_hold_now(struct sdio_func *func)
-+{
-+	mmc_retune_hold_now(func->card->host);
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_hold_now);
-+
-+/**
-+ *	sdio_retune_release - signal that it's OK to retune now
-+ *	@func: SDIO function attached to host
-+ *
-+ *	This is the complement to sdio_retune_hold_now().  Calling this
-+ *	function won't make a retune happen right away but will allow
-+ *	them to be scheduled normally.
-+ *
-+ *	This function should be called while the host is claimed.
-+ */
-+void sdio_retune_release(struct sdio_func *func)
-+{
-+	mmc_retune_release(func->card->host);
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_release);
---- a/include/linux/mmc/sdio_func.h
-+++ b/include/linux/mmc/sdio_func.h
-@@ -162,4 +162,7 @@ extern int sdio_set_host_pm_flags(struct
- extern void sdio_retune_crc_disable(struct sdio_func *func);
- extern void sdio_retune_crc_enable(struct sdio_func *func);
+ 	if (mmc_card_keep_power(host) && mmc_card_wake_sdio_irq(host))
+@@ -982,13 +986,20 @@ static int mmc_sdio_resume(struct mmc_ho
+ 		err = sdio_enable_4bit_bus(host->card);
+ 	}
  
-+extern void sdio_retune_hold_now(struct sdio_func *func);
-+extern void sdio_retune_release(struct sdio_func *func);
+-	if (!err && host->sdio_irqs) {
++	if (err)
++		goto out;
 +
- #endif /* LINUX_MMC_SDIO_FUNC_H */
++	/* Allow SDIO IRQs to be processed again. */
++	mmc_card_clr_suspended(host->card);
++
++	if (host->sdio_irqs) {
+ 		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
+ 			wake_up_process(host->sdio_irq_thread);
+ 		else if (host->caps & MMC_CAP_SDIO_IRQ)
+ 			host->ops->enable_sdio_irq(host, 1);
+ 	}
+ 
++out:
+ 	mmc_release_host(host);
+ 
+ 	host->pm_flags &= ~MMC_PM_KEEP_POWER;
+--- a/drivers/mmc/core/sdio_irq.c
++++ b/drivers/mmc/core/sdio_irq.c
+@@ -38,6 +38,10 @@ static int process_sdio_pending_irqs(str
+ 	unsigned char pending;
+ 	struct sdio_func *func;
+ 
++	/* Don't process SDIO IRQs if the card is suspended. */
++	if (mmc_card_suspended(card))
++		return 0;
++
+ 	/*
+ 	 * Optimization, if there is only 1 function interrupt registered
+ 	 * and we know an IRQ was signaled then call irq handler directly.
 
 
