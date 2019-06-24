@@ -2,177 +2,99 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDB9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C3C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F7B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dawHkGuw"
+	by mail.kernel.org (Postfix) with ESMTP id EB3A9205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfFXPsK (ORCPT
+        id S1730452AbfFXPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:48:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37995 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729946AbfFXPsK (ORCPT
+        Mon, 24 Jun 2019 11:49:16 -0400
+Received: from 22.17.110.36.static.bjtelecom.net ([36.110.17.22]:6445 "HELO
+        bsf01.didichuxing.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with SMTP id S1727957AbfFXPtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:48:10 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b11so10444672lfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:48:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RZEdkpcm2DoHjvk4iUfPQvATQTAXaYA2G42qvscInT4=;
-        b=dawHkGuwoexp/U6hls2tL0rd5MvFhGfNSloIQ+uyh77OZa7CX83DBpFsVz46qXyLqT
-         N9cKp33Sgbij/OFfl5O8Vb/6gDUmUBgod/uZsNoo1a5W0lJ4JcxR1jRVIHNYSfgdZRmT
-         3cba7yDMHC72BKn3lpDbP1L80zDGHeOzLQXJRS/MmBKjVkdZ3aZ0jV0uWTFATqjHyWZE
-         SegzHVNZvsVD9EQdsLJqCrXXfjG2P+DLZqM2k3mgQyAoGfYZyYQx8ktPllYpNu8qwhNx
-         RuUQuEPB98VMSi50jhKHSHv+z/Sh7ypGJuiNBktpxD2+tstBCGrmM0ca6tsB8vGIN0I+
-         vi8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RZEdkpcm2DoHjvk4iUfPQvATQTAXaYA2G42qvscInT4=;
-        b=JVWiRtnfxoGm4QvwWD9INSelCyoyxMYVFO6lB1W4Ncs9wPgCb63ZDnNieJvSJMU/Md
-         1OavouTKjMPQYWJX5FYH+rvV/jYiMEdaktTzuJdmC1qf5CdkDd+CyzQVWf3IzcYHdMDX
-         WXhcwZAuoOP6LgTxkUSGE/AMUUrtQJNGzbZSW/g6OeS84pG7to5pBOuyolPMd2RoQmiy
-         AevZO+BeOUjgYIp81yAniSkgkRzieNR3Jy4Xwig+NBjejBJs2+jQJ2BUm/tBr2eVlh6b
-         noMoFrT8R3ETDfrWU7XuxkTV/6aMOmJUzS/TJJOZ/OdK9gB9dy22IFpKhaTqJmDmq9tF
-         uduQ==
-X-Gm-Message-State: APjAAAXUDEjEsyxH1EK46CAeR8+w/HX3OGqRSB+LnJfxNyrDSo15QMFm
-        DDC0UoezNnbTsOEh9LCxWJDOvSv4cdZiVSMubEmTuQ==
-X-Google-Smtp-Source: APXvYqxNqQUU12xxGQ7h+SpiZ3wpTHj5k3ZD3y0Vai59zG1U4M0mk/lKZRcyrF3ostVcAQAs9MKINZgIvPFiMFrQTGw=
-X-Received: by 2002:a19:671c:: with SMTP id b28mr8802495lfc.164.1561391288073;
- Mon, 24 Jun 2019 08:48:08 -0700 (PDT)
+        Mon, 24 Jun 2019 11:49:16 -0400
+X-Greylist: delayed 3642 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 11:49:04 EDT
+X-ASG-Debug-ID: 1561386577-0e40886efc18f480001-xx1T2L
+Received: from BJEXCAS08.didichuxing.com (bogon [172.20.36.203]) by bsf01.didichuxing.com with ESMTP id UooTDiNe2MZyyI4j; Mon, 24 Jun 2019 22:29:37 +0800 (CST)
+X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
+Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
+ (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 22:29:37 +0800
+Date:   Mon, 24 Jun 2019 22:29:36 +0800
+From:   Weiping Zhang <zhangweiping@didiglobal.com>
+To:     <tglx@linutronix.de>, <axboe@kernel.dk>, <tj@kernel.org>,
+        <hch@lst.de>, <bvanassche@acm.org>, <keith.busch@intel.com>,
+        <minwoo.im.dev@gmail.com>
+CC:     <linux-block@vger.kernel.org>, <cgroups@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous affinity
+ set
+Message-ID: <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
+X-ASG-Orig-Subj: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous affinity
+ set
+Mail-Followup-To: tglx@linutronix.de, axboe@kernel.dk, tj@kernel.org,
+        hch@lst.de, bvanassche@acm.org, keith.busch@intel.com,
+        minwoo.im.dev@gmail.com, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1561385989.git.zhangweiping@didiglobal.com>
 MIME-Version: 1.0
-References: <20190624092305.919204959@linuxfoundation.org>
-In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 24 Jun 2019 21:17:56 +0530
-Message-ID: <CA+G9fYvWbPPYeT+odDHhpq6QeOKOJyfo7cOeX_FBuFMUZ3POdA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/51] 4.14.130-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1561385989.git.zhangweiping@didiglobal.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [172.22.50.20]
+X-ClientProxiedBy: BJEXCAS03.didichuxing.com (172.20.36.245) To
+ BJSGEXMBX03.didichuxing.com (172.20.15.133)
+X-Barracuda-Connect: bogon[172.20.36.203]
+X-Barracuda-Start-Time: 1561386577
+X-Barracuda-URL: https://bsf01.didichuxing.com:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at didichuxing.com
+X-Barracuda-Scan-Msg-Size: 756
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0002 1.0000 -2.0200
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.73067
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 at 15:29, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.130 release.
-> There are 51 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.130-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+The driver may implement multiple affinity set, and some of
+are empty, for this case we just skip them.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+---
+ kernel/irq/affinity.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Summary
-------------------------------------------------------------------------
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index f18cd5aa33e8..6d964fe0fbd8 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -295,6 +295,10 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+ 		unsigned int this_vecs = affd->set_size[i];
+ 		int ret;
+ 
++		/* skip empty affinity set */
++		if (this_vecs == 0)
++			continue;
++
+ 		ret = irq_build_affinity_masks(affd, curvec, this_vecs,
+ 					       curvec, masks);
+ 		if (ret) {
+-- 
+2.14.1
 
-kernel: 4.14.130-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 57f3c9aebc308dc826ec1191e750fc853e79fb3a
-git describe: v4.14.129-52-g57f3c9aebc30
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.129-52-g57f3c9aebc30
-
-
-No regressions (compared to build v4.14.129)
-
-No fixes (compared to build v4.14.129)
-
-
-Ran 23741 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kselftest
-* ltp-dio-tests
-* ltp-io-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
