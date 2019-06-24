@@ -2,370 +2,164 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27817C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1970FC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E498120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA16B20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:35:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LKeDx3yU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfFXSeo (ORCPT
+        id S1729101AbfFXSfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:34:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45007 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfFXSen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:34:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 11:34:43 -0700
-X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
-   d="scan'208";a="312794570"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 11:34:43 -0700
-Subject: [PATCH v4 10/10] acpi/numa/hmat: Register "specific purpose" memory
- as an "hmem" device
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     x86@kernel.org
-Cc:     Len Brown <lenb@kernel.org>, Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        peterz@infradead.org, ard.biesheuvel@linaro.org,
-        tglx@linutronix.de, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Date:   Mon, 24 Jun 2019 11:20:26 -0700
-Message-ID: <156140042634.2951909.15878153818360710942.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Mon, 24 Jun 2019 14:35:04 -0400
+Received: from mail-eopbgr720053.outbound.protection.outlook.com ([40.107.72.53]:24415
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbfFXSfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 14:35:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rj0bzWf6+MqDUIlV4j65618yeg8AuS9uKU1xg74asGY=;
+ b=LKeDx3yUBqL/xCge91iXKV47RuhIVINBSJ6xdv4Zn7bL1bRBy2r5IEpzKq5xf5sPlE9MiO4L5qo8JP6/WMwTyyfzK2zvj2n8r0EXsAqYbEZMxvdG+/RwmS+GTbeUTnKuVJ44ko6QPzL3dCHYjQeM+D5bYNdHuW7S5f1VCJYPV4I=
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
+ DM5PR12MB1417.namprd12.prod.outlook.com (10.168.236.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 18:35:02 +0000
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::180c:ff0c:37e6:a482]) by DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::180c:ff0c:37e6:a482%10]) with mapi id 15.20.2008.014; Mon, 24 Jun
+ 2019 18:35:01 +0000
+From:   "Hook, Gary" <Gary.Hook@amd.com>
+To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: [PATCH] Documentation: dmaengine: clean up description of dmatest
+ usage
+Thread-Topic: [PATCH] Documentation: dmaengine: clean up description of
+ dmatest usage
+Thread-Index: AQHVKruIc2Kes2M1zUyEVecbjL+xhw==
+Date:   Mon, 24 Jun 2019 18:35:01 +0000
+Message-ID: <156140130017.28986.2649022716558702933.stgit@taos>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0014.namprd04.prod.outlook.com
+ (2603:10b6:805:3e::27) To DM5PR12MB1449.namprd12.prod.outlook.com
+ (2603:10b6:4:10::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 07fced30-17e7-4aeb-0205-08d6f8d2ab0e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1417;
+x-ms-traffictypediagnostic: DM5PR12MB1417:
+x-microsoft-antispam-prvs: <DM5PR12MB1417B15D4494F7ADCCA0C91BFDE00@DM5PR12MB1417.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(7916004)(346002)(136003)(396003)(376002)(39860400002)(366004)(199004)(189003)(14444005)(71200400001)(26005)(110136005)(102836004)(2906002)(6436002)(33716001)(52116002)(103116003)(316002)(6506007)(386003)(478600001)(66066001)(6486002)(3846002)(53936002)(7736002)(305945005)(14454004)(72206003)(81166006)(8676002)(9686003)(6512007)(8936002)(81156014)(2501003)(25786009)(256004)(66946007)(68736007)(186003)(99286004)(486006)(6116002)(66446008)(66556008)(64756008)(73956011)(476003)(66476007)(5660300002)(71190400001)(2201001)(86362001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1417;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NUpuVrYt0hfSsKRIizNKyGhiJKOP0Z4i9OgA+ncLdLCppKlwEjCOoGuQ83RPkWBMC+KU/eGLQBZ+6veUTIRHbLZoo//ZrSHZav87kv2yYpyvRACu3cC4LmaVfLPAFhimYG+gsZUxzE5jBh4R7iiFEJGL+Uq9YMLG7i8O1uB1iuEKrSqX6vXZU8g0Yzd56QGrtDUvAh0Jc3fiSlkanZs/lwtNnl+imjD2SVCWDLvX6vTueJNfWfzGwrEW6YWnr8Lr9df6o0H5Bj7DklIPiFoePBbOq/oOVuNljiVTA19H5gpqCEcRexTVsGZExzcnZ+IPedadSz7cPICx8QHTBe5VPlseqAMZ7pi93zBAQ64wjhXleSbQraf2nN25wwMSQt0bo7wP+KIcVYthbgsuCFwMGxxbSsBXr3KYogJrDFfYfKA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A877A8A46A07AA4F8828F839A97E0538@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07fced30-17e7-4aeb-0205-08d6f8d2ab0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 18:35:01.8968
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1417
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory that has been tagged EFI_MEMORY_SP, and has performance
-properties described by the ACPI HMAT is expected to have an application
-specific consumer.
+Fix the formatting of the multi-channel test usage example. Call out
+the note about parameter ordering and add detail on the settings of
+parameters for the new version of dmatest.
 
-Those consumers may want 100% of the memory capacity to be reserved from
-any usage by the kernel. By default, with this enabling, a platform
-device is created to represent this differentiated resource.
+Fixes: f80f9988a26d7 ("dmaengine: Documentation: Add documentation for mult=
+i chan testing")
 
-The device-dax "hmem" driver claims these devices by default and
-provides an mmap interface for the target application.  If the
-administrator prefers, the hmem resource range can be made available to
-the core-mm via the device-dax hotplug facility, kmem, to online the
-memory with its own numa node.
-
-This was tested with an emulated HMAT produced by qemu (with the pending
-HMAT enabling patches), and "efi_fake_mem=8G@9G:0x40000" on the kernel
-command line to mark the memory ranges associated with node2 and node3
-as EFI_MEMORY_SP.
-
-qemu numa configuration options:
-
--numa node,mem=4G,cpus=0-19,nodeid=0
--numa node,mem=4G,cpus=20-39,nodeid=1
--numa node,mem=4G,nodeid=2
--numa node,mem=4G,nodeid=3
--numa dist,src=0,dst=0,val=10
--numa dist,src=0,dst=1,val=21
--numa dist,src=0,dst=2,val=21
--numa dist,src=0,dst=3,val=21
--numa dist,src=1,dst=0,val=21
--numa dist,src=1,dst=1,val=10
--numa dist,src=1,dst=2,val=21
--numa dist,src=1,dst=3,val=21
--numa dist,src=2,dst=0,val=21
--numa dist,src=2,dst=1,val=21
--numa dist,src=2,dst=2,val=10
--numa dist,src=2,dst=3,val=21
--numa dist,src=3,dst=0,val=21
--numa dist,src=3,dst=1,val=21
--numa dist,src=3,dst=2,val=21
--numa dist,src=3,dst=3,val=10
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
--numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
--numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
--numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
--numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
--numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
--numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
--numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
--numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
--numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
--numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
--numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
--numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
-
-Result:
-
-# daxctl list -RDu
-[
-  {
-    "path":"\/platform\/hmem.1",
-    "id":1,
-    "size":"4.00 GiB (4.29 GB)",
-    "align":2097152,
-    "devices":[
-      {
-        "chardev":"dax1.0",
-        "size":"4.00 GiB (4.29 GB)"
-      }
-    ]
-  },
-  {
-    "path":"\/platform\/hmem.0",
-    "id":0,
-    "size":"4.00 GiB (4.29 GB)",
-    "align":2097152,
-    "devices":[
-      {
-        "chardev":"dax0.0",
-        "size":"4.00 GiB (4.29 GB)"
-      }
-    ]
-  }
-]
-
-# cat /proc/iomem
-[..]
-240000000-43fffffff : Application Reserved
-  240000000-33fffffff : hmem.0
-    240000000-33fffffff : dax0.0
-  340000000-43fffffff : hmem.1
-    340000000-43fffffff : dax1.0
-
-Cc: Len Brown <lenb@kernel.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
 ---
- drivers/acpi/numa/Kconfig |    1 
- drivers/acpi/numa/hmat.c  |  132 +++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 122 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-index d14582387ed0..c1be746e111a 100644
---- a/drivers/acpi/numa/Kconfig
-+++ b/drivers/acpi/numa/Kconfig
-@@ -8,6 +8,7 @@ config ACPI_HMAT
- 	bool "ACPI Heterogeneous Memory Attribute Table Support"
- 	depends on ACPI_NUMA
- 	select HMEM_REPORTING
-+	select MEMREGION
- 	help
- 	 If set, this option has the kernel parse and report the
- 	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 1d329c4af3bf..622c5feb3aa0 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -8,11 +8,16 @@
-  * the applicable attributes with the node's interfaces.
-  */
- 
-+#define pr_fmt(fmt) "acpi/hmat: " fmt
-+#define dev_fmt(fmt) "acpi/hmat: " fmt
-+
- #include <linux/acpi.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/list.h>
-+#include <linux/mm.h>
-+#include <linux/platform_device.h>
- #include <linux/list_sort.h>
- #include <linux/node.h>
- #include <linux/sysfs.h>
-@@ -40,6 +45,7 @@ struct memory_target {
- 	struct list_head node;
- 	unsigned int memory_pxm;
- 	unsigned int processor_pxm;
-+	struct resource memregions;
- 	struct node_hmem_attrs hmem_attrs;
- };
- 
-@@ -92,21 +98,35 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
- 	list_add_tail(&initiator->node, &initiators);
- }
- 
--static __init void alloc_memory_target(unsigned int mem_pxm)
-+static __init void alloc_memory_target(unsigned int mem_pxm,
-+		resource_size_t start, resource_size_t len)
- {
- 	struct memory_target *target;
- 
- 	target = find_mem_target(mem_pxm);
--	if (target)
--		return;
+ Documentation/driver-api/dmaengine/dmatest.rst |   21 +++++++++++++-------=
 -
--	target = kzalloc(sizeof(*target), GFP_KERNEL);
--	if (!target)
--		return;
-+	if (!target) {
-+		target = kzalloc(sizeof(*target), GFP_KERNEL);
-+		if (!target)
-+			return;
-+		target->memory_pxm = mem_pxm;
-+		target->processor_pxm = PXM_INVAL;
-+		target->memregions = (struct resource) {
-+			.name	= "ACPI mem",
-+			.start	= 0,
-+			.end	= -1,
-+			.flags	= IORESOURCE_MEM,
-+		};
-+		list_add_tail(&target->node, &targets);
-+	}
- 
--	target->memory_pxm = mem_pxm;
--	target->processor_pxm = PXM_INVAL;
--	list_add_tail(&target->node, &targets);
-+	/*
-+	 * There are potentially multiple ranges per PXM, so record each
-+	 * in the per-target memregions resource tree.
-+	 */
-+	if (!__request_region(&target->memregions, start, len, "memory target",
-+				IORESOURCE_MEM))
-+		pr_warn("failed to reserve %#llx - %#llx in pxm: %d\n",
-+				start, start + len, mem_pxm);
- }
- 
- static __init const char *hmat_data_type(u8 type)
-@@ -428,7 +448,7 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	if (!(ma->flags & ACPI_SRAT_MEM_ENABLED))
- 		return 0;
--	alloc_memory_target(ma->proximity_domain);
-+	alloc_memory_target(ma->proximity_domain, ma->base_address, ma->length);
- 	return 0;
- }
- 
-@@ -580,6 +600,81 @@ static __init void hmat_register_target_perf(struct memory_target *target)
- 	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
- }
- 
-+static __init void hmat_register_target_device(struct memory_target *target,
-+		struct resource *r)
-+{
-+	/* define a clean / non-busy resource for the platform device */
-+	struct resource res = {
-+		.start = r->start,
-+		.end = r->end,
-+		.flags = IORESOURCE_MEM,
-+	};
-+	struct platform_device *pdev;
-+	struct memregion_info info;
-+	int rc, id;
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation=
+/driver-api/dmaengine/dmatest.rst
+index e78d070bb468..ee268d445d38 100644
+--- a/Documentation/driver-api/dmaengine/dmatest.rst
++++ b/Documentation/driver-api/dmaengine/dmatest.rst
+@@ -44,7 +44,8 @@ Example of usage::
+=20
+     dmatest.timeout=3D2000 dmatest.iterations=3D1 dmatest.channel=3Ddma0ch=
+an0 dmatest.run=3D1
+=20
+-Example of multi-channel test usage:
++Example of multi-channel test usage (new in the 5.0 kernel)::
 +
-+	rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
-+			IORES_DESC_APPLICATION_RESERVED);
-+	if (rc != REGION_INTERSECTS)
-+		return;
+     % modprobe dmatest
+     % echo 2000 > /sys/module/dmatest/parameters/timeout
+     % echo 1 > /sys/module/dmatest/parameters/iterations
+@@ -53,15 +54,18 @@ Example of multi-channel test usage:
+     % echo dma0chan2 > /sys/module/dmatest/parameters/channel
+     % echo 1 > /sys/module/dmatest/parameters/run
+=20
+-Note: the channel parameter should always be the last parameter set prior =
+to
+-running the test (setting run=3D1), this is because upon setting the chann=
+el
+-parameter, that specific channel is requested using the dmaengine and a th=
+read
+-is created with the existing parameters. This thread is set as pending
+-and will be executed once run is set to 1. Any parameters set after the th=
+read
+-is created are not applied.
++.. note::
++  For all tests, starting in the 5.0 kernel, either single- or multi-chann=
+el,
++  the channel parameter(s) must be set after all other parameters. It is a=
+t
++  that time that the existing parameter values are acquired for use by the
++  thread(s). All other parameters are shared. Therefore, if changes are ma=
+de
++  to any of the other parameters, and an additional channel specified, the
++  (shared) parameters used for all threads will use the new values.
++  After the channels are specified, each thread is set as pending. All thr=
+eads
++  begin execution when the run parameter is set to 1.
+=20
+ .. hint::
+-  available channel list could be extracted by running the following comma=
+nd::
++  A list of available channels can be found by running the following comma=
+nd::
+=20
+     % ls -1 /sys/class/dma/
+=20
+@@ -204,6 +208,7 @@ Releasing Channels
+ Channels can be freed by setting run to 0.
+=20
+ Example::
 +
-+	id = memregion_alloc(GFP_KERNEL);
-+	if (id < 0) {
-+		pr_err("memregion allocation failure for %pr\n", &res);
-+		return;
-+	}
-+
-+	pdev = platform_device_alloc("hmem", id);
-+	if (!pdev) {
-+		pr_err("hmem device allocation failure for %pr\n", &res);
-+		goto out_pdev;
-+	}
-+
-+	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
-+	info = (struct memregion_info) {
-+		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
-+	};
-+	rc = platform_device_add_data(pdev, &info, sizeof(info));
-+	if (rc < 0) {
-+		pr_err("hmem memregion_info allocation failure for %pr\n", &res);
-+		goto out_pdev;
-+	}
-+
-+	rc = platform_device_add_resources(pdev, &res, 1);
-+	if (rc < 0) {
-+		pr_err("hmem resource allocation failure for %pr\n", &res);
-+		goto out_resource;
-+	}
-+
-+	rc = platform_device_add(pdev);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "device add failed for %pr\n", &res);
-+		goto out_resource;
-+	}
-+
-+	return;
-+
-+out_resource:
-+	put_device(&pdev->dev);
-+out_pdev:
-+	memregion_free(id);
-+}
-+
-+static __init void hmat_register_target_devices(struct memory_target *target)
-+{
-+	struct resource *res;
-+
-+	/*
-+	 * Do not bother creating devices if no driver is available to
-+	 * consume them.
-+	 */
-+	if (!IS_ENABLED(CONFIG_DEV_DAX_HMEM))
-+		return;
-+
-+	for (res = target->memregions.child; res; res = res->sibling)
-+		hmat_register_target_device(target, res);
-+}
-+
- static __init void hmat_register_targets(void)
- {
- 	struct memory_target *target;
-@@ -587,6 +682,12 @@ static __init void hmat_register_targets(void)
- 	list_for_each_entry(target, &targets, node) {
- 		int nid = pxm_to_node(target->memory_pxm);
- 
-+		/*
-+		 * Devices may belong to either an offline or online
-+		 * node, so unconditionally add them.
-+		 */
-+		hmat_register_target_devices(target);
-+
- 		/*
- 		 * Skip offline nodes. This can happen when memory
- 		 * marked EFI_MEMORY_SP, "specific purpose", is applied
-@@ -608,7 +709,16 @@ static __init void hmat_free_structures(void)
- 	struct memory_initiator *initiator, *inext;
- 
- 	list_for_each_entry_safe(target, tnext, &targets, node) {
-+		struct resource *res, *res_next;
-+
- 		list_del(&target->node);
-+		res = target->memregions.child;
-+		while (res) {
-+			res_next = res->sibling;
-+			__release_region(&target->memregions, res->start,
-+					resource_size(res));
-+			res = res_next;
-+		}
- 		kfree(target);
- 	}
- 
+     % echo dma0chan1 > /sys/module/dmatest/parameters/channel
+     dmatest: Added 1 threads using dma0chan1
+     % cat /sys/class/dma/dma0chan1/in_use
 
