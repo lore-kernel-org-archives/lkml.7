@@ -2,56 +2,56 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FA1C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E94BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F0B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1B720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfFXQUj (ORCPT
+        id S1731987AbfFXQUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:20:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56774 "EHLO
+        Mon, 24 Jun 2019 12:20:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56788 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfFXQUi (ORCPT
+        with ESMTP id S1726686AbfFXQUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:20:38 -0400
+        Mon, 24 Jun 2019 12:20:44 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1BADA1504D454;
-        Mon, 24 Jun 2019 09:20:38 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 09:20:36 -0700 (PDT)
-Message-Id: <20190624.092036.1996472048103001854.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F34CD1504D457;
+        Mon, 24 Jun 2019 09:20:43 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 09:20:43 -0700 (PDT)
+Message-Id: <20190624.092043.1169366109120722825.davem@davemloft.net>
 To:     antoine.tenart@bootlin.com
 Cc:     nicolas.ferre@microchip.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com,
         alexandre.belloni@bootlin.com
-Subject: Re: [PATCH net-next] net: macb: use NAPI_POLL_WEIGHT
+Subject: Re: [PATCH net-next] net: macb: use GRO
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190621152855.30330-1-antoine.tenart@bootlin.com>
-References: <20190621152855.30330-1-antoine.tenart@bootlin.com>
+In-Reply-To: <20190621153002.30587-1-antoine.tenart@bootlin.com>
+References: <20190621153002.30587-1-antoine.tenart@bootlin.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 09:20:38 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 09:20:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Fri, 21 Jun 2019 17:28:55 +0200
+Date: Fri, 21 Jun 2019 17:30:02 +0200
 
-> Use NAPI_POLL_WEIGHT, the default NAPI poll() weight instead of
-> redefining our own value (which turns out to be 64 as well).
+> This patch updates the macb driver to use NAPI GRO helpers when
+> receiving SKBs. This improves performances.
 > 
 > Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Applied, thanks.
+Applied.
