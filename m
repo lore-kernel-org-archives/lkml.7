@@ -2,98 +2,71 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0541FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC1CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE19A212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DA92063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730602AbfFXNDb (ORCPT
+        id S1730624AbfFXNDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:03:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36797 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbfFXNDa (ORCPT
+        Mon, 24 Jun 2019 09:03:34 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:52918 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730576AbfFXNDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:03:30 -0400
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hfOd5-00027A-B6; Mon, 24 Jun 2019 15:03:27 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joe Perches <joe@perches.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH] get_maintainer: Add --cc option
-Date:   Mon, 24 Jun 2019 15:03:23 +0200
-Message-Id: <20190624130323.14137-1-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 24 Jun 2019 09:03:33 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 24 Jun 2019 06:03:17 -0700
+Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 7BFB44141B;
+        Mon, 24 Jun 2019 06:03:25 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <aarcange@redhat.com>, <jannh@google.com>, <oleg@redhat.com>,
+        <peterx@redhat.com>, <rppt@linux.ibm.com>, <jgg@mellanox.com>,
+        <mhocko@suse.com>
+CC:     <jglisse@redhat.com>, <akpm@linux-foundation.org>,
+        <mike.kravetz@oracle.com>, <viro@zeniv.linux.org.uk>,
+        <riandrews@android.com>, <arve@android.com>,
+        <yishaih@mellanox.com>, <dledford@redhat.com>,
+        <sean.hefty@intel.com>, <hal.rosenstock@gmail.com>,
+        <matanb@mellanox.com>, <leonro@mellanox.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <devel@driverdev.osuosl.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <akaher@vmware.com>, <srivatsab@vmware.com>, <amakhalov@vmware.com>
+Subject: [PATCH v4 0/3] [v4.9.y] coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
+Date:   Tue, 25 Jun 2019 02:33:06 +0530
+Message-ID: <1561410186-3919-4-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561410186-3919-1-git-send-email-akaher@vmware.com>
+References: <1561410186-3919-1-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The --cc adds a Cc: prefix infront of the email address so it can be
-used by other Scripts directly instead of adding another wrapper for
-this.
+coredump: fix race condition between mmget_not_zero()/get_task_mm()
+and core dumping
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- scripts/get_maintainer.pl | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+[PATCH v4 1/3]:
+Backporting of commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
 
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index c1c088ef1420e..7f812d23218e5 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -46,6 +46,8 @@ my $output_multiline = 1;
- my $output_separator = ", ";
- my $output_roles = 0;
- my $output_rolestats = 1;
-+my $output_cc_prefix = 0;
-+my $cc_prefix = "";
- my $output_section_maxlen = 50;
- my $scm = 0;
- my $tree = 1;
-@@ -252,6 +254,7 @@ if (!GetOptions(
- 		'multiline!' => \$output_multiline,
- 		'roles!' => \$output_roles,
- 		'rolestats!' => \$output_rolestats,
-+		'cc!' => \$output_cc_prefix,
- 		'separator=s' => \$output_separator,
- 		'subsystem!' => \$subsystem,
- 		'status!' => \$status,
-@@ -298,6 +301,10 @@ $output_multiline = 0 if ($output_separator ne ", ");
- $output_rolestats = 1 if ($interactive);
- $output_roles = 1 if ($output_rolestats);
- 
-+if ($output_cc_prefix) {
-+    $cc_prefix = "Cc: ";
-+}
-+
- if ($sections || $letters ne "") {
-     $sections = 1;
-     $email = 0;
-@@ -2462,9 +2469,9 @@ sub merge_email {
- 	my ($address, $role) = @$_;
- 	if (!$saw{$address}) {
- 	    if ($output_roles) {
--		push(@lines, "$address ($role)");
-+		push(@lines, "$cc_prefix" . "$address ($role)");
- 	    } else {
--		push(@lines, $address);
-+		push(@lines, "$cc_prefix" . "$address");
- 	    }
- 	    $saw{$address} = 1;
- 	}
--- 
-2.20.1
+[PATCH v4 2/3]:
+Extension of commit 04f5866e41fb to fix the race condition between
+get_task_mm() and core dumping for IB->mlx4 and IB->mlx5 drivers.
 
+[PATCH v4 3/3]
+Backporting of commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+
+[diff from v3]:
+- added [PATCH v4 3/3]
