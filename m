@@ -2,224 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F43EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F364DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D89A2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7ED12054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSCxSb4W"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pHGrb80a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfFXJqe (ORCPT
+        id S1728482AbfFXJrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:46:34 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37544 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfFXJqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:46:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d11so9546681lfb.4;
-        Mon, 24 Jun 2019 02:46:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ev9Tj2wrV2sHVa78lJSUKLNtj813pnRYEFAtRIvugjE=;
-        b=qSCxSb4WXeoEdWJZpY6yBNK8LXScRMNlFQ6qW4vetx44ieE7bfXpvvHAA9dVyGi6W0
-         CkXlZVeJ6Xyz60NBJHmRkxeu60aF9Pmh1rLzqqpvUJ/J60YEk0b7O6F/yzgnKUHkMl3r
-         kSNAhNA0ozuVh4xziklAIjJ7ns5zqobvE0Z3I5SsdcXpc2MJM9jkpt55hD8UX98RjocV
-         Ay5xrZK/YLYBdbtMPBGacuWXzKMSsfDpEX7jhBfWUgInyyJi3DkMwMDM+XA+/4/2rnBm
-         3ZhfaUXVPaEKQQnlb1bL1Yft4giSc7pfAiB53860HM0iLNlHPY78Jov5uUZGTV/Mq2pI
-         sxOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ev9Tj2wrV2sHVa78lJSUKLNtj813pnRYEFAtRIvugjE=;
-        b=Zm4dJUm/ViY1+n/hC6GJHb5weR5KeYLtdJ2Vvs4YXDkj5l42+o/YOYxRN/0AUK3enh
-         KUIP1opHVQuITyHfSbgmmEwhTAGcTboj6xJRA7VmHMRnzD2KeIfokTmTpansB43DlWVM
-         E77bbu71oAemMpo4Ta9VjUiCO+fKWhf9xfd3VZ+bASQY46rHKEpR2q4zSptPMzzNAww0
-         RPea3h1NSLWda4rV5Q7I0tNxVCtIhkNgL4ICbtaf05jKGMgviIFn5YbZPVCDPwYzxEWu
-         oew2e4R1jwBkoKAMJRbyRdZBW1gB9P0H8O3d7s0LEBzcrUlZCHiD9oEbr4JqDcw+dr6z
-         Pi4w==
-X-Gm-Message-State: APjAAAVas0V/XpGsgSmXW/PQgK/MfQRYWPLoOB/XqWT9njEzWuT+4w3M
-        P0E4uhUMuzxe02s71Uz1V4vyxB7w
-X-Google-Smtp-Source: APXvYqzsFhhIEFfn6HM3ZO8SBA4KV8ZzTlRkGff2B0yMJxryYKBTwQTW/XWgiiIfqrsVyzbYuiKkow==
-X-Received: by 2002:a19:550f:: with SMTP id n15mr3464871lfe.34.1561369590174;
-        Mon, 24 Jun 2019 02:46:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id z26sm1643515ljz.64.2019.06.24.02.46.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 02:46:29 -0700 (PDT)
-Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a03ce644-5efd-e721-fb06-16de097171bb@gmail.com>
-Date:   Mon, 24 Jun 2019 12:46:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 24 Jun 2019 05:47:07 -0400
+Received: from mout.web.de ([212.227.17.12]:57333 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbfFXJrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:47:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1561369619;
+        bh=lzyy9j7qnXqsvAbV76zCce0wMX+0BQGE8HteHYxHRGQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=pHGrb80awqEoTQ2WTdj5YtnMWnHcsYlKURR2Cek0xB5oEyxkYKDlfWB5lGrdqjyk1
+         PkbMK7YAWTOA8M3iPrdCtevPsaL4cLUUYRjkDenNhCXuCPKsvR6iXuF9maBZd2CG1w
+         vFJW4R/afwfNlrj40WWLWJrfoj4jMBo9a53QSGFQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from lab-pc08.sra.uni-hannover.de ([130.75.33.87]) by smtp.web.de
+ (mrweb101 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 0MUFGo-1i6OuH3DHe-00R3Wg; Mon, 24 Jun 2019 11:46:59 +0200
+From:   =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
+To:     gregkh@linuxfoundation.org
+Cc:     johnfwhitmore@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        felix.trommer@hotmail.de,
+        =?UTF-8?q?Christian=20M=C3=BCller?= <muellerch-privat@web.de>
+Subject: [PATCH 0/2] drivers/staging/rtl8192u: adjust block comments
+Date:   Mon, 24 Jun 2019 11:46:38 +0200
+Message-Id: <20190624094640.5459-1-muellerch-privat@web.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190620113308.GA16195@kroah.com>
+References: <20190620113308.GA16195@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LbTnXBDz6pMGBFVKewlRvSH5QnM8/tq+wHSt2/fIhFXqTGjGumT
+ hcEoDIJ/cUliTFC38xixU44E5siemKomEAarNnQQH8WZDQDeNgBjn95NYnB9LYEMuXco68R
+ K44qIjV1dXESxbDPVUOI8/fcmP18nLynFNnBYqPAouIbWexQ4peptEqAa0mWyIFXScimQnt
+ U4yJ0OCZvSWdXEeu8GvEg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wvBOKAObEwQ=:l2pNXkW07JEiXA+GGYOcLa
+ R1fvRyb2YOKIp/HUB5y0tQUm8x8MCoa46vGkpEVZU9j4FXU1KfqCSfF+deR2SLhi3USy9BSLh
+ 0iyK02bl4LVCOHbP43qJMUCU4HGldYm5aneEuRxC1yXQw2KdukAuDx+DEXII95+DBxb5IKf0p
+ oLf7q5bsG7G2dsSgI2x9wxm7TPOr2xPKarMxpkYJmZwc8kdfPZvRp41bKTSIO5K+++utbAWP6
+ LN2eE9cXOwR6dr5r243wkI2oTnlDfBIy+qKRoUU50yms+KYTMYf0XWJMXcIniP+yQSvjy5tsv
+ euwOw8EP58dZZjo20OovcN+yCV3hMVgU/mBMwergJw20s5MwjlXrVtq39bNXs5p6hka6sSIRz
+ tiHaL58V0Khm2d8H1dtMBgXsGdQhvyRq2KEIxeK7WPNODdshxz3bKK/dW4dHIWG75pML/6Ux9
+ i72ajG5h7LNIy0G124q0ivO+t9Nz6Ts2ZLG1BEY+MlW4PuDEQyvCLIrYF8gHRnoo1U5YhQbH5
+ cl46ITxxxlBuO7fRhmDIIU+ypIYEKIAJ9KPtrg/VwVGTojnHkskyhTy4K9KPweihz4E6+ehV6
+ yhwvvoxVb0buaF9RB6RTvNwhfiw0ZTq+pcRMF8+R5DLs50Dy03R98np4Ma2gPEfGMUsRhoTE4
+ MXxlLcD/rKrxBqOmEbh+cHHlqXEYbPS9Eyms31D+2im7kmIEm6Dq+1f6zlI6ug8Y+cRv3Vk87
+ U1hsBYEyNl8JSWc/22Mi9p24GXfOV135W8pMjGMS8rD6DdMG/g+CbGMyWMAnrj3Rrazn/ZHur
+ 5BR3jJSNwjIcz9+OEVTmS6bMoB2sLN/4SlM30Hlz6yZvlvvPgiDicf7i8Zt8fV3iFZsfYtITF
+ JZbMl2jkaXtk+QFo6hUthcMO1c5mnFu8VHPGskhal5b3sj/nRDJhE5Etb/xNZOd0t6ptK2dAT
+ FKaDbPZ/rr91wakaz2DuZIZdhxKdcGIfZIoLqQMPaRxlRFFEa0V41
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.06.2019 6:02, Sowjanya Komatineni пишет:
-> This patch adds support for Tegra pinctrl driver suspend and resume.
-> 
-> During suspend, context of all pinctrl registers are stored and
-> on resume they are all restored to have all the pinmux and pad
-> configuration for normal operation.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++++++++
->  drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
->  drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
->  3 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> index b03c465917b8..c0ba6fa63ad1 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -631,6 +631,38 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->  	}
->  }
->  
-> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev)
+As per the last correspondence with Greg, he pointed out that the whole
+driver rtl8192u should be merged some day into drivers/net/ and thus
+implement different standards regarding multiline comments.
+Because of that, we did the exact opposite of what we did the last time,
+and changed comments such that they obey these standards.
 
-The "maybe_unused" attribute isn't needed for global functions because
-compiler always assumes that such functions are used somewhere outside.
+All multiline-comments in this file now look like the following example:
 
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	unsigned int i, j;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		regs = pmx->regs[i];
-> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-> +			*backup_regs++ = readl(regs++);
-> +	}
-> +
-> +	return pinctrl_force_sleep(pmx->pctl);
-> +}
-> +
-> +int __maybe_unused tegra_pinctrl_resume(struct device *dev)
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	unsigned int i, j;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		regs = pmx->regs[i];
-> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-> +			writel(*backup_regs++, regs++);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static bool gpio_node_has_range(const char *compatible)
->  {
->  	struct device_node *np;
-> @@ -655,6 +687,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  	int i;
->  	const char **group_pins;
->  	int fn, gn, gfn;
-> +	unsigned long backup_regs_size = 0;
->  
->  	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
->  	if (!pmx)
-> @@ -707,6 +740,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->  		if (!res)
->  			break;
-> +		backup_regs_size += resource_size(res);
->  	}
->  	pmx->nbanks = i;
->  
-> @@ -715,11 +749,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  	if (!pmx->regs)
->  		return -ENOMEM;
->  
-> +	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
-> +					  sizeof(*pmx->reg_bank_size),
-> +					  GFP_KERNEL);
-> +	if (!pmx->reg_bank_size)
-> +		return -ENOMEM;
-> +
-> +	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
-> +					GFP_KERNEL);
-> +	if (!pmx->backup_regs)
-> +		return -ENOMEM;
-> +
->  	for (i = 0; i < pmx->nbanks; i++) {
->  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->  		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
->  		if (IS_ERR(pmx->regs[i]))
->  			return PTR_ERR(pmx->regs[i]);
-> +
-> +		pmx->reg_bank_size[i] = resource_size(res);
->  	}
->  
->  	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-> index 32642af3f871..65fcbf8c7579 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-> @@ -17,6 +17,8 @@ struct tegra_pmx {
->  
->  	int nbanks;
->  	void __iomem **regs;
-> +	size_t *reg_bank_size;
-> +	u32 *backup_regs;
->  };
->  
->  enum tegra_pinconf_param {
-> @@ -195,4 +197,6 @@ struct tegra_pinctrl_soc_data {
->  
->  int tegra_pinctrl_probe(struct platform_device *pdev,
->  			const struct tegra_pinctrl_soc_data *soc_data);
-> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev);
-> +int __maybe_unused tegra_pinctrl_resume(struct device *dev);
->  #endif
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> index 617ad963f5ad..4616bbc2efba 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> @@ -1562,6 +1562,11 @@ static int tegra210_pinctrl_probe(struct platform_device *pdev)
->  	return tegra_pinctrl_probe(pdev, &tegra210_pinctrl);
->  }
->  
-> +static const struct dev_pm_ops tegra_pinctrl_pm = {
-> +	.suspend = &tegra_pinctrl_suspend,
-> +	.resume = &tegra_pinctrl_resume
-> +};
+/* Multiline comments
+ * in r8192U_dm.c
+ * now look like this.
+ */
 
-What about to move tegra_pinctrl_pm out into pinctrl-tegra.c to make it
-common for all of the drivers?
+Christian M=C3=BCller (2):
+  drivers/staging/rtl8192u: adjust block comments
+  drivers/staging/rtl8192u: adjust block comments
+
+ drivers/staging/rtl8192u/r8192U_dm.c | 97 +++++++++++-----------------
+ 1 file changed, 39 insertions(+), 58 deletions(-)
+
+=2D-
+2.17.1
+
