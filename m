@@ -2,93 +2,92 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC93C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F6AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE7420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE56A20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732810AbfFXSXS (ORCPT
+        id S1732819AbfFXSXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:23:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44361 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFXSXR (ORCPT
+        Mon, 24 Jun 2019 14:23:45 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:47681 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbfFXSXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:23:17 -0400
-Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M9Wqa-1hc9gp1oDk-005WqO; Mon, 24 Jun 2019 20:22:47 +0200
-Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
- devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190221162627.3476-1-brgl@bgdev.pl>
- <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
- <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
- <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
- <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <1dd52704-0e41-db31-33f4-c9f446a47344@metux.net>
-Date:   Mon, 24 Jun 2019 20:22:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 24 Jun 2019 14:23:45 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2B0DC1C0005;
+        Mon, 24 Jun 2019 18:23:34 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 20:23:33 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, mchehab+samsung@kernel.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] thermal: sun8i: support ahb clocks
+Message-ID: <20190624182333.di7avywtdvzwukms@flea>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+ <20190623164206.7467-9-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZgmkRGHs7Dk+by07gKqk33wnZnw8jFOEY7Mzgtc3URhPyCvBCsp
- L7tXD4MeY3Xax46GIB0/blF9/NGjT6pAdIcNuaiXYy+qpAvnxV38nbKkqLmxD5l1e0ffUxg
- cGc1gvVDpkaV2vKyS+EHGXs00cgG7Bp6N5otI5l/92GnSozO9QX52qTDnFOzOAHaLVbEztt
- yimvgXuW6f0pYDq6sgQvg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JQHY8EkLn+M=:lJVSEKZy2Nz4CNNSOqZUni
- EqeYGj7M4IwCCw1HCbCW3SUiu7ZTdr7RPEedoSpwkDfh13u5+kQSble5vLGiCAiK0teAIkOI7
- llvxXVKhZXASP0VcRyPao9P21+vNMyOKoub8/JrM1YhDERUMe3pXNpi96YwHB9abnjK2EnrLW
- zuTEPB2A7QLq9RSeDh2mTbGps1v9B3bGdpC8W7b1cwmI3NhHD6JWH0OY8czisXQt/GKrTz64/
- MYfi/0mKuzwT9FaITglKSHfH1YakogstwdpPj6OAElm3PW6DaVdBl0vF6C4jWPZeczqsNc+2d
- Guk1BCLf5Skdl1PdW/sk1oszu8DcEawwqZS52osidlchQNxeHJBrIyVIXidlK46tRF+JGNRKV
- vaxHjrPds05TGoQa7NiKIhp19eldmo6o+77fVnHrFhWQ70ccJrd6TZXnTOoxhCxVz+Z18hqQc
- Ox/OKf6XnAWhze2iTRyV04Of3IroXksK/VazvPdCl4CgFIQsNzE4jQLufL0nvnF/kpcNS5aza
- t5bTvRbUSYmKtXwaEyGgWCeP4+vlqAts+/BZhQLXmrc08sNUKCDggXa+fi7RiB/M83shvNzHR
- aqQ/V8vqkSAcDXWu1FlZ9dHqG9DkcLuk7ib4qZf15xbvXNHP4E4A0qgLRVl0DxXVMw+G1zRkU
- IFRtpyPnNmRoVgYpyr/eFvTCZ+RyExHBlbh3HUL5h5EnX/GNb7dntJskgj4ZTMPatHHlUinJ8
- mqHEgn3KBHEbmn7MvQWhWAaS9oly8yjDi9T/7ZpzNpTaniJUupJ71kFvkuU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190623164206.7467-9-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.06.19 12:46, Bartosz Golaszewski wrote:
+On Sun, Jun 23, 2019 at 12:42:03PM -0400, Yangtao Li wrote:
+> H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
+> and adds the process of the clock.
+>
+> This is pre-work for supprt it.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index ed1c19bb27cf..04f53ffb6a14 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -54,6 +54,7 @@ struct tsensor {
+>  };
+>
+>  struct ths_thermal_chip {
+> +	bool            has_ahb_clk;
+>  	int		sensor_num;
+>  	int		offset;
+>  	int		scale;
+> @@ -69,6 +70,7 @@ struct ths_device {
+>  	struct regmap				*regmap;
+>  	struct reset_control			*reset;
+>  	struct clk				*bus_clk;
+> +	struct clk                              *ahb_clk;
 
->> The patch seems pretty trivial and doesn't change any actual code, so
->> I don't see hard resons for rejecting it.
->>
-> 
-> In its current form it makes the code even less readable. The #ifdef
-> should actually be one line lower and touch the comment instead of the
-> EXPORT_SYMBOL() related to a different function.
+Hmm, thinking a bit about this, the name of those two clocks doesn't
+make sense. AHB is the bus being used to access that device, so the
+bus clock is the AHB clock.
 
-Okay, that missing newline should be fixed (as well as the extra one
-after the #ifdef). Besides that, I don't see any further problems.
+What is that clock being used for?
 
---mtx
+Maxime
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
