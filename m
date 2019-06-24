@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B58C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACB1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C124B20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EF12089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371419;
-	bh=aRhkgb5S/u+8oZ/KpUkEYewDKFzT6/mr7blE20Y2cvg=;
+	s=default; t=1561371423;
+	bh=tsibFGeCM9kozJlvLSct5i3Ff8kYIeVStbM5u+Zsugk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCDMH3tKgb3eRDpTfKLsL2B4lacoNhUPy8nTLBzXK2bpS8VL+BXmEUE2ClnwTHwlZ
-	 sRqkykGFtulC/PLs0y/wBz4EvfPOPfWt2pg8bzt42+EqI5gyLXOqeaXFDq3QHlpMfv
-	 OAALtsci/bV+hrqEqhgI1zX9HRU3hFrzUgAnQLqE=
+	b=pZxJFlMhHHhmtPA/qBSBDroNd3YyS/2VgwTjUX4BRi6/0JfM1unMu08W1nlYzaS9P
+	 BqEFLgahv3R6LcueIcujinaTxwRyFZUiBuOk64HJQfooaTTIoHd88Tu+2Fm1FpyG3W
+	 91rfVNQPmn2TE5ZHcPoS9x62gP0uy3NlItGVJO34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfFXKQ6 (ORCPT
+        id S1730863AbfFXKRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730824AbfFXKQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:55 -0400
+        id S1729631AbfFXKRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:17:00 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8513F205C9;
-        Mon, 24 Jun 2019 10:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDAC6205C9;
+        Mon, 24 Jun 2019 10:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371414;
-        bh=aRhkgb5S/u+8oZ/KpUkEYewDKFzT6/mr7blE20Y2cvg=;
+        s=default; t=1561371419;
+        bh=tsibFGeCM9kozJlvLSct5i3Ff8kYIeVStbM5u+Zsugk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLi20MqGP2vdnDLpbiIcizM1J1YEiaB12qR64ewTKKS7rdg2W4OHYrkLyOAQ7bgW1
-         6Rq9umkCvHLAtpqlfJlStGxo/LNdtna27sQFeVufdQBID+ObpvAN8FcHRgL608/8kj
-         vftyVcFWH9wXxZDCdtFf+weJjkroeHRKcrK3VBz0=
+        b=rRPqB0n0pQd1J7od2DZhHu0r+760h2ayiLWDkyxw9SLIaoVWdA7E1IXPAlFlOMxUZ
+         j07B7tdvd8QVaUhDtasBEv7G64PXDaJjQKOKoAVJt2wM2cCIz7o8nAJgEQ6geOwLsc
+         7xb3igBR/Puu+VcxLn7U/CIuXGitv4lOdg0nEM/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.1 094/121] can: flexcan: fix timeout when set small bitrate
-Date:   Mon, 24 Jun 2019 17:57:06 +0800
-Message-Id: <20190624092325.579672385@linuxfoundation.org>
+        stable@vger.kernel.org, ShihPo Hung <shihpo.hung@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH 5.1 096/121] riscv: mm: synchronize MMU after pte change
+Date:   Mon, 24 Jun 2019 17:57:08 +0800
+Message-Id: <20190624092325.659180675@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,55 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: ShihPo Hung <shihpo.hung@sifive.com>
 
-commit 247e5356a709eb49a0d95ff2a7f07dac05c8252c upstream.
+commit bf587caae305ae3b4393077fb22c98478ee55755 upstream.
 
-Current we can meet timeout issue when setting a small bitrate like
-10000 as follows on i.MX6UL EVK board (ipg clock = 66MHZ, per clock =
-30MHZ):
+Because RISC-V compliant implementations can cache invalid entries
+in TLB, an SFENCE.VMA is necessary after changes to the page table.
+This patch adds an SFENCE.vma for the vmalloc_fault path.
 
-| root@imx6ul7d:~# ip link set can0 up type can bitrate 10000
-
-A link change request failed with some changes committed already.
-Interface can0 may have been left with an inconsistent configuration,
-please check.
-
-| RTNETLINK answers: Connection timed out
-
-It is caused by calling of flexcan_chip_unfreeze() timeout.
-
-Originally the code is using usleep_range(10, 20) for unfreeze
-operation, but the patch (8badd65 can: flexcan: avoid calling
-usleep_range from interrupt context) changed it into udelay(10) which is
-only a half delay of before, there're also some other delay changes.
-
-After double to FLEXCAN_TIMEOUT_US to 100 can fix the issue.
-
-Meanwhile, Rasmus Villemoes reported that even with a timeout of 100,
-flexcan_probe() fails on the MPC8309, which requires a value of at least
-140 to work reliably. 250 works for everyone.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: ShihPo Hung <shihpo.hung@sifive.com>
+[paul.walmsley@sifive.com: reversed tab->whitespace conversion,
+ wrapped comment lines]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/flexcan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/mm/fault.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -166,7 +166,7 @@
- #define FLEXCAN_MB_CNT_LENGTH(x)	(((x) & 0xf) << 16)
- #define FLEXCAN_MB_CNT_TIMESTAMP(x)	((x) & 0xffff)
+--- a/arch/riscv/mm/fault.c
++++ b/arch/riscv/mm/fault.c
+@@ -29,6 +29,7 @@
  
--#define FLEXCAN_TIMEOUT_US		(50)
-+#define FLEXCAN_TIMEOUT_US		(250)
+ #include <asm/pgalloc.h>
+ #include <asm/ptrace.h>
++#include <asm/tlbflush.h>
  
- /* FLEXCAN hardware feature flags
-  *
+ /*
+  * This routine handles page faults.  It determines the address and the
+@@ -281,6 +282,18 @@ vmalloc_fault:
+ 		pte_k = pte_offset_kernel(pmd_k, addr);
+ 		if (!pte_present(*pte_k))
+ 			goto no_context;
++
++		/*
++		 * The kernel assumes that TLBs don't cache invalid
++		 * entries, but in RISC-V, SFENCE.VMA specifies an
++		 * ordering constraint, not a cache flush; it is
++		 * necessary even after writing invalid entries.
++		 * Relying on flush_tlb_fix_spurious_fault would
++		 * suffice, but the extra traps reduce
++		 * performance. So, eagerly SFENCE.VMA.
++		 */
++		local_flush_tlb_page(addr);
++
+ 		return;
+ 	}
+ }
 
 
