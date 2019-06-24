@@ -2,115 +2,94 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D45C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C195C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15BA213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E548320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvXMMqyn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RO8plrW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfFXMvp (ORCPT
+        id S1728556AbfFXMzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:51:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40331 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbfFXMvo (ORCPT
+        Mon, 24 Jun 2019 08:55:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46782 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfFXMzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:51:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so13239663wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 05:51:42 -0700 (PDT)
+        Mon, 24 Jun 2019 08:55:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z15so9901367lfh.13;
+        Mon, 24 Jun 2019 05:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=V3PN7+Kr/tucktHOq459ffhVuFT8vFVeNdn3CWQcOqs=;
-        b=TvXMMqynMJ9F3R8PSllCw3D53Zv+6ul3QP1YWFwld//r+zWK/6tW2Cg1h4EEU5f2az
-         na4AjvEKtFLrIPOSdpBSAGuAgvhEeRkZ7S/iQlwZ1vFDkqqgfvOZ+FLpkHVwgj6nC7pU
-         nuL/7FbuLNJ514VttRDd9EvuasI4d1R7u+5vz0gEjKWjANT2gVGfOcxe07DIG2e7w+q0
-         4o8hgviHyZN9wIXbr63XDzpmLEvB8p+ffPJiRKyr6ci7o2jM3nEg5OmlvOOCnwXvMzW+
-         /tK/hki6IwlCPeqrFvT6/a+BbGyewJWs561wIY77L7lA1zWMJhdGlyjVbT5eCwlcSOPF
-         +A7A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WNEPAJU0PKDjx+XnMY/T0wpxzKSr9Cr3EplpOoCn4Mg=;
+        b=RO8plrW1jTvcIU9jaiUr7gbc5+mACH0QXHLY3czL8SgaIhkmOlLNLRThMiAUSqB5Ly
+         8Z0H2FubYRIdzrxk5ZZKDi0MOMaGgn1Cy6DM5Tz5+bBIcstMxY7a0zn93hYlohOi0cx+
+         dRaClftcITthbkuf+GMufHq115LKWsPXfIEUGwLbRij2EgfffrDvbyyJjL0tVAxcFR8E
+         ABEkxVK/PMW83c2/h7KNA7UkXGfLNPIwfswHio2wX8A0cwQhFG882iRx/C0v6KbAzR8U
+         +MFGbBVbfaGX2wbnqHofSk2s1nDCMO6eNmZ/C42BFo9Ak8BkTwY5yq9hUB6/b/pEabsk
+         Tj3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=V3PN7+Kr/tucktHOq459ffhVuFT8vFVeNdn3CWQcOqs=;
-        b=RxWMEyrM/lVzkZqv+QdXjm9RVJ+CcuWWbYg8xKsTj1JpF1DDZOU8TVy20PldzAo266
-         IrWFo913oJDUPn5aoF2k85yzuRWP23GMZDQ2PilNWqo6ReUNyZRgOuGv29k1xNcAlR4b
-         J7Y+9/HxndazU2x3XWi9rF8OjyDsC5tHgiCbW+Mriw8afjOJIawNjzyQL0+1Jc8zk99I
-         7XKLfrxMJjGsZUSjncs1PmeudPcsXB4yukPFeTCkDj15Km8hdVDoRcNwsKEr5xVUOk3s
-         6m3L3pStR/k3MWYpUzYnPQjtA8Z8XbNw1RtPtBhUk7Dg5GpNcCOJawSNxd9GHkbooTFR
-         sFKw==
-X-Gm-Message-State: APjAAAWO+NNVSPY9mPA26nNtXPSbVLf/bUn2bbs6nzUjf1FBX6lPWNEr
-        27jTeqnes40qguj+EFvpqqXQoQ==
-X-Google-Smtp-Source: APXvYqzSzSl6fHZHf0Jw53i1jb2T7E8JBP2SWlv/T63vVd+AKTU/rUYev6uqlIbbsKy+8FkpZfvlqQ==
-X-Received: by 2002:a7b:c748:: with SMTP id w8mr15115318wmk.36.1561380701751;
-        Mon, 24 Jun 2019 05:51:41 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id 203sm7917884wmc.30.2019.06.24.05.51.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Jun 2019 05:51:40 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 13:51:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] pinctrl: qcom: sdm845: Fix CONFIG preprocessor guard
-Message-ID: <20190624125126.GF4699@dell>
-References: <20190621202043.95967-1-natechancellor@gmail.com>
- <CAKwvOdnP+XMn4BMHRcFeO=TCLxjhKk5NBrpmSyZnsAtwFj+gTw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WNEPAJU0PKDjx+XnMY/T0wpxzKSr9Cr3EplpOoCn4Mg=;
+        b=TWdgT8Brice8h6AD9YrvEUaF9jrKBFQEYuMTBo4/JmkSQ1CG1ciIE3eyuQPIvTK12U
+         I/jDL8Tqc7DqE6zShX/UeEj8w7gvdi01UyIZhuWU1bhPBzUrXiLRv5ESLEMJN0tQCRfD
+         uegSYlg1B7WwcosUTj/+V5fVp0hIpKY1ECE8wBop6lh2eGMK+mHpqxY8h6hMY66hY7iF
+         AUrHGHQ92qkc/HQ022wY9Z5EM3kD4mJIfgmzI3rOH547W3pbNqmyha/lO810ei3dOmvZ
+         IPrdrO8+vMfb8vzFvyqJjMg1r8Na0m1mjW//Wt8Cn2UvKJ9n7xnJBYjA0WPVEBGxujfa
+         yyVA==
+X-Gm-Message-State: APjAAAULvWzz1ZZXgG2wXZVBUKfY0X6GsKrDwup4xQzJ2MBhnVPsD22G
+        1bAY9PuXiuCO84VU0DkaoBurslu8
+X-Google-Smtp-Source: APXvYqzSDGrndyCxLDg8GGelDuwS8V7x7tQBjK5jsA9NOeIRgsbr70QnRs0ab8nFHEci1xRTIgnoYA==
+X-Received: by 2002:a19:ca0e:: with SMTP id a14mr20824806lfg.19.1561380906306;
+        Mon, 24 Jun 2019 05:55:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id u13sm1568415lfl.61.2019.06.24.05.55.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 05:55:05 -0700 (PDT)
+Subject: Re: [PATCH v1 1/3] gpu: host1x: Remove implicit IOMMU backing on
+ client's registration
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190623173743.24088-1-digetx@gmail.com>
+ <20190624070413.GA23846@infradead.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e7ecff74-ef8e-fd7e-1be2-0f3c60abc6f8@gmail.com>
+Date:   Mon, 24 Jun 2019 15:55:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190624070413.GA23846@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdnP+XMn4BMHRcFeO=TCLxjhKk5NBrpmSyZnsAtwFj+gTw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Nick Desaulniers wrote:
-
-> On Fri, Jun 21, 2019 at 1:21 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Clang warns when CONFIG_ACPI is unset:
-> >
-> >  drivers/pinctrl/qcom/pinctrl-sdm845.c:1320:5: warning: 'CONFIG_ACPI' is
-> >  not defined, evaluates to 0 [-Wundef]
-> >  #if CONFIG_ACPI
-> >      ^
-> >  1 warning generated.
-> >
-> > Use ifdef instead of if to resolve this.
-> >
-> > Fixes: a229105d7a1e ("pinctrl: qcom: sdm845: Provide ACPI support")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/569
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+24.06.2019 10:04, Christoph Hellwig пишет:
+> Don't we have a device tree problem here if there is a domain covering
+> them?  I though we should only pick up an IOMMU for a given device
+> if DT explicitly asked for that?
 > 
-> Thanks for the patch.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Interesting.  Thanks for fixing.
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+There is no specific domain that "covering them". The IOMMU domain is allocated
+dynamically during of the Tegra DRM's driver initialization (see tegra_drm_load) and
+then all of DRM devices are attached to that domain once all of the DRM sub-drivers
+are probed successfully. On Tegra SoCs it's up to software (driver) to decide how to
+separate hardware devices from each other, in a case of DRM we're putting all the
+relevant graphics devices into a single domain. Is it even possible to express IOMMU
+domain (not group!) assignments in a device-tree?
