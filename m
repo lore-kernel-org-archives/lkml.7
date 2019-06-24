@@ -2,202 +2,127 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAA2C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F7CC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D7520674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4B020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG3m/z6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfFXXJl (ORCPT
+        id S1728127AbfFXXLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:09:41 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58549 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbfFXXJl (ORCPT
+        Mon, 24 Jun 2019 19:11:12 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46526 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728045AbfFXXLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:09:41 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id d4c091cf0ca37d7c; Tue, 25 Jun 2019 01:09:37 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Tue, 25 Jun 2019 01:09:36 +0200
-Message-ID: <2287147.DxjcvLeq6l@kreacher>
-In-Reply-To: <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
-References: <1668247.RaJIPSxJUN@kreacher> <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com> <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
+        Mon, 24 Jun 2019 19:11:12 -0400
+Received: by mail-qk1-f194.google.com with SMTP id x18so11088006qkn.13;
+        Mon, 24 Jun 2019 16:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t2olUjb+16IZtzOoq18SXHccFR02UrcSs/pzhBjuQYc=;
+        b=LG3m/z6w5YI3QAgJOK9/qBg7kB2GAceSIahI/bjERhRHBVEfR5MQGznAQe1+7xq0W7
+         Nh0kyVIB8NVB93sxhlJuhzQ5KUAE6Qz1BPikOMudcogD6owbYr5r9ue9QiILYf+whf7A
+         TDBgkGjdyQjN/fySmtXhQuzZac6v/iAXmRJhodBn5T+PxBJ3A7aD51Yj0Ug/eOpeEJKg
+         XhjlBXwR/abMS5uN+rGN63FKkl/j8HS1VGkT4JTi8lBuJmgrZjKKVrSXy89DpS0CczO9
+         o0M37DcXlqkKaHwA6TT/zUte8ZjvUJNlBk58xAlt0Bkd1aPQThNI/uXa+0EnmTeH3VY3
+         bTog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t2olUjb+16IZtzOoq18SXHccFR02UrcSs/pzhBjuQYc=;
+        b=CQty6x/DHAFKS0Y+bZDqPOVVagCtvTbJDnVa3anOp5gvy7AKybnmZ+gt6O6q7gIYJx
+         XilyFkrXxwtk2swxKF5DWCv8hdnvCVubIIoGKGj9iTQq3yNpLtVsQQy9FRAlkKv6UGAe
+         mwsLpKGDzpJmNp2NhNiVNaPmeTlTSg6UKH6Ly0EHbwtt9aTRntaMO6XyoVrtCLFhWDRR
+         69rIljsk8TSlp9TBo/KgXvTwLaH4cm3HyUzC2foFMXv+uGt/arMUsCiEVbi8avnJjKxd
+         /YilC8NsoSfqbn+JlKtbtRIlkd3MKmj0oHahD4nBLiFheh5BGAY1JbLcO8QqZ2c/IU+m
+         AMJQ==
+X-Gm-Message-State: APjAAAXlSwXalMl8uGIucrAZbsWMWQDrUlLpEF+0xzcyJWojo0cU5sgZ
+        TYlgsIb/3EF9HCUDgRUxn2QSKcGUKHx5xtDxi0M=
+X-Google-Smtp-Source: APXvYqzSDSbXNFncqjERfHaY7Nx3NAuwCBGrqaFXc/ZkV5HX1DrlOzILnN1JAHAVDdvZ2qJw7c40CA4+lbRHfClvVYk=
+X-Received: by 2002:ae9:e40f:: with SMTP id q15mr54612321qkc.241.1561417870754;
+ Mon, 24 Jun 2019 16:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190624215824.118783-1-allanzhang@google.com>
+In-Reply-To: <20190624215824.118783-1-allanzhang@google.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Mon, 24 Jun 2019 16:10:59 -0700
+Message-ID: <CAPhsuW40c=CTdTo9YUbyj3AAL+A37TX1-Bty267bCYOaThJJ7w@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Allow bpf_skb_event_output for a few prog types
+To:     allanzhang <allanzhang@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 25, 2019 12:20:26 AM CEST Rafael J. Wysocki wrote:
-> On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On 13/06/2019 22:59, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > attempted to avoid a problem with devices whose drivers want them to
-> > > > stay in D0 over suspend-to-idle and resume, but it did not go as far
-> > > > as it should with that.
-> > > >
-> > > > Namely, first of all, the power state of a PCI bridge with a
-> > > > downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
-> > > > sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
-> > > > transactions on its secondary bus), but that is not actively enforced
-> > > > during system-wide PM transitions, so use the skip_bus_pm flag
-> > > > introduced by commit d491f2b75237 for that.
-> > > >
-> > > > Second, the configuration of devices left in D0 (whatever the reason)
-> > > > during suspend-to-idle need not be changed and attempting to put them
-> > > > into D0 again by force is pointless, so explicitly avoid doing that.
-> > > >
-> > > > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > >
-> > > I have noticed a regression in both the mainline and -next branches on
-> > > one of our boards when testing suspend. The bisect is point to this
-> > > commit and reverting on top of mainline does fix the problem. So far I
-> > > have not looked at this in close detail but kernel log is showing ...
-> >
-> > Can you please collect a log like that, but with dynamic debug in
-> > pci-driver.c enabled?
-> >
-> > Note that reverting this commit is rather out of the question, so we
-> > need to get to the bottom of the failure.
-> 
-> I suspect that there is a problem with the pm_suspend_via_firmware()
-> check which returns 'false' on the affected board, but the platform
-> actually removes power from devices left in D0 during suspend.
-> 
-> I guess it would be more appropriate to check something like
-> pm_suspend_no_platform() which would return 'true' in the
-> suspend-to-idle patch w/ ACPI.
+On Mon, Jun 24, 2019 at 3:08 PM allanzhang <allanzhang@google.com> wrote:
+>
+> Software event output is only enabled by a few prog types right now (TC,
+> LWT out, XDP, sockops). Many other skb based prog types need
+> bpf_skb_event_output to produce software event.
+>
+> Added socket_filter, cg_skb, sk_skb prog types to generate sw event.
+>
+> Test bpf code is generated from code snippet:
+>
+> struct TMP {
+>     uint64_t tmp;
+> } tt;
+> tt.tmp = 5;
+> bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
+>                       &tt, sizeof(tt));
+> return 1;
+>
+> the bpf assembly from llvm is:
+>        0:       b7 02 00 00 05 00 00 00         r2 = 5
+>        1:       7b 2a f8 ff 00 00 00 00         *(u64 *)(r10 - 8) = r2
+>        2:       bf a4 00 00 00 00 00 00         r4 = r10
+>        3:       07 04 00 00 f8 ff ff ff         r4 += -8
+>        4:       18 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00    r2 = 0ll
+>        6:       b7 03 00 00 00 00 00 00         r3 = 0
+>        7:       b7 05 00 00 08 00 00 00         r5 = 8
+>        8:       85 00 00 00 19 00 00 00         call 25
+>        9:       b7 00 00 00 01 00 00 00         r0 = 1
+>       10:       95 00 00 00 00 00 00 00         exit
+>
+> Patch 1 is enabling code.
+> Patch 2 is fullly covered selftest code.
+>
+> Signed-off-by: allanzhang <allanzhang@google.com>
 
-So I wonder if the patch below makes any difference?
+A few logistics issues:
 
----
- drivers/pci/pci-driver.c |    8 ++++----
- include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
- kernel/power/suspend.c   |    3 +++
- 3 files changed, 31 insertions(+), 6 deletions(-)
+1. The patch should be sent as a set, as
+   [PATCH bpf-next 0/2] ...
+   [PATCH bpf-next 1/2] ...
+   [PATCH bpf-next 2/2] ...
 
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
- 
- extern unsigned int pm_suspend_global_flags;
- 
--#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
--#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
-+#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
-+#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
-+#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
- 
- static inline void pm_suspend_clear_flags(void)
- {
-@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
- 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
- }
- 
-+static inline void pm_set_suspend_no_platform(void)
-+{
-+	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
-+}
-+
- /**
-  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
-  *
-@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
- 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
- }
- 
-+/**
-+ * pm_suspend_no_platform - Check if platform may change device power states.
-+ *
-+ * To be called during system-wide power management transitions to sleep states
-+ * or during the subsequent system-wide transitions back to the working state.
-+ *
-+ * Return 'true' if the power states of devices remain under full control of the
-+ * kernel throughout the system-wide suspend and resume cycle in progress (that
-+ * is, if a device is put into a certain power state during suspend, it can be
-+ * expected to remain in that state during resume).
-+ */
-+static inline bool pm_suspend_no_platform(void)
-+{
-+	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
-+}
-+
- /* Suspend-to-idle state machnine. */
- enum s2idle_states {
- 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
-Index: linux-pm/kernel/power/suspend.c
-===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
- 
- 	pm_suspend_target_state = state;
- 
-+	if (state == PM_SUSPEND_TO_IDLE)
-+		pm_set_suspend_no_platform();
-+
- 	error = platform_suspend_begin(state);
- 	if (error)
- 		goto Close;
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -870,7 +870,7 @@ static int pci_pm_suspend_noirq(struct d
- 			pci_dev->bus->self->skip_bus_pm = true;
- 	}
- 
--	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-+	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
- 		dev_dbg(dev, "PCI PM: Skipped\n");
- 		goto Fixup;
- 	}
-@@ -925,10 +925,10 @@ static int pci_pm_resume_noirq(struct de
- 	/*
- 	 * In the suspend-to-idle case, devices left in D0 during suspend will
- 	 * stay in D0, so it is not necessary to restore or update their
--	 * configuration here and attempting to put them into D0 again may
--	 * confuse some firmware, so avoid doing that.
-+	 * configuration here and attempting to put them into D0 again is
-+	 * pointless, so avoid doing that.
- 	 */
--	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-+	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
- 		pci_pm_default_resume_early(pci_dev);
- 
- 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+2. You need to specify which tree this is targeting. In this case, bpf-next.
+3. Please use different commit log for each patch.
+4. No need for Signed-off-by in the cover letter.
 
+Please resubmit. And generate the patches with git command similar to
+the following:
 
+git format-patch --cover-leter --subject_prefix "PATCH bpf-next v2" HEAD~2
 
+Thanks,
+Song
