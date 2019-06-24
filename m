@@ -2,74 +2,79 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715DEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D42C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A8320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908B12133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561382477;
-	bh=uKlCQRGXXA9YPfkpvOBY9ttO0cZxrzJGnbw1r6VZnMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JpZvP+FTMVI7w6GPZu2g7/8M6TgXXXRKlSTJ06B1Qa8Zh7HVlLyeVBJW9NBEOHF5E
-	 uzqqqTetP6/0tBAl1U96uqbPQlLNFEGynH84BvvTNv6V0Ehf6jJaFxGPSGfSxyu68X
-	 WayPWqtEjqaabmbQ+fk2nR5KMYiiFaXBFmkes8n4=
+	s=default; t=1561382491;
+	bh=WAE1HR6hUH9xAcKn4xMqspK9ebAd/XkgtM/HqIgBdiw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XLxS8uBZE7XY1HckuItGshPYBCPUvarcVY1O+Wye0NaiAneMpUp4QuL3sD+d8fB0a
+	 g2UJbnpa0K5CCnmK4Y6Dr4DJO1/VdJfXmcqxbE3PGlzMNNkArQYJ23JeLzjndOIjZX
+	 L8LBakZYv1p5uBr26UdbLSJuh+5176h0bDtuRuNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfFXNVP (ORCPT
+        id S1726723AbfFXNVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 09:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFXNVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:21:13 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1726773AbfFXNV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:21:29 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B9A20820;
-        Mon, 24 Jun 2019 13:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4916120820;
+        Mon, 24 Jun 2019 13:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561382472;
-        bh=uKlCQRGXXA9YPfkpvOBY9ttO0cZxrzJGnbw1r6VZnMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f5lH0uZvw8BkIHG188VL+ST9jbasC1wQ0K2sJIzFZLneGFIYFvMW3P/GAeLUpQQCn
-         NkDhvX8ulbWbYdZFaTG/4uuJVIJro3Ob1NSt9eVJH3OdykWxwNm/8D7xoqVR2yzi/o
-         mu5tKbw/US+kMCKfawNd81c+5ga6vt8grmCs6bj4=
-Date:   Mon, 24 Jun 2019 21:20:57 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: linux-next: Signed-off-by missing for commit in the imx-mxs tree
-Message-ID: <20190624132056.GC16146@dragon>
-References: <20190624222359.62e92a15@canb.auug.org.au>
+        s=default; t=1561382488;
+        bh=WAE1HR6hUH9xAcKn4xMqspK9ebAd/XkgtM/HqIgBdiw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=g8JlED+0oqILB6Ch8fwGlZ6lFtDGij9D2xNScUPrTW24XcjIZqN3PWDME2nCrPQHj
+         jTfTQ37BG6gJhCI9mC4lB2ztn87SlhnIA3MIoPJGVfHXgFuhP36lfNf9D97jvgEAk9
+         ha9OKapyPhY/qyD9EJbEttZLSeYCwIXergjN8nUQ=
+Date:   Mon, 24 Jun 2019 15:21:23 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+cc:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>, rjw@rjwysocki.net,
+        Joey Lee <JLee@suse.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH V34 10/29] hibernate: Disable when the kernel is locked
+ down
+In-Reply-To: <20190622175208.GB30317@amd>
+Message-ID: <nycvar.YFH.7.76.1906241520500.27227@cbobk.fhfr.pm>
+References: <20190622000358.19895-1-matthewgarrett@google.com> <20190622000358.19895-11-matthewgarrett@google.com> <20190622175208.GB30317@amd>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624222359.62e92a15@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:23:59PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commit
-> 
->   9b5800c21b4d ("ARM: dts: imx6qdl-kontron-samx6i: add Kontron SMARC SoM Support")
-> 
-> is missing a Signed-off-by from its author.
+On Sat, 22 Jun 2019, Pavel Machek wrote:
 
-Thanks for spotting it, Stephen.
+> > There is currently no way to verify the resume image when returning
+> > from hibernate.  This might compromise the signed modules trust model,
+> > so until we can work with signed hibernate images we disable it when the
+> > kernel is locked down.
+> 
+> I keep getting these...
+> 
+> IIRC suse has patches to verify the images.
 
-@Michael, would you please give your SoB?  Otherwise, I will have to
-back out the patch.
+Yeah, Joey Lee is taking care of those. CCing.
 
-Shawn
+-- 
+Jiri Kosina
+SUSE Labs
+
