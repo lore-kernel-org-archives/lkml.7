@@ -6,105 +6,155 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEBCC4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF600C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5D8208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65F720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfFXXoQ (ORCPT
+        id S1728603AbfFXXo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:44:16 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:45829 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728499AbfFXXoQ (ORCPT
+        Mon, 24 Jun 2019 19:44:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728499AbfFXXo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:44:16 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id E6EC03DBE31;
-        Tue, 25 Jun 2019 09:44:12 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hfYc4-0000mA-Q2; Tue, 25 Jun 2019 09:43:04 +1000
-Date:   Tue, 25 Jun 2019 09:43:04 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190624234304.GD7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-12-hch@lst.de>
+        Mon, 24 Jun 2019 19:44:26 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5ONhMe8127404
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:44:24 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb5ysnn46-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:44:24 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 25 Jun 2019 00:44:23 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Jun 2019 00:44:20 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5ONiJ1F41746830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 23:44:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15AFEB2064;
+        Mon, 24 Jun 2019 23:44:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECF2CB205F;
+        Mon, 24 Jun 2019 23:44:18 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Jun 2019 23:44:18 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 73EFB16C5D9C; Mon, 24 Jun 2019 16:44:22 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 16:44:22 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Reply-To: paulmck@linux.ibm.com
+References: <20190620211019.GA3436@hirez.programming.kicks-ass.net>
+ <20190620221336.GZ26519@linux.ibm.com>
+ <20190621105503.GI3436@hirez.programming.kicks-ass.net>
+ <20190621121630.GE26519@linux.ibm.com>
+ <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+ <20190621133414.GF26519@linux.ibm.com>
+ <20190621174104.GA7519@linux.ibm.com>
+ <20190621175027.GA23260@linux.ibm.com>
+ <20190621234602.GA16286@linux.ibm.com>
+ <20190624231222.GA17497@lerouge>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-12-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=WnLPuD5yqiszFHSN9gAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190624231222.GA17497@lerouge>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062423-0072-0000-0000-0000044068DF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011323; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01222816; UDB=6.00643456; IPR=6.01003976;
+ MB=3.00027451; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 23:44:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062423-0073-0000-0000-00004CB089EF
+Message-Id: <20190624234422.GP26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:52AM +0200, Christoph Hellwig wrote:
-> Takes the xfs writeback code and move it to iomap.c.  A new structure
-> with three methods is added as the abstraction from the generic
-> writeback code to the file system.  These methods are used to map
-> blocks, submit an ioend, and cancel a page that encountered an error
-> before it was added to an ioend.
+On Tue, Jun 25, 2019 at 01:12:23AM +0200, Frederic Weisbecker wrote:
+> On Fri, Jun 21, 2019 at 04:46:02PM -0700, Paul E. McKenney wrote:
+> > @@ -3097,13 +3126,21 @@ static void sched_tick_remote(struct work_struct *work)
+> >  	/*
+> >  	 * Run the remote tick once per second (1Hz). This arbitrary
+> >  	 * frequency is large enough to avoid overload but short enough
+> > -	 * to keep scheduler internal stats reasonably up to date.
+> > +	 * to keep scheduler internal stats reasonably up to date.  But
+> > +	 * first update state to reflect hotplug activity if required.
+> >  	 */
+> > +	os = atomic_read(&twork->state);
+> > +	if (os) {
+> > +		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_OFFLINING);
+> > +		if (atomic_inc_not_zero(&twork->state))
+> > +			return;
 > 
-> Note that we temporarily lose the writepage tracing, but that will
-> be added back soon.
+> Using inc makes me a bit nervous here. If we do so, we should somewhow
+> make sure that we never exceed a value higher than TICK_SCHED_REMOTE_OFFLINE
+> by accident.
+> 
+> atomic_xchg() is probably a bit costlier but also safer as it allows
+> us to check both the old and the new value. That path shouldn't be critically fast
+> after all.
 
-I'm a little concerned this is going to limit what we can do
-with the XFS IO path because now we can't change this code without
-considering the direct impact on other filesystems. The QA burden of
-changing the XFS writeback code goes through the roof with this
-change (i.e. we can break multiple filesystems, not just XFS).
+It would need to be cmpxchg() to avoid messing with the state if
+the state were somehow TICK_SCHED_REMOTE_RUNNING, right?
 
-The writepage code is one of the areas that, historically speaking,
-has one of the highest rates of modification in XFS - we've
-substantially reworked this code from top to bottom 4 or 5 times in
-a bit over ten years, and each time it's been removing abstraction
-layers and getting the writeback code closer to the internal XFS
-extent mapping infrastructure.
+> > +	}
+> >  	queue_delayed_work(system_unbound_wq, dwork, HZ);
+> >  }
+> >  
+> >  static void sched_tick_start(int cpu)
+> >  {
+> > +	int os;
+> >  	struct tick_work *twork;
+> >  
+> >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+> > @@ -3112,15 +3149,20 @@ static void sched_tick_start(int cpu)
+> >  	WARN_ON_ONCE(!tick_work_cpu);
+> >  
+> >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
+> > -	twork->cpu = cpu;
+> > -	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+> > -	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
+> > +	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
+> > +	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
+> 
+> See if we use atomic_inc(), we would need to also WARN(os > TICK_SCHED_REMOTE_OFFLINE).
 
-This steps the other way - it adds abstraction to move the XFS code
-to be generic, and now we have to be concerned about how changes to
-the XFS IO path affects other filesystems. While I can see the
-desire to use this code in other filesystems, no other filesystem
-does COW or delayed allocation like XFS and this functionality is
-tightly tied into the iomap page writeback architecture.
+How about if I put that WARN() between the atomic_inc_not_zero() and
+the return, presumably also adding braces?
 
-As such, I'm not convinced that a wholesale lifting of this code
-into the generic iomap code is going to make our life easier or
-better. The stuff we've already got in fs/iomap.c is largely
-uncontroversial and straight forward, but this writeback code is
-anything but straight forward.....
+							Thanx, Paul
 
-Another issue this raises is that fs/iomap.c is already huge chunk
-of code with lots of different functionality in it. Adding another
-500+ lines of new functionality to it doesn't make it any easier to
-navigate or find things.
+> > +	if (os == TICK_SCHED_REMOTE_OFFLINE) {
+> > +		twork->cpu = cpu;
+> > +		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+> > +		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
+> > +	}
+> >  }
+> 
+> Thanks.
+> 
 
-If we are going to move this writeback code to the generic iomap
-infrastructure, can we please split the iomap code up in to smaller
-files first?  e.g. fs/iomap-dio.c for all the direct IO code,
-fs/iomap-pageio.c for all the page-based IO, fs/iomap.c for all the
-core functionality (like iomap_apply()) and fs/iomap-util.c for all
-the miscellaneous one-off functions like fiemap, etc?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
