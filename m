@@ -2,99 +2,126 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385ADC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B28C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C8920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B586020673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbfFXRkX (ORCPT
+        id S1732580AbfFXRkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:40:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:55820 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 13:40:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34686 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfFXRkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:40:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67044C0A;
-        Mon, 24 Jun 2019 10:40:22 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B95AE3F718;
-        Mon, 24 Jun 2019 10:40:17 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 18:40:15 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in
- mlx4_get_umem_mr
-Message-ID: <20190624174015.GL29120@arrakis.emea.arm.com>
-References: <cover.1561386715.git.andreyknvl@google.com>
- <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
+        id S1727945AbfFXRkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:40:31 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A516B307D85A;
+        Mon, 24 Jun 2019 17:40:25 +0000 (UTC)
+Received: from ovpn-116-138.phx2.redhat.com (ovpn-116-138.phx2.redhat.com [10.3.116.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B749600C0;
+        Mon, 24 Jun 2019 17:40:20 +0000 (UTC)
+Message-ID: <3deedea922e864ddf6363dc6d0850f42ad33ba50.camel@redhat.com>
+Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
+ disabled the same
+From:   Scott Wood <swood@redhat.com>
+To:     paulmck@linux.ibm.com
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 24 Jun 2019 12:40:19 -0500
+In-Reply-To: <20190622191320.GA23577@linux.ibm.com>
+References: <20190619011908.25026-1-swood@redhat.com>
+         <20190619011908.25026-4-swood@redhat.com>
+         <20190620211005.GW26519@linux.ibm.com>
+         <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
+         <20190620222505.GB26519@linux.ibm.com>
+         <5d24d1243849d9f8f6884348e1ceafcc3b7314fd.camel@redhat.com>
+         <20190622002606.GL26519@linux.ibm.com>
+         <20190622191320.GA23577@linux.ibm.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 24 Jun 2019 17:40:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends kernel ABI to allow to pass
-> tagged user pointers (with the top byte set to something else other than
-> 0x00) as syscall arguments.
+On Sat, 2019-06-22 at 12:13 -0700, Paul E. McKenney wrote:
+> On Fri, Jun 21, 2019 at 05:26:06PM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 20, 2019 at 06:08:19PM -0500, Scott Wood wrote:
+> > > On Thu, 2019-06-20 at 15:25 -0700, Paul E. McKenney wrote:
+> > > > On Thu, Jun 20, 2019 at 04:59:30PM -0500, Scott Wood wrote:
+> > > > > On Thu, 2019-06-20 at 14:10 -0700, Paul E. McKenney wrote:
+> > > > > > On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
+> > > > > > > [Note: Just before posting this I noticed that the
+> > > > > > > invoke_rcu_core
+> > > > > > > stuff
+> > > > > > >  is part of the latest RCU pull request, and it has a patch
+> > > > > > > that
+> > > > > > >  addresses this in a more complicated way that appears to deal
+> > > > > > > with
+> > > > > > > the
+> > > > > > >  bare irq-disabled sequence as well.
+> > > > > > 
+> > > > > > Far easier to deal with it than to debug the lack of it.  ;-)
+> > > > > > 
+> > > > > > >  Assuming we need/want to support such sequences, is the
+> > > > > > >  invoke_rcu_core() call actually going to result in scheduling
+> > > > > > > any
+> > > > > > >  sooner?  resched_curr() just does the same setting of
+> > > > > > > need_resched
+> > > > > > >  when it's the same cpu.
+> > > > > > > ]
+> > > > > > 
+> > > > > > Yes, invoke_rcu_core() can in some cases invoke the scheduler
+> > > > > > sooner.
+> > > > > > Setting the CPU-local bits might not have effect until the next
+> > > > > > interrupt.
+> > > > > 
+> > > > > Maybe I'm missing something, but I don't see how (in the non-
+> > > > > use_softirq
+> > > > > case).  It just calls wake_up_process(), which in resched_curr()
+> > > > > will
+> > > > > set
+> > > > > need_resched but not do an IPI-to-self.
+> > > > 
+> > > > The common non-rt case will be use_softirq.  Or are you referring
+> > > > specifically to this block of code in current -rcu?
+> > > > 
+> > > > 		} else if (exp && irqs_were_disabled && !use_softirq
+> > > > &&
+> > > > 			   !t-
+> > > > >rcu_read_unlock_special.b.deferred_qs) {
+> > > > 			// Safe to awaken and we get no help from
+> > > > enabling
+> > > > 			// irqs, unlike bh/preempt.
+> > > > 			invoke_rcu_core();
+> > > 
+> > > Yes, that one.  If that block is removed the else path should be
+> > > sufficient,
+> > > now that an IPI-to-self has been added.
+> > 
+> > I will give it a try and let you know what happens.
 > 
-> mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-> only by done with untagged pointers.
-> 
-> Untag user pointers in this function.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> How about the following?
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Looks good, thanks.
 
-This patch also needs an ack from the infiniband maintainers (Jason).
+-Scott
 
--- 
-Catalin
+
