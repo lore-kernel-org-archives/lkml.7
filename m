@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FDCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE3C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883C320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8397420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfFXJ5P (ORCPT
+        id S1728658AbfFXJ4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:57:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:44918 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 05:56:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:44868 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfFXJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:56:21 -0400
+        id S1728601AbfFXJ4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:56:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA46D106F;
-        Mon, 24 Jun 2019 02:56:20 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B56A9C15;
+        Mon, 24 Jun 2019 02:56:13 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C54A3F71E;
-        Mon, 24 Jun 2019 02:56:19 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C4223F71E;
+        Mon, 24 Jun 2019 02:56:12 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, julien.thierry@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC V3 07/18] objtool: Introduce INSN_UNKNOWN type
-Date:   Mon, 24 Jun 2019 10:55:37 +0100
-Message-Id: <20190624095548.8578-8-raphael.gault@arm.com>
+Subject: [RFC V3 02/18] objtool: orc: Refactor ORC API for other architectures to implement.
+Date:   Mon, 24 Jun 2019 10:55:32 +0100
+Message-Id: <20190624095548.8578-3-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190624095548.8578-1-raphael.gault@arm.com>
 References: <20190624095548.8578-1-raphael.gault@arm.com>
@@ -41,117 +41,360 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arm64 some object files contain data stored in the .text section.
-This data is interpreted by objtool as instruction but can't be
-identified as a valid one. In order to keep analysing those files we
-introduce INSN_UNKNOWN type. The "unknown instruction" warning will thus
-only be raised if such instructions are uncountered while validating an
-execution branch.
-
-This change doesn't impact the x86 decoding logic since 0 is still used
-as a way to specify an unknown type, raising the "unknown instruction"
-warning during the decoding phase still.
+The ORC unwinder is only supported on x86 at the moment and should thus be
+in the x86 architecture code. In order not to break the whole structure in
+case another architecture decides to support the ORC unwinder via objtool
+we choose to let the implementation be done in the architecture dependent
+code.
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- tools/objtool/arch.h                           |  3 ++-
- tools/objtool/arch/arm64/decode.c              |  8 ++++----
- tools/objtool/arch/arm64/include/insn_decode.h |  4 ++--
- tools/objtool/check.c                          | 10 +++++++++-
- 4 files changed, 17 insertions(+), 8 deletions(-)
+ tools/objtool/Build                     |   2 -
+ tools/objtool/arch.h                    |   3 +
+ tools/objtool/arch/x86/Build            |   2 +
+ tools/objtool/{ => arch/x86}/orc_dump.c |   4 +-
+ tools/objtool/{ => arch/x86}/orc_gen.c  | 104 ++++++++++++++++++++++--
+ tools/objtool/check.c                   |  99 +---------------------
+ tools/objtool/orc.h                     |   4 +-
+ 7 files changed, 111 insertions(+), 107 deletions(-)
+ rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
+ rename tools/objtool/{ => arch/x86}/orc_gen.c (66%)
 
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index 749becdf5b90..2ed83344e0a5 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -2,8 +2,6 @@ objtool-y += arch/$(SRCARCH)/
+ objtool-y += builtin-check.o
+ objtool-y += builtin-orc.o
+ objtool-y += check.o
+-objtool-y += orc_gen.o
+-objtool-y += orc_dump.o
+ objtool-y += elf.o
+ objtool-y += special.o
+ objtool-y += objtool.o
 diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index 723600aae13f..f3f94e2a1403 100644
+index 2a38a834cf40..ce7db772248e 100644
 --- a/tools/objtool/arch.h
 +++ b/tools/objtool/arch.h
-@@ -26,7 +26,8 @@
- #define INSN_CLAC		12
- #define INSN_STD		13
- #define INSN_CLD		14
--#define INSN_OTHER		15
-+#define INSN_UNKNOWN		15
-+#define INSN_OTHER		16
- #define INSN_LAST		INSN_OTHER
+@@ -10,6 +10,7 @@
+ #include <linux/list.h>
+ #include "elf.h"
+ #include "cfi.h"
++#include "orc.h"
  
- enum op_dest_type {
-diff --git a/tools/objtool/arch/arm64/decode.c b/tools/objtool/arch/arm64/decode.c
-index 5be1d87b1a1c..a40338a895f5 100644
---- a/tools/objtool/arch/arm64/decode.c
-+++ b/tools/objtool/arch/arm64/decode.c
-@@ -37,9 +37,9 @@
+ #define INSN_JUMP_CONDITIONAL	1
+ #define INSN_JUMP_UNCONDITIONAL	2
+@@ -75,6 +76,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 
+ bool arch_callee_saved_reg(unsigned char reg);
+ 
++int arch_orc_read_unwind_hints(struct objtool_file *file);
++
+ unsigned long arch_jump_destination(struct instruction *insn);
+ 
+ unsigned long arch_dest_rela_offset(int addend);
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index b998412c017d..1f11b45999d0 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,4 +1,6 @@
+ objtool-y += decode.o
++objtool-y += orc_dump.o
++objtool-y += orc_gen.o
+ 
+ inat_tables_script = arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = arch/x86/lib/x86-opcode-map.txt
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/arch/x86/orc_dump.c
+similarity index 98%
+rename from tools/objtool/orc_dump.c
+rename to tools/objtool/arch/x86/orc_dump.c
+index 13ccf775a83a..cfe8f96bdd68 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/arch/x86/orc_dump.c
+@@ -4,8 +4,8 @@
   */
- static arm_decode_class aarch64_insn_class_decode_table[] = {
- 	[INSN_RESERVED]			= arm_decode_reserved,
--	[INSN_UNKNOWN]			= arm_decode_unknown,
-+	[INSN_UNALLOC_1]		= arm_decode_unknown,
- 	[INSN_SVE_ENC]			= arm_decode_sve_encoding,
--	[INSN_UNALLOC]			= arm_decode_unknown,
-+	[INSN_UNALLOC_2]		= arm_decode_unknown,
- 	[INSN_LD_ST_4]			= arm_decode_ld_st,
- 	[INSN_DP_REG_5]			= arm_decode_dp_reg,
- 	[INSN_LD_ST_6]			= arm_decode_ld_st,
-@@ -191,7 +191,7 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- int arm_decode_unknown(u32 instr, unsigned char *type,
- 		       unsigned long *immediate, struct stack_op *op)
+ 
+ #include <unistd.h>
+-#include "orc.h"
+-#include "warn.h"
++#include "../../orc.h"
++#include "../../warn.h"
+ 
+ static const char *reg_name(unsigned int reg)
  {
--	*type = 0;
-+	*type = INSN_UNKNOWN;
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/arch/x86/orc_gen.c
+similarity index 66%
+rename from tools/objtool/orc_gen.c
+rename to tools/objtool/arch/x86/orc_gen.c
+index 27a4112848c2..b4f285bf5271 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/arch/x86/orc_gen.c
+@@ -6,11 +6,11 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "orc.h"
+-#include "check.h"
+-#include "warn.h"
++#include "../../orc.h"
++#include "../../check.h"
++#include "../../warn.h"
+ 
+-int create_orc(struct objtool_file *file)
++int arch_create_orc(struct objtool_file *file)
+ {
+ 	struct instruction *insn;
+ 
+@@ -116,7 +116,7 @@ static int create_orc_entry(struct section *u_sec, struct section *ip_relasec,
  	return 0;
  }
  
-@@ -206,7 +206,7 @@ int arm_decode_reserved(u32 instr, unsigned char *type,
- 			unsigned long *immediate, struct stack_op *op)
+-int create_orc_sections(struct objtool_file *file)
++int arch_create_orc_sections(struct objtool_file *file)
  {
- 	*immediate = instr & ONES(16);
--	*type = INSN_BUG;
-+	*type = INSN_UNKNOWN;
+ 	struct instruction *insn, *prev_insn;
+ 	struct section *sec, *u_sec, *ip_relasec;
+@@ -209,3 +209,97 @@ int create_orc_sections(struct objtool_file *file)
+ 
  	return 0;
  }
- 
-diff --git a/tools/objtool/arch/arm64/include/insn_decode.h b/tools/objtool/arch/arm64/include/insn_decode.h
-index eb54fc39dca5..a01d76306749 100644
---- a/tools/objtool/arch/arm64/include/insn_decode.h
-+++ b/tools/objtool/arch/arm64/include/insn_decode.h
-@@ -20,9 +20,9 @@
- #include "../../../arch.h"
- 
- #define INSN_RESERVED	0b0000
--#define INSN_UNKNOWN	0b0001
-+#define INSN_UNALLOC_1	0b0001
- #define INSN_SVE_ENC	0b0010
--#define INSN_UNALLOC	0b0011
-+#define INSN_UNALLOC_2	0b0011
- #define INSN_DP_IMM	0b1001	//0x100x
- #define INSN_BRANCH	0b1011	//0x101x
- #define INSN_LD_ST_4	0b0100	//0bx1x0
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 3172f49c3a58..cba1d91451cc 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1952,6 +1952,13 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 	while (1) {
- 		next_insn = next_insn_same_sec(file, insn);
- 
-+		if (insn->type == INSN_UNKNOWN) {
-+			WARN("%s+0x%lx unknown instruction type, should never be reached",
-+			     insn->sec->name,
-+			     insn->offset);
-+			return 1;
++
++int arch_orc_read_unwind_hints(struct objtool_file *file)
++{
++	struct section *sec, *relasec;
++	struct rela *rela;
++	struct unwind_hint *hint;
++	struct instruction *insn;
++	struct cfi_reg *cfa;
++	int i;
++
++	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
++	if (!sec)
++		return 0;
++
++	relasec = sec->rela;
++	if (!relasec) {
++		WARN("missing .rela.discard.unwind_hints section");
++		return -1;
++	}
++
++	if (sec->len % sizeof(struct unwind_hint)) {
++		WARN("struct unwind_hint size mismatch");
++		return -1;
++	}
++
++	file->hints = true;
++
++	for (i = 0; i < sec->len / sizeof(struct unwind_hint); i++) {
++		hint = (struct unwind_hint *)sec->data->d_buf + i;
++
++		rela = find_rela_by_dest(sec, i * sizeof(*hint));
++		if (!rela) {
++			WARN("can't find rela for unwind_hints[%d]", i);
++			return -1;
 +		}
 +
- 		if (file->c_file && func && insn->func && func != insn->func->pfunc) {
- 			WARN("%s() falls through to next function %s()",
- 			     func->name, insn->func->name);
-@@ -2383,7 +2390,8 @@ static int validate_reachable_instructions(struct objtool_file *file)
- 		return 0;
++		insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!insn) {
++			WARN("can't find insn for unwind_hints[%d]", i);
++			return -1;
++		}
++
++		cfa = &insn->state.cfa;
++
++		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
++			insn->save = true;
++			continue;
++
++		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
++			insn->restore = true;
++			insn->hint = true;
++			continue;
++		}
++
++		insn->hint = true;
++
++		switch (hint->sp_reg) {
++		case ORC_REG_UNDEFINED:
++			cfa->base = CFI_UNDEFINED;
++			break;
++		case ORC_REG_SP:
++			cfa->base = CFI_SP;
++			break;
++		case ORC_REG_BP:
++			cfa->base = CFI_BP;
++			break;
++		case ORC_REG_SP_INDIRECT:
++			cfa->base = CFI_SP_INDIRECT;
++			break;
++		case ORC_REG_R10:
++			cfa->base = CFI_R10;
++			break;
++		case ORC_REG_R13:
++			cfa->base = CFI_R13;
++			break;
++		case ORC_REG_DI:
++			cfa->base = CFI_DI;
++			break;
++		case ORC_REG_DX:
++			cfa->base = CFI_DX;
++			break;
++		default:
++			WARN_FUNC("unsupported unwind_hint sp base reg %d",
++				  insn->sec, insn->offset, hint->sp_reg);
++			return -1;
++		}
++
++		cfa->offset = hint->sp_offset;
++		insn->state.type = hint->type;
++		insn->state.end = hint->end;
++	}
++
++	return 0;
++}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index b37ca4822f25..1a7ee85e9878 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1147,99 +1147,6 @@ static int add_switch_table_alts(struct objtool_file *file)
+ 	return 0;
+ }
  
- 	for_each_insn(file, insn) {
--		if (insn->visited || ignore_unreachable_insn(insn))
-+		if (insn->visited || ignore_unreachable_insn(insn) ||
-+		    insn->type == INSN_UNKNOWN)
- 			continue;
+-static int read_unwind_hints(struct objtool_file *file)
+-{
+-	struct section *sec, *relasec;
+-	struct rela *rela;
+-	struct unwind_hint *hint;
+-	struct instruction *insn;
+-	struct cfi_reg *cfa;
+-	int i;
+-
+-	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
+-	if (!sec)
+-		return 0;
+-
+-	relasec = sec->rela;
+-	if (!relasec) {
+-		WARN("missing .rela.discard.unwind_hints section");
+-		return -1;
+-	}
+-
+-	if (sec->len % sizeof(struct unwind_hint)) {
+-		WARN("struct unwind_hint size mismatch");
+-		return -1;
+-	}
+-
+-	file->hints = true;
+-
+-	for (i = 0; i < sec->len / sizeof(struct unwind_hint); i++) {
+-		hint = (struct unwind_hint *)sec->data->d_buf + i;
+-
+-		rela = find_rela_by_dest(sec, i * sizeof(*hint));
+-		if (!rela) {
+-			WARN("can't find rela for unwind_hints[%d]", i);
+-			return -1;
+-		}
+-
+-		insn = find_insn(file, rela->sym->sec, rela->addend);
+-		if (!insn) {
+-			WARN("can't find insn for unwind_hints[%d]", i);
+-			return -1;
+-		}
+-
+-		cfa = &insn->state.cfa;
+-
+-		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
+-			insn->save = true;
+-			continue;
+-
+-		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
+-			insn->restore = true;
+-			insn->hint = true;
+-			continue;
+-		}
+-
+-		insn->hint = true;
+-
+-		switch (hint->sp_reg) {
+-		case ORC_REG_UNDEFINED:
+-			cfa->base = CFI_UNDEFINED;
+-			break;
+-		case ORC_REG_SP:
+-			cfa->base = CFI_SP;
+-			break;
+-		case ORC_REG_BP:
+-			cfa->base = CFI_BP;
+-			break;
+-		case ORC_REG_SP_INDIRECT:
+-			cfa->base = CFI_SP_INDIRECT;
+-			break;
+-		case ORC_REG_R10:
+-			cfa->base = CFI_R10;
+-			break;
+-		case ORC_REG_R13:
+-			cfa->base = CFI_R13;
+-			break;
+-		case ORC_REG_DI:
+-			cfa->base = CFI_DI;
+-			break;
+-		case ORC_REG_DX:
+-			cfa->base = CFI_DX;
+-			break;
+-		default:
+-			WARN_FUNC("unsupported unwind_hint sp base reg %d",
+-				  insn->sec, insn->offset, hint->sp_reg);
+-			return -1;
+-		}
+-
+-		cfa->offset = hint->sp_offset;
+-		insn->state.type = hint->type;
+-		insn->state.end = hint->end;
+-	}
+-
+-	return 0;
+-}
  
- 		WARN_FUNC("unreachable instruction", insn->sec, insn->offset);
+ static int read_retpoline_hints(struct objtool_file *file)
+ {
+@@ -1334,7 +1241,7 @@ static int decode_sections(struct objtool_file *file)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = read_unwind_hints(file);
++	ret = arch_orc_read_unwind_hints(file);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2457,11 +2364,11 @@ int check(const char *_objname, bool orc)
+ 	}
+ 
+ 	if (orc) {
+-		ret = create_orc(&file);
++		ret = arch_create_orc(&file);
+ 		if (ret < 0)
+ 			goto out;
+ 
+-		ret = create_orc_sections(&file);
++		ret = arch_create_orc_sections(&file);
+ 		if (ret < 0)
+ 			goto out;
+ 
+diff --git a/tools/objtool/orc.h b/tools/objtool/orc.h
+index ee2832221e62..fd7fa1d34a81 100644
+--- a/tools/objtool/orc.h
++++ b/tools/objtool/orc.h
+@@ -10,8 +10,8 @@
+ 
+ struct objtool_file;
+ 
+-int create_orc(struct objtool_file *file);
+-int create_orc_sections(struct objtool_file *file);
++int arch_create_orc(struct objtool_file *file);
++int arch_create_orc_sections(struct objtool_file *file);
+ 
+ int orc_dump(const char *objname);
+ 
 -- 
 2.17.1
 
