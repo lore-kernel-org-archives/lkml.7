@@ -2,52 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C45C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9127C48BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA59205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83C92146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371135;
-	bh=GQIqOJoLrWOHgb9iG6OJt8URd/S+GLaWZyR0/LD9Jvo=;
+	s=default; t=1561371138;
+	bh=8J2ek7vj1Ztw0cwOVrjW589wi/e/fWDGfafVoe4r+Zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1j9NTksjOFyw/20D68pwvcqDAmwFo5I9u327Uh3vyRmf9fEyoWrPa4U7wQlR7ZT1p
-	 SjzdUaAaWn/yHTApT35ZieEu2TH5NHx/SgHV9txhAhUddhNflPrZY3PqJEXkejhJFx
-	 gnlqBMNaln/tVGGtsH/Nd6wMcqMcB1lfofCykFjc=
+	b=Ygc/kaleGEJ0cQKCiMzoyoKf+pd70q7ABFJOv+x6ez4Pfd/LCQ525QqE5ovzTkLf9
+	 bojafXkMoUjNf6zsD5gpif+KbCnBNOMtQddCTBg1oAv+3Nf8LfA5u7uhQZvfyr22w9
+	 fbgmcoVEjgL7Rj3oO+LqRfI4qg2MaE5gbufOC9Fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfFXKMN (ORCPT
+        id S1729600AbfFXKGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730055AbfFXKGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:12 -0400
+        id S1729423AbfFXKGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:04 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3080208E3;
-        Mon, 24 Jun 2019 10:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A12208E3;
+        Mon, 24 Jun 2019 10:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370771;
-        bh=GQIqOJoLrWOHgb9iG6OJt8URd/S+GLaWZyR0/LD9Jvo=;
+        s=default; t=1561370763;
+        bh=8J2ek7vj1Ztw0cwOVrjW589wi/e/fWDGfafVoe4r+Zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iI+8TDsyf+gczjSB7UAzK9O6kGknqcX1TsmyaILYQTznokqE4vwc8R2W6RQQ6b67R
-         Vbvuv7phdMnWN01y/wKEXJ+VwclAYoW3ajL3kSLgsl3wmNKH/ix2ETVIvr1ZK07W1n
-         s1rTR6Osh/IxrIiOH68MMACw+Wq4ladFNbsPKGbg=
+        b=cSmGjZs7kzLGqIQ6RATf54nmqgamuQY+jExBBN1fWA7AjPyQfX1XhUuHB341o7XlU
+         huxHf9i5x6vVv4JqGxuMaDKbOGKm34DiBMMo5HAgXQyGhezb8pIurPWIiV+H5W4O6i
+         fWxjabBVin4Dc0HkfpdfMYlvcMitFVUjZha7pKmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/90] net: hns: Fix loopback test failed at copper ports
-Date:   Mon, 24 Jun 2019 17:56:40 +0800
-Message-Id: <20190624092317.482478718@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.19 81/90] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+Date:   Mon, 24 Jun 2019 17:57:11 +0800
+Message-Id: <20190624092319.233578744@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,45 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e1f164861e500f4e068a9d909bbd3fcc7841483 ]
+From: Marcel Holtmann <marcel@holtmann.org>
 
-When doing a loopback test at copper ports, the serdes loopback
-and the phy loopback will fail, because of the adjust link had
-not finished, and phy not ready.
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-Adds sleep between adjust link and test process to fix it.
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/net/bluetooth/hci_core.h |    3 +++
+ net/bluetooth/hci_conn.c         |    8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-index e2710ff48fb0..1fa0cd527ead 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-@@ -339,6 +339,7 @@ static int __lb_setup(struct net_device *ndev,
- static int __lb_up(struct net_device *ndev,
- 		   enum hnae_loop loop_mode)
- {
-+#define NIC_LB_TEST_WAIT_PHY_LINK_TIME 300
- 	struct hns_nic_priv *priv = netdev_priv(ndev);
- 	struct hnae_handle *h = priv->ae_handle;
- 	int speed, duplex;
-@@ -365,6 +366,9 @@ static int __lb_up(struct net_device *ndev,
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -182,6 +182,9 @@ struct adv_info {
  
- 	h->dev->ops->adjust_link(h, speed, duplex);
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
  
-+	/* wait adjust link done and phy ready */
-+	msleep(NIC_LB_TEST_WAIT_PHY_LINK_TIME);
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
 +
- 	return 0;
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
  }
  
--- 
-2.20.1
-
 
 
