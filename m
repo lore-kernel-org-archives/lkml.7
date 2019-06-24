@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C307C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD489C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18632212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33EB212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370664;
-	bh=pRnKOdPQl7hC2q6F+bPvTomDy/40Pc8baQlM3LhR8NE=;
+	s=default; t=1561370666;
+	bh=/LuzipxlxcA01dUG2PDDkaVnU54GDF4QMOE/ETs3E9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BBeFvFxW+jjtg+3vPfOZqvES4xJTwJQ1rbbaSWUnmicZRoKsTpySZQpcCnJ9HRagU
-	 gnqERc9RvbMNHhCCEoRdvVG7y7hUuteNtKHbnhk3I6tUMoGMEaaNKNjkgncG8RdNo3
-	 TewLozkGX/TBMMZMV48ScSVXerG4mSiob9lKSPK0=
+	b=b3/6x4z4dQjZHhIMxr/EaIFTgDL1o96bd1gOtrz8oacIVb+JEMNas9BZKXzI6pDNX
+	 wdiUiLw99i8TScHMOvkmegLF2G1D8msKygFQmHFxCgqlh9cZLMGYd0DpEC816Y83Hp
+	 aU0pnX65KGlcFkNioKwQcrbQPxaj9RBGtcu1jjek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfFXKEX (ORCPT
+        id S1729694AbfFXKEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbfFXKES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:18 -0400
+        id S1729666AbfFXKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:21 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6817A20848;
-        Mon, 24 Jun 2019 10:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C92205ED;
+        Mon, 24 Jun 2019 10:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370657;
-        bh=pRnKOdPQl7hC2q6F+bPvTomDy/40Pc8baQlM3LhR8NE=;
+        s=default; t=1561370660;
+        bh=/LuzipxlxcA01dUG2PDDkaVnU54GDF4QMOE/ETs3E9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFyB9VJaAbNXYIf0X/BLHws8KkRiTxGoYGlW0L5Z+xEwR6nVnBZv5XSO5+MsXsxgt
-         9chZ9XHhKi+YGOiDXVdBZII6UP+Gp4/sSmf8vryOmAF1lHdm6iY5uaVYa7rQfeQO5z
-         lnof1nR98GjFDopsdtGO3xuHIjp5dMsZUoaN9iWI=
+        b=ZLAT9J7Oryy947lYGzwpSGibothfgkSPZpvNDXp1UJt2iEUJeivwTWJHhmMO9m9k3
+         Yq8cGGUwPevVALyCXWBEN8LMxr22lB2whl491FyMQlyHav62Is7s8dS/KhwqGsJOlo
+         5INlj5pBuLhi69nz4rWTHgmH+K9j3e+gPPxD2r0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Kamenee Arumugam <kamenee.arumugam@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/90] IB/hfi1: Validate page aligned for a given virtual address
-Date:   Mon, 24 Jun 2019 17:56:32 +0800
-Message-Id: <20190624092317.051419705@linuxfoundation.org>
+Subject: [PATCH 4.19 43/90] MIPS: uprobes: remove set but not used variable epc
+Date:   Mon, 24 Jun 2019 17:56:33 +0800
+Message-Id: <20190624092317.105339061@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -63,39 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
+[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
 
-User applications can register memory regions for TID buffers that are not
-aligned on page boundaries. Hfi1 is expected to pin those pages in memory
-and cache the pages with mmu_rb. The rb tree will fail to insert pages
-that are not aligned correctly.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Validate whether a given virtual address is page aligned before pinning.
+arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
+arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
 
-Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+It's never used since introduction in
+commit 40e084a506eb ("MIPS: Add uprobes support.")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: <linux-mips@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/kernel/uprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-index dbe7d14a5c76..4e986ca4dd35 100644
---- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-+++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
- 	u32 *tidlist = NULL;
- 	struct tid_user_buf *tidbuf;
- 
-+	if (!PAGE_ALIGNED(tinfo->vaddr))
-+		return -EINVAL;
-+
- 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
- 	if (!tidbuf)
- 		return -ENOMEM;
+diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
+index 4aaff3b3175c..6dbe4eab0a0e 100644
+--- a/arch/mips/kernel/uprobes.c
++++ b/arch/mips/kernel/uprobes.c
+@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
+ 	 */
+ 	aup->resume_epc = regs->cp0_epc + 4;
+ 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
+-		unsigned long epc;
+-
+-		epc = regs->cp0_epc;
+ 		__compute_return_epc_for_insn(regs,
+ 			(union mips_instruction) aup->insn[0]);
+ 		aup->resume_epc = regs->cp0_epc;
 -- 
 2.20.1
 
