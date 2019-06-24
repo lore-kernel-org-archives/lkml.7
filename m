@@ -2,108 +2,107 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2681CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF65C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBCA2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:47:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1t2stW6K"
+	by mail.kernel.org (Postfix) with ESMTP id F03E32063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfFXOr6 (ORCPT
+        id S1728850AbfFXOsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:47:58 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44110 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfFXOr6 (ORCPT
+        Mon, 24 Jun 2019 10:48:04 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:43484 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfFXOsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:47:58 -0400
-Received: by mail-wr1-f51.google.com with SMTP id r16so14194620wrl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version;
-        bh=dIRgQ3ynOpjhyuIVnVuPJTcE55pI12BhgO4qsYJmHWg=;
-        b=1t2stW6KFcusBgmgb+vjxCC6D/mAJkeo4PWwfQTJtiO7t+wgz+REk1m6xRvG5PdvpB
-         N5Cfj0WIDM23ujK4DsoZ5o1ow097YCS3oiJGmCJJLc5kPXI9NQjDO+jaevjCq4y3MDyi
-         RwKqbnu2Na54f0LI1M23VY8Iq8pGBws7IXzE5sNIaK7HzGq0HBb8ZEcyorT4YW2sK18x
-         cQHHT0avopamkHoV1U0VKmXeQpKbSOAQpadRqHyELQS+oT5AGEeyL05nMQWknKwiEzY7
-         kaNz21h3qkJfc4TfwevGKTNdhk0RfDvec7zs18vmX6VVcVS/qiaLjeq43dtTUSp9cngj
-         BBqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
-        bh=dIRgQ3ynOpjhyuIVnVuPJTcE55pI12BhgO4qsYJmHWg=;
-        b=cuYIb9oehsxxrrYQuqB7a0gJCDKIFk4/rFEJIIqCYKLwe+M3mv6veL07U5FzIBB8ZF
-         634N54yFNQN+WxmZT/jvCXpq8xZH2eG+fozVz4qgONzIQyt9yrQJv4AReK19scwTRUoK
-         J+zyQjhBzaAZVrRVDIvwGCLhy7+cHf3Gli1ieKGOmx2/O4+pefo6v3SWWWwkoyaPaRr+
-         ckb8BOQzypFwdCUW48V91XT0diop/MrszluatlZqgykEut7sL3lMGjJZWvT3REIywiMw
-         xFJQ7iBdsDjL7vyAvx+FWY4XDq6okNg6RDYSVqgf8HDtDYWH9/7q0YMlnhWaLdBxu/jq
-         fjgQ==
-X-Gm-Message-State: APjAAAW6eXtS9ayVLU8F2mkOoGrX3KRq7xEOYnqn8U7MhXl7l9zqtonn
-        CwOmbK8vhAM3g/G3znrsZJIjLg==
-X-Google-Smtp-Source: APXvYqzAhY+ZzLqrg8P9+Gjky58V/7Mins9CYwy8HmsCLCi6hwSDb1K4orr31YS8ZR7Cuubi4to67Q==
-X-Received: by 2002:a5d:4642:: with SMTP id j2mr11688565wrs.211.1561387676728;
-        Mon, 24 Jun 2019 07:47:56 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u6sm13228366wml.9.2019.06.24.07.47.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 07:47:55 -0700 (PDT)
-From:   Julien Masson <jmasson@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
-Subject: [PATCH 0/9] drm: meson: global clean-up (use proper macros, update comments ...)
-Date:   Mon, 24 Jun 2019 16:20:42 +0200
-Message-ID: <86zhm782g5.fsf@baylibre.com>
+        Mon, 24 Jun 2019 10:48:04 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 7D8DA67A90A;
+        Mon, 24 Jun 2019 16:47:51 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 24 Jun
+ 2019 16:47:50 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Mon, 24 Jun 2019 16:47:50 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Peter Pan <peterpandong@micron.com>,
+        "Chuanhong Guo" <gch981213@gmail.com>
+CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Topic: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Index: AQHVKoaYbYsysfnJPUKsxvje/QcCeKaqwQIA
+Date:   Mon, 24 Jun 2019 14:47:50 +0000
+Message-ID: <f86e6750-6b4f-daf7-3f0c-1c5e63b5b95d@kontron.de>
+References: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
+In-Reply-To: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9FE31BB9AAE8204BAD101611478CAFA2@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 7D8DA67A90A.A00F2
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@exceet.de, gch981213@gmail.com,
+        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com, peterpandong@micron.com, richard@nod.at,
+        stable@vger.kernel.org, vigneshr@ti.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-This patch series aims to clean-up differents parts of the drm meson
-code source.
-
-Couple macros have been defined and used to set several registers
-instead of using magic constants.
-
-I also took the opportunity to:
-- add/remove/update comments
-- remove useless code
-- minor fix/improvment
-
-Julien Masson (9):
-  drm: meson: mask value when writing bits relaxed
-  drm: meson: crtc: use proper macros instead of magic constants
-  drm: meson: drv: use macro when initializing vpu
-  drm: meson: vpp: use proper macros instead of magic constants
-  drm: meson: viu: use proper macros instead of magic constants
-  drm: meson: venc: use proper macros instead of magic constants
-  drm: meson: global clean-up
-  drm: meson: add macro used to enable HDMI PLL
-  drm: meson: venc: set the correct macrovision max amplitude value
-
- drivers/gpu/drm/meson/meson_crtc.c      |  17 ++-
- drivers/gpu/drm/meson/meson_drv.c       |  26 +++-
- drivers/gpu/drm/meson/meson_dw_hdmi.c   |   2 +
- drivers/gpu/drm/meson/meson_dw_hdmi.h   |  12 +-
- drivers/gpu/drm/meson/meson_plane.c     |   2 +-
- drivers/gpu/drm/meson/meson_registers.h | 136 ++++++++++++++++---
- drivers/gpu/drm/meson/meson_vclk.c      |   7 +-
- drivers/gpu/drm/meson/meson_venc.c      | 169 ++++++++++++++++++------
- drivers/gpu/drm/meson/meson_venc_cvbs.c |   3 +-
- drivers/gpu/drm/meson/meson_viu.c       |  82 ++++++------
- drivers/gpu/drm/meson/meson_vpp.c       |  27 ++--
- 11 files changed, 362 insertions(+), 121 deletions(-)
-
--- 
-2.17.1
-
+T24gMjQuMDYuMTkgMTQ6MTUsIGxpYW93ZWl4aW9uZyB3cm90ZToNCj4gSW4gY2FzZSBvZiB0aGUg
+bGFzdCBwYWdlIGNvbnRhaW5pbmcgYml0ZmxpcHMgKHJldCA+IDApLA0KPiBzcGluYW5kX210ZF9y
+ZWFkKCkgd2lsbCByZXR1cm4gdGhhdCBudW1iZXIgb2YgYml0ZmxpcHMgZm9yIHRoZSBsYXN0DQo+
+IHBhZ2UuIEJ1dCB0byBtZSBpdCBsb29rcyBsaWtlIGl0IHNob3VsZCBpbnN0ZWFkIHJldHVybiBt
+YXhfYml0ZmxpcHMgbGlrZQ0KPiBpdCBkb2VzIHdoZW4gdGhlIGxhc3QgcGFnZSByZWFkIHJldHVy
+bnMgd2l0aCAwLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogbGlhb3dlaXhpb25nIDxsaWFvd2VpeGlv
+bmdAYWxsd2lubmVydGVjaC5jb20+DQo+IEFja2VkLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
+LmJyZXppbGxvbkBjb2xsYWJvcmEuY29tPg0KPiBBY2tlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8
+ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQpXaHkgZGlkIHlvdSBjaGFuZ2Ugb3VyIFJl
+dmlld2VkLWJ5IHRhZ3MgdG8gQWNrZWQtYnkgdGFncz8NCg0KPiBGaXhlczogNzUyOWRmNDY1MjQ4
+ICgibXRkOiBuYW5kOiBBZGQgY29yZSBpbmZyYXN0cnVjdHVyZSB0byBzdXBwb3J0IFNQSSBOQU5E
+cyIpDQo+IC0tLQ0KPiAgIGRyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyB8IDIgKy0NCj4gICAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMgYi9kcml2ZXJzL210ZC9uYW5kL3Nw
+aS9jb3JlLmMNCj4gaW5kZXggNTU2YmZkYi4uNmI5Mzg4ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUu
+Yw0KPiBAQCAtNTExLDEyICs1MTEsMTIgQEAgc3RhdGljIGludCBzcGluYW5kX210ZF9yZWFkKHN0
+cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2ZmX3QgZnJvbSwNCj4gICAJCWlmIChyZXQgPT0gLUVCQURN
+U0cpIHsNCj4gICAJCQllY2NfZmFpbGVkID0gdHJ1ZTsNCj4gICAJCQltdGQtPmVjY19zdGF0cy5m
+YWlsZWQrKzsNCj4gLQkJCXJldCA9IDA7DQo+ICAgCQl9IGVsc2Ugew0KPiAgIAkJCW10ZC0+ZWNj
+X3N0YXRzLmNvcnJlY3RlZCArPSByZXQ7DQo+ICAgCQkJbWF4X2JpdGZsaXBzID0gbWF4X3QodW5z
+aWduZWQgaW50LCBtYXhfYml0ZmxpcHMsIHJldCk7DQo+ICAgCQl9DQo+ICAgDQo+ICsJCXJldCA9
+IDA7DQo+ICAgCQlvcHMtPnJldGxlbiArPSBpdGVyLnJlcS5kYXRhbGVuOw0KPiAgIAkJb3BzLT5v
+b2JyZXRsZW4gKz0gaXRlci5yZXEub29ibGVuOw0KPiAgIAl9DQo+IA==
