@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3702C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2630AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BDD208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD30F20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370403;
-	bh=30UQfNx5V5qlH97nqNcpVbRoZDxwq1XOiz803BNOLlw=;
+	s=default; t=1561370410;
+	bh=YESTF+djnPXlhFHCOy0pYzKxfYTjxk33iochzxG71zY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=09tx3LydoEoHEtJLW5DyO7r5pfqIQABtDW3rGAS6c/qq21SM/xpZEXzFNPaU7R+BT
-	 zXrFvV9quc7jPKRTKnF4HqHYRWNkP1fxKRpihsbVrQQZC1KREFfXouG6ueXvVLSfRm
-	 S/uKOczn/GL6j6hJOVooUw2EYRoQgY5NVBTwTqOA=
+	b=oqKaX9mggKESAB9Qda9eSOJt89kJBypoGHCER6UiEFeumttGXFUnWf2CjpDrhDYbH
+	 zleqk1S35Qh5lBqnNMBLsLgBZCE4dQc94lm/xodA1E4121PzZCFVMDp55EtEkzPO7S
+	 i65pp5t1NqDitri0SAGRinxIkk2n2Ai2BUdtCdP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfFXKAC (ORCPT
+        id S1729310AbfFXJ7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbfFXJ77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:59 -0400
+        id S1729284AbfFXJ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:48 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B7C214C6;
-        Mon, 24 Jun 2019 09:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B06205ED;
+        Mon, 24 Jun 2019 09:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370398;
-        bh=30UQfNx5V5qlH97nqNcpVbRoZDxwq1XOiz803BNOLlw=;
+        s=default; t=1561370387;
+        bh=YESTF+djnPXlhFHCOy0pYzKxfYTjxk33iochzxG71zY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1uRUFxJQhBJ9a5UYJDn8WLaLjtJJUiq0JGlF3YjxZ5reom4tK2+2Dqc2k5VaTouJp
-         cTkRVSDCXzNbdgADyBwf2sH+P4d/cmVStkXP3QeInHKgm7XTDoneeSCzYg2BIqeMZm
-         ed4YTUb/nrhxgv5Kvcy0Q716J96TXNOio903LGek=
+        b=vvHK/3l3T3hRObjPwjKGm80bW6OIzSxCYyamNvFrVnzcL62PJYYgtJa3A/xMBz/Dn
+         tq/HvFXJ0yOSBZb8NiTZqIT1MFpfUG84J98ekFpL8cDeH64BfNhzwW80cIWsML5cxB
+         bTYiZnmjU7nlGk20QS0JcwGVKWEVoriRcx5blUiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.14 44/51] ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
-Date:   Mon, 24 Jun 2019 17:57:02 +0800
-Message-Id: <20190624092311.047822964@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.14 40/51] can: flexcan: fix timeout when set small bitrate
+Date:   Mon, 24 Jun 2019 17:56:58 +0800
+Message-Id: <20190624092310.686118575@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -59,41 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-commit 88a748419b84187fd1da05637b8e5928b04a1e06 upstream.
+commit 247e5356a709eb49a0d95ff2a7f07dac05c8252c upstream.
 
-If UHS speed modes are enabled, a compatible SD card switches down to
-1.8V during enumeration. If after this a software reboot/crash takes
-place and on-chip ROM tries to enumerate the SD card, the difference in
-IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+Current we can meet timeout issue when setting a small bitrate like
+10000 as follows on i.MX6UL EVK board (ipg clock = 66MHZ, per clock =
+30MHZ):
 
-The fix for this is to have support for power cycling the card in
-hardware (with a PORz/soft-reset line causing a power cycle of the
-card). Since am571x-, am572x- and am574x-idk don't have this
-capability, disable voltage switching for these boards.
+| root@imx6ul7d:~# ip link set can0 up type can bitrate 10000
 
-The major effect of this is that the maximum supported speed
-mode is now high speed(50 MHz) down from SDR104(200 MHz).
+A link change request failed with some changes committed already.
+Interface can0 may have been left with an inconsistent configuration,
+please check.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+| RTNETLINK answers: Connection timed out
+
+It is caused by calling of flexcan_chip_unfreeze() timeout.
+
+Originally the code is using usleep_range(10, 20) for unfreeze
+operation, but the patch (8badd65 can: flexcan: avoid calling
+usleep_range from interrupt context) changed it into udelay(10) which is
+only a half delay of before, there're also some other delay changes.
+
+After double to FLEXCAN_TIMEOUT_US to 100 can fix the issue.
+
+Meanwhile, Rasmus Villemoes reported that even with a timeout of 100,
+flexcan_probe() fails on the MPC8309, which requires a value of at least
+140 to work reliably. 250 works for everyone.
+
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/am57xx-idk-common.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/can/flexcan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-@@ -405,6 +405,7 @@
- 	vqmmc-supply = <&ldo1_reg>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+	no-1-8-v;
- };
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -177,7 +177,7 @@
+ #define FLEXCAN_MB_CNT_LENGTH(x)	(((x) & 0xf) << 16)
+ #define FLEXCAN_MB_CNT_TIMESTAMP(x)	((x) & 0xffff)
  
- &mmc2 {
+-#define FLEXCAN_TIMEOUT_US		(50)
++#define FLEXCAN_TIMEOUT_US		(250)
+ 
+ /* FLEXCAN hardware feature flags
+  *
 
 
