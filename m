@@ -2,187 +2,195 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FCEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A9CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC02E2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2892089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DkEnz2pU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfFXIWG (ORCPT
+        id S1727826AbfFXIXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:22:06 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:48690 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfFXIWF (ORCPT
+        Mon, 24 Jun 2019 04:23:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35768 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbfFXIXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:22:05 -0400
-Received: by mail-io1-f72.google.com with SMTP id z19so3493289ioi.15
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:22:05 -0700 (PDT)
+        Mon, 24 Jun 2019 04:23:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f15so2972699wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=r/Gq+b3f8SdftObytJUqlEQiegHXyWR3QGcAhKeM2ME=;
+        b=DkEnz2pUUwUmo09M+6MVrmbP5Quj6zD0pksFDfgb09Pi+lKinJJy9tOHot3/QdlcZK
+         yqPYDaYnDkECCMJiCHHuqnFAUFcsa7I/3fKWAq5pUj1vLtwaeQnfkmskZP6Cl3NZcJYY
+         TK2T7QMU92Enn0DPq9CTJpn08D6kICSHDJFHNZUAhh71vUkVabqb+YRuhXLoWYsSiDFY
+         A+oGn9owrbT1DZziq6AOBCyoWW9QD8soOQPlupFK4pw6j/Gga9iFGvSN1hVp9xD9itk4
+         6mLgRPOgvHLRNJH9EWKGgnvlV+/RssiQzL+8+t8kawyTBI8J+ZbYNn/MSsIkVo7wl+TP
+         mXXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YZgcLfRhyHL78sZ7TJjPKJ+WSFoTOyOmk/4C7t9HRo8=;
-        b=t7c8ekyjTwWHqW8o0b14OpXfnVKrr0jYC53C/dfo42vX5732NF8f8DiXGgDAxRZrzP
-         0nGQkW6KuMHwNl6bs0ACDdgYOWvM3MfZidK6VjA7dVANq+ZROAQAdAeFq+33soQv3N4e
-         OS7XWCWH4N7GKB/PT53qT3d1l28imT6xO8APwUK9eWN2xcQVkyTNceeaJxCCkFAcW0ZK
-         O1cRntUc2wwlGZjrHZGgtH/sd42wtKqbjJ7AmA9gJJyedFWzrBZ1MUHrTpggqbmupX4h
-         kbnAFVY6s3LNfQZxMuL5GapWiJ0J7dftCRFuS1iLjSRG/OyXsj3+gAep7jT7+gRdJSrG
-         latQ==
-X-Gm-Message-State: APjAAAWEsB5KKoRwdrch25a8C2HZ8lhlczFCwE3MEnKjNt1zJgbzKAVL
-        xYxnDQknYkh5ACnz4D+7nymhApSdGFFp23OlFRL+LQfXht8s
-X-Google-Smtp-Source: APXvYqyTRl/9CxZYV5oILQSkgPDgew5gV2YyknZv22+rXw/aaGKjOmEBIokdOqn2xMKmw1VGbcP/D52avGDpC4Q1rbfOebwvnId7
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=r/Gq+b3f8SdftObytJUqlEQiegHXyWR3QGcAhKeM2ME=;
+        b=G9mrb3nT6UWb1pyE91vilns0JFFAOJ2X6286GNsfBY7xYEUHTqzhAUdQvQcFbmx0Ii
+         toPWvxNETHy3s/WPL0paqDy2cCrgA1n0rtqJMTHS6u5GzSNGgzsnVxB+KKSc6qgHUds7
+         iSCrcO14/M3F3MUEJNDtekbMbgx/e2UGnOw8K4ouWtptay6jbCsmFQTA191G+D7t0U51
+         FpauqpcH+bs4zioDto6dYZpcFUHweGGabC8XTIuWEh9X2CGsyVrbAvQe4+wnTfy/BwDa
+         8QwyXbgRqP5g6VuwbOwonN4jL4wcsfIErvkQWXDac9bN1eXRrrbh1zSKKSPda4yGPiQ0
+         ezDA==
+X-Gm-Message-State: APjAAAXSqUIoXIqZCFZjkPb3oUToX6QfxzzePB78G0pKuzI6zJgNR9NM
+        KG3Yc1GkS+Z94oE5NuhwX5IBNw==
+X-Google-Smtp-Source: APXvYqx+PJXlKPyJ6o7BEWInAqF5spC2F8HGL3RFg+6VUHnHhq0tKwqLoNOiW6CtgZmwZUdoerFf4w==
+X-Received: by 2002:a05:6000:100a:: with SMTP id a10mr39261789wrx.154.1561364578407;
+        Mon, 24 Jun 2019 01:22:58 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id l4sm7825900wmh.18.2019.06.24.01.22.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 01:22:57 -0700 (PDT)
+Subject: Re: [RFC/RFT 14/14] arm64: dts: meson-g12b-odroid-n2: enable DVFS
+To:     jbrunet@baylibre.com, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com
+References: <20190620150013.13462-1-narmstrong@baylibre.com>
+ <20190620150013.13462-15-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <789aa9dc-08d5-5d76-6efb-1365d83aad2e@baylibre.com>
+Date:   Mon, 24 Jun 2019 10:22:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:5a89:: with SMTP id v131mr15706664jaa.130.1561364524867;
- Mon, 24 Jun 2019 01:22:04 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 01:22:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dea828058c0d815d@google.com>
-Subject: KASAN: use-after-free Read in _free_event
-From:   syzbot <syzbot+37100ea87beb0cac28f4@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        jolsa@redhat.com, kafai@fb.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190620150013.13462-15-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 20/06/2019 17:00, Neil Armstrong wrote:
+> Enable DVFS for the Odroid-N2 by setting the clock, OPP and supply
+> for each cores of each CPU clusters.
+> 
+> The first cluster uses the "VDDCPU_B" power supply, and the second
+> cluster uses the "VDDCPU_A" power supply.
+> 
+> Each power supply can achieve 0.73V to 1.01V using 2 distinct PWM
+> outputs clocked at 800KHz with an inverse duty-cycle.
+> 
+> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
+> between all the possible cpufreq translations of each cluster and
+> checking the final frequency using the clock-measurer, script at [2].
+> 
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index c3e0735e6d9f..0db1547bfb5a 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -114,6 +114,44 @@
 
-syzbot found the following crash on:
+[...]
 
-HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=179ccd3aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
-dashboard link: https://syzkaller.appspot.com/bug?extid=37100ea87beb0cac28f4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+I just ran a 4days long test, leading to ~4 729 015 transitions.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Here are the cpufreq trans_table content :
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+37100ea87beb0cac28f4@syzkaller.appspotmail.com
+Cortex-A53:
+   From  :    To
+         :    100000    250000    500000    666666   1000000   1200000   1398000   1512000   1608000   1704000   1896000
+   100000:         0     30975     20650     20649     20649     20649     20649     20649     20649     20649     20649
+   250000:     20650         0     30975     20649     20649     20649     20649     20649     20649     20649     20649
+   500000:     20650     20650         0     30973     20649     20648     20648     20648     20648     20648     20648
+   666666:     20649     20649     20649         0     30972     20648     20648     20648     20648     20648     20648
+  1000000:     20649     20649     20649     20648         0     30972     20648     20648     20648     20648     20648
+  1200000:     20649     20649     20648     20648     20648         0     30972     20648     20648     20648     20648
+  1398000:     20649     20649     20648     20648     20648     20648         0     30972     20648     20648     20648
+  1512000:     20649     20649     20648     20648     20648     20648     20648         0     30972     20648     20648
+  1608000:     20649     20649     20648     20648     20648     20648     20648     20648         0     30972     20648
+  1704000:     20649     20649     20648     20648     20648     20648     20648     20648     20648         0     30972
+  1896000:     30973     20649     20648     20648     20648     20648     20648     20648     20648     20648         0
 
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_sub_and_test_checked+0x87/0x200  
-lib/refcount.c:182
-Read of size 4 at addr ffff88804e9f06e0 by task syz-executor.5/13046
+Cortex-A73:
+   From  :    To
+         :    100000    250000    500000    666666   1000000   1200000   1398000   1512000   1704000
+   100000:         0     45964     30643     30643     30643     30642     30642     30642     30642
+   250000:     30643         0     45963     30642     30642     30642     30642     30642     30642
+   500000:     30643     30642         0     45963     30642     30642     30642     30642     30642
+   666666:     30643     30642     30642         0     45963     30642     30642     30642     30642
+  1000000:     30643     30642     30642     30642         0     45963     30642     30642     30642
+  1200000:     30642     30642     30642     30642     30642         0     45963     30642     30642
+  1398000:     30642     30642     30642     30642     30642     30642         0     45963     30642
+  1512000:     30642     30642     30642     30642     30642     30642     30642         0     45963
+  1704000:     45963     30642     30642     30642     30642     30642     30642     30642         0
 
-CPU: 1 PID: 13046 Comm: syz-executor.5 Not tainted 5.2.0-rc5+ #38
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
-  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
-  kasan_check_read+0x11/0x20 mm/kasan/common.c:94
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  refcount_sub_and_test_checked+0x87/0x200 lib/refcount.c:182
-  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
-  put_task_struct include/linux/sched/task.h:98 [inline]
-  _free_event+0x3d5/0x13a0 kernel/events/core.c:4470
-  free_event+0x5f/0xd0 kernel/events/core.c:4491
-  perf_event_release_kernel+0x5b2/0xbe0 kernel/events/core.c:4652
-  perf_release+0x37/0x50 kernel/events/core.c:4666
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
-  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x412fb1
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffe25e1b730 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000412fb1
-RDX: 0000000000000000 RSI: 0000000000000081 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000760a38 R09: ffffffffffffffff
-R10: 00007ffe25e1b800 R11: 0000000000000293 R12: 0000000000760a40
-R13: 0000000000000003 R14: 0000000000000001 R15: 000000000075bfd4
-
-Allocated by task 13049:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
-  slab_post_alloc_hook mm/slab.h:437 [inline]
-  slab_alloc_node mm/slab.c:3269 [inline]
-  kmem_cache_alloc_node+0x131/0x710 mm/slab.c:3579
-  alloc_task_struct_node kernel/fork.c:160 [inline]
-  dup_task_struct kernel/fork.c:848 [inline]
-  copy_process.part.0+0x43f7/0x6790 kernel/fork.c:1868
-  copy_process kernel/fork.c:1800 [inline]
-  _do_fork+0x25d/0xfe0 kernel/fork.c:2369
-  __do_sys_clone kernel/fork.c:2476 [inline]
-  __se_sys_clone kernel/fork.c:2470 [inline]
-  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2470
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8689:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3432 [inline]
-  kmem_cache_free+0x86/0x260 mm/slab.c:3698
-  free_task_struct kernel/fork.c:165 [inline]
-  free_task+0xdd/0x120 kernel/fork.c:460
-  __delayed_free_task+0x19/0x20 kernel/fork.c:1744
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2092 [inline]
-  invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
-  rcu_core+0xba5/0x1500 kernel/rcu/tree.c:2291
-  __do_softirq+0x25c/0x94c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88804e9f06c0
-  which belongs to the cache task_struct(97:syz5) of size 6080
-The buggy address is located 32 bytes inside of
-  6080-byte region [ffff88804e9f06c0, ffff88804e9f1e80)
-The buggy address belongs to the page:
-page:ffffea00013a7c00 refcount:1 mapcount:0 mapping:ffff888090b5de40  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0001681f88 ffffea0001576488 ffff888090b5de40
-raw: 0000000000000000 ffff88804e9f06c0 0000000100000001 ffff888058fda540
-page dumped because: kasan: bad access detected
-page->mem_cgroup:ffff888058fda540
-
-Memory state around the buggy address:
-  ffff88804e9f0580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88804e9f0600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff88804e9f0680: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff88804e9f0700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88804e9f0780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Neil
