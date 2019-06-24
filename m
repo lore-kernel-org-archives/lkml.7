@@ -2,105 +2,79 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ECAC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FB6C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7229F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E051720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfFXTqA (ORCPT
+        id S1730576AbfFXTqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:46:00 -0400
-Received: from smtprelay0205.hostedemail.com ([216.40.44.205]:47796 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726263AbfFXTp7 (ORCPT
+        Mon, 24 Jun 2019 15:46:38 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:46655 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFXTqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:45:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 797CD1801C5E9;
-        Mon, 24 Jun 2019 19:45:58 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: run93_50df21c86a335
-X-Filterd-Recvd-Size: 3000
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 24 Jun 2019 19:45:55 +0000 (UTC)
-Message-ID: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-From:   Joe Perches <joe@perches.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Shawn Landden <shawn@git.icu>
-Date:   Mon, 24 Jun 2019 12:45:54 -0700
-In-Reply-To: <20190624193123.GI3436@hirez.programming.kicks-ass.net>
-References: <20190624161913.GA32270@embeddedor>
-         <20190624193123.GI3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 24 Jun 2019 15:46:38 -0400
+Received: by mail-pf1-f178.google.com with SMTP id 81so8088017pfy.13;
+        Mon, 24 Jun 2019 12:46:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ifvZwjPwDnekn88v2jZcVDzNwUQkndcGRvqJLqxCMJM=;
+        b=RigsEIJMVqY+eXhbrmD9uR0vJzcCxw9/2BctBV23xULkOFJKn+GxMxYiT6M70AA1Di
+         xf5Ee7cAP1OGsDWyTdW8FOpyI5wiNAXWX66qR3Jlis+wS5PiMErLUPzin9Gz90k7r05j
+         Z4BAt44l9UPEo9LLr7TxI1F4n8/IwpdJiJUmzuX2FhW8UzO2pRlcMrEw0QzN+XFX/8of
+         3NL8kCPZWsl3HmPPUUw+BJX8LHfjTOmtbyzC7gf8+0ox8nHL0b2IEy0PzRP6t9EOzx/T
+         uaLnPCMzx3pH59PgyphkyxUNs2+bZWgtrUg/onvjDlgvoGxjUu6vjqQp/dZjHfY7wmpv
+         0ecQ==
+X-Gm-Message-State: APjAAAXxoGqFXqmeRTyzjMwiuvdrWyHI3rb+G4Uqd/eMXrGLsJ0eXYPa
+        D0ips/STKox+8xfkpodOwlk=
+X-Google-Smtp-Source: APXvYqyXexiRyLBKCch3RWNo/gEJaD46Zv3bDfNy7281rA63x0CF2GMKqklJcpXfrfIGHJ+S0upenA==
+X-Received: by 2002:a17:90a:2648:: with SMTP id l66mr26400820pje.65.1561405597532;
+        Mon, 24 Jun 2019 12:46:37 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id r15sm17932733pfc.162.2019.06.24.12.46.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 12:46:36 -0700 (PDT)
+Subject: Re: [PATCH 3/4] scsi: sd_zbc: add zone open, close, and finish
+ support
+To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>, axboe@fb.com,
+        hch@lst.de, damien.lemoal@wdc.com, chaitanya.kulkarni@wdc.com,
+        dmitry.fomichev@wdc.com, ajay.joshi@wdc.com,
+        aravind.ramesh@wdc.com, martin.petersen@oracle.com,
+        James.Bottomley@HansenPartnership.com, agk@redhat.com,
+        snitzer@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, dm-devel@redhat.com
+References: <20190621130711.21986-1-mb@lightnvm.io>
+ <20190621130711.21986-4-mb@lightnvm.io>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <db952c97-b5c9-9276-ea51-c14064c5a093@acm.org>
+Date:   Mon, 24 Jun 2019 12:46:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190621130711.21986-4-mb@lightnvm.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 21:31 +0200, Peter Zijlstra wrote:
-> On Mon, Jun 24, 2019 at 11:19:13AM -0500, Gustavo A. R. Silva wrote:
-> > In preparation to enabling -Wimplicit-fallthrough, mark switch
-> > cases where we are expecting to fall through.
-> > 
-> > This patch fixes the following warnings:
-> > 
-> > arch/x86/events/intel/core.c: In function ‘intel_pmu_init’:
-> > arch/x86/events/intel/core.c:4959:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >    pmem = true;
-> >    ~~~~~^~~~~~
-> > arch/x86/events/intel/core.c:4960:2: note: here
-> >   case INTEL_FAM6_SKYLAKE_MOBILE:
-> >   ^~~~
-> > arch/x86/events/intel/core.c:5008:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >    pmem = true;
-> >    ~~~~~^~~~~~
-> > arch/x86/events/intel/core.c:5009:2: note: here
-> >   case INTEL_FAM6_ICELAKE_MOBILE:
-> >   ^~~~
-> > 
-> > Warning level 3 was used: -Wimplicit-fallthrough=3
-> > 
-> > This patch is part of the ongoing efforts to enable
-> > -Wimplicit-fallthrough.
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> I still consider it an abomination that the C parser looks at comments
-> -- other than to delete them, but OK I suppose, I'll take it.
+On 6/21/19 6:07 AM, Matias Bjørling wrote:
+> + * @op: Operation to be performed
 
-I still believe Arnaldo's/Miguel's/Shawn's/my et al. suggestion of
+This description could be more clear.
 
-#define __fallthrough __attribute__((fallthrough))
+Thanks,
 
-is far better.
-
-https://lkml.org/lkml/2017/2/9/845
-https://lkml.org/lkml/2017/2/10/485
-https://lore.kernel.org/lkml/20181021171414.22674-2-miguel.ojeda.sandonis@gmail.com/
-https://lore.kernel.org/lkml/20190617155643.GA32544@amd/
-
-
-
+Bart.
