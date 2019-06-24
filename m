@@ -2,253 +2,107 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829F9C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F54CC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EE02089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55457208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eCGkVTgq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mQ6DTx7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbfFXLHH (ORCPT
+        id S1729691AbfFXLID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:07:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41081 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFXLHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:07:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XRM85VVCz9s4Y;
-        Mon, 24 Jun 2019 21:07:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561374422;
-        bh=JieXE9Fx9kjQx6ywEnMBUTJMQ3pLDeJ7IgxRZjmvcIE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eCGkVTgqmckXx94y9YfdKpigTWnhXbrlq8oul9ukEJp6mmRYxWad16wxggowuU6Fx
-         WalAJzjoArz3XX5TO/QlhSfgHGSEZ2LA5b8PzpQlFfXf/3B9YBJmYbPaHFU2A5qsd7
-         KitqbkdAg9aOkvDaLReVBw9RYiYfycnpq0AWZzpGJ/pVvVwRv6Q/EPYNeykVqhOiBq
-         gGSSjXmDq9o8cUrMdSKOARUBXo4/baPLwjGbR5iJ6cnBATdJvS/12ivSan7Il5DHn1
-         nyzTKKJ62mIiIVE2sdPlrq90jg7lsaRwRXnIB4/zgTneAkZoZoTJSjSPy8PtAsJ48z
-         J4nDCGVUcSiJQ==
-Date:   Mon, 24 Jun 2019 21:06:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the drm
- tree
-Message-ID: <20190624210659.152a20bb@canb.auug.org.au>
-In-Reply-To: <20190624204908.64a33862@canb.auug.org.au>
-References: <20190624204908.64a33862@canb.auug.org.au>
+        Mon, 24 Jun 2019 07:08:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35060 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728979AbfFXLIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:08:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+fmi+ZSQNZKWfLg7h0rz9xCg0r+OkI0+jdLLJqV5Gds=; b=mQ6DTx7dBBzKhnce0ZURQodes
+        UCd2kBQf5z2qKSaZ8bhomBPmrNa8XK8apI0uFFKqPHzR/ktugUVQ287q3Lz0AC8a1HQ6V9xFmnQTO
+        /WrcAvwRjAQ0OM9+GC26dooWO5yIC6gAYysKDMf9wG7DAknoK8onjsvg/m/AhTTq1+GcY6SD0m4Fr
+        bysCrDg5zxCDQQirgjMVyViB5IYAanySyrqw7JKcX73KhJPDT8Z2IqOijAy/2FcByhbFKZbq+oY34
+        9FkSNZNiDjNfSMiREvqKzfQOGYpDHiKJ/V2yjZNh/NAny2JOYvJx8B9PSzYtmD1EmT5IhjwmjZi+b
+        hcFgTDc8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfMp1-0004yL-EE; Mon, 24 Jun 2019 11:07:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4DF6C203C694B; Mon, 24 Jun 2019 13:07:37 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 13:07:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
+        pmladek@suse.com, ast@kernel.org, daniel@iogearbox.net,
+        akpm@linux-foundation.org
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 3/3] module: Properly propagate MODULE_STATE_COMING
+ failure
+Message-ID: <20190624110737.GU3419@hirez.programming.kicks-ass.net>
+References: <20190624091843.859714294@infradead.org>
+ <20190624092109.863781858@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Zu5Xbr4/KoBLXq8r1M+zMXU"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624092109.863781858@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Zu5Xbr4/KoBLXq8r1M+zMXU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 24 Jun 2019 20:49:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   mm/memory.c
->=20
-> between commit:
->=20
->   29875a52915e ("mm: Add an apply_to_pfn_range interface")
->=20
-> from the drm tree and commit:
->=20
->   e972cea08fb3 ("mm/pgtable: drop pgtable_t variable from pte_fn_t functi=
-ons")
->=20
-> from the akpm-current tree.
->=20
-> I fixed it up (see below my signature, then added the following merge
-> resolution patch as well) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 24 Jun 2019 20:40:46 +1000
-> Subject: [PATCH] merge fixup for "mm: Add an apply_to_pfn_range interface"
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+On Mon, Jun 24, 2019 at 11:18:46AM +0200, Peter Zijlstra wrote:
+> Now that notifiers got unbroken; use the proper interface to handle
+> notifier errors and propagate them.
+> 
+> There were already MODULE_STATE_COMING notifiers that failed; notably:
+> 
+>  - jump_label_module_notifier()
+>  - tracepoint_module_notify()
+>  - bpf_event_notify()
+> 
+> By propagating this error, we fix those users.
+> 
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  include/linux/mm.h    | 2 +-
->  mm/as_dirty_helpers.c | 8 ++------
->  2 files changed, 3 insertions(+), 7 deletions(-)
->=20
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 87d53de3dee4..4404e18443ef 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2673,7 +2673,7 @@ extern int apply_to_page_range(struct mm_struct *mm=
-, unsigned long address,
->  			       unsigned long size, pte_fn_t fn, void *data);
-> =20
->  struct pfn_range_apply;
-> -typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
-> +typedef int (*pter_fn_t)(pte_t *pte, unsigned long addr,
->  			 struct pfn_range_apply *closure);
->  struct pfn_range_apply {
->  	struct mm_struct *mm;
-> diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
-> index f600e31534fb..7c863626c2a4 100644
-> --- a/mm/as_dirty_helpers.c
-> +++ b/mm/as_dirty_helpers.c
-> @@ -26,7 +26,6 @@ struct apply_as {
->  /**
->   * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
->   * @pte: Pointer to the pte
-> - * @token: Page table token, see apply_to_pfn_range()
->   * @addr: The virtual page address
->   * @closure: Pointer to a struct pfn_range_apply embedded in a
->   * struct apply_as
-> @@ -36,8 +35,7 @@ struct apply_as {
->   *
->   * Return: Always zero.
->   */
-> -static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
-> -			      unsigned long addr,
-> +static int apply_pt_wrprotect(pte_t *pte, unsigned long addr,
->  			      struct pfn_range_apply *closure)
->  {
->  	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
-> @@ -78,7 +76,6 @@ struct apply_as_clean {
->  /**
->   * apply_pt_clean - Leaf pte callback to clean a pte
->   * @pte: Pointer to the pte
-> - * @token: Page table token, see apply_to_pfn_range()
->   * @addr: The virtual page address
->   * @closure: Pointer to a struct pfn_range_apply embedded in a
->   * struct apply_as_clean
-> @@ -91,8 +88,7 @@ struct apply_as_clean {
->   *
->   * Return: Always zero.
->   */
-> -static int apply_pt_clean(pte_t *pte, pgtable_t token,
-> -			  unsigned long addr,
-> +static int apply_pt_clean(pte_t *pte, unsigned long addr,
->  			  struct pfn_range_apply *closure)
->  {
->  	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
-> --=20
-> 2.20.1
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc mm/memory.c
-> index 462aa47f8878,f8a75528658a..e7e37fcbd687
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@@ -2037,12 -2036,11 +2035,11 @@@ static int apply_to_pte_range(struct pf
->   {
->   	pte_t *pte;
->   	int err;
-> - 	pgtable_t token;
->   	spinlock_t *uninitialized_var(ptl);
->  =20
->  -	pte =3D (mm =3D=3D &init_mm) ?
->  +	pte =3D (closure->mm =3D=3D &init_mm) ?
->   		pte_alloc_kernel(pmd, addr) :
->  -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
->  +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
->   	if (!pte)
->   		return -ENOMEM;
->  =20
-> @@@ -2050,10 -2048,8 +2047,8 @@@
->  =20
->   	arch_enter_lazy_mmu_mode();
->  =20
-> - 	token =3D pmd_pgtable(*pmd);
-> -=20
->   	do {
-> - 		err =3D closure->ptefn(pte++, token, addr, closure);
->  -		err =3D fn(pte++, addr, data);
-> ++		err =3D closure->ptefn(pte++, addr, closure);
->   		if (err)
->   			break;
->   	} while (addr +=3D PAGE_SIZE, addr !=3D end);
+>  kernel/module.c |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3643,9 +3643,10 @@ static int prepare_coming_module(struct
+>  	if (err)
+>  		return err;
+>  
+> -	blocking_notifier_call_chain(&module_notify_list,
+> -				     MODULE_STATE_COMING, mod);
+> -	return 0;
+> +	err = blocking_notifier_call_chain_error(&module_notify_list,
+> +			MODULE_STATE_COMING, MODULE_STATE_GOING, mod);
+> +
+> +	return notifier_to_errno(err);
+>  }
 
-I also needed this:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 24 Jun 2019 21:04:14 +1000
-Subject: [PATCH] another fixup for "mm: Add an apply_to_pfn_range interface"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- mm/memory.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e7e37fcbd687..81d71fbfca5a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2189,14 +2189,13 @@ struct page_range_apply {
-  * Callback wrapper to enable use of apply_to_pfn_range for
-  * the apply_to_page_range interface
-  */
--static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
--				       unsigned long addr,
-+static int apply_to_page_range_wrapper(pte_t *pte, unsigned long addr,
- 				       struct pfn_range_apply *pter)
- {
- 	struct page_range_apply *pra =3D
- 		container_of(pter, typeof(*pra), pter);
-=20
--	return pra->fn(pte, token, addr, pra->data);
-+	return pra->fn(pte, addr, pra->data);
- }
-=20
- /*
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Zu5Xbr4/KoBLXq8r1M+zMXU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QrtMACgkQAVBC80lX
-0Gx/fggAlp4Muec97qYio3yQWl5B4oPemTyqmCIoI0omcU5Kf7EogGncwWJnpFnX
-imENfTQKxvY2naCnglA4XBPucjU8maev/KYhvzV/0I9l2ONlyZMg3xY8mOznjmVr
-WQhE5W5sBOiRg31KeaYWjhoslTS9GRNrN2KdgUYSw/EkGpJH+sbX1rrZABN3Co+R
-/soSq13b7MUVP3cHhfM7cgEkFT3uSRYdrzialmdhBUgVHSrkdl1J+nsWlmxW0t/p
-oRBG/X0pLte+Q/bklj6A6FOyTb/XJ2ycqAZSewhM4M9bnPcsK4x+qE08G3chddSV
-ympOzM506hubWFvOlw1r0dNnrlC2JA==
-=l+kP
------END PGP SIGNATURE-----
-
---Sig_/Zu5Xbr4/KoBLXq8r1M+zMXU--
+Argh, I messed up that klp thing again :/
