@@ -2,61 +2,117 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E48DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F372C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9FC208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47767208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BohYL1cB"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YG5GjITf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfFXHEO (ORCPT
+        id S1727562AbfFXHEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:04:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50038 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727462AbfFXHEO (ORCPT
+        Mon, 24 Jun 2019 03:04:54 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:58407 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfFXHEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:04:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OoUthh4K4QVJptThzzsksGKju8VbXnICnnIphBGevoY=; b=BohYL1cB9GVEVEEB/AQ+8Wjp+
-        b9vzWf/zdBChO5/Yxc6ATgd75pIyE2sUBr9MEVSXGU/iabRj+A7a/YiVSO98Mhva/KDGjks8AulSq
-        XyqeR6U2u1kwW76TBuewbiVFdJsBNtOgafjIeXWZEbYEG6mEyfDQkyWmtRoU8RE3FRIYHOzHuk5vf
-        JRh0putoHM099rGuVjmQHkDrQ6wcOUyyFof//B/CD6vJiszBlSqCvk5ikDiHNXBHO4EmpcRrlSVAE
-        YEirofTW1iSPhXf11n+fiEqcpqvkNDItmurm7DbKV7yv4/QvyVisvbi/clmel2U/YLe5Riq9USF2z
-        BDkMd0B9A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfJ1R-0007yG-74; Mon, 24 Jun 2019 07:04:13 +0000
-Date:   Mon, 24 Jun 2019 00:04:13 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] gpu: host1x: Remove implicit IOMMU backing on
- client's registration
-Message-ID: <20190624070413.GA23846@infradead.org>
-References: <20190623173743.24088-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623173743.24088-1-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 24 Jun 2019 03:04:53 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5O73v9q030616;
+        Mon, 24 Jun 2019 16:03:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5O73v9q030616
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561359838;
+        bh=5OUaZkjNas9lHS+ZQnY9UtPOBcnTTcVLurctTO3m70A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YG5GjITfAvzH2ZVvZjUsSjp2gg9EqW6C69xZBgP9nFJBGAEaCLEu0mDuVCmoiPv95
+         XDP/XKSVXF1Y8haU2KSZBjRmZUdKzX+Xyd3k/jte2Di7Nz28I8v3UPGPg35Gb08mDU
+         cyBAgI0thchw/xzTkbFlG2m581OwB0a+4r4EXb8WuLBNPaVPavybPjahJ4QACOGyZu
+         BgxWXXEmw4ThKwFxH3piyBsyV7/9YF5bNv0fQmSIv4NIjty6iSr5PNKVVWVoYYvmk4
+         S1eo4x+tOhbY2KwKxVOYxVmqnUOVxof/zEka9MqdHj1YJiPzu3pLl3PCAE/PMaO3jG
+         yozMaTddvqpJA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Simon Horman <simon.horman@netronome.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2] dt-binding: mmc: rename tmio_mmc.txt to renesas,sdhi.txt
+Date:   Mon, 24 Jun 2019 16:03:45 +0900
+Message-Id: <20190624070345.20373-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't we have a device tree problem here if there is a domain covering
-them?  I though we should only pick up an IOMMU for a given device
-if DT explicitly asked for that?
+As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+MFD glue") said, these MMC controllers use the IP from Panasonic.
+
+TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+The common driver code was split and expanded as 'tmio-mmc-core', then
+it became historical misnomer since 'tmio' is not the name of this IP.
+
+In the discussion [1], we decide to keep this name as-is at least in
+Linux driver level because renaming everything is a big churn.
+
+However, DT should not be oriented to a particular project even though
+it is mainly developed in Linux communities.
+
+This is the misfortune only in Linux. Let's stop exporting it to other
+projects, where there is no good reason to call this hardware "TMIO".
+Rename the file to renesas,sdhi.txt. In fact, all the information in
+this file is specific to the Renesas platform.
+
+This commit also removes the first paragraph entirely. The DT-binding
+should describe the hardware. It is strange to talk about Linux driver
+internals such as how the drivers are probed, how platform data are
+handed off, etc.
+
+[1] https://www.spinics.net/lists/linux-mmc/msg46952.html
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+ - Rename to renesas,sdhi.txt instead of renesas_sdhi.txt
+
+ .../bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt}   | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+ rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt} (87%)
+
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+similarity index 87%
+rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+rename to Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+index 2b4f17ca9087..dd08d038a65c 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+@@ -1,13 +1,4 @@
+-* Toshiba Mobile IO SD/MMC controller
+-
+-The tmio-mmc driver doesn't probe its devices actively, instead its binding to
+-devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
+-driver. Those drivers supply the tmio-mmc driver with platform data, that either
+-describe hardware capabilities, known to them, or are obtained by them from
+-their own platform data or from their DT information. In the latter case all
+-compulsory and any optional properties, common to all SD/MMC drivers, as
+-described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
+-optional bindings can be used.
++* Renesas SDHI SD/MMC controller
+ 
+ Required properties:
+ - compatible: should contain one or more of the following:
+-- 
+2.17.1
+
