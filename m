@@ -2,119 +2,188 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F9EC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8685CC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D9720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E3620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WVw0EoU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfFXXEx (ORCPT
+        id S1728036AbfFXXFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:04:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbfFXXEx (ORCPT
+        Mon, 24 Jun 2019 19:05:08 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:33447 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfFXXFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:04:53 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OMvfrh022547
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:04:52 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb5ysmea2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:04:51 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 25 Jun 2019 00:04:50 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 00:04:47 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5ON4ki036569560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:04:46 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E43BB2066;
-        Mon, 24 Jun 2019 23:04:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 408ADB2064;
-        Mon, 24 Jun 2019 23:04:46 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 23:04:46 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B14B416C373B; Mon, 24 Jun 2019 16:04:49 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:04:49 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     joel@joelfernandes.org, tglx@linutronix.de, mingo@kernel.org,
-        rostedt@goodmis.org, frederic@kernel.org,
-        alexander.levin@verizon.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] softirq: Replace this_cpu_write with __this_cpu_write if
- irq is disabled
-Reply-To: paulmck@linux.ibm.com
-References: <20190618143305.2038-1-smuchun@gmail.com>
+        Mon, 24 Jun 2019 19:05:07 -0400
+Received: by mail-ua1-f67.google.com with SMTP id f20so6365229ual.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UUo1KrRDh5d7CTBF6eaNp9PxHrRcB6qM3gI926f1TeA=;
+        b=WVw0EoU/h/EqUukaJvGtqujV+cXiSxfpwlH2O1mjOPjBOWZm7X31Fi0BEpRrTWYB9o
+         o3CdLbtue0bwaz7Vgm1UpKlE0E0fSuldvTbmZ5qdmnnWwc+B2pMoaALrgyVv/folYTdx
+         o5vrcJW2m//kZ2EHqvUqM4fL2R7S887YcxtaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UUo1KrRDh5d7CTBF6eaNp9PxHrRcB6qM3gI926f1TeA=;
+        b=hJZyUWLIpm1rFK8R9SKWuZiJXwkdhO5rkpjpchWHZuSI9kCyyWzLy17ntRlkYdJv6H
+         1df8lr901RrnJorBSOra/zmjUv4hr8kqgF2gbX/fGXgNg6XVFQwbFcaJwJXnBA/P206N
+         l83sO3IGpNNMlNTgXEwmxT/ORZISDhrWEKRey3xnvzouTyUeHYEwS+pLUwIlGoavioEy
+         pBvhGBzW865kBvIgdllnmh2/6d+VjiCC896l1w1F9G6rFQwTGQts1eX4hOU/3f7lRxK4
+         OpOmfwE8iYe4cRbiid3Ng3A/tlW0FMml+DIR72e/TMNCFgisJFetu0ZdQcveraET+FQ+
+         54Zw==
+X-Gm-Message-State: APjAAAUqPQkdWwekf+reiLUTejPoTZV/CwkwhYMueyLp+5GpcAgnQWkr
+        pToJ6xifs5JtzxnkjHawV/+7pb9RNB8/0axzak2yDg2SXzQ=
+X-Google-Smtp-Source: APXvYqzGrtkWF399TOCeEibm6SiwufJW+tbfw85UkDFZQy9sMXwWQnNPBCZCk62frDzlYpVuKPp8w75505JQWMBjpNM=
+X-Received: by 2002:a9f:31a2:: with SMTP id v31mr30915038uad.15.1561417505834;
+ Mon, 24 Jun 2019 16:05:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618143305.2038-1-smuchun@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062423-2213-0000-0000-000003A40A65
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011323; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01222803; UDB=6.00643448; IPR=6.01003963;
- MB=3.00027451; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 23:04:49
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062423-2214-0000-0000-00005EFAED92
-Message-Id: <20190624230449.GO26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=886 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240181
+References: <20190622034105.188454-1-dbasehore@chromium.org> <20190622034105.188454-3-dbasehore@chromium.org>
+In-Reply-To: <20190622034105.188454-3-dbasehore@chromium.org>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Mon, 24 Jun 2019 16:04:54 -0700
+Message-ID: <CAGAzgsrhS_nsXqf83ivZS5qcfT+Ss0=pzshH_i2+-Hd1iVNgNA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] drm/panel: set display info in panel attach
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:33:05PM +0800, Muchun Song wrote:
-> Irq is disabled before this_cpu_write(), so we can Replace this_cpu_write()
-> with __this_cpu_write().
-> 
-> Signed-off-by: Muchun Song <smuchun@gmail.com>
-
-This passes light rcutorture testing, and looks rather low risk.
-
-Tested-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
+On Fri, Jun 21, 2019 at 8:41 PM Derek Basehore <dbasehore@chromium.org> wrote:
+>
+> Devicetree systems can set panel orientation via a panel binding, but
+> there's no way, as is, to propagate this setting to the connector,
+> where the property need to be added.
+> To address this, this patch sets orientation, as well as other fixed
+> values for the panel, in the drm_panel_attach function. These values
+> are stored from probe in the drm_panel struct.
+>
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
 > ---
->  kernel/softirq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/softirq.c b/kernel/softirq.c
-> index 2c3382378d94..eaf3bdf7c749 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
-> @@ -650,7 +650,7 @@ static int takeover_tasklets(unsigned int cpu)
->  	/* Find end, append list for that CPU. */
->  	if (&per_cpu(tasklet_vec, cpu).head != per_cpu(tasklet_vec, cpu).tail) {
->  		*__this_cpu_read(tasklet_vec.tail) = per_cpu(tasklet_vec, cpu).head;
-> -		this_cpu_write(tasklet_vec.tail, per_cpu(tasklet_vec, cpu).tail);
-> +		__this_cpu_write(tasklet_vec.tail, per_cpu(tasklet_vec, cpu).tail);
->  		per_cpu(tasklet_vec, cpu).head = NULL;
->  		per_cpu(tasklet_vec, cpu).tail = &per_cpu(tasklet_vec, cpu).head;
->  	}
-> -- 
-> 2.17.1
-> 
+>  drivers/gpu/drm/drm_panel.c | 28 ++++++++++++++++++++++++++++
+>  include/drm/drm_panel.h     | 14 ++++++++++++++
+>  2 files changed, 42 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index 507099af4b57..5690fca30236 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -104,11 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
+>   */
+>  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
+>  {
+> +       struct drm_display_info *info;
+> +
+>         if (panel->connector)
+>                 return -EBUSY;
+>
+>         panel->connector = connector;
+>         panel->drm = connector->dev;
+> +       info = &connector->display_info;
+> +       info->width_mm = panel->width_mm;
+> +       info->height_mm = panel->height_mm;
+> +       info->bpc = panel->bpc;
+> +       info->panel_orientation = panel->orientation;
+> +       info->bus_flags = panel->bus_flags;
+> +       if (panel->bus_formats)
+> +               drm_display_info_set_bus_formats(&connector->display_info,
+> +                                                panel->bus_formats,
+> +                                                panel->num_bus_formats);
+>
+>         return 0;
+>  }
+> @@ -128,6 +140,22 @@ EXPORT_SYMBOL(drm_panel_attach);
+>   */
+>  int drm_panel_detach(struct drm_panel *panel)
+>  {
+> +       struct drm_display_info *info;
+> +
+> +       if (!panel->connector)
+> +               goto out;
+> +
+> +       info = &panel->connector->display_info;
+> +       info->width_mm = 0;
+> +       info->height_mm = 0;
+> +       info->bpc = 0;
+> +       info->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
+> +       info->bus_flags = 0;
+> +       kfree(info->bus_formats);
+> +       info->bus_formats = NULL;
+> +       info->num_bus_formats = 0;
+> +
+> +out:
+>         panel->connector = NULL;
+>         panel->drm = NULL;
+>
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index 3564952f1a4f..760ca5865962 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -37,6 +37,8 @@ struct display_timing;
+>   * struct drm_panel_funcs - perform operations on a given panel
+>   * @disable: disable panel (turn off back light, etc.)
+>   * @unprepare: turn off panel
+> + * @detach: detach panel->connector (clear internal state, etc.)
+> + * @attach: attach panel->connector (update internal state, etc.)
+>   * @prepare: turn on panel and perform set up
+>   * @enable: enable panel (turn on back light, etc.)
+>   * @get_modes: add modes to the connector that the panel is attached to and
+> @@ -93,6 +95,18 @@ struct drm_panel {
+>
+>         const struct drm_panel_funcs *funcs;
+>
+> +       /*
+> +        * panel information to be set in the connector when the panel is
+> +        * attached.
+> +        */
+> +       unsigned int width_mm;
+> +       unsigned int height_mm;
+> +       unsigned int bpc;
+> +       int orientation;
+> +       const u32 *bus_formats;
+> +       unsigned int num_bus_formats;
+> +       u32 bus_flags;
 
+Should probably put these in a struct to ensure the connector and
+panel have the same data types. Will do in a following patch if we
+stay with this.
+
+> +
+>         struct list_head list;
+>  };
+>
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
