@@ -2,54 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F95DC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E743DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B1021670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4302216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370294;
-	bh=ptRqHiaZJhelNecC+tFPsl0PMujncQwmy8uCPCa8F80=;
+	s=default; t=1561370298;
+	bh=Qjw6ANOVJSvaSzw8C/9y6XJbt021XiGCACwXsJArjPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYyj2JLY6qJBWhZ8Ckp1cRE/0TYGRWrV2eYoJNC5BRErRJwUy5h64sM/xlLakK8k7
-	 7CS9Tw12nk5TekQVbsMKRXTS+pJGw7sfoyNL4cLzn4rJIWlMU3yHxC4sgzHFF77ap7
-	 126+dm0ssWdGI2nmGlPaMqiYxWHKY7cfTbid6DvI=
+	b=vvvK04Bdu6QwLwz3FpBh4odup4XhZhAwUgmqby3c/v2l6cP+8S2S0Uf2K2DieXwde
+	 h82eEyhP8azg3pXPFd9y2OetYr36VhZg27s2h3cES9L+TiLupR3yLxihs85RonFIKn
+	 UBpNTlkhG92q3T6rDhx8R9KjkdVL0tTaoHgZoATc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfFXJ6N (ORCPT
+        id S1728955AbfFXJ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfFXJ6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:11 -0400
+        id S1728948AbfFXJ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:14 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6887E213F2;
-        Mon, 24 Jun 2019 09:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21953205ED;
+        Mon, 24 Jun 2019 09:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370290;
-        bh=ptRqHiaZJhelNecC+tFPsl0PMujncQwmy8uCPCa8F80=;
+        s=default; t=1561370293;
+        bh=Qjw6ANOVJSvaSzw8C/9y6XJbt021XiGCACwXsJArjPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MB6e3GGyXY94YfChp65nU9SsiUzUatp0EJjT5HPg+FD7qnyduN+xxlqqTr91hKRIq
-         EEjTRmRPlSNEgMLvCf2DuID4xWCTDCuvtFfkVuO9zED6nUu1YheBL6DtTKr8InGagH
-         TTBFtzaJFKGhTeBM/DEOW+SOfgi4/aA0EaJqQgqw=
+        b=U2AAPRM7GI0wyNVYNFq86g3N7LfnsZBXW6yEMu1H2NiFtO3vCIkbmu7Drlw7dqA0F
+         8zYUbIxXIDrAI5UX7pnYB0SAFKTk7B2CpRf7FCAuqp32oKpDJpURoCAWecEPwRqcaJ
+         yXwFaSrfOR8hxMyshBiHDGzCVuoWZO2ODZjYcw5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Collier <josh.d.collier@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/51] IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
-Date:   Mon, 24 Jun 2019 17:56:37 +0800
-Message-Id: <20190624092308.445649009@linuxfoundation.org>
+        stable@vger.kernel.org, Allan Xavier <allan.x.xavier@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 02/51] objtool: Support per-function rodata sections
+Date:   Mon, 24 Jun 2019 17:56:20 +0800
+Message-Id: <20190624092306.165336854@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -62,66 +60,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 35164f5259a47ea756fa1deb3e463ac2a4f10dc9 ]
+From: Allan Xavier <allan.x.xavier@oracle.com>
 
-The command 'ibv_devinfo -v' reports 0 for max_mr.
+commit 4a60aa05a0634241ce17f957bf9fb5ac1eed6576 upstream.
 
-Fix by assigning the query values after the mr lkey_table has been built
-rather than early on in the driver.
+Add support for processing switch jump tables in objects with multiple
+.rodata sections, such as those created by '-ffunction-sections' and
+'-fdata-sections'.  Currently, objtool always looks in .rodata for jump
+table information, which results in many "sibling call from callable
+instruction with modified stack frame" warnings with objects compiled
+using those flags.
 
-Fixes: 7b1e2099adc8 ("IB/rdmavt: Move memory registration into rdmavt")
-Reviewed-by: Josh Collier <josh.d.collier@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The fix is comprised of three parts:
+
+1. Flagging all .rodata sections when importing ELF information for
+   easier checking later.
+
+2. Keeping a reference to the section each relocation is from in order
+   to get the list_head for the other relocations in that section.
+
+3. Finding jump tables by following relocations to .rodata sections,
+   rather than always referencing a single global .rodata section.
+
+The patch has been tested without data sections enabled and no
+differences in the resulting orc unwind information were seen.
+
+Note that as objtool adds terminators to end of each .text section the
+unwind information generated between a function+data sections build and
+a normal build aren't directly comparable. Manual inspection suggests
+that objtool is now generating the correct information, or at least
+making more of an effort to do so than it did previously.
+
+Signed-off-by: Allan Xavier <allan.x.xavier@oracle.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/099bdc375195c490dda04db777ee0b95d566ded1.1536325914.git.jpoimboe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/hfi1/verbs.c    | 2 --
- drivers/infiniband/hw/qib/qib_verbs.c | 2 --
- drivers/infiniband/sw/rdmavt/mr.c     | 2 ++
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ tools/objtool/check.c |   38 ++++++++++++++++++++++++++++++++------
+ tools/objtool/check.h |    4 ++--
+ tools/objtool/elf.c   |    1 +
+ tools/objtool/elf.h   |    3 ++-
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-index 2e8854ba18cf..f4372afa0e81 100644
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -1400,8 +1400,6 @@ static void hfi1_fill_device_attr(struct hfi1_devdata *dd)
- 	rdi->dparms.props.max_cq = hfi1_max_cqs;
- 	rdi->dparms.props.max_ah = hfi1_max_ahs;
- 	rdi->dparms.props.max_cqe = hfi1_max_cqes;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_pd = hfi1_max_pds;
- 	rdi->dparms.props.max_qp_rd_atom = HFI1_MAX_RDMA_ATOMIC;
-diff --git a/drivers/infiniband/hw/qib/qib_verbs.c b/drivers/infiniband/hw/qib/qib_verbs.c
-index 9d92aeb8d9a1..350bc29a066f 100644
---- a/drivers/infiniband/hw/qib/qib_verbs.c
-+++ b/drivers/infiniband/hw/qib/qib_verbs.c
-@@ -1495,8 +1495,6 @@ static void qib_fill_device_attr(struct qib_devdata *dd)
- 	rdi->dparms.props.max_cq = ib_qib_max_cqs;
- 	rdi->dparms.props.max_cqe = ib_qib_max_cqes;
- 	rdi->dparms.props.max_ah = ib_qib_max_ahs;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_qp_rd_atom = QIB_MAX_RDMA_ATOMIC;
- 	rdi->dparms.props.max_qp_init_rd_atom = 255;
-diff --git a/drivers/infiniband/sw/rdmavt/mr.c b/drivers/infiniband/sw/rdmavt/mr.c
-index e7013d2d4f0e..d5b51f4cb49a 100644
---- a/drivers/infiniband/sw/rdmavt/mr.c
-+++ b/drivers/infiniband/sw/rdmavt/mr.c
-@@ -96,6 +96,8 @@ int rvt_driver_mr_init(struct rvt_dev_info *rdi)
- 	for (i = 0; i < rdi->lkey_table.max; i++)
- 		RCU_INIT_POINTER(rdi->lkey_table.table[i], NULL);
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -814,7 +814,7 @@ static int add_switch_table(struct objto
+ 	struct symbol *pfunc = insn->func->pfunc;
+ 	unsigned int prev_offset = 0;
  
-+	rdi->dparms.props.max_mr = rdi->lkey_table.max;
-+	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
+-	list_for_each_entry_from(rela, &file->rodata->rela->rela_list, list) {
++	list_for_each_entry_from(rela, &table->rela_sec->rela_list, list) {
+ 		if (rela == next_table)
+ 			break;
+ 
+@@ -904,6 +904,7 @@ static struct rela *find_switch_table(st
+ {
+ 	struct rela *text_rela, *rodata_rela;
+ 	struct instruction *orig_insn = insn;
++	struct section *rodata_sec;
+ 	unsigned long table_offset;
+ 
+ 	/*
+@@ -931,10 +932,13 @@ static struct rela *find_switch_table(st
+ 		/* look for a relocation which references .rodata */
+ 		text_rela = find_rela_by_dest_range(insn->sec, insn->offset,
+ 						    insn->len);
+-		if (!text_rela || text_rela->sym != file->rodata->sym)
++		if (!text_rela || text_rela->sym->type != STT_SECTION ||
++		    !text_rela->sym->sec->rodata)
+ 			continue;
+ 
+ 		table_offset = text_rela->addend;
++		rodata_sec = text_rela->sym->sec;
++
+ 		if (text_rela->type == R_X86_64_PC32)
+ 			table_offset += 4;
+ 
+@@ -942,10 +946,10 @@ static struct rela *find_switch_table(st
+ 		 * Make sure the .rodata address isn't associated with a
+ 		 * symbol.  gcc jump tables are anonymous data.
+ 		 */
+-		if (find_symbol_containing(file->rodata, table_offset))
++		if (find_symbol_containing(rodata_sec, table_offset))
+ 			continue;
+ 
+-		rodata_rela = find_rela_by_dest(file->rodata, table_offset);
++		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+ 		if (rodata_rela) {
+ 			/*
+ 			 * Use of RIP-relative switch jumps is quite rare, and
+@@ -1030,7 +1034,7 @@ static int add_switch_table_alts(struct
+ 	struct symbol *func;
+ 	int ret;
+ 
+-	if (!file->rodata || !file->rodata->rela)
++	if (!file->rodata)
+ 		return 0;
+ 
+ 	for_each_sec(file, sec) {
+@@ -1175,10 +1179,33 @@ static int read_retpoline_hints(struct o
  	return 0;
  }
  
--- 
-2.20.1
-
++static void mark_rodata(struct objtool_file *file)
++{
++	struct section *sec;
++	bool found = false;
++
++	/*
++	 * This searches for the .rodata section or multiple .rodata.func_name
++	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
++	 * rodata sections are ignored as they don't contain jump tables.
++	 */
++	for_each_sec(file, sec) {
++		if (!strncmp(sec->name, ".rodata", 7) &&
++		    !strstr(sec->name, ".str1.")) {
++			sec->rodata = true;
++			found = true;
++		}
++	}
++
++	file->rodata = found;
++}
++
+ static int decode_sections(struct objtool_file *file)
+ {
+ 	int ret;
+ 
++	mark_rodata(file);
++
+ 	ret = decode_instructions(file);
+ 	if (ret)
+ 		return ret;
+@@ -2150,7 +2177,6 @@ int check(const char *_objname, bool orc
+ 	INIT_LIST_HEAD(&file.insn_list);
+ 	hash_init(file.insn_hash);
+ 	file.whitelist = find_section_by_name(file.elf, ".discard.func_stack_frame_non_standard");
+-	file.rodata = find_section_by_name(file.elf, ".rodata");
+ 	file.c_file = find_section_by_name(file.elf, ".comment");
+ 	file.ignore_unreachables = no_unreachable;
+ 	file.hints = false;
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -60,8 +60,8 @@ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+ 	DECLARE_HASHTABLE(insn_hash, 16);
+-	struct section *rodata, *whitelist;
+-	bool ignore_unreachables, c_file, hints;
++	struct section *whitelist;
++	bool ignore_unreachables, c_file, hints, rodata;
+ };
+ 
+ int check(const char *objname, bool orc);
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -390,6 +390,7 @@ static int read_relas(struct elf *elf)
+ 			rela->offset = rela->rela.r_offset;
+ 			symndx = GELF_R_SYM(rela->rela.r_info);
+ 			rela->sym = find_symbol_by_index(elf, symndx);
++			rela->rela_sec = sec;
+ 			if (!rela->sym) {
+ 				WARN("can't find rela entry symbol %d for %s",
+ 				     symndx, sec->name);
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -48,7 +48,7 @@ struct section {
+ 	char *name;
+ 	int idx;
+ 	unsigned int len;
+-	bool changed, text;
++	bool changed, text, rodata;
+ };
+ 
+ struct symbol {
+@@ -68,6 +68,7 @@ struct rela {
+ 	struct list_head list;
+ 	struct hlist_node hash;
+ 	GElf_Rela rela;
++	struct section *rela_sec;
+ 	struct symbol *sym;
+ 	unsigned int type;
+ 	unsigned long offset;
 
 
