@@ -2,106 +2,127 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE892C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7943C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5DE2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3B62089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PHqSc71V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfFXHhu (ORCPT
+        id S1728041AbfFXHhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:37:50 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:44648 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfFXHht (ORCPT
+        Mon, 24 Jun 2019 03:37:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33690 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfFXHhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:37:49 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 55C2A67A866;
-        Mon, 24 Jun 2019 09:37:45 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 24 Jun
- 2019 09:37:44 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Mon, 24 Jun 2019 09:37:44 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>,
-        "Jeff Kletsky" <git-commits@allycomm.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mtd: spinand: read return badly if the last page has
- bitflips
-Thread-Topic: [PATCH v2] mtd: spinand: read return badly if the last page has
- bitflips
-Thread-Index: AQHVJwOfUanKNwqMXUOnQCnAkBatBqaqT90A
-Date:   Mon, 24 Jun 2019 07:37:44 +0000
-Message-ID: <d406a968-a489-f457-2bde-1912618879fa@kontron.de>
-References: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
-In-Reply-To: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <44B2B8BBC59D1345937FB8A85C0FB59B@snt-world.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 03:37:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m4so6037236pgk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OeWUAdnx0L1hjDpfMtx2IyzWmQaeGBQ1LmUUqXpZp+s=;
+        b=PHqSc71VmMVb7KzIIyYV1T/rvk/8ZXT5M79sW38Oa+4BxNZzqQK7Oi0R77jVv26b76
+         63BIhZgKTVFXcVezHgdv6UwSjVmbWNkZ1FfAnm35FwEGQQbdMT3wktAWIZ+PC1V/VVm8
+         9f3fzUcUScUB8epezz9gDsL0uZarFESR+Ok8KG1nPjNNez82ZecAytvGDqUFH5wbvqsl
+         gayGuluLt0jT6JxztAX2UtwGMpwDn1gB4m0ZXnySZ8BRnQCsWW7fKB3ljQ8A/nS3cSjg
+         pAKz2Zqwvcp3OqCjOA8s6yP90bcE2RdDO5r91AW5GtVnWUP4FRuQIXomlIcHhIB6UlLx
+         FKmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OeWUAdnx0L1hjDpfMtx2IyzWmQaeGBQ1LmUUqXpZp+s=;
+        b=E+jzI6hhsEywyAv99nt+JUiK1p8xg/iYP2Uf0bGQyaH2NAcYH9e2iEQAJheQ+ApOUV
+         zW+ut6Cn0qw/v/3z0hJ5Xyyg1aw5TEvOm8JcsSeKdPP5yQlmJgWU8A5BUNbiCCkLhTdg
+         BKjX+S3dKsxQxg3WV/L3875ozASvVV4CB+wmrKfJuKRPhuSiwKeAEgqEVm6eg5cwAuAI
+         1RSnnyX4gEe+/RiMvudWPUnSeFiFE9wR+IxuQPToj1awXZruRFmTt5VOTN6w7cOpesa5
+         Lr67Aq2ksT9Zvf9PqnPV8k35BlG+j13zxkYf43HCp4FrXSr19FbMFul6TFd6+K4XLqfv
+         tNHQ==
+X-Gm-Message-State: APjAAAWsRHlaPFHvdQ6YLcVwJN0kt9kvpY11sSKemAV1I8eHrVGFwxN9
+        3GDqeduU70NzxLeB2wEQQoKlLw==
+X-Google-Smtp-Source: APXvYqzw6cAd7oVJ4Rd/hA/i0R7A5vczq5bhj7cIdGgVJjVtof9rhhMbhMIYeGn+Iziy3CzvAYc/pQ==
+X-Received: by 2002:a17:90a:f488:: with SMTP id bx8mr22856976pjb.91.1561361869345;
+        Mon, 24 Jun 2019 00:37:49 -0700 (PDT)
+Received: from localhost ([122.172.211.128])
+        by smtp.gmail.com with ESMTPSA id f14sm11537304pfn.53.2019.06.24.00.37.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 00:37:48 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 13:07:47 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, linux-kernel@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:TI BANDGAP AND THERMAL DRIVER" 
+        <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH 2/6] thermal/drivers/cpu_cooling: Unregister with the
+ policy
+Message-ID: <20190624073747.hf7jd6ulkmebbxtm@vireshk-i7>
+References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
+ <20190621132302.30414-2-daniel.lezcano@linaro.org>
+ <20190624060334.kak2mjuou4napi4x@vireshk-i7>
+ <3f324189-aa1e-ae78-1d69-61e00c5d033a@linaro.org>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 55C2A67A866.AE508
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@exceet.de,
-        git-commits@allycomm.com, liaoweixiong@allwinnertech.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com,
-        peterpandong@micron.com, richard@nod.at, vigneshr@ti.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f324189-aa1e-ae78-1d69-61e00c5d033a@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAuMDYuMTkgMDM6MDAsIGxpYW93ZWl4aW9uZyB3cm90ZToNCj4gSW4gY2FzZSBvZiB0aGUg
-bGFzdCBwYWdlIGNvbnRhaW5pbmcgYml0ZmxpcHMgKHJldCA+IDApLA0KPiBzcGluYW5kX210ZF9y
-ZWFkKCkgd2lsbCByZXR1cm4gdGhhdCBudW1iZXIgb2YgYml0ZmxpcHMgZm9yIHRoZSBsYXN0DQo+
-IHBhZ2UuIEJ1dCB0byBtZSBpdCBsb29rcyBsaWtlIGl0IHNob3VsZCBpbnN0ZWFkIHJldHVybiBt
-YXhfYml0ZmxpcHMgbGlrZQ0KPiBpdCBkb2VzIHdoZW4gdGhlIGxhc3QgcGFnZSByZWFkIHJldHVy
-bnMgd2l0aCAwLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogbGlhb3dlaXhpb25nIDxsaWFvd2VpeGlv
-bmdAYWxsd2lubmVydGVjaC5jb20+DQoNClJldmlld2VkLWJ5OiBGcmllZGVyIFNjaHJlbXBmIDxm
-cmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQoNClRoaXMgc2hvdWxkIHByb2JhYmx5IGJlIHJl
-c2VudCB3aXRoIHRoZSBmb2xsb3dpbmcgdGFnczoNCg0KQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5v
-cmcNCkZpeGVzOiA3NTI5ZGY0NjUyNDggKCJtdGQ6IG5hbmQ6IEFkZCBjb3JlIGluZnJhc3RydWN0
-dXJlIHRvIHN1cHBvcnQgU1BJIA0KTkFORHMiKQ0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvbXRkL25h
-bmQvc3BpL2NvcmUuYyB8IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9uYW5kL3NwaS9j
-b3JlLmMgYi9kcml2ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMNCj4gaW5kZXggNTU2YmZkYi4uNmI5
-Mzg4ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBi
-L2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYw0KPiBAQCAtNTExLDEyICs1MTEsMTIgQEAgc3Rh
-dGljIGludCBzcGluYW5kX210ZF9yZWFkKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2ZmX3QgZnJv
-bSwNCj4gICAJCWlmIChyZXQgPT0gLUVCQURNU0cpIHsNCj4gICAJCQllY2NfZmFpbGVkID0gdHJ1
-ZTsNCj4gICAJCQltdGQtPmVjY19zdGF0cy5mYWlsZWQrKzsNCj4gLQkJCXJldCA9IDA7DQo+ICAg
-CQl9IGVsc2Ugew0KPiAgIAkJCW10ZC0+ZWNjX3N0YXRzLmNvcnJlY3RlZCArPSByZXQ7DQo+ICAg
-CQkJbWF4X2JpdGZsaXBzID0gbWF4X3QodW5zaWduZWQgaW50LCBtYXhfYml0ZmxpcHMsIHJldCk7
-DQo+ICAgCQl9DQo+ICAgDQo+ICsJCXJldCA9IDA7DQo+ICAgCQlvcHMtPnJldGxlbiArPSBpdGVy
-LnJlcS5kYXRhbGVuOw0KPiAgIAkJb3BzLT5vb2JyZXRsZW4gKz0gaXRlci5yZXEub29ibGVuOw0K
-PiAgIAl9DQo+IA==
+On 24-06-19, 09:30, Daniel Lezcano wrote:
+> On 24/06/2019 08:03, Viresh Kumar wrote:
+> > On 21-06-19, 15:22, Daniel Lezcano wrote:
+> >> Currently the function cpufreq_cooling_register() returns a cooling
+> >> device pointer which is used back as a pointer to call the function
+> >> cpufreq_cooling_unregister(). Even if it is correct, it would make
+> >> sense to not leak the structure inside a cpufreq driver and keep the
+> >> code thermal code self-encapsulate. Moreover, that forces to add an
+> >> extra variable in each driver using this function.
+> >>
+> >> Instead of passing the cooling device to unregister, pass the policy.
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+> >>  drivers/cpufreq/arm_big_little.c               |  2 +-
+> >>  drivers/cpufreq/cpufreq.c                      |  2 +-
+> >>  drivers/thermal/cpu_cooling.c                  | 18 ++++++++++--------
+> >>  drivers/thermal/imx_thermal.c                  |  4 ++--
+> >>  .../thermal/ti-soc-thermal/ti-thermal-common.c |  2 +-
+> >>  include/linux/cpu_cooling.h                    |  6 +++---
+> >>  6 files changed, 18 insertions(+), 16 deletions(-)
+> > 
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> Just a side note, does it make sense to have the function called from
+> imx_thermal.c and ti-thermal-common.c? Sounds like also a leakage from
+> cpufreq to thermal drivers, no?
+
+I am not sure what you are proposing here :)
+
+-- 
+viresh
