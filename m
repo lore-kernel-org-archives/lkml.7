@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060D0C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8ECC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0072205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5802720848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370598;
-	bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
+	s=default; t=1561370601;
+	bh=CpjiAQxxGhskeVbGZi9ELuGE30tiEiIXdWgK6Pov1Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LefqH/Mv2FtofjDr1buchiv+IGufor0KrEKfgc95D0VvAM0dpvIc6U1jAY24C7ia1
-	 0lCm26gNV2JCiU9Po/ePknrSBuFSLkct95A55iSS1qlCr5kxflPwjvmlyY/wG+mEHK
-	 6IrC00RU2GzdqYVQqr55IJN+BNQtLO6trZcYuezQ=
+	b=FJiBmADlEaWMNq/vqwU9OzbZOFBeE1QzZl939iardgIr8RIUqgq3CWPaiqTjZEJvR
+	 pBAy3AbAGpkQzuiJzRewfiQVVk40eI03TmBbhiALng+uIak5SWLHu4QmP0xtgX6H9U
+	 NPOkQEE+kFAxAoVnbx7nx+Pjcdu84h6B5ErZZxrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfFXKDQ (ORCPT
+        id S1729557AbfFXKDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbfFXKDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:03:11 -0400
+        id S1729524AbfFXKDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:14 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8BE205ED;
-        Mon, 24 Jun 2019 10:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01CC0205ED;
+        Mon, 24 Jun 2019 10:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370590;
-        bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
+        s=default; t=1561370593;
+        bh=CpjiAQxxGhskeVbGZi9ELuGE30tiEiIXdWgK6Pov1Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=amV5OC7KydpsyvPZYWxXTUYVjLQ5wM0zE0oGBu58OXYP48OrQox1MmurYCVXQK9sg
-         +sW8T4M1Nzmtu2L3SUeShQUs981JjPj0lvLMAU6FelB6Lwy7vdnWWtVdc1ggBR8jMd
-         0nYHSfNmfFJ7LYywBqgVOP71w2Xu7XRG1NJyDY2M=
+        b=F0uG5DQa6L8n2RGuELqicuXeaJWUNrnCkDyYDIYYK2xkgX51hXw/3k86cSUxKrYN/
+         BSdauBL0fFzEwSbZ4ai4gXorP9P1Kd8W1wMPPI7dBO/VKuvEm8g4aOshfuz1g07quK
+         Leh+YGpGTlFwGoz87hkUSU2J4KFfROedqQrCPuJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/90] ARC: fix build warnings
-Date:   Mon, 24 Jun 2019 17:56:20 +0800
-Message-Id: <20190624092316.242626964@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/90] dmaengine: dw-axi-dmac: fix null dereference when pointer first is null
+Date:   Mon, 24 Jun 2019 17:56:21 +0800
+Message-Id: <20190624092316.334690590@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -59,96 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
+[ Upstream commit 0788611c9a0925c607de536b2449de5ed98ef8df ]
 
-| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
-| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
+In the unlikely event that axi_desc_get returns a null desc in the
+very first iteration of the while-loop the error exit path ends
+up calling axi_desc_put on a null pointer 'first' and this causes
+a null pointer dereference.  Fix this by adding a null check on
+pointer 'first' before calling axi_desc_put.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Addresses-Coverity: ("Explicit null dereference")
+Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
- arch/arc/mm/tlb.c              | 13 ++++++++-----
- 2 files changed, 18 insertions(+), 9 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index d819de1c5d10..3ea4112c8302 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index c4eb55e3011c..c05ef7f1d7b6 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -512,7 +512,8 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 	return vchan_tx_prep(&chan->vc, &first->vd, flags);
  
- #endif /* CONFIG_ARC_HAS_LLSC */
- 
--#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
--				(unsigned long)(o), (unsigned long)(n)))
-+#define cmpxchg(ptr, o, n) ({				\
-+	(typeof(*(ptr)))__cmpxchg((ptr),		\
-+				  (unsigned long)(o),	\
-+				  (unsigned long)(n));	\
-+})
- 
- /*
-  * atomic_cmpxchg is same as cmpxchg
-@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
- 	return __xchg_bad_pointer();
+ err_desc_get:
+-	axi_desc_put(first);
++	if (first)
++		axi_desc_put(first);
+ 	return NULL;
  }
- 
--#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
--						 sizeof(*(ptr))))
-+#define xchg(ptr, with) ({				\
-+	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
-+			       (ptr),			\
-+			       sizeof(*(ptr)));		\
-+})
- 
- #endif /* CONFIG_ARC_PLAT_EZNPS */
- 
-diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
-index 4097764fea23..fa18c00b0cfd 100644
---- a/arch/arc/mm/tlb.c
-+++ b/arch/arc/mm/tlb.c
-@@ -911,9 +911,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			  struct pt_regs *regs)
- {
- 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
--	unsigned int pd0[mmu->ways];
- 	unsigned long flags;
--	int set;
-+	int set, n_ways = mmu->ways;
-+
-+	n_ways = min(n_ways, 4);
-+	BUG_ON(mmu->ways > 4);
- 
- 	local_irq_save(flags);
- 
-@@ -921,9 +923,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 	for (set = 0; set < mmu->sets; set++) {
- 
- 		int is_valid, way;
-+		unsigned int pd0[4];
- 
- 		/* read out all the ways of current set */
--		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
-+		for (way = 0, is_valid = 0; way < n_ways; way++) {
- 			write_aux_reg(ARC_REG_TLBINDEX,
- 					  SET_WAY_TO_IDX(mmu, set, way));
- 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
-@@ -937,14 +940,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			continue;
- 
- 		/* Scan the set for duplicate ways: needs a nested loop */
--		for (way = 0; way < mmu->ways - 1; way++) {
-+		for (way = 0; way < n_ways - 1; way++) {
- 
- 			int n;
- 
- 			if (!pd0[way])
- 				continue;
- 
--			for (n = way + 1; n < mmu->ways; n++) {
-+			for (n = way + 1; n < n_ways; n++) {
- 				if (pd0[way] != pd0[n])
- 					continue;
  
 -- 
 2.20.1
