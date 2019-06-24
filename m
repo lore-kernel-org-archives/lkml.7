@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB3BC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15F6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEAB205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80B320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371231;
-	bh=D4RMN1f/DLIbKHDKcjd5wfl1Siuho9V4f9ky9WSofjQ=;
+	s=default; t=1561371236;
+	bh=0Tuv9WLmua8GzdXQkqqEv0t3CuaXw/uKeuI6XH6NamM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pbwewu7CCDTsFfcZPWHwFEcCOZtW/Jm1mtNpOeMxAxFtK7lcCAGxRlyHBFkBKtI7j
-	 jtWXOxgawawMY/H6vRTQRO/QlEwZZqhJCuZ0fa3FFYsZmcCNrK1yKIB15Q0r9meml+
-	 pKW6vTwmfxfgS8l5W8+eSLpT2k1v0yo+cOf0MAq8=
+	b=cy/OzSh900g/LPIjBQJs5TMbE7KtZegM+ZrviWrWbuYUU0TJHC2fP9ZRkgX2kPDM+
+	 M/bU3WDGCdXrHzFgQKHgC4FalU5qw3NjSDXGhB2ABwGNDA53bKGLO4YMM9emQIRJdV
+	 gW0l86dxMF6j4DwjxPZBwJc3NA0EEmTxYIvObYpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfFXKEG (ORCPT
+        id S1730324AbfFXKNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729614AbfFXKEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:04 -0400
+        id S1728715AbfFXKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:02 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 090F3214DA;
-        Mon, 24 Jun 2019 10:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B92E213F2;
+        Mon, 24 Jun 2019 10:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370644;
-        bh=D4RMN1f/DLIbKHDKcjd5wfl1Siuho9V4f9ky9WSofjQ=;
+        s=default; t=1561370641;
+        bh=0Tuv9WLmua8GzdXQkqqEv0t3CuaXw/uKeuI6XH6NamM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDIrh3z2ZzmXCXQ4itrJIpvY4NMkk58WDH2MCnj90vj7Ohv5jHwLOUiFc/pyiOiSg
-         ZSHxphfUNvk1kbTEJiVGKX8S81FQ8bzyTOu+ln6H1UafP4H1F+GBa1U1Ffn0YixgY2
-         4Bz4Cd9Mmff1UKsIkwvO6odN/njt6+yjAHUun2PY=
+        b=hjBMFrSo0ZCcNVAJQJfAxh2qvoNznEp+yKsvJFZy+pywSxOwkCvqycUFTdzZaMRFk
+         hPoBSVOhD5ItfPUWSEAjfG0dlJc4kcMOQlPgR1O2ZORxRj18PJ2T7LE7ACwzxQJWbn
+         Qqrsedaqjr9HwL1KM5sNFwk8SxZ5eCtXnxBuyeZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/90] parport: Fix mem leak in parport_register_dev_model
-Date:   Mon, 24 Jun 2019 17:56:27 +0800
-Message-Id: <20190624092316.732679453@linuxfoundation.org>
+Subject: [PATCH 4.19 10/90] s390/jump_label: Use "jdd" constraint on gcc9
+Date:   Mon, 24 Jun 2019 17:56:00 +0800
+Message-Id: <20190624092314.669022460@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,65 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
+[ Upstream commit 146448524bddbf6dfc62de31957e428de001cbda ]
 
-BUG: memory leak
-unreferenced object 0xffff8881df48cda0 (size 16):
-  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
-  hex dump (first 16 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
-    [<00000000782f6dab>] 0xffffffffc15d1196
-    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
-    [<00000000628c2a94>] really_probe+0x342/0x4d0
-    [<000000006874f5da>] driver_probe_device+0x8c/0x170
-    [<00000000424de37a>] __device_attach_driver+0xda/0x100
-    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
-    [<000000003d9e5f31>] __device_attach+0x190/0x230
-    [<0000000035d32f80>] bus_probe_device+0x123/0x140
-    [<00000000a05ba627>] device_add+0x7cc/0xce0
-    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
-    [<000000002a0be07d>] 0xffffffffc15d0949
-    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
-    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
-    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
-    [<00000000987f06fc>] 0xffffffffc15d803e
+[heiko.carstens@de.ibm.com]:
+-----
+Laura Abbott reported that the kernel doesn't build anymore with gcc 9,
+due to the "X" constraint. Ilya provided the gcc 9 patch "S/390:
+Introduce jdd constraint" which introduces the new "jdd" constraint
+which fixes this.
+-----
 
-After commit 4e5a74f1db8d ("parport: Revert "parport: fix
-memory leak""), free_pardevice do not free par_dev->state,
-we should free it in error path of parport_register_dev_model
-before return.
+The support for section anchors on S/390 introduced in gcc9 has changed
+the behavior of "X" constraint, which can now produce register
+references. Since existing constraints, in particular, "i", do not fit
+the intended use case on S/390, the new machine-specific "jdd"
+constraint was introduced. This patch makes jump labels use "jdd"
+constraint when building with gcc9.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/include/asm/jump_label.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 5dc53d420ca8..7b4ee33c1935 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 	par_dev->devmodel = true;
- 	ret = device_register(&par_dev->dev);
- 	if (ret) {
-+		kfree(par_dev->state);
- 		put_device(&par_dev->dev);
- 		goto err_put_port;
- 	}
-@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 			spin_unlock(&port->physport->pardevice_lock);
- 			pr_debug("%s: cannot grant exclusive access for device %s\n",
- 				 port->name, name);
-+			kfree(par_dev->state);
- 			device_unregister(&par_dev->dev);
- 			goto err_put_port;
- 		}
+diff --git a/arch/s390/include/asm/jump_label.h b/arch/s390/include/asm/jump_label.h
+index 40f651292aa7..9c7dc970e966 100644
+--- a/arch/s390/include/asm/jump_label.h
++++ b/arch/s390/include/asm/jump_label.h
+@@ -10,6 +10,12 @@
+ #define JUMP_LABEL_NOP_SIZE 6
+ #define JUMP_LABEL_NOP_OFFSET 2
+ 
++#if __GNUC__ < 9
++#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "X"
++#else
++#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "jdd"
++#endif
++
+ /*
+  * We use a brcl 0,2 instruction for jump labels at compile time so it
+  * can be easily distinguished from a hotpatch generated instruction.
+@@ -19,9 +25,9 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+ 	asm_volatile_goto("0:	brcl 0,"__stringify(JUMP_LABEL_NOP_OFFSET)"\n"
+ 		".pushsection __jump_table, \"aw\"\n"
+ 		".balign 8\n"
+-		".quad 0b, %l[label], %0\n"
++		".quad 0b, %l[label], %0+%1\n"
+ 		".popsection\n"
+-		: : "X" (&((char *)key)[branch]) : : label);
++		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
+ 
+ 	return false;
+ label:
+@@ -33,9 +39,9 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
+ 	asm_volatile_goto("0:	brcl 15, %l[label]\n"
+ 		".pushsection __jump_table, \"aw\"\n"
+ 		".balign 8\n"
+-		".quad 0b, %l[label], %0\n"
++		".quad 0b, %l[label], %0+%1\n"
+ 		".popsection\n"
+-		: : "X" (&((char *)key)[branch]) : : label);
++		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
+ 
+ 	return false;
+ label:
 -- 
 2.20.1
 
