@@ -2,80 +2,496 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE5EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82B6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEB92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D272063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561340845;
-	bh=4nvZp6iXSVydigSn7lGWLwxqlvENp3j62806CqZD/NQ=;
+	s=default; t=1561340849;
+	bh=cpSGSmm/kURiWlNaTfui8DywiRIeRNlWNGYYmkVeqEI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x0E/4iVCOWdiloYVH3YorrVrZHUfZ0rSiSUvmKMI/kn4vqKLRzMPBLXmRnij6xARS
-	 wFMm8O1TOWi9uMSUnHgCYJHx6yWZhA2jjukXDxlWDHmhPUfGeXXDWMHbqPIjDrOX/T
-	 dKkc51GMqBg6WRSDmm0M8Aa82zaGlQavmiKXtesQ=
+	b=u+myLxtYhSaMj+vYzTwCwLYuK7gAVeKdh7G0tAA6Ku/FeOIRu8iPPHVme7CPByoHd
+	 8x3++5nsrBmyBrwG9dNLELo/NYnJA8EI7cqbHbUO8mbx3nLjM90E8i4b340G2BJYXV
+	 /jGxxVXzROYOk6SEF35irj0oF7wXdSzqt/cOHH48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfFXBrY (ORCPT
+        id S1726520AbfFXBr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
+        Sun, 23 Jun 2019 21:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbfFXBrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:47:23 -0400
+        id S1726351AbfFXBrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:47:24 -0400
 Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C277522CEA;
-        Mon, 24 Jun 2019 01:29:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E4282133F;
+        Mon, 24 Jun 2019 00:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561339760;
-        bh=4nvZp6iXSVydigSn7lGWLwxqlvENp3j62806CqZD/NQ=;
+        s=default; t=1561336147;
+        bh=cpSGSmm/kURiWlNaTfui8DywiRIeRNlWNGYYmkVeqEI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mfEU6Sc1RAoevKpcSCGpMzSh0Vi+dgoiG6xE5H+OwvrBvsGnvlPo/g6jRRAtOmJf2
-         GfGRD/gpTyNOfaG1hK4qfP8ekwgev8BiWDZic2KfJuUh3hryaHsf7oxRBIMioZKspE
-         7DltZxx3wT08P3MQOiamPFipM7rnAb9okCLDRaPQ=
-Date:   Mon, 24 Jun 2019 09:29:08 +0800
+        b=0NjCYYEEoahcoOj0mI5V5d3pNNfhzvqU/mSzk7Gv9IIpImvyUHc+o5AQSxLafC0E4
+         Z+G8ivwt1Fu4nkZV81PoZ55ThOVFn/QaKoyRByebuHPBKy6ZkXh1FoAga91aN2L/h9
+         cjmE93pkt0FScMdX8JoylMKELBIgdhubj8ccaBVc=
+Date:   Mon, 24 Jun 2019 08:28:55 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2] soc: imx: Add i.MX8MN SoC driver support
-Message-ID: <20190624012757.GH3800@dragon>
-References: <20190619010708.31412-1-Anson.Huang@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bob Langer <Bob.Langer@zii.aero>,
+        Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Message-ID: <20190624002853.GC3800@dragon>
+References: <20190617153025.12120-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190619010708.31412-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190617153025.12120-1-andrew.smirnov@gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 09:07:08AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Jun 17, 2019 at 08:30:24AM -0700, Andrey Smirnov wrote:
+> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
 > 
-> This patch adds i.MX8MN SoC driver support:
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Bob Langer <Bob.Langer@zii.aero>
+> Cc: Liang Pan <Liang.Pan@zii.aero>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
 > 
-> root@imx8mnevk:~# cat /sys/devices/soc0/family
-> Freescale i.MX
+> Changes since [v1]:
 > 
-> root@imx8mnevk:~# cat /sys/devices/soc0/machine
-> NXP i.MX8MNano DDR4 EVK board
+>     - Added missing #address-cells and #size-cells
+>     
+>     - Replaced reset-gpio -> reset-gpios
 > 
-> root@imx8mnevk:~# cat /sys/devices/soc0/soc_id
-> i.MX8MN
 > 
-> root@imx8mnevk:~# cat /sys/devices/soc0/revision
-> 1.0
+> [v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>  arch/arm/boot/dts/Makefile           |   1 +
+>  arch/arm/boot/dts/imx7d-zii-rmu2.dts | 361 +++++++++++++++++++++++++++
+>  2 files changed, 362 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5559028b770e..516e2912236d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+>  	imx7d-sdb.dtb \
+>  	imx7d-sdb-reva.dtb \
+>  	imx7d-sdb-sht11.dtb \
+> +	imx7d-zii-rmu2.dtb \
+>  	imx7d-zii-rpu2.dtb \
+>  	imx7s-colibri-eval-v3.dtb \
+>  	imx7s-mba7.dtb \
+> diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> new file mode 100644
+> index 000000000000..e60b3232a090
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> @@ -0,0 +1,361 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Device tree file for ZII's RMU2 board
+> + *
+> + * RMU - Remote Modem Unit
+> + *
+> + * Copyright (C) 2019 Zodiac Inflight Innovations
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/thermal/thermal.h>
+> +#include "imx7d.dtsi"
+> +
+> +/ {
+> +	model = "ZII RMU2 Board";
+> +	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
+> +
+> +	chosen {
+> +		stdout-path = &uart2;
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&pinctrl_leds_debug>;
+> +		pinctrl-names = "default";
+> +
+> +		debug {
+> +			label = "zii:green:debug1";
+> +			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	arm-supply = <&sw1a_reg>;
+> +};
+> +
+> +&ecspi1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> +	assigned-clock-rates = <0>, <100000000>;
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&fec1_phy>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		fec1_phy: phy@0 {
 
-Applied, thanks.
+ethernet-phy for node name.
+
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
+> +				    <&pinctrl_enet1_phy_interrupt>;
+> +			reg = <0>;
+> +			interrupt-parent = <&gpio1>;
+> +			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> +			reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pmic: pmic@8 {
+
+Label can be more specific, so maybe:
+
+	pfuze3000: pmic@8
+
+> +		compatible = "fsl,pfuze3000";
+> +		reg = <0x08>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1a {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw1c_reg: sw1b {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1475000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1850000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3 {
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1650000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vldo1 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen2_reg: vldo2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen3_reg: vccsd {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen4_reg: v33 {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vldo3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vldo4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	eeprom@50 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x50>;
+> +	};
+> +
+> +	eeprom@52 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x52>;
+> +	};
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> +	status = "okay";
+> +
+> +	rave-sp {
+> +		compatible = "zii,rave-sp-rdu2";
+> +		current-speed = <1000000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		watchdog {
+> +			compatible = "zii,rave-sp-watchdog";
+> +		};
+> +
+> +		eeprom@a3 {
+> +			compatible = "zii,rave-sp-eeprom";
+> +			reg = <0xa3 0x4000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			zii,eeprom-name = "main-eeprom";
+> +		};
+> +	};
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	bus-width = <4>;
+> +	no-1-8-v;
+> +	no-sdio;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	bus-width = <8>;
+> +	no-1-8-v;
+> +	non-removable;
+> +	no-sdio;
+> +	no-sd;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	status = "disabled";
+> +};
+> +
+> +&snvs_rtc {
+> +	status = "disabled";
+> +};
+
+Please sort it alphabetically in label name.
+
+> +
+> +&snvs_pwrkey {
+> +	status = "disabled";
+> +};
+
+We already queued up the patch below to disable snvs_pwrkey by default.
+
+https://lkml.org/lkml/2019/6/13/1170
+
+> +
+> +&iomuxc {
+> +	pinctrl_ecspi1: ecspi1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
+> +			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
+> +			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
+> +			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
+> +			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
+> +			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
+> +			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
+> +			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
+> +			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1_phy_reset: enet1phyresetgrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
+> +
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
+> +			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_leds_debug: debuggrp {
+
+ledsgrp?
+
+Shawn
+
+> +		fsl,pins = <
+> +			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
+> +		>;
+> +	};
+> +
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
+> +			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
+> +			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
+> +			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> +			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
+> +			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
+> +			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
+> +			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
+> +			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
+> +			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
+> +			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
+> +			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
+> +			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
+> +			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
+> +		>;
+> +	};
+> +};
+> +
+> +&iomuxc_lpsr {
+> +	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
+> +		fsl,phy = <
+> +			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
