@@ -2,173 +2,135 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2E6C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8433C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520C02083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561413609;
-	bh=lw5GuMlwurRFIck+THkaL+0gGqOuBPz+HQ70nF0227w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mG0Hilt44mwvUWPTcnL5U0CDgscwQpN0K1Kon9e6yEhQQQEuSI23GK0/ukYhLUZaY
-	 nbb+ZxUoNtqRFgSvaedcPjn5ESt46n+LIKQSFfXUdY6pHgC3VJ41IYsaEzf9iQE1wj
-	 UaG2yCeTlTtkUNYzzMyHbs9fPol9X11kYXnqCqRI=
+	by mail.kernel.org (Postfix) with ESMTP id A595020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izb2Z46N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfFXWAH (ORCPT
+        id S1727282AbfFXWCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:00:07 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44835 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732608AbfFXV65 (ORCPT
+        Mon, 24 Jun 2019 18:02:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32962 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfFXWCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:58:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so373836iob.11;
-        Mon, 24 Jun 2019 14:58:57 -0700 (PDT)
+        Mon, 24 Jun 2019 18:02:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so14162724ljg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4XtbMn3xFs7FmnICFe6DhpFIKouWcZNSxkCHmQ/+Ylc=;
+        b=izb2Z46NzMUkEEC4KRpeTZxTRLJ0GQ/RzhAb8ief9AuLtSRsxtyGojyTaRXUHuLRF1
+         Y1K1Hj+ItpQFmYCDMraMDoN6XKefXr/fA2S8lixYzb6lN+40iNMZAwugGK8wDaIMlihe
+         GnpLw8qtECPRTbWEMTN4v6XVwOgmV0JI/tyVx9mdyNZyMPiICLek7nR5F+BVEJ6kQcqU
+         ZPQK7vlfl2br4pdVVLyjIF2wmIT5LthddzXtyklfp3JOeQBYHHElDedyH9Pfi4UkF1mQ
+         QU0A3nRr+NuNXpcAu8UNX2jUf/t5J1gt+oqip44qh7spUrxSVnv6owch92cePWrvXSMi
+         c6gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EsofIvvvlgyPGjRrCqOhd2B5EfQ76NdrYwJSPILmUYU=;
-        b=ZBDflobFKnKbmkU4va2vVnMcsZu6TPZuMSsqb38CVfNL9J+v3HJlmD/5WJKlUsb8Wn
-         UsXc2iBxwtbyMsx6VjrvsPBosjFLT51AdRCDbEOnJLC8s7+FEE4TKyhMSIaUPe4xgz23
-         nJPpoOLs7JfRZm8+6+sB+REkVCVtFTQy8wybH8ZFYRRMeCYd2MYKREHmhJG/VNds8lZO
-         1g77K8NAaGFjrlvWpkEiClAgFSUx4A10Ecm2p2tXmbr/moY4mPf9HQMoBRGmvMvNzlgv
-         U1hVwtW9EUS8TQBEZO4vnA/TggKitKej5c9/zc1VBWYDx03B6YNeq8IT0XhWi2yOeSUE
-         NkpA==
-X-Gm-Message-State: APjAAAUyEBjIpF1ZJyD2RfBMwWaoc0R1CtFTpzgZMjY8CbFpBGqSh7tx
-        ez0q/pRS/+Iq/CNrxkOYrXKVVD4=
-X-Google-Smtp-Source: APXvYqypkquLGIbeEuuKXDqGyJadIY3xZB0pV5upOm2xBGDsKARVJrcz5ROUd99C3CHulYEBkUg9wQ==
-X-Received: by 2002:a6b:f00c:: with SMTP id w12mr4134606ioc.280.1561413536983;
-        Mon, 24 Jun 2019 14:58:56 -0700 (PDT)
-Received: from localhost.localdomain ([64.188.179.247])
-        by smtp.googlemail.com with ESMTPSA id l5sm14717301ioq.83.2019.06.24.14.58.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 14:58:56 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH v2 03/15] dt-bindings: display: Convert ampire,am-480272h3tmqw-t01h panel to DT schema
-Date:   Mon, 24 Jun 2019 15:56:37 -0600
-Message-Id: <20190624215649.8939-4-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-References: <20190624215649.8939-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4XtbMn3xFs7FmnICFe6DhpFIKouWcZNSxkCHmQ/+Ylc=;
+        b=a57PrS5hr033Nu4w5k2MSrl1uXyCcnoFDsBDN8RRsQltd3p8+o4H3u7mYzss0+f1PF
+         d2ptjqXl9Dd/XISi86S6+dn5xCtfWFpp1cJDT/ge1kYguFpvZcVQFpNGCDvDwetuvJHz
+         qSZsVZQnoGVbNFlH8v4ozUfSzQa9Jkf4ooGeL+fGGcikAOnYMejV/hvykpIJDgprxQii
+         HyTfkj2V6wneVYW9Q943x4eHk9OnSOnfE78fFZwZSjAKOmPN9MeM9Dgx+91kyy8d928I
+         2QDhcuwyH8rjP3doJXXFQvQe37ToJE8VPxNVNgn3prR73UfOeNyUL62OWFQw2uhswhgw
+         ScwA==
+X-Gm-Message-State: APjAAAWz+I3WOKHTC3JLAJQ9ttT9uDo0W4xkjRTwY2RXtd0v9kk4/AoR
+        H+WV7e6Vr6IyNWfZnGN7qgoikUZDMOsp3bAQk/EAev+f
+X-Google-Smtp-Source: APXvYqz94aRYtRYpNe6kqWgritXzE0c6aWIYSvz2gxrGE8hvN+/7y7do5SKF1vQxUBqEL72NonVRvHe+q4JNPmoe7sI=
+X-Received: by 2002:a2e:81d8:: with SMTP id s24mr31105577ljg.37.1561413735780;
+ Mon, 24 Jun 2019 15:02:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190522163428.7078-1-paul@crapouillou.net> <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
+In-Reply-To: <20190621135608.GB11839@ulmo>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 00:02:02 +0200
+Message-ID: <CACRpkdY4xgtYVto8fM-TSGWbDEsJpj=Fx2zXHPaZTJ6m1JuWQw@mail.gmail.com>
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered down
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the ampire,am-480272h3tmqw-t01h panel binding to DT schema.
+On Fri, Jun 21, 2019 at 3:56 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Cc: Yannick Fertre <yannick.fertre@st.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../panel/ampire,am-480272h3tmqw-t01h.txt     | 26 ------------
- .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 42 +++++++++++++++++++
- 2 files changed, 42 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> I'm not sure this would actually work because I think the way that
+> pinctrl handles states both "init" and "idle" would be the same pointer
+> values and therefore pinctrl_init_done() would think the driver didn't
+> change away from the "init" state because it is the same pointer value
+> as the "idle" state that the driver selected.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
-deleted file mode 100644
-index 6812280cb109..000000000000
---- a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
--
--This binding is compatible with the simple-panel binding, which is specified
--in simple-panel.txt in this directory.
--
--Required properties:
--- compatible: should be "ampire,am-480272h3tmqw-t01h"
--
--Optional properties:
--- power-supply: regulator to provide the supply voltage
--- enable-gpios: GPIO pin to enable or disable the panel
--- backlight: phandle of the backlight device attached to the panel
--
--Optional nodes:
--- Video port for RGB input.
--
--Example:
--	panel_rgb: panel-rgb {
--		compatible = "ampire,am-480272h3tmqw-t01h";
--		enable-gpios = <&gpioa 8 1>;
--		port {
--			panel_in_rgb: endpoint {
--				remote-endpoint = <&controller_out_rgb>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
-new file mode 100644
-index 000000000000..c6e33e7f36d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/ampire,am-480272h3tmqw-t01h.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
-+
-+maintainers:
-+  - Yannick Fertre <yannick.fertre@st.com>
-+  - Thierry Reding <treding@nvidia.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: ampire,am-480272h3tmqw-t01h
-+
-+  power-supply: true
-+  enable-gpios: true
-+  backlight: true
-+  port: true
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    panel_rgb: panel {
-+      compatible = "ampire,am-480272h3tmqw-t01h";
-+      enable-gpios = <&gpioa 8 1>;
-+      port {
-+        panel_in_rgb: endpoint {
-+          remote-endpoint = <&controller_out_rgb>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+Right.
 
+> One way to work around
+> that would be to duplicate the "idle" state definition and associate one
+> instance of it with the "idle" state and the other with the "init"
+> state. At that point both states should be different (different pointer
+> values) and we'd get the init state selected automatically before probe,
+> select "idle" during probe and then the core will leave it alone. That's
+> of course ugly because we duplicate the pinctrl state in DT, but perhaps
+> it's the least ugly solution.
+
+If something needs special mockery and is not generic, I'd just
+come up with whatever string PWM needs, like
+"pwm-idle", "pwm-sleep", "pwm-init" etc instead of
+complicating the stuff done before probe(). These states are
+only handled there to make probe() simple in simple cases.
+
+> Adding Linus for visibility. Perhaps he can share some insight.
+
+I think Paul hashed it out. Or will.
+
+> On that note, I'm wondering if perhaps it'd make sense for pinctrl to
+> support some mode where a device would start out in idle mode. That is,
+> where pinctrl_bind_pins() would select the "idle" mode as the default
+> before probe. With something like that we could easily support this
+> use-case without glitching.
+
+I would say the driver can come up with whatever state it need for
+that and handle it explicitly. When there are so many of them that
+it warrants growing the device core, we can move it into
+drivers/base/pinctrl.c. But no upfront design.
+
+> I suppose yet another variant would be for the PWM backlight to not use
+> any of the standard pinctrl states at all. Instead it could just define
+> custom states, say "active" and "inactive".
+
+I would suggest doing that.
+
+> Looking at the code that
+> would prevent pinctrl_bind_pins() from doing anything with pinctrl
+> states and given the driver exact control over when each of the states
+> will be selected. That's somewhat suboptimal because we can't make use
+> of the pinctrl PM helpers and it'd require more boilerplate.
+
+The helpers are just for the dirt-simple cases anyway.
+At one point one developer thought that the "default" set up
+before probe would be the only thing any system would ever
+want to do with pin control. It seems like not.
+
+Yours,
+Linus Walleij
