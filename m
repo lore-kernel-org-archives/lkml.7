@@ -2,66 +2,105 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FD4C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74F1C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68891208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00822089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AJakDklB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfFXFkl (ORCPT
+        id S1727026AbfFXFlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:40:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:59669 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFXFkk (ORCPT
+        Mon, 24 Jun 2019 01:41:52 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:41698 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726223AbfFXFlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:40:40 -0400
-Received: from orion.localdomain ([77.4.138.202]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N1x6X-1ihOs022f3-012JY6; Mon, 24 Jun 2019 07:40:37 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        t.scherer@eckelmann.de
-Subject: siox: driver init boilerplate reduction v3
-Date:   Mon, 24 Jun 2019 07:40:32 +0200
-Message-Id: <1561354834-22617-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:wTtturKseSw62Mg1u4FlttGfZPKgGLNLe1vqf4zBZyiRy88271B
- YyUKXb1XSz+9PZIGQ9VBt3JiT6Nx01x+BViXcQyPl1PaBPUQsEvvlnyNhNkzm3FNDiYUxjK
- Wp48JmaR0EvOeIgj0E62lFss/DmS/GPYBt2tVidL8j+Ph+dLNErFZ1lAOvts0SNzEa7AIH6
- ksRU0U7SP0QP4emdDDJkA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:chhH1N20ZLU=:tx5YoGtq3T3XWTFel3HS4e
- /EiI8YD5HdOJ0/y3Dv8q8iQ2t5JOmO7CYa7Ep/EMkbsB8mQictOOvy5DQVh0GHrg4WxU35u6E
- Qg8R9MZZNxNM3vtD247N3PuqG/X7uATT2Bk6muNzfCOprT/PZMNqefm/xOoUZG6cRbRZei7dP
- W/Yj4B3qqScWHaIqEArFBug+6X/5RCcutDSM857AraDAl2ipWPzbvpvdtBnjDZxE07g1JVAAj
- rHS8Vja83vOgyvu/Im6Yb/jff/bj0JQu8SVWwCTizDweXz9c1VK2Qn7x+/ImWwSgVBTP8vP8D
- wTFol2zcsV9s8GMvta06Es+m+PPK+E8kotjVjGDzV6y9B23uzE/rtbGtc18yQFTg3UwzUGuLg
- fYlP0Lj3v7w+geCcbFJvVw6Q64RU7jAD8dUdjIuTmTnNMFlEgdiuPrj6JbCPc4oK5/hUf+UdR
- FMHc7rLQ58lp0+56LWq1oYpjzm6oMDICxVYwFvC05nCbcBWDQ5YCCrAhEOWtL/9dV01WPLAcq
- ASyyvPE3mvfp3wrMXtzXkOC4ABZYQdmeVZ/yGaoIqWapZABmxePQgIQR+P160u5TUXrDDt0Kv
- 3qYUqY3T8eXXNGWosS95uay25OtPI2W5y3eHnjBA376QjHtwPeBIbigFzaRXV7qqlSiCjAggH
- 5gHyg4LEvavBBgUYD8SUNK16CoIvCncfeU+l3HXSDFAl8Elai5T26FqhLV4D+esaJGXQL2+lr
- yBpfFaDMu5NdEvbIpHuzSVeXRzwqc9Foyu7rww==
+        Mon, 24 Jun 2019 01:41:52 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D9084C01C4;
+        Mon, 24 Jun 2019 05:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561354911; bh=E1ERrISIW+x8N6/XjWkPCVdmvp0aiB6uJtVc4k+4tXo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AJakDklB8qWucLSsOgZ7kcmOZ6Sd0wVHNpfzhJg27zkf+9MeY50eFDFnlhPkeRUCM
+         NsAHHH62qGvuMQA3TCQHdQ6F2WNUdq6O7en9wPPCFVRbuMp2Bv7lKP4VoddNKynS9o
+         qDS05iIumGYXIsOvKTqq4kZK+pZcqyNkYoF1x2hxyILh9iNAfEvXRcL6javwhFxR3K
+         LirNPYlsPwJc9TeWw/NgXFb7ZiEIZniIZftaqb97JQZ59uvXfi7/Wpqgz2igr3MNrx
+         6nAL523LjnSJrMhc4jCg1Tqb1B9GbbkURgkDznKe0UNnz+ciIXjYGp3seVWsGzHye1
+         4X8dgja8PUrxw==
+Received: from [10.116.70.206] (unknown [10.116.70.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id EB20DA0231;
+        Mon, 24 Jun 2019 05:41:47 +0000 (UTC)
+Subject: Re: [PATCH] usb: dwc2: use a longer AHB idle timeout in
+ dwc2_core_reset()
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>
+References: <20190620175022.29348-1-martin.blumenstingl@googlemail.com>
+From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+Message-ID: <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com>
+Date:   Mon, 24 Jun 2019 09:41:46 +0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190620175022.29348-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On 6/20/2019 9:51 PM, Martin Blumenstingl wrote:
+> Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
+> consistent with the other "wait for AHB master IDLE state" ocurrences.
+> 
+> This fixes a problem for me where dwc2 would not want to initialize when
+> updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
+> 4.14.
+> Testing on my board shows that it takes 180us until AHB master IDLE
+> state is signalled. The very old vendor driver for this SoC (ifxhcd)
+> used a 1 second timeout.
+> Use the same timeout that is used everywhere when polling for
+> GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
+> (180us in my case) to have consistent behavior across the dwc2 driver.
+> 
+> Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
 
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
 
-this is v3 of my siox/gpio series from last week.
+>   drivers/usb/dwc2/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
+> index 8b499d643461..8e41d70fd298 100644
+> --- a/drivers/usb/dwc2/core.c
+> +++ b/drivers/usb/dwc2/core.c
+> @@ -531,7 +531,7 @@ int dwc2_core_reset(struct dwc2_hsotg *hsotg, bool skip_wait)
+>   	}
+>   
+>   	/* Wait for AHB master IDLE state */
+> -	if (dwc2_hsotg_wait_bit_set(hsotg, GRSTCTL, GRSTCTL_AHBIDLE, 50)) {
+> +	if (dwc2_hsotg_wait_bit_set(hsotg, GRSTCTL, GRSTCTL_AHBIDLE, 10000)) {
+>   		dev_warn(hsotg->dev, "%s: HANG! AHB Idle timeout GRSTCTL GRSTCTL_AHBIDLE\n",
+>   			 __func__);
+>   		return -EBUSY;
+> 
 
-v3: fixed subject and formatting pointed out by Uwe,
-    second patch (gpio-siox.c) already acked by him
-
-v2: fixed the typos pointed out by Uwe.
-
-
---mtx
