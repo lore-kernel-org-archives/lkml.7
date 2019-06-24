@@ -2,54 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793BDC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81602C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFA321473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE502145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370747;
-	bh=CRSruYZNYZEsKMB0PpnlbwDxJmP7qjeeKQInSfEmv5U=;
+	s=default; t=1561370750;
+	bh=W0Xsbqza/+fR8KzRJ6FPJFO9jlBLhM1du4QMqOW7tXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fF/TSbtzS2yockeM6u/Ow4VVL6U8eY3m1E+83Qx2Aci1Cq8rjKNQK2fbB5AKDzD+f
-	 5LEtwLdu4YI2p502j/LgaCk3C3NHY7niW4aNWk1PBApfVv5Dnnu0fDlvf/fkbpVT0V
-	 5lGSPZyKTFAH8ZS48JYrucYRKUAN/3hNRXt2fOZY=
+	b=l9F3LtDGEYT3RMpI7b8VsAyZmU2aZdM+8ek+AkHnJDp+Fztrbjm5WAt5rqxjEPxUG
+	 AFl9o5NZKsW2zNbS0C6WcX6n4HbYgiFvHBdR7faV0R6kFgHlkVz/eBgQHgTSJNbQ7N
+	 6M+YVJuy12Qxo8IfYUN4dtbYDX25O5PvNWrOADEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbfFXKFq (ORCPT
+        id S1729997AbfFXKFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbfFXKFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:42 -0400
+        id S1729478AbfFXKFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:45 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D45212F5;
-        Mon, 24 Jun 2019 10:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE2492145D;
+        Mon, 24 Jun 2019 10:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370741;
-        bh=CRSruYZNYZEsKMB0PpnlbwDxJmP7qjeeKQInSfEmv5U=;
+        s=default; t=1561370744;
+        bh=W0Xsbqza/+fR8KzRJ6FPJFO9jlBLhM1du4QMqOW7tXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5gtfy2EixQQzeeEoGw0X/30ViI+m1ojJ9aOY8GpQoZcbo2fkMm5BbS8VpxiNUqF0
-         aUomvxv4UQw1qeMCGwcd+hfge/SkQ1k58g/Uo+DtFgHglYsBXcFrilLccL+eBs4Vdl
-         v8FHt9NWB1OU6BWDfFx5+7m6Lk8AG1RlSh7qkTAA=
+        b=VMrUoZRuwmT1iLBUqoND0xed4r5GQK55HBI/1H9ySlV2WvdxNNN68WaYPFhU+H1cQ
+         U463KGpi7/+IqxUztQ0RXfPqT0CiyyWWl+76eoxHYu3yGB4AyZqdGEv+SYazCmohYy
+         o4jJkxnasEgN/MKxRc+z8EDGZ9JOucgQ6an59cMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.19 74/90] ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
-Date:   Mon, 24 Jun 2019 17:57:04 +0800
-Message-Id: <20190624092318.839626230@linuxfoundation.org>
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 48/90] selftests: vm: install test_vmalloc.sh for run_vmtests
+Date:   Mon, 24 Jun 2019 17:56:38 +0800
+Message-Id: <20190624092317.387371473@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,52 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+[ Upstream commit bc2cce3f2ebcae02aa4bb29e3436bf75ee674c32 ]
 
-commit b25af2ff7c07bd19af74e3f64ff82e2880d13d81 upstream.
+Add test_vmalloc.sh to TEST_FILES to make sure it gets installed for
+run_vmtests.
 
-Since commit 1e434b703248 ("ARM: imx: update the cpu power up timing
-setting on i.mx6sx") some characters loss is noticed on i.MX6ULL UART
-as reported by Christoph Niedermaier.
+Fixed below error:
+./run_vmtests: line 217: ./test_vmalloc.sh: No such file or directory
 
-The intention of such commit was to increase the SW2ISO field for i.MX6SX
-only, but since cpuidle-imx6sx is also used on i.MX6UL/i.MX6ULL this caused
-unintended side effects on other SoCs.
+Tested with: make TARGETS=vm install INSTALL_PATH=$PWD/x
 
-Fix this problem by keeping the original SW2ISO value for i.MX6UL/i.MX6ULL
-and only increase SW2ISO in the i.MX6SX case.
-
-Cc: stable@vger.kernel.org
-Fixes: 1e434b703248 ("ARM: imx: update the cpu power up timing setting on i.mx6sx")
-Reported-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Tested-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/cpuidle-imx6sx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/vm/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-@@ -15,6 +15,7 @@
+diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+index dc68340a6a96..2cf3dc49bd03 100644
+--- a/tools/testing/selftests/vm/Makefile
++++ b/tools/testing/selftests/vm/Makefile
+@@ -24,6 +24,8 @@ TEST_GEN_FILES += virtual_address_range
  
- #include "common.h"
- #include "cpuidle.h"
-+#include "hardware.h"
+ TEST_PROGS := run_vmtests
  
- static int imx6sx_idle_finish(unsigned long val)
- {
-@@ -110,7 +111,7 @@ int __init imx6sx_cpuidle_init(void)
- 	 * except for power up sw2iso which need to be
- 	 * larger than LDO ramp up time.
- 	 */
--	imx_gpc_set_arm_power_up_timing(0xf, 1);
-+	imx_gpc_set_arm_power_up_timing(cpu_is_imx6sx() ? 0xf : 0x2, 1);
- 	imx_gpc_set_arm_power_down_timing(1, 1);
++TEST_FILES := test_vmalloc.sh
++
+ KSFT_KHDR_INSTALL := 1
+ include ../lib.mk
  
- 	return cpuidle_register(&imx6sx_cpuidle_driver, NULL);
+-- 
+2.20.1
+
 
 
