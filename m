@@ -2,186 +2,151 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC800C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BAFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC4720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A689720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VbJ3z4Q8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WST0UPSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfFXEIZ (ORCPT
+        id S1727773AbfFXEM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:08:25 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:33677 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfFXEIZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:08:25 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CFC98886BF;
-        Mon, 24 Jun 2019 16:08:21 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1561349301;
-        bh=zla6gqgu/QGAoBJC/d/BI1oq50bbnGBXXybMEGpiuGU=;
-        h=From:To:CC:Subject:Date:References;
-        b=VbJ3z4Q878gfLfSdUG0sV5ZcJQY9sb5FBes4tO2HhG66RVIYoCnXRQHMxwrB3ZsLA
-         Nnlqyd4/yI2uFvMjuMQzg0zFnr8hNgby1HDiL6GbERlMLsve6fA7GuTVKsR/FytSEY
-         0rEoRnG0sf/+boIjNUVBAPnhQYrkh/6DUGA0Yn/RdSFlNwLNtUe4GL5Y+D2MmTmGcF
-         IpAhd+KeeLLwGffTw1DtD+plNTZc13hDILU7RtvEWDyYvWOqPNiPAFY9JyFkSpMzh+
-         1SrpW3L3kJK/WkssF4h9FE3y/GxkDcGUR2trJsNxDVnbaIXGjtstbWIuw0YDD26XbI
-         hWhCGkP30OGVQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d104cb60000>; Mon, 24 Jun 2019 16:08:22 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 24 Jun 2019 16:08:20 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 24 Jun 2019 16:08:20 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Kirkwood PCI Express and bridges
-Thread-Topic: Kirkwood PCI Express and bridges
-Thread-Index: AQHVJ+ZHqWcIqP7kgUutSbOlaor9TQ==
-Date:   Mon, 24 Jun 2019 04:08:20 +0000
-Message-ID: <936d1790c94f4b9c884bc79819b8b777@svr-chch-ex1.atlnz.lc>
-References: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
- <20190621073318.3bcd940e@windsurf>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Mon, 24 Jun 2019 00:12:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39148 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFXEM6 (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 00:12:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so6373088pgc.6
+        for <Linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 21:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=liAXSrzZADosAkb1YtXWhzyzZ/3HP+JE3hlQPzLjKmY=;
+        b=WST0UPSxHFggzVaicksTgzQyGB6/nIpepqasB5OKMlpX3rsja1TvHJxR4lrdMAUVAP
+         2H9C11DwrkI0aHug/+cSUmz9S0HXv+3TALy9ePTW3w4BIR2m8KAqaE7oQ9zYzmzvTGJN
+         /eyeYAHj0LXDLaL4hOA0vL2otu3b4cvecV0skqxcIydsgvCsXQqRTz71Vpb5lCGneuxN
+         v/XTodbFVZtWYeQQKMdLhBgY9oZTSxyiprXdlKmDs/LDHGGs6p7AfvyzGCGcjNKukKd6
+         vLeZRkn8/rwhQWtIZkFh8o+7vJ3P/tbhv3PpWdVAxL2lNhqM062UInNj02QkdxLCt6gx
+         /v9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=liAXSrzZADosAkb1YtXWhzyzZ/3HP+JE3hlQPzLjKmY=;
+        b=JctfDYruKA8rD6JOdcPjLirJdEJxq2jaKDrNV/Z9/DKh0fcTH7unUqh2RqNguLmC1m
+         2ffsJcOVSjwdx9DLpw2HYytmL8pDIkYfKgzD/WUGy5CwL3CbOWqA7E7VIAD8s8MaPqnA
+         7NYen5rDb/SvR/PH5km8hdirAvBchCE5zS9LN31kO8tn4Xa2jD3j2O85dkonGLtIfoyN
+         QrTlm9CHaDxRHBh/vm+jJoQ9jvA3NVbl+bZ49CAX9aGsKvuwtYyK7p43e995l2F5mN+B
+         N0jx09VQ1pS8gsIpoLHTKOtZvkzePDH2K7w+094jQ1ASq+SUQgjk3HfCwBlQe/ocIhZ3
+         dUdw==
+X-Gm-Message-State: APjAAAXWn/KkzRvuZyvAvtju6DJwbDfksVF0nRnZzK/arMm6tTaghYOZ
+        BZWi6a89rC9m33nEYsd35A==
+X-Google-Smtp-Source: APXvYqz73zX9Cj8GqKXGuUimsv0v8MW6gNnWWORYAHs3K7IDVHnrZrBvSf0VxXsWmAA5jNXiyXaccg==
+X-Received: by 2002:a63:5a4b:: with SMTP id k11mr13446294pgm.143.1561349578165;
+        Sun, 23 Jun 2019 21:12:58 -0700 (PDT)
+Received: from mylaptop.nay.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id j14sm10202116pfn.120.2019.06.23.21.12.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 21:12:57 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: [PATCHv2] mm/gup: speed up check_and_migrate_cma_pages() on huge page
+Date:   Mon, 24 Jun 2019 12:12:41 +0800
+Message-Id: <1561349561-8302-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,=0A=
-=0A=
-On 21/06/19 6:17 PM, Thomas Petazzoni wrote:=0A=
-> Hello Chris,=0A=
-> =0A=
-> On Fri, 21 Jun 2019 04:03:27 +0000=0A=
-> Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> I'm in the process of updating the kernel version used on our products=
-=0A=
->> from 4.4 -> 5.1.=0A=
->>=0A=
->> We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvell=
-=0A=
->> Switch ASIC. The Switch ASIC presents as multiple PCI devices.=0A=
->>=0A=
->> The hardware setup looks like this=0A=
->>                                        __________=0A=
->> [ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |=0A=
->>                                 +---  |  Switch  |=0A=
->>                                 +---  |          |=0A=
->>                                 +---  |__________|=0A=
->>=0A=
->> On the 4.4 based kernel things are fine=0A=
->>=0A=
->> [root@awplus flash]# lspci -t=0A=
->> -[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0=0A=
->>                                              +-03.0-[04]----00.0=0A=
->>                                              +-04.0-[05]----00.0=0A=
->>                                              \-05.0-[06]----00.0=0A=
->>=0A=
->> But on the 5.1 based kernel things get a little weird=0A=
->>=0A=
->> [root@awplus flash]# lspci -t=0A=
->> -[0000:00]---01.0-[01-06]--+-00.0-[02-06]--=0A=
->>                              +-01.0=0A=
->>                              +-02.0-[02-06]--=0A=
->>                              +-03.0-[02-06]--=0A=
->>                              +-04.0-[02-06]--=0A=
->>                              +-05.0-[02-06]--=0A=
->>                              +-06.0-[02-06]--=0A=
->>                              +-07.0-[02-06]--=0A=
->>                              +-08.0-[02-06]--=0A=
->>                              +-09.0-[02-06]--=0A=
->>                              +-0a.0-[02-06]--=0A=
->>                              +-0b.0-[02-06]--=0A=
->>                              +-0c.0-[02-06]--=0A=
->>                              +-0d.0-[02-06]--=0A=
->>                              +-0e.0-[02-06]--=0A=
->>                              +-0f.0-[02-06]--=0A=
->>                              +-10.0-[02-06]--=0A=
->>                              +-11.0-[02-06]--=0A=
->>                              +-12.0-[02-06]--=0A=
->>                              +-13.0-[02-06]--=0A=
->>                              +-14.0-[02-06]--=0A=
->>                              +-15.0-[02-06]--=0A=
->>                              +-16.0-[02-06]--=0A=
->>                              +-17.0-[02-06]--=0A=
->>                              +-18.0-[02-06]--=0A=
->>                              +-19.0-[02-06]--=0A=
->>                              +-1a.0-[02-06]--=0A=
->>                              +-1b.0-[02-06]--=0A=
->>                              +-1c.0-[02-06]--=0A=
->>                              +-1d.0-[02-06]--=0A=
->>                              +-1e.0-[02-06]--=0A=
->>                              \-1f.0-[02-06]--+-02.0-[03]----00.0=0A=
->>                                              +-03.0-[04]----00.0=0A=
->>                                              +-04.0-[05]----00.0=0A=
->>                                              \-05.0-[06]----00.0=0A=
->>=0A=
->>=0A=
->> I'll start bisecting to see where things started going wrong. I just=0A=
->> wondered if this rings any bells for anyone.=0A=
-> =0A=
-> I am almost sure that the culprit is=0A=
-> 1f08673eef1236f7d02d93fcf596bb8531ef0d12 ("PCI: mvebu: Convert to PCI=0A=
-> emulated bridge config space").=0A=
-=0A=
-The problem seems to pre-date this commit. I've gone back as far as 4.18 =
-=0A=
-and the problem still exists (in fact there are more duplicate devices). =
-=0A=
-I'll keep going back (unfortunately due to out platform being out of =0A=
-tree it's not a simple bisect).=0A=
-=0A=
-> I still think it makes sense to share the bridge emulation code between=
-=0A=
-> the mvebu and aardvark drivers, but this sharing has required making=0A=
-> the code very different, with lots of subtle differences in behavior in=
-=0A=
-> how registers are emulated.=0A=
-=0A=
-Agreed. Bugs love to hide in duplicated code.=0A=
-=0A=
-I will admit to being ignorant about the need for an emulated bridge. I =0A=
-know it has something to do with the type of transaction used for the =0A=
-downstream devices. I also know that these systems won't work without an =
-=0A=
-emulated bridge.=0A=
-=0A=
-> Unfortunately, I don't have access to one of these complicated PCI=0A=
-> setup with a HW switch on the way, so I couldn't test this kind of=0A=
-> setups.=0A=
-> =0A=
-> Do you mind helping with figuring out what the issues are ? That would=0A=
-> be really nice.=0A=
-=0A=
-No problem. As I said I'll keep going to find a point where behaviour =0A=
-turns bad for me. I suspect we might find other problems along the way.=0A=
-=0A=
+Both hugetlb and thp locate on the same migration type of pageblock, since
+they are allocated from a free_list[]. Based on this fact, it is enough to
+check on a single subpage to decide the migration type of the whole huge
+page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+similar on other archs.
+
+Furthermore, when executing isolate_huge_page(), it avoid taking global
+hugetlb_lock many times, and meanless remove/add to the local link list
+cma_page_list.
+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Linux-kernel@vger.kernel.org
+---
+ mm/gup.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index ddde097..544f5de 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1342,19 +1342,22 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 	LIST_HEAD(cma_page_list);
+ 
+ check_again:
+-	for (i = 0; i < nr_pages; i++) {
++	for (i = 0; i < nr_pages;) {
++
++		struct page *head = compound_head(pages[i]);
++		long step = 1;
++
++		if (PageCompound(head))
++			step = compound_order(head) - (pages[i] - head);
+ 		/*
+ 		 * If we get a page from the CMA zone, since we are going to
+ 		 * be pinning these entries, we might as well move them out
+ 		 * of the CMA zone if possible.
+ 		 */
+-		if (is_migrate_cma_page(pages[i])) {
+-
+-			struct page *head = compound_head(pages[i]);
+-
+-			if (PageHuge(head)) {
++		if (is_migrate_cma_page(head)) {
++			if (PageHuge(head))
+ 				isolate_huge_page(head, &cma_page_list);
+-			} else {
++			else {
+ 				if (!PageLRU(head) && drain_allow) {
+ 					lru_add_drain_all();
+ 					drain_allow = false;
+@@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 				}
+ 			}
+ 		}
++
++		i += step;
+ 	}
+ 
+ 	if (!list_empty(&cma_page_list)) {
+-- 
+2.7.5
+
