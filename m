@@ -2,182 +2,110 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5154C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A88C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E39720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AD6208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBw2Pi/g"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hzjpX5+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfFXCLh (ORCPT
+        id S1726931AbfFXCNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:11:37 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41695 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfFXCLh (ORCPT
+        Sun, 23 Jun 2019 22:13:10 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:53127 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726849AbfFXCNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:11:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 136so8778227lfa.8;
-        Sun, 23 Jun 2019 19:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
-        b=aBw2Pi/g1EFggFSqM5ezLhR8jtsfNMeL+puTBkm1rfO1WCEiSaEWHRKZCeXPEaJl2f
-         iZcLzfRW17n2YDzmAvw8gBlaL72KivYn6IsFTbzmGWpM6EB95L7qPrw+KGDdKehISGxP
-         q1Z6pEbxu14hA5vo8AgD74xitmLlny8r6UahTjlvM0HhNj1E76OYi3D5wHdNgCJlvBUk
-         VsajHWzXAzKl5rjX6nG4++9Srf0oVKaMp+jYYo8VPwoqt9qfmPeCNOOY45ukjxmRDySz
-         ZcuXQE6Z2eDJuJZaeMlJemf0x9IMAgAtGjDSKLJPJBAkTJNz+4QfAG21bhYHNUpjzqpk
-         GAgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
-        b=bdkU/B5yylW4fhlPbemuN9QlKYoL2L0haPH6Vst4qeitDlzTM7v66X228jMFbky/Oa
-         00nYgA8z+LMNx+lbDZRRspHN5vtxYse7vU1ntkXUaMJkLdaKxlbVzZiD0Fp4YeVIjNXM
-         dhlb+XVn+s2zmQIZcW+lgivAr8J1Kd1auzk13lh+qrFVU8N2nGnALoySYcgHxCMVwD3h
-         C79L4HFDtsGQoQGpA+oHkUV5H5fPzpcBc1YUZ75LtdMb4v+dje6MsP1amKc4qftO4s3a
-         89ib+4vHrEOKWFRqmBCvPiAS+P0QcAN6lEMiNDUQJLVG8BrnWWLopzwn3TDUjL3X9QP7
-         HeeA==
-X-Gm-Message-State: APjAAAXHZLL9UZlocAZokTPVjwpcrDQed2C9myQNK27Zg2Ucc+fF7f4A
-        BP2aGqRF9qNqz+aud0mPPUkp88c8
-X-Google-Smtp-Source: APXvYqwN9Hp8nL8bgaYziK3xwBIDMkDhRRwsgu4ZLjmJedVlV/eL7eCCcXOboZFOUlJrqk27ljj1Kg==
-X-Received: by 2002:ac2:5337:: with SMTP id f23mr35362792lfh.15.1561336319655;
-        Sun, 23 Jun 2019 17:31:59 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id y5sm1495146ljj.5.2019.06.23.17.31.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 17:31:59 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
+        Sun, 23 Jun 2019 22:13:10 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190624021306epoutp015982f94b7bc6e2a0f05f632c06f94c27~rAKC9VSqu0940109401epoutp01H
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:13:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190624021306epoutp015982f94b7bc6e2a0f05f632c06f94c27~rAKC9VSqu0940109401epoutp01H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561342386;
+        bh=Bjxv0RRUWPDBM+vlsvLdx6BQWrwtvpQPL5LR7DGLxjw=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=hzjpX5+9hx/a1tdVMF8nJlqTy4AoOattbUJB3gjjl2g9E4cDDgyE9EZSCiKyYCk+j
+         AAxsgbzscgkEwuqqh8zB5aSwmHq5Hbw1hY7hQdcmF4cgc1m7EqhAuZDv3vU7K8i5Lx
+         O9AvXL2KfXmItk6fZhNotQzX4qzE3540oCxuNXuo=
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.155]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190624021301epcas1p32614991eb0c0533de1d556cbf4945e11~rAJ_vt4kw0385803858epcas1p3A;
+        Mon, 24 Jun 2019 02:13:01 +0000 (GMT)
+X-AuditID: b6c32a38-5cbff700000010a1-02-5d10319df346
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D9.4A.04257.D91301D5; Mon, 24 Jun 2019 11:12:45 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH v1 01/11] PM / devfreq: tegra30: Change irq type to
+ unsigned int
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/10] memory: tegra20-emc: Adapt for clock driver changes
-Date:   Mon, 24 Jun 2019 03:31:25 +0300
-Message-Id: <20190624003132.29473-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20190623214658.11680-2-digetx@gmail.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190624021245epcms1p5366dd98904dac95625dc2deb4b649cb1@epcms1p5>
+Date:   Mon, 24 Jun 2019 11:12:45 +0900
+X-CMS-MailID: 20190624021245epcms1p5366dd98904dac95625dc2deb4b649cb1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj285ydHZfLz2n1YWXrQBeFpUedHStDSGJQghFUWDIPeprD3diZ
+        KytIUqk0zUIr5qUsI9PCC16ms5QZRZlFiYWEJd3MUrtohFjUtjOxf8/38Lzv87zv95KY7DIR
+        QmoNFs5sYHUUIcHb+8IUiioapkaOl9PMy5kxEdPw/R1g8m1XcWbgxISYGeyqJJjp4nuAOT1j
+        I5jZrmqcKbn9nEjwU9lHaoGq0zYiVhXnTRGqktZ6oJpuCU0WpWRtyeTYDM4s5wzpxgytQRNP
+        7dit3qZWxkbSCjqO2UjJDayei6cSdyYrtmt1rkCU3Mrqsl1UMsvzVMTWLWZjtoWTZxp5SzzF
+        mTJ0pjjTBp7V89kGzYZ0o34THRkZpXQJ07Iyx2YLRKZx38ODde+JXNDoWwj8SARjUF7BW8KN
+        ZdAO0IXRfYWAJKUwEP2xB7npILgHnSmxAUFCodzhu5jAR6BTo+0enoAK1NY0ghcCCRkM5wC6
+        0/lO5H5gsBOgqdY3YsFMii6d/IALeDnquNHmqfaDsejRi1PeQEvQcMOkeB5/vX8ZCDgYFbwe
+        wAQciEZnHWC+z6Wyv96eR9GLi9fEbmME8wEqbijziiLQ46qHnimlMAl9cvzyYByuQd+c173F
+        iej0UJHIjTG4CnVMVmLuTWAwDDV2RQiS1ahzrgoIksVo6ucZ0fxc9ur33vxrkdNR682/AvVf
+        rPFmVqGzM+WYsMWbAHU046VAblvYte0/Y9uC8RWA1YOlnInXazieNsX8/7stwHOc4YwddD/Z
+        6QSQBJS/FDYFpMpErJXP0TsBIjEqWOqv80+VSTPYnCOc2ag2Z+s43gmUrvnPYSFL0o2uUzdY
+        1LQyKjo6momhY5U0TS2TqhcNH5BBDWvhsjjOxJnn63xJv5BcEBy0SSKRfbM23uofqa7T3teG
+        Nj/tt35pOb+4rHZ2fXivpXSiyOiYHIxS1ZT77F33O+djwLFDnxVvQ7ldn5Z2/6ocL5qx90w/
+        S8Ff6VoqHMPyvocpuWUXjgds7H/c8yCh4od9haYmxzDUdnK5JDVtQmrVjoUm1Ww+mNTb7uMT
+        s3L/KgrnM1k6HDPz7D9DtmwasgMAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190623214841epcas5p161cceab51cb10d5146e57d49a696d5e5
+References: <20190623214658.11680-2-digetx@gmail.com>
+        <20190623214658.11680-1-digetx@gmail.com>
+        <CGME20190623214841epcas5p161cceab51cb10d5146e57d49a696d5e5@epcms1p5>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now Terga20 and Tegra30 EMC drivers should provide clock-rounding
-functionality using the new Tegra-CLK driver API.
+>IRQ numbers are always positive, hence the corresponding variable should
+>be unsigned to keep types consistent. This is a minor change that cleans
+>up code a tad more.
+>
+>Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+>Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 50 ++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 2 deletions(-)
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index da8fa592b071..b519f02b0ee9 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk/tegra.h>
- #include <linux/completion.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-@@ -421,6 +422,44 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	return 0;
- }
- 
-+static long emc_round_rate(unsigned long rate,
-+			   unsigned long min_rate,
-+			   unsigned long max_rate,
-+			   void *arg)
-+{
-+	struct emc_timing *timing = NULL;
-+	struct tegra_emc *emc = arg;
-+	unsigned int i;
-+
-+	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
-+
-+	for (i = 0; i < emc->num_timings; i++) {
-+		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
-+			continue;
-+
-+		if (emc->timings[i].rate > max_rate) {
-+			i = max(i, 1u) - 1;
-+
-+			if (emc->timings[i].rate < min_rate)
-+				break;
-+		}
-+
-+		if (emc->timings[i].rate < min_rate)
-+			continue;
-+
-+		timing = &emc->timings[i];
-+		break;
-+	}
-+
-+	if (!timing) {
-+		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
-+			rate, min_rate, max_rate);
-+		return -EINVAL;
-+	}
-+
-+	return timing->rate;
-+}
-+
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
-@@ -477,21 +516,28 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
-+
- 	emc->clk = devm_clk_get(&pdev->dev, "emc");
- 	if (IS_ERR(emc->clk)) {
- 		err = PTR_ERR(emc->clk);
- 		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
--		return err;
-+		goto unset_cb;
- 	}
- 
- 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
- 			err);
--		return err;
-+		goto unset_cb;
- 	}
- 
- 	return 0;
-+
-+unset_cb:
-+	tegra20_clk_set_emc_round_callback(NULL, NULL);
-+
-+	return err;
- }
- 
- static const struct of_device_id tegra_emc_of_match[] = {
--- 
-2.22.0
 
+Cheers,
+MyungJoo
