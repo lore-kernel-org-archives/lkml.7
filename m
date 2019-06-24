@@ -2,233 +2,187 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB496C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E995C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BF420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7340F20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbfFXQG1 (ORCPT
+        id S1729436AbfFXQHk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:06:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47560 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727082AbfFXQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:06:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 85038AE21;
-        Mon, 24 Jun 2019 16:06:24 +0000 (UTC)
-Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
-To:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-10-hch@lst.de>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
-Date:   Mon, 24 Jun 2019 19:06:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 24 Jun 2019 12:07:40 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43090 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFXQHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:07:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e3so22489725edr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:07:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pWYsiKGg/zyVesxoNDfGpttEfT3N8EUCOmxzrH5E//Q=;
+        b=NcgfnVJU/rtcPBB9LtT0h/faDwzG93aspuwiCIGowNaO2aqrMfkOQS+yFS2yhDq5ta
+         yB/1tpVc7tJpmpzSqSCuopG792V7x7as4BSj5bMRbSkvIbPH3Wciq6VHmxicudxOSk91
+         olewnncHXoSC+APEVPgSxKp8I2/tk/ZBn2AorBZ/rGtfpb/wQqMJhRMf9ptCbVVTv7R6
+         vPQuwjd5hFn5I24qInUqxnU0RRuPuAw0HwjBx3Iy4l2XAXU1tXHFofdyF1GQeSqLC3gY
+         MzqMx8NyhTbGY45PaCg57Cb0e40Q3mEuVKTqPtUGsnyGc0FaPRg+LDIHL2rdl9vUy52m
+         jZWA==
+X-Gm-Message-State: APjAAAUNmgkpVj58A1VYMElPL58Xig4ux64jA/cAefSkbEgHQrqyUaDb
+        JvSGyZZsdTNxyftVLGAbaOx8wPJpfCE=
+X-Google-Smtp-Source: APXvYqztmgndhFLUHDgQ1yRzv0IUw3ri1jcdD04SfVQLpjVtDqy8ucr65iD4Ne0cEvsqDIWcZtN3jw==
+X-Received: by 2002:a05:6402:1446:: with SMTP id d6mr126699677edx.37.1561392457073;
+        Mon, 24 Jun 2019 09:07:37 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id l35sm842315edc.2.2019.06.24.09.07.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 09:07:35 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id g135so13331120wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:07:35 -0700 (PDT)
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr16105850wmc.25.1561392454870;
+ Mon, 24 Jun 2019 09:07:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190624055253.31183-10-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+ <3f9e51d5-8ca5-a439-943c-26de92dd52fe@samsung.com> <CAGb2v67FF3k9wZu7K+Z5yKFFeh8A_4iuEXfh+tO65UvVRfY-sA@mail.gmail.com>
+ <44611965.cJa5QBey4U@jernej-laptop>
+In-Reply-To: <44611965.cJa5QBey4U@jernej-laptop>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 25 Jun 2019 00:07:23 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67T-nOqxkjekcc1ze9otVrzJb5KEtdJuMMk+dEGgAn1pQ@mail.gmail.com>
+Message-ID: <CAGb2v67T-nOqxkjekcc1ze9otVrzJb5KEtdJuMMk+dEGgAn1pQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/sun4i: Enable DRM InfoFrame support on H6
+To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 12:03 AM Jernej Škrabec <jernej.skrabec@siol.net> wrote:
+>
+> Dne ponedeljek, 24. junij 2019 ob 17:56:30 CEST je Chen-Yu Tsai napisal(a):
+> > On Mon, Jun 24, 2019 at 11:49 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> > > On 24.06.2019 17:05, Jernej Škrabec wrote:
+> > > > Dne ponedeljek, 24. junij 2019 ob 17:03:31 CEST je Andrzej Hajda
+> napisal(a):
+> > > >> On 26.05.2019 23:20, Jonas Karlman wrote:
+> > > >>> This patch enables Dynamic Range and Mastering InfoFrame on H6.
+> > > >>>
+> > > >>> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > >>> Cc: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > >>> ---
+> > > >>>
+> > > >>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 2 ++
+> > > >>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
+> > > >>>  2 files changed, 3 insertions(+)
+> > > >>>
+> > > >>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > > >>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index
+> > > >>> 39d8509d96a0..b80164dd8ad8
+> > > >>> 100644
+> > > >>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > > >>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > > >>> @@ -189,6 +189,7 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> > > >>> struct device *master,>
+> > > >>>
+> > > >>>     sun8i_hdmi_phy_init(hdmi->phy);
+> > > >>>
+> > > >>>     plat_data->mode_valid = hdmi->quirks->mode_valid;
+> > > >>>
+> > > >>> +   plat_data->drm_infoframe = hdmi->quirks->drm_infoframe;
+> > > >>>
+> > > >>>     sun8i_hdmi_phy_set_ops(hdmi->phy, plat_data);
+> > > >>>
+> > > >>>     platform_set_drvdata(pdev, hdmi);
+> > > >>>
+> > > >>> @@ -255,6 +256,7 @@ static const struct sun8i_dw_hdmi_quirks
+> > > >>> sun8i_a83t_quirks = {>
+> > > >>>
+> > > >>>  static const struct sun8i_dw_hdmi_quirks sun50i_h6_quirks = {
+> > > >>>
+> > > >>>     .mode_valid = sun8i_dw_hdmi_mode_valid_h6,
+> > > >>>
+> > > >>> +   .drm_infoframe = true,
+> > > >>>
+> > > >>>  };
+> > > >>>
+> > > >>>  static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
+> > > >>>
+> > > >>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > >>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index
+> > > >>> 720c5aa8adc1..2a0ec08ee236
+> > > >>> 100644
+> > > >>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > >>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > >>> @@ -178,6 +178,7 @@ struct sun8i_dw_hdmi_quirks {
+> > > >>>
+> > > >>>     enum drm_mode_status (*mode_valid)(struct drm_connector
+> > > >
+> > > > *connector,
+> > > >
+> > > >>>                                        const struct
+> > > >
+> > > > drm_display_mode *mode);
+> > > >
+> > > >>>     unsigned int set_rate : 1;
+> > > >>>
+> > > >>> +   unsigned int drm_infoframe : 1;
+> > > >>
+> > > >> Again, drm_infoframe suggests it contains inforframe, but in fact it
+> > > >> just informs infoframe can be used, so again my suggestion
+> > > >> use_drm_infoframe.
+> > > >>
+> > > >> Moreover bool type seems more appropriate here.
+> > > >
+> > > > checkpatch will give warning if bool is used.
+> > >
+> > > Then I would say "fix/ignore checkpatch" :)
+> > >
+> > > But maybe there is a reason.
+> >
+> > Here's an old one from Linus: https://lkml.org/lkml/2013/9/1/154
+> >
+> > I'd say that bool in a struct is a waste of space compared to a 1 bit
+> > bitfield, especially when there already are other bitfields in the same
+> > struct.
+> > > Anyway I've tested and I do not see the warning, could you elaborate it.
+> >
+> > Maybe checkpatch.pl --strict?
+>
+> It seems they removed that check:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?
+> id=7967656ffbfa493f5546c0f1
+>
+> After reading that block of text, I'm not sure what would be prefered way for
+> this case.
 
+This:
 
-On 24.06.19 г. 8:52 ч., Christoph Hellwig wrote:
-> Introduce two nicely abstracted helper, which can be moved to the
-> iomap code later.  Also use list_pop and list_first_entry_or_null
-> to simplify the code a bit.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_aops.c | 66 ++++++++++++++++++++++++++---------------------
->  1 file changed, 36 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index acbd73976067..5d302ebe2a33 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -121,6 +121,19 @@ xfs_destroy_ioend(
->  	}
->  }
->  
-> +static void
-> +xfs_destroy_ioends(
-> +	struct xfs_ioend	*ioend,
-> +	int			error)
-> +{
-> +	struct list_head	tmp;
-> +
-> +	list_replace_init(&ioend->io_list, &tmp);
-> +	xfs_destroy_ioend(ioend, error);
-> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
-> +		xfs_destroy_ioend(ioend, error);
++If a structure has many true/false values, consider consolidating them into a
++bitfield with 1 bit members, or using an appropriate fixed width type, such as
++u8.
 
-nit: I'd prefer if the list_pop patch is right before this one since
-this is the first user of it. Additionally, I don't think list_pop is
-really a net-negative win in comparison to list_for_each_entry_safe
-here. In fact this "delete the list" would seems more idiomatic if
-implemented via list_for_each_entry_safe
+would suggest using a bitfield, or flags within a fixed width type?
 
-> +}
-> +
->  /*
->   * Fast and loose check if this write could update the on-disk inode size.
->   */
-> @@ -173,7 +186,6 @@ xfs_end_ioend(
->  	struct xfs_ioend	*ioend)
->  {
->  	unsigned int		nofs_flag = memalloc_nofs_save();
-> -	struct list_head	ioend_list;
->  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
->  	xfs_off_t		offset = ioend->io_offset;
->  	size_t			size = ioend->io_size;
-> @@ -207,16 +219,7 @@ xfs_end_ioend(
->  	if (!error && xfs_ioend_is_append(ioend))
->  		error = xfs_setfilesize(ip, offset, size);
->  done:
-> -	list_replace_init(&ioend->io_list, &ioend_list);
-> -	xfs_destroy_ioend(ioend, error);
-> -
-> -	while (!list_empty(&ioend_list)) {
-> -		ioend = list_first_entry(&ioend_list, struct xfs_ioend,
-> -				io_list);
-> -		list_del_init(&ioend->io_list);
-> -		xfs_destroy_ioend(ioend, error);
-> -	}
-> -
-> +	xfs_destroy_ioends(ioend, error);
->  	memalloc_nofs_restore(nofs_flag);
->  }
->  
-> @@ -246,15 +249,16 @@ xfs_ioend_try_merge(
->  	struct xfs_ioend	*ioend,
->  	struct list_head	*more_ioends)
->  {
-> -	struct xfs_ioend	*next_ioend;
-> +	struct xfs_ioend	*next;
->  
-> -	while (!list_empty(more_ioends)) {
-> -		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
-> -				io_list);
-> -		if (!xfs_ioend_can_merge(ioend, next_ioend))
-> +	INIT_LIST_HEAD(&ioend->io_list);
-> +
-> +	while ((next = list_first_entry_or_null(more_ioends, struct xfs_ioend,
-> +			io_list))) {
-> +		if (!xfs_ioend_can_merge(ioend, next))
->  			break;
-> -		list_move_tail(&next_ioend->io_list, &ioend->io_list);
-> -		ioend->io_size += next_ioend->io_size;
-> +		list_move_tail(&next->io_list, &ioend->io_list);
-> +		ioend->io_size += next->io_size;
->  	}
->  }
->  
-> @@ -277,29 +281,31 @@ xfs_ioend_compare(
->  	return 0;
->  }
->  
-> +static void
-> +xfs_sort_ioends(
-> +	struct list_head	*ioend_list)
-> +{
-> +	list_sort(NULL, ioend_list, xfs_ioend_compare);
-> +}
-> +
->  /* Finish all pending io completions. */
->  void
->  xfs_end_io(
->  	struct work_struct	*work)
->  {
-> -	struct xfs_inode	*ip;
-> +	struct xfs_inode	*ip =
-> +		container_of(work, struct xfs_inode, i_ioend_work);
->  	struct xfs_ioend	*ioend;
-> -	struct list_head	completion_list;
-> +	struct list_head	tmp;
->  	unsigned long		flags;
->  
-> -	ip = container_of(work, struct xfs_inode, i_ioend_work);
-> -
->  	spin_lock_irqsave(&ip->i_ioend_lock, flags);
-> -	list_replace_init(&ip->i_ioend_list, &completion_list);
-> +	list_replace_init(&ip->i_ioend_list, &tmp);
->  	spin_unlock_irqrestore(&ip->i_ioend_lock, flags);
->  
-> -	list_sort(NULL, &completion_list, xfs_ioend_compare);
-> -
-> -	while (!list_empty(&completion_list)) {
-> -		ioend = list_first_entry(&completion_list, struct xfs_ioend,
-> -				io_list);
-> -		list_del_init(&ioend->io_list);
-> -		xfs_ioend_try_merge(ioend, &completion_list);
-> +	xfs_sort_ioends(&tmp);
-> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list))) {
-> +		xfs_ioend_try_merge(ioend, &tmp);
->  		xfs_end_ioend(ioend);
-
-Here again, tmp is a local copy that is immutable so using while()
-instead of list_for_each_entry_safe doesn't seem to be providing much.
-
->  	}
->  }
-> 
+ChenYu
