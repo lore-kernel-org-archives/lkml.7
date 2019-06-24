@@ -2,25 +2,25 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C3EC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4A9C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F622133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94044208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfFXOgo (ORCPT
+        id S1728609AbfFXOgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:36:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33260 "EHLO huawei.com"
+        Mon, 24 Jun 2019 10:36:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19068 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727520AbfFXOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727170AbfFXOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 10:36:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3B08A24D32A7364DE355;
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0CD4920D55B641FA4EB3;
         Mon, 24 Jun 2019 22:36:37 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
@@ -31,12 +31,10 @@ CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <arnd@arndb.de>, <olof@lixom.net>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 1/6] lib: logic_pio: Fix RCU usage
-Date:   Mon, 24 Jun 2019 22:35:03 +0800
-Message-ID: <1561386908-31884-2-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v2 0/6] Fixes for HiSilicon LPC driver and logical PIO code
+Date:   Mon, 24 Jun 2019 22:35:02 +0800
+Message-ID: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
-References: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.75]
@@ -46,116 +44,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The traversing of io_range_list with list_for_each_entry_rcu()
-is not properly protected by rcu_read_lock() and rcu_read_unlock(),
-so add them.
+As reported in [1], the hisi-lpc driver has certain issues in handling
+logical PIO regions, specifically unregistering regions.
 
-These functions mark the critical section scope where the list is
-protected for the reader, it cannot be  "reclaimed". Any updater - in
-this case, the logical PIO registration functions - cannot update the
-list until the reader exits this critical section.
+This series add a method to unregister a logical PIO region, and fixes up
+the driver to use them.
 
-In addition, the list traversing used in logic_pio_register_range()
-does not need to use the rcu variant.
+RCU usage in logical PIO code looks to always have been broken, so that
+is fixed also. This is not a major fix as the list which RCU protects
+would be rarely modified.
 
-This is because we are already using io_range_mutex to guarantee mutual
-exclusion from mutating the list.
+There is another patch to simplify logical PIO registration, made possible
+by the fixes.
 
-Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- lib/logic_pio.c | 49 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+At this point, there are still separate ongoing discussions about how to
+stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
 
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index feea48fd1a0d..761296376fbc 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -46,7 +46,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
- 	end = new_range->hw_start + new_range->size;
- 
- 	mutex_lock(&io_range_mutex);
--	list_for_each_entry_rcu(range, &io_range_list, list) {
-+	list_for_each_entry(range, &io_range_list, list) {
- 		if (range->fwnode == new_range->fwnode) {
- 			/* range already there */
- 			goto end_register;
-@@ -108,26 +108,38 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
-  */
- struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
- {
--	struct logic_pio_hwaddr *range;
-+	struct logic_pio_hwaddr *range, *found_range = NULL;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
--		if (range->fwnode == fwnode)
--			return range;
-+		if (range->fwnode == fwnode) {
-+			found_range = range;
-+			break;
-+		}
- 	}
--	return NULL;
-+	rcu_read_unlock();
-+
-+	return found_range;
- }
- 
- /* Return a registered range given an input PIO token */
- static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
- {
--	struct logic_pio_hwaddr *range;
-+	struct logic_pio_hwaddr *range, *found_range = NULL;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
--		if (in_range(pio, range->io_start, range->size))
--			return range;
-+		if (in_range(pio, range->io_start, range->size)) {
-+			found_range = range;
-+			break;
-+		}
- 	}
--	pr_err("PIO entry token %lx invalid\n", pio);
--	return NULL;
-+	rcu_read_unlock();
-+
-+	if (!found_range)
-+		pr_err("PIO entry token 0x%lx invalid\n", pio);
-+
-+	return found_range;
- }
- 
- /**
-@@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
- {
- 	struct logic_pio_hwaddr *range;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
- 		if (range->flags != LOGIC_PIO_CPU_MMIO)
- 			continue;
--		if (in_range(addr, range->hw_start, range->size))
--			return addr - range->hw_start + range->io_start;
-+		if (in_range(addr, range->hw_start, range->size)) {
-+			unsigned long cpuaddr;
-+
-+			cpuaddr = addr - range->hw_start + range->io_start;
-+
-+			rcu_read_unlock();
-+			return cpuaddr;
-+		}
- 	}
--	pr_err("addr %llx not registered in io_range_list\n",
--	       (unsigned long long) addr);
-+	rcu_read_unlock();
-+
-+	pr_err("addr %pa not registered in io_range_list\n", &addr);
-+
- 	return ~0UL;
- }
- 
+Hopefully this series can go through the arm soc tree and the maintainers
+have no issue with that. I'm talking specifically about the logical PIO
+code, which went through PCI tree on only previous upstreaming.
+
+Cc. linux-pci@vger.kernel.org
+
+[1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
+[2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+
+Changes since v1:
+- Add more reasoning in RCU fix patch
+- Create separate patch to change LOGIC_PIO_CPU_MMIO registration to
+  accomodate unregistration
+
+John Garry (6):
+  lib: logic_pio: Fix RCU usage
+  lib: logic_pio: Avoid possible overlap for unregistering regions
+  lib: logic_pio: Add logic_pio_unregister_range()
+  bus: hisi_lpc: Unregister logical PIO range to avoid potential
+    use-after-free
+  bus: hisi_lpc: Add .remove method to avoid driver unbind crash
+  lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
+    registration
+
+ drivers/bus/hisi_lpc.c    | 43 +++++++++++++++++---
+ include/linux/logic_pio.h |  1 +
+ lib/logic_pio.c           | 86 +++++++++++++++++++++++++++------------
+ 3 files changed, 99 insertions(+), 31 deletions(-)
+
 -- 
 2.17.1
 
