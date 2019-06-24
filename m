@@ -2,193 +2,119 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F631C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D4AC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D841D2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C305208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhZUc0bS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Kshrg/nN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfFXDsk (ORCPT
+        id S1727705AbfFXDx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:48:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43100 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfFXDsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:48:39 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so6681478pfg.10;
-        Sun, 23 Jun 2019 20:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HxLh5bacpaEbPEgyRw0bk27sc0jWaPgYJYjIXjgo33A=;
-        b=GhZUc0bSh9odzWJr8A9l4V9YbZ7WOEQfA8ezqs8d4I9b204HgGVhyhCAeoUAzusB0+
-         vQi3QusFCSeL+fgy/Vt7/yNTUoO1SaDCCRBguglKq+bkmON8QUg64+gHQzmRa0KdUgpo
-         AFMxVVWYh/stfp4k5afgp5YC5ZYZfzMV8lwwvFBOtAcguOX5vv0QEWFvRbHsEvJCqpKq
-         upahY483hsbmVhufRqFTDgjQIiEv2VTV3UPaWsvD7HINq7GUBmQaKW9Uf6I1AbxlJJ+B
-         Xiau+4OIEn/G7XeNB13ZQEFio/zIbLoRFG5UZ9wHsjQdefe+1/gcCoDEml/WdPTme7Ma
-         yUvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HxLh5bacpaEbPEgyRw0bk27sc0jWaPgYJYjIXjgo33A=;
-        b=mpFz5TREMWeZI5vZV0FnqsI1sk33pvpR/PPfTgg+vGDuckh8Jh5uPbrXegDEUFlEtW
-         F+t156MtPS5ET7kqPvq1YhRCEmgoSyyb1wzvok285ff9AxF8y5s7t8H2MuJNLdJBr4Jf
-         wsvYLD/A4qDFbmrSSfzC+2+uXbPwb60R5B1wPZCPf7eZHozCQcTIID7sn5i7PIcYEWld
-         niKAk1H/EHBTAEwXLULxAM+7CVnLp4L+aX5M59FzHciyQ07mHo4cAylNEYoQYIMjNRAu
-         hwjtUwIYru4v8qHb8JAUTceKPciDi44z4ao7031Bn2hPaJBluxMr8AVqB5oqg6POu7wa
-         l3qg==
-X-Gm-Message-State: APjAAAU6KfGC4uK4ypINt8xyHWwe3TkOHmyXZ91USd3SP242rkcs5bUf
-        GDye7h42J1+5Ro4YtCtYHKMFc/gqHYGGjA==
-X-Google-Smtp-Source: APXvYqwUGAkdev3Lth6QIcfTFndeH/dXnC4Ay6j09REyaesdUSXcxsVRiRTu2tBjGKSEdP4p+amZBA==
-X-Received: by 2002:a65:518d:: with SMTP id h13mr30373503pgq.22.1561348119000;
-        Sun, 23 Jun 2019 20:48:39 -0700 (PDT)
-Received: from localhost ([2601:600:10a:3c04:4c61:fdbe:e215:fc10])
-        by smtp.gmail.com with ESMTPSA id t13sm8991228pjo.13.2019.06.23.20.48.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 23 Jun 2019 20:48:38 -0700 (PDT)
-From:   Jordan Hand <jordanhand22@gmail.com>
-Cc:     jordanhand22@gmail.com, Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm: Get TCG log from TPM2 ACPI table for tpm2 systems
-Date:   Sun, 23 Jun 2019 20:47:33 -0700
-Message-Id: <20190624034734.15957-1-jordanhand22@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 23 Jun 2019 23:53:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53555 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbfFXDx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:53:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XFlP3YK6z9s7h;
+        Mon, 24 Jun 2019 13:53:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561348435;
+        bh=VGIluw6Hvk7T/j5RUdomh0qB2Y2R8PaWhs0YvojBVVI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kshrg/nNzmsnx243Egr3ezPv5vwk/kYDsT8+lE6SKNkh2pveGDlbta+3tOnjwK7y1
+         lUnGKsTaJkb3OzafcN+QmaJiiK+V71m19UsbVBYo5bH/ucE2xrzZxJR++zMJkTgKpr
+         WAbqsBSY3kgEtz+2ABXEFfP0/zEqPeqUz9kzbOqtYB/G6y8e3tjt3lekyMX3m5mAkw
+         +GlnoR8qXL0El0aL9jNJGbZrYgGGkcc2td0wIpyUmJSuIexSQDcfw2RmJmkVfkd5xG
+         FGbH8V4HiSF2hnBZS/saJVUT9T+aEOtalu8jNX70Eyo4K1CEs1AbDOAlV99Bk/yF/h
+         Cs1gR1oWw1cZA==
+Date:   Mon, 24 Jun 2019 13:53:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     DRI <dri-devel@lists.freedesktop.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dave Airlie <airlied@linux.ie>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: linux-next: manual merge of the drm-intel tree with the pci
+ tree
+Message-ID: <20190624135352.18b7dd23@canb.auug.org.au>
+In-Reply-To: <20190617132027.3e34597d@canb.auug.org.au>
+References: <20190617132027.3e34597d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/D/pPn=xabmgy+IeW5=LwFxy"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For TPM2-based systems, retrieve the TCG log from the TPM2 ACPI table.
+--Sig_/D/pPn=xabmgy+IeW5=LwFxy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jordan Hand <jordanhand22@gmail.com>
----
- drivers/char/tpm/eventlog/acpi.c | 67 +++++++++++++++++++++++---------
- 1 file changed, 48 insertions(+), 19 deletions(-)
+Hi all,
 
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index 63ada5e53f13..942d282e2738 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -41,17 +41,31 @@ struct acpi_tcpa {
- 	};
- };
- 
-+struct acpi_tpm2 {
-+	struct acpi_table_header hdr;
-+	u16 platform_class;
-+	u16 reserved;
-+	u64 control_area_addr;
-+	u32 start_method;
-+	u8 start_method_params[12];
-+	u32 log_max_len;
-+	u64 log_start_addr;
-+} __packed;
-+
- /* read binary bios log */
- int tpm_read_log_acpi(struct tpm_chip *chip)
- {
--	struct acpi_tcpa *buff;
-+	struct acpi_table_header *buff;
-+	struct acpi_tcpa *tcpa;
-+	struct acpi_tpm2 *tpm2;
-+
- 	acpi_status status;
- 	void __iomem *virt;
- 	u64 len, start;
-+	int log_type;
- 	struct tpm_bios_log *log;
--
--	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		return -ENODEV;
-+	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
-+	acpi_string table_sig;
- 
- 	log = &chip->log;
- 
-@@ -61,26 +75,41 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	if (!chip->acpi_dev_handle)
- 		return -ENODEV;
- 
--	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
--	status = acpi_get_table(ACPI_SIG_TCPA, 1,
--				(struct acpi_table_header **)&buff);
-+	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-+	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
-+	status = acpi_get_table(table_sig, 1, &buff);
- 
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	switch(buff->platform_class) {
--	case BIOS_SERVER:
--		len = buff->server.log_max_len;
--		start = buff->server.log_start_addr;
--		break;
--	case BIOS_CLIENT:
--	default:
--		len = buff->client.log_max_len;
--		start = buff->client.log_start_addr;
--		break;
-+	/* If log_max_len and log_start_addr are set, start_method_params will
-+	 * be 12 bytes, according to TCG ACPI spec. If start_method_params is
-+	 * fewer than 12 bytes, the TCG log is not available
-+	 */
-+	if (is_tpm2 && (buff->length == sizeof(acpi_tpm2))) {
-+		tpm2 = (struct acpi_tpm2 *)buff;
-+		len = tpm2->log_max_len;
-+		start = tpm2->log_start_addr;
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+	} else {
-+		tcpa = (struct acpi_tcpa *)buff;
-+		switch (tcpa->platform_class) {
-+		case BIOS_SERVER:
-+			len = tcpa->server.log_max_len;
-+			start = tcpa->server.log_start_addr;
-+			break;
-+		case BIOS_CLIENT:
-+		default:
-+			len = tcpa->client.log_max_len;
-+			start = tcpa->client.log_start_addr;
-+			break;
-+		}
-+		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
- 	}
-+
- 	if (!len) {
--		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-+		dev_warn(&chip->dev, "%s: %s log area empty\n",
-+				table_sig, __func__);
- 		return -EIO;
- 	}
- 
-@@ -98,7 +127,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	memcpy_fromio(log->bios_event_log, virt, len);
- 
- 	acpi_os_unmap_iomem(virt, len);
--	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	return log_type;
- 
- err:
- 	kfree(log->bios_event_log);
--- 
-2.20.1
+On Mon, 17 Jun 2019 13:20:27 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the drm-intel tree got a conflict in:
+>=20
+>   drivers/gpu/drm/i915/i915_drv.h
+>=20
+> between commit:
+>=20
+>   151f4e2bdc7a ("docs: power: convert docs to ReST and rename to *.rst")
+>=20
+> from the pci tree and commit:
+>=20
+>   1bf676cc2dba ("drm/i915: move and rename i915_runtime_pm")
+>=20
+> from the drm-intel tree.
+>=20
+> I fixed it up (I just removed the struct definition form this files as
+> the latter did - its comment will need to be fixed up in its new file)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
+This is now a conflict between the drm and pci trees.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/D/pPn=xabmgy+IeW5=LwFxy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QSVAACgkQAVBC80lX
+0GwM7gf9GK6qzUpAzdlZxWPsizUemMk0hlu06vCfFkvj4DMv6FYsDDyE7Pgt1OHm
+XGAE9GIE5qFu5DuesAChmzvOcMVg1kvp8oclWH/OFHCzBS87wDPE2MV0L3WDb+rb
+MgGgvDWdG2CJ12ztOdw+3Am1FBmIBVtQ7e1ss2kYERCtCWbwwnN5iJpt9MBpx8/8
+f+bHM4Um3Sttm9pTmYGg4tWzsSKY1NE3FouOZCVVUdUsbeNBDL2ACDmBOmg/zoZA
+LrVQ+xhPlU0q0fXVREO/A+TW3Ndba+UhQsPYHoIsOMaZeo4juJhdMGZt7EYZJhpz
++pSKH2SGBt35p0xFQLbfFvATmfcGog==
+=jGei
+-----END PGP SIGNATURE-----
+
+--Sig_/D/pPn=xabmgy+IeW5=LwFxy--
