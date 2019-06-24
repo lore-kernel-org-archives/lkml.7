@@ -2,152 +2,151 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54F2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A07C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54C82133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6E12083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dKww+5G8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfFXIAn (ORCPT
+        id S1726846AbfFXIFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:00:43 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:33938 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727243AbfFXIAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:00:42 -0400
-X-UUID: 38754436abf2429f8da264e9d1e305fd-20190624
-X-UUID: 38754436abf2429f8da264e9d1e305fd-20190624
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 664715075; Mon, 24 Jun 2019 16:00:32 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 24 Jun
- 2019 16:00:31 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Mon, 24 Jun 2019 16:00:28 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
+        Mon, 24 Jun 2019 04:05:08 -0400
+Received: from mail-eopbgr20089.outbound.protection.outlook.com ([40.107.2.89]:56324
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726351AbfFXIFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:05:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bBOYBXzozbCtfIO5X4wDYJcGRtkAIQ0gxvXtpKDMoNQ=;
+ b=dKww+5G8mb1Wb54v83DgQ1p+/37MTBAFIPCISNJissxHrGCoCCWAgJRfKZsxoO/T1fcx/j+v2E/4TD3JkRUgCK8gVkXvsfGiK94PoxZ66G3Amc+h9g0ima/k6z0Mk/Kld14Q362fXrK2l53ozeTqCpuIds4RS9d/CCM0zBYU2aU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3946.eurprd04.prod.outlook.com (52.134.72.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 08:04:23 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 08:04:23 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v2 2/2] drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
-Date:   Mon, 24 Jun 2019 16:00:01 +0800
-Message-ID: <20190624080001.67222-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190624080001.67222-1-jitao.shi@mediatek.com>
-References: <20190624080001.67222-1-jitao.shi@mediatek.com>
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Topic: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Index: AQHVJXvnLQPj9qjL2U2LZTWuyBDONqaqeq9g
+Date:   Mon, 24 Jun 2019 08:04:22 +0000
+Message-ID: <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190618021820.14885-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190618021820.14885-1-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49b87960-1f61-4e28-99d3-08d6f87a918b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3946;
+x-ms-traffictypediagnostic: DB3PR0402MB3946:
+x-microsoft-antispam-prvs: <DB3PR0402MB3946FDB3407C7C806D9766F9F5E00@DB3PR0402MB3946.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(396003)(366004)(346002)(199004)(189003)(9686003)(71190400001)(74316002)(7736002)(81156014)(8676002)(8936002)(81166006)(68736007)(25786009)(478600001)(7416002)(33656002)(110136005)(4326008)(316002)(305945005)(3846002)(6116002)(2501003)(55016002)(14454004)(53936002)(44832011)(66066001)(229853002)(76176011)(7696005)(26005)(99286004)(186003)(6436002)(102836004)(6506007)(2201001)(256004)(476003)(5660300002)(446003)(486006)(52536014)(6246003)(71200400001)(76116006)(73956011)(11346002)(66946007)(66446008)(64756008)(66556008)(66476007)(86362001)(2906002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3946;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pTN/hE4UnGZ5M3DnEeJbwIhVdk8pXzNpc9l1I8sxTDkzxCwu2h4JzeRBNzQWnYJnfDHt0NoSIrqWkLvbiafQUGgZjkvK7jDnqD4zDU5HIOOeyf6h0Fi5zMOb/DglCZmQbRqiCXYSnPFXUDgxGmzs5n3VrD7FVxAjMzpGr/gLHzgm/tguGkCWQ633Zw5fJmYhGbHI/gNZWuzLMgNi+/w+N/M4rLEoTOhzKulHVJqm5veGeTGoH2onAwg8/OUH/Qf5UpseVMrBqFVEM3sM19910R4Zx6HyTJJmqNrtfzKWNUPlJ/OZMdVE73rUn7FHdEYosVf4LU6weyD/vCWNDybFPQJ34XOkyWIFCCugDic99bmK1C7oR7Kav3TRHQEBUcn/CKFQ52yjLvJiCfbNZIgxh859FcLODmBDfviui/QQ3Cg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49b87960-1f61-4e28-99d3-08d6f87a918b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 08:04:22.8858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3946
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
-The most codes can be reuse.
-So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
-Add the different parts in driver data.
-
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-index 6e06c8506623..d1ee43cfcbe2 100644
---- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-+++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-@@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
- 	{},
- };
- 
-+static const struct panel_init_cmd auo_init_cmd[] = {
-+	_INIT_DELAY_CMD(24),
-+	_INIT_DCS_CMD(0x11),
-+	_INIT_DELAY_CMD(120),
-+	_INIT_DCS_CMD(0x29),
-+	_INIT_DELAY_CMD(120),
-+	{},
-+};
-+
- static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
- {
- 	return container_of(panel, struct boe_panel, base);
-@@ -572,6 +581,34 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
- 	.init_cmds = boe_init_cmd,
- };
- 
-+static const struct drm_display_mode auo_default_mode = {
-+	.clock = 157000,
-+	.hdisplay = 1200,
-+	.hsync_start = 1200 + 80,
-+	.hsync_end = 1200 + 80 + 24,
-+	.htotal = 1200 + 80 + 24 + 36,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 16,
-+	.vsync_end = 1920 + 16 + 4,
-+	.vtotal = 1920 + 16 + 4 + 16,
-+	.vrefresh = 60,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct panel_desc auo_kd101n80_45na_desc = {
-+	.modes = &auo_default_mode,
-+	.bpc = 8,
-+	.size = {
-+		.width = 216,
-+		.height = 135,
-+	},
-+	.lanes = 4,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_LPM,
-+	.init_cmds = auo_init_cmd,
-+};
-+
- static int boe_panel_get_modes(struct drm_panel *panel)
- {
- 	struct boe_panel *boe = to_boe_panel(panel);
-@@ -695,6 +732,9 @@ static const struct of_device_id boe_of_match[] = {
- 	{ .compatible = "boe,tv101wum-nl6",
- 	  .data = &boe_tv101wum_nl6_desc
- 	},
-+	{ .compatible = "auo,kd101n80-45na",
-+	  .data = &auo_kd101n80_45na_desc
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, boe_of_match);
--- 
-2.21.0
-
+SGksIERhbmllbC9SdWkvRWR1YXJkbw0KCUNvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2sgYXQg
+dGhpcyBwYXRjaCBzZXJpZXM/IA0KDQpBbnNvbg0KDQo+IEZyb206IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiANCj4gTlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRo
+IGEgQ29ydGV4LU00IGNvcmUgaW5zaWRlIGFzIHN5c3RlbQ0KPiBjb250cm9sbGVyLCB0aGUgc3lz
+dGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9mIHN5c3RlbSBwb3dlciwgY2xvY2sgYW5kDQo+
+IHRoZXJtYWwgc2Vuc29ycyBldGMuIG1hbmFnZW1lbnQsIExpbnV4IGtlcm5lbCBoYXMgdG8gY29t
+bXVuaWNhdGUgd2l0aA0KPiBzeXN0ZW0gY29udHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkg
+SVBDIHRvIGdldCB0ZW1wZXJhdHVyZSBmcm9tIHRoZXJtYWwNCj4gc2Vuc29ycywgdGhpcyBwYXRj
+aCBhZGRzIGJpbmRpbmcgZG9jIGZvciBpLk1YIHN5c3RlbSBjb250cm9sbGVyIHRoZXJtYWwNCj4g
+ZHJpdmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54
+cC5jb20+DQo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBS
+ZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gLS0tDQo+
+IE5vIGNoYW5nZS4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
+YWxlL2ZzbCxzY3UudHh0ICAgICAgICB8IDE2ICsrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
+PiBpbmRleCBhNTc1ZTQyLi5mYzM4NDRlIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
+PiBAQCAtMTU1LDYgKzE1NSwxNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgT3B0aW9uYWwg
+cHJvcGVydGllczoNCj4gIC0gdGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1l
+b3V0IGluIHNlY29uZHMuDQo+IA0KPiArVGhlcm1hbCBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVz
+c2FnZSBQcm90b2NvbA0KPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICsNCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICst
+IGNvbXBhdGlibGU6CQkJU2hvdWxkIGJlIDoNCj4gKwkJCQkgICJmc2wsaW14OHF4cC1zYy10aGVy
+bWFsIg0KPiArCQkJCWZvbGxvd2VkIGJ5ICJmc2wsaW14LXNjLXRoZXJtYWwiOw0KPiArDQo+ICst
+ICN0aGVybWFsLXNlbnNvci1jZWxsczoJU2VlDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy90aGVybWFsL3RoZXJtYWwudHh0DQo+ICsJCQkJZm9yIGEgZGVzY3JpcHRpb24uDQo+
+ICsNCj4gIEV4YW1wbGUgKGlteDhxeHApOg0KPiAgLS0tLS0tLS0tLS0tLQ0KPiAgYWxpYXNlcyB7
+DQo+IEBAIC0yMjIsNiArMjMzLDExIEBAIGZpcm13YXJlIHsNCj4gIAkJCWNvbXBhdGlibGUgPSAi
+ZnNsLGlteDhxeHAtc2Mtd2R0IiwgImZzbCxpbXgtc2Mtd2R0IjsNCj4gIAkJCXRpbWVvdXQtc2Vj
+ID0gPDYwPjsNCj4gIAkJfTsNCj4gKw0KPiArCQl0c2VuczogdGhlcm1hbC1zZW5zb3Igew0KPiAr
+CQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zYy10aGVybWFsIiwgImZzbCxpbXgtc2MtDQo+
+IHRoZXJtYWwiOw0KPiArCQkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+Ow0KPiArCQl9Ow0K
+PiAgCX07DQo+ICB9Ow0KPiANCj4gLS0NCj4gMi43LjQNCg0K
