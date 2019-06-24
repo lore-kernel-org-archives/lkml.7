@@ -2,59 +2,63 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3661C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B85C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAA620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C0F20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="txqvv/Nr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HgR87KJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfFXX50 (ORCPT
+        id S1728972AbfFXX5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:57:26 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:56085 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbfFXX5Z (ORCPT
+        Mon, 24 Jun 2019 19:57:30 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:48916 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728710AbfFXX52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:57:25 -0400
-Received: by mail-pg1-f202.google.com with SMTP id b10so10311147pgb.22
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:57:25 -0700 (PDT)
+        Mon, 24 Jun 2019 19:57:28 -0400
+Received: by mail-yb1-f201.google.com with SMTP id z124so18189000ybz.15
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=aQiVt1v1ZspQwRYs4b3nRqt7OstkFgTd68CV7/bkhBE=;
-        b=txqvv/NrWF2r2ZYnikxukD/ZTGTxdxrEpeeOGHmXwj72GqxK2ht2VzPh7WQDvUOEvx
-         fveeS03789E660Df7NgYySiBMq0CKfnt0FGrf+j0Ccn2Q8q1SUPKjPckd0zwOvi2S8Lm
-         fTMZHhPZ2Rt4so+75FNenrstI74oZ231YwcoLAzFNzkScr9l99sN5uLzDadIRInd/sy2
-         zSq3KdMgHT8SZI65hzgk0sGSFKdjTir5r+KZ4MDS5SoytMFRCAKJvHNZ7XT6h/cp2iDF
-         HHPsjszn23XpCFmfrSA9dnk+MoClS1XLMfyLf3IfmKNR0qOJoAYvyKcGSTMGcqqvcYiJ
-         pHvg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=lTASmr8508yaqk28Yw8XQISa65o9AY9rEgUPJ2XrbLE=;
+        b=HgR87KJOS1v7A9kmRis9ASzQhNbmeTLU0roMW42HlmJb2Vw/ecwDkpvpaNtUztTUv7
+         h4vpxWjgXCKKKHUKF4+wZj8DQkaAGkhJqrcWplLbvU/fI5opDKRRbdtJx3eZfJdkebxt
+         5lLQlThX62drcBIZH7UH+REXFuJJvNW/vtzmYPg0Ve2TeI7LUs9qg/lwHGBGOxAuhQoK
+         YKLOIFepoVtUgSvnODVM4flMJG2zquyVTjn3+IQXbdQpZltRcrvJFjx+rDzMkYmsRIPT
+         0r9WqmY0/em+knUwzDG62lpnogrUEI69Q+Ivb+NXpaa2TXYGd96vpG7ghFpyM+quVfY9
+         vn7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=aQiVt1v1ZspQwRYs4b3nRqt7OstkFgTd68CV7/bkhBE=;
-        b=dqtNgVdvhdRz2dkC2Lp2WjOx8hcgEXqPgH4+EBniPCIUquuQDWKhn8m1gHrP8DhPGC
-         4eliQN/NxnsipFbPV6TXKE40ttE/PpLwJijcje5PxTzPI9evjyzve5t6ldlgg6BoLKHT
-         3tPLFoWQhTRwu7o13Un+y1viNtNXA2dr8H0TEiQZjCVjszupmy9haS3lxGGhhowZmSQS
-         RMq/uXM/DInZY8IIDePBwrvI/9RWGBO/y16dcOf+Ls1TlQ7y7DeRdihR5jkWp27+Gln8
-         +6AOEe38T4kq8EsB1fWoEXkBEYJOVXowHmQZf2iNX58kxOe+yhAifQoNh3relEDJ36Si
-         Vu7w==
-X-Gm-Message-State: APjAAAWx6jcvkvOTdAI9FRYjdGDqWeqa6Y5H01uw6Ca9OMbeRTQ9ZAfC
-        QnSI/yIEY8zHSDHqM/Bbdd4eYa9q3rw6FZv0
-X-Google-Smtp-Source: APXvYqyVAz/J7JuE9xSQrMGwuqiw5jvMqJF2PJiivFk2FjhFS9d/dVj1l146q2/pkut1R0tC6xATSgINoHjQjykI
-X-Received: by 2002:a65:560f:: with SMTP id l15mr12290186pgs.94.1561420645035;
- Mon, 24 Jun 2019 16:57:25 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:57:18 -0700
-Message-Id: <20190624235720.167067-1-allanzhang@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=lTASmr8508yaqk28Yw8XQISa65o9AY9rEgUPJ2XrbLE=;
+        b=ZORcbggu2NepWEmeQkpfJwZXO8pCoFGYPu1dbFc+UeaZk7rTgK3lBLRz7wzIgBrLl3
+         PFa3gcP0ngo1EWDAVyTThapEbpY9WyqIbonp2KDOTIVyUyX+UoOztHaQgFaKOxDaewxf
+         lVhoK/Ei+TdSvHS5IG130QK27YfZzC0N9m6FYY0jtEuQzeh2qkAWjX5s/qtkkaCwmL6f
+         NzHYxOIJmHvBN51yzCPDMqk6W9nyQBRxH21WFC5ZnYvaZsqVgpmHnuhfbJqgyYwFWGCI
+         0GLW7lgBGg2aotK7VKnBGlFph5TjVm9o9YQZj0LC3jFEe20sTE4DAwkpnSMPxxgG0LgQ
+         t18Q==
+X-Gm-Message-State: APjAAAVKPbzcIvury7bILncSZ1tLOJOiZzIlMAo25t7BFxqm2Z2tc8hM
+        SVrcgBfwDPAuUr2N6hhPZUK9IDTh3CE+JXHG
+X-Google-Smtp-Source: APXvYqzXalSqNauQM9XckgaKmyMAAqND1aX+nEX1lCLabHCSYvsOYf5VxY3Af5oXAhLyouFsqmetotCdMjNXR0vD
+X-Received: by 2002:a0d:cc91:: with SMTP id o139mr72026193ywd.162.1561420647461;
+ Mon, 24 Jun 2019 16:57:27 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 16:57:19 -0700
+In-Reply-To: <20190624235720.167067-1-allanzhang@google.com>
+Message-Id: <20190624235720.167067-2-allanzhang@google.com>
 Mime-Version: 1.0
+References: <20190624235720.167067-1-allanzhang@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3 0/2] bpf: Allow bpf_skb_event_output for more prog types
+Subject: [PATCH v3 1/2] bpf: Allow bpf_skb_event_output for a few prog types
 From:   allanzhang <allanzhang@google.com>
 To:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -75,18 +79,64 @@ bpf_skb_event_output to produce software event.
 
 Added socket_filter, cg_skb, sk_skb prog types to generate sw event.
 
-*** BLURB HERE ***
+Test bpf code is generated from code snippet:
 
-allanzhang (2):
-  bpf: Allow bpf_skb_event_output for a few prog types
-  bpf: Add selftests for bpf_perf_event_output
+struct TMP {
+    uint64_t tmp;
+} tt;
+tt.tmp = 5;
+bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
+                      &tt, sizeof(tt));
+return 1;
 
- net/core/filter.c                             |  6 ++
- tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
- .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
- 3 files changed, 132 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+the bpf assembly from llvm is:
+       0:       b7 02 00 00 05 00 00 00         r2 = 5
+       1:       7b 2a f8 ff 00 00 00 00         *(u64 *)(r10 - 8) = r2
+       2:       bf a4 00 00 00 00 00 00         r4 = r10
+       3:       07 04 00 00 f8 ff ff ff         r4 += -8
+       4:       18 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00    r2 = 0ll
+       6:       b7 03 00 00 00 00 00 00         r3 = 0
+       7:       b7 05 00 00 08 00 00 00         r5 = 8
+       8:       85 00 00 00 19 00 00 00         call 25
+       9:       b7 00 00 00 01 00 00 00         r0 = 1
+      10:       95 00 00 00 00 00 00 00         exit
 
+Signed-off-by: allanzhang <allanzhang@google.com>
+---
+ net/core/filter.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 2014d76e0d2a..b75fcf412628 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -5958,6 +5958,8 @@ sk_filter_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_socket_cookie_proto;
+ 	case BPF_FUNC_get_socket_uid:
+ 		return &bpf_get_socket_uid_proto;
++	case BPF_FUNC_perf_event_output:
++		return &bpf_skb_event_output_proto;
+ 	default:
+ 		return bpf_base_func_proto(func_id);
+ 	}
+@@ -5978,6 +5980,8 @@ cg_skb_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_sk_storage_get_proto;
+ 	case BPF_FUNC_sk_storage_delete:
+ 		return &bpf_sk_storage_delete_proto;
++	case BPF_FUNC_perf_event_output:
++		return &bpf_skb_event_output_proto;
+ #ifdef CONFIG_SOCK_CGROUP_DATA
+ 	case BPF_FUNC_skb_cgroup_id:
+ 		return &bpf_skb_cgroup_id_proto;
+@@ -6226,6 +6230,8 @@ sk_skb_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_sk_redirect_map_proto;
+ 	case BPF_FUNC_sk_redirect_hash:
+ 		return &bpf_sk_redirect_hash_proto;
++	case BPF_FUNC_perf_event_output:
++		return &bpf_skb_event_output_proto;
+ #ifdef CONFIG_INET
+ 	case BPF_FUNC_sk_lookup_tcp:
+ 		return &bpf_sk_lookup_tcp_proto;
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
