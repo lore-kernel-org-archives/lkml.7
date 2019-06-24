@@ -2,87 +2,84 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D83C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD61208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D0D20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uJ0CROum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfFXNzM convert rfc822-to-8bit (ORCPT
+        id S1731454AbfFXNzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:55:12 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27378 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726716AbfFXNzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:55:12 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-154-zyOnqJgCNBeziOcEpui8zg-1; Mon, 24 Jun 2019 14:55:08 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Jun 2019 14:55:08 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Jun 2019 14:55:08 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Reinette Chatre' <reinette.chatre@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>
-CC:     "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] x86/resctrl: Prevent possible overrun during bitmap
- operations
-Thread-Topic: [PATCH] x86/resctrl: Prevent possible overrun during bitmap
- operations
-Thread-Index: AQHVJt2gKCUy1MDNR0eTZZQcuzstIqaq2mhQ
-Date:   Mon, 24 Jun 2019 13:55:07 +0000
-Message-ID: <2b15f4ce814a425c8278e910289398c1@AcuMS.aculab.com>
-References: <58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com>
-In-Reply-To: <58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Jun 2019 09:55:15 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53376 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728762AbfFXNzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:55:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=KptglKiorU95pwI/pjmagyuGLuNXr9MKuaB4FPPE9s8=; b=uJ0CROumKYnIINu/Kn05ZH0uoL
+        GfiyAMb3GcFHu3H/GBB9sorrbrNTlWHcX79EvuuSUHHm3uJb0o6sXAEEY7hTrc/5+lwnEITziu049
+        oGsn/V/hBpIdbBKKOY5yOnyy8MQTaUqCBiKrLW7orid9XoeakRedtH6uFFHTsz+8OVaY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hfPQV-0005Ig-9V; Mon, 24 Jun 2019 15:54:31 +0200
+Date:   Mon, 24 Jun 2019 15:54:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        alexander.sverdlin@gmail.com, allison@lohutok.net, ast@kernel.org,
+        bgolaszewski@baylibre.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
+        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
+        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
+        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
+        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
+        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
+        krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk,
+        liviu.dudau@arm.com, lkundrak@v3.sk, lorenzo.pieralisi@arm.com,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, nsekhar@ti.com, peterz@infradead.org,
+        robert.jarzmik@free.fr, s.hauer@pengutronix.de,
+        sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
+        songliubraving@fb.com, sudeep.holla@arm.com, swinslow@gmail.com,
+        tglx@linutronix.de, tony@atomide.com, will@kernel.org, yhs@fb.com
+Subject: Re: [PATCH V2 10/15] ARM: orion5x: cleanup cppcheck shifting errors
+Message-ID: <20190624135431.GO31306@lunn.ch>
+References: <20190623151313.970-1-tranmanphong@gmail.com>
+ <20190624135105.15579-1-tranmanphong@gmail.com>
+ <20190624135105.15579-11-tranmanphong@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: zyOnqJgCNBeziOcEpui8zg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624135105.15579-11-tranmanphong@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinette Chatre
-> Sent: 19 June 2019 21:27
+On Mon, Jun 24, 2019 at 08:51:00PM +0700, Phong Tran wrote:
+> [arch/arm/mach-orion5x/pci.c:281]: (error) Shifting signed 32-bit value
+> by 31 bits is undefined behaviour
+> [arch/arm/mach-orion5x/pci.c:305]: (error) Shifting signed 32-bit value
+> by 31 bits is undefined behaviour
 > 
-> While the DOC at the beginning of lib/bitmap.c explicitly states that
-> "The number of valid bits in a given bitmap does _not_ need to be an
-> exact multiple of BITS_PER_LONG.", some of the bitmap operations do
-> indeed access BITS_PER_LONG portions of the provided bitmap no matter
-> the size of the provided bitmap. For example, if find_first_bit()
-> is provided with an 8 bit bitmap the operation will access
-> BITS_PER_LONG bits from the provided bitmap. While the operation
-> ensures that these extra bits do not affect the result, the memory
-> is still accessed.
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I suspect that comment also needs correcting.
-On BE systems you really do need to have a array of longs.
+Thanks for swapping to the BIT macro.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+       Andrew
