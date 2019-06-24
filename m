@@ -2,118 +2,121 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F78EC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E66C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B1C208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83790214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EStluEZ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ00Q4nD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfFXEP7 (ORCPT
+        id S1727793AbfFXEVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:15:59 -0400
-Received: from ozlabs.org ([203.11.71.1]:46163 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfFXEP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:15:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XGDq0h5rz9s3l;
-        Mon, 24 Jun 2019 14:15:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561349755;
-        bh=9riMMsbTfWEXQ3lscKQPqLcoMaG3jMzOSISEUDt+ogw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EStluEZ6UYgr0Dv05TMk1GsyB3Sah4JQ5RKyjvx+lIueiqPVzw8XhfUt28AAEgCTF
-         QrFYIOQp5hbTz3ZzL9O3/6Cz9j8trzYvvCtpFs8+coto0Asmu/o8QN3vr8tx5ekVGF
-         giVBwxrCQJerzzLns8TMVLIFn+XHpMONHNHYgRarXUMrUo7cMuwaDDc4U68cDSKcGc
-         GOmPuAHgIqyDjVtZUPtVtOxgJRr+zTiJGPLX4+nJqWq6JDWP5QrApSOCimQY3UYnc2
-         sRPr3tuTlCSk3jNSDMoWin4Ci2uJEFH5+FF6sD3rTV71Z1U1HlydW1HjhpCljb4a5u
-         rpbO0Baqzk/PA==
-Date:   Mon, 24 Jun 2019 14:15:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: linux-next: build failure after merge of the fbdev tree
-Message-ID: <20190624141554.7aafe108@canb.auug.org.au>
-In-Reply-To: <20190624114538.3531b28d@canb.auug.org.au>
-References: <20190620114126.2f13ab9c@canb.auug.org.au>
-        <20190624114538.3531b28d@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/mk3Ou2z25S+CbuKHtZ9n4iV"; protocol="application/pgp-signature"
+        Mon, 24 Jun 2019 00:21:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36188 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFXEVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 00:21:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f21so6395324pgi.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 21:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/Vi0SmBJrr/dhcFyf+7ZAHJAQmuruaehm6iOPvzhh0A=;
+        b=BZ00Q4nDJWbfG8+WDCxOo9DiaRK/yg6Yn/n2eoMxTA6AukHxBQvZ4+mZP16keQzAgb
+         aCsv4jtOVZi0/bgxePIWQmSeq2A2N7zo1ty8lDc6eAOwMd2YYfJY3C/wFotgvEVEmnyB
+         8/DgGIGsxZ8kk2ISnWjURBlXhlgWPpfWFRwr5CBk+ma0PfNx6V4v6/c1HQwctUNhXgHF
+         YUmoVtW4aH+sw0cJQPaeBP2dq3g1jGkUWlPZRyyZ0z4hMy50mRrR/f/wIEnPmFifV64o
+         uq+9VNBHCcsiEIIERe4TC4Kq1oC++FL/XWelwlAX+eliU/V0nipXL02bQBn0VfgV31u3
+         5nZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/Vi0SmBJrr/dhcFyf+7ZAHJAQmuruaehm6iOPvzhh0A=;
+        b=goTNvnyvcOEk3dfSAeKPs5KQ6QXZhZcssFPIWAPkc/yht0XZV8VTHikgZ5hwe6tY7q
+         g4WAOdCg38RPQ0qZFd/TmcZ+o42JJbxDs0mmS5fo+rQC5Lw5d6fDKWlct54qU6whz4PO
+         oris5s7iR+syvlFnjjuDk+jh7tUb4psAbYXWOiIL6r+Ma6qoaD24B8Y5T96s0RfX/QL8
+         Oso2eFn+cl57gE3ls31XiRZzfL5RNg+o3WqgxlWMvsgPsV1dtmUFM2dnicBExNa5re8N
+         KAXisjmEqTzW7vBZkPzKfFn1orQm8bp6SknlYLoqqGMo7O1G4pWX/tukb/TP8LY3AwId
+         poHQ==
+X-Gm-Message-State: APjAAAUFncT0KMuH4pqDcdhLGkXpcig2+kfykahJzqItxSv4fTpbBoBW
+        V7+xtVboP785e6GJEBczTaajack=
+X-Google-Smtp-Source: APXvYqzk+mEWys6LQTcZ4E5e9NNeshfHFdIyEnJiuucAc3dGIR7ipjsKgsHr3zoJScBJt8PvZYLzhQ==
+X-Received: by 2002:a63:8ac3:: with SMTP id y186mr24564759pgd.198.1561350083906;
+        Sun, 23 Jun 2019 21:21:23 -0700 (PDT)
+Received: from mylaptop.nay.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id w14sm10047181pfn.47.2019.06.23.21.21.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 21:21:23 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate away smaller huge page
+Date:   Mon, 24 Jun 2019 12:21:08 +0800
+Message-Id: <1561350068-8966-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mk3Ou2z25S+CbuKHtZ9n4iV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The current pfn_range_valid_gigantic() rejects the pud huge page allocation
+if there is a pmd huge page inside the candidate range.
 
-Hi all,
+But pud huge resource is more rare, which should align on 1GB on x86. It is
+worth to allow migrating away pmd huge page to make room for a pud huge
+page.
 
-On Mon, 24 Jun 2019 11:45:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Thu, 20 Jun 2019 11:41:26 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > After merging the fbdev tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >=20
-> > x86_64-linux-gnu-ld: drivers/gpu/vga/vga_switcheroo.o: in function `vga=
-_switchto_stage2':
-> > vga_switcheroo.c:(.text+0x997): undefined reference to `fbcon_remap_all'
-> >=20
-> > Caused by commit
-> >=20
-> >   1cd51b5d200d ("vgaswitcheroo: call fbcon_remap_all directly")
-> >=20
-> > I have used the version of the fbdev tree from next-20190619 for today.=
- =20
->=20
-> I am still getting this failure.
+The same logic is applied to pgd and pud huge pages.
 
-This has now been merged into the drm-intel and drm trees :-( .
-Something has gone wrong as Daniel was cc'd on the original build
-failure report.
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/hugetlb.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-I have reverted commits
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ac843d3..02d1978 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1081,7 +1081,11 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+ 			unsigned long start_pfn, unsigned long nr_pages)
+ {
+ 	unsigned long i, end_pfn = start_pfn + nr_pages;
+-	struct page *page;
++	struct page *page = pfn_to_page(start_pfn);
++
++	if (PageHuge(page))
++		if (compound_order(compound_head(page)) >= nr_pages)
++			return false;
+ 
+ 	for (i = start_pfn; i < end_pfn; i++) {
+ 		if (!pfn_valid(i))
+@@ -1098,8 +1102,6 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+ 		if (page_count(page) > 0)
+ 			return false;
+ 
+-		if (PageHuge(page))
+-			return false;
+ 	}
+ 
+ 	return true;
+-- 
+2.7.5
 
-  1cd51b5d200d ("vgaswitcheroo: call fbcon_remap_all directly")
-  fe2d70d6f6ff ("fbcon: Call con2fb_map functions directly")
-
-for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/mk3Ou2z25S+CbuKHtZ9n4iV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QTnoACgkQAVBC80lX
-0Gxubgf9GSTtt9btn00u94XXVVz1g0pGwGhvhNCUWJfaafnmo8vOZOVyby1wG/Qe
-oLSIorvCYPMTaKyKuYOXx7CXaSq0//+rQCcRYal1qd/A+zBGZzYZsG2flIxNnoBm
-fJDxhZt2U8uY5N6XKokKtIf/39s5Xumchn6LHGHT8Yepk/yLk5VqJc04rMeWyjJg
-UihzpQG7CHna7sKtYlZRpCsUbOkLNTbkvcuNZbNx2EWmAVqsenbmaZz8Dcg/S3nS
-7ooa3d7/g4peTZEs+RdN4bnH2m12vvzX7pfimD2B7Rk1gIe2qbcVnQw9G+D1/eYx
-mjintqUpgjoPJR4FPPFyGODUgF0hyQ==
-=DhjA
------END PGP SIGNATURE-----
-
---Sig_/mk3Ou2z25S+CbuKHtZ9n4iV--
