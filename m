@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1311CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF19820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27602089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371364;
-	bh=IxxckGWoavSWiTFLS3AgZL5hr8r6rQT8m7x02K4Eoho=;
+	s=default; t=1561371366;
+	bh=6F0uQCMTnlWtg++gfb6hQFg+O79tkm8+jbu/aXD6iy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3BRfHPG+gvaDO7P7iMWdT0FgQQAHvI2S7edzDhAWWSPa3bGBz0u2+3g6qrJZ5tE1
-	 3UM1mMMYJQ7dO16wJk9PpG3ycRv4rzDN08bA2oYKWEKH9iRvGD2pYawxjlQU6ZppUB
-	 NQDd9Qa5PqFpWjkzlQboSAtsFEiejKvmeGDeXnuw=
+	b=xLHDsC59QpZZ1Cl0acGWYz5yxa2K+ghXFppM2s7QTJr1yP7c8U0QCLQfQ1lCyWSdI
+	 OgZ2gQ5GFc8jLtwsEXsxe0S/m+jMHYtMdJabv0bzxN9/i8MWQgPkcVIxZCWcJA18nC
+	 e1l6GuBgwsyG82ApHG99YdMto1p7yLi/EFtmEeCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbfFXKQC (ORCPT
+        id S1730636AbfFXKQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfFXKP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:15:58 -0400
+        id S1729670AbfFXKQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:04 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D5E205ED;
-        Mon, 24 Jun 2019 10:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF8D9205ED;
+        Mon, 24 Jun 2019 10:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371357;
-        bh=IxxckGWoavSWiTFLS3AgZL5hr8r6rQT8m7x02K4Eoho=;
+        s=default; t=1561371363;
+        bh=6F0uQCMTnlWtg++gfb6hQFg+O79tkm8+jbu/aXD6iy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Ed3i8j6fgN3jAQYlorn3+Shj/KAqZ7wvaAo3+d3FO0YP5nFsxuajWyVur4P62dcb
-         HolS6/P5Kg2wMr7rNjnbFM1mtQsTYVFOUxtwa0Pi+R/5JpCbg9J440VX+LwDXog/KY
-         Y/XyDHcRNEoCAqrRZ5qlGl+wLrGm0tQ1FVnvt6KI=
+        b=S+IsMYwGVz1NtBOkYeSFfihKOPqlY4NEXotNZ5PGexyU+75Y1Lp8+VJQ+F7tc37en
+         jf/NuvdOU6xukKLUTxnfURJLxFzurkQBZaQFsuAzJdnKOu0WCpK8D55RmRqLUUAgCc
+         UQKji1eed6298ZjNzXhA+JN6DOc6OUHAPC/EyLiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Long <eric.long@unisoc.com>,
         Baolin Wang <baolin.wang@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 038/121] dmaengine: sprd: Fix the incorrect start for 2-stage destination channels
-Date:   Mon, 24 Jun 2019 17:56:10 +0800
-Message-Id: <20190624092322.752085308@linuxfoundation.org>
+Subject: [PATCH 5.1 040/121] dmaengine: sprd: Fix the right place to configure 2-stage transfer
+Date:   Mon, 24 Jun 2019 17:56:12 +0800
+Message-Id: <20190624092322.847607054@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,34 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3d626a97f0303e9c30d063434b749de3f0f91fb5 ]
+[ Upstream commit c434e377dad1dec05cad1870ce21bc539e1e024f ]
 
-The 2-stage destination channel will be triggered by source channel
-automatically, which means we should not trigger it by software request.
+Move the 2-stage configuration before configuring the link-list mode,
+since we will use some 2-stage configuration to fill the link-list
+configuration.
 
 Signed-off-by: Eric Long <eric.long@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/sprd-dma.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 431e289d59a5..0f92e60529d1 100644
+index a01c23246632..01abed5cde49 100644
 --- a/drivers/dma/sprd-dma.c
 +++ b/drivers/dma/sprd-dma.c
-@@ -510,7 +510,9 @@ static void sprd_dma_start(struct sprd_dma_chn *schan)
- 	sprd_dma_set_uid(schan);
- 	sprd_dma_enable_chn(schan);
+@@ -911,6 +911,12 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		schan->linklist.virt_addr = 0;
+ 	}
  
--	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID)
-+	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID &&
-+	    schan->chn_mode != SPRD_DMA_DST_CHN0 &&
-+	    schan->chn_mode != SPRD_DMA_DST_CHN1)
- 		sprd_dma_soft_request(schan);
- }
++	/* Set channel mode and trigger mode for 2-stage transfer */
++	schan->chn_mode =
++		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
++	schan->trg_mode =
++		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
++
+ 	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
+ 	if (!sdesc)
+ 		return NULL;
+@@ -944,12 +950,6 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		}
+ 	}
  
+-	/* Set channel mode and trigger mode for 2-stage transfer */
+-	schan->chn_mode =
+-		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
+-	schan->trg_mode =
+-		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
+-
+ 	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, src, dst, len,
+ 				 dir, flags, slave_cfg);
+ 	if (ret) {
 -- 
 2.20.1
 
