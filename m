@@ -2,99 +2,69 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7979EC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459A120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561407714;
-	bh=/rV1TlvYuXOK2sFci2/p6W21rW/APz4/kUsj3EobUV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gdmR3eG+sdRTqCZ59/bUs2+L2lXgGj12/AZTKUFyn6GvVfL+wpaIEVVGIzHPiLbUH
-	 nx15DGIMthy8rseLWjqGlMXkxPbh7EsoTId7mh/WDyi332q9WSrn2/QlJZy+OenqA/
-	 2L72e95pemqUAsWDQ5Acq44TzEqtrnEb3Dwm6KrA=
+	by mail.kernel.org (Postfix) with ESMTP id A57CD20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731662AbfFXUVx (ORCPT
+        id S1731664AbfFXUZB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfFXUVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:21:52 -0400
-Received: from localhost (unknown [167.220.24.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6755E20645;
-        Mon, 24 Jun 2019 20:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561407711;
-        bh=/rV1TlvYuXOK2sFci2/p6W21rW/APz4/kUsj3EobUV4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2VPaEOiYLx/B1U7xl+3URPJW/PCnea+Hoo4lmR8kq/6n244//CX5FcosNOr1Dj3oq
-         kZ/WOwKR+mt0aTbDmzXkGDY61uNn7Pw8n0E1ZmPY1FmKSwRlrgS69rOqWLgsC9nNQT
-         I7qwRnBg2lc/TFX9Q7IzCpvfO5IQUktLdI8ucdSE=
-Date:   Mon, 24 Jun 2019 16:21:50 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     aarcange@redhat.com, jannh@google.com, oleg@redhat.com,
-        peterx@redhat.com, rppt@linux.ibm.com, jgg@mellanox.com,
-        mhocko@suse.com, jglisse@redhat.com, akpm@linux-foundation.org,
-        mike.kravetz@oracle.com, viro@zeniv.linux.org.uk,
-        riandrews@android.com, arve@android.com, yishaih@mellanox.com,
-        dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, matanb@mellanox.com, leonro@mellanox.com,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        devel@driverdev.osuosl.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        srivatsab@vmware.com, amakhalov@vmware.com
-Subject: Re: [PATCH v4 0/3] [v4.9.y] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Message-ID: <20190624202150.GC3881@sasha-vm>
-References: <1561410186-3919-1-git-send-email-akaher@vmware.com>
- <1561410186-3919-4-git-send-email-akaher@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1561410186-3919-4-git-send-email-akaher@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 24 Jun 2019 16:25:01 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60448 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfFXUZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 16:25:00 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 378BE126B52D0;
+        Mon, 24 Jun 2019 13:24:59 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 13:24:56 -0700 (PDT)
+Message-Id: <20190624.132456.2013417744691373807.davem@davemloft.net>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com,
+        wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
+References: <20190620134748.17866-1-megous@megous.com>
+        <20190624.102927.1268781741493594465.davem@davemloft.net>
+        <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 13:24:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:33:06AM +0530, Ajay Kaher wrote:
->coredump: fix race condition between mmget_not_zero()/get_task_mm()
->and core dumping
->
->[PATCH v4 1/3]:
->Backporting of commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
->
->[PATCH v4 2/3]:
->Extension of commit 04f5866e41fb to fix the race condition between
->get_task_mm() and core dumping for IB->mlx4 and IB->mlx5 drivers.
->
->[PATCH v4 3/3]
->Backporting of commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
->
->[diff from v3]:
->- added [PATCH v4 3/3]
+From: Ondøej Jirman <megous@megous.com>
+Date: Mon, 24 Jun 2019 19:46:37 +0200
 
-Why do all the patches have the same subject line?
+> This series was even longer before, with patches all around for various
+> maintainers. I'd expect that relevant maintainers pick the range of patches
+> meant for them. I don't know who's exactly responsible for what, but I think,
+> this should work:
+> 
+> - 2 stmmac patches should go together via some networking tree (is there
+>   something specific for stmmac?)
+> - all DTS patches should go via sunxi
+> - hdmi patches via some drm tree
 
-I guess it's correct for the first one, but can you explain what's up
-with #2 and #3?
-
-If the second one isn't upstream, please explain in detail why not and
-how 4.9 differs from upstream so that it requires a custom backport.
-
-The third one just looks like a different patch altogether with a wrong
-subject line?
-
---
-Thanks,
-Sasha
+Thank you.  So I'll merge the first two patches that touch the stmmac
+driver via my net-next tree.
