@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81724C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72390C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF5F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B972146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371695;
-	bh=SZxykeU4Vsmcs7B5/PXtHkSQeFdz7khlY6jwLUstk3I=;
+	s=default; t=1561371697;
+	bh=Kw1mpABG4CIcAUpoJ0aMROBIUYxIWsrlD7TXc+yhPsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzL9JEHIh+m0et6jCZVVFf9x6rWH0Vbl/ZPUwC3wa3cSAM2acry5ee9V5bZaKJZ8s
-	 5wQZNBSdcHgjn2eo6hMwD38606HFP+BxOzhWVBQfwF0FcH0xhYCFFJbiqeN3lDmx4v
-	 kjMDKhpTvBw+qgnbnjOCUEJ0ccgEucblOaGHjVl0=
+	b=cALW7kpyR2kyvpf/NUSDMFwog+PeSzIq8slNj5c4d2d2vxXuAkLfni4ldFANuwjjA
+	 j3nH1OfSy6BN1JrQYkscxvwqB6Wq53Q1MVVK8fiZm7RfMQZ3U98AXE15gb80BbS736
+	 GP2JOgsDYd5rqkeOlkI821KdDtiHllt/+xf53dbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfFXKVd (ORCPT
+        id S1729751AbfFXKVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57168 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfFXKVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:21:32 -0400
+        id S1727525AbfFXKVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:21:34 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC4E220645;
-        Mon, 24 Jun 2019 10:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 868DB2089F;
+        Mon, 24 Jun 2019 10:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371691;
-        bh=SZxykeU4Vsmcs7B5/PXtHkSQeFdz7khlY6jwLUstk3I=;
+        s=default; t=1561371694;
+        bh=Kw1mpABG4CIcAUpoJ0aMROBIUYxIWsrlD7TXc+yhPsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3TsJj/oKOZ/t+4JONCE+uX8mrWvpWh/IKI+7avhFmKds3x+9qvGjXh0kraQB2QPO
-         cusoAQC5FNYSNbN8W65LdsuTU04UvL97xZxMw+4WutVdGFVbW1m/xtCGWUOYwpymV/
-         xfB3AjBhXhGdW6VxRSghx4AN1O2AdWYOTMUGLjbc=
+        b=VCyJkBoOJMF2CB2AJtK2cJge6rjohZuRT61CPFgtGPnbNPHGfH/fk2RDyvzYcoQiR
+         rS00zCsDZYDRNgfc+GRhj3XxoPZaQFBtQ7rdON9uu7nnP+cbjDffgyYKfKbU6I9H/o
+         JBEMfxaYgczUlVJoOAuXq26iCXmhCzVjCJQU8SF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 076/121] net: phylink: avoid reducing support mask
-Date:   Mon, 24 Jun 2019 17:56:48 +0800
-Message-Id: <20190624092324.772292576@linuxfoundation.org>
+Subject: [PATCH 5.1 077/121] scsi: ufs: Check that space was properly alloced in copy_query_response
+Date:   Mon, 24 Jun 2019 17:56:49 +0800
+Message-Id: <20190624092324.813898254@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,90 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77316763321ee4050f0576ffd472183aa90dcb30 ]
+[ Upstream commit 1c90836f70f9a8ef7b7ad9e1fdd8961903e6ced6 ]
 
-Avoid reducing the support mask as a result of the interface type
-selected for SFP modules, or when setting the link settings through
-ethtool - this should only change when the supported link modes of
-the hardware combination change.
+struct ufs_dev_cmd is the main container that supports device management
+commands. In the case of a read descriptor request, we assume that the
+proper space was allocated in dev_cmd to hold the returning descriptor.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is no longer true, as there are flows that doesn't use dev_cmd for
+device management requests, and was wrong in the first place.
+
+Fixes: d44a5f98bb49 (ufs: query descriptor API)
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phylink.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index efa31fcda505..611dfc3d89a0 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -1080,6 +1080,7 @@ EXPORT_SYMBOL_GPL(phylink_ethtool_ksettings_get);
- int phylink_ethtool_ksettings_set(struct phylink *pl,
- 				  const struct ethtool_link_ksettings *kset)
- {
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(support);
- 	struct ethtool_link_ksettings our_kset;
- 	struct phylink_link_state config;
- 	int ret;
-@@ -1090,11 +1091,12 @@ int phylink_ethtool_ksettings_set(struct phylink *pl,
- 	    kset->base.autoneg != AUTONEG_ENABLE)
- 		return -EINVAL;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 5ba49c8cd2a3..dbd1f8c253bf 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1917,7 +1917,8 @@ int ufshcd_copy_query_response(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 	memcpy(&query_res->upiu_res, &lrbp->ucd_rsp_ptr->qr, QUERY_OSF_SIZE);
  
-+	linkmode_copy(support, pl->supported);
- 	config = pl->link_config;
- 
- 	/* Mask out unsupported advertisements */
- 	linkmode_and(config.advertising, kset->link_modes.advertising,
--		     pl->supported);
-+		     support);
- 
- 	/* FIXME: should we reject autoneg if phy/mac does not support it? */
- 	if (kset->base.autoneg == AUTONEG_DISABLE) {
-@@ -1104,7 +1106,7 @@ int phylink_ethtool_ksettings_set(struct phylink *pl,
- 		 * duplex.
- 		 */
- 		s = phy_lookup_setting(kset->base.speed, kset->base.duplex,
--				       pl->supported, false);
-+				       support, false);
- 		if (!s)
- 			return -EINVAL;
- 
-@@ -1133,7 +1135,7 @@ int phylink_ethtool_ksettings_set(struct phylink *pl,
- 		__set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
- 	}
- 
--	if (phylink_validate(pl, pl->supported, &config))
-+	if (phylink_validate(pl, support, &config))
- 		return -EINVAL;
- 
- 	/* If autonegotiation is enabled, we must have an advertisement */
-@@ -1583,6 +1585,7 @@ static int phylink_sfp_module_insert(void *upstream,
- {
- 	struct phylink *pl = upstream;
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(support) = { 0, };
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(support1);
- 	struct phylink_link_state config;
- 	phy_interface_t iface;
- 	int ret = 0;
-@@ -1610,6 +1613,8 @@ static int phylink_sfp_module_insert(void *upstream,
- 		return ret;
- 	}
- 
-+	linkmode_copy(support1, support);
-+
- 	iface = sfp_select_interface(pl->sfp_bus, id, config.advertising);
- 	if (iface == PHY_INTERFACE_MODE_NA) {
- 		netdev_err(pl->netdev,
-@@ -1619,7 +1624,7 @@ static int phylink_sfp_module_insert(void *upstream,
- 	}
- 
- 	config.interface = iface;
--	ret = phylink_validate(pl, support, &config);
-+	ret = phylink_validate(pl, support1, &config);
- 	if (ret) {
- 		netdev_err(pl->netdev, "validation of %s/%s with support %*pb failed: %d\n",
- 			   phylink_an_mode_str(MLO_AN_INBAND),
+ 	/* Get the descriptor */
+-	if (lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
++	if (hba->dev_cmd.query.descriptor &&
++	    lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
+ 		u8 *descp = (u8 *)lrbp->ucd_rsp_ptr +
+ 				GENERAL_UPIU_REQUEST_SIZE;
+ 		u16 resp_len;
 -- 
 2.20.1
 
