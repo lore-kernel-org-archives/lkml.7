@@ -2,138 +2,648 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AB0C48BE4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A894C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1563F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB52320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a4YAHAC0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2ErC+ST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfFXC0J (ORCPT
+        id S1727124AbfFXC1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:26:09 -0400
-Received: from mail-eopbgr00072.outbound.protection.outlook.com ([40.107.0.72]:32782
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726758AbfFXC0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:26:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fuwY5M+LhzNtMX2fFp8HUfde8HKxnfuq2nGJMebwqwU=;
- b=a4YAHAC0xcpOdCkgp9SYHAH6PhncGSGV1mXnGE0PKHmxGXFduoWQY9JIM4axmq8ZW8MP1IfTGQGbNEfR4/Q7Q+t3zvR9iU1VEzn+i2WHQeSxc8bjPBcJ1pnyLXuTcQRlUNf5hptuEyv2jkCg/IoGod+Ua6Ikjh5+z9zzMz0PN4o=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3739.eurprd04.prod.outlook.com (52.134.67.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 02:26:05 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 02:26:05 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC
- platforms
-Thread-Topic: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC
- platforms
-Thread-Index: AQHVJ/+7WzrDWTethU+K40MoFm49OKaqFzaAgAAA3XA=
-Date:   Mon, 24 Jun 2019 02:26:04 +0000
-Message-ID: <DB3PR0402MB39160E3867ACE054098229B8F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190621070720.12395-1-Anson.Huang@nxp.com>
- <20190624022200.GN3800@dragon>
-In-Reply-To: <20190624022200.GN3800@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d46b71f9-bafe-4f40-67d5-08d6f84b4f05
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3739;
-x-ms-traffictypediagnostic: DB3PR0402MB3739:
-x-microsoft-antispam-prvs: <DB3PR0402MB37393993549361114AB166C4F5E00@DB3PR0402MB3739.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(13464003)(102836004)(229853002)(256004)(6116002)(446003)(11346002)(305945005)(74316002)(7696005)(476003)(9686003)(6506007)(81166006)(81156014)(68736007)(486006)(44832011)(54906003)(66066001)(76176011)(55016002)(3846002)(7736002)(53546011)(6436002)(53936002)(2906002)(316002)(99286004)(6246003)(8936002)(4326008)(26005)(186003)(33656002)(8676002)(7416002)(25786009)(66556008)(66446008)(52536014)(73956011)(76116006)(66946007)(66476007)(64756008)(14454004)(5660300002)(86362001)(71200400001)(71190400001)(478600001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3739;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: upGZ5zHy7wHyBNgNGSgusdrvfpokECAdTlBCyOGj3SDwOnG/HIzSkn46DZp6TPldXqiXxQU5oZDQYAIVeVZyEfhom1MK6PgwGj9/OTbnh6KXhgrO8rIvTpO73JG1W4m54V3Do+hvdqdKp9O2V7Oq4sjt8PKnwuZLJO3XDLrllndOL2WGQIX35hWk+B1mi/USsF8upM/9+xeAZqZcMo0RkSsRLF4Q+SKCBCn71XKTFT75PTOlCBShGsd6D714lnLeCIIESM+2yloIIvZMUIpHP6SZolCOJ95S8omL8yv7g0G9ty8BpHG6Oa8wSmOrWuLfCeIwOfV6STbkAIUxfe8Y9scH67ZpM+x6V0FU+gPtmWEMYukYFwy7uR72ETm+RQDCmwSXoTXZPGHTtociXVzC3UkNKD/Bzl0KvX3pQ9G0+w8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 23 Jun 2019 22:27:15 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46704 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfFXC1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 22:27:15 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so8752899lfh.13;
+        Sun, 23 Jun 2019 19:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QlyZLBKwKgWOLFPT5a8Dy2/0ax3CQfhDrOHN/BJl+n0=;
+        b=m2ErC+ST7xuY+3cmNuU+yJZEI6dsWXKp1hRjxV6+kZWxyhR6BC8+a4e/ZyNVERzilw
+         rsSmKts3y6h8cpG86E+guyFweoXfrgwc1pke9UetKnAXsgqe91cxqUhb1sE/65V5sZuy
+         V29FBihe1N+uyBmJRS7Wlt+rWL1BqWKgEwi5iQ/BpbPHmAqMrO6DzYBqhNVulfNUDuMl
+         z3okDDcsmq4qrlhuXxiJVTvah/lUg1z9vXKS55tqq45SpHWspVZixU4P/8GSDpF6LoRS
+         pihzFyGI/90FWjzWEqkiUjXLSY1Girqxg1aeO9nHM0cNGj1bjQrjHv0MPLc1SQfO1aM7
+         ygZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QlyZLBKwKgWOLFPT5a8Dy2/0ax3CQfhDrOHN/BJl+n0=;
+        b=FS4JALFt8AgbZ7F9O17MdHJrTAJrlwIew9cW4392ACzLL6TOj6SKMnebq4JfNdQ+Ah
+         eYD9sv2WdigW6ScJIuVtfN3xUe3jxqEt/rMYdgmDYQr/nlDIzx4EKk2UUkrolguXniRo
+         hqbZ6LL6dyK8R/wPXepX0ylTNzrxb9nZEPWT7P/riPekoRA+7VO+GewfpmCTRsGBJUFC
+         eb9dXdErbxkQIhUkMCv8RxvNNAzPWwLd8tOTeEijBdx7P8x6HvbjFXC/5HouQzhzqerD
+         0JsYzY0EFYBOBKYcg9ddd6/6UR1uj4wdldF4Ka/dNGlEsva8cyyQcgdRJdAm6BHeuNrB
+         zQUA==
+X-Gm-Message-State: APjAAAV7QgZqf4gIL1CrYgqTQApKwd44IdfuwzPquTLbT5Vu+QX+EK/o
+        3lmodTXmAPY5FztyPCqg3ylFqNhw
+X-Google-Smtp-Source: APXvYqxPAJBKFo7p7XPtmm/jZOz3VYhzo3P5PRxVLOeYEbxo7WIuw0uyyMPe7szw4TA+xjsuVRWw8g==
+X-Received: by 2002:ac2:499b:: with SMTP id f27mr49038678lfl.88.1561336317615;
+        Sun, 23 Jun 2019 17:31:57 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id y5sm1495146ljj.5.2019.06.23.17.31.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Jun 2019 17:31:57 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 01/10] clk: tegra20/30: Add custom EMC clock implementation
+Date:   Mon, 24 Jun 2019 03:31:23 +0300
+Message-Id: <20190624003132.29473-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
+References: <20190624003132.29473-1-digetx@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d46b71f9-bafe-4f40-67d5-08d6f84b4f05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 02:26:04.9924
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3739
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
-R3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEp1bmUgMjQsIDIwMTkg
-MTA6MjIgQU0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzog
-Y2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGxAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2Vy
-bmVsQHBlbmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IG10dXJxdWV0dGVAYmF5
-bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQu
-Y3Jlc3RlekBueHAuY29tPjsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47
-IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47IERhbmllbCBCYWx1dGENCj4gPGRhbmllbC5i
-YWx1dGFAbnhwLmNvbT47IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPjsgQWJlbCBWZXNhDQo+
-IDxhYmVsLnZlc2FAbnhwLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51
-eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRdIGFybTY0OiBFbmFibGUg
-VElNRVJfSU1YX1NZU19DVFIgZm9yIEFSQ0hfTVhDDQo+IHBsYXRmb3Jtcw0KPiANCj4gT24gRnJp
-LCBKdW4gMjEsIDIwMTkgYXQgMDM6MDc6MTdQTSArMDgwMCwgQW5zb24uSHVhbmdAbnhwLmNvbSB3
-cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPg0K
-PiA+IEFSQ0hfTVhDIHBsYXRmb3JtcyBuZWVkcyBzeXN0ZW0gY291bnRlciBhcyBicm9hZGNhc3Qg
-dGltZXIgdG8gc3VwcG9ydA0KPiA+IGNwdWlkbGUsIGVuYWJsZSBpdCBieSBkZWZhdWx0Lg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
-ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQvS2NvbmZpZy5wbGF0Zm9ybXMgfCAxICsNCj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm02NC9LY29uZmlnLnBsYXRmb3Jtcw0KPiA+IGIvYXJjaC9hcm02NC9LY29uZmlnLnBsYXRmb3Jt
-cyBpbmRleCA0Nzc4Yzc3Li5mNWU2MjNmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvS2Nv
-bmZpZy5wbGF0Zm9ybXMNCj4gPiArKysgYi9hcmNoL2FybTY0L0tjb25maWcucGxhdGZvcm1zDQo+
-ID4gQEAgLTE3Myw2ICsxNzMsNyBAQCBjb25maWcgQVJDSF9NWEMNCj4gPiAgCXNlbGVjdCBQTQ0K
-PiA+ICAJc2VsZWN0IFBNX0dFTkVSSUNfRE9NQUlOUw0KPiA+ICAJc2VsZWN0IFNPQ19CVVMNCj4g
-PiArCXNlbGVjdCBUSU1FUl9JTVhfU1lTX0NUUg0KPiANCj4gV2hlcmUgaXMgdGhhdCBkcml2ZXI/
-DQoNClRoZSBkcml2ZXIgaXMgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtc3lzY3RyLmMs
-IHNpbWlsYXIgZnVuY3Rpb24gYXMgR1BULg0KDQpUaGFua3MsDQpBbnNvbg0KDQo+IA0KPiBTaGF3
-bg0KPiANCj4gPiAgCWhlbHANCj4gPiAgCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHRoZSBB
-Uk12OCBiYXNlZCBTb0NzIGluIHRoZQ0KPiA+ICAJICBOWFAgaS5NWCBmYW1pbHkuDQo+ID4gLS0N
-Cj4gPiAyLjcuNA0KPiA+DQo=
+A proper External Memory Controller clock rounding and parent selection
+functionality is required by the EMC drivers, it is not available using
+the generic clock implementation because only the Memory Controller driver
+is aware of what clock rates are actually available for a particular
+device. EMC drivers will have to register a Tegra-specific CLK-API
+callback which will perform rounding of a requested rate. EMC clock users
+won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
+driver is probed and the callback is set up.
+
+The functionality is somewhat similar to the clk-emc.c which serves
+Tegra124+ SoCs. The later HW generations support more parent clock sources
+and the HW configuration / integration with the EMC drivers differs a tad
+from the older gens, hence it's not really worth to try to squash
+everything into a single source file.
+
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clk/tegra/Makefile          |   2 +
+ drivers/clk/tegra/clk-tegra20-emc.c | 293 ++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c     |  55 ++----
+ drivers/clk/tegra/clk-tegra30.c     |  38 ++--
+ drivers/clk/tegra/clk.h             |   3 +
+ include/linux/clk/tegra.h           |  11 ++
+ 6 files changed, 350 insertions(+), 52 deletions(-)
+ create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+
+diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+index 4812e45c2214..df966ca06788 100644
+--- a/drivers/clk/tegra/Makefile
++++ b/drivers/clk/tegra/Makefile
+@@ -17,7 +17,9 @@ obj-y					+= clk-tegra-fixed.o
+ obj-y					+= clk-tegra-super-gen4.o
+ obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
++obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= clk-tegra20-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
++obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= clk-tegra20-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
+ obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
+diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
+new file mode 100644
+index 000000000000..03bf0009a33c
+--- /dev/null
++++ b/drivers/clk/tegra/clk-tegra20-emc.c
+@@ -0,0 +1,293 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Based on drivers/clk/tegra/clk-emc.c
++ * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Dmitry Osipenko <digetx@gmail.com>
++ * Copyright (C) 2019 GRATE-DRIVER project
++ */
++
++#define pr_fmt(fmt)	"tegra-emc-clk: " fmt
++
++#include <linux/bits.h>
++#include <linux/clk-provider.h>
++#include <linux/clk/tegra.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++
++#include "clk.h"
++
++#define CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK	GENMASK(7, 0)
++#define CLK_SOURCE_EMC_2X_CLK_SRC_MASK		GENMASK(31, 30)
++#define CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT		30
++
++#define MC_EMC_SAME_FREQ	BIT(16)
++#define USE_PLLM_UD		BIT(29)
++
++#define EMC_SRC_PLL_M		0
++#define EMC_SRC_PLL_C		1
++#define EMC_SRC_PLL_P		2
++#define EMC_SRC_CLK_M		3
++
++static const char * const emc_parent_clk_names[] = {
++	"pll_m", "pll_c", "pll_p", "clk_m",
++};
++
++struct tegra_clk_emc {
++	struct clk_hw hw;
++	void __iomem *reg;
++	bool mc_same_freq;
++	bool want_low_jitter;
++
++	tegra20_clk_emc_round_cb *round_cb;
++	void *cb_arg;
++};
++
++static inline struct tegra_clk_emc *to_tegra_clk_emc(struct clk_hw *hw)
++{
++	return container_of(hw, struct tegra_clk_emc, hw);
++}
++
++static unsigned long emc_recalc_rate(struct clk_hw *hw,
++				     unsigned long parent_rate)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	val = readl_relaxed(emc->reg);
++	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++
++	return DIV_ROUND_UP(parent_rate * 2, div + 2);
++}
++
++static u8 emc_get_parent(struct clk_hw *hw)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++
++	return readl_relaxed(emc->reg) >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++}
++
++static int emc_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	val = readl_relaxed(emc->reg);
++	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
++	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_set_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long parent_rate)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	unsigned int index;
++	u32 val, div;
++
++	div = div_frac_get(rate, parent_rate, 8, 1, 0);
++
++	val = readl_relaxed(emc->reg);
++	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++	val |= div;
++
++	index = val >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_set_rate_and_parent(struct clk_hw *hw,
++				   unsigned long rate,
++				   unsigned long parent_rate,
++				   u8 index)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	div = div_frac_get(rate, parent_rate, 8, 1, 0);
++
++	val = readl_relaxed(emc->reg);
++
++	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
++	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++	val |= div;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	struct clk_hw *parent_hw;
++	unsigned long divided_rate;
++	unsigned long parent_rate;
++	unsigned int i;
++	long emc_rate;
++	int div;
++
++	emc_rate = emc->round_cb(req->rate, req->min_rate, req->max_rate,
++				 emc->cb_arg);
++	if (emc_rate < 0)
++		return emc_rate;
++
++	for (i = 0; i < ARRAY_SIZE(emc_parent_clk_names); i++) {
++		parent_hw = clk_hw_get_parent_by_index(hw, i);
++
++		if (req->best_parent_hw == parent_hw)
++			parent_rate = req->best_parent_rate;
++		else
++			parent_rate = clk_hw_get_rate(parent_hw);
++
++		if (emc_rate > parent_rate)
++			continue;
++
++		div = div_frac_get(emc_rate, parent_rate, 8, 1, 0);
++		divided_rate = DIV_ROUND_UP(parent_rate * 2, div + 2);
++
++		if (divided_rate != emc_rate)
++			continue;
++
++		req->best_parent_rate = parent_rate;
++		req->best_parent_hw = parent_hw;
++		req->rate = emc_rate;
++		break;
++	}
++
++	if (i == ARRAY_SIZE(emc_parent_clk_names)) {
++		pr_err_once("can't find parent for rate %lu emc_rate %lu\n",
++			    req->rate, emc_rate);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct clk_ops tegra_clk_emc_ops = {
++	.recalc_rate = emc_recalc_rate,
++	.get_parent = emc_get_parent,
++	.set_parent = emc_set_parent,
++	.set_rate = emc_set_rate,
++	.set_rate_and_parent = emc_set_rate_and_parent,
++	.determine_rate = emc_determine_rate,
++};
++
++void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
++					void *cb_arg)
++{
++	struct clk *clk = __clk_lookup("emc");
++	struct tegra_clk_emc *emc;
++	struct clk_hw *hw;
++
++	if (clk) {
++		hw = __clk_get_hw(clk);
++		emc = to_tegra_clk_emc(hw);
++
++		emc->round_cb = round_cb;
++		emc->cb_arg = cb_arg;
++	}
++}
++
++bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw)
++{
++	return to_tegra_clk_emc(emc_hw)->round_cb != NULL;
++}
++
++struct clk *tegra20_clk_register_emc(void __iomem *ioaddr, bool low_jitter)
++{
++	struct tegra_clk_emc *emc;
++	struct clk_init_data init;
++	struct clk *clk;
++
++	emc = kzalloc(sizeof(*emc), GFP_KERNEL);
++	if (!emc)
++		return NULL;
++
++	/*
++	 * EMC stands for External Memory Controller.
++	 *
++	 * We don't want EMC clock to be disabled ever by gating its
++	 * parent and whatnot because system is busted immediately in that
++	 * case, hence the clock is marked as critical.
++	 */
++	init.name = "emc";
++	init.ops = &tegra_clk_emc_ops;
++	init.flags = CLK_IS_CRITICAL;
++	init.parent_names = emc_parent_clk_names;
++	init.num_parents = ARRAY_SIZE(emc_parent_clk_names);
++
++	emc->reg = ioaddr;
++	emc->hw.init = &init;
++	emc->want_low_jitter = low_jitter;
++
++	clk = clk_register(NULL, &emc->hw);
++	if (IS_ERR(clk)) {
++		kfree(emc);
++		return NULL;
++	}
++
++	return clk;
++}
++
++int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
++{
++	struct tegra_clk_emc *emc;
++	struct clk_hw *hw;
++
++	if (!emc_clk)
++		return -EINVAL;
++
++	hw = __clk_get_hw(emc_clk);
++	emc = to_tegra_clk_emc(hw);
++	emc->mc_same_freq = same;
++
++	return 0;
++}
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index bcd871134f45..cceefbd67a3b 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -130,8 +130,6 @@ static struct cpu_clk_suspend_context {
+ static void __iomem *clk_base;
+ static void __iomem *pmc_base;
+ 
+-static DEFINE_SPINLOCK(emc_lock);
+-
+ #define TEGRA_INIT_DATA_MUX(_name, _parents, _offset,	\
+ 			    _clk_num, _gate_flags, _clk_id)	\
+ 	TEGRA_INIT_DATA(_name, NULL, NULL, _parents, _offset,	\
+@@ -760,7 +758,6 @@ static const char *pwm_parents[] = { "pll_p", "pll_c", "audio", "clk_m",
+ static const char *mux_pllpcm_clkm[] = { "pll_p", "pll_c", "pll_m", "clk_m" };
+ static const char *mux_pllpdc_clkm[] = { "pll_p", "pll_d_out0", "pll_c",
+ 					 "clk_m" };
+-static const char *mux_pllmcp_clkm[] = { "pll_m", "pll_c", "pll_p", "clk_m" };
+ 
+ static struct tegra_periph_init_data tegra_periph_clk_list[] = {
+ 	TEGRA_INIT_DATA_MUX("i2s1", i2s1_parents,     CLK_SOURCE_I2S1,   11, TEGRA_PERIPH_ON_APB, TEGRA20_CLK_I2S1),
+@@ -787,41 +784,6 @@ static struct tegra_periph_init_data tegra_periph_nodiv_clk_list[] = {
+ 	TEGRA_INIT_DATA_NODIV("disp2",	mux_pllpdc_clkm, CLK_SOURCE_DISP2, 30, 2, 26,  0, TEGRA20_CLK_DISP2),
+ };
+ 
+-static void __init tegra20_emc_clk_init(void)
+-{
+-	const u32 use_pllm_ud = BIT(29);
+-	struct clk *clk;
+-	u32 emc_reg;
+-
+-	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+-			       ARRAY_SIZE(mux_pllmcp_clkm),
+-			       CLK_SET_RATE_NO_REPARENT,
+-			       clk_base + CLK_SOURCE_EMC,
+-			       30, 2, 0, &emc_lock);
+-
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
+-	clks[TEGRA20_CLK_MC] = clk;
+-
+-	/* un-divided pll_m_out0 is currently unsupported */
+-	emc_reg = readl_relaxed(clk_base + CLK_SOURCE_EMC);
+-	if (emc_reg & use_pllm_ud) {
+-		pr_err("%s: un-divided PllM_out0 used as clock source\n",
+-		       __func__);
+-		return;
+-	}
+-
+-	/*
+-	 * Note that 'emc_mux' source and 'emc' rate shouldn't be changed at
+-	 * the same time due to a HW bug, this won't happen because we're
+-	 * defining 'emc_mux' and 'emc' as distinct clocks.
+-	 */
+-	clk = tegra_clk_register_divider("emc", "emc_mux",
+-				clk_base + CLK_SOURCE_EMC, CLK_IS_CRITICAL,
+-				TEGRA_DIVIDER_INT, 0, 8, 1, &emc_lock);
+-	clks[TEGRA20_CLK_EMC] = clk;
+-}
+-
+ static void __init tegra20_periph_clk_init(void)
+ {
+ 	struct tegra_periph_init_data *data;
+@@ -835,7 +797,13 @@ static void __init tegra20_periph_clk_init(void)
+ 	clks[TEGRA20_CLK_AC97] = clk;
+ 
+ 	/* emc */
+-	tegra20_emc_clk_init();
++	clk = tegra20_clk_register_emc(clk_base + CLK_SOURCE_EMC, false);
++
++	clks[TEGRA20_CLK_EMC] = clk;
++
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
++				    NULL);
++	clks[TEGRA20_CLK_MC] = clk;
+ 
+ 	/* dsi */
+ 	clk = tegra_clk_register_periph_gate("dsi", "pll_d", 0, clk_base, 0,
+@@ -1115,6 +1083,8 @@ static struct clk *tegra20_clk_src_onecell_get(struct of_phandle_args *clkspec,
+ 	if (IS_ERR(clk))
+ 		return clk;
+ 
++	hw = __clk_get_hw(clk);
++
+ 	/*
+ 	 * Tegra20 CDEV1 and CDEV2 clocks are a bit special case, their parent
+ 	 * clock is created by the pinctrl driver. It is possible for clk user
+@@ -1124,13 +1094,16 @@ static struct clk *tegra20_clk_src_onecell_get(struct of_phandle_args *clkspec,
+ 	 */
+ 	if (clkspec->args[0] == TEGRA20_CLK_CDEV1 ||
+ 	    clkspec->args[0] == TEGRA20_CLK_CDEV2) {
+-		hw = __clk_get_hw(clk);
+-
+ 		parent_hw = clk_hw_get_parent(hw);
+ 		if (!parent_hw)
+ 			return ERR_PTR(-EPROBE_DEFER);
+ 	}
+ 
++	if (clkspec->args[0] == TEGRA20_CLK_EMC) {
++		if (!tegra20_clk_emc_driver_available(hw))
++			return ERR_PTR(-EPROBE_DEFER);
++	}
++
+ 	return clk;
+ }
+ 
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 7b4c6a488527..95b0e4a16dd5 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -151,7 +151,6 @@ static unsigned long input_freq;
+ 
+ static DEFINE_SPINLOCK(cml_lock);
+ static DEFINE_SPINLOCK(pll_d_lock);
+-static DEFINE_SPINLOCK(emc_lock);
+ 
+ #define TEGRA_INIT_DATA_MUX(_name, _parents, _offset,	\
+ 			    _clk_num, _gate_flags, _clk_id)	\
+@@ -808,7 +807,7 @@ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_pll_a] = { .dt_id = TEGRA30_CLK_PLL_A, .present = true },
+ 	[tegra_clk_pll_a_out0] = { .dt_id = TEGRA30_CLK_PLL_A_OUT0, .present = true },
+ 	[tegra_clk_cec] = { .dt_id = TEGRA30_CLK_CEC, .present = true },
+-	[tegra_clk_emc] = { .dt_id = TEGRA30_CLK_EMC, .present = true },
++	[tegra_clk_emc] = { .dt_id = TEGRA30_CLK_EMC, .present = false },
+ };
+ 
+ static const char *pll_e_parents[] = { "pll_ref", "pll_p" };
+@@ -995,7 +994,6 @@ static void __init tegra30_super_clk_init(void)
+ static const char *mux_pllacp_clkm[] = { "pll_a_out0", "unused", "pll_p",
+ 					 "clk_m" };
+ static const char *mux_pllpcm_clkm[] = { "pll_p", "pll_c", "pll_m", "clk_m" };
+-static const char *mux_pllmcp_clkm[] = { "pll_m", "pll_c", "pll_p", "clk_m" };
+ static const char *spdif_out_parents[] = { "pll_a_out0", "spdif_2x", "pll_p",
+ 					   "clk_m" };
+ static const char *mux_pllmcpa[] = { "pll_m", "pll_c", "pll_p", "pll_a_out0" };
+@@ -1044,14 +1042,12 @@ static void __init tegra30_periph_clk_init(void)
+ 	clks[TEGRA30_CLK_AFI] = clk;
+ 
+ 	/* emc */
+-	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+-			       ARRAY_SIZE(mux_pllmcp_clkm),
+-			       CLK_SET_RATE_NO_REPARENT,
+-			       clk_base + CLK_SOURCE_EMC,
+-			       30, 2, 0, &emc_lock);
++	clk = tegra20_clk_register_emc(clk_base + CLK_SOURCE_EMC, true);
++
++	clks[TEGRA30_CLK_EMC] = clk;
+ 
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
++				    NULL);
+ 	clks[TEGRA30_CLK_MC] = clk;
+ 
+ 	/* cml0 */
+@@ -1302,6 +1298,26 @@ static struct tegra_audio_clk_info tegra30_audio_plls[] = {
+ 	{ "pll_a", &pll_a_params, tegra_clk_pll_a, "pll_p_out1" },
+ };
+ 
++static struct clk *tegra30_clk_src_onecell_get(struct of_phandle_args *clkspec,
++					       void *data)
++{
++	struct clk_hw *hw;
++	struct clk *clk;
++
++	clk = of_clk_src_onecell_get(clkspec, data);
++	if (IS_ERR(clk))
++		return clk;
++
++	hw = __clk_get_hw(clk);
++
++	if (clkspec->args[0] == TEGRA30_CLK_EMC) {
++		if (!tegra20_clk_emc_driver_available(hw))
++			return ERR_PTR(-EPROBE_DEFER);
++	}
++
++	return clk;
++}
++
+ static void __init tegra30_clock_init(struct device_node *np)
+ {
+ 	struct device_node *node;
+@@ -1345,7 +1361,7 @@ static void __init tegra30_clock_init(struct device_node *np)
+ 
+ 	tegra_init_dup_clks(tegra_clk_duplicates, clks, TEGRA30_CLK_CLK_MAX);
+ 
+-	tegra_add_of_provider(np, of_clk_src_onecell_get);
++	tegra_add_of_provider(np, tegra30_clk_src_onecell_get);
+ 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
+ 
+ 	tegra_clk_apply_init_table = tegra30_clock_apply_init_table;
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 905bf1096558..20b3ee123050 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -838,4 +838,7 @@ int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+ 		udelay(delay);		\
+ 	} while (0)
+ 
++bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw);
++struct clk *tegra20_clk_register_emc(void __iomem *ioaddr, bool low_jitter);
++
+ #endif /* TEGRA_CLK_H */
+diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+index b8aef62cc3f5..6a7cbc3cfadc 100644
+--- a/include/linux/clk/tegra.h
++++ b/include/linux/clk/tegra.h
+@@ -119,4 +119,15 @@ extern void tegra210_put_utmipll_in_iddq(void);
+ extern void tegra210_put_utmipll_out_iddq(void);
+ extern int tegra210_clk_handle_mbist_war(unsigned int id);
+ 
++struct clk;
++
++typedef long (tegra20_clk_emc_round_cb)(unsigned long rate,
++					unsigned long min_rate,
++					unsigned long max_rate,
++					void *arg);
++
++void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
++					void *cb_arg);
++int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same);
++
+ #endif /* __LINUX_CLK_TEGRA_H_ */
+-- 
+2.22.0
+
