@@ -2,125 +2,91 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4963FC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2647DC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C4D21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZyt9A/F"
+	by mail.kernel.org (Postfix) with ESMTP id E735821537
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561357567;
+	bh=k59t1m8wsiRmS1GXcPU6ssPkedRk7do9n0WBaDvykoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BZ3tyXcvKsIb5uKq8DMZTNcqpSZXgXr15OzPKaUPB+spVxTeKaEv4hRywBqvR2D8P
+	 FReDqleS8PgUPdRafhncZwZ18s7bxN1b62JOEt8JYQhghuR4tcmpG2YW4XdV3G5sj6
+	 FEyfqN6Zbz4U+wfJrUEdvRshu2cYbxUbZ64xSCnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfFXGY4 (ORCPT
+        id S1727387AbfFXG0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:24:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46314 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfFXGYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:24:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v9so6512131pgr.13;
-        Sun, 23 Jun 2019 23:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0IvJHoD0x6Z/N31hvvGGVGsE7+bjH2MX+F9HjOeromU=;
-        b=NZyt9A/FB82vZiEifdr4Gx0xRekMuZIHBVLc2U4ciy49oyXnteKcbU3xAWpZIH2Oi0
-         QqUJZ+arQh/RT94jLsK6IWOt4GUGUOl4w1VMPgcoxBf14CzYX6lJk+ZOXkdCGqc+EG6w
-         TFi44c4Dd8PW752R9KlLakLU49Wz9A2M/qfAG8wALOpUyS8gGbt2FyWyal3iRntzcWco
-         ApVGW8Sy6mQeBzPTpyejshIpszTRZzop41iqenSASYj/tKxS5cI2BrtMuutB0zvoc5bI
-         Bpz+yoZ5CbAZwxdqiz2Np+SzSIRNXE2EJ8lzuDwyFG+HDB0VhGxZwcbpPfjRvXukzUPy
-         goMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0IvJHoD0x6Z/N31hvvGGVGsE7+bjH2MX+F9HjOeromU=;
-        b=DKzuBrCv82+ZPM/15q+iML71BkEdnTvwOHBNzlJgsR6E0T9O6I76K8RRjHQ4XXtH2V
-         /Ds9EvUhXYn3AZ5fd36p16T7lA4HUaVMxsSFbOR2gtTe+KvxgdE6o4dFSLQWMqOt2yWH
-         r4UpxTujwVS0du+Dz837f12YxAignvVsvwQ/lFbVoVr+uAhgtrPRISDt6axVVUPMcCcv
-         IVLhdRVs0hISuau7bLZpLx+EHo2hZYthqcbsvhwe/vbDLET2aRYJRDcwiEViHrJBx2gE
-         LTPWhQAqRXfhLul2FLg902FFA2ueoh+cshXWTE87H0dN69NHhc1RQsXVwjrCbQbL246T
-         +d5w==
-X-Gm-Message-State: APjAAAXIZbg/qNiMrd3rQ79GDUawYCgD+I4ugxtnBFC+RM+w75bKzhzH
-        z41oMw2wlFzch2oOZUWDd9byb0MD
-X-Google-Smtp-Source: APXvYqxTzWCohtq7uhbcpUGfCJQdaCRM5/dDC1t+UWjKV1bWOZDk0wItx04vbN7k1hGgnsy6X7/wDA==
-X-Received: by 2002:a63:4641:: with SMTP id v1mr25070516pgk.347.1561357492003;
-        Sun, 23 Jun 2019 23:24:52 -0700 (PDT)
-Received: from prsriva-ThinkPad-P50s.hsd1.wa.comcast.net ([2601:602:9c01:c794:e00a:1dbc:5f62:b8ea])
-        by smtp.gmail.com with ESMTPSA id 191sm2641620pfu.177.2019.06.23.23.24.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 23 Jun 2019 23:24:51 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, roberto.sassu@huawei.com, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH V10 3/3] KEXEC: Call ima_kexec_cmdline to measure the boot command line args
-Date:   Sun, 23 Jun 2019 23:23:31 -0700
-Message-Id: <20190624062331.388-4-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190624062331.388-1-prsriva02@gmail.com>
-References: <20190624062331.388-1-prsriva02@gmail.com>
+        Mon, 24 Jun 2019 02:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbfFXG0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 02:26:05 -0400
+Received: from localhost (unknown [116.247.127.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDE2E21530;
+        Mon, 24 Jun 2019 06:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561357564;
+        bh=k59t1m8wsiRmS1GXcPU6ssPkedRk7do9n0WBaDvykoM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dHnYZQ1c0qzeZe0amKkYEc5WHqmoV9zMD4AD/MVGJWW/TCq+qv2J8LVzfAm9erTKD
+         cFaO4A7sv6a/0PTn+AfVwy/E814PajvGu1DtbW7ZtqVAB4V7M15vGyUdfFcc8lTI6x
+         L4IFN0eSrxH8wZLP8iSXkdullBfO4wCD8cpy+hy0=
+Date:   Mon, 24 Jun 2019 05:20:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v2 03/28] acpi: utils: Cleanup acpi_dev_match_cb
+Message-ID: <20190624032007.GA23457@kroah.com>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-4-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0j-AwFkeK35xG-WnDq8_wrzfH-0jqv6hVW+7uZD3R2k8Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0j-AwFkeK35xG-WnDq8_wrzfH-0jqv6hVW+7uZD3R2k8Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During soft reboot(kexec_file_load) boot command line
-arguments are not measured.
+On Tue, Jun 18, 2019 at 12:08:45AM +0200, Rafael J. Wysocki wrote:
+> On Fri, Jun 14, 2019 at 7:54 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >
+> > The prototype of bus_find_device() will be unified with that of
+> > class_find_device() subsequently, but for this purpose the callback
+> > functions passed to it need to take (const void *) as the second
+> > argument.  Consequently, they cannot modify the memory pointed to by
+> > that argument which currently is not the case for acpi_dev_match_cb().
+> > However, acpi_dev_match_cb() really need not modify the "match" object
+> > passed to it, because acpi_dev_get_first_match_dev() which uses it via
+> > bus_find_device() can easily convert the result of bus_find_device()
+> > into the pointer to return.
+> >
+> > For this reason, update acpi_dev_match_cb() to avoid the redundant
+> > memory updates.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Len Brown <lenb@kernel.org>
+> > Cc: linux-acpi@vger.kernel.org
+> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Or if you want me to take this patch, please let me know.
 
-Call ima hook ima_kexec_cmdline to measure the boot command line
-arguments into IMA measurement list.
+I'll take it now, thanks.
 
-- call ima_kexec_cmdline from kexec_file_load.
-- move the call ima_add_kexec_buffer after the cmdline
-args have been measured.
-
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- kernel/kexec_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 072b6ee55e3f..b0c724e5d86c 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		return ret;
- 	image->kernel_buf_len = size;
- 
--	/* IMA needs to pass the measurement list to the next kernel. */
--	ima_add_kexec_buffer(image);
--
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
- 					    image->kernel_buf_len);
-@@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			ret = -EINVAL;
- 			goto out;
- 		}
-+
-+		ima_kexec_cmdline(image->cmdline_buf,
-+				  image->cmdline_buf_len - 1);
- 	}
- 
-+	/* IMA needs to pass the measurement list to the next kernel. */
-+	ima_add_kexec_buffer(image);
-+
- 	/* Call arch image load handlers */
- 	ldata = arch_kexec_kernel_image_load(image);
- 
--- 
-2.19.1
-
+greg k-h
