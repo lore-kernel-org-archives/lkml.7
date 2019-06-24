@@ -2,131 +2,152 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54423C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98398C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2C120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E45E208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojCRx10N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaG2tg0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfFXGGT (ORCPT
+        id S1726908AbfFXGKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:06:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36133 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfFXGGT (ORCPT
+        Mon, 24 Jun 2019 02:10:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40318 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfFXGKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:06:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so6273455plt.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:06:18 -0700 (PDT)
+        Mon, 24 Jun 2019 02:10:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id n5so295098ioc.7
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aGcIyULDIj+/YCJKjZCul6zq9ZyFOh+SAi/ktfFmdnA=;
-        b=ojCRx10N1FWdtoFOzUCjMACQhavDUeLMd4dGW8VDGyit16iBmkUSKO2IAFGfq1Wmbt
-         0uRGTWOvvWsodOBMsw/OvECQDLwMM4B6HhJzGcLD5UbCSu6BmYUm4NczknhOIEj/IuRH
-         XtVJmMowfw5pB397ZN7ISh5oyHyDK3TU/4KAVg12oICmXL0IvNisLpwzbM9LGfjKCFV3
-         AmU2e1hmuxFrZhIYxwhYSIr3p0Qs66yiYKY2I7doKsqcZkBsgcCpRJmL61o9GJg/fFVT
-         BozhLSVASWxIsc0UwIXqdwjvHNQBC68j0zce2ZR7wOxuVHs4cqp5LPKI9Nda+PynZ5Ip
-         2xrQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4j6NnH/rtjW7YqPJZlJgQIQOVFVwz7hkEl28tcCpX/c=;
+        b=QaG2tg0YYgd5+P5YRlDvLPsQpP7pDaSmqOTCFDcG7/rcTc53ymw2VqKN97slpnV64h
+         Z0qRqTGndfOy26HG/tWXys9SYkoqbC/kD6scoZi8KsC2l3+OsH6QsMKNsERmRMR0PDlM
+         NCls1WOiUY+TnzK1tWtORWC0o/KQlxMxSoR4va5E58FzkSBpUkmE8HWQZ0/Zb3ZcfTSn
+         mSaid68PFqvYlQA3Fnblkgdug64w3pgL4eb3n3Di+vyEQM9/Ab7C/9Jip9LxDovl67NG
+         S5t16MOLFqYUMTdA5h1HYzdKbBrk8BRvQa+OW1Z8gIH+DIPrutdgXyVI2/6HHWDy+kos
+         tJSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aGcIyULDIj+/YCJKjZCul6zq9ZyFOh+SAi/ktfFmdnA=;
-        b=oFTV+SCzf2u/pZrb32OPlNDgCu/Ow3Y8L6A6bObveN+B27hMSLH/gcCEj0fBDF7bRd
-         s6QZn5fzirtG1ZVwtoIQR2MZr7ioC2Suhlx3F6fyTZaq9kZgcwpO+TJbUV1imV7w/kHI
-         wJohmtBjNa0FuZzotYAw7r5w7Yc7N1Gp+7va8Emmn9uE3WZ0gMWALeFWAd0XyUFhIWWg
-         pvz5waw44sRUSZmCgevTuEcmJ/VfU8BYrKBQYbh+XA49qRfJ9veD92J4aAx/PT3iKOH2
-         QBBMeeBDTXVc+ELS5R6fH8i6Yv6M7f3xRkirLr6p/x2NBMMkNObXKbgymjn02Xy1Wkhy
-         XIiw==
-X-Gm-Message-State: APjAAAUp9UF3GpBmqjmPB5+bPuGqH33lYut49Iiln6STBCXc++z+y49r
-        qbm5WdtCxv23IiYEiJRtOYOCpw==
-X-Google-Smtp-Source: APXvYqwthf8PxT+L5Pi9Ju4TgVKwn2daZ1Xa+6cWzh6FDJ19THDBLX7OB8cN2dmP9iHMiWNEWVZ3Qw==
-X-Received: by 2002:a17:902:7787:: with SMTP id o7mr458356pll.120.1561356378089;
-        Sun, 23 Jun 2019 23:06:18 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id e10sm6598616pfi.153.2019.06.23.23.06.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 23:06:17 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:36:15 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     edubezval@gmail.com, linux-kernel@vger.kernel.org,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
-Subject: Re: [PATCH 6/6] thermal/drivers/ti: Remove cooling device usage
-Message-ID: <20190624060615.ptdeejny75x44wue@vireshk-i7>
-References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
- <20190621132302.30414-6-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4j6NnH/rtjW7YqPJZlJgQIQOVFVwz7hkEl28tcCpX/c=;
+        b=NRfJJeQGvm7Y8JpdsLgW4iDRe8HLFW2K4w0gW3F6oz7EcC/i427Ji9MmyFuC3CqLTP
+         BXXa0R8nLxB3kvDifMq/4llxkaAfSfkgxlMRYgK2wgoDWkJriDm4DPWw1QwdStMnX1Hn
+         jBGgJXTefepo09FLt5dPuuA6UDIGWr7s/lj3kVjJcOUd/KC00UFX/P2Fe2egy0r6PmGA
+         BbOEtb5ZJ3huX4yf69tC8dXeM/3VH3L12BezDCQfSkrEaQftfy147ovF1DCcm+qnTfOL
+         yu6Lf6Qqa3UJW3pbqVLru5tlrSmRt4KOtDWSygeAw07MY9r+W2FHHadxnMhoxNRVw8vT
+         aboA==
+X-Gm-Message-State: APjAAAXhJFxanyPSjKommSIpFXhGx17Rq468FtHPan4Juj+ms88uUZjF
+        sJA9JFvUNmclb5jEuT4xESxtQa3b1+WOdVCP1A==
+X-Google-Smtp-Source: APXvYqz4l/aitSGXlKJujrJxoiu8kzosNa/t0hrpf2ai9RzW0CH9f/kJvMBczKvXomO4NEdlo8XLXdUnhSubabN7hoI=
+X-Received: by 2002:a02:a384:: with SMTP id y4mr124829515jak.77.1561356613275;
+ Sun, 23 Jun 2019 23:10:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621132302.30414-6-daniel.lezcano@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <1561350068-8966-1-git-send-email-kernelfans@gmail.com> <216a335d-f7c6-26ad-2ac1-427c8a73ca2f@arm.com>
+In-Reply-To: <216a335d-f7c6-26ad-2ac1-427c8a73ca2f@arm.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 24 Jun 2019 14:10:02 +0800
+Message-ID: <CAFgQCTs14R5P7RpCTMwLCMJrGgPzbTGp4tvxCJA0kFgD8_y==g@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate
+ away smaller huge page
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-06-19, 15:23, Daniel Lezcano wrote:
-> The cpufreq_cooling_unregister() function uses now the policy to
-> unregister itself. The only purpose of the cooling device pointer is
-> to unregister the cpu cooling device.
-> 
-> As there is no more need of this pointer, remove it.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> index 217b1aae8b4f..170b70b6ec61 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> @@ -41,7 +41,6 @@ struct ti_thermal_data {
->  	struct cpufreq_policy *policy;
->  	struct thermal_zone_device *ti_thermal;
->  	struct thermal_zone_device *pcb_tz;
-> -	struct thermal_cooling_device *cool_dev;
->  	struct ti_bandgap *bgp;
->  	enum thermal_device_mode mode;
->  	struct work_struct thermal_wq;
-> @@ -233,6 +232,7 @@ int ti_thermal_register_cpu_cooling(struct ti_bandgap *bgp, int id)
->  {
->  	struct ti_thermal_data *data;
->  	struct device_node *np = bgp->dev->of_node;
-> +	struct thermal_cooling_device *cdev;
->  
->  	/*
->  	 * We are assuming here that if one deploys the zone
-> @@ -256,9 +256,9 @@ int ti_thermal_register_cpu_cooling(struct ti_bandgap *bgp, int id)
->  	}
->  
->  	/* Register cooling device */
-> -	data->cool_dev = cpufreq_cooling_register(data->policy);
-> -	if (IS_ERR(data->cool_dev)) {
-> -		int ret = PTR_ERR(data->cool_dev);
-> +	cdev = cpufreq_cooling_register(data->policy);
-> +	if (IS_ERR(cdev)) {
-> +		int ret = PTR_ERR(cdev);
->  		dev_err(bgp->dev, "Failed to register cpu cooling device %d\n",
->  			ret);
->  		cpufreq_cpu_put(data->policy);
+On Mon, Jun 24, 2019 at 1:16 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+>
+>
+> On 06/24/2019 09:51 AM, Pingfan Liu wrote:
+> > The current pfn_range_valid_gigantic() rejects the pud huge page allocation
+> > if there is a pmd huge page inside the candidate range.
+> >
+> > But pud huge resource is more rare, which should align on 1GB on x86. It is
+> > worth to allow migrating away pmd huge page to make room for a pud huge
+> > page.
+> >
+> > The same logic is applied to pgd and pud huge pages.
+>
+> The huge page in the range can either be a THP or HugeTLB and migrating them has
+> different costs and chances of success. THP migration will involve splitting if
+> THP migration is not enabled and all related TLB related costs. Are you sure
+> that a PUD HugeTLB allocation really should go through these ? Is there any
+PUD hugetlb has already driven out PMD thp in current. This patch just
+want to make PUD hugetlb survives PMD hugetlb.
 
-And this too..
+> guarantee that after migration of multiple PMD sized THP/HugeTLB pages on the
+> given range, the allocation request for PUD will succeed ?
+The migration is complicated, but as my understanding, if there is no
+gup pin in the range and there is enough memory including swap, then
+it will success.
+>
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/hugetlb.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index ac843d3..02d1978 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -1081,7 +1081,11 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+> >                       unsigned long start_pfn, unsigned long nr_pages)
+> >  {
+> >       unsigned long i, end_pfn = start_pfn + nr_pages;
+> > -     struct page *page;
+> > +     struct page *page = pfn_to_page(start_pfn);
+> > +
+> > +     if (PageHuge(page))
+> > +             if (compound_order(compound_head(page)) >= nr_pages)
+> > +                     return false;
+> >
+> >       for (i = start_pfn; i < end_pfn; i++) {
+> >               if (!pfn_valid(i))
+> > @@ -1098,8 +1102,6 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+> >               if (page_count(page) > 0)
+> >                       return false;
+> >
+> > -             if (PageHuge(page))
+> > -                     return false;
+> >       }
+> >
+> >       return true;
+> >
+>
+> So except in the case where there is a bigger huge page in the range this will
+> attempt migrating everything on the way. As mentioned before if it all this is
+> a good idea, it needs to differentiate between HugeTLB and THP and also take
+> into account costs of migrations and chance of subsequence allocation attempt
+> into account.
+Sorry, but I think this logic is only for hugetlb. The caller
+alloc_gigantic_page() is only used inside mm/hugetlb.c, not by
+huge_memory.c.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+Thanks,
+  Pingfan
