@@ -2,124 +2,129 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839D8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48144C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBB8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371111;
-	bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMYG+pMCxvbAntwZuM7eJS4vdSxqkEBywUJwOBe1sHLia/x8+1xH4YLHwcr4GpM/S
-	 QLtHwOHMa/CrTaBQn4It9l9Xsako1KlcWtpyv79gfjbzAiaDGFWYkAN8J7Icfvo0S4
-	 hoaJ/4+VcgfnekHwFpiHShX9BtfFeSSWynQEqFV8=
+	by mail.kernel.org (Postfix) with ESMTP id 262DE2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfFXKG3 (ORCPT
+        id S1730497AbfFXKLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729676AbfFXKGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:25 -0400
-Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B3AE21473;
-        Mon, 24 Jun 2019 10:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370784;
-        bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WViqk4PYNDKd623HcTERwnTZPsgKqDzn1wLNpklVcD7eFsrnbH6r/qjtTv0Q+yGcL
-         p4TVuLWIfCGfiEcUetvtnfFgNDHyh1Llwsy5GOkGfCk4AphfcqUMvRI8ZvaBbeawLi
-         JAO9tPQbma2OnX4w7MWHEmiCGOfJvM0O4fHEl3T4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Shi <alex.shi@linux.alibaba.com>,
-        Shuah Khan <shuah@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/90] kselftest/cgroup: fix unexpected testing failure on test_memcontrol
-Date:   Mon, 24 Jun 2019 17:56:35 +0800
-Message-Id: <20190624092317.217590191@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
-References: <20190624092313.788773607@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Jun 2019 06:11:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:42609 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730103AbfFXKG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:28 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MirfI-1iB8Md1MgO-00er3h; Mon, 24 Jun 2019 12:05:43 +0200
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
+ devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190221162627.3476-1-brgl@bgdev.pl>
+ <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+ <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
+Date:   Mon, 24 Jun 2019 12:05:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Y5KmhAuGYBWpz63kWCoOrWjQppi2GCM7nw4zwIl5goqEXlJ5BbX
+ t8ubaYngOokp6Z8xrfJZdvOg8jSkCfYvjScNX1xaVigp3qfACw0j20K6xuf4CANZ46Nq9me
+ q08dSj4GKou4/MPmMnT9912RJMpzT2PhiqIUQy8YOCHkkeHk9RA7GVcmp4d+Al1H+rYRXPs
+ 32V86gxzCU6XHurLGQZkA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EhlFrXnRRgs=:/a8XyZ7CEl2MasOCthdPtj
+ GHPmIV3VKUQE9+3JzxCKgOABObymqWS20d1W1RBSBjOszBrrtsH9gfXYJYPn76gflfz2vENlz
+ f7yuhlrfbJvb/GmOQW0IF0Mio5exilcACOo3xQHJXqqHp2i5N1BXXYS7k5+XdcYDSCfPKS+ZU
+ 8pYNFguDUshvnjh2oUJ80YdL8blZUSa08lYuap5dZtqw4LAgNmuJmpzRltz/125xVxwPE8Ccl
+ 1Yd2YmZ2kfhnd1EmwVn6OeN3Fj/zeuXq+aJq3F0QHpUP+K5mPhlEs7h+RJwooknu04BCD+VsR
+ nUr+BfT1xIWR/sTJJ4WgIJ64t1dTTangFgfUiadeSMwaEV6OvOaOpvR4JQ5h5+phkGo24n6LD
+ QC+KNoTH/n4wDIHzqMyqX5Ev35mg9SvjSrIwoSmBx2aCHvX0tGazcolLApMyZx4Nmrx79iQiD
+ uoOz6UVo0p5K2+W/qigonOACW2LdYozDvoaePPP/4F9CMdG/79hvp5Qjk02aSHpy+ki18VXH+
+ CFLv6ygB+oMEAVxl4EvuffVb5WYkGHvkUjQMspnD7rc5mGFJllTXRsrLoB4h+8InP6OTM9w8l
+ khKa6p00oEoCBymM8BKqFu0Zr+ZcHWEiXSpJUzLkoob77+hG+k3WltUeg0zOCcED/lLOJPKsf
+ 2BkRkkh3rMPoy3a/iusG2prGte2LUVNt5UBGA1Yr3ry2YBA2rsYbudm44rtCdPpzZgaU6K/h9
+ D/eNKp1aT1PhRS9h7Kuoi1K+0coK98p/mkx00aFfY0souEtU/PI3+UTZ3QvcWfKkaIgS8MpQ3
+ eLPWthYy3Xf2gooeBE1FiY5qhbOertn8d6oftV/J6aDRj0kTdaFsDmFZfHJNuGW4qQlnHAF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6131f28057d4fd8922599339e701a2504e0f23d ]
+On 24.06.19 10:29, Bartosz Golaszewski wrote:
+> pt., 14 cze 2019 o 18:50 Markus Elfring <Markus.Elfring@web.de> napisał(a):
+>>
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Fri, 14 Jun 2019 17:45:13 +0200
+>>
+>> Move the preprocessor statement “#ifdef CONFIG_HAS_IOMEM” so that
+>> the corresponding scope for conditional compilation includes also comments
+>> for this function implementation.
+>>
+>> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>> ---
+>>  drivers/base/platform.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index 4d1729853d1a..a5f40974a6ef 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>>         return NULL;
+>>  }
+>>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>> +#ifdef CONFIG_HAS_IOMEM
+>>
+>>  /**
+>>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+>> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+>>   *        resource management
+>>   * @index: resource index
+>>   */
+>> -#ifdef CONFIG_HAS_IOMEM
+>>  void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+>>                                              unsigned int index)
+>>  {
+>> --
+>> 2.22.0
+>>
+> 
+> And what is the purpose of that?
 
-The cgroup testing relies on the root cgroup's subtree_control setting,
-If the 'memory' controller isn't set, all test cases will be failed
-as following:
+I can imagine that this could improve readability a little bit. Maybe if
+one uses same fancy ide/editor that can fold code blocks like functions
+and conditionals, this patch could make the code prettier.
 
-$ sudo ./test_memcontrol
-not ok 1 test_memcg_subtree_control
-not ok 2 test_memcg_current
-ok 3 # skip test_memcg_min
-not ok 4 test_memcg_low
-not ok 5 test_memcg_high
-not ok 6 test_memcg_max
-not ok 7 test_memcg_oom_events
-ok 8 # skip test_memcg_swap_max
-not ok 9 test_memcg_sock
-not ok 10 test_memcg_oom_group_leaf_events
-not ok 11 test_memcg_oom_group_parent_events
-not ok 12 test_memcg_oom_group_score_events
+The patch seems pretty trivial and doesn't change any actual code, so
+I don't see hard resons for rejecting it.
 
-To correct this unexpected failure, this patch write the 'memory' to
-subtree_control of root to get a right result.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Jay Kamat <jgkamat@fb.com>
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++++
- 1 file changed, 4 insertions(+)
+--mtx
 
-diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
-index 6f339882a6ca..c19a97dd02d4 100644
---- a/tools/testing/selftests/cgroup/test_memcontrol.c
-+++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-@@ -1205,6 +1205,10 @@ int main(int argc, char **argv)
- 	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
- 		ksft_exit_skip("memory controller isn't available\n");
- 
-+	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
-+		if (cg_write(root, "cgroup.subtree_control", "+memory"))
-+			ksft_exit_skip("Failed to set memory controller\n");
-+
- 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
- 		switch (tests[i].fn(root)) {
- 		case KSFT_PASS:
+
 -- 
-2.20.1
-
-
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
