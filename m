@@ -2,167 +2,100 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82006C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 622C2208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D742133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfFXNni convert rfc822-to-8bit (ORCPT
+        id S1731274AbfFXNnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:43:38 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:51985 "EHLO hermes.aosc.io"
+        Mon, 24 Jun 2019 09:43:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51670 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbfFXNnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:43:37 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id F0E2A6CACE;
-        Mon, 24 Jun 2019 13:43:30 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 21:43:23 +0800
-In-Reply-To: <20190624124301.chwhfalk5o53fm5x@flea>
-References: <20190623043801.14040-1-icenowy@aosc.io> <20190623043801.14040-10-icenowy@aosc.io> <20190624124301.chwhfalk5o53fm5x@flea>
+        id S1729815AbfFXNnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:43:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B7DDB316290E;
+        Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
+Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BE9B600CD;
+        Mon, 24 Jun 2019 13:43:38 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 21:43:33 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kyle Pelton <kyle.d.pelton@intel.com>
+Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
+ phys_p4d_init()
+Message-ID: <20190624134333.GO24419@MiWiFi-R3L-srv>
+References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
+ <20190621090249.GL24419@MiWiFi-R3L-srv>
+ <20190621105449.fp7h7tsmpitvplyr@box>
+ <20190624100742.GM24419@MiWiFi-R3L-srv>
+ <20190624122355.762cadxds37enfdo@box>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v3 9/9] ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
-To:     linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <1E6AB747-5A4C-4515-A0EB-F0E89F520CF7@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624122355.762cadxds37enfdo@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/24/19 at 03:23pm, Kirill A. Shutemov wrote:
+> On Mon, Jun 24, 2019 at 06:07:42PM +0800, Baoquan He wrote:
+> > On 06/21/19 at 01:54pm, Kirill A. Shutemov wrote:
+> > > > The code block as below is to zero p4d entries which are not coverred by
+> > > > the current memory range, and if haven't been mapped already. It's
+> > > > clearred away in this patch, could you also mention it in log, and tell
+> > > > why it doesn't matter now?
+> > > > 
+> > > > If it doesn't matter, should we clear away the simillar code in
+> > > > phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
+> > > > clean up?
+> > > 
+> > > It only matters for the levels that contains page table entries that can
+> > > point to pages, not page tables. There's no p4d or pgd huge pages on x86.
+> > > Otherwise we only leak page tables without any benefit.
+> > 
+> > Ah, I checked git history, didn't find why it's added. I just Have a
+> > superficial knowledge of the clearing, but in a low-efficiency way.
+> > 
+> > > 
+> > > We might have this on all leveles under p?d_large() condition and don't
+> > > touch page tables at all.
+> > 
+> > I see.
+> > 
+> > > 
+> > > BTW, it all becomes rather risky for this late in the release cycle. Maybe
+> > > we should revert the original patch and try again later with more
+> > > comprehansive solution?
+> > 
+> > It's not added in one time. I am fine with your current change, would be
+> > much better if mention it in log, and also add code comment above the
+> > clearing code. Surely reverting and trying later with more comprehensive
+> > solution is also good to me, this need a little more effort.
+> 
+> I've decided to keep the block for now. We can remove it later, once the fixis in.
+> I'll post it soon
 
-
-于 2019年6月24日 GMT+08:00 下午8:43:01, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->On Sun, Jun 23, 2019 at 12:38:01PM +0800, Icenowy Zheng wrote:
->> Lichee zero plus is a core board made by Sipeed, which includes
->on-board
->> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
->> header, a microUSB slot and a gold finger connector for expansion. It
->> can use either Sochip S3 or Allwinner S3L SoC.
->>
->> Add the basic device tree for the core board, w/o optional onboard
->> storage, and with S3 SoC.
->>
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> ---
->> Changes in v3:
->> - Drop common regulator DTSI usage and added vcc3v3 regulator.
->>
->>  arch/arm/boot/dts/Makefile                    |  1 +
->>  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
->>  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 44
->+++++++++++++++++++
->>  3 files changed, 53 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->>  create mode 100644
->arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index c4742afe41a7..d24dec29245e 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -1113,6 +1113,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->>  	sun8i-r16-nintendo-super-nes-classic.dtb \
->>  	sun8i-r16-parrot.dtb \
->>  	sun8i-r40-bananapi-m2-ultra.dtb \
->> +	sun8i-s3-lichee-zero-plus.dtb \
->>  	sun8i-t3-cqa3t-bv3.dtb \
->>  	sun8i-v3s-licheepi-zero.dtb \
->>  	sun8i-v3s-licheepi-zero-dock.dtb \
->> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->> new file mode 100644
->> index 000000000000..7d2f6b145190
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->> @@ -0,0 +1,8 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun8i-s3.dtsi"
->> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
->> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->> new file mode 100644
->> index 000000000000..e68f738c3046
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->> @@ -0,0 +1,46 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
->> + */
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/ {
->> +	aliases {
->> +		serial0 = &uart0;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +
->> +	reg_vcc3v3: vcc3v3 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vcc3v3";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +	};
->> +};
->> +
->> +&mmc0 {
->> +	broken-cd;
->> +	bus-width = <4>;
->> +	vmmc-supply = <&reg_vcc3v3>;
->> +	status = "okay";
->> +};
->> +
->> +&uart0 {
->> +	pinctrl-0 = <&uart0_pb_pins>;
->> +	pinctrl-names = "default";
->> +	status = "okay";
->> +};
->> +
->> +&usb_otg {
->> +	dr_mode = "otg";
->> +	status = "okay";
->> +};
->> +
->> +&usbphy {
->> +	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
->> +	status = "okay";
->> +};
->
->How can it do OTG if there's no controllable VBUS regulator?
-
-All 5V's are connected together, like Orange Pi Zero.
-
->
->Maxime
->
->--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin.com
-
--- 
-使用 K-9 Mail 发送自我的Android设备。
+That's great, can make those codes more understandable with clear commit
+log and code comment.
