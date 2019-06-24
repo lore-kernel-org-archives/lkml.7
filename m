@@ -2,109 +2,233 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD5EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33153C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41736208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD7D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="fZt+asrE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Bhigd78A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfFXOie (ORCPT
+        id S1728244AbfFXOj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:38:34 -0400
-Received: from mail-eopbgr770122.outbound.protection.outlook.com ([40.107.77.122]:3187
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726396AbfFXOid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:38:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector2-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=88MwFkrLRW09sAI0A8nZ+7uIFYPFLZnkM+2+y68G3p4=;
- b=fZt+asrEt6KTqLMtERk30+GPJdPLcIjT/mTK+1qOWPGZsLO29hVJaAPXG4dguGxvjb+xhRsQJz3ysM790S06PVqATpes34BxZ7sPU3Oppi3ZDCXX0yoec6H5Uj4VZ7GboRwnSjssRDdXXSD7omtmTqw9qiHqo05BmShCQIAW+4U=
-Received: from DM6PR01MB4090.prod.exchangelabs.com (20.176.104.151) by
- DM6PR01MB3929.prod.exchangelabs.com (20.176.66.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Mon, 24 Jun 2019 14:38:29 +0000
-Received: from DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::f0f2:16e1:1db7:ccb3]) by DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::f0f2:16e1:1db7:ccb3%7]) with mapi id 15.20.2008.017; Mon, 24 Jun 2019
- 14:38:29 +0000
-From:   Hoan Tran OS <hoan@os.amperecomputing.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Review <OpenSourceReview@amperecomputing.com>,
-        Hoan Tran OS <hoan@os.amperecomputing.com>
-Subject: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for NUMA
-Thread-Topic: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
- NUMA
-Thread-Index: AQHVKpp8SjYC130sVEibrXL3FC+ASw==
-Date:   Mon, 24 Jun 2019 14:38:28 +0000
-Message-ID: <1561387098-23692-1-git-send-email-Hoan@os.amperecomputing.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR18CA0064.namprd18.prod.outlook.com
- (2603:10b6:903:13f::26) To DM6PR01MB4090.prod.exchangelabs.com
- (2603:10b6:5:2a::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hoan@os.amperecomputing.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [4.28.12.214]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5902007f-628d-46b4-3293-08d6f8b19e7a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR01MB3929;
-x-ms-traffictypediagnostic: DM6PR01MB3929:
-x-microsoft-antispam-prvs: <DM6PR01MB392952282822042DF2CB1D3AF1E00@DM6PR01MB3929.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(376002)(136003)(346002)(396003)(366004)(189003)(199004)(66446008)(68736007)(81156014)(6486002)(26005)(4326008)(186003)(256004)(6436002)(6506007)(486006)(386003)(102836004)(4744005)(71200400001)(71190400001)(305945005)(66556008)(64756008)(73956011)(99286004)(86362001)(2616005)(476003)(52116002)(25786009)(66946007)(2906002)(66066001)(7736002)(53936002)(81166006)(8936002)(107886003)(6512007)(110136005)(66476007)(316002)(50226002)(478600001)(5660300002)(14454004)(6116002)(3846002)(8676002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB3929;H:DM6PR01MB4090.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: os.amperecomputing.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i7A3tHJnWEj1++QD0H5pIvKApNpWhz/e9BS/mRVIoxRAplNFy3bga4sG/cNXrYVaaYWn3EvHh0uhd4mKRrqUORWp4YfkIDjAsmM1HiaCS2FvPMol5zeMs9qUb7mDHHSFhsiqYH5ZwkYym61QfJGMJJ50GnAw9t7NvfDaVwY/luEomjH8vIT5MsRErZeRKXATJcrvAIsux5eWoTZfS2VodvYd2F2XeUXvP3dIA7gPEF45vGvE5Hu/s7icgULTApPAeIJBgwEOZgsFxi38+jHpp0+gwt1LesB9LbC/hPWT8hiuu1jhL6rClb1D+9yA4CHkFl1+61LtKE0MKJgUjI5tSMh/oGsoPwj/L4tnKa2S0jm5YD+bgUrpTwWh42cDcey0Akp1dm/NsZOHz6fsrFDETOq0OqXQEHg7ubAq8aJ1QpU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 10:39:56 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38916 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfFXOjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:39:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561387193; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2QvYrE3ls/QXOBjihXF5hG/izh16IQcN2h5MrNGxNC8=;
+        b=Bhigd78ANkGaYmYI+0oAYzU8YmsKJKpGucWHCgAFcpgfWaU3meL5LseFh10NK0JeR5KmaM
+        12aEdcqwu8iiOZlWEOUx6HTENsi+bWOCqdoD7FO+fT75BOEoG6IBkftSspiT9/Scfd69v3
+        BqpepJB6H/+J64wFIT4/1DgXmX4rXVg=
+Date:   Mon, 24 Jun 2019 16:39:46 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1561387186.20436.1@crapouillou.net>
+In-Reply-To: <20190621135608.GB11839@ulmo>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+        <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+        <20190621135608.GB11839@ulmo>
 MIME-Version: 1.0
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5902007f-628d-46b4-3293-08d6f8b19e7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:38:29.1030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hoan@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB3929
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29tZSBOVU1BIG5vZGVzIGhhdmUgbWVtb3J5IHJhbmdlcyB0aGF0IHNwYW4gb3RoZXIgbm9kZXMu
-DQpFdmVuIHRob3VnaCBhIHBmbiBpcyB2YWxpZCBhbmQgYmV0d2VlbiBhIG5vZGUncyBzdGFydCBh
-bmQgZW5kIHBmbnMsDQppdCBtYXkgbm90IHJlc2lkZSBvbiB0aGF0IG5vZGUuDQoNClRoaXMgcGF0
-Y2ggZW5hYmxlcyBOT0RFU19TUEFOX09USEVSX05PREVTIGNvbmZpZyBmb3IgTlVNQSB0byBzdXBw
-b3J0DQp0aGlzIHR5cGUgb2YgTlVNQSBsYXlvdXQuDQoNClNpZ25lZC1vZmYtYnk6IEhvYW4gVHJh
-biA8SG9hbkBvcy5hbXBlcmVjb21wdXRpbmcuY29tPg0KLS0tDQogYXJjaC9hcm02NC9LY29uZmln
-IHwgNyArKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm02NC9LY29uZmlnIGIvYXJjaC9hcm02NC9LY29uZmlnDQppbmRleCA2OTdl
-YTA1Li4yMWZjMTY4IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9LY29uZmlnDQorKysgYi9hcmNo
-L2FybTY0L0tjb25maWcNCkBAIC04NzMsNiArODczLDEzIEBAIGNvbmZpZyBORUVEX1BFUl9DUFVf
-RU1CRURfRklSU1RfQ0hVTksNCiBjb25maWcgSE9MRVNfSU5fWk9ORQ0KIAlkZWZfYm9vbCB5DQog
-DQorIyBTb21lIE5VTUEgbm9kZXMgaGF2ZSBtZW1vcnkgcmFuZ2VzIHRoYXQgc3BhbiBvdGhlciBu
-b2Rlcy4NCisjIEV2ZW4gdGhvdWdoIGEgcGZuIGlzIHZhbGlkIGFuZCBiZXR3ZWVuIGEgbm9kZSdz
-IHN0YXJ0IGFuZCBlbmQgcGZucywNCisjIGl0IG1heSBub3QgcmVzaWRlIG9uIHRoYXQgbm9kZS4N
-Citjb25maWcgTk9ERVNfU1BBTl9PVEhFUl9OT0RFUw0KKwlkZWZfYm9vbCB5DQorCWRlcGVuZHMg
-b24gQUNQSV9OVU1BDQorDQogc291cmNlICJrZXJuZWwvS2NvbmZpZy5oeiINCiANCiBjb25maWcg
-QVJDSF9TVVBQT1JUU19ERUJVR19QQUdFQUxMT0MNCi0tIA0KMi43LjQNCg0K
+
+
+Le ven. 21 juin 2019 =E0 15:56, Thierry Reding=20
+<thierry.reding@gmail.com> a =E9crit :
+> On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
+>>  On 22/05/2019 17:34, Paul Cercueil wrote:
+>>  > When the driver probes, the PWM pin is automatically configured=20
+>> to its
+>>  > default state, which should be the "pwm" function.
+>>=20
+>>  At which point in the probe... and by who?
+>=20
+> The driver core will select the "default" state of a device right=20
+> before
+> calling the driver's probe, see:
+>=20
+> 	drivers/base/pinctrl.c: pinctrl_bind_pins()
+>=20
+> which is called from:
+>=20
+> 	drivers/base/dd.c: really_probe()
+>=20
+>>  > However, at this
+>>  > point we don't know the actual level of the pin, which may be=20
+>> active or
+>>  > inactive. As a result, if the driver probes without enabling the
+>>  > backlight, the PWM pin might be active, and the backlight would be
+>>  > lit way before being officially enabled.
+>>  >
+>>  > To work around this, if the probe function doesn't enable the=20
+>> backlight,
+>>  > the pin is set to its sleep state instead of the default one,=20
+>> until the
+>>  > backlight is enabled. Whenk the backlight is disabled, the pin is=20
+>> reset
+>>  > to its sleep state.
+>>  Doesn't this workaround result in a backlight flash between=20
+>> whatever enables
+>>  it and the new code turning it off again?
+>=20
+> Yeah, I think it would. I guess if you're very careful on how you set=20
+> up
+> the device tree you might be able to work around it. Besides the=20
+> default
+> and idle standard pinctrl states, there's also the "init" state. The
+> core will select that instead of the default state if available.=20
+> However
+> there's also pinctrl_init_done() which will try again to switch to the
+> default state after probe has finished and the driver didn't switch=20
+> away
+> from the init state.
+>=20
+> So you could presumably set up the device tree such that you have=20
+> three
+> states defined: "default" would be the one where the PWM pin is=20
+> active,
+> "idle" would be used when backlight is off (PWM pin inactive) and then
+> another "init" state that would be the same as "idle" to be used=20
+> during
+> probe. During probe the driver could then switch to the "idle" state=20
+> so
+> that the pin shouldn't glitch.
+
+That's exactly what I'm doing, yes (with the minor difference that your
+"idle" state is my "sleep" state).
+
+> I'm not sure this would actually work because I think the way that
+> pinctrl handles states both "init" and "idle" would be the same=20
+> pointer
+> values and therefore pinctrl_init_done() would think the driver didn't
+> change away from the "init" state because it is the same pointer value
+> as the "idle" state that the driver selected. One way to work around
+> that would be to duplicate the "idle" state definition and associate=20
+> one
+> instance of it with the "idle" state and the other with the "init"
+> state. At that point both states should be different (different=20
+> pointer
+> values) and we'd get the init state selected automatically before=20
+> probe,
+> select "idle" during probe and then the core will leave it alone.=20
+> That's
+> of course ugly because we duplicate the pinctrl state in DT, but=20
+> perhaps
+> it's the least ugly solution.
+
+That works perfectly on my side. I didn't have to duplicate the states=20
+in DT.
+
+> Adding Linus for visibility. Perhaps he can share some insight.
+>=20
+> On that note, I'm wondering if perhaps it'd make sense for pinctrl to
+> support some mode where a device would start out in idle mode. That=20
+> is,
+> where pinctrl_bind_pins() would select the "idle" mode as the default
+> before probe. With something like that we could easily support this
+> use-case without glitching.
+
+You'd still need the driver to switch back between "default" and "idle"
+states, and switching to the "idle" state in the probe is a one-liner,
+so probably not worth the trouble, unless I don't understand the whole
+picture.
+
+Thanks,
+-Paul
+
+> I suppose yet another variant would be for the PWM backlight to not=20
+> use
+> any of the standard pinctrl states at all. Instead it could just=20
+> define
+> custom states, say "active" and "inactive". Looking at the code that
+> would prevent pinctrl_bind_pins() from doing anything with pinctrl
+> states and given the driver exact control over when each of the states
+> will be selected. That's somewhat suboptimal because we can't make use
+> of the pinctrl PM helpers and it'd require more boilerplate.
+>=20
+> Thierry
+>=20
+>>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net> > ---
+>>  >   drivers/video/backlight/pwm_bl.c | 9 +++++++++
+>>  >   1 file changed, 9 insertions(+)
+>>  >
+>>  > diff --git a/drivers/video/backlight/pwm_bl.c=20
+>> b/drivers/video/backlight/pwm_bl.c
+>>  > index fb45f866b923..422f7903b382 100644
+>>  > --- a/drivers/video/backlight/pwm_bl.c
+>>  > +++ b/drivers/video/backlight/pwm_bl.c
+>>  > @@ -16,6 +16,7 @@
+>>  >   #include <linux/module.h>
+>>  >   #include <linux/kernel.h>
+>>  >   #include <linux/init.h>
+>>  > +#include <linux/pinctrl/consumer.h>
+>>  >   #include <linux/platform_device.h>
+>>  >   #include <linux/fb.h>
+>>  >   #include <linux/backlight.h>
+>>  > @@ -50,6 +51,8 @@ static void pwm_backlight_power_on(struct=20
+>> pwm_bl_data *pb)
+>>  >   	struct pwm_state state;
+>>  >   	int err;
+>>  > +	pinctrl_pm_select_default_state(pb->dev);
+>>  > +
+>>  >   	pwm_get_state(pb->pwm, &state);
+>>  >   	if (pb->enabled)
+>>  >   		return;
+>>  > @@ -90,6 +93,8 @@ static void pwm_backlight_power_off(struct=20
+>> pwm_bl_data *pb)
+>>  >   	regulator_disable(pb->power_supply);
+>>  >   	pb->enabled =3D false;
+>>  > +
+>>  > +	pinctrl_pm_select_sleep_state(pb->dev);
+>>  >   }
+>>  >   static int compute_duty_cycle(struct pwm_bl_data *pb, int=20
+>> brightness)
+>>  > @@ -626,6 +631,10 @@ static int pwm_backlight_probe(struct=20
+>> platform_device *pdev)
+>>  >   	backlight_update_status(bl);
+>>  >   	platform_set_drvdata(pdev, bl);
+>>  > +
+>>  > +	if (bl->props.power =3D=3D FB_BLANK_POWERDOWN)
+>>  > +		pinctrl_pm_select_sleep_state(&pdev->dev);
+>>=20
+>>  Didn't backlight_update_status(bl) already do this?
+>>=20
+>>=20
+>>  Daniel.
+>>=20
+>>=20
+>>  > +
+>>  >   	return 0;
+>>  >   err_alloc:
+>>  >
+>>=20
+
+=
+
