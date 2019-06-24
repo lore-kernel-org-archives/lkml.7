@@ -2,76 +2,85 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48487C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E8BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E67213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FF6208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="v79fJ+CG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfFXO0A (ORCPT
+        id S1728664AbfFXO0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:26:00 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43870 "EHLO ms.lwn.net"
+        Mon, 24 Jun 2019 10:26:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53612 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfFXO0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:26:00 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id A686D35A;
-        Mon, 24 Jun 2019 14:25:59 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 08:25:58 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190624082558.62e6c0d2@lwn.net>
-In-Reply-To: <87k1dbrziw.fsf@intel.com>
-References: <20190621235159.6992-1-corbet@lwn.net>
-        <20190621235159.6992-2-corbet@lwn.net>
-        <87k1dbrziw.fsf@intel.com>
-Organization: LWN.net
+        id S1726263AbfFXO0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:26:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=N5N6f9ldaRZVCwiVvBP9WWU3rYbAdzLFROiOxUyweJg=; b=v79fJ+CGdaLUV1/cBB/sRLTk9L
+        4rfzsWfmoOX/OPvFugF8ZIDfiLiCFEc7W2S+tcAbv1bwlwuBbZU1zL+Erwq+xQIxzc3YqhAAOOrjS
+        YHfzlIW7yPBmE2yKC6l1g1MdgFbQyLLtlTk/rb/mX01M9qJC2ru3PDYVb1ToXrk1lsmw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hfPvN-0005nr-N6; Mon, 24 Jun 2019 16:26:25 +0200
+Date:   Mon, 24 Jun 2019 16:26:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190624142625.GR31306@lunn.ch>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624115558.GA5690@piout.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 14:30:47 +0300
-Jani Nikula <jani.nikula@linux.intel.com> wrote:
-
-> > +def auto_markup(app, doctree, name):
-> > +    for para in doctree.traverse(nodes.paragraph):
-> > +        for node in para.traverse(nodes.Text):
-> > +            if not isinstance(node.parent, nodes.literal):
-> > +                node.parent.replace(node, markup_funcs(name, app, node))  
+> > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
+> > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > these switch ports can be configured as CPU port (with follow-up patches).
+> > 
+> > This configuration may look prettier on DSA, but the main restriction here
+> > is that the entire functionality is provided by the ocelot driver which is a
+> > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > from ocelot to a separate dsa driver.
+> > 
 > 
-> I think overall this is a better approach than preprocessing. Thanks for
-> doing this!
-> 
-> I toyed with something like this before, and the key difference here
-> seems to be ignoring literal blocks. The problem seemed to be that
-> replacing blocks with syntax highlighting also removed the syntax
-> highlighting, with no way that I could find to bring it back.
+> We should probably make the ocelot driver a DSA driver then...
 
-That test could use a comment, really.  What it is actually doing is
-skipping text chunks in ``inline literal`` sections, and what that is
-*actually* doing is avoiding marking up functions that have an
-explicit :c:func: markup on them already.
+Hi Claudiu, Alexandre
 
-Someday I don't doubt that this loop will be replaced by a proper tree
-walk that knows where to prune things and how to replace various other
-types of nodes, but this is easy and does the right thing pretty much
-everywhere as far as I can tell.
+An important part of DSA is being able to direct frames out specific
+ports when they ingress via the CPU port. Does the silicon support
+this? At the moment, i think it is using polled IO.
 
-Thanks,
-
-jon
+      Andrew
