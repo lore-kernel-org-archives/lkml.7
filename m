@@ -2,51 +2,56 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D55C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839D8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE9B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBB8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371106;
-	bh=gLATnypNp2v0wAGrWsRrZZ9B5iEH6gSMGiRcoUTSREo=;
+	s=default; t=1561371111;
+	bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBxAKqmfH3F0f0amMR2n5SZt0L92aQnj1MEGTmHA5oeEVuJxxtNpd8s0TUtjEI+uQ
-	 IQCiOjVDcRU/DUbPWag6aVmMeURfDs+2w9pQc3RXaWWUG9g3ks+VNzZviJzGHmysad
-	 T9HXbqhQINX1+RGFA8uWwfj+k8u3KL9XruxJwKuc=
+	b=yMYG+pMCxvbAntwZuM7eJS4vdSxqkEBywUJwOBe1sHLia/x8+1xH4YLHwcr4GpM/S
+	 QLtHwOHMa/CrTaBQn4It9l9Xsako1KlcWtpyv79gfjbzAiaDGFWYkAN8J7Icfvo0S4
+	 hoaJ/4+VcgfnekHwFpiHShX9BtfFeSSWynQEqFV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbfFXKLp (ORCPT
+        id S1730113AbfFXKG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730138AbfFXKGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:36 -0400
+        id S1729676AbfFXKGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:25 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18541208E3;
-        Mon, 24 Jun 2019 10:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B3AE21473;
+        Mon, 24 Jun 2019 10:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370795;
-        bh=gLATnypNp2v0wAGrWsRrZZ9B5iEH6gSMGiRcoUTSREo=;
+        s=default; t=1561370784;
+        bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ln4Dl7p0SjRnKiWg5hOLBEwl72Ti1GJNHpn62xjsVtPbhVOMCp2g1FCJHfdtckCHg
-         OvihV7kFaZy26vG3FWGteuJh3yaLJyxuXXpnO0oPZqnOykLS7dLf3aRb8XbDfNvFPS
-         /5M1b0ZogKxqUl+p2/3NUVc/Wk9OKmHffDtT+Iv8=
+        b=WViqk4PYNDKd623HcTERwnTZPsgKqDzn1wLNpklVcD7eFsrnbH6r/qjtTv0Q+yGcL
+         p4TVuLWIfCGfiEcUetvtnfFgNDHyh1Llwsy5GOkGfCk4AphfcqUMvRI8ZvaBbeawLi
+         JAO9tPQbma2OnX4w7MWHEmiCGOfJvM0O4fHEl3T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Wang <yyuwang@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 87/90] mac80211: handle deauthentication/disassociation from TDLS peer
-Date:   Mon, 24 Jun 2019 17:57:17 +0800
-Message-Id: <20190624092319.580084063@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Shi <alex.shi@linux.alibaba.com>,
+        Shuah Khan <shuah@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 45/90] kselftest/cgroup: fix unexpected testing failure on test_memcontrol
+Date:   Mon, 24 Jun 2019 17:56:35 +0800
+Message-Id: <20190624092317.217590191@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -59,117 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Wang <yyuwang@codeaurora.org>
+[ Upstream commit f6131f28057d4fd8922599339e701a2504e0f23d ]
 
-commit 79c92ca42b5a3e0ea172ea2ce8df8e125af237da upstream.
+The cgroup testing relies on the root cgroup's subtree_control setting,
+If the 'memory' controller isn't set, all test cases will be failed
+as following:
 
-When receiving a deauthentication/disassociation frame from a TDLS
-peer, a station should not disconnect the current AP, but only
-disable the current TDLS link if it's enabled.
+$ sudo ./test_memcontrol
+not ok 1 test_memcg_subtree_control
+not ok 2 test_memcg_current
+ok 3 # skip test_memcg_min
+not ok 4 test_memcg_low
+not ok 5 test_memcg_high
+not ok 6 test_memcg_max
+not ok 7 test_memcg_oom_events
+ok 8 # skip test_memcg_swap_max
+not ok 9 test_memcg_sock
+not ok 10 test_memcg_oom_group_leaf_events
+not ok 11 test_memcg_oom_group_parent_events
+not ok 12 test_memcg_oom_group_score_events
 
-Without this change, a TDLS issue can be reproduced by following the
-steps as below:
+To correct this unexpected failure, this patch write the 'memory' to
+subtree_control of root to get a right result.
 
-1. STA-1 and STA-2 are connected to AP, bidirection traffic is running
-   between STA-1 and STA-2.
-2. Set up TDLS link between STA-1 and STA-2, stay for a while, then
-   teardown TDLS link.
-3. Repeat step #2 and monitor the connection between STA and AP.
-
-During the test, one STA may send a deauthentication/disassociation
-frame to another, after TDLS teardown, with reason code 6/7, which
-means: Class 2/3 frame received from nonassociated STA.
-
-On receive this frame, the receiver STA will disconnect the current
-AP and then reconnect. It's not a expected behavior, purpose of this
-frame should be disabling the TDLS link, not the link with AP.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Yu Wang <yyuwang@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jay Kamat <jgkamat@fb.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/ieee80211_i.h |    3 +++
- net/mac80211/mlme.c        |   12 +++++++++++-
- net/mac80211/tdls.c        |   23 +++++++++++++++++++++++
- 3 files changed, 37 insertions(+), 1 deletion(-)
+ tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -2183,6 +2183,9 @@ void ieee80211_tdls_cancel_channel_switc
- 					  const u8 *addr);
- void ieee80211_teardown_tdls_peers(struct ieee80211_sub_if_data *sdata);
- void ieee80211_tdls_chsw_work(struct work_struct *wk);
-+void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
-+				      const u8 *peer, u16 reason);
-+const char *ieee80211_get_reason_code_string(u16 reason_code);
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index 6f339882a6ca..c19a97dd02d4 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -1205,6 +1205,10 @@ int main(int argc, char **argv)
+ 	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
+ 		ksft_exit_skip("memory controller isn't available\n");
  
- extern const struct ethtool_ops ieee80211_ethtool_ops;
- 
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2868,7 +2868,7 @@ static void ieee80211_rx_mgmt_auth(struc
- #define case_WLAN(type) \
- 	case WLAN_REASON_##type: return #type
- 
--static const char *ieee80211_get_reason_code_string(u16 reason_code)
-+const char *ieee80211_get_reason_code_string(u16 reason_code)
- {
- 	switch (reason_code) {
- 	case_WLAN(UNSPECIFIED);
-@@ -2933,6 +2933,11 @@ static void ieee80211_rx_mgmt_deauth(str
- 	if (len < 24 + 2)
- 		return;
- 
-+	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
-+		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
-+		return;
-+	}
++	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
++		if (cg_write(root, "cgroup.subtree_control", "+memory"))
++			ksft_exit_skip("Failed to set memory controller\n");
 +
- 	if (ifmgd->associated &&
- 	    ether_addr_equal(mgmt->bssid, ifmgd->associated->bssid)) {
- 		const u8 *bssid = ifmgd->associated->bssid;
-@@ -2982,6 +2987,11 @@ static void ieee80211_rx_mgmt_disassoc(s
- 
- 	reason_code = le16_to_cpu(mgmt->u.disassoc.reason_code);
- 
-+	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
-+		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
-+		return;
-+	}
-+
- 	sdata_info(sdata, "disassociated from %pM (Reason: %u=%s)\n",
- 		   mgmt->sa, reason_code,
- 		   ieee80211_get_reason_code_string(reason_code));
---- a/net/mac80211/tdls.c
-+++ b/net/mac80211/tdls.c
-@@ -1992,3 +1992,26 @@ void ieee80211_tdls_chsw_work(struct wor
- 	}
- 	rtnl_unlock();
- }
-+
-+void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
-+				      const u8 *peer, u16 reason)
-+{
-+	struct ieee80211_sta *sta;
-+
-+	rcu_read_lock();
-+	sta = ieee80211_find_sta(&sdata->vif, peer);
-+	if (!sta || !sta->tdls) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	rcu_read_unlock();
-+
-+	tdls_dbg(sdata, "disconnected from TDLS peer %pM (Reason: %u=%s)\n",
-+		 peer, reason,
-+		 ieee80211_get_reason_code_string(reason));
-+
-+	ieee80211_tdls_oper_request(&sdata->vif, peer,
-+				    NL80211_TDLS_TEARDOWN,
-+				    WLAN_REASON_TDLS_TEARDOWN_UNREACHABLE,
-+				    GFP_ATOMIC);
-+}
+ 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+ 		switch (tests[i].fn(root)) {
+ 		case KSFT_PASS:
+-- 
+2.20.1
+
 
 
