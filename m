@@ -2,109 +2,95 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19177C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB6FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC732089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="EMfpHTNX"
+	by mail.kernel.org (Postfix) with ESMTP id 7133F2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfFXIeS (ORCPT
+        id S1728148AbfFXIeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:34:18 -0400
-Received: from mail-eopbgr30120.outbound.protection.outlook.com ([40.107.3.120]:37738
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbfFXIeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:34:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MtW8TNwL3nMci6PXQxTPxjx9kVsYY9xkqlI7JvXxawk=;
- b=EMfpHTNXGZBph+0eQj0rrr/Cmds27ksRe6yK3Kq78jl4fXoNz8NIVvi1w8Hk/U2l06FHvorhVRXbLuWeaoSFFQUvX4dyS0wbn7IDpz8Zy5Nzw9CMh7IZ9ry5NS47iChnFBI2tK8109eb/xsamrUqcNxiFEq5E+2ylU/X1NAYiIQ=
-Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM (10.255.30.92) by
- AM0PR10MB2387.EURPRD10.PROD.OUTLOOK.COM (20.177.109.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 08:34:14 +0000
-Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d591:47a7:70ee:3162]) by AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d591:47a7:70ee:3162%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 08:34:14 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] can: dev: call netif_carrier_off() in
- register_candev()
-Thread-Topic: [PATCH net-next] can: dev: call netif_carrier_off() in
- register_candev()
-Thread-Index: AQHVKmeahsDxJm0SfUSG50fnY2XQSw==
-Date:   Mon, 24 Jun 2019 08:34:13 +0000
-Message-ID: <20190624083352.29257-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR07CA0020.eurprd07.prod.outlook.com
- (2603:10a6:7:67::30) To AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:160::28)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0c1c281-f7d6-4fcf-9550-08d6f87ebcbb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR10MB2387;
-x-ms-traffictypediagnostic: AM0PR10MB2387:
-x-microsoft-antispam-prvs: <AM0PR10MB2387FDA80145DEC038003EF48AE00@AM0PR10MB2387.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(376002)(39840400004)(346002)(199004)(189003)(26005)(102836004)(66946007)(36756003)(110136005)(71200400001)(42882007)(25786009)(8676002)(81166006)(81156014)(54906003)(486006)(8976002)(305945005)(4326008)(316002)(3846002)(71190400001)(53936002)(6116002)(256004)(8936002)(7736002)(6512007)(478600001)(4744005)(64756008)(66446008)(186003)(74482002)(1076003)(66066001)(99286004)(6506007)(386003)(6436002)(44832011)(50226002)(73956011)(6486002)(68736007)(476003)(2616005)(5660300002)(2906002)(14454004)(72206003)(66476007)(66556008)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB2387;H:AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 36SNkUwLObqVNjHz4gVlASaEBdUGy2H9fXgLftHwYRAPE5AhDrKr8BxznJsK2CLwfNRqPjaAxfdGHbD9qeK7GioZ2Qn0J4my8W3y2xseacTd3Wn/hks+IvVz1Lfgot2h/BXzTrqXBpD7aanBAe+OwaW5MGDN/qI2rMPR6xSLWJKiHqDVCr0pHhj0JNimiwHmx0DgYkPVkrtij64l/SdV+2RA/cDmbbnnwk9W0gX/MTw6FyN8WPyplWQHiLYhoPLq3nBUxRTsoHC4Yze6F92L+qfqFo03zprUbG+IVfPMD9uPsjS4iVgBW88hNYJzgtHo4gq9lpTkzEPWDmgl1HDn4zHopVtypGNWkT2yRZoxfXA/D2AY2hpOX49tB8pqPA84qsvBgPYTfxL35fo2A/hGsBKQEBUxRfrms+Q/ynZLebw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 04:34:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:43688 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbfFXIep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:34:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E42722B;
+        Mon, 24 Jun 2019 01:34:44 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B41B3F71E;
+        Mon, 24 Jun 2019 01:34:43 -0700 (PDT)
+Subject: Re: [PATCH v2 13/28] drivers: Introduce
+ class_find_device_by_of_node() helper
+To:     peda@axentia.se, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org, atull@kernel.org,
+        mdf@kernel.org, linux-fpga@vger.kernel.org, broonie@kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        andrew@lunn.ch, lgirdwood@gmail.com, jslaby@suse.com
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-14-git-send-email-suzuki.poulose@arm.com>
+ <325e46fd-a480-78ed-81fd-55e993fbc06f@axentia.se>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <5cf1a8e2-bb1e-b6bc-32fe-93db0a6b5efd@arm.com>
+Date:   Mon, 24 Jun 2019 09:34:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0c1c281-f7d6-4fcf-9550-08d6f87ebcbb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 08:34:13.9239
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2387
+In-Reply-To: <325e46fd-a480-78ed-81fd-55e993fbc06f@axentia.se>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q09ORklHX0NBTl9MRURTIGlzIGRlcHJlY2F0ZWQuIFdoZW4gdHJ5aW5nIHRvIHVzZSB0aGUgZ2Vu
-ZXJpYyBuZXRkZXYNCnRyaWdnZXIgYXMgc3VnZ2VzdGVkLCB0aGVyZSdzIGEgc21hbGwgaW5jb25z
-aXN0ZW5jeSB3aXRoIHRoZSBsaW5rDQpwcm9wZXJ0eTogVGhlIExFRCBpcyBvbiBpbml0aWFsbHks
-IHN0YXlzIG9uIHdoZW4gdGhlIGRldmljZSBpcyBicm91Z2h0DQp1cCwgYW5kIHRoZW4gdHVybnMg
-b2ZmIChhcyBleHBlY3RlZCkgd2hlbiB0aGUgZGV2aWNlIGlzIGJyb3VnaHQgZG93bi4NCg0KTWFr
-ZSBzdXJlIHRoZSBMRUQgYWx3YXlzIHJlZmxlY3RzIHRoZSBzdGF0ZSBvZiB0aGUgQ0FOIGRldmlj
-ZS4NCg0KU2lnbmVkLW9mZi1ieTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0Bw
-cmV2YXMuZGs+DQotLS0NCiBkcml2ZXJzL25ldC9jYW4vZGV2LmMgfCAxICsNCiAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2Nhbi9kZXYu
-YyBiL2RyaXZlcnMvbmV0L2Nhbi9kZXYuYw0KaW5kZXggYzA1ZTRkNTBkNDNkLi5mYWQyN2FjZTYy
-NDggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9jYW4vZGV2LmMNCisrKyBiL2RyaXZlcnMvbmV0
-L2Nhbi9kZXYuYw0KQEAgLTEyNjAsNiArMTI2MCw3IEBAIGludCByZWdpc3Rlcl9jYW5kZXYoc3Ry
-dWN0IG5ldF9kZXZpY2UgKmRldikNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KIAlkZXYtPnJ0bmxf
-bGlua19vcHMgPSAmY2FuX2xpbmtfb3BzOw0KKwluZXRpZl9jYXJyaWVyX29mZihkZXYpOw0KIAly
-ZXR1cm4gcmVnaXN0ZXJfbmV0ZGV2KGRldik7DQogfQ0KIEVYUE9SVF9TWU1CT0xfR1BMKHJlZ2lz
-dGVyX2NhbmRldik7DQotLSANCjIuMjAuMQ0KDQo=
+Hi Peter,
+
+On 22/06/2019 06:25, Peter Rosin wrote:
+> On 2019-06-14 19:54, Suzuki K Poulose wrote:
+>> Add a wrapper to class_find_device() to search for a device
+>> by the of_node pointer, reusing the generic match function.
+>> Also convert the existing users to make use of the new helper.
+>>
+>> Cc: Alan Tull <atull@kernel.org>
+>> Cc: Moritz Fischer <mdf@kernel.org>
+>> Cc: linux-fpga@vger.kernel.org
+>> Cc: Peter Rosin <peda@axentia.se>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: Florian Fainelli <f.fainelli@gmail.com>
+>> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: Andrew Lunn <andrew@lunn.ch>
+>> Cc: Liam Girdwood <lgirdwood@gmail.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: Jiri Slaby <jslaby@suse.com>
+>> Acked-by: Mark Brown <broonie@kernel.org>
+>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>> Reviewed-by: Peter Rosin <peda@axentia.se>
+> 
+> Whoooa! I reviewed only the drivers/mux/core.c changes when this was done
+> in a series of much smaller patches. This tag makes it seem as if I have
+> reviewed the whole thing, which I had not done when you added this tag out
+> of the blue.
+
+Apologies for the surprise. The patch was simply squashed with the change that
+introduced the "helper" to better aid the reviewers, based on suggestions on the
+list. I kept your tags, only because there were no changes, but some additional
+context on the core driver.
+
+> 
+> Now, this stuff is trivial and by now I have looked at the other files
+> and it all seems simple enough. So, you can keep the tag, but it is NOT
+> ok to handle tags like you have done here.
+
+Sure, I will keep that in mind.
+
+Cheers
+Suzuki
