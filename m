@@ -4,180 +4,314 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F65C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B13C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66620204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4646204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbfFXQwO (ORCPT
+        id S1732254AbfFXQxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:52:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:54906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfFXQwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:52:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABF5E360;
-        Mon, 24 Jun 2019 09:52:12 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 223FE3F71E;
-        Mon, 24 Jun 2019 09:52:10 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 17:52:01 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steve Capper <Steve.Capper@arm.com>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "david@redhat.com" <david@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        James Morse <James.Morse@arm.com>,
-        "cpandya@codeaurora.org" <cpandya@codeaurora.org>,
-        "arunks@codeaurora.org" <arunks@codeaurora.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        Ard Biesheuvel <Ard.Biesheuvel@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH V6 3/3] arm64/mm: Enable memory hot remove
-Message-ID: <20190624165148.GA9847@lakrids.cambridge.arm.com>
-References: <1560917860-26169-1-git-send-email-anshuman.khandual@arm.com>
- <1560917860-26169-4-git-send-email-anshuman.khandual@arm.com>
- <20190621143540.GA3376@capper-debian.cambridge.arm.com>
+        Mon, 24 Jun 2019 12:53:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58542 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728010AbfFXQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:53:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 873ECAE74;
+        Mon, 24 Jun 2019 16:53:43 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 254671E2F23; Mon, 24 Jun 2019 18:53:43 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 18:53:43 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
+Message-ID: <20190624165343.GP32376@quack2.suse.cz>
+References: <20190615182453.843275-1-tj@kernel.org>
+ <20190615182453.843275-5-tj@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190621143540.GA3376@capper-debian.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190615182453.843275-5-tj@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 03:35:53PM +0100, Steve Capper wrote:
-> Hi Anshuman,
+On Sat 15-06-19 11:24:48, Tejun Heo wrote:
+> When a shared kthread needs to issue a bio for a cgroup, doing so
+> synchronously can lead to priority inversions as the kthread can be
+> trapped waiting for that cgroup.  This patch implements
+> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
+> to a dedicated per-blkcg work item to avoid such priority inversions.
 > 
-> On Wed, Jun 19, 2019 at 09:47:40AM +0530, Anshuman Khandual wrote:
-> > The arch code for hot-remove must tear down portions of the linear map and
-> > vmemmap corresponding to memory being removed. In both cases the page
-> > tables mapping these regions must be freed, and when sparse vmemmap is in
-> > use the memory backing the vmemmap must also be freed.
-> > 
-> > This patch adds a new remove_pagetable() helper which can be used to tear
-> > down either region, and calls it from vmemmap_free() and
-> > ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
-> > backing memory will be freed.
-> > 
-> > remove_pagetable() makes two distinct passes over the kernel page table.
-> > In the first pass it unmaps, invalidates applicable TLB cache and frees
-> > backing memory if required (vmemmap) for each mapped leaf entry. In the
-> > second pass it looks for empty page table sections whose page table page
-> > can be unmapped, TLB invalidated and freed.
-> > 
-> > While freeing intermediate level page table pages bail out if any of its
-> > entries are still valid. This can happen for partially filled kernel page
-> > table either from a previously attempted failed memory hot add or while
-> > removing an address range which does not span the entire page table page
-> > range.
-> > 
-> > The vmemmap region may share levels of table with the vmalloc region.
-> > There can be conflicts between hot remove freeing page table pages with
-> > a concurrent vmalloc() walking the kernel page table. This conflict can
-> > not just be solved by taking the init_mm ptl because of existing locking
-> > scheme in vmalloc(). Hence unlike linear mapping, skip freeing page table
-> > pages while tearing down vmemmap mapping.
-> > 
-> > While here update arch_add_memory() to handle __add_pages() failures by
-> > just unmapping recently added kernel linear mapping. Now enable memory hot
-> > remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
-> > 
-> > This implementation is overall inspired from kernel page table tear down
-> > procedure on X86 architecture.
-> > 
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > ---
+> This will be used to fix priority inversions in btrfs compression and
+> should be generally useful as we grow filesystem support for
+> comprehensive IO control.
 > 
-> FWIW:
-> Acked-by: Steve Capper <steve.capper@arm.com>
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Cc: Chris Mason <clm@fb.com>
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  block/blk-cgroup.c          | 53 +++++++++++++++++++++++++++++++++++++
+>  block/blk-core.c            |  3 +++
+>  include/linux/backing-dev.h |  1 +
+>  include/linux/blk-cgroup.h  | 16 ++++++++++-
+>  include/linux/blk_types.h   | 10 +++++++
+>  include/linux/writeback.h   | 12 ++++++---
+>  6 files changed, 91 insertions(+), 4 deletions(-)
 > 
-> One minor comment below though.
+> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> index 07600d3c9520..48239bb93fbe 100644
+> --- a/block/blk-cgroup.c
+> +++ b/block/blk-cgroup.c
+> @@ -53,6 +53,7 @@ static struct blkcg_policy *blkcg_policy[BLKCG_MAX_POLS];
+>  static LIST_HEAD(all_blkcgs);		/* protected by blkcg_pol_mutex */
+>  
+>  static bool blkcg_debug_stats = false;
+> +static struct workqueue_struct *blkcg_punt_bio_wq;
+>  
+>  static bool blkcg_policy_enabled(struct request_queue *q,
+>  				 const struct blkcg_policy *pol)
+> @@ -88,6 +89,8 @@ static void __blkg_release(struct rcu_head *rcu)
+>  
+>  	percpu_ref_exit(&blkg->refcnt);
+>  
+> +	WARN_ON(!bio_list_empty(&blkg->async_bios));
+> +
+>  	/* release the blkcg and parent blkg refs this blkg has been holding */
+>  	css_put(&blkg->blkcg->css);
+>  	if (blkg->parent)
+> @@ -113,6 +116,23 @@ static void blkg_release(struct percpu_ref *ref)
+>  	call_rcu(&blkg->rcu_head, __blkg_release);
+>  }
+>  
+> +static void blkg_async_bio_workfn(struct work_struct *work)
+> +{
+> +	struct blkcg_gq *blkg = container_of(work, struct blkcg_gq,
+> +					     async_bio_work);
+> +	struct bio_list bios = BIO_EMPTY_LIST;
+> +	struct bio *bio;
+> +
+> +	/* as long as there are pending bios, @blkg can't go away */
+> +	spin_lock_bh(&blkg->async_bio_lock);
+> +	bio_list_merge(&bios, &blkg->async_bios);
+> +	bio_list_init(&blkg->async_bios);
+> +	spin_unlock_bh(&blkg->async_bio_lock);
+> +
+> +	while ((bio = bio_list_pop(&bios)))
+> +		submit_bio(bio);
+> +}
+> +
+>  /**
+>   * blkg_alloc - allocate a blkg
+>   * @blkcg: block cgroup the new blkg is associated with
+> @@ -138,6 +158,9 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+>  
+>  	blkg->q = q;
+>  	INIT_LIST_HEAD(&blkg->q_node);
+> +	spin_lock_init(&blkg->async_bio_lock);
+> +	bio_list_init(&blkg->async_bios);
+> +	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
+>  	blkg->blkcg = blkcg;
+>  
+>  	for (i = 0; i < BLKCG_MAX_POLS; i++) {
+> @@ -1583,6 +1606,25 @@ void blkcg_policy_unregister(struct blkcg_policy *pol)
+>  }
+>  EXPORT_SYMBOL_GPL(blkcg_policy_unregister);
+>  
+> +bool __blkcg_punt_bio_submit(struct bio *bio)
+> +{
+> +	struct blkcg_gq *blkg = bio->bi_blkg;
+> +
+> +	/* consume the flag first */
+> +	bio->bi_opf &= ~REQ_CGROUP_PUNT;
+> +
+> +	/* never bounce for the root cgroup */
+> +	if (!blkg->parent)
+> +		return false;
+> +
+> +	spin_lock_bh(&blkg->async_bio_lock);
+> +	bio_list_add(&blkg->async_bios, bio);
+> +	spin_unlock_bh(&blkg->async_bio_lock);
+> +
+> +	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
+> +	return true;
+> +}
+> +
+>  /*
+>   * Scale the accumulated delay based on how long it has been since we updated
+>   * the delay.  We only call this when we are adding delay, in case it's been a
+> @@ -1783,5 +1825,16 @@ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta)
+>  	atomic64_add(delta, &blkg->delay_nsec);
+>  }
+>  
+> +static int __init blkcg_init(void)
+> +{
+> +	blkcg_punt_bio_wq = alloc_workqueue("blkcg_punt_bio",
+> +					    WQ_MEM_RECLAIM | WQ_FREEZABLE |
+> +					    WQ_UNBOUND | WQ_SYSFS, 0);
+> +	if (!blkcg_punt_bio_wq)
+> +		return -ENOMEM;
+> +	return 0;
+> +}
+> +subsys_initcall(blkcg_init);
+> +
+>  module_param(blkcg_debug_stats, bool, 0644);
+>  MODULE_PARM_DESC(blkcg_debug_stats, "True if you want debug stats, false if not");
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index a55389ba8779..5879c1ec044d 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1165,6 +1165,9 @@ EXPORT_SYMBOL_GPL(direct_make_request);
+>   */
+>  blk_qc_t submit_bio(struct bio *bio)
+>  {
+> +	if (blkcg_punt_bio_submit(bio))
+> +		return BLK_QC_T_NONE;
+> +
+>  	/*
+>  	 * If it's a regular read/write or a barrier with data attached,
+>  	 * go through the normal accounting stuff before submission.
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index f9b029180241..35b31d176f74 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -48,6 +48,7 @@ extern spinlock_t bdi_lock;
+>  extern struct list_head bdi_list;
+>  
+>  extern struct workqueue_struct *bdi_wq;
+> +extern struct workqueue_struct *bdi_async_bio_wq;
+>  
+>  static inline bool wb_has_dirty_io(struct bdi_writeback *wb)
+>  {
+> diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+> index 76c61318fda5..ffb2f88e87c6 100644
+> --- a/include/linux/blk-cgroup.h
+> +++ b/include/linux/blk-cgroup.h
+> @@ -134,13 +134,17 @@ struct blkcg_gq {
+>  
+>  	struct blkg_policy_data		*pd[BLKCG_MAX_POLS];
+>  
+> -	struct rcu_head			rcu_head;
+> +	spinlock_t			async_bio_lock;
+> +	struct bio_list			async_bios;
+> +	struct work_struct		async_bio_work;
+>  
+>  	atomic_t			use_delay;
+>  	atomic64_t			delay_nsec;
+>  	atomic64_t			delay_start;
+>  	u64				last_delay;
+>  	int				last_use;
+> +
+> +	struct rcu_head			rcu_head;
+>  };
+>  
+>  typedef struct blkcg_policy_data *(blkcg_pol_alloc_cpd_fn)(gfp_t gfp);
+> @@ -763,6 +767,15 @@ static inline bool blk_throtl_bio(struct request_queue *q, struct blkcg_gq *blkg
+>  				  struct bio *bio) { return false; }
+>  #endif
+>  
+> +bool __blkcg_punt_bio_submit(struct bio *bio);
+> +
+> +static inline bool blkcg_punt_bio_submit(struct bio *bio)
+> +{
+> +	if (bio->bi_opf & REQ_CGROUP_PUNT)
+> +		return __blkcg_punt_bio_submit(bio);
+> +	else
+> +		return false;
+> +}
+>  
+>  static inline void blkcg_bio_issue_init(struct bio *bio)
+>  {
+> @@ -910,6 +923,7 @@ static inline char *blkg_path(struct blkcg_gq *blkg) { return NULL; }
+>  static inline void blkg_get(struct blkcg_gq *blkg) { }
+>  static inline void blkg_put(struct blkcg_gq *blkg) { }
+>  
+> +static inline bool blkcg_punt_bio_submit(struct bio *bio) { return false; }
+>  static inline void blkcg_bio_issue_init(struct bio *bio) { }
+>  static inline bool blkcg_bio_issue_check(struct request_queue *q,
+>  					 struct bio *bio) { return true; }
+> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+> index 791fee35df88..e8b42a786315 100644
+> --- a/include/linux/blk_types.h
+> +++ b/include/linux/blk_types.h
+> @@ -321,6 +321,14 @@ enum req_flag_bits {
+>  	__REQ_RAHEAD,		/* read ahead, can fail anytime */
+>  	__REQ_BACKGROUND,	/* background IO */
+>  	__REQ_NOWAIT,           /* Don't wait if request will block */
+> +	/*
+> +	 * When a shared kthread needs to issue a bio for a cgroup, doing
+> +	 * so synchronously can lead to priority inversions as the kthread
+> +	 * can be trapped waiting for that cgroup.  CGROUP_PUNT flag makes
+> +	 * submit_bio() punt the actual issuing to a dedicated per-blkcg
+> +	 * work item to avoid such priority inversions.
+> +	 */
+> +	__REQ_CGROUP_PUNT,
+>  
+>  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
+>  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
+> @@ -347,6 +355,8 @@ enum req_flag_bits {
+>  #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
+>  #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
+>  #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
+> +#define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+> +
+>  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
+>  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
+>  
+> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+> index 800ee031e88a..be602c42aab8 100644
+> --- a/include/linux/writeback.h
+> +++ b/include/linux/writeback.h
+> @@ -70,6 +70,7 @@ struct writeback_control {
+>  	unsigned range_cyclic:1;	/* range_start is cyclic */
+>  	unsigned for_sync:1;		/* sync(2) WB_SYNC_ALL writeback */
+>  	unsigned no_wbc_acct:1;		/* skip wbc IO accounting */
+> +	unsigned punt_to_cgroup:1;	/* cgrp punting, see __REQ_CGROUP_PUNT */
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+>  	struct bdi_writeback *wb;	/* wb this writeback is issued under */
+>  	struct inode *inode;		/* inode being written out */
+> @@ -86,12 +87,17 @@ struct writeback_control {
+>  
+>  static inline int wbc_to_write_flags(struct writeback_control *wbc)
+>  {
+> +	int flags = 0;
+> +
+> +	if (wbc->punt_to_cgroup)
+> +		flags = REQ_CGROUP_PUNT;
+> +
+>  	if (wbc->sync_mode == WB_SYNC_ALL)
+> -		return REQ_SYNC;
+> +		flags |= REQ_SYNC;
+>  	else if (wbc->for_kupdate || wbc->for_background)
+> -		return REQ_BACKGROUND;
+> +		flags |= REQ_BACKGROUND;
+>  
+> -	return 0;
+> +	return flags;
+>  }
+>  
+>  static inline struct cgroup_subsys_state *
+> -- 
+> 2.17.1
 > 
-> >  arch/arm64/Kconfig  |   3 +
-> >  arch/arm64/mm/mmu.c | 290 ++++++++++++++++++++++++++++++++++++++++++++++++++--
-> >  2 files changed, 284 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index 6426f48..9375f26 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -270,6 +270,9 @@ config HAVE_GENERIC_GUP
-> >  config ARCH_ENABLE_MEMORY_HOTPLUG
-> >  	def_bool y
-> >  
-> > +config ARCH_ENABLE_MEMORY_HOTREMOVE
-> > +	def_bool y
-> > +
-> >  config SMP
-> >  	def_bool y
-> >  
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index 93ed0df..9e80a94 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -733,6 +733,250 @@ int kern_addr_valid(unsigned long addr)
-> >  
-> >  	return pfn_valid(pte_pfn(pte));
-> >  }
-> > +
-> > +#ifdef CONFIG_MEMORY_HOTPLUG
-> > +static void free_hotplug_page_range(struct page *page, size_t size)
-> > +{
-> > +	WARN_ON(!page || PageReserved(page));
-> > +	free_pages((unsigned long)page_address(page), get_order(size));
-> > +}
-> 
-> We are dealing with power of 2 number of pages, it makes a lot more
-> sense (to me) to replace the size parameter with order.
-> 
-> Also, all the callers are for known compile-time sizes, so we could just
-> translate the size parameter as follows to remove any usage of get_order?
-> PAGE_SIZE -> 0
-> PMD_SIZE -> PMD_SHIFT - PAGE_SHIFT
-> PUD_SIZE -> PUD_SHIFT - PAGE_SHIFT
-
-Now that I look at this again, the above makes sense to me.
-
-I'd requested the current form (which I now realise is broken), since
-back in v2 the code looked like:
-
-static void free_pagetable(struct page *page, int order)
-{
-	...
-	free_pages((unsigned long)page_address(page), order);
-	...
-}
-
-... with callsites looking like:
-
-free_pagetable(pud_page(*pud), get_order(PUD_SIZE));
-
-... which I now see is off by PAGE_SHIFT, and we inherited that bug in
-the current code, so the calculated order is vastly larger than it
-should be. It's worrying that doesn't seem to be caught by anything in
-testing. :/
-
-Anshuman, could you please fold in Steve's suggested change? I'll look
-at the rest of the series shortly, so no need to resend that right away,
-but it would be worth sorting out.
-
-Thanks,
-Mark.
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
