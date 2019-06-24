@@ -2,90 +2,57 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88236C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694532133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C655E212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfFXOSh (ORCPT
+        id S1727112AbfFXOTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:18:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38153 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfFXOSg (ORCPT
+        Mon, 24 Jun 2019 10:19:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:54580 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfFXOTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:18:36 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfPni-0005Vw-8Q; Mon, 24 Jun 2019 16:18:30 +0200
-Date:   Mon, 24 Jun 2019 16:18:28 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-cc:     linux-arch@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
-In-Reply-To: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1906241613280.32342@nanos.tec.linutronix.de>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com> <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Mon, 24 Jun 2019 10:19:08 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 017FB15040FFE;
+        Mon, 24 Jun 2019 07:19:07 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 07:19:04 -0700 (PDT)
+Message-Id: <20190624.071904.218810557862357397.davem@davemloft.net>
+To:     xuechaojing@huawei.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        luoshaokai@huawei.com, cloud.wangxiaoyun@huawei.com,
+        chiqijun@huawei.com, wulike1@huawei.com
+Subject: Re: [PATCH net-next v2] hinic: implement the statistical interface
+ of ethtool
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190624035012.7221-1-xuechaojing@huawei.com>
+References: <20190624035012.7221-1-xuechaojing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 07:19:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vincenzo,
+From: Xue Chaojing <xuechaojing@huawei.com>
+Date: Mon, 24 Jun 2019 03:50:12 +0000
 
-On Mon, 24 Jun 2019, Thomas Gleixner wrote:
+> This patch implement the statistical interface of ethtool, user can use
+> ethtool -S to show hinic statistics.
+> 
+> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
 
-> I did not merge the ARM and MIPS parts as they lack any form of
-> acknowlegment from their maintainers. Please talk to those folks. If they
-> ack/review the changes then I can pick them up and they go into 5.3 or they
-> have to go in a later cycle. Nevertheless it was well worth the trouble to
-> have those conversions done to confirm that the new common library fits a
-> bunch of different architectures.
-
-I talked to Russell King and he suggested to file the ARM parts into his
-patch system and he'll pick them up after 5.3-rc1.
-
-   https://www.arm.linux.org.uk/developer/patches/
-
-I paged out how to deal with it, but you'll surely manage :)
-
-Thanks,
-
-	tglx
+Applied.
