@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD0C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E865C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5E2208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACD1208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370322;
-	bh=ujae7JQ+lu0jKDwdkiYlRT2lJU6O7ehCmL2a/FuCdj0=;
+	s=default; t=1561370325;
+	bh=GojfBNqMKITgPki3u0hexU7f7xe5o+EXlKwf4BahSRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xg/UWp+1KSk2d3pZFRL+JC+PS+7PZWYDVkPn1XuC1ckk1Z6Sdf7cL6xqEroPHI74B
-	 IVM9g21vbCbl3aD0bYaQG5t1Klqq8XeZO0ZHbvWrvKcp7lqPw4/VyvazB/Md8Hg0BE
-	 NuAL948b4ls594H7XoiN9AoER1ctD1wx+mJ+t64g=
+	b=fQvQw3pGiCXYXPxSGodVAWIIUYjH5DdF/j7uGeX5u1oRPP3sjrCre+1Nme6HfMxlA
+	 7cHnuW2vC/eLm8hxjBPfZF6BW36YvMC5i9Q24zMM0Y63NoDW5YoTAtxOGDQN8UMPAk
+	 HpkWlkzgRx3MYttQH/X9yt0fKG4KiVYv5rhN6S7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfFXJ6l (ORCPT
+        id S1729076AbfFXJ6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbfFXJ6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:38 -0400
+        id S1729055AbfFXJ6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:41 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22E38205ED;
-        Mon, 24 Jun 2019 09:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03282133F;
+        Mon, 24 Jun 2019 09:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370317;
-        bh=ujae7JQ+lu0jKDwdkiYlRT2lJU6O7ehCmL2a/FuCdj0=;
+        s=default; t=1561370320;
+        bh=GojfBNqMKITgPki3u0hexU7f7xe5o+EXlKwf4BahSRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j0DaWepEGls/gpPWi+UmAcIReANu/WvFHGl/jmvlY/2hNL15G3n2VToKPOFuQ2k5N
-         xUqHONiu9FqakKbykva5T+7jvbcgdpSBlQaP19b+n7R/2pr2ozIEcjvsgSops/4/fJ
-         wFarbwAl6MBv2ShhIbgwXASSQnfM/0vf+LFxreU4=
+        b=0yERKt8gCY1yX+G2nfIRhbtLHu8mKpftyS+crV+Z3BBUixvyFVF3gMhp+pKaNjyRc
+         TtPTQ9+xZmKVlY3QWy+Lj7xAppTimiiFtzuQN9fBQSgzgnbPpAT3rnVlKB4Xqzjn5k
+         KQ95bSSZlUTW3X1/kDAwK25SC6v5gRChJ+pdRW0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/51] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
-Date:   Mon, 24 Jun 2019 17:56:46 +0800
-Message-Id: <20190624092309.643476580@linuxfoundation.org>
+Subject: [PATCH 4.14 29/51] drm/arm/hdlcd: Actually validate CRTC modes
+Date:   Mon, 24 Jun 2019 17:56:47 +0800
+Message-Id: <20190624092309.724893444@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -61,40 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
+[ Upstream commit b96151edced4edb6a18aa89a5fa02c7066efff45 ]
 
-Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
-equals to 2.
+Rather than allowing any old mode through, then subsequently refusing
+unmatchable clock rates in atomic_check when it's too late to back out
+and pick a different mode, let's do that validation up-front where it
+will cause unsupported modes to be correctly pruned in the first place.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This also eliminates an issue whereby a perceived clock rate of 0 would
+cause atomic disable to fail and prevent the module from being unloaded.
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/arm/hdlcd_crtc.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 5208bf61df10..9ba699cbdbc5 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1788,6 +1788,7 @@ static void mtk_poll_controller(struct net_device *dev)
+diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+index 72b22b805412..4a108660cc8f 100644
+--- a/drivers/gpu/drm/arm/hdlcd_crtc.c
++++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
+@@ -186,20 +186,19 @@ static void hdlcd_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	clk_disable_unprepare(hdlcd->clk);
+ }
  
- static int mtk_start_dma(struct mtk_eth *eth)
+-static int hdlcd_crtc_atomic_check(struct drm_crtc *crtc,
+-				   struct drm_crtc_state *state)
++static enum drm_mode_status hdlcd_crtc_mode_valid(struct drm_crtc *crtc,
++		const struct drm_display_mode *mode)
  {
-+	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
- 	int err;
+ 	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+-	struct drm_display_mode *mode = &state->adjusted_mode;
+ 	long rate, clk_rate = mode->clock * 1000;
  
- 	err = mtk_dma_init(eth);
-@@ -1804,7 +1805,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 		MTK_QDMA_GLO_CFG);
+ 	rate = clk_round_rate(hdlcd->clk, clk_rate);
+ 	if (rate != clk_rate) {
+ 		/* clock required by mode not supported by hardware */
+-		return -EINVAL;
++		return MODE_NOCLOCK;
+ 	}
  
- 	mtk_w32(eth,
--		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
-+		MTK_RX_DMA_EN | rx_2b_offset |
- 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
- 		MTK_PDMA_GLO_CFG);
+-	return 0;
++	return MODE_OK;
+ }
  
+ static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
+@@ -220,7 +219,7 @@ static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
+ }
+ 
+ static const struct drm_crtc_helper_funcs hdlcd_crtc_helper_funcs = {
+-	.atomic_check	= hdlcd_crtc_atomic_check,
++	.mode_valid	= hdlcd_crtc_mode_valid,
+ 	.atomic_begin	= hdlcd_crtc_atomic_begin,
+ 	.atomic_enable	= hdlcd_crtc_atomic_enable,
+ 	.atomic_disable	= hdlcd_crtc_atomic_disable,
 -- 
 2.20.1
 
