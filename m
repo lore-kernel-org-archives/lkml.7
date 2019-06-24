@@ -2,100 +2,147 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFF1C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2854C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36589208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983242083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtT27z9m"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qeef3+La"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfFXFZ0 (ORCPT
+        id S1726550AbfFXF0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:25:26 -0400
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:33340 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFXFZ0 (ORCPT
+        Mon, 24 Jun 2019 01:26:19 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3420 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXF0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:25:26 -0400
-Received: by mail-pf1-f180.google.com with SMTP id x15so6837717pfq.0;
-        Sun, 23 Jun 2019 22:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V9rJzZcXuoLDtrkFWHRyX992s5fq2c3C47qbTibbjGA=;
-        b=NtT27z9mEL3sPywpIcjvYkcqf8gzwetcS51Vcbi96TFxCO0UFvLYs13K4iBJOpjnbO
-         iwmPl5GZFxyWjkBYeaaDN51L5o1dz0qftaZx2MioHfap6X1STSxvfQTI4xUD8E2mMjOn
-         Ror3Od8S5vm1D83gV4yj9rWjpfDXygKc5dQMp8MJn2DEEoJMygwAmtKwvkJoqcc9nvEt
-         opSyDNMOsQBpN5NE6sgEHs23wdkYnSBogOB6+jCYkZJHi77Vdg0KpWARSd3S9ySOMz6J
-         stNpYv31sawg/1ll66XGLDsmjl3Sn5fwbV4Er71I/CBoh3lgbrONGa9XVbH7NPQ1xYjL
-         G0oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V9rJzZcXuoLDtrkFWHRyX992s5fq2c3C47qbTibbjGA=;
-        b=tD6TEBKJmMPw5abLZO1ROUImk6OU6e2ZlJX2tdh8y9m04O7KuRgsuXvpUiqiD5UWDl
-         L/pv78LBIXRTu1pnNIX6MzUMOSzQAWh9QDzNd+pVoTFcGd/N9UIxDpt9dC0a43crrQKZ
-         6g1uHrU5WU88CKq2DNxaEtJ0qznMYkb606rH0cmwwHR40s+/VBV+osDeOYrxXtPaXXa6
-         JElruSbKsK4JAD5MYJjJyXpLz1RklhonxSi1ZsciOM29gvlM/1f0xus2JxdwlNtZBZbm
-         PuCc525/yfg5+6/hYb00x2/VTM/V8zhjybU5uf5aB652yIRHaoWypzipgP0gNNecROIM
-         QGJQ==
-X-Gm-Message-State: APjAAAWDrnwRK7CMaXhex/WaaB5OjCvoC4rQiazmUbB1O6UrB7RrOHy4
-        2aoLX10kvolBboCbfEZcMUU=
-X-Google-Smtp-Source: APXvYqzl3tWhsX9AhmihDCClNnGFkHMUpa0GR83mr4cNgtGbHnwb3Lp47MsL81G/Qfoy6DM/N/XsjQ==
-X-Received: by 2002:a63:735d:: with SMTP id d29mr18372263pgn.276.1561353925515;
-        Sun, 23 Jun 2019 22:25:25 -0700 (PDT)
-Received: from btopel-mobl.ger.intel.com ([192.55.54.44])
-        by smtp.gmail.com with ESMTPSA id y193sm9333002pgd.41.2019.06.23.22.25.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 23 Jun 2019 22:25:24 -0700 (PDT)
-From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, netdev@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        magnus.karlsson@intel.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jonathan.lemon@gmail.com
-Subject: [PATCH bpf-next] MAINTAINERS: add reviewer to maintainers entry
-Date:   Mon, 24 Jun 2019 07:24:55 +0200
-Message-Id: <20190624052455.10659-1-bjorn.topel@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 24 Jun 2019 01:26:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d105ef80000>; Sun, 23 Jun 2019 22:26:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 23 Jun 2019 22:26:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 22:26:17 -0700
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 05:26:17 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Jun 2019 05:26:17 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d105ef60000>; Sun, 23 Jun 2019 22:26:17 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
+        <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V8 1/3] PCI: dwc: Add API support to de-initialize host
+Date:   Mon, 24 Jun 2019 10:56:09 +0530
+Message-ID: <20190624052611.11279-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561353976; bh=dzve3ASwEKO4Dcux6cF7QV4x5EvgKnFRmP/2xPrYdWs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=qeef3+LasOVux4RgBLarlrCsiyHDzV8Kdgz+nfW+ViH66Z4dbUdgoRm3m7X0/kwkj
+         DZv+JA1KVoRvsYrTcHH+30XbDIuWifTToXxoyrRabAs/AR6xoR3PI7Q8skXjj20pYj
+         qY8PnIDPFu/xUOlzZgipBJa3BBXIG82a2r2IX6RDBgr3jCQAUsM1WKmDa0Rv04u9xZ
+         zUyVvLymZo6mddhh30J5kDjci3gS9PchKZv2nYiTQIRVZ/LnfHOlBw0F5rQc2672uH
+         cnuWJ5KcDd+GEcCxqyTuwGn4OOcY68NqX3fFPOk3rA3OCl0878fRC34FLcHNKvlyKJ
+         aCmXqUNOh6aFA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+Add an API to group all the tasks to be done to de-initialize host which
+can then be called by any DesignWare core based driver implementations
+while adding .remove() support in their respective drivers.
 
-Jonathan Lemon has volunteered as an official AF_XDP reviewer. Thank
-you, Jonathan!
-
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes from v7:
+* None
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0cfe98a6761a..dd875578d53c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17284,6 +17284,7 @@ N:	xdp
- XDP SOCKETS (AF_XDP)
- M:	Björn Töpel <bjorn.topel@intel.com>
- M:	Magnus Karlsson <magnus.karlsson@intel.com>
-+R:	Jonathan Lemon <jonathan.lemon@gmail.com>
- L:	netdev@vger.kernel.org
- L:	bpf@vger.kernel.org
- S:	Maintained
+Changes from v6:
+* None
+
+Changes from v5:
+* None
+
+Changes from v4:
+* None
+
+Changes from v3:
+* Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+  dw_pcie_free_msi() API to mimic init path
+
+Changes from v2:
+* Rebased on top of linux-next top of the tree branch
+
+Changes from v1:
+* s/Designware/DesignWare
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 77db32529319..d069e4290180 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
+ 
++void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++	pci_stop_root_bus(pp->root_bus);
++	pci_remove_root_bus(pp->root_bus);
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
++}
++
+ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				     u32 devfn, int where, int size, u32 *val,
+ 				     bool write)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index b8993f2b78df..14762e262758 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+ void dw_pcie_free_msi(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
++void dw_pcie_host_deinit(struct pcie_port *pp);
+ int dw_pcie_allocate_domains(struct pcie_port *pp);
+ #else
+ static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+@@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static inline void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++}
++
+ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+ {
+ 	return 0;
 -- 
-2.20.1
+2.17.1
 
