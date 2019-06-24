@@ -2,94 +2,115 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58EAC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A9DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C547D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB7B2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Xaw+C38e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfFXKmp (ORCPT
+        id S1729433AbfFXKms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:42:45 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:57125 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbfFXKmp (ORCPT
+        Mon, 24 Jun 2019 06:42:48 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:38358 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbfFXKmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:42:45 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BE47B100005;
-        Mon, 24 Jun 2019 10:42:38 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 12:42:34 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Vincent Donnefort <vdonnefort@gmail.com>,
-        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] rtc: pcf8563: Fix unhandled interrupt storm
-Message-ID: <20190624104234.GG3133@piout.net>
-References: <20190604042337.26129-1-wens@kernel.org>
- <20190620162220.GA23549@piout.net>
- <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
+        Mon, 24 Jun 2019 06:42:47 -0400
+Received: by mail-wm1-f54.google.com with SMTP id s15so12831873wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 03:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q883E1TSKpw+8Z8/vLIrUQrvnvTA4vR/WV9GJinwpYU=;
+        b=Xaw+C38e/CezApMz3QojV7i85dRjg5/G7ci9YV2sEkBDlquzKE3G7aYXfiODpMzR2n
+         jENoHuyYNVLtcpuh4hVtnOmAG5Qe+hup+jI3lwgM1rGSyuS//JYi60L24r7bvaTHMz4N
+         ZJFx1wysOiBWC5RsWFsGsQBdhf2yqXzJvTcv4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q883E1TSKpw+8Z8/vLIrUQrvnvTA4vR/WV9GJinwpYU=;
+        b=lscfcvlf5qLy3s5QbzIaJfq20eatzUD5f2q8qYKLsYA/EuXlEMdkPfXs7XocYxAuEj
+         o7FgH9MSi4qgp7KZMZqKisSzPf+9GO3fSUzqTEmUL878shaBUMNtnod46sZitdeFBafx
+         syGXn40k/sAeZ2ZATR5YRGR5Zza/eAoN49EFl/o3khUkMwd9zwsL5ArnmIdlfjNV3I4s
+         +0M5vtGXbq4Dh/gJnr53S3e3BYRnD1QbLXJ1gScMm6oh034APKLCfFtxLMRqAAJ6M6Gx
+         tqBFkWqRmeolol9xIh2YWhAwXgq3hV0Og9pJpW3TOYQmQktRjmYfu5MOZzoFRQ13c7zQ
+         aT2g==
+X-Gm-Message-State: APjAAAXQfJ2eZXmrK6l8YE14aky4gw8PZpz68pvpfxIY9mXTdhUDC4Bv
+        IKgefWNgZQi74zJ1xeZDcLpR7s4QH2yZYpnMfOhidg==
+X-Google-Smtp-Source: APXvYqxT5XqU+T41zf4YRFiyF2TLqKZmo1od90mkk6zd77tdB3Ro93HS/rncirTRa/tO3JkD2WeJgwfrpiSW7rAL7qo=
+X-Received: by 2002:a1c:7d56:: with SMTP id y83mr15845237wmc.77.1561372964887;
+ Mon, 24 Jun 2019 03:42:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517152200.GI8945@kernel.org> <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
+ <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org> <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
+ <20190610151407.GS21245@kernel.org> <20190610152542.GA4132@kroah.com> <20190610191417.GW21245@kernel.org>
+In-Reply-To: <20190610191417.GW21245@kernel.org>
+From:   Ignat Korchagin <ignat@cloudflare.com>
+Date:   Mon, 24 Jun 2019 11:42:34 +0100
+Message-ID: <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
+Subject: Re: Linux 4.19 and GCC 9
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2019 18:34:29+0800, Chen-Yu Tsai wrote:
-> On Fri, Jun 21, 2019 at 12:22 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
+Hi Greg,
+
+> > For us it seems applying the following 4 mainline patches makes 4.19.x
+> > branch perf compile with GCC-9:
 > >
-> > On 04/06/2019 12:23:34+0800, Chen-Yu Tsai wrote:
-> > > From: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > Hi everyone,
-> > >
-> > > While bringing up my Pine H64, I encountered an interrupt storm from the
-> > > pcf8563 RTC. The RTC chip's interrupt line is shared with the PMIC, and
-> > > was not properly added to the device tree. Also, the driver was using an
-> > > trigger method incompatible with the PMIC, preventing the interrupt line
-> > > from being shared. Last, the driver only clears and masks the alarm
-> > > interrupt, while leaving the timer interrupt untouched. This is a
-> > > problem if previous systems left the timer interrupt enabled, and there
-> > > was an interrupt pending.
-> > >
-> > > This patch set fixes all three issues, one per patch.
-> > >
-> > > Please have a look.
-> > >
+> > 4d0f16d059ddb91424480d88473f7392f24aebdc: perf ui helpline: Use
+> > strlcpy() as a shorter form of strncpy() + explicit set nul
+> > b6313899f4ed2e76b8375cf8069556f5b94fbff0: perf help: Remove needless
+> > use of strncpy()
+> > 5192bde7d98c99f2cd80225649e3c2e7493722f7: perf header: Fix unchecked
+> > usage of strncpy()
+> > 97acec7df172cd1e450f81f5e293c0aa145a2797: perf data: Fix 'strncat may
+> > truncate' build failure with recent gcc
 > >
-> > I don't have that particular RTC so I can't test but the interrupt
-> > handling in pcf8563_irq seems problematic too. I guess the RTC will only
-> > trigger once per second because the call to pcf8563_set_alarm_mode will
-> > explicitely leave the alarm enabled. The core doesn't really care but it
-> > doesn't really expect the alarm to stay enabled. i.e. It will ensure the
-> > alarm is enabled again after setting it when necessary. I think it would
-> > be safer to simply clear both AIE and AF here. Could you test?
-> 
-> Yeah, that bit looked weird to me as well. And actually the alarm doesn't
-> go down to the second, only the minute.
-> 
-> Is there a test program I can use to test the alarms?
-> 
+> > I also checked that 4.19.49 compiles fine with GCC 9, although with a
+> > lot of warnings, mostly from objtool, like "warning: objtool:
+> > sock_register()+0xd: sibling call from callable instruction with
+> > modified stack frame". But it's a start.
+> >
+> > Can we apply the above-mentioned patches, please?
 
-Sure, tools/testing/selftests/rtc/rtctest.c if you use a recent enough
-version, it will test minute boundaries.
+> I'll look into these after the next round of kernels are released.  I
 
+Did you by any chance forget to queue these patches? :) (the build is
+still broken for GCC 9.1)
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> guess I'll go find a distro that has gcc9 on it to actually test
+> things...
+
+BTW, Arch already has GCC 9.1 package, so no need to compile your own
+anymore for testing:
+https://www.archlinux.org/packages/core/x86_64/gcc/
+
+Regards,
+Ignat
