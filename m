@@ -2,279 +2,156 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94723C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C4C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6373C212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E44212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:59:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="NFec1O8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfFXM7W (ORCPT
+        id S1730504AbfFXM7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:59:22 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:11206 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbfFXM7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:59:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 840FE3F669;
-        Mon, 24 Jun 2019 14:59:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1ArtfnyGGGGw; Mon, 24 Jun 2019 14:59:18 +0200 (CEST)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 32B2C3F4E9;
-        Mon, 24 Jun 2019 14:59:17 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 14:59:16 +0200
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>, laurentiu.tudor@nxp.com,
-        stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
-        JuergenUrban@gmx.de
-Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
- memory
-Message-ID: <20190624125916.GA2516@sx9>
-References: <20190605214622.GA22254@roeck-us.net>
- <20190611133223.GA30054@roeck-us.net>
- <20190611172654.GA2602@sx9>
- <20190611190343.GA18459@roeck-us.net>
- <20190613134033.GA2489@sx9>
- <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
- <20190613153414.GA909@sx9>
- <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
- <20190614142816.GA2574@sx9>
- <20190624063515.GA3296@lst.de>
+        Mon, 24 Jun 2019 08:59:35 -0400
+Received: from canardo.mork.no ([148.122.252.1]:34121 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728070AbfFXM7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 08:59:35 -0400
+Received: from miraculix.mork.no ([IPv6:2a02:2121:282:c0c6:2870:15ff:fe87:c238])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x5OCxGG2006893
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 24 Jun 2019 14:59:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1561381158; bh=XQsUYIbtGV5iLBtEMGinbcXCCB2jfmy7MxU1fU6ua0E=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=NFec1O8OFGN9c5A8nkGrqjIpmLTHJO9Q0DGVTC2jYIVhCNIkS8MJGaVONb6L+caha
+         EYyp1Vo1/sf6IDv2WP4xQVnRDiQOJVr0k/hVFTjmyuGOGq/BOHdD/krguQzXjzQHVU
+         JNt8Z/ZueCsQzPQ/dyQncu9JhJ/fPL3kSF26llJA=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
+        (envelope-from <bjorn@mork.no>)
+        id 1hfOYx-0007Ao-Fm; Mon, 24 Jun 2019 14:59:11 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Kristian Evensen <kristian.evensen@gmail.com>
+Cc:     syzbot <syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: global-out-of-bounds Read in qmi_wwan_probe
+Organization: m
+References: <0000000000008f19f7058c10a633@google.com>
+Date:   Mon, 24 Jun 2019 14:59:11 +0200
+In-Reply-To: <0000000000008f19f7058c10a633@google.com> (syzbot's message of
+        "Mon, 24 Jun 2019 05:07:05 -0700")
+Message-ID: <871rzj6sww.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624063515.GA3296@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.100.3 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+syzbot <syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com> writes:
 
-> Can you send me the patch formally so that I can queue it up for the
-> dma-mapping tree?
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    9939f56e usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1615a669a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Ddf134eda130bb=
+43a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Db68605d7fadd215=
+10de1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10630af6a00=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1127da69a00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com
+>
+> usb 1-1: new high-speed USB device number 2 using dummy_hcd
+> usb 1-1: Using ep0 maxpacket: 8
+> usb 1-1: New USB device found, idVendor=3D12d1, idProduct=3D14f1,
+> bcdDevice=3Dd4.d9
+> usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
+> usb 1-1: config 0 descriptor??
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KASAN: global-out-of-bounds in qmi_wwan_probe+0x342/0x360
+> drivers/net/usb/qmi_wwan.c:1417
+> Read of size 8 at addr ffffffff8618c140 by task kworker/1:1/22
+>
+> CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc5+ #11
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xca/0x13e lib/dump_stack.c:113
+>  print_address_description+0x67/0x231 mm/kasan/report.c:188
+>  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>  kasan_report+0xe/0x20 mm/kasan/common.c:614
+>  qmi_wwan_probe+0x342/0x360 drivers/net/usb/qmi_wwan.c:1417
+>  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>  really_probe+0x281/0x660 drivers/base/dd.c:509
+>  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>
 
-That patch would be detrimental to local memory devices, as previously
-discussed, so I would like to suggest a much better approach, as shown below,
-where allocations are aligned as required but not necessarily much more than
-that.
+Hello Kristian!
 
-Fredrik
+I need some help understanding this...  IIUC syzbot is claiming an
+out-of-bounds access at line 1417 in v5.2-rc5.  Or whatever - I'm having
+a hard time deciphering what kernel version the bot is actually
+testing. The claimed HEAD is not a kernel commit.  At least not in my
+kernel...
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -3014,7 +3014,7 @@ int usb_hcd_setup_local_mem(struct usb_hcd *hcd, phys_addr_t phys_addr,
- 	int err;
- 	void __iomem *local_mem;
- 
--	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, PAGE_SHIFT,
-+	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, 4,
- 						  dev_to_node(hcd->self.sysdev),
- 						  dev_name(hcd->self.sysdev));
- 	if (IS_ERR(hcd->localmem_pool))
-diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -507,9 +507,9 @@ static int ohci_init (struct ohci_hcd *ohci)
- 	ohci->prev_frame_no = IO_WATCHDOG_OFF;
- 
- 	if (hcd->localmem_pool)
--		ohci->hcca = gen_pool_dma_alloc(hcd->localmem_pool,
-+		ohci->hcca = gen_pool_dma_alloc_align(hcd->localmem_pool,
- 						sizeof(*ohci->hcca),
--						&ohci->hcca_dma);
-+						&ohci->hcca_dma, 256);
- 	else
- 		ohci->hcca = dma_alloc_coherent(hcd->self.controller,
- 						sizeof(*ohci->hcca),
-diff --git a/drivers/usb/host/ohci-mem.c b/drivers/usb/host/ohci-mem.c
---- a/drivers/usb/host/ohci-mem.c
-+++ b/drivers/usb/host/ohci-mem.c
-@@ -94,7 +94,8 @@ td_alloc (struct ohci_hcd *hc, gfp_t mem_flags)
- 	struct usb_hcd	*hcd = ohci_to_hcd(hc);
- 
- 	if (hcd->localmem_pool)
--		td = gen_pool_dma_zalloc(hcd->localmem_pool, sizeof(*td), &dma);
-+		td = gen_pool_dma_zalloc_align(hcd->localmem_pool,
-+				sizeof(*td), &dma, 32);
- 	else
- 		td = dma_pool_zalloc(hc->td_cache, mem_flags, &dma);
- 	if (td) {
-@@ -137,7 +138,8 @@ ed_alloc (struct ohci_hcd *hc, gfp_t mem_flags)
- 	struct usb_hcd	*hcd = ohci_to_hcd(hc);
- 
- 	if (hcd->localmem_pool)
--		ed = gen_pool_dma_zalloc(hcd->localmem_pool, sizeof(*ed), &dma);
-+		ed = gen_pool_dma_zalloc_align(hcd->localmem_pool,
-+				sizeof(*ed), &dma, 16);
- 	else
- 		ed = dma_pool_zalloc(hc->ed_cache, mem_flags, &dma);
- 	if (ed) {
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -121,7 +121,15 @@ extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
- 		genpool_algo_t algo, void *data);
- extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
- 		dma_addr_t *dma);
--void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
-+extern void *gen_pool_dma_alloc_algo(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, genpool_algo_t algo, void *data);
-+extern void *gen_pool_dma_alloc_align(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, int align);
-+extern void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
-+extern void *gen_pool_dma_zalloc_algo(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, genpool_algo_t algo, void *data);
-+extern void *gen_pool_dma_zalloc_align(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, int align);
- extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
- extern void gen_pool_for_each_chunk(struct gen_pool *,
- 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
-diff --git a/lib/genalloc.c b/lib/genalloc.c
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -347,13 +347,33 @@ EXPORT_SYMBOL(gen_pool_alloc_algo);
-  * Return: virtual address of the allocated memory, or %NULL on failure
-  */
- void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
-+{
-+	return gen_pool_dma_alloc_algo(pool, size, dma, pool->algo, pool->data);
-+}
-+EXPORT_SYMBOL(gen_pool_dma_alloc);
-+
-+/**
-+ * gen_pool_dma_alloc_algo - allocate special memory from the pool for DMA
-+ * usage with the given pool algorithm
-+ * @pool: pool to allocate from
-+ * @size: number of bytes to allocate from the pool
-+ * @dma: dma-view physical address return value.  Use NULL if unneeded.
-+ * @algo: algorithm passed from caller
-+ * @data: data passed to algorithm
-+ *
-+ * Allocate the requested number of bytes from the specified pool. Uses the
-+ * given pool allocation function. Can not be used in NMI handler on
-+ * architectures without NMI-safe cmpxchg implementation.
-+ */
-+void *gen_pool_dma_alloc_algo(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, genpool_algo_t algo, void *data)
- {
- 	unsigned long vaddr;
- 
- 	if (!pool)
- 		return NULL;
- 
--	vaddr = gen_pool_alloc(pool, size);
-+	vaddr = gen_pool_alloc_algo(pool, size, algo, data);
- 	if (!vaddr)
- 		return NULL;
- 
-@@ -362,7 +382,31 @@ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
- 
- 	return (void *)vaddr;
- }
--EXPORT_SYMBOL(gen_pool_dma_alloc);
-+EXPORT_SYMBOL(gen_pool_dma_alloc_algo);
-+
-+/**
-+ * gen_pool_dma_zalloc_align - allocate special from the pool for DMA usage
-+ * with the given alignment
-+ * @pool: pool to allocate from
-+ * @size: number of bytes to allocate from the pool
-+ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
-+ * @align: alignment in bytes for starting address
-+ *
-+ * Allocate the requested number bytes from the specified pool, with the given
-+ * alignment restriction. Can not be used in NMI handler on architectures
-+ * without NMI-safe cmpxchg implementation.
-+ *
-+ * Return: virtual address of the allocated memory, or %NULL on failure
-+ */
-+void *gen_pool_dma_alloc_align(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, int align)
-+{
-+	struct genpool_data_align data = { .align = align };
-+
-+	return gen_pool_dma_alloc_algo(pool, size, dma,
-+			gen_pool_first_fit_align, &data);
-+}
-+EXPORT_SYMBOL(gen_pool_dma_alloc_align);
- 
- /**
-  * gen_pool_dma_zalloc - allocate special zeroed memory from the pool for
-@@ -380,14 +424,60 @@ EXPORT_SYMBOL(gen_pool_dma_alloc);
-  */
- void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
- {
--	void *vaddr = gen_pool_dma_alloc(pool, size, dma);
-+	return gen_pool_dma_zalloc_algo(pool, size, dma, pool->algo, pool->data);
-+}
-+EXPORT_SYMBOL(gen_pool_dma_zalloc);
-+
-+/**
-+ * gen_pool_dma_zalloc_algo - allocate special zeroed memory from the pool for
-+ * DMA usage with the given pool algorithm
-+ * @pool: pool to allocate from
-+ * @size: number of bytes to allocate from the pool
-+ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
-+ * @algo: algorithm passed from caller
-+ * @data: data passed to algorithm
-+ *
-+ * Allocate the requested number of zeroed bytes from the specified pool. Uses
-+ * the pool allocation function. Can not be used in NMI handler on
-+ * architectures without NMI-safe cmpxchg implementation.
-+ *
-+ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
-+ */
-+void *gen_pool_dma_zalloc_algo(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, genpool_algo_t algo, void *data)
-+{
-+	void *vaddr = gen_pool_dma_alloc_algo(pool, size, dma, algo, data);
- 
- 	if (vaddr)
- 		memset(vaddr, 0, size);
- 
- 	return vaddr;
- }
--EXPORT_SYMBOL(gen_pool_dma_zalloc);
-+EXPORT_SYMBOL(gen_pool_dma_zalloc_algo);
-+
-+/**
-+ * gen_pool_dma_zalloc_align - allocate special zeroed memory from the pool for
-+ * DMA usage with the given alignment
-+ * @pool: pool to allocate from
-+ * @size: number of bytes to allocate from the pool
-+ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
-+ * @align: alignment in bytes for starting address
-+ *
-+ * Allocate the requested number of zeroed bytes from the specified pool,
-+ * with the given alignment restriction. Can not be used in NMI handler on
-+ * architectures without NMI-safe cmpxchg implementation.
-+ *
-+ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
-+ */
-+void *gen_pool_dma_zalloc_align(struct gen_pool *pool, size_t size,
-+		dma_addr_t *dma, int align)
-+{
-+	struct genpool_data_align data = { .align = align };
-+
-+	return gen_pool_dma_zalloc_algo(pool, size, dma,
-+			gen_pool_first_fit_align, &data);
-+}
-+EXPORT_SYMBOL(gen_pool_dma_zalloc_align);
- 
- /**
-  * gen_pool_free - free allocated special memory back to the pool
+
+But if this is correct, then it points to the info->data access you
+recently added:
+
+822e44b45eb99 (Kristian Evensen        2019-03-02 13:32:26 +0100 1409)  /* =
+Several Quectel modems supports dynamic interface configuration, so
+7c5cca3588545 (Kristian Evensen        2018-09-08 13:50:48 +0200 1410)   * =
+we need to match on class/subclass/protocol. These values are
+7c5cca3588545 (Kristian Evensen        2018-09-08 13:50:48 +0200 1411)   * =
+identical for the diagnostic- and QMI-interface, but bNumEndpoints is
+7c5cca3588545 (Kristian Evensen        2018-09-08 13:50:48 +0200 1412)   * =
+different. Ignore the current interface if the number of endpoints
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1413)   * =
+equals the number for the diag interface (two).
+7c5cca3588545 (Kristian Evensen        2018-09-08 13:50:48 +0200 1414)   */
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1415)  inf=
+o =3D (void *)&id->driver_info;
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1416)=20
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1417)  if =
+(info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1418)     =
+     if (desc->bNumEndpoints =3D=3D 2)
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1419)     =
+             return -ENODEV;
+e4bf63482c309 (Kristian Evensen        2019-04-07 15:39:09 +0200 1420)  }
+
+
+I must be blind. I cannot see how this could end up failing.
+id->driver_info is always set to one of qmi_wwan_info,
+qmi_wwan_info_quirk_dtr or qmi_wwan_info_quirk_quectel_dyncfg at this
+point.  How does that end up out-of-bounds?
+
+
+
+Bj=C3=B8rn
