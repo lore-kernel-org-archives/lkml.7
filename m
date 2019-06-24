@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A39BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8276BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA85205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDC7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371375;
-	bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
+	s=default; t=1561371378;
+	bh=Y/MYH8fEzOhlLXY1NSLeaKuxk3L/Epd5P+oRdNS6+aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i99LEavO3eqn6PWeVVVLzCxs99LTbX7KPr1eByGkjA7oR1C3eOpmTuNmB8/cf+YD8
-	 gpbo/1JlUit+4rvmlvlcsCkSjDdwY5COQP79+3W6PAsU8OzbGGKbWiIZVN3EPNsepx
-	 zvhF5jJFN6ggiQVjLWhNwZzIlxvyz6URz+B7nR04=
+	b=OFo6821cGMFWCpQdetJDe2JCFY3tOEx55BfLy6OYwmi7v9DKRKL5a12UYggb/ViXq
+	 G5b7BKK7Y8fNRfOatIFif1+K2Zl+4FmLjEQvdR8YRuzMP1+dY9gAr77isfKLYJspL9
+	 MT8UQZbTrGu/VKCbzjMxGlMvFWo/EBQP6G6AA7Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbfFXKQN (ORCPT
+        id S1730702AbfFXKQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfFXKQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:09 -0400
+        id S1730228AbfFXKQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:12 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325F620645;
-        Mon, 24 Jun 2019 10:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D32DC205ED;
+        Mon, 24 Jun 2019 10:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371368;
-        bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
+        s=default; t=1561371371;
+        bh=Y/MYH8fEzOhlLXY1NSLeaKuxk3L/Epd5P+oRdNS6+aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJRl8gw3UuiFxdmQ5ghs1Mf3aQuD37B5jX9Cq1vn5rQy/73tf9J/luSyqVgXNwILU
-         5k4q5x87lut460Qot2cKOz4Ab2E5fLMWibStaS29nFjPDW+xYmhnSQAMPmcpVGKP7j
-         DWXTuCSHUMOZokYx+SfhN9G31rLWQLPoNbr3Er1I=
+        b=HVnlY6DA4nlDDe8fn1usY5p8SSnXKPKohIoNmT0J2xCnhamWbrFw2AzB8DpaFw9WQ
+         c8LjtNU76uIO0lmg1lfyDTllh1B5flYpub/Sb9AlqSMGUdghtzgfWtsiVG8l8eTVNn
+         zl/vUm25PGpuwi3a1QSrp6fN2rjgvzzsyW0IvCgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 032/121] ARC: fix build warnings
-Date:   Mon, 24 Jun 2019 17:56:04 +0800
-Message-Id: <20190624092322.470688892@linuxfoundation.org>
+Subject: [PATCH 5.1 071/121] drm/arm/hdlcd: Actually validate CRTC modes
+Date:   Mon, 24 Jun 2019 17:56:43 +0800
+Message-Id: <20190624092324.519615127@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,97 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
+[ Upstream commit b96151edced4edb6a18aa89a5fa02c7066efff45 ]
 
-| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
-| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
+Rather than allowing any old mode through, then subsequently refusing
+unmatchable clock rates in atomic_check when it's too late to back out
+and pick a different mode, let's do that validation up-front where it
+will cause unsupported modes to be correctly pruned in the first place.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+This also eliminates an issue whereby a perceived clock rate of 0 would
+cause atomic disable to fail and prevent the module from being unloaded.
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
- arch/arc/mm/tlb.c              | 13 ++++++++-----
- 2 files changed, 18 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/arm/hdlcd_crtc.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index d819de1c5d10..3ea4112c8302 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
- 
- #endif /* CONFIG_ARC_HAS_LLSC */
- 
--#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
--				(unsigned long)(o), (unsigned long)(n)))
-+#define cmpxchg(ptr, o, n) ({				\
-+	(typeof(*(ptr)))__cmpxchg((ptr),		\
-+				  (unsigned long)(o),	\
-+				  (unsigned long)(n));	\
-+})
- 
- /*
-  * atomic_cmpxchg is same as cmpxchg
-@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
- 	return __xchg_bad_pointer();
+diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+index 0b2b62f8fa3c..ecac6fe0b213 100644
+--- a/drivers/gpu/drm/arm/hdlcd_crtc.c
++++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
+@@ -186,20 +186,19 @@ static void hdlcd_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	clk_disable_unprepare(hdlcd->clk);
  }
  
--#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
--						 sizeof(*(ptr))))
-+#define xchg(ptr, with) ({				\
-+	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
-+			       (ptr),			\
-+			       sizeof(*(ptr)));		\
-+})
- 
- #endif /* CONFIG_ARC_PLAT_EZNPS */
- 
-diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
-index 4097764fea23..fa18c00b0cfd 100644
---- a/arch/arc/mm/tlb.c
-+++ b/arch/arc/mm/tlb.c
-@@ -911,9 +911,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			  struct pt_regs *regs)
+-static int hdlcd_crtc_atomic_check(struct drm_crtc *crtc,
+-				   struct drm_crtc_state *state)
++static enum drm_mode_status hdlcd_crtc_mode_valid(struct drm_crtc *crtc,
++		const struct drm_display_mode *mode)
  {
- 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
--	unsigned int pd0[mmu->ways];
- 	unsigned long flags;
--	int set;
-+	int set, n_ways = mmu->ways;
-+
-+	n_ways = min(n_ways, 4);
-+	BUG_ON(mmu->ways > 4);
+ 	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+-	struct drm_display_mode *mode = &state->adjusted_mode;
+ 	long rate, clk_rate = mode->clock * 1000;
  
- 	local_irq_save(flags);
+ 	rate = clk_round_rate(hdlcd->clk, clk_rate);
+ 	if (rate != clk_rate) {
+ 		/* clock required by mode not supported by hardware */
+-		return -EINVAL;
++		return MODE_NOCLOCK;
+ 	}
  
-@@ -921,9 +923,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 	for (set = 0; set < mmu->sets; set++) {
+-	return 0;
++	return MODE_OK;
+ }
  
- 		int is_valid, way;
-+		unsigned int pd0[4];
+ static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
+@@ -220,7 +219,7 @@ static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
+ }
  
- 		/* read out all the ways of current set */
--		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
-+		for (way = 0, is_valid = 0; way < n_ways; way++) {
- 			write_aux_reg(ARC_REG_TLBINDEX,
- 					  SET_WAY_TO_IDX(mmu, set, way));
- 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
-@@ -937,14 +940,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			continue;
- 
- 		/* Scan the set for duplicate ways: needs a nested loop */
--		for (way = 0; way < mmu->ways - 1; way++) {
-+		for (way = 0; way < n_ways - 1; way++) {
- 
- 			int n;
- 
- 			if (!pd0[way])
- 				continue;
- 
--			for (n = way + 1; n < mmu->ways; n++) {
-+			for (n = way + 1; n < n_ways; n++) {
- 				if (pd0[way] != pd0[n])
- 					continue;
- 
+ static const struct drm_crtc_helper_funcs hdlcd_crtc_helper_funcs = {
+-	.atomic_check	= hdlcd_crtc_atomic_check,
++	.mode_valid	= hdlcd_crtc_mode_valid,
+ 	.atomic_begin	= hdlcd_crtc_atomic_begin,
+ 	.atomic_enable	= hdlcd_crtc_atomic_enable,
+ 	.atomic_disable	= hdlcd_crtc_atomic_disable,
 -- 
 2.20.1
 
