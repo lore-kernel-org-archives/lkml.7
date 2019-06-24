@@ -2,141 +2,113 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E763CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58E820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787B720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xtph9kd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbfFXPM7 convert rfc822-to-8bit (ORCPT
+        id S1730362AbfFXPO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:12:59 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34417 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727454AbfFXPM7 (ORCPT
+        Mon, 24 Jun 2019 11:14:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34687 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfFXPO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:12:59 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-130-OoVrAoe7MWG74k3yi9X8Ig-1; Mon, 24 Jun 2019 16:12:51 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Jun 2019 16:12:50 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Jun 2019 16:12:50 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Fenghua Yu' <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Sai Praneeth Prakhya" <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH v9 03/17] x86/split_lock: Align x86_capability to unsigned
- long to avoid split locked access
-Thread-Topic: [PATCH v9 03/17] x86/split_lock: Align x86_capability to
- unsigned long to avoid split locked access
-Thread-Index: AQHVJihj4k0PM5XU4kKltrhDxHB06Kaq7sOQ
-Date:   Mon, 24 Jun 2019 15:12:49 +0000
-Message-ID: <746b5a8752cc40b1b954913f786ed9a6@AcuMS.aculab.com>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-4-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1560897679-228028-4-git-send-email-fenghua.yu@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Jun 2019 11:14:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a128so10071625oib.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vO6fOjt6R4QMMLsc459TN7pMrGe8AbjFNTWYK7oO/lc=;
+        b=Xtph9kd/luA0omO0Xa9f6cDJjFGkVuvYFWyj+VwNw0DTc0gX59NSEbCTu/stJHToA2
+         Jt+WJpSX7v43vyaqCb2viUq3IFjj7HPQQLzu2VrRAlOOhtPBDEC2DvuEZ5MoaNP0viMB
+         UGFAAI3lmiosusmNDYvT25fDIZCUwgfuDlZzE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vO6fOjt6R4QMMLsc459TN7pMrGe8AbjFNTWYK7oO/lc=;
+        b=tMAbvxXumNOlfVu/De7RMU1SZHoSb/HHbT80W6jxLiEUICZ5n2Ju94W38/2rJhPzSl
+         x+CO9AVgUyk3RQDxGGsyL+dK8pTz/rmr/5N/2sIVh2UXvTwEPDeeAFTXbz/8Kjg6YnZe
+         x2XDx+0wUkwM352CoChyiaveQhqhQcnmTZgsduisVP/BXNHN13r0r0XQeMkI2w9Yf+dU
+         T9I4Iv+J3eYuBuWfOr6be2aNa5hIe8TGS/Fk2k4GV/hXaLlAQgjyELnyDcrRHS0IU0pB
+         0z7qPjDBjSiRI98uDOxQxmOzXdBCCfDmfAoesClgaw8R1BxogETLFc5o1+SrsxWjO9w9
+         NmJA==
+X-Gm-Message-State: APjAAAUnZxBPyTkR8pLnWjVlorimtxm/1ofy2Cir1hBIqx6eu25JtM55
+        bv7X/uSNt+8Xk3rSBHi0H3meyvesHgc=
+X-Google-Smtp-Source: APXvYqyvK904af3vhfRcjLOyn3HZ31X/hs2/b7WUeJRJrYPcVTEi7xKBx89WDv2uQfKI89cbuxlfPg==
+X-Received: by 2002:aca:fc8d:: with SMTP id a135mr2868559oii.145.1561389296151;
+        Mon, 24 Jun 2019 08:14:56 -0700 (PDT)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
+        by smtp.gmail.com with ESMTPSA id b2sm4205955otf.48.2019.06.24.08.14.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 08:14:55 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id 43so9064757otf.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:14:54 -0700 (PDT)
+X-Received: by 2002:a9d:2c41:: with SMTP id f59mr64979036otb.268.1561389294058;
+ Mon, 24 Jun 2019 08:14:54 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: OoVrAoe7MWG74k3yi9X8Ig-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <201906220821.144PfQAY%lkp@intel.com> <20190622005547.GA64911@lkp-kbuild08>
+In-Reply-To: <20190622005547.GA64911@lkp-kbuild08>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Mon, 24 Jun 2019 09:14:42 -0600
+X-Gmail-Original-Message-ID: <CAHX4x87UDrePWynTUU5sgQ_bdvqp4TYr+JM+C4-mY+97yL31fA@mail.gmail.com>
+Message-ID: <CAHX4x87UDrePWynTUU5sgQ_bdvqp4TYr+JM+C4-mY+97yL31fA@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_lpc: fix semicolon.cocci warnings
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kbuild-all@01.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu
-> Sent: 18 June 2019 23:41
-> 
-> set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
-> operate on bitmap defined in x86_capability.
-> 
-> Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
-> the location is at:
-> base address of x86_capability + (bit offset in x86_capability / 64) * 8
-> 
-> Since base address of x86_capability may not be aligned to unsigned long,
-> the single unsigned long location may cross two cache lines and
-> accessing the location by locked BTS/BTR introductions will cause
-> split lock.
-> 
-> To fix the split lock issue, align x86_capability to size of unsigned long
-> so that the location will be always within one cache line.
-> 
-> Changing x86_capability's type to unsigned long may also fix the issue
-> because x86_capability will be naturally aligned to size of unsigned long.
-> But this needs additional code changes. So choose the simpler solution
-> by setting the array's alignment to size of unsigned long.
+I fixed this in the new version.
 
-As I've pointed out several times before this isn't the only int[] data item
-in this code that gets passed to the bit operations.
-Just because you haven't got a 'splat' from the others doesn't mean they don't
-need fixing at the same time.
-
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+On Fri, Jun 21, 2019 at 6:55 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> From: kbuild test robot <lkp@intel.com>
+>
+> drivers/platform/chrome/wilco_ec/event.c:161:3-4: Unneeded semicolon
+>
+>
+>  Remove unneeded semicolon.
+>
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+>
+> Fixes: 22c040fa21b6 ("platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 > ---
->  arch/x86/include/asm/processor.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index c34a35c78618..d3e017723634 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -93,7 +93,9 @@ struct cpuinfo_x86 {
->  	__u32			extended_cpuid_level;
->  	/* Maximum supported CPUID level, -1=no CPUID: */
->  	int			cpuid_level;
-> -	__u32			x86_capability[NCAPINTS + NBUGINTS];
-> +	/* Aligned to size of unsigned long to avoid split lock in atomic ops */
-
-Wrong comment.
-Something like:
-	/* Align to sizeof (unsigned long) because the array is passed to the
-	 * atomic bit-op functions which require an aligned unsigned long []. */
-
-> +	__u32			x86_capability[NCAPINTS + NBUGINTS]
-> +				__aligned(sizeof(unsigned long));
-
-It might be better to use a union (maybe unnamed) here.
-
->  	char			x86_vendor_id[16];
->  	char			x86_model_id[64];
->  	/* in KB - valid for CPUS which support this call: */
-> --
-> 2.19.1
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
+> head:   9eecd07b34507de9d6a9c264d13d30e1ee5fabe8
+> commit: 22c040fa21b604b9b3d88645e108fb2f0a74474b [21/22] platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime
+>
+>  event.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -158,7 +158,7 @@ static int enqueue_events(struct acpi_de
+>                         dev_err(&adev->dev, "Too many event words: %zu > %d\n",
+>                                 num_words, EC_ACPI_MAX_EVENT_WORDS);
+>                         return -EOVERFLOW;
+> -               };
+> +               }
+>
+>                 /* Ensure event does not overflow the available buffer */
+>                 if ((offset + event_size) > length) {
