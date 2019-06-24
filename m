@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15F6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42549C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80B320645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1201B205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371236;
-	bh=0Tuv9WLmua8GzdXQkqqEv0t3CuaXw/uKeuI6XH6NamM=;
+	s=default; t=1561371243;
+	bh=TGBsQJwB/9SZ4dCxM9rwwKRyxINEMNBpivPmqFGJXCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cy/OzSh900g/LPIjBQJs5TMbE7KtZegM+ZrviWrWbuYUU0TJHC2fP9ZRkgX2kPDM+
-	 M/bU3WDGCdXrHzFgQKHgC4FalU5qw3NjSDXGhB2ABwGNDA53bKGLO4YMM9emQIRJdV
-	 gW0l86dxMF6j4DwjxPZBwJc3NA0EEmTxYIvObYpw=
+	b=PQMRLG6UGYGjlF7JQWq157gPyO8BxeYMeT4p6rnq6d3yRbERwM1eEBRaU83EdYe6b
+	 FnyU//YVM3B2q4eZ5zZePqAVQ1/Mf3g+zMt6kRSFkM+StMAAUS5z0ZmkaoZkPLXdHr
+	 PWbstPRjqbUcZwf0LhgVVqNK5PRjdldjwhe2QQsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfFXKNz (ORCPT
+        id S1726731AbfFXKDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728715AbfFXKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:02 -0400
+        id S1728730AbfFXKDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:49 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B92E213F2;
-        Mon, 24 Jun 2019 10:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D012208E3;
+        Mon, 24 Jun 2019 10:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370641;
-        bh=0Tuv9WLmua8GzdXQkqqEv0t3CuaXw/uKeuI6XH6NamM=;
+        s=default; t=1561370628;
+        bh=TGBsQJwB/9SZ4dCxM9rwwKRyxINEMNBpivPmqFGJXCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjBMFrSo0ZCcNVAJQJfAxh2qvoNznEp+yKsvJFZy+pywSxOwkCvqycUFTdzZaMRFk
-         hPoBSVOhD5ItfPUWSEAjfG0dlJc4kcMOQlPgR1O2ZORxRj18PJ2T7LE7ACwzxQJWbn
-         Qqrsedaqjr9HwL1KM5sNFwk8SxZ5eCtXnxBuyeZY=
+        b=Tups/nlvmHyd5UX6sCP3yD478I1G1u5ljnk9maHiCCc6wGLDuebhW2e9YQx+giHUO
+         35lhDtROw+A7IwMaqcb9co2UEeLAnOGUTTP7aJj6MNmUH3LZdhMJwRLZpMlENAMqao
+         cUAbTJ3MoTuFzkG7D4n69q/8zyeS21qfnQUafA+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/90] s390/jump_label: Use "jdd" constraint on gcc9
-Date:   Mon, 24 Jun 2019 17:56:00 +0800
-Message-Id: <20190624092314.669022460@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Long <eric.long@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/90] dmaengine: sprd: Fix block length overflow
+Date:   Mon, 24 Jun 2019 17:56:22 +0800
+Message-Id: <20190624092316.417766707@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,73 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 146448524bddbf6dfc62de31957e428de001cbda ]
+[ Upstream commit 89d03b3c126d683f7b2cd5b07178493993d12448 ]
 
-[heiko.carstens@de.ibm.com]:
------
-Laura Abbott reported that the kernel doesn't build anymore with gcc 9,
-due to the "X" constraint. Ilya provided the gcc 9 patch "S/390:
-Introduce jdd constraint" which introduces the new "jdd" constraint
-which fixes this.
------
+The maximum value of block length is 0xffff, so if the configured transfer length
+is more than 0xffff, that will cause block length overflow to lead a configuration
+error.
 
-The support for section anchors on S/390 introduced in gcc9 has changed
-the behavior of "X" constraint, which can now produce register
-references. Since existing constraints, in particular, "i", do not fit
-the intended use case on S/390, the new machine-specific "jdd"
-constraint was introduced. This patch makes jump labels use "jdd"
-constraint when building with gcc9.
+Thus we can set block length as the maximum burst length to avoid this issue, since
+the maximum burst length will not be a big value which is more than 0xffff.
 
-Reported-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Eric Long <eric.long@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/jump_label.h | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/dma/sprd-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/jump_label.h b/arch/s390/include/asm/jump_label.h
-index 40f651292aa7..9c7dc970e966 100644
---- a/arch/s390/include/asm/jump_label.h
-+++ b/arch/s390/include/asm/jump_label.h
-@@ -10,6 +10,12 @@
- #define JUMP_LABEL_NOP_SIZE 6
- #define JUMP_LABEL_NOP_OFFSET 2
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 55df0d41355b..1ed1c7efa288 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -663,7 +663,7 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
+ 	temp |= slave_cfg->src_maxburst & SPRD_DMA_FRG_LEN_MASK;
+ 	hw->frg_len = temp;
  
-+#if __GNUC__ < 9
-+#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "X"
-+#else
-+#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "jdd"
-+#endif
-+
- /*
-  * We use a brcl 0,2 instruction for jump labels at compile time so it
-  * can be easily distinguished from a hotpatch generated instruction.
-@@ -19,9 +25,9 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
- 	asm_volatile_goto("0:	brcl 0,"__stringify(JUMP_LABEL_NOP_OFFSET)"\n"
- 		".pushsection __jump_table, \"aw\"\n"
- 		".balign 8\n"
--		".quad 0b, %l[label], %0\n"
-+		".quad 0b, %l[label], %0+%1\n"
- 		".popsection\n"
--		: : "X" (&((char *)key)[branch]) : : label);
-+		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
+-	hw->blk_len = len & SPRD_DMA_BLK_LEN_MASK;
++	hw->blk_len = slave_cfg->src_maxburst & SPRD_DMA_BLK_LEN_MASK;
+ 	hw->trsc_len = len & SPRD_DMA_TRSC_LEN_MASK;
  
- 	return false;
- label:
-@@ -33,9 +39,9 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
- 	asm_volatile_goto("0:	brcl 15, %l[label]\n"
- 		".pushsection __jump_table, \"aw\"\n"
- 		".balign 8\n"
--		".quad 0b, %l[label], %0\n"
-+		".quad 0b, %l[label], %0+%1\n"
- 		".popsection\n"
--		: : "X" (&((char *)key)[branch]) : : label);
-+		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
- 
- 	return false;
- label:
+ 	temp = (dst_step & SPRD_DMA_TRSF_STEP_MASK) << SPRD_DMA_DEST_TRSF_STEP_OFFSET;
 -- 
 2.20.1
 
