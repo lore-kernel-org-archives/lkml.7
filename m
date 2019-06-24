@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B4C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19614C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435C32089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9435208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DsBS4El+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r5n6pCeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfFXFn7 (ORCPT
+        id S1727148AbfFXFoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:43:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37630 "EHLO
+        Mon, 24 Jun 2019 01:44:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37886 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbfFXFn5 (ORCPT
+        with ESMTP id S1727229AbfFXFoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:43:57 -0400
+        Mon, 24 Jun 2019 01:44:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QKrZKqm9xX7/gKntli3kjDV0bZW8VwVWFoBUswi6ZbI=; b=DsBS4El+mIDdDpYL3biKUdVRJ/
-        gRsHj2wUwnw4hOCIz4900CEw/5hNBn83QXaN/N05RmdL9tzK/1lSSI2iqYVahKMo0XaXpwbjdtPKY
-        6fusC2JxKNUi6Wcy0DXpKqNMuKP3VS4bgMDOkykPUY3EwbA92QOKfS/y0+A1ROpcg74mXxa1pHNsX
-        9CDeIJ4QBgCUmvopkpBdjN2FiVF9Xk0wvrMzGPRniCqFcnTi6ht8NvrkQmjx+LMwEtdRQIot497Y4
-        RLH6FazV3C/man5B6AAVTMf3gveCXvtw/C+Z1o9GZMvhIJFNTotzhkFBiUgBSrkjzl4YyRHeCmXX9
-        6f7Z39Vg==;
+        bh=4ocWky3c08iK0yepv2gQs0SBg5KjT+xunPaTv4oC5uw=; b=r5n6pCeH/gadzSXK5KdI2Tqxv8
+        YODK6eN48ucCegAYBApmU91XF9qDbVsH6tKFA77OewDRe6wqTI7SOkxxGuNy9Sqic+I0WUPShkgI5
+        Q1lzoYmneNbpVbOUPj+V3mJQXEi+aDzQsaS8iujdNcz5g+2YOFVvO09khJr31WiotohZZLvZ1sZxX
+        Au7/D6AWMmPm2BTMHXivfuRi7XYiZI3SmPmvmgQznl97DnHs/ShMX+Jt4xrDoWzclv6O8NDl/VF15
+        MEZtZEouwgD3Ybb8UXfWgU8hWoGgN6ZUV08QMBzBJNpFVg/90QTwtKFUM9bKrgLFEMLNGW7/C5meg
+        uw+VkyYQ==;
 Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHlj-0006gQ-Me; Mon, 24 Jun 2019 05:43:56 +0000
+        id 1hfHln-0006kL-1n; Mon, 24 Jun 2019 05:43:59 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/17] riscv: implement remote sfence.i natively for M-mode
-Date:   Mon, 24 Jun 2019 07:43:06 +0200
-Message-Id: <20190624054311.30256-13-hch@lst.de>
+Subject: [PATCH 13/17] riscv: poison SBI calls for M-mode
+Date:   Mon, 24 Jun 2019 07:43:07 +0200
+Message-Id: <20190624054311.30256-14-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190624054311.30256-1-hch@lst.de>
 References: <20190624054311.30256-1-hch@lst.de>
@@ -58,78 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RISC-V ISA only supports flushing the instruction cache for the local
-CPU core.  For normal S-mode Linux remote flushing is offloaded to
-machine mode using ecalls, but for M-mode Linux we'll have to do it
-ourselves.  Use the same implementation as all the existing open source
-SBI implementations by just doing an IPI to all remote cores to execute
-th sfence.i instruction on every live core.
+There is no SBI when we run in M-mode, so fail the compile for any code
+trying to use SBI calls.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/mm/cacheflush.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ arch/riscv/include/asm/sbi.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-index 9ebcff8ba263..10875ea1065e 100644
---- a/arch/riscv/mm/cacheflush.c
-+++ b/arch/riscv/mm/cacheflush.c
-@@ -10,10 +10,35 @@
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 21134b3ef404..1e17f07eadaf 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -8,6 +8,7 @@
  
- #include <asm/sbi.h>
+ #include <linux/types.h>
  
-+#ifdef CONFIG_M_MODE
-+static void ipi_remote_fence_i(void *info)
-+{
-+	return local_flush_icache_all();
-+}
-+
-+void flush_icache_all(void)
-+{
-+	on_each_cpu(ipi_remote_fence_i, NULL, 1);
-+}
-+
-+static void flush_icache_cpumask(const cpumask_t *mask)
-+{
-+	on_each_cpu_mask(mask, ipi_remote_fence_i, NULL, 1);
-+}
-+#else /* CONFIG_M_MODE */
- void flush_icache_all(void)
- {
- 	sbi_remote_fence_i(NULL);
++#ifndef CONFIG_M_MODE
+ #define SBI_SET_TIMER 0
+ #define SBI_CONSOLE_PUTCHAR 1
+ #define SBI_CONSOLE_GETCHAR 2
+@@ -94,4 +95,5 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+ 	SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
  }
-+static void flush_icache_cpumask(const cpumask_t *mask)
-+{
-+	cpumask_t hmask;
-+
-+	cpumask_clear(&hmask);
-+	riscv_cpuid_to_hartid_mask(mask, &hmask);
-+	sbi_remote_fence_i(hmask.bits);
-+}
+ 
+-#endif
 +#endif /* CONFIG_M_MODE */
- 
- /*
-  * Performs an icache flush for the given MM context.  RISC-V has no direct
-@@ -28,7 +53,7 @@ void flush_icache_all(void)
- void flush_icache_mm(struct mm_struct *mm, bool local)
- {
- 	unsigned int cpu;
--	cpumask_t others, hmask, *mask;
-+	cpumask_t others, *mask;
- 
- 	preempt_disable();
- 
-@@ -47,9 +72,7 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
- 	cpumask_andnot(&others, mm_cpumask(mm), cpumask_of(cpu));
- 	local |= cpumask_empty(&others);
- 	if (mm != current->active_mm || !local) {
--		cpumask_clear(&hmask);
--		riscv_cpuid_to_hartid_mask(&others, &hmask);
--		sbi_remote_fence_i(hmask.bits);
-+		flush_icache_cpumask(&others);
- 	} else {
- 		/*
- 		 * It's assumed that at least one strongly ordered operation is
++#endif /* _ASM_RISCV_SBI_H */
 -- 
 2.20.1
 
