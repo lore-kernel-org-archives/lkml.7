@@ -2,283 +2,179 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B5C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E35213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E104B213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="er1KuzqM"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="arVbRxRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfFXLoR (ORCPT
+        id S1729065AbfFXLpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:44:17 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44588 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbfFXLoQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:44:16 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190624114414euoutp029e813bdc065d4a3bd4cb25f293548d7d~rH8t8_XBm1186811868euoutp02z
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:44:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190624114414euoutp029e813bdc065d4a3bd4cb25f293548d7d~rH8t8_XBm1186811868euoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561376654;
-        bh=OQuH1fK1Mq0SGuvaIWVkirqd0DzLaLERGnAwyc1o0PY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=er1KuzqMKjogbSSN/ncKmxXFac2P4zHRbKvPdpBJbPRnXUs0F0g78nX13ZIis1dcr
-         r9REnilXvMpxPZRYpC+OLIUwhYzizwCURiGANBkX0wTMpQvgSzMSZ4PIqyK4QPIath
-         GXRc4iHIT30ZcLqtisiWMVTnSHiSnZzeIquQZ1FQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190624114413eucas1p1953e70c97577b65ac95759ec5c500cd7~rH8tQUVMY0606206062eucas1p17;
-        Mon, 24 Jun 2019 11:44:13 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id DC.3A.04377.D87B01D5; Mon, 24
-        Jun 2019 12:44:13 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190624114413eucas1p14fcfcf4feb2a1458f02be3414f6cd57c~rH8sj2g6d1682016820eucas1p1C;
-        Mon, 24 Jun 2019 11:44:13 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190624114413eusmtrp15bf14aef47ac2a8b297228048339e64e~rH8sjQ-Ur2161521615eusmtrp1K;
-        Mon, 24 Jun 2019 11:44:13 +0000 (GMT)
-X-AuditID: cbfec7f4-5632c9c000001119-be-5d10b78d24e6
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8A.13.04140.D87B01D5; Mon, 24
-        Jun 2019 12:44:13 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190624114412eusmtip12a0b55ea36d2b276144f305eca20696b~rH8sHK0C20194001940eusmtip1I;
-        Mon, 24 Jun 2019 11:44:12 +0000 (GMT)
-Subject: Re: [PATCH v2] drm/bridge/synopsys: dsi: Allow VPG to be enabled
- via debugfs
-To:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Archit Taneja <architt@codeaurora.org>,
-        David Airlie <airlied@linux.ie>,
+        Mon, 24 Jun 2019 07:45:43 -0400
+Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:46723
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727722AbfFXLpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:45:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uiBvnSVc9iVgRblkUv8oNtcSdjLdouP7sgHwUqCFq7o=;
+ b=arVbRxRa6ubZBOyzBdCqvO02hD6jW7u37f6Y47AvFOzDWCtTQlZZ/IOzCvp9OESrYt/Vg93zdH/e2bnTXCuwKgO/9wm0Qcm1iYkaN6ekaBPBYCbTvyoYOxKDNhTaN6wSlBUCOMU/7PPacgzk45e2dpGn4C09FbCp4LUDKyNy/uQ=
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
+ VI1PR04MB5309.eurprd04.prod.outlook.com (20.177.52.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 11:45:37 +0000
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::cdda:87e3:ea91:f78b]) by VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::cdda:87e3:ea91:f78b%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 11:45:37 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matthew Redfearn <matthew.redfearn@thinci.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <d73e0df8-761d-380c-17f3-f3cbb737c677@samsung.com>
-Date:   Mon, 24 Jun 2019 13:44:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <fd4f3c69-5bbd-a7ac-983c-4aa9a2a2313e@thinci.com>
-Content-Transfer-Encoding: 8bit
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Thread-Topic: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Thread-Index: AQHVKEeAhac7DL/j0Uy9JhFYnIZAmKamUhMAgARcasA=
+Date:   Mon, 24 Jun 2019 11:45:37 +0000
+Message-ID: <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+In-Reply-To: <20190621164940.GL31306@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7djP87q92wViDf7MVrfoPXeSyaKp4y2r
-        xZWv79ksOicuYbe4vGsOm8Wu+wuYLLbP28BksfT3O0aLBy0vWC3aO1vZHLg8Lvf1MnnM7pjJ
-        6rH92wNWj/vdx5k8/s7az+Lx9MdeZo/Zkx+xenzeJBfAEcVlk5Kak1mWWqRvl8CV8XTPQqaC
-        GRoV81+4NjAeVehi5OCQEDCRmLpcsYuRi0NIYAWjxKmXk9ggnC+MEst+LWaHcD4zSjz+fZGp
-        i5ETrKN7zlmoquWMEq0thxlBEkICbxkljhz2A7GFBcIlHlzqYwUpEhHoY5Q4NuUNM4jDLHCT
-        SeLntwdgHWwCmhJ/N99kA7F5Bewkvn6aBmazCKhKPH27iBnEFhWIkPiycxMjRI2gxMmZT1hA
-        bE6g+u/35oPZzALyEs1bZzND2OISt57MZwJZJiFwj11i77LTUHe7SJxdt4gVwhaWeHV8CzuE
-        LSNxenIPC4RdL3F/RQszRHMHo8TWDTuZIRLWEoePX2QFBRkz0NXrd+lDhB0l9n9cxAgJST6J
-        G28FIW7gk5i0bTozRJhXoqNNCKJaUeL+2a1QA8Ulll74yjaBUWkWks9mIflmFpJvZiHsXcDI
-        sopRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwfZ3+d/zLDsZdf5IOMQpwMCrx8Aps4I8V
-        Yk0sK67MPcQowcGsJMK7NFEgVog3JbGyKrUoP76oNCe1+BCjNAeLkjhvNcODaCGB9MSS1OzU
-        1ILUIpgsEwenVANj/r/giZ9dd9iLJgXyCZjE3+Ta4Fq65aGI1dIne9MZDh1KLuC3vfjDTjk/
-        tumY2MrHMma7xXS9rJep7YlP3qmn9ndbcNL58Evih25k3CtrzNjzWnodn3jaZ/vDd/fdmb3Q
-        kuu3f6TQ0oui97tmx2VKe4u8eMhQUXbvAtOM2x8Ewx/GzOzNjuRUYinOSDTUYi4qTgQAohK5
-        EVsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xu7q92wViDc5tYrfoPXeSyaKp4y2r
-        xZWv79ksOicuYbe4vGsOm8Wu+wuYLLbP28BksfT3O0aLBy0vWC3aO1vZHLg8Lvf1MnnM7pjJ
-        6rH92wNWj/vdx5k8/s7az+Lx9MdeZo/Zkx+xenzeJBfAEaVnU5RfWpKqkJFfXGKrFG1oYaRn
-        aGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8XTPQqaCGRoV81+4NjAeVehi5OSQEDCR
-        6J5zlq2LkYtDSGApo8Sprd2sEAlxid3z3zJD2MISf651QRW9ZpSY8/wsO0hCWCBcor23jREk
-        ISLQxyix4OAXdhCHWeA2k8Ts748YQaqEBL4ySpw9EQFiswloSvzdfJMNxOYVsJP4+mkamM0i
-        oCrx9O0isHWiAhESs3c1sEDUCEqcnPkEzOYEqv9+bz6YzSygLvFn3iVmCFteonnrbChbXOLW
-        k/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjNltx35u
-        2cHY9S74EKMAB6MSD6/ABv5YIdbEsuLK3EOMEhzMSiK8SxMFYoV4UxIrq1KL8uOLSnNSiw8x
-        mgI9N5FZSjQ5H5hO8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1
-        MPp9saq5mR+huu2wvuI8Dm7jWU8UzMxWa2zezK5scnXz4uMvnRLP28+clxh2s+nGUqmmDINl
-        DCfn9Ees6ctZtZGDOffLe80zHSs7jVjPXLZasOqp2LNrYn2cqy6a3Tfvk993o0Rt2kfVZ5W6
-        86V++P6p7//raXo14qThhqOuwmJTS87/DGXcba3EUpyRaKjFXFScCADmrb7Z7wIAAA==
-X-CMS-MailID: 20190624114413eucas1p14fcfcf4feb2a1458f02be3414f6cd57c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190624110224epcas3p45442d82c6f6c3e99311334c2603b9143
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190624110224epcas3p45442d82c6f6c3e99311334c2603b9143
-References: <20190430081646.23845-1-matt.redfearn@thinci.com>
-        <0832ec0c-cf21-7b43-17a7-dbe54513453c@st.com>
-        <CGME20190624110224epcas3p45442d82c6f6c3e99311334c2603b9143@epcas3p4.samsung.com>
-        <fd4f3c69-5bbd-a7ac-983c-4aa9a2a2313e@thinci.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=claudiu.manoil@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c951484-610a-4101-b379-08d6f89979a2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5309;
+x-ms-traffictypediagnostic: VI1PR04MB5309:
+x-microsoft-antispam-prvs: <VI1PR04MB530911634F859E9A9C58FF4A96E00@VI1PR04MB5309.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(396003)(346002)(376002)(13464003)(199004)(189003)(51914003)(11346002)(54906003)(44832011)(33656002)(305945005)(6116002)(3846002)(6916009)(66066001)(26005)(52536014)(74316002)(4326008)(2906002)(478600001)(68736007)(7736002)(229853002)(446003)(316002)(486006)(7696005)(186003)(102836004)(5660300002)(14454004)(6246003)(71200400001)(53936002)(66946007)(71190400001)(8676002)(256004)(81156014)(73956011)(55016002)(76176011)(7416002)(81166006)(9686003)(76116006)(99286004)(6506007)(25786009)(8936002)(66476007)(66446008)(6436002)(64756008)(476003)(86362001)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5309;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mu4KR8QYccwr0U/FAI5cMaBeiV0dE9dONoHkq1xji6xGt8JCRT7n1u7/yyNhi+DoWuwsYtr+VJj9jCNEOlIYP/8V4raHyjZZ10M4GupxrPhIiC9LqInKf/4i/t9AhXokExaXASdvkuflKzoSR8OdzW+grJ+H4VKVNKT7Bw+j6SyTYIRQ79tcMWWcwmcdnokMp+qs5JLGbGIccPHZw9psA4NsGt4PW+NWF3EXh3uCrP09YX31kk/qiZ8ITT6l8ELc8FngVHTgGoKZ6rrGHu05m7kJ6m5gifV1aBXByWMelUjB+1ARHIYpbagds9aqtTTtSp+NasjCyBQFzqHPXGy0Q0GqDMWnBuzMqTbbcRVVxcdcWWpBXG3H8YzIqViIuFYukq5D9AEJ5NAVRtMDtX8wtxmV85c7TA6Fzdq4dgGo/M8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c951484-610a-4101-b379-08d6f89979a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 11:45:37.2295
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.06.2019 13:02, Matt Redfearn wrote:
-> Hi,
-> Anything stopping this being applied?
+Hi Andrew,
 
-
-Queued to drm-misc-next.
-
---
-Regards
-Andrzej
-
-
+>-----Original Message-----
+>From: Andrew Lunn <andrew@lunn.ch>
+>Sent: Friday, June 21, 2019 7:50 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
+>Alexandre Belloni <alexandre.belloni@bootlin.com>; netdev@vger.kernel.org;
+>Alexandru Marginean <alexandru.marginean@nxp.com>; linux-
+>kernel@vger.kernel.org; UNGLinuxDriver@microchip.com; Allan Nielsen
+><Allan.Nielsen@microsemi.com>; Rob Herring <robh+dt@kernel.org>; linux-
+>arm-kernel@lists.infradead.org
+>Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix swit=
+ch port
+>DT node
 >
-> Thanks,
-> Matt
+>On Fri, Jun 21, 2019 at 06:38:50PM +0300, Claudiu Manoil wrote:
+>> The switch device features 6 ports, 4 with external links
+>> and 2 internally facing to the ls1028a SoC and connected via
+>> fixed links to 2 internal enetc ethernet controller ports.
 >
-> On 03/05/2019 16:32, Philippe CORNU wrote:
->> Hi Matt,
->> and many thanks for the patch.
->>
->> Tested successfully by Yannick on STM32MP1 boards :-)
->>
->> Tested-by: Yannick Fertré <yannick.fertre@st.com>
->> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
->>
->> Thank you,
->> Philippe :-)
->>
->>
->> On 4/30/19 10:17 AM, Matt Redfearn wrote:
->>> The Synopsys MIPI DSI IP contains a video test pattern generator which
->>> is helpful in debugging video timing with connected displays.
->>> Add a debugfs directory containing files which allow the VPG to be
->>> enabled and disabled, and its orientation to be changed.
->>>
->>> Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
->>>
->>> ---
->>>
->>> Changes in v2:
->>> - Ensure dw_mipi_dsi_video_mode_config() doesn't break without CONFIG_DEBUG_FS
->>> - Tidy up initialisation / tidy up of debugfs
->>>
->>>    drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 47 +++++++++++++++++++
->>>    1 file changed, 47 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> index 0ee440216b8..bffeef7a6cc 100644
->>> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> @@ -10,6 +10,7 @@
->>>    
->>>    #include <linux/clk.h>
->>>    #include <linux/component.h>
->>> +#include <linux/debugfs.h>
->>>    #include <linux/iopoll.h>
->>>    #include <linux/module.h>
->>>    #include <linux/of_device.h>
->>> @@ -86,6 +87,8 @@
->>>    #define VID_MODE_TYPE_NON_BURST_SYNC_EVENTS	0x1
->>>    #define VID_MODE_TYPE_BURST			0x2
->>>    #define VID_MODE_TYPE_MASK			0x3
->>> +#define VID_MODE_VPG_ENABLE		BIT(16)
->>> +#define VID_MODE_VPG_HORIZONTAL		BIT(24)
->>>    
->>>    #define DSI_VID_PKT_SIZE		0x3c
->>>    #define VID_PKT_SIZE(p)			((p) & 0x3fff)
->>> @@ -234,6 +237,13 @@ struct dw_mipi_dsi {
->>>    	u32 format;
->>>    	unsigned long mode_flags;
->>>    
->>> +#ifdef CONFIG_DEBUG_FS
->>> +	struct dentry *debugfs;
->>> +
->>> +	bool vpg;
->>> +	bool vpg_horizontal;
->>> +#endif /* CONFIG_DEBUG_FS */
->>> +
->>>    	struct dw_mipi_dsi *master; /* dual-dsi master ptr */
->>>    	struct dw_mipi_dsi *slave; /* dual-dsi slave ptr */
->>>    
->>> @@ -525,6 +535,13 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
->>>    	else
->>>    		val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
->>>    
->>> +#ifdef CONFIG_DEBUG_FS
->>> +	if (dsi->vpg) {
->>> +		val |= VID_MODE_VPG_ENABLE;
->>> +		val |= dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
->>> +	}
->>> +#endif /* CONFIG_DEBUG_FS */
->>> +
->>>    	dsi_write(dsi, DSI_VID_MODE_CFG, val);
->>>    }
->>>    
->>> @@ -935,6 +952,33 @@ static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
->>>    	.attach	      = dw_mipi_dsi_bridge_attach,
->>>    };
->>>    
->>> +#ifdef CONFIG_DEBUG_FS
->>> +
->>> +static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
->>> +{
->>> +	dsi->debugfs = debugfs_create_dir(dev_name(dsi->dev), NULL);
->>> +	if (IS_ERR(dsi->debugfs)) {
->>> +		dev_err(dsi->dev, "failed to create debugfs root\n");
->>> +		return;
->>> +	}
->>> +
->>> +	debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
->>> +	debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
->>> +			    &dsi->vpg_horizontal);
->>> +}
->>> +
->>> +static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
->>> +{
->>> +	debugfs_remove_recursive(dsi->debugfs);
->>> +}
->>> +
->>> +#else
->>> +
->>> +static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi) { }
->>> +static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi) { }
->>> +
->>> +#endif /* CONFIG_DEBUG_FS */
->>> +
->>>    static struct dw_mipi_dsi *
->>>    __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    		    const struct dw_mipi_dsi_plat_data *plat_data)
->>> @@ -1005,6 +1049,7 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    		clk_disable_unprepare(dsi->pclk);
->>>    	}
->>>    
->>> +	dw_mipi_dsi_debugfs_init(dsi);
->>>    	pm_runtime_enable(dev);
->>>    
->>>    	dsi->dsi_host.ops = &dw_mipi_dsi_host_ops;
->>> @@ -1012,6 +1057,7 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    	ret = mipi_dsi_host_register(&dsi->dsi_host);
->>>    	if (ret) {
->>>    		dev_err(dev, "Failed to register MIPI host: %d\n", ret);
->>> +		dw_mipi_dsi_debugfs_remove(dsi);
->>>    		return ERR_PTR(ret);
->>>    	}
->>>    
->>> @@ -1029,6 +1075,7 @@ static void __dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi)
->>>    	mipi_dsi_host_unregister(&dsi->dsi_host);
->>>    
->>>    	pm_runtime_disable(dsi->dev);
->>> +	dw_mipi_dsi_debugfs_remove(dsi);
->>>    }
->>>    
->>>    void dw_mipi_dsi_set_slave(struct dw_mipi_dsi *dsi, struct dw_mipi_dsi *slave)
->>>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
+>Hi Claudiu
+>
+>> +			switch@0,5 {
+>> +				compatible =3D "mscc,felix-switch";
+>> +				reg =3D <0x000500 0 0 0 0>;
+>> +
+>> +				ethernet-ports {
+>> +					#address-cells =3D <1>;
+>> +					#size-cells =3D <0>;
+>> +
+>> +					/* external ports */
+>> +					switch_port0: port@0 {
+>> +						reg =3D <0>;
+>> +					};
+>> +					switch_port1: port@1 {
+>> +						reg =3D <1>;
+>> +					};
+>> +					switch_port2: port@2 {
+>> +						reg =3D <2>;
+>> +					};
+>> +					switch_port3: port@3 {
+>> +						reg =3D <3>;
+>> +					};
+>> +					/* internal to-cpu ports */
+>> +					port@4 {
+>> +						reg =3D <4>;
+>> +						fixed-link {
+>> +							speed =3D <1000>;
+>> +							full-duplex;
+>> +						};
+>> +					};
+>> +					port@5 {
+>> +						reg =3D <5>;
+>> +						fixed-link {
+>> +							speed =3D <1000>;
+>> +							full-duplex;
+>> +						};
+>> +					};
+>> +				};
+>> +			};
+>
+>This sounds like a DSA setup, where you have SoC ports connected to
+>the switch. With DSA, the CPU ports of the switch are special. We
+>don't create netdev's for them, the binding explicitly list which SoC
+>interface they are bound to, etc.
+>
+>What model are you using here? I'm just trying to understand the setup
+>to ensure it is consistent with the swichdev model.
+>
 
+Yeah, there are 2 ethernet controller ports (managed by the enetc driver)=20
+connected inside the SoC via SGMII links to 2 of the switch ports, one of
+these switch ports can be configured as CPU port (with follow-up patches).
+
+This configuration may look prettier on DSA, but the main restriction here
+is that the entire functionality is provided by the ocelot driver which is =
+a
+switchdev driver.  I don't think it would be a good idea to copy-paste code
+from ocelot to a separate dsa driver.
+
+Thanks for the review.
+Claudiu
