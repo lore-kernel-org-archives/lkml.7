@@ -2,74 +2,162 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6359C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AA22089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D062089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfFXIoi (ORCPT
+        id S1727811AbfFXIrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:44:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35292 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfFXIoh (ORCPT
+        Mon, 24 Jun 2019 04:47:49 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:55339 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfFXIrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:44:37 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so9416478lfg.2;
-        Mon, 24 Jun 2019 01:44:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eTeIf7xKkh2A2KoD3+Or00SIMEpyxib8waiBIUrcyAg=;
-        b=XVLCBp5r9fje3/Fo7H3ivlDYSaYwVgwDsZyJ2iGRwV4AFomBUPoWrzMCZrgtsadmR+
-         wKQGNYiMGJQ9DtWdqA7w0R0tt78MjgckjKfCmcJSIlSLZwCu3u8rO5PNQ7MNw5AHbyvj
-         GCyfVWRX/4ki5AfBK1sA3ZOOndxIlimb/IG4RT/lZ+enkCnIAIT5lD73Jz1kZAsZIz/U
-         r1t+lQa10HLz7acDN4gavXslYuPjLu+WCHzYT6F2GvSxO4Fl55wjNVj44zgKXeE8QQ50
-         DqycnKo8iZVsk4dPUBnnHl/U/14mAoJRwd4ffpbzIaDdqi67e0KICWxawVuYJKayq4oA
-         fQVg==
-X-Gm-Message-State: APjAAAUebNS/dETdYuHLOVL61xyRV0nmU5hbtvPMXXHJayPEl4qJL5fv
-        R+gvLGzM+tORerob742K6GXtKjAydcI=
-X-Google-Smtp-Source: APXvYqwfFsag4uho3t2Tr17/GEZQrV0CY2It2w0W1t4jFqGN7KU4ymdaiY5qC3iE82pnWAQNwXrVyg==
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr72816384lfn.165.1561365875701;
-        Mon, 24 Jun 2019 01:44:35 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id w28sm1624030ljd.12.2019.06.24.01.44.35
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 01:44:35 -0700 (PDT)
-Subject: Re: [PATCH] parisc: asm: psw.h: missing header guard
-To:     Rolf Eike Beer <eike-kernel@sf-tec.de>
-Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+        Mon, 24 Jun 2019 04:47:49 -0400
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id CC5071C0002;
+        Mon, 24 Jun 2019 08:47:37 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 10:47:37 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, mchehab+samsung@kernel.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-References: <20190623150920.26422-1-efremov@linux.com>
- <8264763.oMOxLtkXCx@daneel.sf-tec.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <00da63b3-e98d-147b-32ad-ede82d7c1e17@linux.com>
-Date:   Mon, 24 Jun 2019 11:44:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+Subject: Re: [PATCH v4 02/11] dt-bindings: thermal: add binding document for
+ h6 thermal controller
+Message-ID: <20190624084737.k5stgmqi2kx2p52o@flea>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+ <20190623164206.7467-3-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8264763.oMOxLtkXCx@daneel.sf-tec.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ivprrpimudesnwlt"
+Content-Disposition: inline
+In-Reply-To: <20190623164206.7467-3-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rolf Eike Beer wrote:
-> 
-> You could have removed one of the 2 empty lines then.
-> 
 
-Will send the v2 in minutes.
+--ivprrpimudesnwlt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Denis
+Hi,
+
+On Sun, Jun 23, 2019 at 12:41:57PM -0400, Yangtao Li wrote:
+> This patch adds binding document for allwinner h6 thermal controller.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> new file mode 100644
+> index 000000000000..2c5acc61ed03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +description: |-
+> +  This describes the device tree binding for the Allwinner thermal
+> +  controller which measures the on-SoC temperatures.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 1
+
+You can drop the minItems there
+
+> +  nvmem-cells:
+> +    items:
+> +      - description: ths calibrate data
+> +
+> +  nvmem-cell-names:
+> +    items:
+> +      - const: calib
+
+And for these two, you don't need the items either, it can be directly
+const: calib (and the description for the first one).
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - '#thermal-sensor-cells'
+> +
+> +examples:
+> +  - |
+> +    ths: ths@5070400 {
+> +         compatible = "allwinner,sun50i-h6-ths";
+> +         reg = <0x05070400 0x100>;
+> +         clocks = <&ccu CLK_BUS_THS>;
+> +         clock-names = "bus";
+> +         resets = <&ccu RST_BUS_THS>;
+> +         interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+
+Did you try to run make dtbs_check? That one will probably not
+compile.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ivprrpimudesnwlt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRCOKQAKCRDj7w1vZxhR
+xdBPAQDsYR1iG7lP4B3btdotbt4B3Mnzh74qRV6goFe8yPrtVQEAqTZEFyHblHwJ
+MP/jYXkzBszWwvzwTaG37gmvGqItzQg=
+=EY/h
+-----END PGP SIGNATURE-----
+
+--ivprrpimudesnwlt--
