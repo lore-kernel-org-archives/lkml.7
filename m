@@ -2,59 +2,60 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA0AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D990AC48BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2D620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58C720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M48+BroH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="loOF0OsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfFXTlH (ORCPT
+        id S1730658AbfFXTlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:41:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40336 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfFXTlH (ORCPT
+        Mon, 24 Jun 2019 15:41:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45003 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730403AbfFXTlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:41:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so15157182wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:41:06 -0700 (PDT)
+        Mon, 24 Jun 2019 15:41:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r16so15136613wrl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J6McyXpHhvJ62Wx5SvCqGaB8/OSzRVB/5VC6vTy2TqQ=;
-        b=M48+BroHFQYMi06n4mupqxhg0lJK+JUAVqf5zHxFG54TrAZYIrIWtQUPbfLJhowVfY
-         nha7AD8YdXoLitLaAIuvmXGtIlr0gJfEkS8Ir4FSHGlf6R191KkvGz+ie7RevmS0hbyH
-         tOIz9XGsYXVfkUZxFaUZQaMcXIKXc3VdKe/8I09ftsegvoJ6IONcP55/knMzWpu5v9+V
-         Wi3TELxFuVq+OGYDSZ1Az+t/uyW1KrJZvtZlrVf8zaporbdn9tEexXV4RvLls+RjZWls
-         lh6ZfGKNdpHun6Ky9xnYfIbip8UwcW4DPTnmTk7Txy+AeSEwTYHjDkawFzMMt8SqFQKV
-         P/Pw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=atnBayrLpc2AX2svhMGsm60ysNZ9T7b+BNR7ZDTK0cg=;
+        b=loOF0OsDukaQjB4gzqEHf33xXpdkbvyUk80B+5eIPhILYl3VwyDSvqJO1sDzZPH6vR
+         rYRmMEWXgZZ+gLv5AELdm+O8YH2kQdVu5DaDMI8iW08rgE1dfcsAHgsEalivjQKP7Jk5
+         ccts3YWXMX9OGdxCu3hjcf8sqVTErfRXU8/mZo9lefPBvJg7DWfUfAEC10ylbMWRFaoO
+         +xisJCFcz4ITFGyNEpO6/c8P6ktheNpleL+RrZ09eT0srbMUAvnBR3usvSU1419Bmp9e
+         GDd6dNe/u6Axk6UZpZxbMgrpyHrxioQvGQOnpNn7WlkjsFbxeTQA/5Wg4ZJTcbJlMJlA
+         7stA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J6McyXpHhvJ62Wx5SvCqGaB8/OSzRVB/5VC6vTy2TqQ=;
-        b=Pn9UJOINdIKEpZ2e3QhV7WyPHrXjhaurI7ehlxz3VFlU0rpuXQ8PqlO3ZlpBGS25Se
-         Uub9hg+Bam7+gtD40J+X9g6EKsWSmMOEktTqv2PlDUuH3f1dv2m/wflz52JTbuOrW6/8
-         62WKlT3cq7TozcjLxMFxKpNHn1CuZH35PJnGshG/bZwLNnLGT+yjXWBxbYQ+MyM07yVM
-         7wn9vRPyyqm04lwJLT891OI888MxBMGqb4R5SKpA7WwpvBQHv5oh/A47jCOHUFcvEybw
-         OJTeLz/R2UeKZt2Osjj5herxLRDDtCTxh0i/G+ks/bR8cAqZBkRBDeWA16J15W3MYu9U
-         Narw==
-X-Gm-Message-State: APjAAAW8y/eb/+SMfWO6ixap1wMvwrrkarslOzCY3LnPzgjgWjH72fVF
-        fKXhTGLxV9FLNXgmoyCGhTWhng==
-X-Google-Smtp-Source: APXvYqyD1eXJ9voOpGfL9zu8E91jQPk0kmAnjvPBM0hwFXNjfqm/29dKOBYYxImoXX6UVfSxyoJczA==
-X-Received: by 2002:adf:dfc4:: with SMTP id q4mr37375067wrn.54.1561405265273;
-        Mon, 24 Jun 2019 12:41:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=atnBayrLpc2AX2svhMGsm60ysNZ9T7b+BNR7ZDTK0cg=;
+        b=LA4+D327dght5JSdzEziXRzCyzzGBOxVZVxhzYp0/0B7GP/UlXBwLkMnl7K5spAi9n
+         d4gH4r/Ehc5qZ25Bzl1aZ3wMuqgyN1XPvddMs5zFTkyRR9MW6iG4C0+7hLJZS2R6aL1f
+         jo5ViM0TI5tXdwoebPG/W/xQDk6FX8SfkXJxq6VQ2Umyc2QuQapQa/78Hz48yZy13dD0
+         rsYUaeyvQIF9gptIfNIg8QgGYSf/rWiqE659KQyAa/eFqG9Fq3qfOaT8ek4I1c+mR8QA
+         MdVsKnZnNGIqf4qTlN9NmzGKRpJGI/9SjF22i7+wYVSqn7LX0FnziEKdI7P37b/FVXA7
+         PgbQ==
+X-Gm-Message-State: APjAAAWYQW5XgwIEzj7V+ErNosnpfc9aJJUFYElJ+ooDI3pEbtALMHNo
+        jZaYrVPgq1/vPav8orCNpXQMJg==
+X-Google-Smtp-Source: APXvYqwqN7K2xUrBvStkw/0/+NWC3qsndEhJuGUuF96jm/cvwuGDunI66D16FAF8RBYMz+iCOUSBqg==
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr34579834wrn.160.1561405267903;
+        Mon, 24 Jun 2019 12:41:07 -0700 (PDT)
 Received: from localhost.localdomain (146-241-101-27.dyn.eolo.it. [146.241.101.27])
-        by smtp.gmail.com with ESMTPSA id q25sm17615395wrc.68.2019.06.24.12.41.04
+        by smtp.gmail.com with ESMTPSA id q25sm17615395wrc.68.2019.06.24.12.41.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 12:41:04 -0700 (PDT)
+        Mon, 24 Jun 2019 12:41:07 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,10 +63,12 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
         bottura.nicola95@gmail.com, srivatsa@csail.mit.edu,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT 0/7] boost throughput with synced I/O, reduce latency and fix a bandwidth bug
-Date:   Mon, 24 Jun 2019 21:40:35 +0200
-Message-Id: <20190624194042.38747-1-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT 2/7] block, bfq: fix rq_in_driver check in bfq_update_inject_limit
+Date:   Mon, 24 Jun 2019 21:40:37 +0200
+Message-Id: <20190624194042.38747-3-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190624194042.38747-1-paolo.valente@linaro.org>
+References: <20190624194042.38747-1-paolo.valente@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,30 +76,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-this series, based against for-5.3/block, contains:
-1) The improvements to recover the throughput loss reported by
-   Srivatsa [1] (first five patches)
-2) A preemption improvement to reduce I/O latency
-3) A fix of a subtle bug causing loss of control over I/O bandwidths
+One of the cases where the parameters for injection may be updated is
+when there are no more in-flight I/O requests. The number of in-flight
+requests is stored in the field bfqd->rq_in_driver of the descriptor
+bfqd of the device. So, the controlled condition is
+bfqd->rq_in_driver == 0.
 
-Thanks,
-Paolo
+Unfortunately, this is wrong because, the instruction that checks this
+condition is in the code path that handles the completion of a
+request, and, in particular, the instruction is executed before
+bfqd->rq_in_driver is decremented in such a code path.
 
-[1] https://lkml.org/lkml/2019/5/17/755
+This commit fixes this issue by just replacing 0 with 1 in the
+comparison.
 
-Paolo Valente (7):
-  block, bfq: reset inject limit when think-time state changes
-  block, bfq: fix rq_in_driver check in bfq_update_inject_limit
-  block, bfq: update base request service times when possible
-  block, bfq: bring forward seek&think time update
-  block, bfq: detect wakers and unconditionally inject their I/O
-  block, bfq: preempt lower-weight or lower-priority queues
-  block, bfq: re-schedule empty queues if they deserve I/O plugging
+Tested-by: Srivatsa S. Bhat <srivatsa@csail.mit.edu>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-iosched.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
- block/bfq-iosched.c | 952 ++++++++++++++++++++++++++++++--------------
- block/bfq-iosched.h |  25 +-
- 2 files changed, 686 insertions(+), 291 deletions(-)
-
---
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 9bc10198ddff..05041f84b8da 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5481,8 +5481,14 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
+ 	 * total service time, and there seem to be the right
+ 	 * conditions to do it, or we can lower the last base value
+ 	 * computed.
++	 *
++	 * NOTE: (bfqd->rq_in_driver == 1) means that there is no I/O
++	 * request in flight, because this function is in the code
++	 * path that handles the completion of a request of bfqq, and,
++	 * in particular, this function is executed before
++	 * bfqd->rq_in_driver is decremented in such a code path.
+ 	 */
+-	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 0) ||
++	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 1) ||
+ 	    tot_time_ns < bfqq->last_serv_time_ns) {
+ 		bfqq->last_serv_time_ns = tot_time_ns;
+ 		/*
+-- 
 2.20.1
+
