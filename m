@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9D3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6755B2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF19820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371358;
-	bh=iX2Cvxv91ZoHMIbqMcsmuPSIR3ZlwV71LpYzXjuL+B0=;
+	s=default; t=1561371364;
+	bh=IxxckGWoavSWiTFLS3AgZL5hr8r6rQT8m7x02K4Eoho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0+/2Pd2VLgtnmSQTUmhrOf+mfzS6UqUXuDrunEaIXUoD7WC1+m1DqYF+ck6utIEZ
-	 k6r+26np8lDseMBHIxcp+UvI8dL0uXn99UbEe4QY6nL8Ux6HsKyUH4ui2RdENPOPrV
-	 D0bI6lxa03iR4Ci0szZ0X5WcwjGgAMPrp9P6IzdA=
+	b=l3BRfHPG+gvaDO7P7iMWdT0FgQQAHvI2S7edzDhAWWSPa3bGBz0u2+3g6qrJZ5tE1
+	 3UM1mMMYJQ7dO16wJk9PpG3ycRv4rzDN08bA2oYKWEKH9iRvGD2pYawxjlQU6ZppUB
+	 NQDd9Qa5PqFpWjkzlQboSAtsFEiejKvmeGDeXnuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbfFXKP5 (ORCPT
+        id S1730592AbfFXKQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfFXKPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:15:52 -0400
+        id S1730025AbfFXKP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:15:58 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1172B20645;
-        Mon, 24 Jun 2019 10:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65D5E205ED;
+        Mon, 24 Jun 2019 10:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371352;
-        bh=iX2Cvxv91ZoHMIbqMcsmuPSIR3ZlwV71LpYzXjuL+B0=;
+        s=default; t=1561371357;
+        bh=IxxckGWoavSWiTFLS3AgZL5hr8r6rQT8m7x02K4Eoho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCA7SiNPp/vsvvBstvbj3qe4Fkfk89um9DEKxedDdTfTAMf31SGNnOZg/wB69s7FS
-         pfP+CrHW5/lpH25bsduFNU99HasiKU0he7Um2YRRGqZ66J80PF9iKqtdjbvHhT3AUo
-         ailpaR7q4x6bkO2zqFhxxJ2JsplSb2sa1J0+Zkos=
+        b=2Ed3i8j6fgN3jAQYlorn3+Shj/KAqZ7wvaAo3+d3FO0YP5nFsxuajWyVur4P62dcb
+         HolS6/P5Kg2wMr7rNjnbFM1mtQsTYVFOUxtwa0Pi+R/5JpCbg9J440VX+LwDXog/KY
+         Y/XyDHcRNEoCAqrRZ5qlGl+wLrGm0tQ1FVnvt6KI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        stable@vger.kernel.org, Eric Long <eric.long@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 036/121] dmaengine: sprd: Fix the possible crash when getting descriptor status
-Date:   Mon, 24 Jun 2019 17:56:08 +0800
-Message-Id: <20190624092322.661887903@linuxfoundation.org>
+Subject: [PATCH 5.1 038/121] dmaengine: sprd: Fix the incorrect start for 2-stage destination channels
+Date:   Mon, 24 Jun 2019 17:56:10 +0800
+Message-Id: <20190624092322.752085308@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,39 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16d0f85e45b99411ac10cb12cdd9279204a72381 ]
+[ Upstream commit 3d626a97f0303e9c30d063434b749de3f0f91fb5 ]
 
-We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
-has been submitted, that will crash the kernel when getting the descriptor
-status.
+The 2-stage destination channel will be triggered by source channel
+automatically, which means we should not trigger it by software request.
 
-In this case, since the descriptor has been submitted to process, but it
-is not completed now, which means the descriptor is listed into the
-'vc->desc_submitted' list now. So we can not get current processing descriptor
-by vchan_find_desc(), but the pointer 'schan->cur_desc' will point to the
-current processing descriptor, then we can use 'schan->cur_desc' to get
-current processing descriptor's status to avoid this issue.
-
+Signed-off-by: Eric Long <eric.long@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/sprd-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 48431e2da987..e29342ab85f6 100644
+index 431e289d59a5..0f92e60529d1 100644
 --- a/drivers/dma/sprd-dma.c
 +++ b/drivers/dma/sprd-dma.c
-@@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
- 		else
- 			pos = 0;
- 	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
--		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
-+		struct sprd_dma_desc *sdesc = schan->cur_desc;
+@@ -510,7 +510,9 @@ static void sprd_dma_start(struct sprd_dma_chn *schan)
+ 	sprd_dma_set_uid(schan);
+ 	sprd_dma_enable_chn(schan);
  
- 		if (sdesc->dir == DMA_DEV_TO_MEM)
- 			pos = sprd_dma_get_dst_addr(schan);
+-	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID)
++	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID &&
++	    schan->chn_mode != SPRD_DMA_DST_CHN0 &&
++	    schan->chn_mode != SPRD_DMA_DST_CHN1)
+ 		sprd_dma_soft_request(schan);
+ }
+ 
 -- 
 2.20.1
 
