@@ -2,95 +2,97 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD62C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A591AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D6520645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C03A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfFXT5C (ORCPT
+        id S1731170AbfFXT5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:57:02 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:58495 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727282AbfFXT5B (ORCPT
+        Mon, 24 Jun 2019 15:57:14 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48617 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfFXT5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:57:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1FD7F100E86C5;
-        Mon, 24 Jun 2019 19:57:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fold16_1fd688a2af52b
-X-Filterd-Recvd-Size: 2354
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 24 Jun 2019 19:56:58 +0000 (UTC)
-Message-ID: <c40261d18ff593767a026d0392d44f322b4a3b33.camel@perches.com>
-Subject: Re: [PATCH v6 1/1] EDAC, mellanox: Add ECC support for BlueField
- DDR4
-From:   Joe Perches <joe@perches.com>
-To:     Shravan Kumar Ramani <sramani@mellanox.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-Cc:     Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
+        Mon, 24 Jun 2019 15:57:13 -0400
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 874FF240005;
+        Mon, 24 Jun 2019 19:57:05 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 21:57:05 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 24 Jun 2019 12:56:57 -0700
-In-Reply-To: <176e13c80688f9a37161091e31ade487db6d4c2e.1561400421.git.sramani@mellanox.com>
-References: <cover.1561400421.git.sramani@mellanox.com>
-         <176e13c80688f9a37161091e31ade487db6d4c2e.1561400421.git.sramani@mellanox.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
+ doesn't
+Message-ID: <20190624195705.GD5690@piout.net>
+References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 14:42 -0400, Shravan Kumar Ramani wrote:
-> Add ECC support for Mellanox BlueField SoC DDR controller.
-> This requires SMC to the running Arm Trusted Firmware to report
-> what is the current memory configuration.
-[]
-> diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
-[]
-> @@ -0,0 +1,381 @@
-[]
-> +#define MLXBF_ECC_CNT__SERR_CNT_SHIFT 0
-> +#define MLXBF_ECC_CNT__SERR_CNT_MASK 0xffff
-> +#define MLXBF_ECC_CNT__DERR_CNT_SHIFT 16
-> +#define MLXBF_ECC_CNT__DERR_CNT_MASK 0xffff
+On 21/06/2019 11:51:26+1000, Finn Thain wrote:
+> Some machines store local time in the Real Time Clock. The hard-coded
+> "UTC" string is wrong on those machines so just omit that string.
+> Update the log parser so it doesn't require the string "UTC".
+> 
 
-[multiple variants of #defines like the above]
+I don't agree, hctossys will always think the RTC is in UTC. If you
+store local time in the RTC, then you are probably not using hctosys
+because it definitively doesn't know about the timezone and will
+incorrectly set the system time. That information is usually kept in
+/etc/adjtime.
 
-[]
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> ---
+>  drivers/rtc/hctosys.c             | 2 +-
+>  tools/power/pm-graph/bootgraph.py | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
+> index ff2092a0d38c..2270eca23203 100644
+> --- a/drivers/rtc/hctosys.c
+> +++ b/drivers/rtc/hctosys.c
+> @@ -58,7 +58,7 @@ static int __init rtc_hctosys(void)
+>  
+>  	err = do_settimeofday64(&tv64);
+>  
+> -	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
+> +	dev_info(rtc->dev.parent, "setting system clock to %ptR (%lld)\n",
+>  		 &tm, (long long)tv64.tv_sec);
+>  
+>  err_read:
+> diff --git a/tools/power/pm-graph/bootgraph.py b/tools/power/pm-graph/bootgraph.py
+> index 6dae57041537..5a045d1cb879 100755
+> --- a/tools/power/pm-graph/bootgraph.py
+> +++ b/tools/power/pm-graph/bootgraph.py
+> @@ -333,7 +333,7 @@ def parseKernelLog():
+>  			if(not sysvals.stamp['kernel']):
+>  				sysvals.stamp['kernel'] = sysvals.kernelVersion(msg)
+>  			continue
+> -		m = re.match('.* setting system clock to (?P<t>.*) UTC.*', msg)
+> +		m = re.match('.* setting system clock to (?P<t>.*) (?:UTC )?\(.*', msg)
+>  		if(m):
+>  			bt = datetime.strptime(m.group('t'), '%Y-%m-%d %H:%M:%S')
+>  			bt = bt - timedelta(seconds=int(ktime))
+> -- 
+> 2.21.0
+> 
 
-> +	serr = (dram_syndrom >> MLXBF_SYNDROM__SERR_SHIFT) &
-> +		MLXBF_SYNDROM__SERR_MASK;
-> +	derr = (dram_syndrom >> MLXBF_SYNDROM__DERR_SHIFT) &
-> +		MLXBF_SYNDROM__DERR_MASK;
-> +	syndrom = (dram_syndrom >> MLXBF_SYNDROM__SYN_SHIFT) &
-> +		MLXBF_SYNDROM__SYN_MASK;
-
-To improve readability and reduce possible copy/paste errors,
-these would all benefit from a macro like
-
-#define MLXBF_SM(val, type) 	\
-	(((val) >> (MLXBF_ ## type ## _SHIFT)) & (MLXBF_ ## type ## _MASK)))
-
-So these uses could become:
-
-	serr = MLXBF_SM(dram_syndrom, SYNDROM__SERR);
-	derr = MLXBF_SM(dram_syndrom, SYNDROM__DERR);
-	syndrom =
-MLXBF_SM(dram_syndrom, SYN);
-
-etc...
-
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
