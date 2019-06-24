@@ -2,138 +2,101 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06905C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF243C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D361420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561398372;
-	bh=2YUqQ/qWiyhPNFJWQTWMpcEVjbKIcsm4EvNybS/R7oI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G9grrOqYvqGGfrP7TuvrspOL1TTd6pyzjF9vQd2tgNiHWw0AXhJYNC5wcotpoZwZo
-	 gJkDD/ErbfenKGshI5PMe5U3l7uMNC/F7ecCtz59QM/ItpNqZMoMUcbtOY+iKIJS27
-	 6lz1OpwZy+OU9QTPJByvnpygEhL0wYWWZNA1MIEM=
+	by mail.kernel.org (Postfix) with ESMTP id 7718520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:46:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pegVqKhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfFXRqL (ORCPT
+        id S1731806AbfFXRqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:46:11 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34265 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfFXRqL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:46:11 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t8so10438896qkt.1;
-        Mon, 24 Jun 2019 10:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zqvhv4+HocZvAFgQ886MQBeV76Way/6y27/WtDFCSes=;
-        b=vHR3m7Cw0aO++OPfO86qU7byPS7zK+S7TvkfG3a2HodsI2oq3SB6b6zb73f0m4wAM1
-         stii6+Wq5k+1gW2y52IOuohS6Ma3ZEvGxcMFkK5DFZDVcug8n4nRFmAAAGOw/t/W1Lvq
-         etn4ME0A2n6n2MdOFmak5Sr+NwCWDGyC9UATjJzWsYTC8xPRGn6m4gx4JdttXNzknnBP
-         UL/fbcMFmDgGWjk7f/C0WO38e8F4fQ2f21W2yNk3NYnYTeclq78/l3O38DXQpFcYaSAt
-         YLpa0kjKCNAz21XYCRhpIzGjGqVqYnH5YF31CmdQ/6Xpw8NHOTwbbCwpELMicNNS9+9o
-         cDPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zqvhv4+HocZvAFgQ886MQBeV76Way/6y27/WtDFCSes=;
-        b=sfgFVk6HxbVuW4r58laowJNUn0iVbsh2SXkzZx4uCU6CNWT1qhsmUn+EGA6D08w7Hb
-         pdyLlTfZy6HLs8eOv04/5CIyeWxHrhxKY+a4hnfUGnb0ITgIxg3skMJycu8Nd25TKoZU
-         bW9SlxK/93xsv0E8UGdxctJRFTiHmItq2oXFOAWUX1gHTS37/n9zru2kkC3JFRoXxNYR
-         18xhcWcRWC+1UvvTK06Wq8Wm6Tgz2Cilb7aBe1fQT+uK9GAQlb7tp6jKpV61YcuC/8Q6
-         YPwRlLRrFQ21Dreb+ZZM2yseNcmih5Qr02oQJCl/CgRKy82qr71b/BXUkOEcY80wc4Ll
-         y71w==
-X-Gm-Message-State: APjAAAVHOkjtixWIHIt7DGkqC5xQx6Fchqns6BqWUN81ANMkQQFQJpet
-        3ARn6l8WNOK97sRp4XM4Yrkq+7Sp
-X-Google-Smtp-Source: APXvYqxX0bKL1ZZp233OQnZs7tJk5Ha00oreIjI+nAb4bDv2XkvCQ630hdwQSisX+Y/ep+WSTHRs+Q==
-X-Received: by 2002:a37:9c16:: with SMTP id f22mr121696273qke.261.1561398369951;
-        Mon, 24 Jun 2019 10:46:09 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::2c48])
-        by smtp.gmail.com with ESMTPSA id j79sm6894214qke.112.2019.06.24.10.46.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 10:46:08 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 10:46:07 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v10 13/16] sched/core: uclamp: Propagate parent clamps
-Message-ID: <20190624174607.GQ657710@devbig004.ftw2.facebook.com>
-References: <20190621084217.8167-1-patrick.bellasi@arm.com>
- <20190621084217.8167-14-patrick.bellasi@arm.com>
- <20190622150750.GN657710@devbig004.ftw2.facebook.com>
- <20190624173405.enrxqalaqinbgsut@e110439-lin>
+        Mon, 24 Jun 2019 13:46:40 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53516 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbfFXRqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:46:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1561398397; bh=l26+171beDHOxmBA8VQOvSCiteWk45rGxm72YTM5O5M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pegVqKhp8mz968SWeU+w2vKRP6a4dc5+dBNm3nxwjuqAnevGGPHI4ZwfoFTXH8rjC
+         thu7zSl6O4mdMXvGt7ZiNDk2BDZdMjeXRx4UwQIv7JVVJa+Df0sZPc6ZKAo7frELlZ
+         9z4OGEpcrYnbZdEHdsuYFHIY74nf+gLab1TwBX54=
+Date:   Mon, 24 Jun 2019 19:46:37 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com,
+        wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
+Message-ID: <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
+Mail-Followup-To: David Miller <davem@davemloft.net>,
+        linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com,
+        wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20190620134748.17866-1-megous@megous.com>
+ <20190624.102927.1268781741493594465.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624173405.enrxqalaqinbgsut@e110439-lin>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190624.102927.1268781741493594465.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Patrick.
-
-On Mon, Jun 24, 2019 at 06:34:05PM +0100, Patrick Bellasi wrote:
-> > On Fri, Jun 21, 2019 at 09:42:14AM +0100, Patrick Bellasi wrote:
-> > > Since it can be interesting for userspace, e.g. system management
-> > > software, to know exactly what the currently propagated/enforced
-> > > configuration is, the effective clamp values are exposed to user-space
-> > > by means of a new pair of read-only attributes
-> > > cpu.util.{min,max}.effective.
+On Mon, Jun 24, 2019 at 10:29:27AM -0700, David Miller wrote:
+> From: megous@megous.com
+> Date: Thu, 20 Jun 2019 15:47:42 +0200
+> 
+> > From: Ondrej Jirman <megous@megous.com>
 > > 
-> > Can we not add the effective interface file for now?
+> > This series implements support for Xunlong Orange Pi 3 board.
+> > 
+> > - ethernet support (patches 1-3)
+> > - HDMI support (patches 4-6)
+> > 
+> > For some people, ethernet doesn't work after reboot (but works on cold
+> > boot), when the stmmac driver is built into the kernel. It works when
+> > the driver is built as a module. It's either some timing issue, or power
+> > supply issue or a combination of both. Module build induces a power
+> > cycling of the phy.
+> > 
+> > I encourage people with this issue, to build the driver into the kernel,
+> > and try to alter the reset timings for the phy in DTS or
+> > startup-delay-us and report the findings.
 > 
-> You mean just the (read-only) user-space API right?
-
-Yeah.
-
-> I found it quite convenient, even just for debugging.
-> Moreover it allows a container to know what it's exactly getting...
-
-I fully agree.
-
-> > I don't think it's a bad idea but would like to think more about it.
-> > For cpuset, it was needed because configuration was so interwoven
-> > with the effective masks, but we don't generally do this for other
-> > min/max or weight knobs, all of which have effective hierarchical
-> > values and I'm not quite sure about adding .effective for all of
-> > them.
-> > It could be that that's what we end up doing eventually but
-> > I'd like to think a bit more about it.
+> This is a mixture of networking and non-networking changes so it really
+> can't go through my tree.
 > 
-> ... but I see your point and, since it's not strictly required, I
-> think we can drop it in v11. Will check better if it's of any use
-> apart from debugging/testing support.
+> I wonder how you expect this series to be merged?
+> 
+> Thanks.
 
-Yeah, I just wanna figure out a plan which works for other controllers
-too.  It could be that the right thing to do is just adding .effective
-to everything but idk I need to think more about it.
+This series was even longer before, with patches all around for various
+maintainers. I'd expect that relevant maintainers pick the range of patches
+meant for them. I don't know who's exactly responsible for what, but I think,
+this should work:
 
-Thanks.
+- 2 stmmac patches should go together via some networking tree (is there
+  something specific for stmmac?)
+- all DTS patches should go via sunxi
+- hdmi patches via some drm tree
 
--- 
-tejun
+thank you and regards,
+	o.
