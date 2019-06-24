@@ -2,174 +2,124 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB67C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65E6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DAB205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sn2HlGn3"
+	by mail.kernel.org (Postfix) with ESMTP id A64E52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561390764;
+	bh=ZYAnFVb9E5/har+TpVa/361C3B1529mpTgyS6KnQOQ0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=TSYcpJfubnXOOlYnQuIQI6Io4UJnhc7We10v9vi60YdNfKd7xdkRHboIrYkGGpbT3
+	 OudmoRJKxIBQiVnobZXGIxQv48c28ulmjmp4Q0INXk4CnpwPAwKim5JuhbY34w4GFh
+	 Kfo6NVdc7rpMYj3x3futLk+x+9vm5Tk3SziSFdxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731208AbfFXPia (ORCPT
+        id S1731214AbfFXPjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:38:30 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:13600 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfFXPi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:38:28 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="35625180"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2019 08:38:27 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 08:37:28 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 24 Jun 2019 08:37:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Z8Vw1y174E7oyZoYvXlSn3C/Ka4yfqqxb9UEYX1Ezk=;
- b=sn2HlGn3AFoGH99UgovOLUjWVdiafpuwFnURmVO2yqFzlVQNk5KTcbT49oLfMGuoOENrHN7FN3jeJUrCLS0r7SayaPkqQibl9CLfJb8+AyKitxdkDhE/XPw/NLDAiOaFIxmCFxE68cEvUlVJgjxKyTA40b5SLUj8Rh5XGWFYmng=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHSPR00MB242.namprd11.prod.outlook.com (10.169.207.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Mon, 24 Jun 2019 15:38:23 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 15:38:23 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <robh+dt@kernel.org>, <yash.shah@sifive.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <mark.rutland@arm.com>,
-        <palmer@sifive.com>, <aou@eecs.berkeley.edu>, <ynezz@true.cz>,
-        <paul.walmsley@sifive.com>, <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000 binding
-Thread-Topic: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000
- binding
-Thread-Index: AQHVKqLbM22kFcE4xk2eilNUVLOx5w==
-Date:   Mon, 24 Jun 2019 15:38:23 +0000
-Message-ID: <b0c60ec9-2f57-c3f5-c3b4-ee83a5ec4c45@microchip.com>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
- <1558611952-13295-2-git-send-email-yash.shah@sifive.com>
- <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0406.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:f::34) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 290f0a53-2d13-42a3-dab0-08d6f8b9fde6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHSPR00MB242;
-x-ms-traffictypediagnostic: MWHSPR00MB242:
-x-microsoft-antispam-prvs: <MWHSPR00MB2422390040E3DA84F4ECFD6E0E00@MWHSPR00MB242.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(366004)(136003)(189003)(199004)(6436002)(26005)(68736007)(6116002)(476003)(6512007)(110136005)(36756003)(6486002)(52116002)(73956011)(76176011)(66556008)(2906002)(3846002)(53936002)(72206003)(31686004)(66476007)(66946007)(11346002)(64756008)(478600001)(4326008)(99286004)(14454004)(25786009)(446003)(2616005)(66446008)(86362001)(102836004)(229853002)(53546011)(186003)(6506007)(6246003)(54906003)(316002)(486006)(5660300002)(66066001)(31696002)(386003)(71200400001)(7416002)(305945005)(71190400001)(8936002)(81156014)(81166006)(8676002)(7736002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHSPR00MB242;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QNtqDVoxysryNHIC74fIbsrkiCeObMpZohIvR4w1aKNnVNyCM/BiSdfNTl7hSloeV5r4YJcunx9VV3i+DKARv4WG04vLbqzj+dMxJGB4gmllN67LpWwVfqM4otEbxZ3iPy7+6Tb+IwKhb6ecARkisf2NorWGmdyIT5ycYjzo+2up4QEwKnU7TnyeXZErOyOKKy4tSjTzgcR53nQPksGgPcqz19DVmObu4wo9JyzXDoZMV6glvm2NDoFONiIp4WnE0eLNXnXvan9FqqWke4Et8B3LVGrcVaAr6QVQ35zIqEYCZT6wrygcDQrHd2eCwzebYpyqzzShfFtxeQOgJGptT/uF5A0bVLALfijovmrEyRXcsCE1nZ8ngKPHaHxlmw6GKjsma3rTZHK8xpzevKa8r+3xGjVeF0aP/Hh75q2W8tU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BF668DD5250ADD4CA5B56765716862D1@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 11:39:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfFXPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 11:39:23 -0400
+Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E6CD2054F;
+        Mon, 24 Jun 2019 15:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561390761;
+        bh=ZYAnFVb9E5/har+TpVa/361C3B1529mpTgyS6KnQOQ0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cByF7kMYeb72/2o8o2lgXoTHdDi3qnBisKdx7jUe9vW+KizwvOuwevHdsmUWZ0w5Q
+         bYQ466vp/mgqsQNPtJCcjce3XBMW/bNTICIWybcbaIgleg/ItcJtoAmO7Hq3M14NwJ
+         0pBNRlBb5moIRx942HGWfB1k3TdgcySddKm6QvgE=
+Subject: Re: [PATCH] ARM: dts: socfpga: update to new Denali NAND binding
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+References: <20190621112306.17769-1-yamada.masahiro@socionext.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
+Date:   Mon, 24 Jun 2019 10:39:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 290f0a53-2d13-42a3-dab0-08d6f8b9fde6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 15:38:23.4499
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHSPR00MB242
+In-Reply-To: <20190621112306.17769-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjMvMDUvMjAxOSBhdCAyMjo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgTWF5
-IDIzLCAyMDE5IGF0IDY6NDYgQU0gWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4gd3Jv
-dGU6DQo+Pg0KPj4gQWRkIHRoZSBjb21wYXRpYmlsaXR5IHN0cmluZyBkb2N1bWVudGF0aW9uIGZv
-ciBTaUZpdmUgRlU1NDAtQzAwMDANCj4+IGludGVyZmFjZS4NCj4+IE9uIHRoZSBGVTU0MCwgdGhp
-cyBkcml2ZXIgYWxzbyBuZWVkcyB0byByZWFkIGFuZCB3cml0ZSByZWdpc3RlcnMgaW4gYQ0KPj4g
-bWFuYWdlbWVudCBJUCBibG9jayB0aGF0IG1vbml0b3JzIG9yIGRyaXZlcyBib3VuZGFyeSBzaWdu
-YWxzIGZvciB0aGUNCj4+IEdFTUdYTCBJUCBibG9jayB0aGF0IGFyZSBub3QgZGlyZWN0bHkgbWFw
-cGVkIHRvIEdFTUdYTCByZWdpc3RlcnMuDQo+PiBUaGVyZWZvcmUsIGFkZCBhZGRpdGlvbmFsIHJh
-bmdlIHRvICJyZWciIHByb3BlcnR5IGZvciBTaUZpdmUgR0VNR1hMDQo+PiBtYW5hZ2VtZW50IElQ
-IHJlZ2lzdGVycy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYXNoIFNoYWggPHlhc2guc2hhaEBz
-aWZpdmUuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvbWFjYi50eHQgfCAzICsrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvbWFjYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21h
-Y2IudHh0DQo+PiBpbmRleCA5YzVlOTQ0Li45MWEyYTY2IDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gQEAgLTQsNiArNCw3
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIC0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJj
-ZG5zLFs8Y2hpcD4tXXttYWNifGdlbX0iDQo+PiAgICAgVXNlICJjZG5zLGF0OTFybTkyMDAtZW1h
-YyIgQXRtZWwgYXQ5MXJtOTIwMCBTb0MuDQo+PiAgICAgVXNlICJjZG5zLGF0OTFzYW05MjYwLW1h
-Y2IiIGZvciBBdG1lbCBhdDkxc2FtOSBTb0NzLg0KPj4gKyAgVXNlICJjZG5zLGZ1NTQwLW1hY2Ii
-IGZvciBTaUZpdmUgRlU1NDAtQzAwMCBTb0MuDQo+IA0KPiBUaGlzIHBhdHRlcm4gdGhhdCBBdG1l
-bCBzdGFydGVkIGlzbid0IHJlYWxseSBjb3JyZWN0LiBUaGUgdmVuZG9yDQo+IHByZWZpeCBoZXJl
-IHNob3VsZCBiZSBzaWZpdmUuICdjZG5zJyB3b3VsZCBiZSBhcHByb3ByaWF0ZSBmb3IgYQ0KPiBm
-YWxsYmFjay4NCg0KT2ssIHdlIG1pc3NlZCB0aGlzIGZvciB0aGUgc2FtOXg2MCBTb0MgdGhhdCB3
-ZSBhZGRlZCByZWNlbnRseSB0aGVuLg0KDQpBbnl3YXkgYSBsaXR0bGUgdG9vIGxhdGUsIGNvbWlu
-ZyBiYWNrIHRvIHRoaXMgbWFjaGluZSwgYW5kIHRhbGtpbmcgdG8gDQpZYXNoLCBpc24ndCAic2lm
-aXZlLGZ1NTQwLWMwMDAtbWFjYiIgbW9yZSBzcGVjaWZpYyBhbmQgYSBiZXR0ZXIgbWF0Y2ggDQpm
-b3IgYmVpbmcgZnV0dXJlIHByb29mPyBJIHdvdWxkIGFkdmljZSBmb3IgdGhlIG1vc3Qgc3BlY2lm
-aWMgcG9zc2libGUgDQp3aXRoIG90aGVyIGNvbXBhdGlibGUgc3RyaW5ncyBvbiB0aGUgc2FtZSBs
-aW5lIGluIHRoZSBEVCwgbGlrZToNCg0KInNpZml2ZSxmdTU0MC1jMDAwLW1hY2IiLCAic2lmaXZl
-LGZ1NTQwLW1hY2IiDQoNCk1vcmVvdmVyLCBpcyBpdCByZWFsbHkgYSAibWFjYiIgb3IgYSAiZ2Vt
-IiB0eXBlIG9mIGludGVyZmFjZSBmcm9tIA0KQ2FkZW5jZT8gTm90IGEgYmlnIGRlYWwsIGJ1dCBq
-dXN0IHRvIGRpc2N1c3MgdGhlIHRvcGljIHRvIHRoZSBib25lLi4uDQoNCk5vdGUgdGhhdCBJJ20g
-ZmluZSBpZiB5b3UgY29uc2lkZXIgdGhhdCB3aGF0IHlvdSBoYXZlIGluIG5ldC1uZXh0IG5ldyBp
-cyANCmNvcnJlY3QuDQoNClJlZ2FyZHMsDQogICBOaWNvbGFzDQoNCj4+ICAgICBVc2UgImNkbnMs
-c2FtOXg2MC1tYWNiIiBmb3IgTWljcm9jaGlwIHNhbTl4NjAgU29DLg0KPj4gICAgIFVzZSAiY2Ru
-cyxucDQtbWFjYiIgZm9yIE5QNCBTb0MgZGV2aWNlcy4NCj4+ICAgICBVc2UgImNkbnMsYXQzMmFw
-NzAwMC1tYWNiIiBmb3Igb3RoZXIgMTAvMTAwIHVzYWdlIG9yIHVzZSB0aGUgZ2VuZXJpYyBmb3Jt
-OiAiY2RucyxtYWNiIi4NCj4+IEBAIC0xNyw2ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+PiAgICAgVXNlICJjZG5zLHp5bnFtcC1nZW0iIGZvciBaeW5xIFVsdHJhc2NhbGUrIE1QU29D
-Lg0KPj4gICAgIE9yIHRoZSBnZW5lcmljIGZvcm06ICJjZG5zLGVtYWMiLg0KPj4gICAtIHJlZzog
-QWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZpY2UNCj4+
-ICsgICAgICAgRm9yICJjZG5zLGZ1NTQwLW1hY2IiLCBzZWNvbmQgcmFuZ2UgaXMgcmVxdWlyZWQg
-dG8gc3BlY2lmeSB0aGUNCj4+ICsgICAgICAgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
-c3RlcnMgZm9yIEdFTUdYTCBNYW5hZ2VtZW50IGJsb2NrLg0KPj4gICAtIGludGVycnVwdHM6IFNo
-b3VsZCBjb250YWluIG1hY2IgaW50ZXJydXB0DQo+PiAgIC0gcGh5LW1vZGU6IFNlZSBldGhlcm5l
-dC50eHQgZmlsZSBpbiB0aGUgc2FtZSBkaXJlY3RvcnkuDQo+PiAgIC0gY2xvY2stbmFtZXM6IFR1
-cGxlIGxpc3RpbmcgaW5wdXQgY2xvY2sgbmFtZXMuDQo+PiAtLQ0KPj4gMS45LjENCj4+DQo+IA0K
-DQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+
+
+On 6/21/19 6:23 AM, Masahiro Yamada wrote:
+> With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
+> and NAND chips"), the Denali NAND controller driver migrated to the
+> new controller/chip representation.
+> 
+> Update DT for it.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  arch/arm/boot/dts/socfpga.dtsi                |  2 +-
+>  arch/arm/boot/dts/socfpga_arria10.dtsi        |  2 +-
+>  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 20 ++++++++++++-------
+>  3 files changed, 15 insertions(+), 9 deletions(-)
+> 
+
+Applied! Thanks!
+
+Dinh
