@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C535CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D1CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4CF208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB211208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371725;
-	bh=7xLo/8ltZ3m/6HmFyEdmADw8EBYFNc6hwS8LWzSxUoM=;
+	s=default; t=1561371729;
+	bh=cGWn1xdRWPwMBifaU9ygoOOYp2g118IgKBAQOa88xJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rPoGZqaZsOph9r12W3uQZmcVlaO3QJmgRBsFGrTouiopUU3An5DKi/2St1iUHNSoi
-	 LiH00YbvoeWTzTvry7Q/xn+TLGyeDFkiAgGn9UnNNpCP9WCdOz+jKcOf0F/XgEeYZI
-	 PiKPxQGKneEgCxSHPT91Q6k0Yw2G2K+tIKyMKZUY=
+	b=F44FE1tFv5GVDGb5fpxooue4y2X/JpkOobi1+Tme+eVDR27svI9E1i1wZsZA1WyTl
+	 jmnCozb98Y6fCSNEB9oNkosE3/8minMcywaN9m9t6NcwWorvXAw3W/r/sMmIu4UhHk
+	 xTV9SuVYOjuM7/waw+dGARQLUXxBdbinYMn7R1Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbfFXKWE (ORCPT
+        id S1731073AbfFXKWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbfFXKWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:22:01 -0400
+        id S1731048AbfFXKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:22:06 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48A402133F;
-        Mon, 24 Jun 2019 10:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8682215EA;
+        Mon, 24 Jun 2019 10:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371720;
-        bh=7xLo/8ltZ3m/6HmFyEdmADw8EBYFNc6hwS8LWzSxUoM=;
+        s=default; t=1561371726;
+        bh=cGWn1xdRWPwMBifaU9ygoOOYp2g118IgKBAQOa88xJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKksxoCHKqS3quE57fHz+/3tc0XdtBjeKjK12a9hWSOKYGh10SA7wgWGgfHvjM4Ef
-         dagLJ5YAXSFRESeBKx1amFCKIR9vDAtzS34v0P9h0hP3/PhcBbvzXqRVotXbDaWnio
-         Q/uQVHZ/bunSvRJri2A3045GsjnoTEFIRuQa088I=
+        b=ZYYPllp2sNvpvs+jxwvsjZQl6s/FiwXIQLcCVEjWSERtT1zq41eusYNCSx8DhlKL5
+         42uZ6SY+aHW44esX3xSQOyAgWl+UcrikWF7Dtv1WY4fqw4HIuoe+tPWmbrh2liWcMu
+         SYoPrYq10ffVWCQEfTx5qC9q7juSKmmYwPY2T36Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 5.1 109/121] staging: erofs: add requirements field in superblock
-Date:   Mon, 24 Jun 2019 17:57:21 +0800
-Message-Id: <20190624092326.255534512@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 111/121] Bluetooth: Fix regression with minimum encryption key size alignment
+Date:   Mon, 24 Jun 2019 17:57:23 +0800
+Message-Id: <20190624092326.347408473@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,106 +59,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 5efe5137f05bbb4688890620934538c005e7d1d6 upstream.
+commit 693cd8ce3f882524a5d06f7800dd8492411877b3 upstream.
 
-There are some backward incompatible features pending
-for months, mainly due to on-disk format expensions.
+When trying to align the minimum encryption key size requirement for
+Bluetooth connections, it turns out doing this in a central location in
+the HCI connection handling code is not possible.
 
-However, we should ensure that it cannot be mounted with
-old kernels. Otherwise, it will causes unexpected behaviors.
+Original Bluetooth version up to 2.0 used a security model where the
+L2CAP service would enforce authentication and encryption.  Starting
+with Bluetooth 2.1 and Secure Simple Pairing that model has changed into
+that the connection initiator is responsible for providing an encrypted
+ACL link before any L2CAP communication can happen.
 
-Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Now connecting Bluetooth 2.1 or later devices with Bluetooth 2.0 and
+before devices are causing a regression.  The encryption key size check
+needs to be moved out of the HCI connection handling into the L2CAP
+channel setup.
+
+To achieve this, the current check inside hci_conn_security() has been
+moved into l2cap_check_enc_key_size() helper function and then called
+from four decisions point inside L2CAP to cover all combinations of
+Secure Simple Pairing enabled devices and device using legacy pairing
+and legacy service security model.
+
+Fixes: d5bb334a8e17 ("Bluetooth: Align minimum encryption key size for LE and BR/EDR connections")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203643
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/erofs/erofs_fs.h |   13 ++++++++++---
- drivers/staging/erofs/internal.h |    2 ++
- drivers/staging/erofs/super.c    |   19 +++++++++++++++++++
- 3 files changed, 31 insertions(+), 3 deletions(-)
+ net/bluetooth/hci_conn.c   |   18 +++++++++---------
+ net/bluetooth/l2cap_core.c |   33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 37 insertions(+), 14 deletions(-)
 
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/drivers/staging/erofs/erofs_fs.h
-@@ -17,10 +17,16 @@
- #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1276,14 +1276,6 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
  
-+/*
-+ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-+ * incompatible with this kernel version.
-+ */
-+#define EROFS_ALL_REQUIREMENTS  0
-+
- struct erofs_super_block {
- /*  0 */__le32 magic;           /* in the little endian */
- /*  4 */__le32 checksum;        /* crc32c(super_block) */
--/*  8 */__le32 features;
-+/*  8 */__le32 features;        /* (aka. feature_compat) */
- /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
- /* 13 */__u8 reserved;
- 
-@@ -34,9 +40,10 @@ struct erofs_super_block {
- /* 44 */__le32 xattr_blkaddr;
- /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
- /* 64 */__u8 volume_name[16];   /* volume name */
-+/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
- 
--/* 80 */__u8 reserved2[48];     /* 128 bytes */
--} __packed;
-+/* 84 */__u8 reserved2[44];
-+} __packed;                     /* 128 bytes */
- 
- /*
-  * erofs inode data mapping:
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -114,6 +114,8 @@ struct erofs_sb_info {
- 
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
-+	u32 requirements;
-+
- 	char *dev_name;
- 
- 	unsigned int mount_opt;
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -76,6 +76,22 @@ static void destroy_inode(struct inode *
- 	call_rcu(&inode->i_rcu, i_callback);
+-	/* The minimum encryption key size needs to be enforced by the
+-	 * host stack before establishing any L2CAP connections. The
+-	 * specification in theory allows a minimum of 1, but to align
+-	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+-	 */
+-	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
+-		return 0;
+-
+ 	return 1;
  }
  
-+static bool check_layout_compatibility(struct super_block *sb,
-+				       struct erofs_super_block *layout)
-+{
-+	const unsigned int requirements = le32_to_cpu(layout->requirements);
+@@ -1400,8 +1392,16 @@ auth:
+ 		return 0;
+ 
+ encrypt:
+-	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags))
++	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags)) {
++		/* Ensure that the encryption key size has been read,
++		 * otherwise stall the upper layer responses.
++		 */
++		if (!conn->enc_key_size)
++			return 0;
 +
-+	EROFS_SB(sb)->requirements = requirements;
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-+		errln("unidentified requirements %x, please upgrade kernel version",
-+		      requirements & ~EROFS_ALL_REQUIREMENTS);
-+		return false;
++		/* Nothing else needed, all requirements are met */
+ 		return 1;
 +	}
-+	return true;
+ 
+ 	hci_conn_encrypt(conn);
+ 	return 0;
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1341,6 +1341,21 @@ static void l2cap_request_info(struct l2
+ 		       sizeof(req), &req);
+ }
+ 
++static bool l2cap_check_enc_key_size(struct hci_conn *hcon)
++{
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 *
++	 * This check might also be called for unencrypted connections
++	 * that have no key size requirements. Ensure that the link is
++	 * actually encrypted before enforcing a key size.
++	 */
++	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
++		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
 +}
 +
- static int superblock_read(struct super_block *sb)
+ static void l2cap_do_start(struct l2cap_chan *chan)
  {
- 	struct erofs_sb_info *sbi;
-@@ -109,6 +125,9 @@ static int superblock_read(struct super_
- 		goto out;
- 	}
+ 	struct l2cap_conn *conn = chan->conn;
+@@ -1358,9 +1373,14 @@ static void l2cap_do_start(struct l2cap_
+ 	if (!(conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_DONE))
+ 		return;
  
-+	if (!check_layout_compatibility(sb, layout))
-+		goto out;
+-	if (l2cap_chan_check_security(chan, true) &&
+-	    __l2cap_no_conn_pending(chan))
++	if (!l2cap_chan_check_security(chan, true) ||
++	    !__l2cap_no_conn_pending(chan))
++		return;
 +
- 	sbi->blocks = le32_to_cpu(layout->blocks);
- 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
- #ifdef CONFIG_EROFS_FS_XATTR
++	if (l2cap_check_enc_key_size(conn->hcon))
+ 		l2cap_start_connection(chan);
++	else
++		__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
+ }
+ 
+ static inline int l2cap_mode_supported(__u8 mode, __u32 feat_mask)
+@@ -1439,7 +1459,10 @@ static void l2cap_conn_start(struct l2ca
+ 				continue;
+ 			}
+ 
+-			l2cap_start_connection(chan);
++			if (l2cap_check_enc_key_size(conn->hcon))
++				l2cap_start_connection(chan);
++			else
++				l2cap_chan_close(chan, ECONNREFUSED);
+ 
+ 		} else if (chan->state == BT_CONNECT2) {
+ 			struct l2cap_conn_rsp rsp;
+@@ -7490,7 +7513,7 @@ static void l2cap_security_cfm(struct hc
+ 		}
+ 
+ 		if (chan->state == BT_CONNECT) {
+-			if (!status)
++			if (!status && l2cap_check_enc_key_size(hcon))
+ 				l2cap_start_connection(chan);
+ 			else
+ 				__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
+@@ -7499,7 +7522,7 @@ static void l2cap_security_cfm(struct hc
+ 			struct l2cap_conn_rsp rsp;
+ 			__u16 res, stat;
+ 
+-			if (!status) {
++			if (!status && l2cap_check_enc_key_size(hcon)) {
+ 				if (test_bit(FLAG_DEFER_SETUP, &chan->flags)) {
+ 					res = L2CAP_CR_PEND;
+ 					stat = L2CAP_CS_AUTHOR_PEND;
 
 
