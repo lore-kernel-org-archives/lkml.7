@@ -2,103 +2,154 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC6AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5688C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CDC2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934A42145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbfFXMj6 (ORCPT
+        id S1730352AbfFXMjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:39:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28592 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730345AbfFXMjr (ORCPT
+        Mon, 24 Jun 2019 08:39:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48230 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfFXMjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:39:47 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OCRUtx112829
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:39:46 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tax7dhkau-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:39:46 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 24 Jun 2019 13:39:44 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Jun 2019 13:39:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OCdd1e15860188
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 12:39:39 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B8D242049;
-        Mon, 24 Jun 2019 12:39:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 656E64203F;
-        Mon, 24 Jun 2019 12:39:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.5])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 12:39:38 +0000 (GMT)
-Subject: Re: [PATCH V10 1/3] IMA: Define a new hook to measure the kexec
- boot command line arguments
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com
-Date:   Mon, 24 Jun 2019 08:39:27 -0400
-In-Reply-To: <20190624062331.388-2-prsriva02@gmail.com>
-References: <20190624062331.388-1-prsriva02@gmail.com>
-         <20190624062331.388-2-prsriva02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 24 Jun 2019 08:39:44 -0400
+Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3800A260ED4;
+        Mon, 24 Jun 2019 13:39:39 +0100 (BST)
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
+        kernel@collabora.com, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH v2 3/5] media: vimc: stream: format comments as kernel-doc
+Date:   Mon, 24 Jun 2019 09:37:27 -0300
+Message-Id: <20190624123729.5847-3-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624123729.5847-1-andrealmeid@collabora.com>
+References: <20190624123729.5847-1-andrealmeid@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062412-0016-0000-0000-0000028BE04C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062412-0017-0000-0000-000032E94C63
-Message-Id: <1561379967.4340.3.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prakhar,
+Format the current existing comments as kernel-doc comments, to be
+reused at kernel documention. Add opening marks (/**) and return values.
 
-On Sun, 2019-06-23 at 23:23 -0700, Prakhar Srivastava wrote:
-> Currently during soft reboot(kexec_file_load) boot command line
-> arguments are not measured. Define hooks needed to measure kexec
-> command line arguments during soft reboot(kexec_file_load).
-> 
-> - A new ima hook ima_kexec_cmdline is defined to be called by the
-> kexec code.
-> - A new function process_buffer_measurement is defined to measure
-> the buffer hash into the IMA measurement list.
-> - A new func policy KEXEC_CMDLINE is defined to control the
->  measurement.[Suggested by Mimi]
-> 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
 
-Thanks!  This patch set is now queued in the next-queued-testing
-branch for any last minute comments or Reviews/Acks, before being
-staged in the next-integrity branch.
+Changes in v2: replace ``vimc_streamer_s_stream`` for
+vimc_streamer_s_stream().
 
-Mimi
+ drivers/media/platform/vimc/vimc-streamer.c | 38 +++++++++++++--------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index 3b3f36357a0e..62dde7d74c24 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -20,6 +20,8 @@
+  *
+  * Helper function that returns the media entity containing the source pad
+  * linked with the first sink pad from the given media entity pad list.
++ *
++ * Return: The source pad or NULL, if it wasn't found.
+  */
+ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+ {
+@@ -35,7 +37,7 @@ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+ 	return NULL;
+ }
+ 
+-/*
++/**
+  * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
+  *
+  * @stream: the pointer to the stream structure with the pipeline to be
+@@ -63,15 +65,18 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+ 	}
+ }
+ 
+-/*
+- * vimc_streamer_pipeline_init - initializes the stream structure
++/**
++ * vimc_streamer_pipeline_init - Initializes the stream structure
+  *
+  * @stream: the pointer to the stream structure to be initialized
+  * @ved:    the pointer to the vimc entity initializing the stream
+  *
+  * Initializes the stream structure. Walks through the entity graph to
+  * construct the pipeline used later on the streamer thread.
+- * Calls s_stream to enable stream in all entities of the pipeline.
++ * Calls vimc_streamer_s_stream() to enable stream in all entities of
++ * the pipeline.
++ *
++ * Return: 0 if success, error code otherwise.
+  */
+ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+ 				       struct vimc_ent_device *ved)
+@@ -122,13 +127,17 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+ 	return -EINVAL;
+ }
+ 
+-/*
+- * vimc_streamer_thread - process frames through the pipeline
++/**
++ * vimc_streamer_thread - Process frames through the pipeline
+  *
+  * @data:	vimc_stream struct of the current stream
+  *
+  * From the source to the sink, gets a frame from each subdevice and send to
+  * the next one of the pipeline at a fixed framerate.
++ *
++ * Return:
++ * Always zero (created as ``int`` instead of ``void`` to comply with
++ * kthread API).
+  */
+ static int vimc_streamer_thread(void *data)
+ {
+@@ -157,19 +166,20 @@ static int vimc_streamer_thread(void *data)
+ 	return 0;
+ }
+ 
+-/*
+- * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
++/**
++ * vimc_streamer_s_stream - Start/stop the streaming on the media pipeline
+  *
+  * @stream:	the pointer to the stream structure of the current stream
+  * @ved:	pointer to the vimc entity of the entity of the stream
+  * @enable:	flag to determine if stream should start/stop
+  *
+- * When starting, check if there is no stream->kthread allocated. This should
+- * indicate that a stream is already running. Then, it initializes
+- * the pipeline, creates and runs a kthread to consume buffers through the
+- * pipeline.
+- * When stopping, analogously check if there is a stream running, stop
+- * the thread and terminates the pipeline.
++ * When starting, check if there is no ``stream->kthread`` allocated. This
++ * should indicate that a stream is already running. Then, it initializes the
++ * pipeline, creates and runs a kthread to consume buffers through the pipeline.
++ * When stopping, analogously check if there is a stream running, stop the
++ * thread and terminates the pipeline.
++ *
++ * Return: 0 if success, error code otherwise.
+  */
+ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 			   struct vimc_ent_device *ved,
+-- 
+2.22.0
 
