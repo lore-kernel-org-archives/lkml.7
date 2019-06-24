@@ -2,159 +2,146 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF600C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D7CC4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65F720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43E620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="EL2ndxaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfFXXo0 (ORCPT
+        id S1728637AbfFXXrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:44:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728499AbfFXXo0 (ORCPT
+        Mon, 24 Jun 2019 19:47:36 -0400
+Received: from sonic301-38.consmr.mail.ne1.yahoo.com ([66.163.184.207]:41954
+        "EHLO sonic301-38.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728401AbfFXXrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:44:26 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5ONhMe8127404
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:44:24 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb5ysnn46-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 19:44:24 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 25 Jun 2019 00:44:23 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 00:44:20 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5ONiJ1F41746830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:44:19 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15AFEB2064;
-        Mon, 24 Jun 2019 23:44:19 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ECF2CB205F;
-        Mon, 24 Jun 2019 23:44:18 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 23:44:18 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 73EFB16C5D9C; Mon, 24 Jun 2019 16:44:22 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:44:22 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Reply-To: paulmck@linux.ibm.com
-References: <20190620211019.GA3436@hirez.programming.kicks-ass.net>
- <20190620221336.GZ26519@linux.ibm.com>
- <20190621105503.GI3436@hirez.programming.kicks-ass.net>
- <20190621121630.GE26519@linux.ibm.com>
- <20190621122927.GV3402@hirez.programming.kicks-ass.net>
- <20190621133414.GF26519@linux.ibm.com>
- <20190621174104.GA7519@linux.ibm.com>
- <20190621175027.GA23260@linux.ibm.com>
- <20190621234602.GA16286@linux.ibm.com>
- <20190624231222.GA17497@lerouge>
+        Mon, 24 Jun 2019 19:47:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561420054; bh=uWu1XqMlR8Wd+/WAHcLTn592/8LDckPRE3Zxxo4/TqU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=EL2ndxaZ9ptXNdKnzdi9EcMi9gbhH7oNQdksiqysOQxE/3v1kN2/tJPEFkMop3Dy0CDDb9DkanIkvQuPLpcMW7fs7l1LVZVgMYODkvG4psQU6CBiS21GMhmCOzZOtz4c290TF+/BW+0bmKrKj3LvaIQ7Hx8pnsYmALftTVDuK0DTpD+0U5YcTlF4d/Q4qFpVbD71ztAYv7azAZ5iHegQGrOpNfN+wfjlmNbG0BCr+NpYl9B3glKBFQAVNh9YAdlIcKr2Q7NqSZeHMyJi7KgChPvSiPidUmd6AOx1pfyL6dK6OebssQ9EOVyk+HncvrKaZAyavxl5WEHzHjP1g2lUcQ==
+X-YMail-OSG: TvPHr2AVM1mklvawGVPUHVJ5fb5x40W_XyTZP8vL4IIxtjN5hozZL9pkVJ7mPvG
+ eILLEabBOBL2LdrtQvOTqfn55Z_qofJdswxzUfp.iKxMsyxboD7jdL6ZKJiBH3GlpRTQxm.j_zhq
+ GBqAdBtnXI5pGKnRKHyuauJhsgStyABY_ZMmhqQ18PYY1.a_jeumVVCRtgCzbJpe3lLEuBkfmIy3
+ 4rqkFo1Qsyw5Uh4JZvlkisKKN7tHFv5ROOG7GB80wXraf7bDxlx3Tpj13jnBDCyZn72qEaiLdbAR
+ 0glQq4.Gq2_nMXrnRL3Obfn4MweUisPAEJwhulK2wNFMUfrqN73XKpN2NPL.KErM4m7lwy90gcE8
+ A32gCJf5C9pmcfI5UzOLlq3EYpwGZQM5aGuSu46V8WErxB_UOCLjbJ.cYcF9oQy8w_B2k2Masxwd
+ 2QCRT8mDFwewtxgtxWPLpXzTlbjfwo9LF88kKJ7X4sP_yOxqtn2pqzf7ujqZrKJyB40usTHgeAAg
+ .fgfBKzv8xblB7QUDWHcVwWux_I79NpfGFd.oeJ9kWjKmAL7QtQTfGU.TMQtbZehhgZGoulniJrF
+ 8tDPk2cuVnk09Iahgccg.tzxlqJr36pgiSuCEAoocVNogqFkzvm4MuIlrOfeF45csHxtNAwnF6s0
+ h1UEdSj18Cq3IHnyLqYd5ARPaNj13TZjGRuYWKtA1cIXVTjEIru8_kZWsEqrf0RxNx1hUyPTDcTg
+ TUATiLN8Gfb5bJOrSiRUazUN3tbH9ECfaZFD.VZ_k0obNePA7GPLAuLqEfdMYRWqGhaDTpRjPcmQ
+ xd8n.s97YThmm8havSOooiKfPNDwUEtzbdvh8XRnS4mcFHstmK1_Hoe6Npri6JBC36VDozxh0wN8
+ T5wwnjMdrdrwqdpPhg1PMzz4r2lM3oZrYrwiju1AfinAmWpDPNR7yVWph3dq3WVA6IOebO0kiJDr
+ vVrlrj63U.rAuUiIL7pTPWViqvAY79ykzItPbVw146OXUqVVne_Jk8lzOGny.F5C3l2Q9V9H9v.m
+ WYCvW18WT3j2Hjl0RQId7ExjJQGx4iJlJ9QNyNQjWCm_7XnRhU6Ajur9TeZYQbdm9dIWVDfi0mgb
+ OaM7cIUaZGqRwdRlDlJyfJ5vyEnUvkWxOJtVBO55GyjCM97cpXj3RGAMu2Rm0tk6ItwlG.x99IIP
+ UkYE0qMvpvs5uJPrksfwaA_SjdMHhpczGoAZYMyvs3tJVstaYQxcY8gONbtNtVg17xjsUq.d3jWN
+ wP0ECoghI00EC2CmjY9o-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Jun 2019 23:47:34 +0000
+Received: by smtp401.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 61c6ab428a5947a0da3e2cd303da163c;
+          Mon, 24 Jun 2019 23:47:31 +0000 (UTC)
+Subject: Re: [PATCH V34 00/29] Lockdown as an LSM
+To:     James Morris <jmorris@namei.org>,
+        Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@amacapital.net>,
+        John Johansen <john.johansen@canonical.com>,
+        casey@schaufler-ca.com
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <alpine.LRH.2.21.1906250853290.7826@namei.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <c5898a1e-e5c9-c63d-09d4-65fec0744613@schaufler-ca.com>
+Date:   Mon, 24 Jun 2019 16:47:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624231222.GA17497@lerouge>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062423-0072-0000-0000-0000044068DF
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011323; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01222816; UDB=6.00643456; IPR=6.01003976;
- MB=3.00027451; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 23:44:22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062423-0073-0000-0000-00004CB089EF
-Message-Id: <20190624234422.GP26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240187
+In-Reply-To: <alpine.LRH.2.21.1906250853290.7826@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 01:12:23AM +0200, Frederic Weisbecker wrote:
-> On Fri, Jun 21, 2019 at 04:46:02PM -0700, Paul E. McKenney wrote:
-> > @@ -3097,13 +3126,21 @@ static void sched_tick_remote(struct work_struct *work)
-> >  	/*
-> >  	 * Run the remote tick once per second (1Hz). This arbitrary
-> >  	 * frequency is large enough to avoid overload but short enough
-> > -	 * to keep scheduler internal stats reasonably up to date.
-> > +	 * to keep scheduler internal stats reasonably up to date.  But
-> > +	 * first update state to reflect hotplug activity if required.
-> >  	 */
-> > +	os = atomic_read(&twork->state);
-> > +	if (os) {
-> > +		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_OFFLINING);
-> > +		if (atomic_inc_not_zero(&twork->state))
-> > +			return;
-> 
-> Using inc makes me a bit nervous here. If we do so, we should somewhow
-> make sure that we never exceed a value higher than TICK_SCHED_REMOTE_OFFLINE
-> by accident.
-> 
-> atomic_xchg() is probably a bit costlier but also safer as it allows
-> us to check both the old and the new value. That path shouldn't be critically fast
-> after all.
+On 6/24/2019 4:01 PM, James Morris wrote:
+> On Fri, 21 Jun 2019, Matthew Garrett wrote:
+>
+>> Minor updates over V33 - security_is_locked_down renamed to
+>> security_locked_down, return value of security_locked_down is returned=
 
-It would need to be cmpxchg() to avoid messing with the state if
-the state were somehow TICK_SCHED_REMOTE_RUNNING, right?
+>> in most cases, one unnecessary patch was dropped, couple of minor nits=
 
-> > +	}
-> >  	queue_delayed_work(system_unbound_wq, dwork, HZ);
-> >  }
-> >  
-> >  static void sched_tick_start(int cpu)
-> >  {
-> > +	int os;
-> >  	struct tick_work *twork;
-> >  
-> >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-> > @@ -3112,15 +3149,20 @@ static void sched_tick_start(int cpu)
-> >  	WARN_ON_ONCE(!tick_work_cpu);
-> >  
-> >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
-> > -	twork->cpu = cpu;
-> > -	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-> > -	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-> > +	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
-> > +	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
-> 
-> See if we use atomic_inc(), we would need to also WARN(os > TICK_SCHED_REMOTE_OFFLINE).
+>> fixed.
+> Thanks for the respin.
+>
+> We are still not resolved on granularity. Stephen has said he's not sur=
+e=20
+> if a useful policy can be constructed with just confidentiality and=20
+> integrity settings. I'd be interested to know JJ and Casey's thoughts o=
+n=20
+> lockdown policy flexibility wrt their respective LSMs.
 
-How about if I put that WARN() between the atomic_inc_not_zero() and
-the return, presumably also adding braces?
+Smack is a mandatory access control mechanism on named
+objects controlled by the system. Issues of administrative
+control, like whether hibernation is allowed, are outside
+the scope of what Smack controls. There may be some subject/object
+implications, but I have not identified any yet.
 
-							Thanx, Paul
-
-> > +	if (os == TICK_SCHED_REMOTE_OFFLINE) {
-> > +		twork->cpu = cpu;
-> > +		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-> > +		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-> > +	}
-> >  }
-> 
-> Thanks.
-> 
+> These are also "all or nothing" choices which may prevent deployment du=
+e=20
+> to a user needing to allow (presumably controlled or mitigated) excepti=
+ons=20
+> to the policy.
 
