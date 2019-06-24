@@ -2,110 +2,117 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117E5C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C076EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA77720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uo42VIhn"
+	by mail.kernel.org (Postfix) with ESMTP id 9195520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561406941;
+	bh=yZharV4FdSmnh4ESX5hlMEMyGkbzv5g/opBE0Yc/f0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=stA3sLMnDYYonA4iXzDbj2+gSsZKT1Rtjb0jrBbsjdoA9/U1TNjZZEJK3Etp8va6u
+	 GwQ8hPPBvWvObEO/haE1GF1cigAKhp0dtdLIsIH26Cg1uVnprkDcELOFa8IgbJ1HPn
+	 tGnq9U7nQDo97sJeXvV+/b0OHhXQpJjw5NfebAas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfFXUIH (ORCPT
+        id S1731546AbfFXUJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:08:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36633 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfFXUIH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:08:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id p15so15914115qtl.3;
-        Mon, 24 Jun 2019 13:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jn/w53YJ4Q/KOGOCBKw6wUZlBtvSFROxiUctr/L28Ro=;
-        b=Uo42VIhnTbzCA4Ozzfe6YQOxoA3CFwPgWBgS2/smjKrbL8V70yQZaVcV7Dhz55IyFi
-         MDHwAuo0fbuNYqvyHZPKxi5HFAZ9eMZu40E05KpoxaEhoW2ym2bsGdI2AMmPsH2GbwaI
-         A8D5rxBt5QtnMGec03ZSf43TMVeCzjP1k4riaJXqCdwx9tSA29Zk5y4PfSEgb+C/tOn4
-         8/XxPI8IvH5Sz96v28xdsJS4r2jKwN3kB2hgGFL/oiYGW2LVy4lAiWashl/ra3omK0lo
-         q2AU+hNgmHQDS3dH6VdXdgcwxLFmKd25hnSmFvc5C7sve1yQV3fxNcHVf/397C5E82S0
-         3VHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jn/w53YJ4Q/KOGOCBKw6wUZlBtvSFROxiUctr/L28Ro=;
-        b=Dt3YeNUSeCdQd3t07QpFpT1ihgDtToB+++edSNBLDagaYu7LQVY0FG5R5VxdQtP2Yr
-         K9bZajZlsnVQwctXXol5d7lvxbGvNONDr6x0tT9f59Dz7DIxfHrn6ieMqjkZf419Otdw
-         Odp6DhyJdP5N+ptDv0UAw0Wz+gRGn27ch6J7KpSqFuN/lNaWAXKjg/abi5g1UHdF5hKz
-         D2//sZJUhbnHvWL2ZhPES+TkKp5+8XBeefktYegMDbUJ1yhVtMVKVTJeYDKf0UBw43oc
-         Erah5SrlE4b39QlKTcXE69JL4LKlif+sGya5TX1rp0Omyaehuu2qi3L72ok+AzRZ0mRv
-         us/w==
-X-Gm-Message-State: APjAAAVBWIJNGL7Tm1vC79lTmC2NPyrEqZVU8VnZou8dUHpw4G5+oX95
-        VIz4YdTv9yNrrc3jakCGqzki7HpVs2HjgWR96C4=
-X-Google-Smtp-Source: APXvYqzL9Aq6zBn7pr7JmJnrrDNTZgpzKLz/k4Ru5O5kpuz00LKqwQXw9OuJb4OT2je3tIIoAtXBTp6qQ7PnsEltOTg=
-X-Received: by 2002:ac8:25e7:: with SMTP id f36mr119795809qtf.139.1561406885830;
- Mon, 24 Jun 2019 13:08:05 -0700 (PDT)
+        Mon, 24 Jun 2019 16:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731486AbfFXUI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 16:08:58 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8047B208E3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 20:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561406937;
+        bh=yZharV4FdSmnh4ESX5hlMEMyGkbzv5g/opBE0Yc/f0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y1IekffKS026ESmMRLJsvztz8MSob/Ro0R6FERAq9Bq0/tiEEnb1wPvsYvLv+gzeS
+         jf0ST/tsLNz4FT7mGomzddkDvyOyMhn2cbgylD5MqpFhElQOlY99iS+3k+lQfAomRo
+         uJkLnM6Rt8Zt/0bzPwQM9DU0YlHQnU8lKav0D2pc=
+Received: by mail-wm1-f44.google.com with SMTP id x15so552312wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:08:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAUs92aXO1a89Endi8Ly5A+Zb8/cHskfQvHWCtl2nTuBavFuI1tf
+        j+QGbApOuVwEBT1loI+pzZvPSpCg0audizhLHCi/7Q==
+X-Google-Smtp-Source: APXvYqyZ4fIE5cdsQv7I/gZrnrFakyNqFBpURFkRXdCRFCL/Nn5A6g099FGLoCCojiN2iaBzq20qxfRFBCC5+SY8tyQ=
+X-Received: by 2002:a7b:cd84:: with SMTP id y4mr17194362wmj.79.1561406935987;
+ Mon, 24 Jun 2019 13:08:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190624052455.10659-1-bjorn.topel@gmail.com>
-In-Reply-To: <20190624052455.10659-1-bjorn.topel@gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 24 Jun 2019 13:07:54 -0700
-Message-ID: <CAPhsuW4yRnimgpqZxEU0t33epXnOVjKXsAU-bks=c21i7OdDsg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] MAINTAINERS: add reviewer to maintainers entry
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        jonathan.lemon@gmail.com
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-24-matthewgarrett@google.com> <739e21b5-9559-d588-3542-bf0bc81de1b2@iogearbox.net>
+ <CACdnJuvR2bn3y3fYzg06GWXXgAGjgED2Dfa5g0oAwJ28qCCqBg@mail.gmail.com>
+In-Reply-To: <CACdnJuvR2bn3y3fYzg06GWXXgAGjgED2Dfa5g0oAwJ28qCCqBg@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 24 Jun 2019 13:08:44 -0700
+X-Gmail-Original-Message-ID: <CALCETrWmZX3R1L88Gz9vLY68gcK8zSXL4cA4GqAzQoyqSR7rRQ@mail.gmail.com>
+Message-ID: <CALCETrWmZX3R1L88Gz9vLY68gcK8zSXL4cA4GqAzQoyqSR7rRQ@mail.gmail.com>
+Subject: Re: [PATCH V34 23/29] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>, Jann Horn <jannh@google.com>,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 10:45 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.c=
-om> wrote:
+On Mon, Jun 24, 2019 at 12:54 PM Matthew Garrett <mjg59@google.com> wrote:
 >
-> From: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+> On Mon, Jun 24, 2019 at 8:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> >
+> > On 06/22/2019 02:03 AM, Matthew Garrett wrote:
+> > > From: David Howells <dhowells@redhat.com>
+> > >
+> > > There are some bpf functions can be used to read kernel memory:
+> >
+> > Nit: that
 >
-> Jonathan Lemon has volunteered as an official AF_XDP reviewer. Thank
-> you, Jonathan!
+> Fixed.
+>
+> > > bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
+> >
+> > Please explain how bpf_probe_write_user reads kernel memory ... ?!
+>
+> Ha.
+>
+> > > private keys in kernel memory (e.g. the hibernation image signing key) to
+> > > be read by an eBPF program and kernel memory to be altered without
+> >
+> > ... and while we're at it, also how they allow "kernel memory to be
+> > altered without restriction". I've been pointing this false statement
+> > out long ago.
+>
+> Yup. How's the following description:
+>
+>     bpf: Restrict bpf when kernel lockdown is in confidentiality mode
+>
+>     There are some bpf functions that can be used to read kernel memory and
+>     exfiltrate it to userland: bpf_probe_read, bpf_probe_write_user and
+>     bpf_trace_printk.  These could be abused to (eg) allow private
+> keys in kernel
+>     memory to be leaked. Disable them if the kernel has been locked
+> down in confidentiality
+>     mode.
 
-Thanks Jonathan! Please reply with your Acked-by.
+I'm confused.  I understand why we're restricting bpf_probe_read().
+Why are we restricting bpf_probe_write_user() and bpf_trace_printk(),
+though?
 
-Thanks,
-Song
-
->
-> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0cfe98a6761a..dd875578d53c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17284,6 +17284,7 @@ N:      xdp
->  XDP SOCKETS (AF_XDP)
->  M:     Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
->  M:     Magnus Karlsson <magnus.karlsson@intel.com>
-> +R:     Jonathan Lemon <jonathan.lemon@gmail.com>
->  L:     netdev@vger.kernel.org
->  L:     bpf@vger.kernel.org
->  S:     Maintained
-> --
-> 2.20.1
->
+--Andy
