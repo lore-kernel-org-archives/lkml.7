@@ -2,127 +2,115 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AC8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC09C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96880213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A365B20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvgv4lXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbfFXPML convert rfc822-to-8bit (ORCPT
+        id S1730850AbfFXPMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:12:11 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:24274 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728172AbfFXPMK (ORCPT
+        Mon, 24 Jun 2019 11:12:23 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34159 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730435AbfFXPMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:12:10 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-143-5aPUt60zN6uguMOtfab1og-1; Mon, 24 Jun 2019 16:12:06 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Jun 2019 16:12:05 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Jun 2019 16:12:05 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Fenghua Yu' <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Sai Praneeth Prakhya" <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH v9 02/17] drivers/net/b44: Align pwol_mask to unsigned
- long for better performance
-Thread-Topic: [PATCH v9 02/17] drivers/net/b44: Align pwol_mask to unsigned
- long for better performance
-Thread-Index: AQHVJiiMr9gB8h3g0E+XfoKMzxMCiqaq8WpA
-Date:   Mon, 24 Jun 2019 15:12:05 +0000
-Message-ID: <fce80c42ba1949fd8d7924786bbf0ec8@AcuMS.aculab.com>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-3-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1560897679-228028-3-git-send-email-fenghua.yu@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Jun 2019 11:12:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so2397645iot.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i6RP5sEIUQVe7K2Xxca+vDWdrwxXZnb7gXo4fjhFOrI=;
+        b=jvgv4lXqQaoTaUCCgSqFt7dA1UG8exJvGDZ8+KtKxJ/F1Y3nXoRjm3mDxBFqek2yPa
+         6+vxZZK7y20j65gwxGP1TZgLx/GKaAMRMeotexYhGiKkgr37FscTGeHpnWfkup4MQBr7
+         kVxvBPx8VMwMyBZCYCSMzStUhOKfpSYUOOQNP1hG5P9YNsNt6Hqx3aziwKkU0BVMlqW5
+         XwuM0TSzS42G1XJIYxd1+xd1q7vW9P7SovoLT4e4ilPznQYjhpoSBkE7NXsIzj1AHE0l
+         W1m+hPlUxfwPUS1qbPsmfFXhOaK94yklTADYhpuaQtZALjOAMeIsSx6O8N77qkEgoEW0
+         dCVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i6RP5sEIUQVe7K2Xxca+vDWdrwxXZnb7gXo4fjhFOrI=;
+        b=bBmcy4UJHrIQ8xq/bh1JaKIjcNgzpyEdRROaSenX+Kpjz7bGXHK7L47Qlpm8dui1/C
+         mJT+lS3/8tejchL2aW5Tl45yYm9nIl/hQprS1BXBAhpZxhD0Tw9AhutTujj+Q3oh/ynL
+         dm46+NGhQDfXh8XsETHxBkk405Lu14tT6qSU40UhKzmXNpP8+RibeARjTTLNTK0p+yoc
+         Y+3bLf471VNOkxilw3JDT73eu/60p1rj6VjIqvNP8apAMU565uC/8XuCgCWNvxfXqyel
+         fHfSCGyjVWbktNUbZyY75AdDtZRGW1sUW2vGMlot2NpmUw2ODI9pOOSULm/7gVtHY2Ks
+         DI0A==
+X-Gm-Message-State: APjAAAX4UyxQtTt2hOKL89eA1lJUryMZELzkdwBbYpQcstDgORr/oA8r
+        x77/10h9DENe6th1KY852HUr0H+jq9IUmA==
+X-Google-Smtp-Source: APXvYqxhCdDitnoCJq15metdrBXJXKIUUa7soKbJdiR2x1Uo/Def9XZLDCqSPhNc0JhCX6SVb8UL6w==
+X-Received: by 2002:a02:2a8f:: with SMTP id w137mr127594244jaw.50.1561389140370;
+        Mon, 24 Jun 2019 08:12:20 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id f17sm25760614ioc.2.2019.06.24.08.12.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 08:12:19 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 09:12:17 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Ross Zwisler <zwisler@chromium.org>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Fletcher Woodruff <fletcherw@google.com>,
+        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] ext4: use jbd2_inode dirty range scoping
+Message-ID: <20190624151217.GA249955@google.com>
+References: <20190620151839.195506-4-zwisler@google.com>
+ <201906240244.12r4nktI%lkp@intel.com>
 MIME-Version: 1.0
-X-MC-Unique: 5aPUt60zN6uguMOtfab1og-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201906240244.12r4nktI%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu
-> Sent: 18 June 2019 23:41
-> From: Peter Zijlstra <peterz@infradead.org>
+On Mon, Jun 24, 2019 at 02:54:49AM +0800, kbuild test robot wrote:
+> Hi Ross,
 > 
-> A bit in pwol_mask is set in b44_magic_pattern() by atomic set_bit().
-> But since pwol_mask is local and never exposed to concurrency, there is
-> no need to set bit in pwol_mask atomically.
+> Thank you for the patch! Yet something to improve:
 > 
-> set_bit() sets the bit in a single unsigned long location. Because
-> pwol_mask may not be aligned to unsigned long, the location may cross two
-> cache lines. On x86, accessing two cache lines in locked instruction in
-> set_bit() is called split locked access and can cause overall performance
-> degradation.
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v5.2-rc6 next-20190621]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
-> So use non atomic __set_bit() to set pwol_mask bits. __set_bit() won't hit
-> split lock issue on x86.
+> url:    https://github.com/0day-ci/linux/commits/Ross-Zwisler/mm-add-filemap_fdatawait_range_keep_errors/20190623-181603
+> config: x86_64-rhel-7.6 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
 > 
-> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  drivers/net/ethernet/broadcom/b44.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-> index 97ab0dd25552..5738ab963dfb 100644
-> --- a/drivers/net/ethernet/broadcom/b44.c
-> +++ b/drivers/net/ethernet/broadcom/b44.c
-> @@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+> All errors (new ones prefixed by >>):
 > 
->  	memset(ppattern + offset, 0xff, magicsync);
->  	for (j = 0; j < magicsync; j++)
-> -		set_bit(len++, (unsigned long *) pmask);
-> +		__set_bit(len++, (unsigned long *)pmask);
-> 
->  	for (j = 0; j < B44_MAX_PATTERNS; j++) {
->  		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-> @@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
->  		for (k = 0; k< ethaddr_bytes; k++) {
->  			ppattern[offset + magicsync +
->  				(j * ETH_ALEN) + k] = macaddr[k];
-> -			set_bit(len++, (unsigned long *) pmask);
-> +			__set_bit(len++, (unsigned long *)pmask);
+> >> ERROR: "jbd2_journal_inode_ranged_wait" [fs/ext4/ext4.ko] undefined!
+> >> ERROR: "jbd2_journal_inode_ranged_write" [fs/ext4/ext4.ko] undefined!
 
-Is this code expected to do anything sensible on BE systems?
-Casting the bitmask[] argument to any of the set_bit() functions is dubious at best.
+Yep, this is caused by the lack of EXPORT_SYMBOL() calls for these two new
+jbd2 functions.  Ted also pointed this out and fixed this up when he was
+committing:
 
-	David
+https://patchwork.kernel.org/patch/11007139/#22717091
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thank you for the report!
