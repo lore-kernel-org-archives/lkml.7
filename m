@@ -2,133 +2,103 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3714C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937C5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CF420665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E45320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:44:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Akb5+D4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfFXSni (ORCPT
+        id S1728546AbfFXSot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:43:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35765 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbfFXSnh (ORCPT
+        Mon, 24 Jun 2019 14:44:49 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46628 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbfFXSot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:43:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f15so5121461wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:43:36 -0700 (PDT)
+        Mon, 24 Jun 2019 14:44:49 -0400
+Received: by mail-qk1-f193.google.com with SMTP id x18so10520204qkn.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JXj+L0YSeQGtS2fIHaO4Yh9OylVxWOaB1JgmYQtoJ6s=;
+        b=Akb5+D4tPxYc8+ahxrrLB4dMzZNlT7UadNth1lz9ji9q8qJeN+O6fnib/9pmI1JSzH
+         2+CHeJzyxzJbmJEphRfLZLke0weEtA8690HETiI8M5gxUvb/BXPjFiVwiRwcw3lugzrE
+         qe1gDqdT0Zb2LILRnf/MsmqwtSzWj1MmRddpOXdKMlUSZBk6WGS8FTPR4RizDBlsqwun
+         U2J8JY7MAMu0zeIu4MnzGFI6hCcTUPyxQ5OqMeosu2S09R9G11BhVEQ7VZnNrkqWtpaR
+         Sty+a2ezEJkArv7qbyyypSGFPn4pKGMD8D4jcXhhFHvOz/CVE7t2AVBLMLaRYQbVVXfE
+         +SSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GfjEkDFqzgTZBEb7tk5FQBBfhGJ6qrc4fpvCj0iHlvg=;
-        b=PEMLzOlh0FhIICOnXDd6MnoSC8ODG7+U6KY9QYqdS6jTEuAtXQIYcUUCFm+Sb2VKKt
-         XDH8PziZL5otFnWtD5c8J2FoKoOqOcXTVryoZKhROER/C4M8Un0+846X3PSCjTa5lQXB
-         zU01u9ptz6jhB06mRWetGguL7wbGpRuZvj8d00WCds4RlMZ2cs7HpQ4POUU6ztIjzi84
-         874Z/7+2kuLAh6lmo0zx1fWXAzSUX4DsGPG7mGoMm12tTSc1sN2qhVjo/askcA0Ad3c2
-         tCPFPtdVQN98elu/Ehv1N71MQW8gdqZPqRF4zF1HSwxv34nUXLLVEZflX6UxlVm32Iiu
-         B8rA==
-X-Gm-Message-State: APjAAAUIoHF83jiDzaFYBYsuMf9flFrn1PP33P+zwv+NiCiYJiLyOac9
-        JJ19fEiiprXfC7LDC52KQTZTfw==
-X-Google-Smtp-Source: APXvYqw37VJQFJbX+dUabx4CSUB5gIDbQkk/Rk2XlTrf2S7d3VSRR3BHYb/8IS7tK0hRyAS3jV9ftA==
-X-Received: by 2002:a5d:66ce:: with SMTP id k14mr45670884wrw.308.1561401815379;
-        Mon, 24 Jun 2019 11:43:35 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:45fb:a0de:928e:79e8? ([2001:b07:6468:f312:45fb:a0de:928e:79e8])
-        by smtp.gmail.com with ESMTPSA id y19sm397750wmc.21.2019.06.24.11.43.33
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 11:43:34 -0700 (PDT)
-Subject: Re: [PATCH v9 02/17] drivers/net/b44: Align pwol_mask to unsigned
- long for better performance
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Fenghua Yu' <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-3-git-send-email-fenghua.yu@intel.com>
- <fce80c42ba1949fd8d7924786bbf0ec8@AcuMS.aculab.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4cd9d48f-e655-4943-2ec9-1b74a77e317c@redhat.com>
-Date:   Mon, 24 Jun 2019 20:43:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JXj+L0YSeQGtS2fIHaO4Yh9OylVxWOaB1JgmYQtoJ6s=;
+        b=lc0rshzNtfkZfXfuKxelaxS2kHlUvVTaTEcgNn6hhrtXjmDsHNJj12VqrIWXhoVBNC
+         GrhhRdXGAs3n8Hus/Y7kUJDPVNhjuBIKnAxeKsctiqtRDNJaGx9eb9DvSDND8NSya0ct
+         3w1AtY1j59TtqZ6WGSFcZOhjg9LTnMqKp/VebGF6tgd4oD5JChWLHHr9tX3TN/auXWLU
+         Sw1ecVML9x6YJz7PnZqrCllHTpx8yIOtsA7cVHfE6JpNSNJIXQ45pB8IoR3Lar8yh54g
+         P2pD2u0+c+lw1h3zbD6oeCbqV3TpeM5d7M1Aqifd/iwPhKcWgabkFH6iguu1Iu6NRE6z
+         LX4g==
+X-Gm-Message-State: APjAAAU+kEEp/K4K6I/IpEGZdgEOWwXv49hVsP2GEGqeALN0T6dioqMV
+        R8ggiUHNqwbHZ4lZAVPncaE=
+X-Google-Smtp-Source: APXvYqx7o1DaZIsR9wzMEUpRc7tlaMuBRc+fXYH28RPu6r2sAce7n9/nQ3jwnprQj0A2Sr7mdHbdQA==
+X-Received: by 2002:a37:4e8f:: with SMTP id c137mr1491249qkb.127.1561401888383;
+        Mon, 24 Jun 2019 11:44:48 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id h26sm6824548qta.58.2019.06.24.11.44.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 11:44:47 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8657841153; Mon, 24 Jun 2019 15:44:36 -0300 (-03)
+Date:   Mon, 24 Jun 2019 15:44:36 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf thread-stack: Fix thread stack return from
+ kernel for kernel-only case
+Message-ID: <20190624184436.GB4181@kernel.org>
+References: <20190619064429.14940-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fce80c42ba1949fd8d7924786bbf0ec8@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619064429.14940-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/19 17:12, David Laight wrote:
-> From: Fenghua Yu
->> Sent: 18 June 2019 23:41
->> From: Peter Zijlstra <peterz@infradead.org>
->>
->> A bit in pwol_mask is set in b44_magic_pattern() by atomic set_bit().
->> But since pwol_mask is local and never exposed to concurrency, there is
->> no need to set bit in pwol_mask atomically.
->>
->> set_bit() sets the bit in a single unsigned long location. Because
->> pwol_mask may not be aligned to unsigned long, the location may cross two
->> cache lines. On x86, accessing two cache lines in locked instruction in
->> set_bit() is called split locked access and can cause overall performance
->> degradation.
->>
->> So use non atomic __set_bit() to set pwol_mask bits. __set_bit() won't hit
->> split lock issue on x86.
->>
->> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
->> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
->> ---
->>  drivers/net/ethernet/broadcom/b44.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
->> index 97ab0dd25552..5738ab963dfb 100644
->> --- a/drivers/net/ethernet/broadcom/b44.c
->> +++ b/drivers/net/ethernet/broadcom/b44.c
->> @@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
->>
->>  	memset(ppattern + offset, 0xff, magicsync);
->>  	for (j = 0; j < magicsync; j++)
->> -		set_bit(len++, (unsigned long *) pmask);
->> +		__set_bit(len++, (unsigned long *)pmask);
->>
->>  	for (j = 0; j < B44_MAX_PATTERNS; j++) {
->>  		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
->> @@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
->>  		for (k = 0; k< ethaddr_bytes; k++) {
->>  			ppattern[offset + magicsync +
->>  				(j * ETH_ALEN) + k] = macaddr[k];
->> -			set_bit(len++, (unsigned long *) pmask);
->> +			__set_bit(len++, (unsigned long *)pmask);
+Em Wed, Jun 19, 2019 at 09:44:27AM +0300, Adrian Hunter escreveu:
+> Hi
 > 
-> Is this code expected to do anything sensible on BE systems?
+> Here is one non-urgent fix and a subsequent tidy-up.
 
-Probably not, but it's not wrong in different ways before/after the patch.
+Thanks, both applied.
 
-Paolo
+- Arnaldo
+ 
+> 
+> Adrian Hunter (2):
+>       perf thread-stack: Fix thread stack return from kernel for kernel-only case
+>       perf thread-stack: Eliminate code duplicating thread_stack__pop_ks()
+> 
+>  tools/perf/util/thread-stack.c | 48 ++++++++++++++++++++++++++++++------------
+>  1 file changed, 35 insertions(+), 13 deletions(-)
+> 
+> 
+> Regards
+> Adrian
 
-> Casting the bitmask[] argument to any of the set_bit() functions is dubious at best.
+-- 
+
+- Arnaldo
