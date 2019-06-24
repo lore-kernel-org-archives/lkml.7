@@ -2,52 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCC4C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A12220645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE4720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371485;
-	bh=CnQAIDsK/qngiQI4aLOMQNGqTdbXr98z9kcIyjCyOKg=;
+	s=default; t=1561371487;
+	bh=CTGxW4HAeS9AfZqWdcoD0vkfG0UtNdWM6gNBiYfTMAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8KTA0LKZfIa0+7eAGO/pNf/NBGdnE9ME/cC2RKjr967XS3x9roFhSBveRLDDxe4C
-	 LTacaSyTyzOEa55JxoZr4RqKMR1jdwA4JJus4SsEb19o3jzM0wHy+gxeJuGo66S//K
-	 BtuSBLlDN3TZegCFY0ty9bynokeTPGrd58iwFUdE=
+	b=TQEIhQpTGUSLgPuLAp4P/cOh3lpfy3DkxlPpyaMYFUJT3/2a9yzLx+gL2RJ33qeWA
+	 hy8NHnI8/+K/7KDYR2zq44Ia2MZHZp4eihxfVYjkoHgH7jB8HELFZZxzbVcAZqgx1f
+	 E+zQ7460oZQj2dholVYcfsTFPeAD4+fj3l88/ENs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbfFXKQz (ORCPT
+        id S1730819AbfFXKQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54372 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbfFXKQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:49 -0400
+        id S1730788AbfFXKQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:43 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA8C2146F;
-        Mon, 24 Jun 2019 10:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F302089F;
+        Mon, 24 Jun 2019 10:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371408;
-        bh=CnQAIDsK/qngiQI4aLOMQNGqTdbXr98z9kcIyjCyOKg=;
+        s=default; t=1561371403;
+        bh=CTGxW4HAeS9AfZqWdcoD0vkfG0UtNdWM6gNBiYfTMAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvHFW7xNZEgj4+IodIexrw4Mrpg7+wuq14FsPksI263psoaW5eEOVgd3S9A6mPU17
-         iIlSi94jEIpDHTrjK9RBBT6Kg8731EC0A62rfF065XCcjY4wpnkx4KUGeecF71riOy
-         GhvRAgVWrV8YpXRlS1uSTMz4txJPntx4JKQDrLWk=
+        b=0dSVrC+W2lMtH6qady/KCXxharSjRppWs5pjF4c5xKxx2F+jhmJaT7f83g9amjZWS
+         GkGEQD8mSH/00rm3it/8vHLVjP/f6IqvvqESciKo//0hBG3USqaXhg/lC1GThoCGt/
+         nk3qDzJ7IcrSCS8ZC61ZzLfuDovgBhj8wTVkTZoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 092/121] btrfs: start readahead also in seed devices
-Date:   Mon, 24 Jun 2019 17:57:04 +0800
-Message-Id: <20190624092325.492365383@linuxfoundation.org>
+        stable@vger.kernel.org, Antti Antinoja <antti@fennosys.fi>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 090/121] ovl: dont fail with disconnected lower NFS
+Date:   Mon, 24 Jun 2019 17:57:02 +0800
+Message-Id: <20190624092325.399144583@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,49 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
+[ Upstream commit 9179c21dc6ed1c993caa5fe4da876a6765c26af7 ]
 
-commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
+NFS mounts can be disconnected from fs root.  Don't fail the overlapping
+layer check because of this.
 
-Currently, btrfs does not consult seed devices to start readahead. As a
-result, if readahead zone is added to the seed devices, btrfs_reada_wait()
-indefinitely wait for the reada_ctl to finish.
+The check is not authoritative anyway, since topology can change during or
+after the check.
 
-You can reproduce the hung by modifying btrfs/163 to have larger initial
-file size (e.g. xfs_io pwrite 4M instead of current 256K).
-
-Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
-Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
-Cc: stable@vger.kernel.org # 3.2+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Antti Antinoja <antti@fennosys.fi>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/reada.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/overlayfs/super.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -747,6 +747,7 @@ static void __reada_start_machine(struct
- 	u64 total = 0;
- 	int i;
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index c481bf5f6fe2..fa5060f59b88 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -1472,23 +1472,20 @@ out_err:
+  * Check if this layer root is a descendant of:
+  * - another layer of this overlayfs instance
+  * - upper/work dir of any overlayfs instance
+- * - a disconnected dentry (detached root)
+  */
+ static int ovl_check_layer(struct super_block *sb, struct dentry *dentry,
+ 			   const char *name)
+ {
+-	struct dentry *next, *parent;
+-	bool is_root = false;
++	struct dentry *next = dentry, *parent;
+ 	int err = 0;
  
-+again:
- 	do {
- 		enqueued = 0;
- 		mutex_lock(&fs_devices->device_list_mutex);
-@@ -758,6 +759,10 @@ static void __reada_start_machine(struct
- 		mutex_unlock(&fs_devices->device_list_mutex);
- 		total += enqueued;
- 	} while (enqueued && total < 10000);
-+	if (fs_devices->seed) {
-+		fs_devices = fs_devices->seed;
-+		goto again;
-+	}
+-	if (!dentry || dentry == dentry->d_sb->s_root)
++	if (!dentry)
+ 		return 0;
  
- 	if (enqueued == 0)
- 		return;
+-	next = dget(dentry);
+-	/* Walk back ancestors to fs root (inclusive) looking for traps */
+-	do {
+-		parent = dget_parent(next);
+-		is_root = (parent == next);
++	parent = dget_parent(next);
++
++	/* Walk back ancestors to root (inclusive) looking for traps */
++	while (!err && parent != next) {
+ 		if (ovl_is_inuse(parent)) {
+ 			err = -EBUSY;
+ 			pr_err("overlayfs: %s path overlapping in-use upperdir/workdir\n",
+@@ -1497,17 +1494,12 @@ static int ovl_check_layer(struct super_block *sb, struct dentry *dentry,
+ 			err = -ELOOP;
+ 			pr_err("overlayfs: overlapping %s path\n", name);
+ 		}
+-		dput(next);
+ 		next = parent;
+-	} while (!err && !is_root);
+-
+-	/* Did we really walk to fs root or found a detached root? */
+-	if (!err && next != dentry->d_sb->s_root) {
+-		err = -ESTALE;
+-		pr_err("overlayfs: disconnected %s path\n", name);
++		parent = dget_parent(next);
++		dput(next);
+ 	}
+ 
+-	dput(next);
++	dput(parent);
+ 
+ 	return err;
+ }
+-- 
+2.20.1
+
 
 
