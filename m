@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A472C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793BDC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F188214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFA321473
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370744;
-	bh=tsibFGeCM9kozJlvLSct5i3Ff8kYIeVStbM5u+Zsugk=;
+	s=default; t=1561370747;
+	bh=CRSruYZNYZEsKMB0PpnlbwDxJmP7qjeeKQInSfEmv5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JmeLUATMD9Qhvxj+8fjg8EA/GBuR9TJYc13oGsIMbnzMjYXYQ4G6QXnl8DNlbg6mY
-	 aXOOe8bta4wZBJjG9Bp+iRCsMCCsnDNvVzOjHu36PbhkXQ3zikzi0CeeDPsYGgjuID
-	 V0B+4wXL1JapsOx/OxHowaYvWQ6ibXYtzmRHbqwM=
+	b=fF/TSbtzS2yockeM6u/Ow4VVL6U8eY3m1E+83Qx2Aci1Cq8rjKNQK2fbB5AKDzD+f
+	 5LEtwLdu4YI2p502j/LgaCk3C3NHY7niW4aNWk1PBApfVv5Dnnu0fDlvf/fkbpVT0V
+	 5lGSPZyKTFAH8ZS48JYrucYRKUAN/3hNRXt2fOZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfFXKFm (ORCPT
+        id S1729985AbfFXKFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbfFXKFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:37 -0400
+        id S1729970AbfFXKFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:42 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D01F121473;
-        Mon, 24 Jun 2019 10:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14D45212F5;
+        Mon, 24 Jun 2019 10:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370736;
-        bh=tsibFGeCM9kozJlvLSct5i3Ff8kYIeVStbM5u+Zsugk=;
+        s=default; t=1561370741;
+        bh=CRSruYZNYZEsKMB0PpnlbwDxJmP7qjeeKQInSfEmv5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2e/ypiZo03yVTnrT69Z5asUZiwkwXZKhsm15dLWTQ0+ONYQuKLqVDct7985HTPm7b
-         SMY27DoEdRFbmEHIM/N6QZx2xnoMA9U3IDQLh66cGHKb3jFBz89mf4EK728Xz+yA+m
-         S8FsjPQsQy3p4magk17fvgtN6Xe4wBK2pVSiL2Gg=
+        b=E5gtfy2EixQQzeeEoGw0X/30ViI+m1ojJ9aOY8GpQoZcbo2fkMm5BbS8VpxiNUqF0
+         aUomvxv4UQw1qeMCGwcd+hfge/SkQ1k58g/Uo+DtFgHglYsBXcFrilLccL+eBs4Vdl
+         v8FHt9NWB1OU6BWDfFx5+7m6Lk8AG1RlSh7qkTAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ShihPo Hung <shihpo.hung@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH 4.19 72/90] riscv: mm: synchronize MMU after pte change
-Date:   Mon, 24 Jun 2019 17:57:02 +0800
-Message-Id: <20190624092318.729317368@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.19 74/90] ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
+Date:   Mon, 24 Jun 2019 17:57:04 +0800
+Message-Id: <20190624092318.839626230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,57 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ShihPo Hung <shihpo.hung@sifive.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit bf587caae305ae3b4393077fb22c98478ee55755 upstream.
+commit b25af2ff7c07bd19af74e3f64ff82e2880d13d81 upstream.
 
-Because RISC-V compliant implementations can cache invalid entries
-in TLB, an SFENCE.VMA is necessary after changes to the page table.
-This patch adds an SFENCE.vma for the vmalloc_fault path.
+Since commit 1e434b703248 ("ARM: imx: update the cpu power up timing
+setting on i.mx6sx") some characters loss is noticed on i.MX6ULL UART
+as reported by Christoph Niedermaier.
 
-Signed-off-by: ShihPo Hung <shihpo.hung@sifive.com>
-[paul.walmsley@sifive.com: reversed tab->whitespace conversion,
- wrapped comment lines]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-riscv@lists.infradead.org
+The intention of such commit was to increase the SW2ISO field for i.MX6SX
+only, but since cpuidle-imx6sx is also used on i.MX6UL/i.MX6ULL this caused
+unintended side effects on other SoCs.
+
+Fix this problem by keeping the original SW2ISO value for i.MX6UL/i.MX6ULL
+and only increase SW2ISO in the i.MX6SX case.
+
 Cc: stable@vger.kernel.org
+Fixes: 1e434b703248 ("ARM: imx: update the cpu power up timing setting on i.mx6sx")
+Reported-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Tested-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/mm/fault.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/mach-imx/cpuidle-imx6sx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/riscv/mm/fault.c
-+++ b/arch/riscv/mm/fault.c
-@@ -29,6 +29,7 @@
+--- a/arch/arm/mach-imx/cpuidle-imx6sx.c
++++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
+@@ -15,6 +15,7 @@
  
- #include <asm/pgalloc.h>
- #include <asm/ptrace.h>
-+#include <asm/tlbflush.h>
+ #include "common.h"
+ #include "cpuidle.h"
++#include "hardware.h"
  
- /*
-  * This routine handles page faults.  It determines the address and the
-@@ -281,6 +282,18 @@ vmalloc_fault:
- 		pte_k = pte_offset_kernel(pmd_k, addr);
- 		if (!pte_present(*pte_k))
- 			goto no_context;
-+
-+		/*
-+		 * The kernel assumes that TLBs don't cache invalid
-+		 * entries, but in RISC-V, SFENCE.VMA specifies an
-+		 * ordering constraint, not a cache flush; it is
-+		 * necessary even after writing invalid entries.
-+		 * Relying on flush_tlb_fix_spurious_fault would
-+		 * suffice, but the extra traps reduce
-+		 * performance. So, eagerly SFENCE.VMA.
-+		 */
-+		local_flush_tlb_page(addr);
-+
- 		return;
- 	}
- }
+ static int imx6sx_idle_finish(unsigned long val)
+ {
+@@ -110,7 +111,7 @@ int __init imx6sx_cpuidle_init(void)
+ 	 * except for power up sw2iso which need to be
+ 	 * larger than LDO ramp up time.
+ 	 */
+-	imx_gpc_set_arm_power_up_timing(0xf, 1);
++	imx_gpc_set_arm_power_up_timing(cpu_is_imx6sx() ? 0xf : 0x2, 1);
+ 	imx_gpc_set_arm_power_down_timing(1, 1);
+ 
+ 	return cpuidle_register(&imx6sx_cpuidle_driver, NULL);
 
 
