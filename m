@@ -2,100 +2,133 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB92C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D742133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CC0208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfFXNnm (ORCPT
+        id S1731079AbfFXNpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:43:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51670 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbfFXNnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:43:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B7DDB316290E;
-        Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BE9B600CD;
-        Mon, 24 Jun 2019 13:43:38 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 21:43:33 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kyle Pelton <kyle.d.pelton@intel.com>
-Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
- phys_p4d_init()
-Message-ID: <20190624134333.GO24419@MiWiFi-R3L-srv>
-References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
- <20190621090249.GL24419@MiWiFi-R3L-srv>
- <20190621105449.fp7h7tsmpitvplyr@box>
- <20190624100742.GM24419@MiWiFi-R3L-srv>
- <20190624122355.762cadxds37enfdo@box>
+        Mon, 24 Jun 2019 09:45:36 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:57254 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfFXNpg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:45:36 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 1294772CC58;
+        Mon, 24 Jun 2019 16:45:32 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 088B57CCE32; Mon, 24 Jun 2019 16:45:31 +0300 (MSK)
+Date:   Mon, 24 Jun 2019 16:45:31 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] CLONE_PIDFD: do not use the value pointed by
+ parent_tidptr
+Message-ID: <20190624134531.GB6010@altlinux.org>
+References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
+ <20190620110037.GA4998@altlinux.org>
+ <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
+ <20190621170613.GA26182@altlinux.org>
+ <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+ <20190623112717.GA20697@altlinux.org>
+ <20190624094940.24qrteybbcp25wq7@brauner.io>
+ <20190624115942.g6vyis3zy4ptt3fc@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
 Content-Disposition: inline
-In-Reply-To: <20190624122355.762cadxds37enfdo@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 24 Jun 2019 13:43:39 +0000 (UTC)
+In-Reply-To: <20190624115942.g6vyis3zy4ptt3fc@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/19 at 03:23pm, Kirill A. Shutemov wrote:
-> On Mon, Jun 24, 2019 at 06:07:42PM +0800, Baoquan He wrote:
-> > On 06/21/19 at 01:54pm, Kirill A. Shutemov wrote:
-> > > > The code block as below is to zero p4d entries which are not coverred by
-> > > > the current memory range, and if haven't been mapped already. It's
-> > > > clearred away in this patch, could you also mention it in log, and tell
-> > > > why it doesn't matter now?
-> > > > 
-> > > > If it doesn't matter, should we clear away the simillar code in
-> > > > phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
-> > > > clean up?
-> > > 
-> > > It only matters for the levels that contains page table entries that can
-> > > point to pages, not page tables. There's no p4d or pgd huge pages on x86.
-> > > Otherwise we only leak page tables without any benefit.
-> > 
-> > Ah, I checked git history, didn't find why it's added. I just Have a
-> > superficial knowledge of the clearing, but in a low-efficiency way.
-> > 
-> > > 
-> > > We might have this on all leveles under p?d_large() condition and don't
-> > > touch page tables at all.
-> > 
-> > I see.
-> > 
-> > > 
-> > > BTW, it all becomes rather risky for this late in the release cycle. Maybe
-> > > we should revert the original patch and try again later with more
-> > > comprehansive solution?
-> > 
-> > It's not added in one time. I am fine with your current change, would be
-> > much better if mention it in log, and also add code comment above the
-> > clearing code. Surely reverting and trying later with more comprehensive
-> > solution is also good to me, this need a little more effort.
-> 
-> I've decided to keep the block for now. We can remove it later, once the fixis in.
-> I'll post it soon
 
-That's great, can make those codes more understandable with clear commit
-log and code comment.
+--JP+T4n/bALQSJXh8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 24, 2019 at 01:59:43PM +0200, Christian Brauner wrote:
+> On Mon, Jun 24, 2019 at 11:49:40AM +0200, Christian Brauner wrote:
+> > On Sun, Jun 23, 2019 at 02:27:17PM +0300, Dmitry V. Levin wrote:
+> > > Userspace needs a cheap and reliable way to tell whether CLONE_PIDFD
+> > > is supported by the kernel or not.
+> > >=20
+> > > While older kernels without CLONE_PIDFD support just leave unchanged
+> > > the value pointed by parent_tidptr, current implementation fails with
+> > > EINVAL if that value is non-zero.
+> > >=20
+> > > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd =
+=3D=3D 0
+> > > pointed by parent_tidptr also remains unchanged, which effectively
+> > > means that userspace must either check CLONE_PIDFD support beforehand
+> > > or ensure that fd 0 is not closed when invoking CLONE_PIDFD.
+> > >=20
+> > > The check for pidfd =3D=3D 0 was introduced during v5.2 release cycle
+> > > by commit b3e583825266 ("clone: add CLONE_PIDFD") to ensure that
+> > > CLONE_PIDFD could be potentially extended by passing in flags through
+> > > the return argument.
+> > >=20
+> > > However, that extension would look horrendous, and with introduction =
+of
+> > > clone3 syscall in v5.3 there is no need to extend legacy clone syscall
+> > > this way.
+> > >=20
+> > > So remove the pidfd =3D=3D 0 check.  Userspace that needs to be porta=
+ble
+> > > to kernels without CLONE_PIDFD support is advised to initialize pidfd
+> > > with -1 and check the pidfd value returned by CLONE_PIDFD.
+> > >=20
+> > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> >=20
+> > Reviewed-by: Christian Brauner <christian@brauner.io>
+> >=20
+> > Thank you Dmitry, queueing this up for rc7.
+>=20
+> This is now sitting in
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/=
+?h=3Dfixes&id=3D43754d05f235dd1b6c7f8ab9f42007770d721f10
+>=20
+> I reformulated the commit message a bit and gave it a Fixes tag. Dmitry,
+> if you want you can take a look and tell me if that's acceptable to you.
+
+s/Old kernel that only support/Old kernels that only support/
+
+Besides that, fine with me.  Thanks.
+
+
+--=20
+ldv
+
+--JP+T4n/bALQSJXh8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJdENP7AAoJEAVFT+BVnCUIrgIP/1sgLmygdF42/bB1S8h0pKru
+c98crUZv9Ws1hDC3tW4+8ZxI9c2iV/qCiyZo3N4dkS06nWcJJbPR35ZlTCS4u8zd
+OszHMNqeusLo5iU+lhmiOXGu45R9i3QEb+Egk4TAENeCOZCPOVPBrscM/smUSxAD
+uZQtDuf73zq/9fs+2ePbZ15NE2o98/hYRHEkZx39mmOPhVwMSg3eI9m+mdi0M0Km
+Yxor/sAPasFakCaUeNrayK9Rv7q+a3V5awO2PmQk8fOGi+67EDrAraGjPjAYTxtX
+/IrTDNf6KbK2rBJWIKD9cHpQAXTGMkTbYQ9Gspki1QdTu7PUz8RLYM4hpHrULTq0
+6VFAH95ccMH7XabUr+C54aZH8QAuXokf3w5heRWsVVa0NnjvBvJMIQA8GtUlZVSR
+omYxd/PDdJiNG+UAB4yzqyliMQfhJSLdyYIN6MtoloRw+5BzQY78gXad3vVItyCA
+GW1f3wufQ2xdv/irt6DMHtxbJfNLjIiWtUvmafI/iJcG9vJ0Ymkqg7mcxhEOi2P5
+whk94r7dQ8gqsbQkcIMZmyZxhGn7776vPt6L/ZDZg1yenOKV8r4vm+ERqqrKAHrG
+Avpm+9B6WUHhx35xJdV7/EDcOp8bwz2tXWhh7eemrw3j0ay1LW8us49A8UFlJ6/7
+lwACNg07XV9tLqMqHjJ+
+=bvRp
+-----END PGP SIGNATURE-----
+
+--JP+T4n/bALQSJXh8--
