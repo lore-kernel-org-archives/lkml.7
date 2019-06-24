@@ -2,139 +2,72 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73144C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABE0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CBD208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:34:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pLwFYyx4"
+	by mail.kernel.org (Postfix) with ESMTP id B9A2F2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfFXHea (ORCPT
+        id S1728008AbfFXHe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:34:30 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:59942 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFXHea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:34:30 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190624073427epoutp04195f9715386f5cbc125a6cf8c1b64d7f~rEioJlOPD0287602876epoutp04O
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:34:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190624073427epoutp04195f9715386f5cbc125a6cf8c1b64d7f~rEioJlOPD0287602876epoutp04O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561361667;
-        bh=hemYUVKcGXHPpvU5K4qf2wgUfLKg+lVK/vDiZZht2ds=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=pLwFYyx4jUUb8aYl+FA24QdgY0V18OxM0adal6zmZfoCVnxW4fizA8dPfzRwcYCHG
-         eUDcibnTDGpNGRe7cJItEJzO4cy37rmR7kTV697srFC8Dc34lnYHchvROI+gO2QjGa
-         9j9GqjBvqVTmFpJqp2zbuVVmGYIGKMWtdp6cAvsw=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190624073424epcas1p3745daaf40398429cc4bdf8bf92d87455~rEilAkNHp2996729967epcas1p3m;
-        Mon, 24 Jun 2019 07:34:24 +0000 (GMT)
-X-AuditID: b6c32a38-5e3ff700000010a1-8c-5d107cf69a41
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        02.0A.04257.6FC701D5; Mon, 24 Jun 2019 16:34:15 +0900 (KST)
-Mime-Version: 1.0
-Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     "digetx@gmail.com" <digetx@gmail.com>
-CC:     Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
-Date:   Mon, 24 Jun 2019 16:34:14 +0900
-X-CMS-MailID: 20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a
+        Mon, 24 Jun 2019 03:34:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19101 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726077AbfFXHe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:34:59 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 825BA6EB3A94ED6FA231;
+        Mon, 24 Jun 2019 15:34:56 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 24 Jun
+ 2019 15:34:47 +0800
+Subject: Re: [PATCH v3 0/8] staging: erofs: decompression inplace approach
+To:     Gao Xiang <hsiangkao@aol.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, Du Wei <weidu.du@huawei.com>
+References: <20190624072258.28362-1-hsiangkao@aol.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b07bc3f7-e85e-896a-c8ae-4800ca6c9816@huawei.com>
+Date:   Mon, 24 Jun 2019 15:34:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190624072258.28362-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTX/d7jUCsQftSJovrX56zWqz++JjR
-        omXWIhaLy7vmsFl87j3CaNH5ZRabxc9d81gc2D12zrrL7tHb/I7No2/LKkaPz5vkAliism0y
-        UhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgC5QUihLzCkF
-        CgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRYFugVJ+YWl+al6yXn51oZGhgYmQIVJmRntJzq
-        Zi04yF2xccN8pgbGU5xdjJwcEgImErNfnGbsYuTiEBLYwShx+dUSli5GDg5eAUGJvzuEQWqE
-        BZwkmn9cZAOxhQSUJBpu7mOGiOtLdDzYxghiswnoSmzdcJcFxBYR0JTYuKKXBWQms8BpJonN
-        a3+yQSzjlZjR/pQFwpaW2L58KyPILk4BP4k1/3kgwqISN1e/ZYex3x+bzwhhi0i03jvLDGEL
-        Sjz4uZsRZsyMKf+hRlZLXJu+mB1kr4RAC6NE7+opUEX6EmfmngS7gVfAV2L5l/OsIDaLgKrE
-        pI4nUENdJFbfPQ1WwywgL7H97RxmkNuYgZ5Zv0sfokRRYufvuYwQJXwS7772sMK8tWPeEyYI
-        W03i0O4lUPfLSJyevhBqvIfEixP7WCFhOJVR4tIe+QmMCrMQIT0LyeJZCIsXMDKvYhRLLSjO
-        TU8tNiwwQY7cTYzgxKhlsYNxzzmfQ4wCHIxKPLwCG/hjhVgTy4orcw8xSnAwK4nwLk0UiBXi
-        TUmsrEotyo8vKs1JLT7EaAr0/0RmKdHkfGDSziuJNzQ1MjY2tjAxNDM1NFQS543nvhkjJJCe
-        WJKanZpakFoE08fEwSnVwMg9qeBd6cwT1wPKzPILH169UrZ+Ev/TEwz3tyv+2r+3S2z117b8
-        feeyRBncSg4esZG1v6O2tmX6Ezv97YmuST8EFH64RZQnmGn+OiwRyptR4cd7Md/giG2nzprp
-        va8e9wcVCn2TfPj0gP6RVSW9H77zVixLY8hZFtv0qPmB1/mLlZPcHdi+piuxFGckGmoxFxUn
-        AgDqdthpogMAAA==
-DLP-Filter: Pass
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
-References: <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
-        <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/6/24 15:22, Gao Xiang wrote:
+> This is patch v3 of erofs decompression inplace approach, which is sent
+> out by my personal email since I'm out of office to attend Open Source
+> Summit China 2019 these days. No major change from PATCH v2 since no
+> noticeable issue raised from landing to our products till now, mainly
+> as a response to Chao's suggestions.
 > 
->A question:
+> See the bottom lines which are taken from RFC PATCH v1 and describe
+> the principle of these technologies.
 > 
->Does this driver support Tegra20 as well?
->I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
->according to /drivers/soc/tegra/Kconfig.
+> The series is based on the latest staging-next since all dependencies
+> have already been merged.
 > 
+> changelog from v2:
+>  - wrap up some offsets as marcos;
+>  - add some error handling for erofs_get_pcpubuf();
+>  - move some decompression inplace stuffes from PATCH 5 -> 6.
 
-For this matter, how about updating your 13/16 patch as follows?
+Thanks for the update, those all changes look good to me. :)
 
----
- drivers/devfreq/Kconfig         | 4 ++--
- drivers/devfreq/tegra-devfreq.c | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 7dd46d44579d..78c4b436aad8 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -93,8 +93,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  This does not yet operate with optimal voltages.
- 
- config ARM_TEGRA_DEVFREQ
--	tristate "Tegra DEVFREQ Driver"
--	depends on ARCH_TEGRA_124_SOC
-+	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
-+	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || ARCH_TEGRA_124_SOC || ARCH_TEGRA_210_SOC
- 	select PM_OPP
- 	help
- 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
-diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index 5cddf2199c4e..a6ba75f4106d 100644
---- a/drivers/devfreq/tegra-devfreq.c
-+++ b/drivers/devfreq/tegra-devfreq.c
-@@ -726,6 +726,7 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id tegra_devfreq_of_match[] = {
-+	{ .compatible = "nvidia,tegra30-actmon" },
- 	{ .compatible = "nvidia,tegra124-actmon" },
- 	{ },
- };
--- 
-2.17.1
-
+Thanks,
