@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB38C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F55C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A6E205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F08F20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370605;
-	bh=CWZ/M4ZRIO5NyJYUo2xSisGgm4N/taf80NLhXzE4FHs=;
+	s=default; t=1561370610;
+	bh=n9x9Eb4z4CC4l3c7Nba6QN2m62zKHw0k2+ln8QZSuw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjIgIUPoT6y1ogPFcLp9EuOplkqgWrcJ0KetcOlUnEbsxLnHJU7WoIc/rO+POKrwg
-	 AuDB7djVdSms4CxWDCtRPLXnxuBUclGD4tep2sj59HTXxXXGtKxgMBaz7NlXQBRtPM
-	 CeStL8e6ALoSwu+yr7EiQf4fzSY+QKT2XU3oMucI=
+	b=evVAJs7rgmy3lxvTle5tLtuAnnpDCzeG8H5oW6HTfoBtPK14166/vX1bGMmUIYsRU
+	 EwyyZAtkftNsP84A5QKHvGWCqfHEMS23IrPfJO1WP+sxFdp0iuSkJG72aVXpzbHwLH
+	 wPruI/ZKQaNqQO+abXP0V4063bMTLnEa4XkVidbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfFXKDJ (ORCPT
+        id S1729558AbfFXKD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34426 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729518AbfFXKDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:03:06 -0400
+        id S1729501AbfFXKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:03 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00FA2146E;
-        Mon, 24 Jun 2019 10:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41969205ED;
+        Mon, 24 Jun 2019 10:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370585;
-        bh=CWZ/M4ZRIO5NyJYUo2xSisGgm4N/taf80NLhXzE4FHs=;
+        s=default; t=1561370582;
+        bh=n9x9Eb4z4CC4l3c7Nba6QN2m62zKHw0k2+ln8QZSuw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8Q38DjtG9+51zeA5LuyyhC0VXAd8fmLxqQdZ77rfBm69fvR2gGfdrvQz6YCbukLB
-         tivS3oy2lu/vE7Ar7UJkddKfYTUaWy2Nf+sP3BRwEzz5p/7Q44+6jzb/Q213i7YcLM
-         bdqx7yYKcPeK6bnMgqmmo0VJUVDh3/Lu7BESKgss=
+        b=FxcHWqDl4oXe4tosXFgdPYXBXlb3lP72WfvuQAQ97c5WXCteNFxyM+PGJZHF7wMLc
+         yXzmgsK4K2fS5X8EIc1gonQdGoAzshlOI4vUFdtB1lwF1yDQLj3yDBPWYhubqrq8Gk
+         7NoXDUCa+JThf+DcH35nZxO6NOh/b43mZJyqWnsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 28/90] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
-Date:   Mon, 24 Jun 2019 17:56:18 +0800
-Message-Id: <20190624092316.047563650@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 4.19 27/90] apparmor: enforce nullbyte at end of tag string
+Date:   Mon, 24 Jun 2019 17:56:17 +0800
+Message-Id: <20190624092315.965604081@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,54 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Jann Horn <jannh@google.com>
 
-commit 2de0b42da263c97d330d276f5ccf7c4470e3324f upstream.
+commit 8404d7a674c49278607d19726e0acc0cae299357 upstream.
 
-There are certain cases, notably when transitioning between sleep and
-active state, when Broadcom SDIO WiFi cards will produce errors on the
-SDIO bus.  This is evident from the source code where you can see that
-we try commands in a loop until we either get success or we've tried
-too many times.  The comment in the code reinforces this by saying
-"just one write attempt may fail"
+A packed AppArmor policy contains null-terminated tag strings that are read
+by unpack_nameX(). However, unpack_nameX() uses string functions on them
+without ensuring that they are actually null-terminated, potentially
+leading to out-of-bounds accesses.
 
-Unfortunately these failures sometimes end up causing an "-EILSEQ"
-back to the core which triggers a retuning of the SDIO card and that
-blocks all traffic to the card until it's done.
+Make sure that the tag string is null-terminated before passing it to
+strcmp().
 
-Let's disable retuning around the commands we expect might fail.
-
-Cc: stable@vger.kernel.org #v4.18+
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: stable@vger.kernel.org
+Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ security/apparmor/policy_unpack.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -667,6 +667,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio
- 
- 	brcmf_dbg(TRACE, "Enter: on=%d\n", on);
- 
-+	sdio_retune_crc_disable(bus->sdiodev->func1);
-+
- 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
- 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
- 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-@@ -719,6 +721,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio
- 	if (try_cnt > MAX_KSO_ATTEMPTS)
- 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
- 
-+	sdio_retune_crc_enable(bus->sdiodev->func1);
-+
- 	return err;
- }
- 
+--- a/security/apparmor/policy_unpack.c
++++ b/security/apparmor/policy_unpack.c
+@@ -276,7 +276,7 @@ static bool unpack_nameX(struct aa_ext *
+ 		char *tag = NULL;
+ 		size_t size = unpack_u16_chunk(e, &tag);
+ 		/* if a name is specified it must match. otherwise skip tag */
+-		if (name && (!size || strcmp(name, tag)))
++		if (name && (!size || tag[size-1] != '\0' || strcmp(name, tag)))
+ 			goto fail;
+ 	} else if (name) {
+ 		/* if a name is specified and there is no name tag fail */
 
 
