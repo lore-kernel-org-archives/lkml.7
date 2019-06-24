@@ -2,69 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED9FC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A706C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6F0212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0OOWkMg"
+	by mail.kernel.org (Postfix) with ESMTP id 6F870212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbfFXNdj (ORCPT
+        id S1729762AbfFXNdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:33:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34674 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbfFXNdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:33:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IDDl34/KAi739r3TKIL1925N+WLKsZDgMR4rlC9aiPk=; b=S0OOWkMgsjyTrHyiPveXh3eYt
-        daAYZVDsOjPSSyRQrtWqHfcbRFz9vWfX8JiGXMLN+jbwtCDU9rCETU1rfnHRgqiuFirOtLSKR4yiZ
-        0uMuMsTfdLHiDiiwQX8/xMjUez5IM+bNuhLXqsQolt4vdcOcRtjmMhIy6BiFeql6SkiZTfejhDenD
-        JQ7PnZD6Ju5zi9j679eu48d3uvHIAq5hOOjZ1NsMLA9Ych41KtysiTiWMZCHpUcGFiiCVX7jEY6Oh
-        SLCq5nPzJdnhxW6ndrrhgVvE2iGcb6MqW7LoXtmdUOorKJPLA4Tpwb4Wvq19eikliGtDLIBmuoV/1
-        4geSQgA7g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfP6F-0002xQ-63; Mon, 24 Jun 2019 13:33:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A0BE9209C958C; Mon, 24 Jun 2019 15:33:33 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 15:33:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] get_maintainer: Add --cc option
-Message-ID: <20190624133333.GW3419@hirez.programming.kicks-ass.net>
-References: <20190624130323.14137-1-bigeasy@linutronix.de>
+        Mon, 24 Jun 2019 09:33:49 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728884AbfFXNdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:33:49 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D7DD23998DC962976001;
+        Mon, 24 Jun 2019 21:33:43 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
+ 21:33:37 +0800
+Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <corbet@lwn.net>, <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>,
+        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
+        <dvyukov@google.com>, <feng.tang@intel.com>,
+        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
+        <linux@leemhuis.info>, <alex.popov@linux.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+ <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
+ <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com>
+ <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <e870e089-efb6-53a7-4299-8468f2ba8852@huawei.com>
+Date:   Mon, 24 Jun 2019 21:32:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624130323.14137-1-bigeasy@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:03:23PM +0200, Sebastian Andrzej Siewior wrote:
-> The --cc adds a Cc: prefix infront of the email address so it can be
-> used by other Scripts directly instead of adding another wrapper for
-> this.
+On 2019/6/24 17:45, Thomas Gleixner wrote:
+> Zhiqiang,
+> 
+> On Mon, 24 Jun 2019, Zhiqiang Liu wrote:
+>> ÔÚ 2019/6/24 0:38, Thomas Gleixner Ð´µÀ:
+>>
+>> Thanks again for your detailed advice.
+>> As your said, the max_softirq_time_usecs setting without explaining the
+>> relationship with CONFIG_HZ will give a false sense of controlability. And
+>> the time accuracy of jiffies will result in a certain difference between the
+>> max_softirq_time_usecs set value and the actual value, which is in one jiffies
+>> range.
+>>
+>> I will add these infomation in the sysctl documentation and changelog in v2 patch.
+> 
+> Please make the sysctl milliseconds based. That's the closest approximation
+> of useful units for this. This still has the same issues as explained
+> before but it's not off by 3 orders of magitude anymore.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+Thanks for your suggestion.
+I will adopt max_softirq_time_ms to replace MAX_SOFTIRQ_TIME in v2.
 
-Would it make sense to make '--cc' imply --no-roles --no-rolestats ?
-
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-
-Thanks bigeasy!
