@@ -2,117 +2,109 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98CDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA01C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF2E208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E45208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561370450;
+	bh=I5zM+GozbT0bt9CqEAiv4Y3sfVcVo/KIvmIUaX75MXE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vP+eUDbQi6Kb3QYWrk65GLvgBTs+eNj4/DUC2PiplyIIYRXiskI6TIZbhqG5CNcIg
+	 wJ1bNHCsk3qn9JU1tsMCpbw5Xt9VScFU/P4lezW9/Cl9P+g6HlTiLwGe9GEncQ9UPv
+	 IphlhHWIrSwTXyQ1dUu5qyNdeH301bl+rNDFvMhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfFXKAk (ORCPT
+        id S1728898AbfFXKAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:00:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33766 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728620AbfFXKAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:00:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A0EAAFED;
-        Mon, 24 Jun 2019 10:00:35 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 12:00:33 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-cc:     Cheng Jian <cj.chengjian@huawei.com>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, jpoimboe@redhat.com,
-        mingo@redhat.com, huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        yangyingliang@huawei.com, bobo.shaobowang@huawei.com
-Subject: Re: [PATCH] Revert "x86/module: Detect and skip invalid
- relocations"
-In-Reply-To: <alpine.DEB.2.21.1906220927460.5503@nanos.tec.linutronix.de>
-Message-ID: <alpine.LSU.2.21.1906241150000.31030@pobox.suse.cz>
-References: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com> <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz> <alpine.DEB.2.21.1906220927460.5503@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 24 Jun 2019 06:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728687AbfFXJ7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:21 -0400
+Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 860A2208E4;
+        Mon, 24 Jun 2019 09:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561370361;
+        bh=I5zM+GozbT0bt9CqEAiv4Y3sfVcVo/KIvmIUaX75MXE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h28MlDzGHQhnpnpjXiVdQChh1nootKc+fqGw5WDx6hbMv6P/JXF9IY/iVFOtAFe1j
+         MV5RVWgGBM5jQwk90Zey/lpyXfP/f7d/QPrKNsbFg4CNfTStxJ/8Rxgv/7hcLLszeo
+         zsNd0IjY7Zpl5NhZuLzfhUHemEqa+iAttu6oJDBU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.14 45/51] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+Date:   Mon, 24 Jun 2019 17:57:03 +0800
+Message-Id: <20190624092311.114942422@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
+References: <20190624092305.919204959@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Jun 2019, Thomas Gleixner wrote:
+From: Marcel Holtmann <marcel@holtmann.org>
 
-> Miroslav,
-> 
-> On Thu, 20 Jun 2019, Miroslav Benes wrote:
-> > On Thu, 20 Jun 2019, Cheng Jian wrote:
-> > 
-> > > This reverts commit eda9cec4c9a12208a6f69fbe68f72a6311d50032.
-> > > 
-> > > Since commit (eda9cec4c9a1 'x86/module: Detect and skip invalid
-> > > relocations') add some sanity check in apply_relocate_add, borke
-> > > re-insmod a kernel module which has been patched before,
-> > > 
-> > > The relocation informations of the livepatch module have been
-> > > overwritten since first patched, so if we rmmod and insmod the
-> > > kernel module, these values are not zero anymore, when
-> > > klp_module_coming doing, and that commit marks them as invalid
-> > > invalid_relocation.
-> > > 
-> > > Then the following error occurs:
-> > > 
-> > > 	module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc (____ptrval____), val ffffffffc000236c
-> > > 	livepatch: failed to initialize patch 'livepatch_0001_test' for module 'test' (-8)
-> > > 	livepatch: patch 'livepatch_0001_test' failed for module 'test', refusing to load module 'test'
-> > 
-> > Oh yeah. First reported here 20180602161151.apuhs2dygsexmcg2@treble (LP ML 
-> > only and there is no archive on lore.kernel.org yet. Sorry about that.). I 
-> > posted v1 here 
-> > https://lore.kernel.org/lkml/20180607092949.1706-1-mbenes@suse.cz/ and 
-> > even started to work on v2 in March with arch-specific nullifying, but 
-> > then I got sidetracked again. I'll move it up my todo list a bit.
-> 
-> so we need to revert it for now, right?
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-Not necessarily.
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-Quoting Josh from the original bug report:
-"Possible ways to fix it:
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-1) Remove the error check in apply_relocate_add().  I don't think we
-   should do this, because the error is actually useful for detecting
-   corrupt modules.  And also, powerpc has the similar error so this
-   wouldn't be a universal solution.
+---
+ include/net/bluetooth/hci_core.h |    3 +++
+ net/bluetooth/hci_conn.c         |    8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-2) In klp_unpatch_object(), call an arch-specific arch_unpatch_object()
-   which reverses any arch-specific patching: on x86, clearing all
-   relocation targets to zero; on powerpc, converting the instructions
-   after relative link branches to nops.  I don't think we should do
-   this because it's not a global solution and requires fidgety
-   arch-specific patching code.
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -178,6 +178,9 @@ struct adv_info {
+ 
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
++
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1165,6 +1165,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
+ }
+ 
 
-3) Don't allow patched modules to be removed.  I think this makes the
-   most sense.  Nobody needs this functionality anyway (right?).
-"
 
-1 would be the revert. We decided against it. The scenario (rmmod a 
-module) is (supposedly) not that common in practice. Even the current bug 
-report was triggered just in testing if I am not mistaken. Moreover, you 
-need kpatch-build to properly set up relocation records. Upstream 
-livepatch does not offer it as of now. That's why (I think) Josh thought 
-the benefits of the check outweighed the disadvantage.
-
-Then I tried to implement 3, but there were problems with it too. 2 
-remains to be finished and then we can decide what the best approach is.
-
-That being said... I am not against the reverting the commit per se, but 
-we lived with it or quite a long time and no one has met it so far in 
-"real life". I don't think it is the classic "we broke something, we have 
-to revert" scenario.
-
-Josh, any comment? I think your opinion matters here much more than mine.
-
-Miroslav
