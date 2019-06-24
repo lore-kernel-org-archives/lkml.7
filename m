@@ -2,159 +2,202 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77027C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324EAC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505EE208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="izv8/ISA"
+	by mail.kernel.org (Postfix) with ESMTP id 08D912133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561379302;
+	bh=xAWHMRPfHHeuUDsb2NoJwA0gB6ClzmGYlj5zwWg9ygE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uFe8FwHyMYtOW5iqkUq3wJRr9j2tk3bM9DElFnUZRJe23zuoUN68SAv0VoqwWz5F7
+	 Ep7snh42Q+zv84sh8sCJLQhVfbcYifvmGhIJcIdd3Y3xjeCRmnvuBZzBVOuv2RUrGf
+	 mHnSQaYfMlz3iiStFaUjkk4OMJxpt6yLB3R3ZIzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfFXM1e (ORCPT
+        id S1730227AbfFXM2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:27:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39361 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbfFXM1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:27:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id i34so14190501qta.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 05:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8pxgU2+2zAe7XjIsxn6dDw49AVrZSbjiR8p9fg9h61c=;
-        b=izv8/ISAHD8c9UNVkM0cWQvNgJp3wRoXCluQG17yMRfV2pDdp1/uWG9IXPpDE/XYKH
-         CQELaE70QgG60CSIem6+F6R2WvEQaZnzaFC1s3chbLxM9lxC2EBLHJWA9yMJ1J5AHz3P
-         7Zpy0MkZGWg/jnMkdoP+RjTjqsNzWfhxRh/xufz46CJ8Bi0bpWfwAGQ9z4+84AQcvFFV
-         7NSNuj1D+TU3msKRtqeLsf8HA47QG7I/FJcR/P/ZoG073n9/Vgaj78HN3O0I2bM28Q3P
-         qcnLqv41V8hfaMJFwessbe/ky89XOtoWX4bZ9dD7wVAZ6zUgQjHis6jvi1iyT9uLt35P
-         zlgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8pxgU2+2zAe7XjIsxn6dDw49AVrZSbjiR8p9fg9h61c=;
-        b=rdXUMaWwcmz8KtRq5seeo+0weFShNED2Ys/twED2+GIYl8K/9D7GFSMVzuUnO4OtZa
-         4TGJXeTHVhDBIITNiKY95gRZqjgEr5nXu8eeKcGtTi+n+74XYfCOm7F/BulM2UeId1U1
-         4WcQkwGMzxWIBfr5+MJrLD3bSvO3tVUbnQiBpAhZ1PZenlVIok34RxPVEb4KdvnYpn0q
-         QVPV0wcPQsW9gz40sDTh3vuVhTsKUxXHh4C1pDwtuA+N/zXFg+W34aSnFBr2V7X9FHik
-         G5go0uiuPZrYJ7FkW2fwreHqJzKeN7F5P1ENYQYjkdRzjTWlw7yl8QmSioKQZxoDq97D
-         G1DQ==
-X-Gm-Message-State: APjAAAXsnulDYc+5v6IHgAS+Eg7n6X9JjyhPJEvnjhAMDh22AyA559GH
-        uMe81bDStXEy0wWSuyFdFqakzpo5UZq/ObvlPG0eBw==
-X-Google-Smtp-Source: APXvYqyM38rDzwG+qvoXoDo5ZWVVUOEgmwuEYbjLvKWiYs9mNZH/qiES9AHddHYSmG8/Wpvavwglr3tx6kusJaGPdL0=
-X-Received: by 2002:aed:21f0:: with SMTP id m45mr114648286qtc.391.1561379252759;
- Mon, 24 Jun 2019 05:27:32 -0700 (PDT)
+        Mon, 24 Jun 2019 08:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727344AbfFXM2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 08:28:20 -0400
+Received: from localhost (unknown [106.201.35.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB30205C9;
+        Mon, 24 Jun 2019 12:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561379299;
+        bh=xAWHMRPfHHeuUDsb2NoJwA0gB6ClzmGYlj5zwWg9ygE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MlyM/+HoLj6dP1Gga8KhvuWJr/2JNCuTOzkpKzyQtMA9G2d2AL8LpAJPPzcYZtoJc
+         hoj7Vz6tmY8M6T6+WZRAuUcaEMtLhJgGUvCm3VwdSZfbP3Gsquq18W03zaSDnpgsgp
+         GAwwNq3q7d2zEWW4aEsL3irBZy4q4bOA5TGRs1xU=
+Date:   Mon, 24 Jun 2019 17:55:09 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [V4 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA
+ Interface) support
+Message-ID: <20190624122509.GC2962@vkoul-mobl>
+References: <20190613101341.21169-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
- <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
- <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
- <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
- <CANA+-vCBW=P=dpJGfcKTt7SoNKzWcpP5pwZHSDMU6MkwBKoC9A@mail.gmail.com> <20190624073659.GA13957@kroah.com>
-In-Reply-To: <20190624073659.GA13957@kroah.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Mon, 24 Jun 2019 08:27:21 -0400
-Message-ID: <CAJWu+orGgYwnC+ya13+KtdNrH7ZjvmKL8625m=msVZd0==dq9A@mail.gmail.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613101341.21169-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 3:37 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jun 23, 2019 at 06:48:43PM -0700, Tri Vo wrote:
-> > On Wed, Jun 19, 2019 at 1:35 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Wed, Jun 19, 2019 at 1:52 AM Joel Fernandes <joelaf@google.com> wrote:
-> > > >
-> > > > On Tue, Jun 18, 2019 at 7:15 PM Tri Vo <trong@android.com> wrote:
-> > > > [snip]
-> > > > > > > > >
-> > > > > > > > > Android userspace reading wakeup_sources is not ideal because:
-> > > > > > > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
-> > > > > > > > > not guaranteed to be backward/forward compatible.
-> > > > > > > > > - This file requires debugfs to be mounted, which itself is
-> > > > > > > > > undesirable for security reasons.
-> > > > > > > > >
-> > > > > > > > > To address these problems, we want to contribute a way to expose these
-> > > > > > > > > statistics that doesn't depend on debugfs.
-> > > > > > > > >
-> > > > > > > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
-> > > > > > > > > Or maybe implement eBPF-based solution? What do you think?
-> > > > > > >
-> > > > > > > We are going through Android's out-of-tree kernel dependencies along with
-> > > > > > > userspace APIs that are not necessarily considered "stable and forever
-> > > > > > > supported" upstream. The debugfs dependencies showed up on our radar as a
-> > > > > > > result and so we are wondering if we should worry about changes in debugfs
-> > > > > > > interface and hence the question(s) below.
-> > > > > > >
-> > > > > > > So, can we rely on /d/wakeup_sources to be considered a userspace API and
-> > > > > > > hence maintained stable as we do for other /proc and /sys entries?
-> > > > > > >
-> > > > > > > If yes, then we will go ahead and add tests for this in LTP or
-> > > > > > > somewhere else suitable.
-> > > > > >
-> > > > > > No, debugfs is not ABI.
-> > > > > >
-> > > > > > > If no, then we would love to hear suggestions for any changes that need to be
-> > > > > > > made or we simply just move the debugfs entry into somewhere like
-> > > > > > > /sys/power/ ?
-> > > > > >
-> > > > > > No, moving that entire file from debugfs into sysfs is not an option either.
-> > > > > >
-> > > > > > The statistics for the wakeup sources associated with devices are already there
-> > > > > > under /sys/devices/.../power/ , but I guess you want all wakeup sources?
-> > > > > >
-> > > > > > That would require adding a kobject to struct wakeup_source and exposing
-> > > > > > all of the statistics as separate attributes under it.  In which case it would be
-> > > > > > good to replace the existing wakeup statistics under /sys/devices/.../power/
-> > > > > > with symbolic links to the attributes under the wakeup_source kobject.
-> > > > >
-> > > > > Thanks for your input, Rafael! Your suggestion makes sense. I'll work
-> > > > > on a patch for this.
-> > > >
-> > > > Does that entail making each wake up source, a new sysfs node under a
-> > > > particular device, and then adding stats under that new node?
-> > >
-> > > Not under a device, because there are wakeup source objects without
-> > > associated devices.
-> > >
-> > > It is conceivable to have a "wakeup_sources" directory under
-> > > /sys/power/ and sysfs nodes for all wakeup sources in there.
-> > >
-> > > Then, instead of exposing wakeup statistics directly under
-> > > /sys/devices/.../power/, there can be symbolic links from there to the
-> > > new wakeup source nodes under "wakeup_sources" (so as to avoid
-> > > exposing the same data in two different places in sysfs, which may be
-> > > confusing).
-> >
-> > This may be a dumb question. Is it appropriate to make symbolic links
-> > in sysfs from one attribute to another attribute? For example,
-> > /sys/devices/.../power/wakeup_count ->
-> > /sys/power/wakeup_sources/.../wakeup_count.
->
-> Why? would you want that?
+On 13-06-19, 10:13, Peng Ma wrote:
+> The MC(Management Complex) exports the DPDMAI(Data Path DMA Interface)
+> object as an interface to operate the DPAA2(Data Path Acceleration
+> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
+> requests to qDMA and receiving back confirmation response on transaction
+> completion, utilizing the DPAA2 QBMan(Queue Manager and Buffer Manager
+> hardware) infrastructure. DPDMAI object provides up to two priorities for
+> processing qDMA requests.
+> The following list summarizes the DPDMAI main features and capabilities:
+> 	1. Supports up to two scheduling priorities for processing
+> 	service requests.
+> 	- Each DPDMAI transmit queue is mapped to one of two service
+> 	priorities, allowing further prioritization in hardware between
+> 	requests from different DPDMAI objects.
+> 	2. Supports up to two receive queues for incoming transaction
+> 	completion confirmations.
+> 	- Each DPDMAI receive queue is mapped to one of two receive
+> 	priorities, allowing further prioritization between other
+> 	interfaces when associating the DPDMAI receive queues to DPIO
+> 	or DPCON(Data Path Concentrator) objects.
+> 	3. Supports different scheduling options for processing received
+> 	packets:
+> 	- Queues can be configured either in 'parked' mode (default),
+> 	oattached to a DPIO object, or attached to DPCON object.
+        ^^^^^^^^^
+typo?
 
-This sounds like what Rafael suggested (quoted above), right?
+> +struct dpdmai_cmd_open {
+> +	__le32 dpdmai_id;
+> +};
+
+Do you really need a struct to handle a 32bit value?
+
+And seeing it used once, we can skip and avoid needless cast in usage as
+well!
+
+> +/* cmd, param, offset, width, type, arg_name */
+> +#define DPDMAI_CMD_CREATE(_cmd, _cfg) \
+> +do { \
+> +	typeof(_cmd) (cmd) = (_cmd); \
+> +	typeof(_cfg) (cfg) = (_cfg); \
+> +	MC_CMD_OP(cmd, 0, 8,  8,  u8,  (cfg)->priorities[0]);\
+> +	MC_CMD_OP(cmd, 0, 16, 8,  u8,  (cfg)->priorities[1]);\
+> +} while (0)
+> +
+> +static inline u64 mc_enc(int lsoffset, int width, u64 val)
+> +{
+> +	return (u64)(((u64)val & MAKE_UMASK64(width)) << lsoffset);
+
+this looks not so nice. val is u64 so why is it required to cast to u64
+again?
+
+> +}
+> +
+> +static inline u64 mc_dec(u64 val, int lsoffset, int width)
+> +{
+> +	return (u64)((val >> lsoffset) & MAKE_UMASK64(width));
+
+do we need the cast here?
+
+> +int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
+> +		  const struct dpdmai_cfg *cfg, u16 *token)
+> +{
+> +	struct fsl_mc_command cmd = { 0 };
+> +	int err;
+> +
+> +	/* prepare command */
+> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CREATE,
+> +					  cmd_flags,
+> +					  0);
+
+This seems to fit in a single line!
+
+> +	DPDMAI_CMD_CREATE(cmd, cfg);
+> +
+> +	/* send command to mc*/
+> +	err = mc_send_command(mc_io, &cmd);
+> +	if (err)
+> +		return err;
+> +
+> +	/* retrieve response parameters */
+> +	*token = MC_CMD_HDR_READ_TOKEN(cmd.header);
+
+This looks very similar to dpdmai_open() and I suppose you can create a
+macro to create and send cmd with optional params!
+
+> +
+> +	return 0;
+> +}
+> +
+> +int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags,
+> +		  u16 token)
+> +{
+> +	struct fsl_mc_command cmd = { 0 };
+> +
+> +	/* prepare command */
+> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_ENABLE,
+> +					  cmd_flags,
+> +					  token);
+
+This can fit in two lines
+
+> +
+> +	/* send command to mc*/
+> +	return mc_send_command(mc_io, &cmd);
+> +}
+> +
+> +int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags,
+> +		   u16 token)
+
+why two lines for this!
+
+> +{
+> +	struct fsl_mc_command cmd = { 0 };
+> +
+> +	/* prepare command */
+> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_DISABLE,
+> +					  cmd_flags,
+> +					  token);
+
+This also!
+
+Please check rest of the driver for these style issues and see bunch of
+places can fit into a line or two!
+
+> +/**
+> + * dpdmai_open() - Open a control session for the specified object
+> + * @mc_io:	Pointer to MC portal's I/O object
+> + * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
+> + * @dpdmai_id:	DPDMAI unique ID
+> + * @token:	Returned token; use in subsequent API calls
+> + *
+> + * This function can be used to open a control session for an
+> + * already created object; an object may have been declared in
+> + * the DPL or by calling the dpdmai_create() function.
+> + * This function returns a unique authentication token,
+> + * associated with the specific object ID and the specific MC
+> + * portal; this token must be used in all subsequent commands for
+> + * this specific object.
+
+This is good but can you move them to C file with the function
+
+-- 
+~Vinod
