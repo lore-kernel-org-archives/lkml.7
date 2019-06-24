@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24881C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E30C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77D3208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC29208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z8dPUB56"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MplzL5Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfFXDDP (ORCPT
+        id S1727425AbfFXDDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:03:15 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17244 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfFXDDM (ORCPT
+        Sun, 23 Jun 2019 23:03:22 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13191 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727388AbfFXDDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:03:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d103d6c0000>; Sun, 23 Jun 2019 20:03:09 -0700
+        Sun, 23 Jun 2019 23:03:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d103d720000>; Sun, 23 Jun 2019 20:03:14 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 20:03:11 -0700
+  Sun, 23 Jun 2019 20:03:15 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:11 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
+        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:15 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL104.nvidia.com
  (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 03:03:09 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 03:03:09 +0000
+ 2019 03:03:14 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Jun 2019 03:03:14 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.126]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d103d6a0000>; Sun, 23 Jun 2019 20:03:09 -0700
+        id <B5d103d700002>; Sun, 23 Jun 2019 20:03:14 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -50,9 +50,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
-Date:   Sun, 23 Jun 2019 20:02:43 -0700
-Message-ID: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V4 04/18] clk: tegra: save and restore divider rate
+Date:   Sun, 23 Jun 2019 20:02:45 -0700
+Message-ID: <1561345379-2429-5-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
 References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
@@ -60,162 +60,94 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561345389; bh=A/HUC9ICF6u7tt/IyYIJp9vnYg+1R7ienVVHfZr0yLY=;
+        t=1561345394; bh=Nd1v90bh7Ho/ojHQIob7we6JLN3yOOpS5vD9L3b3q98=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Z8dPUB56Bf1tXCcZcyfssBCk4oGkOR9lfNWSYPOmCFsmPvldv7YPnmRSavJ8mdZYZ
-         uk6iXBEqlpF72uY/XZ332XMc96/VHzp8NbBlVbnV5XmRwf617JLnk2y7iFvJWY/HrH
-         kWOMj37huUrBeYUqP+5/UhX0QhNqFK03DyK7+lqsguGCjdRFoN0Cds4/u8sqgStxsA
-         KelWweT1B4VxoMkDAWSKLO8l3PygLrzvUZgTKIJRVLfnhi0Gr0znbBMvR22h4BvXd1
-         Wpc/38m0GSVkkSegg4lNpV7ai3P3lR3qYmajNsS8pY5VkyiaZKU5nQ2FWvTuBcQeXm
-         frKx2YmKI4+XQ==
+        b=MplzL5Sy+cFLkXGahIi3ELLVQytcpLS2O5KHdS0NsyraQlkCQb0Ser7MhKHRunzXY
+         0Y5MMDg1hv9A9CpUN74yhyTuD/4kCgsWYXKZu2BTqvYukubN6qIx9Aw0jqCcVveOtA
+         knBsytf1OxUfsl4b+kixKm+UZuc4x+5xnNAQJHCeNUU5WINqjqhKLOmQ7qLlp0XD0o
+         K2C7CFVYb5sWSGx0plIo7wvLfBgwa1xDBWevvbLLYyTshk22oHNYLIxP/q+sgEviQc
+         WD4c+mZU6bSIuvxVMd/suWqLZR5OatDLisnQseSvAWiYErbNmcqCNnHcilC8r7hNvx
+         dd/PdtOLEnHDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for Tegra pinctrl driver suspend and resume.
+This patch implements context save and restore for clock divider.
 
-During suspend, context of all pinctrl registers are stored and
-on resume they are all restored to have all the pinmux and pad
-configuration for normal operation.
+During system suspend, core power goes off and looses the settings
+of the Tegra CAR controller registers.
 
+So during suspend entry the context of clock divider is saved and
+on resume context is restored back for normal operation.
+
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++++++++
- drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
- drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
- 3 files changed, 57 insertions(+)
+ drivers/clk/tegra/clk-divider.c | 23 +++++++++++++++++++++++
+ drivers/clk/tegra/clk.h         |  2 ++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index b03c465917b8..c0ba6fa63ad1 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -631,6 +631,38 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
- 	}
+diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
+index e76731fb7d69..ecb7ff9ce97e 100644
+--- a/drivers/clk/tegra/clk-divider.c
++++ b/drivers/clk/tegra/clk-divider.c
+@@ -109,10 +109,33 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	return 0;
  }
  
-+int __maybe_unused tegra_pinctrl_suspend(struct device *dev)
++static int clk_divider_save_context(struct clk_hw *hw)
 +{
-+	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-+	u32 *backup_regs = pmx->backup_regs;
-+	u32 *regs;
-+	unsigned int i, j;
++	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
++	struct clk_hw *parent = clk_hw_get_parent(hw);
++	unsigned long parent_rate = clk_hw_get_rate(parent);
 +
-+	for (i = 0; i < pmx->nbanks; i++) {
-+		regs = pmx->regs[i];
-+		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-+			*backup_regs++ = readl(regs++);
-+	}
-+
-+	return pinctrl_force_sleep(pmx->pctl);
-+}
-+
-+int __maybe_unused tegra_pinctrl_resume(struct device *dev)
-+{
-+	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-+	u32 *backup_regs = pmx->backup_regs;
-+	u32 *regs;
-+	unsigned int i, j;
-+
-+	for (i = 0; i < pmx->nbanks; i++) {
-+		regs = pmx->regs[i];
-+		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-+			writel(*backup_regs++, regs++);
-+	}
++	divider->rate = clk_frac_div_recalc_rate(hw, parent_rate);
 +
 +	return 0;
 +}
 +
- static bool gpio_node_has_range(const char *compatible)
- {
- 	struct device_node *np;
-@@ -655,6 +687,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 	int i;
- 	const char **group_pins;
- 	int fn, gn, gfn;
-+	unsigned long backup_regs_size = 0;
- 
- 	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
- 	if (!pmx)
-@@ -707,6 +740,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
- 		if (!res)
- 			break;
-+		backup_regs_size += resource_size(res);
- 	}
- 	pmx->nbanks = i;
- 
-@@ -715,11 +749,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 	if (!pmx->regs)
- 		return -ENOMEM;
- 
-+	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
-+					  sizeof(*pmx->reg_bank_size),
-+					  GFP_KERNEL);
-+	if (!pmx->reg_bank_size)
-+		return -ENOMEM;
++static void clk_divider_restore_context(struct clk_hw *hw)
++{
++	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
++	struct clk_hw *parent = clk_hw_get_parent(hw);
++	unsigned long parent_rate = clk_hw_get_rate(parent);
 +
-+	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
-+					GFP_KERNEL);
-+	if (!pmx->backup_regs)
-+		return -ENOMEM;
++	if (clk_frac_div_set_rate(hw, divider->rate, parent_rate) < 0)
++		WARN_ON(1);
++}
 +
- 	for (i = 0; i < pmx->nbanks; i++) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
- 		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
- 		if (IS_ERR(pmx->regs[i]))
- 			return PTR_ERR(pmx->regs[i]);
-+
-+		pmx->reg_bank_size[i] = resource_size(res);
- 	}
- 
- 	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-index 32642af3f871..65fcbf8c7579 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-@@ -17,6 +17,8 @@ struct tegra_pmx {
- 
- 	int nbanks;
- 	void __iomem **regs;
-+	size_t *reg_bank_size;
-+	u32 *backup_regs;
+ const struct clk_ops tegra_clk_frac_div_ops = {
+ 	.recalc_rate = clk_frac_div_recalc_rate,
+ 	.set_rate = clk_frac_div_set_rate,
+ 	.round_rate = clk_frac_div_round_rate,
++	.save_context = clk_divider_save_context,
++	.restore_context = clk_divider_restore_context,
  };
  
- enum tegra_pinconf_param {
-@@ -195,4 +197,6 @@ struct tegra_pinctrl_soc_data {
- 
- int tegra_pinctrl_probe(struct platform_device *pdev,
- 			const struct tegra_pinctrl_soc_data *soc_data);
-+int __maybe_unused tegra_pinctrl_suspend(struct device *dev);
-+int __maybe_unused tegra_pinctrl_resume(struct device *dev);
- #endif
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-index 617ad963f5ad..4616bbc2efba 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-@@ -1562,6 +1562,11 @@ static int tegra210_pinctrl_probe(struct platform_device *pdev)
- 	return tegra_pinctrl_probe(pdev, &tegra210_pinctrl);
- }
- 
-+static const struct dev_pm_ops tegra_pinctrl_pm = {
-+	.suspend = &tegra_pinctrl_suspend,
-+	.resume = &tegra_pinctrl_resume
-+};
-+
- static const struct of_device_id tegra210_pinctrl_of_match[] = {
- 	{ .compatible = "nvidia,tegra210-pinmux", },
- 	{ },
-@@ -1571,6 +1576,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
- 	.driver = {
- 		.name = "tegra210-pinctrl",
- 		.of_match_table = tegra210_pinctrl_of_match,
-+		.pm = &tegra_pinctrl_pm,
- 	},
- 	.probe = tegra210_pinctrl_probe,
+ struct clk *tegra_clk_register_divider(const char *name,
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 905bf1096558..83623f5f55f3 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -42,6 +42,7 @@ struct clk *tegra_clk_register_sync_source(const char *name,
+  * @width:	width of the divider bit field
+  * @frac_width:	width of the fractional bit field
+  * @lock:	register lock
++ * @rate:	rate during suspend and resume
+  *
+  * Flags:
+  * TEGRA_DIVIDER_ROUND_UP - This flags indicates to round up the divider value.
+@@ -62,6 +63,7 @@ struct tegra_clk_frac_div {
+ 	u8		width;
+ 	u8		frac_width;
+ 	spinlock_t	*lock;
++	unsigned long	rate;
  };
+ 
+ #define to_clk_frac_div(_hw) container_of(_hw, struct tegra_clk_frac_div, hw)
 -- 
 2.7.4
 
