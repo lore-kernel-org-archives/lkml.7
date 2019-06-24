@@ -2,128 +2,226 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB08C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36173C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35753208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dy6wSAbb"
+	by mail.kernel.org (Postfix) with ESMTP id 075B02133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfFXNqq (ORCPT
+        id S1731302AbfFXNrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:46:46 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36124 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbfFXNqq (ORCPT
+        Mon, 24 Jun 2019 09:47:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36910 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729954AbfFXNrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:46:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u8so13463632wmm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fHFQYC4IHk3DGA5SJeJSRcnBstbORPkvgUXGBQflcbU=;
-        b=dy6wSAbb5K7xDqB+qIUCmnIAgBnIXnelPM2aUTAgaGv7Z/NwA+zSpgAUfMS9EKnB/+
-         +jj7JCp465Y0rsmu4RcnTqmWLrwgYq05636vIGBfDYDKB9piVBgk3sYP3vO8O80X5Ppi
-         gXr/EmPgtc+YIs7rxsHSu+tsA2DF8jL90FXxaqGLvXS7oLANJUDvhJHNsVoOv99U4/mU
-         sWnSluDSDrpB/EEW9PGatqncUzFY2NrOlsDe7sfTqvDPc8e8tDQ6fx1eZaoms2T8YD7x
-         GUnijP4PW6FidRXywDiiWKdcmqDowPtjb7eRZz0QEhOw0Zj/S4RIfCuqo0pSkTI13xYP
-         kC3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fHFQYC4IHk3DGA5SJeJSRcnBstbORPkvgUXGBQflcbU=;
-        b=ulaQw9xXF/YRk8B9FM13T99B9OOHrZcxlqM/f91HahIHSGtp/GlfIGIMzgFERe2/lW
-         Tf//+UajLsoeDe1rTX8EPjENGSIrbkWlJwDRSkwlCa6zkTFsUI+aQABqxvUkQ1cH6jYZ
-         zUhYwpXPTB8R/MY6K5inDRPzOMCBe5izorG5uH5XMfTL4epHkd4n1tsM5ZprrU/X80Dx
-         d5fq75rVitTA5bIl7GJPmr9ivoFOwxI6SsXbKnig14ICHLYsNoCR9VpEb27EUKd2Yuf7
-         A90l+Ittw2bBXqRZFQp0e9VeNe4IF/OMZaWqJpsItgyBWGgxrbAy/PWtNaXqccr4GLdA
-         ZURQ==
-X-Gm-Message-State: APjAAAXMXTKsznw9l5uq7RpSbYEm4mIspv9wFGpUvqjb9nKB4A9poF6K
-        FifGqjHH+IV3uz4GNPuu73R9Kg==
-X-Google-Smtp-Source: APXvYqxH/orChM1UzN6yhkjM24At3V8ziMHSnQNkMtcNe8WEW+S3OTMlvLt8dP4L6baO7ZUaKVoRkg==
-X-Received: by 2002:a1c:618a:: with SMTP id v132mr15948959wmb.17.1561384003630;
-        Mon, 24 Jun 2019 06:46:43 -0700 (PDT)
-Received: from ziepe.ca ([66.187.232.66])
-        by smtp.gmail.com with ESMTPSA id y2sm9626575wrl.4.2019.06.24.06.46.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Jun 2019 06:46:42 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hfPIv-0002E2-9A; Mon, 24 Jun 2019 10:46:41 -0300
-Date:   Mon, 24 Jun 2019 10:46:41 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        Mon, 24 Jun 2019 09:47:07 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfPIq-0003An-PU; Mon, 24 Jun 2019 15:46:36 +0200
+Date:   Mon, 24 Jun 2019 15:46:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190624134641.GA8268@ziepe.ca>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
- <20190620193353.GF19891@ziepe.ca>
- <20190624073126.GB3954@lst.de>
+        Jan Beulich <jbeulich@suse.com>
+Subject: Re: x86: Spurious vectors not handled robustly
+In-Reply-To: <alpine.DEB.2.21.1906241236390.32342@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1906241541290.32342@nanos.tec.linutronix.de>
+References: <e525108f-3749-4e1d-1ac2-0d0a2655f15f@siemens.com> <alpine.DEB.2.21.1906241204430.32342@nanos.tec.linutronix.de> <1565f016-4e3b-fa89-62e5-fc77594ee5aa@siemens.com> <alpine.DEB.2.21.1906241236390.32342@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624073126.GB3954@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 09:31:26AM +0200, Christoph Hellwig wrote:
-> On Thu, Jun 20, 2019 at 04:33:53PM -0300, Jason Gunthorpe wrote:
-> > > My primary concern with this is that ascribes a level of generality
-> > > that just isn't there for peer-to-peer dma operations. "Peer"
-> > > addresses are not "DMA" addresses, and the rules about what can and
-> > > can't do peer-DMA are not generically known to the block layer.
+On Mon, 24 Jun 2019, Thomas Gleixner wrote:
+> On Mon, 24 Jun 2019, Jan Kiszka wrote:
+> > On 24.06.19 12:09, Thomas Gleixner wrote:
+> > > If it is a vectored one it _IS_ acked.
+> > > 
+> > >          inc_irq_stat(irq_spurious_count);
+> > > 
+> > >   	/* see sw-dev-man vol 3, chapter 7.4.13.5 */
+> > >          pr_info("spurious APIC interrupt through vector %02x on CPU#%d, "
+> > >                  "should never happen.\n", vector, smp_processor_id());
+> > > 
+> > > and the vector through which that comes is printed correctly, unless
+> > > regs->orig_ax is hosed.
 > > 
-> > ?? The P2P infrastructure produces a DMA bus address for the
-> > initiating device that is is absolutely a DMA address. There is some
-> > intermediate CPU centric representation, but after mapping it is the
-> > same as any other DMA bus address.
-> > 
-> > The map function can tell if the device pair combination can do p2p or
-> > not.
+> > ...which is exactly the case: Since that commit, all unused vectors share the
+> > same entry point, spurious_interrupt, see idt_setup_apic_and_irq_gates(). And
+> > that entry point sets orig_ax to ~0xff.
 > 
-> At the PCIe level there is no such thing as a DMA address, it all
-> is bus address with MMIO and DMA in the same address space (without
-> that P2P would have not chance of actually working obviously).  But
-> that bus address space is different per "bus" (which would be an
-> root port in PCIe), and we need to be careful about that.
+> Bah. Of course I did not look at that ...
+> 
+> /me goes back to stare at the code.
 
-Sure, that is how dma_addr_t is supposed to work - it is always a
-device specific value that can be used only by the device that it was
-created for, and different devices could have different dma_addr_t
-values for the same memory. 
+The patch below should fix it. It's quick tested on 64bit (without inducing
+a spurious vector) and compile tested on 32bit.
 
-So when Logan goes and puts dma_addr_t into the block stack he must
-also invert things so that the DMA map happens at the start of the
-process to create the right dma_addr_t early.
+Can you please give it a try with your failure case?
 
-I'm not totally clear if this series did that inversion, if it didn't
-then it should not be using the dma_addr_t label at all, or refering
-to anything as a 'dma address' as it is just confusing.
+Thanks,
 
-BTW, it is not just offset right? It is possible that the IOMMU can
-generate unique dma_addr_t values for each device?? Simple offset is
-just something we saw in certain embedded cases, IIRC.
+	tglx
 
-Jason
+8<----------------
+Subject: x86/irq: Seperate unused system vectors from spurious entry again
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Mon, 24 Jun 2019 13:34:06 +0200
+
+Quite some time ago the interrupt entry stubs for unused vectors in the
+system vector range got removed and directly mapped to the spurious
+interrupt vector entry point.
+
+Sounds reasonable, but it's subtly broken. The spurious interrupt vector
+entry point pushes vector number 0xFF on the stack which makes the whole
+logic in smp_spurious_interrupt() pointless.
+
+As a consequence any spurious interrupt which comes from a vector != 0xFF
+is treated as a real spurious interrupt (vector 0xFF) and not
+acknowledged. That subsequently stalls all interrupt vectors of equal and
+lower priority, which brings the system to a grinding halt.
+
+This can happen because even on 64-bit the system vector space is not
+guaranteed to be fully populated. A full compile time handling of the
+unused vectors is not possible because quite some of them are conditonally
+populated at runtime.
+
+Bring the entry stubs back, which wastes 160 bytes if all stubs are unused,
+but gains the proper handling back. There is no point to selectively spare
+some of the stubs which are known at compile time as the required code in
+the IDT management would be way larger and convoluted. The array is
+straight forward and simple.
+
+Do not route the spurious entries through common_interrupt and do_IRQ() as
+the original code did. Route it to smp_spurious_interrupt() which evaluates
+the vector number and acts accordingly now that the real vector numbers are
+handed in.
+
+Fixes: 2414e021ac8d ("x86: Avoid building unused IRQ entry stubs")
+Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jan Beulich <jbeulich@suse.com>
+---
+ arch/x86/entry/entry_32.S     |   24 ++++++++++++++++++++++++
+ arch/x86/entry/entry_64.S     |   30 ++++++++++++++++++++++++++----
+ arch/x86/include/asm/hw_irq.h |    2 ++
+ arch/x86/kernel/idt.c         |    3 ++-
+ 4 files changed, 54 insertions(+), 5 deletions(-)
+
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1104,6 +1104,30 @@ ENTRY(irq_entries_start)
+     .endr
+ END(irq_entries_start)
+ 
++#ifdef CONFIG_X86_LOCAL_APIC
++	.align 8
++ENTRY(spurious_entries_start)
++    vector=FIRST_SYSTEM_VECTOR
++    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
++	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
++    vector=vector+1
++	jmp	common_spurious_vector
++	.align	8
++    .endr
++END(spurious_entries_start)
++
++common_spurious:
++	ASM_CLAC
++	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
++	SAVE_ALL switch_stacks=1
++	ENCODE_FRAME_POINTER
++	TRACE_IRQS_OFF
++	movl	%esp, %eax
++	call	smp_spurious_interrupt
++	jmp	ret_from_intr
++ENDPROC(common_interrupt)
++#endif
++
+ /*
+  * the CPU automatically disables interrupts when executing an IRQ vector,
+  * so IRQ-flags tracing has to follow that:
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -375,6 +375,18 @@ ENTRY(irq_entries_start)
+     .endr
+ END(irq_entries_start)
+ 
++	.align 8
++ENTRY(spurious_entries_start)
++    vector=FIRST_SYSTEM_VECTOR
++    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
++	UNWIND_HINT_IRET_REGS
++	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
++	jmp	common_spurious
++	.align	8
++	vector=vector+1
++    .endr
++END(spurious_entries_start)
++
+ .macro DEBUG_ENTRY_ASSERT_IRQS_OFF
+ #ifdef CONFIG_DEBUG_ENTRY
+ 	pushq %rax
+@@ -571,10 +583,20 @@ END(interrupt_entry)
+ 
+ /* Interrupt entry/exit. */
+ 
+-	/*
+-	 * The interrupt stubs push (~vector+0x80) onto the stack and
+-	 * then jump to common_interrupt.
+-	 */
++/*
++ * The interrupt stubs push (~vector+0x80) onto the stack and
++ * then jump to common_spurious/interrupt.
++ */
++common_spurious:
++	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
++	call	interrupt_entry
++	UNWIND_HINT_REGS indirect=1
++	call	smp_spurious_interrupt		/* rdi points to pt_regs */
++	jmp	ret_from_intr
++END(common_spurious)
++_ASM_NOKPROBE(common_spurious)
++
++/* common_interrupt is a hotpath. Align it */
+ 	.p2align CONFIG_X86_L1_CACHE_SHIFT
+ common_interrupt:
+ 	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -150,6 +150,8 @@ extern char irq_entries_start[];
+ #define trace_irq_entries_start irq_entries_start
+ #endif
+ 
++extern char spurious_entries_start[];
++
+ #define VECTOR_UNUSED		NULL
+ #define VECTOR_RETRIGGERED	((void *)~0UL)
+ 
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -319,7 +319,8 @@ void __init idt_setup_apic_and_irq_gates
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
+ 		set_bit(i, system_vectors);
+-		set_intr_gate(i, spurious_interrupt);
++		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
++		set_intr_gate(i, entry);
+ 	}
+ #endif
+ }
