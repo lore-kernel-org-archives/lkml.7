@@ -2,107 +2,134 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD5FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A443C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743AA20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:25:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AoxFlhN7"
+	by mail.kernel.org (Postfix) with ESMTP id 7C86020652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfFXKZD (ORCPT
+        id S1728989AbfFXK0L convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:25:03 -0400
-Received: from ozlabs.org ([203.11.71.1]:33341 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfFXKZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:25:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XQQf4wknz9s4Y;
-        Mon, 24 Jun 2019 20:24:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561371900;
-        bh=3UdhL4q3dcS767+2M1H3YpNFxA/F+kQLYVDA+P0NOS4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AoxFlhN7MMeI8ngeaQ2gP9qGSGZKbmbVLz3E/obOh/Z2tQk3Ds0CA1TMOeRTZHJKp
-         bjEAURtYef/RrisMub3BNMeqwn1Ero4Y75PrEG3HV3OQwAiDYJcEvMseMz561Kf2J9
-         AF1zaM6ov2hI6AIuvOix6lnKe6366ndrha/GBNwDSIxgNRXvBCmITjYU4oAIUxSTGs
-         rAlG0JyxOscKnKjaEFFGPIUjbMlgK0rJnc8UMJzWysdb7NntOzE8L6QTPtFSplH4on
-         vDdcTgAapR6ZDEdZTkaM55W3volwiGO5rOr3Fl3FvcCB7gyvOjfSZoM+1r88LbY1fz
-         H796BDQV8sMzA==
-Date:   Mon, 24 Jun 2019 20:24:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>
-Subject: linux-next: manual merge of the akpm-current tree with the tip tree
-Message-ID: <20190624202455.0d849686@canb.auug.org.au>
+        Mon, 24 Jun 2019 06:26:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42386 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727101AbfFXK0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:26:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AE358AC98;
+        Mon, 24 Jun 2019 10:26:08 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 3/5] livepatch: Allow to distinguish different version of system state changes
+References: <20190611135627.15556-1-pmladek@suse.com>
+        <20190611135627.15556-4-pmladek@suse.com>
+Date:   Mon, 24 Jun 2019 12:26:07 +0200
+In-Reply-To: <20190611135627.15556-4-pmladek@suse.com> (Petr Mladek's message
+        of "Tue, 11 Jun 2019 15:56:25 +0200")
+Message-ID: <87o92n2sao.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2AihEn+dJVp7LFfzr_tJwd3"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2AihEn+dJVp7LFfzr_tJwd3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Petr Mladek <pmladek@suse.com> writes:
 
-Hi all,
+> ---
+>  include/linux/livepatch.h |  2 ++
+>  kernel/livepatch/core.c   |  8 ++++++++
+>  kernel/livepatch/state.c  | 40 +++++++++++++++++++++++++++++++++++++++-
+>  kernel/livepatch/state.h  |  9 +++++++++
+>  4 files changed, 58 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/livepatch/state.h
+>
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 591abdee30d7..8bc4c6cc3f3f 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -135,10 +135,12 @@ struct klp_object {
+>  /**
+>   * struct klp_state - state of the system modified by the livepatch
+>   * @id:		system state identifier (non zero)
+> + * @version:	version of the change (non-zero)
+>   * @data:	custom data
+>   */
+>  struct klp_state {
+>  	int id;
+> +	int version;
+>  	void *data;
+>  };
+>  
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index 24c4a13bd26c..614642719825 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -21,6 +21,7 @@
+>  #include <asm/cacheflush.h>
+>  #include "core.h"
+>  #include "patch.h"
+> +#include "state.h"
+>  #include "transition.h"
+>  
+>  /*
+> @@ -1003,6 +1004,13 @@ int klp_enable_patch(struct klp_patch *patch)
+>  
+>  	mutex_lock(&klp_mutex);
+>  
+> +	if(!klp_is_patch_compatible(patch)) {
+> +		pr_err("Livepatch patch (%s) is not compatible with the already installed livepatches.\n",
+> +			patch->mod->name);
+> +		mutex_unlock(&klp_mutex);
+> +		return -EINVAL;
+> +	}
+> +
+>  	ret = klp_init_patch_early(patch);
+>  	if (ret) {
+>  		mutex_unlock(&klp_mutex);
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
 
-  lib/debugobjects.c
+Just as a remark: klp_reverse_transition() could still transition back
+to a !klp_is_patch_compatible() patch.
 
-between commit:
+I don't think it's much of a problem, because for live patches
+introducing completely new states to the system, it is reasonable
+to assume that they'll start applying incompatible changes only from
+their ->post_patch(), I guess.
 
-  d5f34153e526 ("debugobjects: Move printk out of db->lock critical section=
-s")
+For state "upgrades" to higher versions, it's not so clear though and
+some care will be needed. But I think these could still be handled
+safely at the cost of some complexity in the new live patch's
+->post_patch().
 
-from the tip tree and commit:
+Another detail is that ->post_unpatch() will be called for the new live
+patch which has been unpatched due to transition reversal and one would
+have to be careful not to free shared state from under the older, still
+active live patch. How would ->post_unpatch() distinguish between
+transition reversal and "normal" live patch disabling?  By
+klp_get_prev_state() != NULL?
 
-  8b6b497dfb11 ("lib/debugobjects.c: move printk out of db lock critical se=
-ctions")
+Perhaps transition reversal should be mentioned in the documentation?
 
-from the akpm-current tree.
+Thanks,
 
-I fixed it up (I reverted the akpm-current tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
+Nicolai
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/2AihEn+dJVp7LFfzr_tJwd3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QpPcACgkQAVBC80lX
-0GyN+Af+O8hfDeKXrXOPtny8Ch0jXaEupfqfoIXYqCbk9VGkxpIpzByVtm5tnnIz
-BR7HRB2NMgblTfKCMP/BdxB5yz99HFwpMqvHg1FB4c9mP2YNzcOaO+p2d3qkra+C
-fMpyoiab0ePiclZJA0zfRGFGkFjfXGWX29KoIP+zayQUGuTQRgINQKcSeMOXBLSa
-K0Ev2Zsv37VrsCaRNAX3cn78WW1w16mBKIkWVfkyRjAhh3PQM6zvsW72Udsf8LID
-o9W0+SrL3+y3zzNAzFDu/V/obY5ALSY7q4mKVXEkrS1kXCMo+KEGpLKCZu2dn3so
-rLMlUJphtQz/uJj/bD+eJlzXke4r3Q==
-=Qaxh
------END PGP SIGNATURE-----
-
---Sig_/2AihEn+dJVp7LFfzr_tJwd3--
+-- 
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB
+21284 (AG Nürnberg)
