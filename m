@@ -2,133 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E12FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CF4C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D89A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561394339;
-	bh=H5s9B+mWHa8fAAlANY+QSB05sWH1ftBeHONchoanyss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p55meTJawB+co/KBAsHysgn7F2jYJk9zcSI9TQn4sg/Ytabjuc42Ec9GHKMzq9MRj
-	 +otzY4fXME2JvdsmHysVakTWAPQ2OFS/t9FLxmS+rcypFq7b5cqeCssl+gX41qqvEo
-	 nQ/qlfVzwV4BbWjJdFvYIe3muVTVjrqoRnZDukYE=
+	by mail.kernel.org (Postfix) with ESMTP id 7CB0220665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbfFXQi5 (ORCPT
+        id S1732175AbfFXQjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:38:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58138 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfFXQi5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:38:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fY1uicw44jx44qL4fNl32lhk7YJ+D/1JLgTlaHjUDKg=; b=X/gGuMjIdfzOOqUQIRE98lBM8
-        hQJ/bXQjAv+k3udNbi95nJ1/gufdyY5py1gC7U+WAQHzoM0Ln6sIYtbupQ39CQlULhoQ/UyYEb7IG
-        YeXmW2/8XhLDS4FP6sFxS2sB22txPlNU3jpuu/FN1ZppX+4ExMwDh9PBvRxcYBu4c1mt0j0tVV7Vx
-        Xivr/9G0/IY9FiZVWLWYjAMsJGXuMR7FvmzTGXKxbIccY9AIdfr7XJHKnro49rCD2VjXwl1/Xav2O
-        mBIHOWiOZqawA+qOwgPJH3uOZb0nZ1UxM7oafp8dKlXGhqtDAhIOk/AHiwNrlh+JMta0ZdvO7nKD4
-        VYBICpYzQ==;
-Received: from 177.205.71.220.dynamic.adsl.gvt.net.br ([177.205.71.220] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfRzc-0001LO-7X; Mon, 24 Jun 2019 16:38:56 +0000
-Date:   Mon, 24 Jun 2019 13:38:52 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190624133852.4a31c597@coco.lan>
-In-Reply-To: <20190624082950.5e338d37@lwn.net>
-References: <20190621235159.6992-1-corbet@lwn.net>
-        <20190621235159.6992-2-corbet@lwn.net>
-        <20190621220046.3de30d9d@coco.lan>
-        <20190622084346.28c7c748@lwn.net>
-        <20190622144610.26b7d99c@coco.lan>
-        <20190624082950.5e338d37@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 24 Jun 2019 12:39:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56348 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727182AbfFXQjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:39:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7134EAE74;
+        Mon, 24 Jun 2019 16:39:19 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C9BA31E2F23; Mon, 24 Jun 2019 18:39:18 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 18:39:18 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, dsterba@suse.com, clm@fb.com,
+        josef@toxicpanda.com, axboe@kernel.dk, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/9] blkcg, writeback: Add wbc->no_wbc_acct
+Message-ID: <20190624163918.GL32376@quack2.suse.cz>
+References: <20190615182453.843275-1-tj@kernel.org>
+ <20190615182453.843275-3-tj@kernel.org>
+ <20190620152145.GL30243@quack2.suse.cz>
+ <20190620170250.GL657710@devbig004.ftw2.facebook.com>
+ <20190624082129.GA32376@quack2.suse.cz>
+ <20190624125856.GO657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624125856.GO657710@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 24 Jun 2019 08:29:50 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> On Sat, 22 Jun 2019 14:46:10 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+On Mon 24-06-19 05:58:56, Tejun Heo wrote:
+> Hello, Jan.
 > 
-> > > > .. c:function:: int ioctl( int fd, int request, void *argp )
-> > > >     :name: v4l2-ioctl      
-> > > 
-> > > Some digging around didn't turn up any documentation for :name:, but it
-> > > seems to prevent ioctl() from going into the list of functions that can be
-> > > cross-referenced.     
-> > 
-> > It took me a while to discover this way to be able to re-define the
-> > name of a symbol at the C domain, but I'm pretty sure I read this
-> > somewhere at the Sphinx docs (or perhaps on some bug track or Stack
-> > Overflow).
-> > 
-> > I don't remember exactly where I get it, but I guess it is related to
-> > this:
-> > 
-> > 	http://docutils.sourceforge.net/docs/howto/rst-roles.html
-> >   
-> > > I wonder if the same should be done for the others?    
-> > 
-> > Sure.  
+> On Mon, Jun 24, 2019 at 10:21:30AM +0200, Jan Kara wrote:
+> > OK, now I understand. Just one more question: So effectively, you are using
+> > wbc->no_wbc_acct to pass information from btrfs code to btrfs code telling
+> > it whether IO should or should not be accounted with wbc_account_io().
 > 
-> It actually occurs to me that it might be better to keep the skip list and
-> maybe expand it.  There are vast numbers of places where people write
-> open() or whatever(), and there is no point in even trying to
-> cross-reference them. 
+> Yes.
+> 
+> > Wouldn't it make more sense to just pass this information internally
+> > within btrfs? Granted, if this mechanism gets more widespread use by other
+> > filesystems, then probably using wbc flag makes more sense. But I'm not
+> > sure if this isn't a premature generalization...
+> 
+> The btrfs async issuers end up using generic writeback path and uses
+> the generic wbc owner mechanisms so that ios are attached to the right
+> cgroup too.  So, I kinda prefer to provide a generic mechanism from
+> wbc side.
 
-Yeah, subsystems will likely have their own "man pages" for for sysctls.
+OK, I can live with that. We just have to be kind of careful so that people
+just don't sprinkle no_wbc_acct writeback around because they don't know
+better. Maybe you could at least add comment to no_wbc_acct mentioning that
+this is for the cases where writeback has already been accounted for?
 
-Both the dvb and the v4l2 ones are part of what used to be the DocBook
-manpages for those syscalls. If I'm not mistaken, we ended by expanded 
-the same approach for the media controller, for CEC and for RC.
+> That said, the names are a bit misleading and I think it'd
+> be better to rename them to something more explicit, e.g. sth along
+> the line of wbc_update_cgroup_owner() and wbc->no_cgroup_owner.  What
+> do you think?
 
-> I should do some tests, it might even make a
-> measurable difference in the build time to skip them :)  And in any case,
-> somebody is bound to put one of those common names into the namespace in
-> the future, recreating the current problem.
+Yeah, renaming would probably make things clearer as well.
 
-There is one way of keeping it while avoiding troubles: you could
-create internal names, for example using the current dir, auto-adding
-the ":name:" tag when a declaration conflict rises. Not sure how
-easy/hard would be to implement it.
-
-Btw, at get_abi.pl, I had to do a trick like that, as some symbols
-have a "local context". The good thing at ABI files is that the context
-is clear: it is valid only between "What:" and "Description:" fields.
-
-Also, as it is a single script that parses the entire ABI (it takes
-on ~0.1 seconds to parse everything and store internally on my machine),
-the logic there detects when an existing symbol is re-used on a different
-context. When this happens, it adds a random char at the end of the
-internal reference, while keeping the original name[1].
-
-[1] on the the highly unlikely event that the new name still repeats,
-it adds a new random char - until the name gets different.
-
-Probably doing it at automarkup won't be that simple, but it could
-work.
-
-Thanks,
-Mauro
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
