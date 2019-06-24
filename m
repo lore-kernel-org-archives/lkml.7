@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB8EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ACEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039A3208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3CB2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370933;
-	bh=qb+qcaHSrHlJXAR8Vf66Py3T3iA5GpCBCPiviglifFE=;
+	s=default; t=1561370935;
+	bh=2TP3r5xznyJnJfnmlmOMCaIIiMp7BmAFP6fZzIgNNA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUqvmJW7sDCj0jD9oEA+1ndZ9HbH0sX0yzwOUvG090TTgSaYq7ngEkHxVa3kRW5Y3
-	 VBkwKv3ZBMUZKiVcpN90BeVOl95f0iWHRdCxlv/0VSkxAyJW2Ae7SPJW9VwBSmJqYi
-	 ncJ2twLjDEm0a/COjn1Yg4KDeXDyqexB3dWyWWLI=
+	b=cP0x/5+N/uGYmzZpZNBRaT1Uu/MpfdKfhxqGvUNXZPhbjGuXIY4YwXKyY/ujUxDXO
+	 1J3llHucsS5cOx1IpeSgmTw/JgFgwXIRvbXkjKDk5TK1UXIEqyIGs8j+6xMtdow6XZ
+	 tJvmMYr9IL0RI3fVjJMWE93K1l3/lO6KwqyJH+gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfFXKIv (ORCPT
+        id S1730561AbfFXKIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbfFXKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:39 -0400
+        id S1730167AbfFXKIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:48 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC97205C9;
-        Mon, 24 Jun 2019 10:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF77205C9;
+        Mon, 24 Jun 2019 10:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370918;
-        bh=qb+qcaHSrHlJXAR8Vf66Py3T3iA5GpCBCPiviglifFE=;
+        s=default; t=1561370926;
+        bh=2TP3r5xznyJnJfnmlmOMCaIIiMp7BmAFP6fZzIgNNA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+Zy+KBfSJuzL+75ksa+UV9Mk83iMwa1E/Zolejq1eMpzZ3bKkMdK9sz/jtQNr7IN
-         YrxDNV3kCGMP2DdDZatSIY7P5F/My6G1AiMTkKSOOl7wflno877QQxlLEGcsQf1isD
-         eM6Vx7Gs4cq8gCO8i6LfbN/ZYsqbRH/g+crevE/k=
+        b=of3T9shRz3RVy5xBvgxJqDWnrjX9ixW4dqXEG7/WAhMbmV+VzWlop+aLy4uyCEns9
+         EMoCTp4fFPm2AMp3oAAi7yoSykMGYlZycCHDqizgobXzn5pmptAC0ZsUzFbLbQfggJ
+         HUOfBvEZdBgdetObfZTA//ZlTjaZaoIYnrLcNraU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        stable@vger.kernel.org, Josh Collier <josh.d.collier@intel.com>,
         Mike Marciniszyn <mike.marciniszyn@intel.com>,
         Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 050/121] IB/rdmavt: Fix alloc_qpn() WARN_ON()
-Date:   Mon, 24 Jun 2019 17:56:22 +0800
-Message-Id: <20190624092323.305090738@linuxfoundation.org>
+Subject: [PATCH 5.1 052/121] IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
+Date:   Mon, 24 Jun 2019 17:56:24 +0800
+Message-Id: <20190624092323.392296360@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -62,54 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2abae62a26a265129b364d8c1ef3be55e2c01309 ]
+[ Upstream commit 35164f5259a47ea756fa1deb3e463ac2a4f10dc9 ]
 
-The qpn allocation logic has a WARN_ON() that intends to detect the use of
-an index that will introduce bits in the lower order bits of the QOS bits
-in the QPN.
+The command 'ibv_devinfo -v' reports 0 for max_mr.
 
-Unfortunately, it has the following bugs:
-- it misfires when wrapping QPN allocation for non-QOS
-- it doesn't correctly detect low order QOS bits (despite the comment)
+Fix by assigning the query values after the mr lkey_table has been built
+rather than early on in the driver.
 
-The WARN_ON() should not be applied to non-QOS (qos_shift == 1).
-
-Additionally, it SHOULD test the qpn bits per the table below:
-
-2 data VLs:   [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0,   0,   0, sc0],  qp bit 1 always 0*
-3-4 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0,   0, sc1, sc0], qp bits [21] always 0
-5-8 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0, sc2, sc1, sc0] qp bits [321] always 0
-
-Fix by qualifying the warning for qos_shift > 1 and producing the correct
-mask to insure the above bits are zero without generating a superfluous
-warning.
-
-Fixes: 501edc42446e ("IB/rdmavt: Correct warning during QPN allocation")
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Fixes: 7b1e2099adc8 ("IB/rdmavt: Move memory registration into rdmavt")
+Reviewed-by: Josh Collier <josh.d.collier@intel.com>
 Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
 Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rdmavt/qp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/verbs.c    | 2 --
+ drivers/infiniband/hw/qib/qib_verbs.c | 2 --
+ drivers/infiniband/sw/rdmavt/mr.c     | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index a34b9a2a32b6..a77436ee5ff7 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -594,7 +594,8 @@ static int alloc_qpn(struct rvt_dev_info *rdi, struct rvt_qpn_table *qpt,
- 			offset = qpt->incr | ((offset & 1) ^ 1);
- 		}
- 		/* there can be no set bits in low-order QoS bits */
--		WARN_ON(offset & (BIT(rdi->dparms.qos_shift) - 1));
-+		WARN_ON(rdi->dparms.qos_shift > 1 &&
-+			offset & ((BIT(rdi->dparms.qos_shift - 1) - 1) << 1));
- 		qpn = mk_qpn(qpt, map, offset);
- 	}
+diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+index 55a56b3d7f83..ea68eeba3f22 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -1355,8 +1355,6 @@ static void hfi1_fill_device_attr(struct hfi1_devdata *dd)
+ 	rdi->dparms.props.max_cq = hfi1_max_cqs;
+ 	rdi->dparms.props.max_ah = hfi1_max_ahs;
+ 	rdi->dparms.props.max_cqe = hfi1_max_cqes;
+-	rdi->dparms.props.max_mr = rdi->lkey_table.max;
+-	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
+ 	rdi->dparms.props.max_map_per_fmr = 32767;
+ 	rdi->dparms.props.max_pd = hfi1_max_pds;
+ 	rdi->dparms.props.max_qp_rd_atom = HFI1_MAX_RDMA_ATOMIC;
+diff --git a/drivers/infiniband/hw/qib/qib_verbs.c b/drivers/infiniband/hw/qib/qib_verbs.c
+index 5ff32d32c61c..2c4e569ce438 100644
+--- a/drivers/infiniband/hw/qib/qib_verbs.c
++++ b/drivers/infiniband/hw/qib/qib_verbs.c
+@@ -1459,8 +1459,6 @@ static void qib_fill_device_attr(struct qib_devdata *dd)
+ 	rdi->dparms.props.max_cq = ib_qib_max_cqs;
+ 	rdi->dparms.props.max_cqe = ib_qib_max_cqes;
+ 	rdi->dparms.props.max_ah = ib_qib_max_ahs;
+-	rdi->dparms.props.max_mr = rdi->lkey_table.max;
+-	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
+ 	rdi->dparms.props.max_map_per_fmr = 32767;
+ 	rdi->dparms.props.max_qp_rd_atom = QIB_MAX_RDMA_ATOMIC;
+ 	rdi->dparms.props.max_qp_init_rd_atom = 255;
+diff --git a/drivers/infiniband/sw/rdmavt/mr.c b/drivers/infiniband/sw/rdmavt/mr.c
+index 0bb6e39dd03a..b04d2173e3f4 100644
+--- a/drivers/infiniband/sw/rdmavt/mr.c
++++ b/drivers/infiniband/sw/rdmavt/mr.c
+@@ -96,6 +96,8 @@ int rvt_driver_mr_init(struct rvt_dev_info *rdi)
+ 	for (i = 0; i < rdi->lkey_table.max; i++)
+ 		RCU_INIT_POINTER(rdi->lkey_table.table[i], NULL);
+ 
++	rdi->dparms.props.max_mr = rdi->lkey_table.max;
++	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
+ 	return 0;
+ }
  
 -- 
 2.20.1
