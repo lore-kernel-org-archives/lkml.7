@@ -2,53 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8195EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB1C48BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F18221726
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D5A20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371029;
-	bh=AdM6+pPzjybjfnZGgbahedXVNFsGmlcHWNK+ynDfvEg=;
+	s=default; t=1561371031;
+	bh=Me5ZH5WNgfvvOavz611o8SnLtBSXHw0NStY2yeoBmU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUxoCXirOVoNdbBCJkjtWd0UTa+3WHW2uBNi1SlnSwmYpBiu6P/WmhaYQaKr8G9YR
-	 cjDCdT+GeDu0v5VT6u8M1E+AwbZYOURRX3PKWfVMsAVda9t/+jr6gOp7iL90d4k9Q3
-	 tb0cdm7pYCZizVVHe0zcKejrMAdelbAJp3s8wnss=
+	b=eHMVL1/+EMIyfw12CP4KlqCygkfp1hjRws4eTkxk0ZBXV/jjpn/RPIxrdoB0f2yj9
+	 U3W7Ye1xmQxSyo1EQnnp3KuUlAkXuaiqjEXkmfCi3MA7FWauOGGL3TlXTSiMR62WHF
+	 5kvaFAU/KWZtLpZGM0CUG+0Vaj+40oS/m/bmJrko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfFXKK0 (ORCPT
+        id S1730375AbfFXKHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730015AbfFXKIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:02 -0400
+        id S1730340AbfFXKHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:40 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09227205C9;
-        Mon, 24 Jun 2019 10:08:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43DD72089F;
+        Mon, 24 Jun 2019 10:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370881;
-        bh=AdM6+pPzjybjfnZGgbahedXVNFsGmlcHWNK+ynDfvEg=;
+        s=default; t=1561370859;
+        bh=Me5ZH5WNgfvvOavz611o8SnLtBSXHw0NStY2yeoBmU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ux10n0V1EQhVvxzuSsZ5g8pWwUbSD9rMmN95vXxES3aOfXRWT2bH3ZbiQpvXtCuCl
-         SrNXAsdwFsnE886k9KzhVE7vn0+V5oB6yPc3E/gH5qUdiG3zPfBTKUmjq/OE5j8LZS
-         3YoUeJ6z/mJKNgfxvivt73x1RQGGU8eVH5qu1n0o=
+        b=ZzN93yS64FG0ePJ0QdYrQKbYzJdegKFQudzfcXvc36mqiaAVSz2f26+cN13Y1Efva
+         qBFCvoZj0OmuTVXskpG7ABcGq9f/P0q0vVVQgEuldVGOJGP2sK7gxnzgZqoHsoi9i2
+         wVlkG8pxvncbpeMQOGPhFrU/O+eDsjCG/OC+jIF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 006/121] mmc: core: API to temporarily disable retuning for SDIO CRC errors
-Date:   Mon, 24 Jun 2019 17:55:38 +0800
-Message-Id: <20190624092320.973414712@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Salvatore <mike.salvatore@canonical.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 5.1 027/121] apparmor: reset pos on failure to unpack for various functions
+Date:   Mon, 24 Jun 2019 17:55:59 +0800
+Message-Id: <20190624092322.128018773@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,133 +60,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Mike Salvatore <mike.salvatore@canonical.com>
 
-commit 0a55f4ab9678413a01e740c86e9367ba0c612b36 upstream.
+commit 156e42996bd84eccb6acf319f19ce0cb140d00e3 upstream.
 
-Normally when the MMC core sees an "-EILSEQ" error returned by a host
-controller then it will trigger a retuning of the card.  This is
-generally a good idea.
+Each function that manipulates the aa_ext struct should reset it's "pos"
+member on failure. This ensures that, on failure, no changes are made to
+the state of the aa_ext struct.
 
-However, if a command is expected to sometimes cause transfer errors
-then these transfer errors shouldn't cause a re-tuning.  This
-re-tuning will be a needless waste of time.  One example case where a
-transfer is expected to cause errors is when transitioning between
-idle (sometimes referred to as "sleep" in Broadcom code) and active
-state on certain Broadcom WiFi SDIO cards.  Specifically if the card
-was already transitioning between states when the command was sent it
-could cause an error on the SDIO bus.
+There are paths were elements are optional and the error path is
+used to indicate the optional element is not present. This means
+instead of just aborting on error the unpack stream can become
+unsynchronized on optional elements, if using one of the affected
+functions.
 
-Let's add an API that the SDIO function drivers can call that will
-temporarily disable the auto-tuning functionality.  Then we can add a
-call to this in the Broadcom WiFi driver and any other driver that
-might have similar needs.
-
-NOTE: this makes the assumption that the card is already tuned well
-enough that it's OK to disable the auto-retuning during one of these
-error-prone situations.  Presumably the driver code performing the
-error-prone transfer knows how to recover / retry from errors.  ...and
-after we can get back to a state where transfers are no longer
-error-prone then we can enable the auto-retuning again.  If we truly
-find ourselves in a case where the card needs to be retuned sometimes
-to handle one of these error-prone transfers then we can always try a
-few transfers first without auto-retuning and then re-try with
-auto-retuning if the first few fail.
-
-Without this change on rk3288-veyron-minnie I periodically see this in
-the logs of a machine just sitting there idle:
-  dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
-
-Cc: stable@vger.kernel.org #v4.18+
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: stable@vger.kernel.org
+Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
+Signed-off-by: Mike Salvatore <mike.salvatore@canonical.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/core.c       |    5 +++--
- drivers/mmc/core/sdio_io.c    |   37 +++++++++++++++++++++++++++++++++++++
- include/linux/mmc/host.h      |    1 +
- include/linux/mmc/sdio_func.h |    3 +++
- 4 files changed, 44 insertions(+), 2 deletions(-)
+ security/apparmor/policy_unpack.c |   47 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 8 deletions(-)
 
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -144,8 +144,9 @@ void mmc_request_done(struct mmc_host *h
- 	int err = cmd->error;
+--- a/security/apparmor/policy_unpack.c
++++ b/security/apparmor/policy_unpack.c
+@@ -223,16 +223,21 @@ static void *kvmemdup(const void *src, s
+ static size_t unpack_u16_chunk(struct aa_ext *e, char **chunk)
+ {
+ 	size_t size = 0;
++	void *pos = e->pos;
  
- 	/* Flag re-tuning needed on CRC errors */
--	if ((cmd->opcode != MMC_SEND_TUNING_BLOCK &&
--	    cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
-+	if (cmd->opcode != MMC_SEND_TUNING_BLOCK &&
-+	    cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200 &&
-+	    !host->retune_crc_disable &&
- 	    (err == -EILSEQ || (mrq->sbc && mrq->sbc->error == -EILSEQ) ||
- 	    (mrq->data && mrq->data->error == -EILSEQ) ||
- 	    (mrq->stop && mrq->stop->error == -EILSEQ)))
---- a/drivers/mmc/core/sdio_io.c
-+++ b/drivers/mmc/core/sdio_io.c
-@@ -738,3 +738,40 @@ int sdio_set_host_pm_flags(struct sdio_f
+ 	if (!inbounds(e, sizeof(u16)))
+-		return 0;
++		goto fail;
+ 	size = le16_to_cpu(get_unaligned((__le16 *) e->pos));
+ 	e->pos += sizeof(__le16);
+ 	if (!inbounds(e, size))
+-		return 0;
++		goto fail;
+ 	*chunk = e->pos;
+ 	e->pos += size;
+ 	return size;
++
++fail:
++	e->pos = pos;
++	return 0;
+ }
+ 
+ /* unpack control byte */
+@@ -294,62 +299,84 @@ fail:
+ 
+ static bool unpack_u8(struct aa_ext *e, u8 *data, const char *name)
+ {
++	void *pos = e->pos;
++
+ 	if (unpack_nameX(e, AA_U8, name)) {
+ 		if (!inbounds(e, sizeof(u8)))
+-			return 0;
++			goto fail;
+ 		if (data)
+ 			*data = get_unaligned((u8 *)e->pos);
+ 		e->pos += sizeof(u8);
+ 		return 1;
+ 	}
++
++fail:
++	e->pos = pos;
  	return 0;
  }
- EXPORT_SYMBOL_GPL(sdio_set_host_pm_flags);
-+
-+/**
-+ *	sdio_retune_crc_disable - temporarily disable retuning on CRC errors
-+ *	@func: SDIO function attached to host
-+ *
-+ *	If the SDIO card is known to be in a state where it might produce
-+ *	CRC errors on the bus in response to commands (like if we know it is
-+ *	transitioning between power states), an SDIO function driver can
-+ *	call this function to temporarily disable the SD/MMC core behavior of
-+ *	triggering an automatic retuning.
-+ *
-+ *	This function should be called while the host is claimed and the host
-+ *	should remain claimed until sdio_retune_crc_enable() is called.
-+ *	Specifically, the expected sequence of calls is:
-+ *	- sdio_claim_host()
-+ *	- sdio_retune_crc_disable()
-+ *	- some number of calls like sdio_writeb() and sdio_readb()
-+ *	- sdio_retune_crc_enable()
-+ *	- sdio_release_host()
-+ */
-+void sdio_retune_crc_disable(struct sdio_func *func)
-+{
-+	func->card->host->retune_crc_disable = true;
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_crc_disable);
-+
-+/**
-+ *	sdio_retune_crc_enable - re-enable retuning on CRC errors
-+ *	@func: SDIO function attached to host
-+ *
-+ *	This is the compement to sdio_retune_crc_disable().
-+ */
-+void sdio_retune_crc_enable(struct sdio_func *func)
-+{
-+	func->card->host->retune_crc_disable = false;
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -398,6 +398,7 @@ struct mmc_host {
- 	unsigned int		retune_now:1;	/* do re-tuning at next req */
- 	unsigned int		retune_paused:1; /* re-tuning is temporarily disabled */
- 	unsigned int		use_blk_mq:1;	/* use blk-mq */
-+	unsigned int		retune_crc_disable:1; /* don't trigger retune upon crc */
  
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
---- a/include/linux/mmc/sdio_func.h
-+++ b/include/linux/mmc/sdio_func.h
-@@ -159,4 +159,7 @@ extern void sdio_f0_writeb(struct sdio_f
- extern mmc_pm_flag_t sdio_get_host_pm_caps(struct sdio_func *func);
- extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
- 
-+extern void sdio_retune_crc_disable(struct sdio_func *func);
-+extern void sdio_retune_crc_enable(struct sdio_func *func);
+ static bool unpack_u32(struct aa_ext *e, u32 *data, const char *name)
+ {
++	void *pos = e->pos;
 +
- #endif /* LINUX_MMC_SDIO_FUNC_H */
+ 	if (unpack_nameX(e, AA_U32, name)) {
+ 		if (!inbounds(e, sizeof(u32)))
+-			return 0;
++			goto fail;
+ 		if (data)
+ 			*data = le32_to_cpu(get_unaligned((__le32 *) e->pos));
+ 		e->pos += sizeof(u32);
+ 		return 1;
+ 	}
++
++fail:
++	e->pos = pos;
+ 	return 0;
+ }
+ 
+ static bool unpack_u64(struct aa_ext *e, u64 *data, const char *name)
+ {
++	void *pos = e->pos;
++
+ 	if (unpack_nameX(e, AA_U64, name)) {
+ 		if (!inbounds(e, sizeof(u64)))
+-			return 0;
++			goto fail;
+ 		if (data)
+ 			*data = le64_to_cpu(get_unaligned((__le64 *) e->pos));
+ 		e->pos += sizeof(u64);
+ 		return 1;
+ 	}
++
++fail:
++	e->pos = pos;
+ 	return 0;
+ }
+ 
+ static size_t unpack_array(struct aa_ext *e, const char *name)
+ {
++	void *pos = e->pos;
++
+ 	if (unpack_nameX(e, AA_ARRAY, name)) {
+ 		int size;
+ 		if (!inbounds(e, sizeof(u16)))
+-			return 0;
++			goto fail;
+ 		size = (int)le16_to_cpu(get_unaligned((__le16 *) e->pos));
+ 		e->pos += sizeof(u16);
+ 		return size;
+ 	}
++
++fail:
++	e->pos = pos;
+ 	return 0;
+ }
+ 
+ static size_t unpack_blob(struct aa_ext *e, char **blob, const char *name)
+ {
++	void *pos = e->pos;
++
+ 	if (unpack_nameX(e, AA_BLOB, name)) {
+ 		u32 size;
+ 		if (!inbounds(e, sizeof(u32)))
+-			return 0;
++			goto fail;
+ 		size = le32_to_cpu(get_unaligned((__le32 *) e->pos));
+ 		e->pos += sizeof(u32);
+ 		if (inbounds(e, (size_t) size)) {
+@@ -358,6 +385,9 @@ static size_t unpack_blob(struct aa_ext
+ 			return size;
+ 		}
+ 	}
++
++fail:
++	e->pos = pos;
+ 	return 0;
+ }
+ 
+@@ -374,9 +404,10 @@ static int unpack_str(struct aa_ext *e,
+ 			if (src_str[size - 1] != 0)
+ 				goto fail;
+ 			*string = src_str;
++
++			return size;
+ 		}
+ 	}
+-	return size;
+ 
+ fail:
+ 	e->pos = pos;
 
 
