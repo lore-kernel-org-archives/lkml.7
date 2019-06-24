@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C3CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D134C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12FC20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384D320848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370703;
-	bh=Ib6SgRLFYBubhoJcoft5hs76eSLfNuvv/9iVhQw7T98=;
+	s=default; t=1561370708;
+	bh=ux5ZLLyQLAvQ2u7HPasXsmocZYrBXqREkPVyN9c0Wps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVwBpbmtrhuWkncmU8lDZ574UywRrJBJCvQymq/9xHIdQDKasEPapMbTU4hTgKUNI
-	 eib50gJTSp3OnoJReqiVeKILfFaL8ju1QsL6XkqPYWfPf78fkYdNJR911oZ9+ldgTK
-	 4uYSwkkZNOrOFmsEGqNhWE8cjPoQSGj6+AWb5sM0=
+	b=0Yga8JSBS7j+OMy0NcOlW4ATmMEuUnmvNWWV00aBEvxQdYPzGiGLESj6xAY6xPvNr
+	 WHSh1EqfvJ5MRQpGAPeO8cF3VKMirNKIYDuM+tJ63EGlOwWQgyPwriY5YPF+MmIWm/
+	 y5kVzpvOKDrZspAwXuPjIbtqcheImbtzVAHzKWVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfFXKFB (ORCPT
+        id S1729867AbfFXKFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbfFXKEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:50 -0400
+        id S1729762AbfFXKEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:48 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE86208E3;
-        Mon, 24 Jun 2019 10:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02AB5205ED;
+        Mon, 24 Jun 2019 10:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370690;
-        bh=Ib6SgRLFYBubhoJcoft5hs76eSLfNuvv/9iVhQw7T98=;
+        s=default; t=1561370687;
+        bh=ux5ZLLyQLAvQ2u7HPasXsmocZYrBXqREkPVyN9c0Wps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WF5aU8++VHR46K+PWKrsIjxDxAUs0jUHsT9+dVkp4hn7aHajLD+CpHrXuKsPsFO6T
-         LuDnzYB8ax7/ZzVgZRmaWpF7eTxlLeUDyjeNA7rSZivcO05O82HlgfcsBdU+ris9qB
-         hnuqKH7pfrdie4deNoEqGSpIUQs5VadNrFpn70Q0=
+        b=wH62Kbg+EvdDSW7NCFGLKe+QXfB+qmH/7IAWqJvD3K7nQfjhZLFAmzcBkMbM3wu1I
+         MRScdQeF38X8Bx4pVXCjXXNFHMm9JzzADLjjZH+f/SSu2M1c5qIKfpeHeQ1tRcgZ4z
+         WIHJTex7omC1jBHjvIGK4MR/tv/18LlPbpy5k8r8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        stable@vger.kernel.org, Wen He <wen.he_1@nxp.com>,
         Liviu Dudau <liviu.dudau@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/90] drm/arm/hdlcd: Actually validate CRTC modes
-Date:   Mon, 24 Jun 2019 17:56:46 +0800
-Message-Id: <20190624092317.810284350@linuxfoundation.org>
+Subject: [PATCH 4.19 55/90] drm/arm/mali-dp: Add a loop around the second set CVAL and try 5 times
+Date:   Mon, 24 Jun 2019 17:56:45 +0800
+Message-Id: <20190624092317.745033085@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,61 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b96151edced4edb6a18aa89a5fa02c7066efff45 ]
+[ Upstream commit 6a88e0c14813d00f8520d0e16cd4136c6cf8b4d4 ]
 
-Rather than allowing any old mode through, then subsequently refusing
-unmatchable clock rates in atomic_check when it's too late to back out
-and pick a different mode, let's do that validation up-front where it
-will cause unsupported modes to be correctly pruned in the first place.
+This patch trying to fix monitor freeze issue caused by drm error
+'flip_done timed out' on LS1028A platform. this set try is make a loop
+around the second setting CVAL and try like 5 times before giveing up.
 
-This also eliminates an issue whereby a perceived clock rate of 0 would
-cause atomic disable to fail and prevent the module from being unloaded.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/arm/hdlcd_crtc.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/arm/malidp_drv.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-index e4d67b70244d..d5c1a0b1f01a 100644
---- a/drivers/gpu/drm/arm/hdlcd_crtc.c
-+++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
-@@ -186,20 +186,19 @@ static void hdlcd_crtc_atomic_disable(struct drm_crtc *crtc,
- 	clk_disable_unprepare(hdlcd->clk);
- }
- 
--static int hdlcd_crtc_atomic_check(struct drm_crtc *crtc,
--				   struct drm_crtc_state *state)
-+static enum drm_mode_status hdlcd_crtc_mode_valid(struct drm_crtc *crtc,
-+		const struct drm_display_mode *mode)
+diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+index 94d6dabec2dc..1ab511e33243 100644
+--- a/drivers/gpu/drm/arm/malidp_drv.c
++++ b/drivers/gpu/drm/arm/malidp_drv.c
+@@ -190,6 +190,7 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
  {
- 	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
--	struct drm_display_mode *mode = &state->adjusted_mode;
- 	long rate, clk_rate = mode->clock * 1000;
+ 	struct drm_device *drm = state->dev;
+ 	struct malidp_drm *malidp = drm->dev_private;
++	int loop = 5;
  
- 	rate = clk_round_rate(hdlcd->clk, clk_rate);
- 	if (rate != clk_rate) {
- 		/* clock required by mode not supported by hardware */
--		return -EINVAL;
-+		return MODE_NOCLOCK;
- 	}
+ 	malidp->event = malidp->crtc.state->event;
+ 	malidp->crtc.state->event = NULL;
+@@ -204,8 +205,18 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
+ 			drm_crtc_vblank_get(&malidp->crtc);
  
--	return 0;
-+	return MODE_OK;
- }
- 
- static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
-@@ -220,7 +219,7 @@ static void hdlcd_crtc_atomic_begin(struct drm_crtc *crtc,
- }
- 
- static const struct drm_crtc_helper_funcs hdlcd_crtc_helper_funcs = {
--	.atomic_check	= hdlcd_crtc_atomic_check,
-+	.mode_valid	= hdlcd_crtc_mode_valid,
- 	.atomic_begin	= hdlcd_crtc_atomic_begin,
- 	.atomic_enable	= hdlcd_crtc_atomic_enable,
- 	.atomic_disable	= hdlcd_crtc_atomic_disable,
+ 		/* only set config_valid if the CRTC is enabled */
+-		if (malidp_set_and_wait_config_valid(drm) < 0)
++		if (malidp_set_and_wait_config_valid(drm) < 0) {
++			/*
++			 * make a loop around the second CVAL setting and
++			 * try 5 times before giving up.
++			 */
++			while (loop--) {
++				if (!malidp_set_and_wait_config_valid(drm))
++					break;
++			}
+ 			DRM_DEBUG_DRIVER("timed out waiting for updated configuration\n");
++		}
++
+ 	} else if (malidp->event) {
+ 		/* CRTC inactive means vblank IRQ is disabled, send event directly */
+ 		spin_lock_irq(&drm->event_lock);
 -- 
 2.20.1
 
