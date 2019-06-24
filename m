@@ -2,52 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B855C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51894C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E813204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336B82133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfFXH1J (ORCPT
+        id S1727938AbfFXH12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:27:09 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52513 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfFXH1J (ORCPT
+        Mon, 24 Jun 2019 03:27:28 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47016 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfFXH1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 03:27:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id p12so20867873iog.19
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:27:08 -0700 (PDT)
+Received: by mail-io1-f72.google.com with SMTP id s83so20888377iod.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:27:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Iupi8DOKHDcSSlu87q2pfPMCXoPDN4x3nXpdzN2NyMQ=;
-        b=KZJyVfLEh3mkLEcgMDRvAfm7oiOzE3PNXkItNDtw6Se+COt/64sOALRc+tOcjRw02M
-         57SgLoPc5BO517/PYiyWgdY1nlxUFNjrxxc841Ps801bO5YxThrNqIY0yluyGkuzQwKV
-         lEXrjH6W3mBKxpL1jc11xO64tn+E/MXlB4ZtsSgwEERMRabhHdn6uT7xd3xKZ7Mt8qiS
-         0Lxv2I0j07GUWJ41KSdBYALd8rpIxP8TQq6RNvNvemy5rQMdqipygno2A4tENKtz6C3f
-         DcczFOBVMdl9SVinsYEY+X3jXXREfV0Y68pZrvOAFoZmjYyBrzidLrwvB2gAEGbix/hY
-         B+aw==
-X-Gm-Message-State: APjAAAWrTksQlGJ3A/1euP8VVT7AievRTg+awvjLndGqR4gkDXp4PNty
-        pq0Xp6/WDwgtXeoOX9gViLz7HdNUIW5ICmbTlpZHYDWdQ85I
-X-Google-Smtp-Source: APXvYqxeGV620buUz0aPb2+Oqval4tymsKZZilxKrwLaNYS/Nod4djMLtWlaFmOVev18aExDa9BRLfJkWKbYX/1+mnSH+50izSU3
+        bh=L3zKlrINEtE6m3v0kH7lOhB3kIE+T5TXT3Gi7uSg7F0=;
+        b=ezebFPeawP90WABzGlOsZHZ6uj6xADTFtpJOoUkpdK9BsiaJInebSmpI/BkMPfVb80
+         dh/gbh1AU2yW4ur2dkAUdgYonkE2F9ipRhSIARonzvu5B8km9u56GtmUudO6AHM1Hbc6
+         vf6GhiI2Dsj69Xfpkt3VsNHtkW/ySI8FTwC6AFmrP592mqwpImcU4J5Zlu8xsIRYqYK0
+         GdTHfSI2qv0zttYV2IfvxwqQXYPJRHsAio+IgaJcfPwMtVjdxZEUx6pZgvAgwnQbYVLz
+         8j6xF3a5unwsghU3uN1Ov01hmmObiT/5mXQ7MFVtsZb1SY0uQr9zzBRp8MA+fVbPX42p
+         Mb3w==
+X-Gm-Message-State: APjAAAXFI3MBgTKvUBLcitjIGKrMcPJyQfPp8kiUolpcFvftYxm7IvFt
+        rdu5xg9+UsMkHM2a4F/zwHJYEiImTN9EoB3TATHSsqgp8Mto
+X-Google-Smtp-Source: APXvYqwT7ZZGTV9XAVE3QghvMXv2mA7TgSCeRJIB2qYzFDbMsGzD8yDp7XEqfZK9PxMbPyBHa7uCMJy5T2qCljj08fFGP50gukur
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:218b:: with SMTP id b11mr39471009iob.264.1561361228329;
+X-Received: by 2002:a02:9a0f:: with SMTP id b15mr14994630jal.32.1561361228754;
  Mon, 24 Jun 2019 00:27:08 -0700 (PDT)
 Date:   Mon, 24 Jun 2019 00:27:08 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000617b4a058c0cbd60@google.com>
-Subject: memory leak in mpihelp_mul_karatsuba_case
-From:   syzbot <syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000067f693058c0cbdf4@google.com>
+Subject: INFO: rcu detected stall in write_comp_data
+From:   syzbot <syzbot+de50612027760b3a87aa@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,87 +59,89 @@ syzbot found the following crash on:
 
 HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a8bfeaa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
-dashboard link: https://syzkaller.appspot.com/bug?extid=f7baccc38dcc1e094e77
+console output: https://syzkaller.appspot.com/x/log.txt?x=17246026a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+dashboard link: https://syzkaller.appspot.com/bug?extid=de50612027760b3a87aa
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171aa7e6a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153306cea00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175e1ab2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1156faf6a00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+Reported-by: syzbot+de50612027760b3a87aa@syzkaller.appspotmail.com
 
-ffffffffda RBX: 0000000000000000 RCX: 0000000000441ac9
-BUG: memory leak
-unreferenced object 0xffff88811f4da200 (size 512):
-   comm "syz-executor301", pid 7045, jiffies 4294955450 (age 7.850s)
-   hex dump (first 32 bytes):
-     ad dc f4 43 66 b0 1a 88 8f 0c 17 d5 86 34 3a 85  ...Cf........4:.
-     e3 63 c8 bf 2e 3b f5 0d 1c ab 63 30 15 fe a1 e9  .c...;....c0....
-   backtrace:
-     [<00000000d5589961>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d5589961>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000d5589961>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000d5589961>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000d5589961>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<00000000022eaa00>] kmalloc include/linux/slab.h:552 [inline]
-     [<00000000022eaa00>] mpi_alloc_limb_space+0x29/0x50 lib/mpi/mpiutil.c:64
-     [<00000000d637c699>] mpihelp_mul_karatsuba_case+0x67/0x460  
-lib/mpi/mpih-mul.c:331
-     [<00000000401dc6f9>] mpi_powm+0x7b0/0xdd0 lib/mpi/mpi-pow.c:225
-     [<00000000be8dcb84>] _compute_val crypto/dh.c:39 [inline]
-     [<00000000be8dcb84>] dh_compute_value+0x160/0x220 crypto/dh.c:178
-     [<00000000471846ad>] crypto_kpp_generate_public_key  
-include/crypto/kpp.h:315 [inline]
-     [<00000000471846ad>] __keyctl_dh_compute+0x447/0x970  
-security/keys/dh.c:367
-     [<000000002f6d650d>] keyctl_dh_compute+0x67/0xa6 security/keys/dh.c:422
-     [<00000000b798bc7f>] __do_sys_keyctl security/keys/keyctl.c:1737  
-[inline]
-     [<00000000b798bc7f>] __se_sys_keyctl security/keys/keyctl.c:1633  
-[inline]
-     [<00000000b798bc7f>] __x64_sys_keyctl+0xa5/0x330  
-security/keys/keyctl.c:1633
-     [<000000007a6f9515>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000057f2768>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811f4dac00 (size 512):
-   comm "syz-executor301", pid 7045, jiffies 4294955450 (age 7.850s)
-   hex dump (first 32 bytes):
-     62 72 c4 ae ac af a3 ba e5 24 da a5 30 5e cb c4  br.......$..0^..
-     a6 46 44 39 76 2e 42 f6 85 6a 5b ad ae 97 4e 83  .FD9v.B..j[...N.
-   backtrace:
-     [<00000000d5589961>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d5589961>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000d5589961>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000d5589961>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000d5589961>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<00000000022eaa00>] kmalloc include/linux/slab.h:552 [inline]
-     [<00000000022eaa00>] mpi_alloc_limb_space+0x29/0x50 lib/mpi/mpiutil.c:64
-     [<0000000025804541>] mpihelp_mul_karatsuba_case+0x394/0x460  
-lib/mpi/mpih-mul.c:346
-     [<00000000401dc6f9>] mpi_powm+0x7b0/0xdd0 lib/mpi/mpi-pow.c:225
-     [<00000000be8dcb84>] _compute_val crypto/dh.c:39 [inline]
-     [<00000000be8dcb84>] dh_compute_value+0x160/0x220 crypto/dh.c:178
-     [<00000000471846ad>] crypto_kpp_generate_public_key  
-include/crypto/kpp.h:315 [inline]
-     [<00000000471846ad>] __keyctl_dh_compute+0x447/0x970  
-security/keys/dh.c:367
-     [<000000002f6d650d>] keyctl_dh_compute+0x67/0xa6 security/keys/dh.c:422
-     [<00000000b798bc7f>] __do_sys_keyctl security/keys/keyctl.c:1737  
-[inline]
-     [<00000000b798bc7f>] __se_sys_keyctl security/keys/keyctl.c:1633  
-[inline]
-     [<00000000b798bc7f>] __x64_sys_keyctl+0xa5/0x330  
-security/keys/keyctl.c:1633
-     [<000000007a6f9515>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000057f2768>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+	(detected by 1, t=10502 jiffies, g=7925, q=38)
+rcu: All QSes seen, last rcu_preempt kthread activity 10503  
+(4295059525-4295049022), jiffies_till_next_fqs=1, root ->qsmask 0x0
+syz-executor151 R  running task    26832  8885   8881 0x00004000
+Call Trace:
+  <IRQ>
+  sched_show_task kernel/sched/core.c:5286 [inline]
+  sched_show_task.cold+0x291/0x2fc kernel/sched/core.c:5261
+  print_other_cpu_stall kernel/rcu/tree_stall.h:410 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:536 [inline]
+  rcu_pending kernel/rcu/tree.c:2625 [inline]
+  rcu_sched_clock_irq.cold+0xaaf/0xbfd kernel/rcu/tree.c:2161
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1298
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x33b/0xdd0 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+  smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
+RIP: 0010:check_kcov_mode kernel/kcov.c:68 [inline]
+RIP: 0010:write_comp_data+0x9/0x70 kernel/kcov.c:123
+Code: 12 00 00 8b 80 e4 12 00 00 48 8b 11 48 83 c2 01 48 39 d0 76 07 48 89  
+34 d1 48 89 11 5d c3 0f 1f 00 65 4c 8b 04 25 c0 fd 01 00 <65> 8b 05 f8 3b  
+91 7e a9 00 01 1f 00 75 51 41 8b 80 e0 12 00 00 83
+RSP: 0018:ffff88808d9ef760 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: dffffc0000000000 RBX: ffff88808d9ef848 RCX: ffffffff81b1c7ca
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: ffff88808d9ef768 R08: ffff88808421e080 R09: 0000000000000002
+R10: ffffed1015d26c6f R11: ffff8880ae93637b R12: ffffffff877b6360
+R13: 0000000003826ffc R14: 0000000000000001 R15: 0000000000000000
+  do_iter_readv_writev+0x5ba/0x8f0 fs/read_write.c:690
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_iter_write+0x77/0xb0 fs/read_write.c:983
+  iter_file_splice_write+0x65c/0xbd0 fs/splice.c:746
+  do_splice_from fs/splice.c:848 [inline]
+  direct_splice_actor+0x123/0x190 fs/splice.c:1020
+  splice_direct_to_actor+0x366/0x970 fs/splice.c:975
+  do_splice_direct+0x1da/0x2a0 fs/splice.c:1063
+  do_sendfile+0x597/0xd00 fs/read_write.c:1464
+  __do_sys_sendfile64 fs/read_write.c:1519 [inline]
+  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+  __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1511
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4417c9
+Code: e8 7c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 bb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffee86956c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007ffee8695870 RCX: 00000000004417c9
+RDX: 0000000020000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 00008080fffffffe R11: 0000000000000246 R12: 0000000000000000
+R13: 00000000004024a0 R14: 0000000000000000 R15: 0000000000000000
+rcu: rcu_preempt kthread starved for 10548 jiffies! g7925 f0x2  
+RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     R  running task    29056    10      2 0x80004000
+Call Trace:
+  context_switch kernel/sched/core.c:2818 [inline]
+  __schedule+0x7cb/0x1560 kernel/sched/core.c:3445
+  schedule+0xa8/0x260 kernel/sched/core.c:3509
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1589 [inline]
+  rcu_gp_kthread+0x9b2/0x18b0 kernel/rcu/tree.c:1746
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
 
 ---
