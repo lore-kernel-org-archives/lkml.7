@@ -2,237 +2,99 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE89C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED7BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B9C20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5F720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEzIcJAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfFXRZ5 (ORCPT
+        id S1732428AbfFXR07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:25:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728831AbfFXRZ5 (ORCPT
+        Mon, 24 Jun 2019 13:26:59 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:37304 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbfFXR07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:25:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OHGYXd084901
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:25:56 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb1vjjesc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:25:55 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 24 Jun 2019 18:25:54 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Jun 2019 18:25:49 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OHPmDg25559362
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 17:25:48 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9798B2064;
-        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BE16B205F;
-        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 17:25:48 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 96E6516C3305; Mon, 24 Jun 2019 10:25:51 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 10:25:51 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Byungchul Park <byungchul.park@lge.com>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-Reply-To: paulmck@linux.ibm.com
-References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
- <20190624164624.GA41314@google.com>
+        Mon, 24 Jun 2019 13:26:59 -0400
+Received: by mail-yb1-f195.google.com with SMTP id 189so6044232ybh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 10:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yXmuDDswJwasFysM5xAe3iWKG6lQgSipjb+VoaydZpo=;
+        b=ZEzIcJAE76hfGZSdojtnNCDq8KnZa8QzLX4gcsB7N0ETY6ORcgQdkor67xpQexSWWo
+         fnprlr44zWbGI7KMkoUFtAlcXBvv5h8VZTTFA5WYfT7tmNiBdpnUEvMjWV1eespYOnxk
+         Fl+PI+e3gWgPAAA77uCNH9dQDpxVjW9vD+haq9JfuhF09FQJyTdun0ZPUHYjjtY0KurC
+         v+0o1Wo/EOBSSgiNa8QwBP/x7zBnjsu9+huHIxK7XbalT0GWYGrUmiI2uEkTzkEN6Djk
+         nC9qkPQYSsytaWz/1g2lwHRxrOvwJWFj6RibszIU/C+giXx6xQLf/9D3PHoZAG1pkMQh
+         vRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yXmuDDswJwasFysM5xAe3iWKG6lQgSipjb+VoaydZpo=;
+        b=DgKFH1UceSCK/9Z/ju3Q0rEXYE/wzdsRoAmGouun0WDIH9TiB9J6K2igA4JRDWLQ6d
+         +B4sXiRjkF6D4R2Gem5E6NmA5L85BYIYyBKWPRNYE+HlMQhICa2hihMimIc48zeqadU3
+         YhZTIVAYqoyCvZz5p5sftpzE1ZvWfr1tB97NOzDDqVx/WYzHbrJKV4yGDHVbEOmRtHh1
+         rrW46ybjj/kjDO23+eKvKYvLCYoAHlHIAwrbCyVy7qImZxZ0BEOqDXDgMZbdyL0+a3Uy
+         /X1hfMRF1+UIk7+AoZA6+UsShSQBOJxfce2QjMgMWQ/NIH8/CP38c+FprbAtQCB2qFsm
+         xgaA==
+X-Gm-Message-State: APjAAAXAFHQd76FsASM2u3uZPvPSsIIwT+loTjPfsgbH0VUI27gO3pVB
+        D2Epqyac5lqn41bbquAK6Gr2s2oE
+X-Google-Smtp-Source: APXvYqzw8pbSlUaKwCUcp6NeRqSPYljdiyzEkEXM9NNBWRW2xkxurNFP0j4uN8krsT/yijPD9nLmFw==
+X-Received: by 2002:a25:5f10:: with SMTP id t16mr3102086ybb.5.1561397218061;
+        Mon, 24 Jun 2019 10:26:58 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id q8sm2628622ywj.58.2019.06.24.10.26.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 10:26:56 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 189so6044156ybh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 10:26:56 -0700 (PDT)
+X-Received: by 2002:a25:21c2:: with SMTP id h185mr14071216ybh.125.1561397215686;
+ Mon, 24 Jun 2019 10:26:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624164624.GA41314@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062417-0052-0000-0000-000003D47B5B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011321; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01222690; UDB=6.00643381; IPR=6.01003850;
- MB=3.00027447; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 17:25:52
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062417-0053-0000-0000-000061705D3F
-Message-Id: <20190624172551.GI26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240137
+References: <20190624083352.29257-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190624083352.29257-1-rasmus.villemoes@prevas.dk>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Mon, 24 Jun 2019 13:26:18 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSeHhz1kntLyeUfAB4ZbtYjO1=Ornwse-yQbPwo5c-_2=g@mail.gmail.com>
+Message-ID: <CA+FuTSeHhz1kntLyeUfAB4ZbtYjO1=Ornwse-yQbPwo5c-_2=g@mail.gmail.com>
+Subject: Re: [PATCH net-next] can: dev: call netif_carrier_off() in register_candev()
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
-> On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
-> > Hello rcu folks,
-> > 
-> > I thought it'd better to announce it if those spawnings fail because of
-> > !rcu_scheduler_fully_active.
-> > 
-> > Of course, with the current code, it never happens though.
-> > 
-> > Thoughts?
-> 
-> It seems in the right spirit, but with your patch a warning always fires.
-> rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
-> from hotplug paths.
-> 
-> Warning splat stack looks like:
-> 
-> [    0.398767] Call Trace:
-> [    0.398775]  rcu_init+0x6aa/0x724
-> [    0.398779]  start_kernel+0x220/0x4a2
-> [    0.398780]  ? copy_bootdata+0x12/0xac
-> [    0.398782]  secondary_startup_64+0xa4/0xb0
+On Mon, Jun 24, 2019 at 4:34 AM Rasmus Villemoes
+<rasmus.villemoes@prevas.dk> wrote:
+>
+> CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
+> trigger as suggested, there's a small inconsistency with the link
+> property: The LED is on initially, stays on when the device is brought
+> up, and then turns off (as expected) when the device is brought down.
+>
+> Make sure the LED always reflects the state of the CAN device.
+>
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-Thank you both, and I will remove this from my testing queue.
-
-As Joel says, this is called at various points in the boot sequence, not
-all of which are far enough along to support spawning kthreads.
-
-The real question here is "What types of bugs are we trying to defend
-against?"  But keeping in mind existing diagnostics.  For example, are
-there any kthreads for which a persistent failure to spawn would not
-emit any error message.  My belief is that any such persistent failure
-would result in either an in-kernel diagnostic or an rcutorture failure,
-but I might well be missing something.
-
-Thoughts?  Or, more to the point, tests demonstrating silence in face
-of such a persistent failure?
-
-							Thanx, Paul
-
-> > Thanks,
-> > Byungchul
-> > 
-> > ---8<---
-> > From 58a33a85c70f82c406319b4752af95cf6ceb73a3 Mon Sep 17 00:00:00 2001
-> > From: Byungchul Park <byungchul.park@lge.com>
-> > Date: Mon, 24 Jun 2019 17:08:26 +0900
-> > Subject: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-> > 
-> > In case that rcu ktheads cannot be spawned due to
-> > !rcu_scheduler_fully_active, it'd be better to anounce it.
-> > 
-> > While at it, because the return value of rcu_spawn_one_boost_kthread()
-> > is not used any longer, changed the return type from int to void.
-> > 
-> > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> > ---
-> >  kernel/rcu/tree_plugin.h | 31 +++++++++++++++++++------------
-> >  1 file changed, 19 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 1102765..7d74193 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
-> >   * already exist.  We only create this kthread for preemptible RCU.
-> >   * Returns zero if all is well, a negated errno otherwise.
-> >   */
-> > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> >  {
-> >  	int rnp_index = rnp - rcu_get_root();
-> >  	unsigned long flags;
-> > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> >  	struct task_struct *t;
-> >  
-> >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > -		return 0;
-> > +		return;
-> >  
-> > -	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> > -		return 0;
-> > +	if (rcu_rnp_online_cpus(rnp) == 0)
-> > +		return;
-> >  
-> >  	rcu_state.boost = 1;
-> >  	if (rnp->boost_kthread_task != NULL)
-> > -		return 0;
-> > +		return;
-> >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
-> >  			   "rcub/%d", rnp_index);
-> >  	if (IS_ERR(t))
-> > -		return PTR_ERR(t);
-> > +		return;
-> >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> >  	rnp->boost_kthread_task = t;
-> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >  	sp.sched_priority = kthread_prio;
-> >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-> >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> > -	return 0;
-> >  }
-> >  
-> >  static void rcu_cpu_kthread_setup(unsigned int cpu)
-> > @@ -1264,8 +1263,12 @@ static void __init rcu_spawn_boost_kthreads(void)
-> >  		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
-> >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
-> >  		return;
-> > +
-> > +	if (WARN_ON(!rcu_scheduler_fully_active))
-> > +		return;
-> > +
-> >  	rcu_for_each_leaf_node(rnp)
-> > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > +		rcu_spawn_one_boost_kthread(rnp);
-> >  }
-> >  
-> >  static void rcu_prepare_kthreads(int cpu)
-> > @@ -1273,9 +1276,11 @@ static void rcu_prepare_kthreads(int cpu)
-> >  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> >  	struct rcu_node *rnp = rdp->mynode;
-> >  
-> > +	if (WARN_ON(!rcu_scheduler_fully_active))
-> > +		return;
-> > +
-> >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
-> > -	if (rcu_scheduler_fully_active)
-> > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > +	rcu_spawn_one_boost_kthread(rnp);
-> >  }
-> >  
-> >  #else /* #ifdef CONFIG_RCU_BOOST */
-> > @@ -2198,8 +2203,10 @@ static void rcu_spawn_one_nocb_kthread(int cpu)
-> >   */
-> >  static void rcu_spawn_cpu_nocb_kthread(int cpu)
-> >  {
-> > -	if (rcu_scheduler_fully_active)
-> > -		rcu_spawn_one_nocb_kthread(cpu);
-> > +	if (WARN_ON(!rcu_scheduler_fully_active))
-> > +		return;
-> > +
-> > +	rcu_spawn_one_nocb_kthread(cpu);
-> >  }
-> >  
-> >  /*
-> > -- 
-> > 1.9.1
-> > 
-
+Should this target net? Regardless of CONFIG_CAN_LEDS deprecation,
+this is already not initialized properly if that CONFIG is disabled
+and a can_led_event call at device probe is a noop.
