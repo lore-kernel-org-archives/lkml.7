@@ -2,171 +2,126 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3AFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D051C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5325820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561344750;
-	bh=VkbMuwCphYI8uGxaBCG//nLfz474AdAA5lslPezgjig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ArzmqDymvh138CF8PYBAd6ToR+oRo1Jdh6Pk3h8rsc8CpWK8CjQ1wcJ1ATClyv8XN
-	 5wUoBHUtsMoj9nYDBBNelW3ADoDTzCv4O7q6ZfgND5DsbzT+CkcX+GA1sbDammFFUJ
-	 6U9XUtFEqj3gcENDPh6NYLsNKwQAwnoAKLHHYyrg=
+	by mail.kernel.org (Postfix) with ESMTP id 783192073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 02:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfFXCw3 (ORCPT
+        id S1727271AbfFXC4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 22:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
+        Sun, 23 Jun 2019 22:56:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56924 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfFXCw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 22:52:28 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710092073F;
-        Mon, 24 Jun 2019 02:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561344747;
-        bh=VkbMuwCphYI8uGxaBCG//nLfz474AdAA5lslPezgjig=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LpVN7Q7fNPad8f+qFoOFbk6qmlnDc8XgshQ0IbiMqwpFxfk2BQkXR1L6FyLOW1uvQ
-         h8pr/r6CcHfCjsNLufOFWevv/W+ax1IGs3P2tn9jhZ1FlEc3MFyvkG8qrwTXFPhJjA
-         swCA6fHeB8ywCohpHL6HoL58bNdtN/tmKWfUwjmM=
-Date:   Mon, 24 Jun 2019 11:52:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
- devicetree
-Message-Id: <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
-In-Reply-To: <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
-        <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726307AbfFXC4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 22:56:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2019 19:56:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,410,1557212400"; 
+   d="scan'208";a="171838542"
+Received: from yhuang-mobile.sh.intel.com ([10.239.197.69])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jun 2019 19:56:08 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Rik van Riel <riel@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, jhladky@redhat.com,
+        lvenanci@redhat.com, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH -mm] autonuma: Fix scan period updating
+Date:   Mon, 24 Jun 2019 10:56:04 +0800
+Message-Id: <20190624025604.30896-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
+The autonuma scan period should be increased (scanning is slowed down)
+if the majority of the page accesses are shared with other processes.
+But in current code, the scan period will be decreased (scanning is
+speeded up) in that situation.
 
-Thank you for your comment!
+This patch fixes the code.  And this has been tested via tracing the
+scan period changing and /proc/vmstat numa_pte_updates counter when
+running a multi-threaded memory accessing program (most memory
+areas are accessed by multiple threads).
 
-On Sun, 23 Jun 2019 12:58:45 -0700
-Frank Rowand <frowand.list@gmail.com> wrote:
+Fixes: 37ec97deb3a8 ("sched/numa: Slow down scan rate if shared faults dominate")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: jhladky@redhat.com
+Cc: lvenanci@redhat.com
+Cc: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> Hi Masami,
-> 
-> On 6/21/19 9:18 AM, Masami Hiramatsu wrote:
-> > Hi,
-> > 
-> > Here is an RFC series of patches to add boot-time tracing using
-> > devicetree.
-> > 
-> > Currently, kernel support boot-time tracing using kernel command-line
-> > parameters. But that is very limited because of limited expressions
-> > and limited length of command line. Recently, useful features like
-> > histogram, synthetic events, etc. are being added to ftrace, but it is
-> > clear that we can not expand command-line options to support these
-> > features.
-> 
-> "it is clear that we can not expand command-line options" needs a fuller
-> explanation.  And maybe further exploration.
-
-Indeed. As an example of tracing settings in the first mail, even for simple
-use-case,  the trace command is long and complicated. I think it is hard to
-express that as 1-liner kernel command line. But devicetree looks very good
-for expressing structured data. That is great and I like it :)
-
-> > 
-> > Hoever, I've found that there is a devicetree which can pass more
-> > structured commands to kernel at boot time :) The devicetree is usually
-> > used for dscribing hardware configuration, but I think we can expand it
-> 
-> Devicetree is standardized and documented as hardware description.
-
-Yes, at this moment. Can't we talk about some future things?
-
-> > for software configuration too (e.g. AOSP and OPTEE already introduced
-> > firmware node.) Also, grub and qemu already supports loading devicetree,
-> > so we can use it not only on embedded devices but also on x86 PC too.
-> 
-> Devicetree is NOT for configuration information.  This has been discussed
-> over and over again in mail lists, at various conferences, and was also an
-> entire session at plumbers a few years ago:
-> 
->    https://elinux.org/Device_tree_future#Linux_Plumbers_2016_Device_Tree_Track
-
-Thanks, I'll check that.
-
-> 
-> There is one part of device tree that does allow non-hardware description,
-> which is the "chosen" node which is provided to allow communication between
-> the bootloader and the kernel.
-
-Ah, "chosen" will be suit for me :)
-
-> There clearly are many use cases for providing configuration information
-> and other types of data to a booting kernel.  I have been encouraging
-> people to come up with an additional boot time communication channel or
-> data object to support this use case.  So far, no serious proposal that
-> I am aware of.
-
-Hmm, then, can we add "ftrace" node under "chosen" node?
-It seems that "chosen" is supporting some (flat) properties, and I would
-like to add a tree of nodes for describing per-event setting.
-
-What about something like below? (do we need "compatible" ?)
-
-chosen {
-	linux,ftrace {
-		tp-printk;
-		buffer-size-kb = <400>;
-		event0 {
-			event = "...";
-		};
-	};
-};
-
-[..]
-> > 
-> > I would like to discuss on some points about this idea.
-> > 
-> > - Can we use devicetree for configuring kernel dynamically?
-> 
-> No.  Sorry.
-> 
-> My understanding of this proposal is that it is intended to better
-> support boot time kernel and driver debugging.  As an alternate
-> implementation, could you compile the ftrace configuration information
-> directly into a kernel data structure?  It seems like it would not be
-> very difficult to populate the data structure data via a few macros.
-
-No, that is not what I intended. My intention was to trace boot up
-process "without recompiling kernel", but with a structured data.
-
-For such purpose, we have to implement a tool to parse and pack the
-data and a channel to load it at earlier stage in bootloader. And
-those are already done by devicetree. Thus I thought I could get a
-piggyback on devicetree.
-
-Thank you,
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f5e528..79bc4d2d1e58 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1923,7 +1923,7 @@ static void update_task_scan_period(struct task_struct *p,
+ 			unsigned long shared, unsigned long private)
+ {
+ 	unsigned int period_slot;
+-	int lr_ratio, ps_ratio;
++	int lr_ratio, sp_ratio;
+ 	int diff;
+ 
+ 	unsigned long remote = p->numa_faults_locality[0];
+@@ -1954,22 +1954,22 @@ static void update_task_scan_period(struct task_struct *p,
+ 	 */
+ 	period_slot = DIV_ROUND_UP(p->numa_scan_period, NUMA_PERIOD_SLOTS);
+ 	lr_ratio = (local * NUMA_PERIOD_SLOTS) / (local + remote);
+-	ps_ratio = (private * NUMA_PERIOD_SLOTS) / (private + shared);
++	sp_ratio = (shared * NUMA_PERIOD_SLOTS) / (private + shared);
+ 
+-	if (ps_ratio >= NUMA_PERIOD_THRESHOLD) {
++	if (sp_ratio >= NUMA_PERIOD_THRESHOLD) {
+ 		/*
+-		 * Most memory accesses are local. There is no need to
+-		 * do fast NUMA scanning, since memory is already local.
++		 * Most memory accesses are shared with other tasks.
++		 * There is no point in continuing fast NUMA scanning,
++		 * since other tasks may just move the memory elsewhere.
+ 		 */
+-		int slot = ps_ratio - NUMA_PERIOD_THRESHOLD;
++		int slot = sp_ratio - NUMA_PERIOD_THRESHOLD;
+ 		if (!slot)
+ 			slot = 1;
+ 		diff = slot * period_slot;
+ 	} else if (lr_ratio >= NUMA_PERIOD_THRESHOLD) {
+ 		/*
+-		 * Most memory accesses are shared with other tasks.
+-		 * There is no point in continuing fast NUMA scanning,
+-		 * since other tasks may just move the memory elsewhere.
++		 * Most memory accesses are local. There is no need to
++		 * do fast NUMA scanning, since memory is already local.
+ 		 */
+ 		int slot = lr_ratio - NUMA_PERIOD_THRESHOLD;
+ 		if (!slot)
+@@ -1981,7 +1981,7 @@ static void update_task_scan_period(struct task_struct *p,
+ 		 * yet they are not on the local NUMA node. Speed up
+ 		 * NUMA scanning to get the memory moved over.
+ 		 */
+-		int ratio = max(lr_ratio, ps_ratio);
++		int ratio = max(lr_ratio, sp_ratio);
+ 		diff = -(NUMA_PERIOD_THRESHOLD - ratio) * period_slot;
+ 	}
+ 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.21.0
+
