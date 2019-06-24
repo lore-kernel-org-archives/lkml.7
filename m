@@ -2,168 +2,163 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E099EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1515EC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8231120656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEDC20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BeaLFB2K"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KQ2654w6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfFXO7u (ORCPT
+        id S1729844AbfFXPBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:59:50 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36073 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfFXO7t (ORCPT
+        Mon, 24 Jun 2019 11:01:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45972 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbfFXPBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:59:49 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190624145948euoutp02d21b7cf03e48087b1dffed5b4ffc9793~rKndsMyeG1859718597euoutp02W
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 14:59:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190624145948euoutp02d21b7cf03e48087b1dffed5b4ffc9793~rKndsMyeG1859718597euoutp02W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561388388;
-        bh=P2nkvwikLfmIXL8cK+4QfrKbDbmqAb86J0Ekh6clZ7o=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BeaLFB2K+TPqXGk/H7rfK/n7urmr6kbvQ8CD8NrzcPz1W2O+rxTGURWRryC9tLQSy
-         Gis/x28iD1IVT2q9Xp1ABYrnuQXoYGtpnj7POjppw9pOp/KagRSKsARnJkiyRijTt1
-         MUx0qTrhHnufPJxBRjO9yWXYCv4bwsubFCbNRTeU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190624145947eucas1p2d6350d93fc3b9c664abb10971f81ba12~rKndD6_rZ1017510175eucas1p26;
-        Mon, 24 Jun 2019 14:59:47 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 0A.E9.04377.365E01D5; Mon, 24
-        Jun 2019 15:59:47 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190624145946eucas1p28bbd4bbfe65ae48ae48576c29b573800~rKncZ2JmT1017510175eucas1p25;
-        Mon, 24 Jun 2019 14:59:46 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190624145946eusmtrp1d36d8a9448bfc31efc875b44eebfd5f8~rKncLL3Cm1696416964eusmtrp1U;
-        Mon, 24 Jun 2019 14:59:46 +0000 (GMT)
-X-AuditID: cbfec7f4-5632c9c000001119-8d-5d10e5632f6b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 88.D6.04146.265E01D5; Mon, 24
-        Jun 2019 15:59:46 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190624145946eusmtip2e5865bd41ee117eb9ca5ce9ad548b224~rKnbq2M1j2130521305eusmtip2R;
-        Mon, 24 Jun 2019 14:59:46 +0000 (GMT)
-Subject: Re: [PATCH 3/4] drm/meson: Enable DRM InfoFrame support on GXL, GXM
- and G12A
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>
-Cc:     "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "wens@csie.org" <wens@csie.org>,
-        "hjc@rock-chips.com" <hjc@rock-chips.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <bdc1746a-5829-9991-6f1c-d66f03c95d77@samsung.com>
-Date:   Mon, 24 Jun 2019 16:59:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Mon, 24 Jun 2019 11:01:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so7652078pfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZH0KsEpqEXiZL11grL/nW8IzWOxozO/nFecO0TNWzZg=;
+        b=KQ2654w6YgnMZs2At+Zd89XQIqIuYR8jlquNCWJJuIXpWD/HlSd4ZBjLxPQsxGeT2n
+         QOBGSpQkVzrAWhjdNm3L175i3EwkQyprQmoxs6iyZjw9hV5O7BunNQVJJ3RYGgog4Rsr
+         YQVv/8/84su3okC1IPWa+LhVmvUHm4bqUkhyE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZH0KsEpqEXiZL11grL/nW8IzWOxozO/nFecO0TNWzZg=;
+        b=r51U4f5KIWdWH4nskxXLlOtbf8vBmW3VfVMiG3q216s6PxDdik0KNFxFwYF8GGp5d7
+         /J7bm2ogEejwrOVnch4zQkBiZX7pguiBsG2FM92Wwseljws8r3wwwmJ5o8CLASYZ6Ztt
+         ABAVIkamO4ym5F2PGr0bDk+9A17566ZIorMIybrJo+4G2MoLORFyc8oNOnZFetCWzFlT
+         1XxpXJNnhnMYYq754ORpyyt1nTaReXWMXKOjanoGoRu/dIILPnbUv0DwuJ/emJHGaxBj
+         TgzcPeRAcCJJFIA08UIvUC02u7MxabRQnBqRxbmA/NJbsWX3kuHMz0amxhglAkZrHAqW
+         CsRA==
+X-Gm-Message-State: APjAAAXJqcexcAvOUG3PIkQ3kxQ1n4Kg2gkK7wRorbLXH9N5CxV5hBY6
+        V0z25rCe7cT+cub23eHHKHceBg==
+X-Google-Smtp-Source: APXvYqyXA9qWckeMWJ1FYgTNxW3Kl/SaHQcwWPkv+8Ov9g+q8rZ/yCmpPgqZaQwQyexxau4NGmLb3Q==
+X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr24999228pjb.21.1561388459522;
+        Mon, 24 Jun 2019 08:00:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e188sm1978374pfh.99.2019.06.24.08.00.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 08:00:58 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 08:00:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v18 09/15] drm/amdgpu: untag user pointers
+Message-ID: <201906240800.5677E3CF@keescook>
+References: <cover.1561386715.git.andreyknvl@google.com>
+ <1d036fc5bec4be059ee7f4f42bf7417dc44651dd.1561386715.git.andreyknvl@google.com>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR03MB4206A326130A81DCBAA62CE8AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHfXbvtuty8jirnSw0FwkmaW8fbhRiEXUDiwzKSJfd7KKSLtlV
-        y6Tyg5ZaytRMXDr9kKSr0Mx3KG2Kr4RZGZaSskyauiR8a6DZ5jXy2+/8/+c55/zhoQjFoNiD
-        itEkcFoNG6uSyMj6DlvfzsjvWL1rYd6N/jg3LaGXzZNiuiTvJj2wYCHo7qkBkrbdrRXRmbmP
-        pfSH5mIJPWppQbQpJ4y2mfpEdFVaQJALMz2YLmUMz1KYavNTMfMoo0jMdOnei5iRe50iZknf
-        QjKt2fkk0/DJQDAzNZ6nZOdlBy9zsTFJnDYg8KIs+ofRiOKH110v69GJU9GMcxZypgDvg5re
-        JWkWklEKXIHgQValSChm7cXbvFVnBsHEqxny35PCzH5CMJ4gmKpNX31iRVD9SbfS5Y5DwZKd
-        LnXweqyB0iXDChNYR0LlfLCDJdgXll5+ljhYjgNh3FZGOJjE28G6+EHs4A34HMw21SChxw26
-        i8ZW5jtjNSxbrBJhphc0WIsJgZXwZaxUJFw6J4WHQ4zAR6DUVo8EdoeJzlqpwFugN//+arLb
-        MFKRtpIMcAaCuuomQjAOQFtnv/0gyr7AF6qaAwT5EBQMTUkdMmBXGLS6CSe4Ql59ISHIcsi4
-        oxC6vWHkbd3qQCWUv5uT6JBKvyaYfk0Y/Zow+v97yxBpREoukY+L4vg9Gu6aP8/G8YmaKP/I
-        q3E1yP7fev90zjai5sVLJoQppHKR/+7AaoWYTeKT40wIKEK1Xl7O2iX5ZTb5Bqe9GqFNjOV4
-        E9pMkSqlPMVpNEyBo9gE7grHxXPaf66IcvZIRfqtwzjo+e8Op7apngNevNkvNLj9235bSM4m
-        P4/2F0XZ1V0nma/qnwMFFSVsRnHEL7IgWU1ubD3h0m/2G23Un94bfcjbp69qUnT4zXCAJdyz
-        wOdsSL3xzPhRp3Sl8sLuvlupX3KLMm8+MyfVLW/zDjyeaIx5/trdL6b5WIvREP6rVkXy0ezu
-        HYSWZ/8Cj1feuWsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xe7pJTwViDf63Kllc+fqezeL/o9es
-        FnMn1Vpc/f6S2eLkm6ssFj/btzBZdE5cwm5xedccNosHL/czWhzqi7b4eeg8k8X6Fn0HHo/3
-        N1rZPeatqfbY8Gg1q8fsjpmsHicmXGLyuN99nMnj76z9LB4HeiezeGy/No/Z4/MmuQCuKD2b
-        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MF6tWMRbc
-        4a5YcGoCawPjZ84uRk4OCQETiemdF5m7GLk4hASWMkrs3f+YDSIhLrF7/ltmCFtY4s+1LjaI
-        oteMEpdOLGAFSQgLhEu87G1lB7FFBPIkZt2eA1bELDCBRWLf3idQHc1MEndvX2QBqWIT0JT4
-        u/km2ApeATuJZz8XgK1gEVCVePvnMthUUYEIidm7GlggagQlTs58AmZzCsRK/H/5FqyXWUBd
-        4s+8S8wQtrzE9rdzoGxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgx
-        t7g0L10vOT93EyMwqrcd+7l5B+OljcGHGAU4GJV4eBccEYgVYk0sK67MPcQowcGsJMK7NBEo
-        xJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAhJNXEm9oamhuYWlobmxubGahJM7bIXAwRkgg
-        PbEkNTs1tSC1CKaPiYNTqoFxVlXc3XWvL1czzPGfrXKK9f5sYfms/h9VSZs2bvVzd1g06V1L
-        t9aTT4zyPGcvpoe1fH64/3bCbO45eq/OKxsU1BiGTroht4pzAafY38nzdnxKs/156d7XRZwN
-        KYYRmuEyy6Z5q7zwrjglf99yinqG47bmSZMkMx6L/UuvWsMremL3lTDlwC+sSizFGYmGWsxF
-        xYkAEVYLOgADAAA=
-X-CMS-MailID: 20190624145946eucas1p28bbd4bbfe65ae48ae48576c29b573800
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190526212026epcas3p3ef1bafa97e5da9dac02b26fa0a375c80
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190526212026epcas3p3ef1bafa97e5da9dac02b26fa0a375c80
-References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-        <CGME20190526212026epcas3p3ef1bafa97e5da9dac02b26fa0a375c80@epcas3p3.samsung.com>
-        <VI1PR03MB4206A326130A81DCBAA62CE8AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d036fc5bec4be059ee7f4f42bf7417dc44651dd.1561386715.git.andreyknvl@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.05.2019 23:20, Jonas Karlman wrote:
-> This patch enables Dynamic Range and Mastering InfoFrame on GXL, GXM and G12A.
->
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+On Mon, Jun 24, 2019 at 04:32:54PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends kernel ABI to allow to pass
+> tagged user pointers (with the top byte set to something else other than
+> 0x00) as syscall arguments.
+> 
+> In amdgpu_gem_userptr_ioctl() and amdgpu_amdkfd_gpuvm.c/init_user_pages()
+> an MMU notifier is set up with a (tagged) userspace pointer. The untagged
+> address should be used so that MMU notifiers for the untagged address get
+> correctly matched up with the right BO. This patch untag user pointers in
+> amdgpu_gem_userptr_ioctl() for the GEM case and in amdgpu_amdkfd_gpuvm_
+> alloc_memory_of_gpu() for the KFD case. This also makes sure that an
+> untagged pointer is passed to amdgpu_ttm_tt_get_user_pages(), which uses
+> it for vma lookups.
+> 
+> Suggested-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
 > ---
->  drivers/gpu/drm/meson/meson_dw_hdmi.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index df3f9ddd2234..f7761e698c03 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -966,6 +966,11 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  	dw_plat_data->input_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
->  	dw_plat_data->input_bus_encoding = V4L2_YCBCR_ENC_709;
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c          | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> index a6e5184d436c..5d476e9bbc43 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> @@ -1108,7 +1108,7 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
+>  		alloc_flags = 0;
+>  		if (!offset || !*offset)
+>  			return -EINVAL;
+> -		user_addr = *offset;
+> +		user_addr = untagged_addr(*offset);
+>  	} else if (flags & ALLOC_MEM_FLAGS_DOORBELL) {
+>  		domain = AMDGPU_GEM_DOMAIN_GTT;
+>  		alloc_domain = AMDGPU_GEM_DOMAIN_CPU;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+> index d4fcf5475464..e91df1407618 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+> @@ -287,6 +287,8 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
+>  	uint32_t handle;
+>  	int r;
 >  
-> +	if (dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-gxl-dw-hdmi") ||
-> +	    dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-gxm-dw-hdmi") ||
-> +	    dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-g12a-dw-hdmi"))
-> +		dw_plat_data->drm_infoframe = true;
+> +	args->addr = untagged_addr(args->addr);
 > +
-
-
-I see it follows meson_dw_hdmi.c practices, but maybe it is time to drop
-it and just add flag to meson_dw_hdmi_data, IMO the whole
-dw_hdmi_is_compatible function should be removed
-
-and replaced with fields/flags in meson_dw_hdmi_data - this is what
-of_device_id.data field was created for.
-
-
-Regards
-
-Andrzej
-
-
->  	platform_set_drvdata(pdev, meson_dw_hdmi);
+>  	if (offset_in_page(args->addr | args->size))
+>  		return -EINVAL;
 >  
->  	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
 
-
+-- 
+Kees Cook
