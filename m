@@ -2,134 +2,326 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A443C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B48C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C86020652
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300FD208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561371981;
+	bh=Bgo45ELP4Ju/A9tiOcqJ7Wqth8iVHeFxBk8b7zPOmG0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=pB7Bgn5bqBZLPF+SYhFXl5c7ZmaL0DCJPE1fErp6aNODKw7VPvY9XG569fv8ssEDt
+	 MiFo+A/d4qiZ4GKzoXko+qAq/Ou5A1dS5Oh4MSOx66IHNF3tyeKB3sE2qXY+1NnArw
+	 Hgj2bZ2lvpRVgwA3/D7i2gGWf2yTFVAfPYBo80WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfFXK0L convert rfc822-to-8bit (ORCPT
+        id S1729041AbfFXK0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:26:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42386 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727101AbfFXK0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:26:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE358AC98;
-        Mon, 24 Jun 2019 10:26:08 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/5] livepatch: Allow to distinguish different version of system state changes
-References: <20190611135627.15556-1-pmladek@suse.com>
-        <20190611135627.15556-4-pmladek@suse.com>
-Date:   Mon, 24 Jun 2019 12:26:07 +0200
-In-Reply-To: <20190611135627.15556-4-pmladek@suse.com> (Petr Mladek's message
-        of "Tue, 11 Jun 2019 15:56:25 +0200")
-Message-ID: <87o92n2sao.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 24 Jun 2019 06:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbfFXK0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:26:19 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A8520674;
+        Mon, 24 Jun 2019 10:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561371978;
+        bh=Bgo45ELP4Ju/A9tiOcqJ7Wqth8iVHeFxBk8b7zPOmG0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BoPczUMSQU8hXcLsNPsDd7HLM/6jufV+Ib8cx+qi8V4Ew98p17kUXF+v3h/HVMbkj
+         hyN328T+HXJvrHLbs0rR5qYXT6UIdt/6VBMZ2OwIOjDbusoB9mcfHyQ0ec/rUzoQXj
+         OgONKy3kAHjMpTQhH7O/yBN4wczvj9aoWYElOq10=
+Message-ID: <f120875a67c1421dd7cebbb796b2c68ddf4babf6.camel@kernel.org>
+Subject: Re: [PATCH v3 1/2] ceph: fix buffer length handling in virtual
+ xattrs
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        agruenba@redhat.com, Joe Perches <joe@perches.com>,
+        geert+renesas@glider.be, andriy.shevchenko@linux.intel.com
+Date:   Mon, 24 Jun 2019 06:26:15 -0400
+In-Reply-To: <CAOi1vP8bJcW8ViXhfuoCUqntqLj0bC56dc-9+MGwZvR9yHRFLA@mail.gmail.com>
+References: <20190621141833.17551-1-jlayton@kernel.org>
+         <20190621141833.17551-2-jlayton@kernel.org>
+         <CAOi1vP8bJcW8ViXhfuoCUqntqLj0bC56dc-9+MGwZvR9yHRFLA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Petr Mladek <pmladek@suse.com> writes:
+On Mon, 2019-06-24 at 12:00 +0200, Ilya Dryomov wrote:
+> On Fri, Jun 21, 2019 at 4:18 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > The convention with xattrs is to not store the termination with string
+> > data, given that it returns the length. This is how setfattr/getfattr
+> > operate.
+> > 
+> > Most of ceph's virtual xattr routines use snprintf to plop the string
+> > directly into the destination buffer, but snprintf always NULL
+> > terminates the string. This means that if we send the kernel a buffer
+> > that is the exact length needed to hold the string, it'll end up
+> > truncated.
+> > 
+> > Add new routines to format the string into an on-stack buffer that is
+> > always large enough to hold the whole thing and then memcpy the result
+> > into the destination buffer. Then, change over the virtual xattr
+> > routines to use the new helper functions as appropriate.
+> > 
+> > Finally, make the code return ERANGE if the destination buffer size was
+> > too small to hold the returned value.
+> > 
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/ceph/xattr.c | 103 ++++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 78 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+> > index 6621d27e64f5..359d3cbbb37b 100644
+> > --- a/fs/ceph/xattr.c
+> > +++ b/fs/ceph/xattr.c
+> > @@ -112,22 +112,47 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
+> >         return ret;
+> >  }
+> > 
+> > +/* Enough to hold any possible expression of integer TYPE in base 10 */
+> > +#define INT_STR_SIZE(_type)    3*sizeof(_type)+2
+> > +
+> > +/*
+> > + * snprintf always NULL terminates, but we need for xattrs to not be. For
+> > + * the integer vxattrs, just create an on-stack buffer for snprintf's
+> > + * destination, and just don't copy the termination to the actual buffer.
+> > + */
+> > +#define GENERATE_XATTR_INT_FORMATTER(_lbl, _format, _type)                  \
+> > +static size_t format_ ## _lbl ## _xattr(char *val, size_t size, _type src)   \
+> > +{                                                                           \
+> > +       size_t ret;                                                          \
+> > +       char buf[INT_STR_SIZE(_type)];                                       \
+> > +                                                                            \
+> > +       ret = snprintf(buf, size ? sizeof(buf) : 0, _format, src);           \
+> > +       if (ret <= size)                                                     \
+> > +               memcpy(val, buf, ret);                                       \
+> > +       return ret;                                                          \
+> > +}
+> > +
+> > +GENERATE_XATTR_INT_FORMATTER(u, "%u", unsigned int)
+> > +GENERATE_XATTR_INT_FORMATTER(d, "%d", int)
+> > +GENERATE_XATTR_INT_FORMATTER(lld, "%lld", long long)
+> > +GENERATE_XATTR_INT_FORMATTER(llu, "%llu", unsigned long long)
+> > +
+> >  static size_t ceph_vxattrcb_layout_stripe_unit(struct ceph_inode_info *ci,
+> >                                                char *val, size_t size)
+> >  {
+> > -       return snprintf(val, size, "%u", ci->i_layout.stripe_unit);
+> > +       return format_u_xattr(val, size, ci->i_layout.stripe_unit);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_layout_stripe_count(struct ceph_inode_info *ci,
+> >                                                 char *val, size_t size)
+> >  {
+> > -       return snprintf(val, size, "%u", ci->i_layout.stripe_count);
+> > +       return format_u_xattr(val, size, ci->i_layout.stripe_count);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_layout_object_size(struct ceph_inode_info *ci,
+> >                                                char *val, size_t size)
+> >  {
+> > -       return snprintf(val, size, "%u", ci->i_layout.object_size);
+> > +       return format_u_xattr(val, size, ci->i_layout.object_size);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
+> > @@ -141,10 +166,14 @@ static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
+> > 
+> >         down_read(&osdc->lock);
+> >         pool_name = ceph_pg_pool_name_by_id(osdc->osdmap, pool);
+> > -       if (pool_name)
+> > -               ret = snprintf(val, size, "%s", pool_name);
+> > -       else
+> > -               ret = snprintf(val, size, "%lld", (unsigned long long)pool);
+> > +       if (pool_name) {
+> > +               ret = strlen(pool_name);
+> > +
+> > +               if (ret <= size)
+> > +                       memcpy(val, pool_name, ret);
+> > +       } else {
+> > +               ret = format_lld_xattr(val, size, pool);
+> > +       }
+> >         up_read(&osdc->lock);
+> >         return ret;
+> >  }
+> > @@ -155,7 +184,11 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
+> >         int ret = 0;
+> >         struct ceph_string *ns = ceph_try_get_string(ci->i_layout.pool_ns);
+> >         if (ns) {
+> > -               ret = snprintf(val, size, "%.*s", (int)ns->len, ns->str);
+> > +               ret = ns->len;
+> > +
+> > +               if (ret <= size)
+> > +                       memcpy(val, ns->str, ns->len);
+> > +
+> >                 ceph_put_string(ns);
+> >         }
+> >         return ret;
+> > @@ -166,50 +199,61 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
+> >  static size_t ceph_vxattrcb_dir_entries(struct ceph_inode_info *ci, char *val,
+> >                                         size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_files + ci->i_subdirs);
+> > +       return format_lld_xattr(val, size, ci->i_files + ci->i_subdirs);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_files(struct ceph_inode_info *ci, char *val,
+> >                                       size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_files);
+> > +       return format_lld_xattr(val, size, ci->i_files);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_subdirs(struct ceph_inode_info *ci, char *val,
+> >                                         size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_subdirs);
+> > +       return format_lld_xattr(val, size, ci->i_subdirs);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_rentries(struct ceph_inode_info *ci, char *val,
+> >                                          size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_rfiles + ci->i_rsubdirs);
+> > +       return format_lld_xattr(val, size, ci->i_rfiles + ci->i_rsubdirs);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_rfiles(struct ceph_inode_info *ci, char *val,
+> >                                        size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_rfiles);
+> > +       return format_lld_xattr(val, size, ci->i_rfiles);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
+> >                                          size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_rsubdirs);
+> > +       return format_lld_xattr(val, size, ci->i_rsubdirs);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
+> >                                        size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld", ci->i_rbytes);
+> > +       return format_lld_xattr(val, size, ci->i_rbytes);
+> > +}
+> > +
+> > +static size_t format_ts64_xattr(char *val, size_t size, struct timespec64 *src)
+> > +{
+> > +       size_t ret;
+> > +       char buf[INT_STR_SIZE(long long) + 1 + 9];
+> > +
+> > +       ret = snprintf(buf, size ? sizeof(buf) : 0, "%lld.%09ld", src->tv_sec,
+> > +                      src->tv_nsec);
+> > +       if (ret <= size)
+> > +               memcpy(val, buf, ret);
+> > +       return ret;
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
+> >                                        size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
+> > -                       ci->i_rctime.tv_nsec);
+> > +       return format_ts64_xattr(val, size, &ci->i_rctime);
+> >  }
+> > 
+> >  /* dir pin */
+> > @@ -221,7 +265,7 @@ static bool ceph_vxattrcb_dir_pin_exists(struct ceph_inode_info *ci)
+> >  static size_t ceph_vxattrcb_dir_pin(struct ceph_inode_info *ci, char *val,
+> >                                      size_t size)
+> >  {
+> > -       return snprintf(val, size, "%d", (int)ci->i_dir_pin);
+> > +       return format_d_xattr(val, size, ci->i_dir_pin);
+> >  }
+> > 
+> >  /* quotas */
+> > @@ -241,20 +285,27 @@ static bool ceph_vxattrcb_quota_exists(struct ceph_inode_info *ci)
+> >  static size_t ceph_vxattrcb_quota(struct ceph_inode_info *ci, char *val,
+> >                                   size_t size)
+> >  {
+> > -       return snprintf(val, size, "max_bytes=%llu max_files=%llu",
+> > -                       ci->i_max_bytes, ci->i_max_files);
+> > +       size_t ret;
+> > +       char buf[(2*INT_STR_SIZE(unsigned long long)) + 10 + 11];
+> > +
+> > +       ret = snprintf(buf, size ? sizeof(buf) : 0,
+> > +                      "max_bytes=%llu max_files=%llu",
+> > +                      ci->i_max_bytes, ci->i_max_files);
+> > +       if (ret <= size)
+> > +               memcpy(val, buf, ret);
+> > +       return ret;
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_quota_max_bytes(struct ceph_inode_info *ci,
+> >                                             char *val, size_t size)
+> >  {
+> > -       return snprintf(val, size, "%llu", ci->i_max_bytes);
+> > +       return format_llu_xattr(val, size, ci->i_max_bytes);
+> >  }
+> > 
+> >  static size_t ceph_vxattrcb_quota_max_files(struct ceph_inode_info *ci,
+> >                                             char *val, size_t size)
+> >  {
+> > -       return snprintf(val, size, "%llu", ci->i_max_files);
+> > +       return format_llu_xattr(val, size, ci->i_max_files);
+> >  }
+> > 
+> >  /* snapshots */
+> > @@ -266,8 +317,7 @@ static bool ceph_vxattrcb_snap_btime_exists(struct ceph_inode_info *ci)
+> >  static size_t ceph_vxattrcb_snap_btime(struct ceph_inode_info *ci, char *val,
+> >                                        size_t size)
+> >  {
+> > -       return snprintf(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
+> > -                       ci->i_snap_btime.tv_nsec);
+> > +       return format_ts64_xattr(val, size, &ci->i_snap_btime);
+> >  }
+> > 
+> >  #define CEPH_XATTR_NAME(_type, _name)  XATTR_CEPH_PREFIX #_type "." #_name
+> 
+> Hi Jeff,
+> 
+> This seems over-engineered to me.  You have four functions just for
+> ints, two more for ts64 and quota and several ad-hoc %s memcpys.  Why
+> not define a single function with a generously-sized buffer, BUG in
+> case it's too small and take a format string?
 
-> ---
->  include/linux/livepatch.h |  2 ++
->  kernel/livepatch/core.c   |  8 ++++++++
->  kernel/livepatch/state.c  | 40 +++++++++++++++++++++++++++++++++++++++-
->  kernel/livepatch/state.h  |  9 +++++++++
->  4 files changed, 58 insertions(+), 1 deletion(-)
->  create mode 100644 kernel/livepatch/state.h
->
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index 591abdee30d7..8bc4c6cc3f3f 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -135,10 +135,12 @@ struct klp_object {
->  /**
->   * struct klp_state - state of the system modified by the livepatch
->   * @id:		system state identifier (non zero)
-> + * @version:	version of the change (non-zero)
->   * @data:	custom data
->   */
->  struct klp_state {
->  	int id;
-> +	int version;
->  	void *data;
->  };
->  
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 24c4a13bd26c..614642719825 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -21,6 +21,7 @@
->  #include <asm/cacheflush.h>
->  #include "core.h"
->  #include "patch.h"
-> +#include "state.h"
->  #include "transition.h"
->  
->  /*
-> @@ -1003,6 +1004,13 @@ int klp_enable_patch(struct klp_patch *patch)
->  
->  	mutex_lock(&klp_mutex);
->  
-> +	if(!klp_is_patch_compatible(patch)) {
-> +		pr_err("Livepatch patch (%s) is not compatible with the already installed livepatches.\n",
-> +			patch->mod->name);
-> +		mutex_unlock(&klp_mutex);
-> +		return -EINVAL;
-> +	}
-> +
->  	ret = klp_init_patch_early(patch);
->  	if (ret) {
->  		mutex_unlock(&klp_mutex);
+Having to declare a 64 byte (or 128 byte or whatever) buffer on the
+stack for an int seemed a bit wasteful, but ok. We can certainly do it
+that way instead.
 
+> Regardless, I would much prefer
+> 
+>   char buf[64];
+> 
+> over
+> 
+>   #define INT_STR_SIZE(_type)    3*sizeof(_type)+2
+>   char buf[(2*INT_STR_SIZE(unsigned long long)) + 10 + 11];
+> 
 
-Just as a remark: klp_reverse_transition() could still transition back
-to a !klp_is_patch_compatible() patch.
-
-I don't think it's much of a problem, because for live patches
-introducing completely new states to the system, it is reasonable
-to assume that they'll start applying incompatible changes only from
-their ->post_patch(), I guess.
-
-For state "upgrades" to higher versions, it's not so clear though and
-some care will be needed. But I think these could still be handled
-safely at the cost of some complexity in the new live patch's
-->post_patch().
-
-Another detail is that ->post_unpatch() will be called for the new live
-patch which has been unpatched due to transition reversal and one would
-have to be careful not to free shared state from under the older, still
-active live patch. How would ->post_unpatch() distinguish between
-transition reversal and "normal" live patch disabling?  By
-klp_get_prev_state() != NULL?
-
-Perhaps transition reversal should be mentioned in the documentation?
-
-Thanks,
-
-Nicolai
-
-
+We'll have to agree to disagree here. I rather like seeing the math for
+the buffer length calculations expanded out, particularly in the event
+that they need to be changed in the future.
 -- 
-SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB
-21284 (AG Nürnberg)
+Jeff Layton <jlayton@kernel.org>
+
