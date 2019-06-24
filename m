@@ -2,120 +2,106 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FD1C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BB7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4392054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884402054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJAnkSq9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kYwBf7aN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfFXJlk (ORCPT
+        id S1728457AbfFXJmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:41:40 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38848 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfFXJlk (ORCPT
+        Mon, 24 Jun 2019 05:42:44 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59630 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfFXJmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:41:40 -0400
-Received: by mail-yw1-f68.google.com with SMTP id k125so5586002ywe.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=u7V8Y/svVqpZMFRwTixoQtso+KwwiAflO76wYwcLCwc=;
-        b=AJAnkSq9urX/SgB0iyZYZ3sYrMhkBQbukYZV9Tk0Q8YPBamjJueRwljXf0tlIb9GTS
-         vKOnQh36JFOo9tlUIfmufWeXo7VMM7ZNYZL+zX29WjYRNh88l9Kk+9lp5LZzPQx1cvJI
-         wwA0nT7R/ywdSw1wPOQGMYhAi5syDHaQ2cXHDlY2M+jqVI0DsynY9yTQKAV73r1xScR8
-         s2/jyMheB4ubCIUkEDEPXsF+pIGy8Y+sWNKSLvMtTqbWgkRhUlvOzWZtcvvk56cKMvQj
-         XECr1nWzZhjRNseymLXV9rZe0hw9AafFPvkGCDNUbvStkh6NuKMhfCPTziG2/i88Jvtl
-         tPgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u7V8Y/svVqpZMFRwTixoQtso+KwwiAflO76wYwcLCwc=;
-        b=HgbTXr+pMtDJCgkcq7CJDoPvTaxO1TjN7FvOOecemEbDbj+RWDTYr3CZ7duFxt6xSv
-         3vXBHy1S5GN7OZf8QGA6kVwUzItjjQYb41ezB/VQiUxIYdzq/1xrW9Inbf698hJn621j
-         wRrHS5mHd88X9OEwBVyfuuLc+WO8q5uJVAUH0IwbHEOvRHnblSSaBkBRPr6J7H/lSeI7
-         J9dvW8wbcueolKx9VOSMnCK3Q5EM6qLwjGCsqS9GA0GtelXpStutlejZ6TH+geF9K7UN
-         Xk301ht+hQuytfSdRj+Qx9r6P+RQY423FefB5mssItyC6D4LjH++b+jXLQIXycE+h/o1
-         3h0w==
-X-Gm-Message-State: APjAAAXm8y995CzXozjztMmxxRD65I6xcD15+Pv/fzmQDSscPJgOfaKw
-        +lirPf+sUepP4RkQHM4brKToMt5zn0MDbK3W9NlBw7Ca
-X-Google-Smtp-Source: APXvYqzCtMpSgY48T3u1VN3+5omx2myWrqHuWpKYIdbGpQAXuo+geGpyiy7nfmKnmoYZYTH/0r4k4Ek8y8eMikufcaE=
-X-Received: by 2002:a81:1bc5:: with SMTP id b188mr46386195ywb.232.1561369299261;
- Mon, 24 Jun 2019 02:41:39 -0700 (PDT)
+        Mon, 24 Jun 2019 05:42:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H/a7o7NM+nO05o9bp/X9ThGKJR186yctXKFyGZl+Eww=; b=kYwBf7aNgA1Sz6MvtRAIwRL8O
+        be5F2f5R9WaFQplWvUQAKXRY/b1HOge8zYJBOzov18O55uNA3M9I3SvHAbeUEu6ZAfA9Ju7bsRQ6z
+        8/80AT51DOVBewEKYTu8/pGj+A8ax3tlInljVtlTJ4dp416d5997yhmuRJEbsKaS9bErWV643h+pp
+        PqsjSZA+0rOWTpZYvHkNkh6ty8FKQmUq6M2DxVPcexdVRCEpy4s+zAmBGSdE2x0iK+QI2dfERTTQB
+        DFt5Q1sGmzG278IlbPJSu1ae3Nfip0X2h0sP2FBRZEjGH6hA+qLgjdYL9E9KH1Sym0idMGqJdfB1S
+        a59GJ/h6A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59022)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfLUh-00078P-Sd; Mon, 24 Jun 2019 10:42:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfLUf-0005y1-Fd; Mon, 24 Jun 2019 10:42:33 +0100
+Date:   Mon, 24 Jun 2019 10:42:33 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v4 3/5] net: macb: add support for c45 PHY
+Message-ID: <20190624094233.3xick3snqbcm55gu@shell.armlinux.org.uk>
+References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
+ <1561281797-13796-1-git-send-email-pthombar@cadence.com>
+ <20190623101252.olfxbls3phgxttcb@shell.armlinux.org.uk>
+ <CO2PR07MB24695E11E3931BE2E5664054C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190624050937.6977-1-houweitaoo@gmail.com>
-In-Reply-To: <20190624050937.6977-1-houweitaoo@gmail.com>
-From:   Uladzislau Rezki <urezki@gmail.com>
-Date:   Mon, 24 Jun 2019 11:41:28 +0200
-Message-ID: <CA+KHdyWTst1GFUC3JqHAieuV19UdR67LEPhvDKYZ569u2L1qbA@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmalloc: fix a compile warning in mm
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Penyaev <rpenyaev@suse.de>, Roman Gushchin <guro@fb.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CO2PR07MB24695E11E3931BE2E5664054C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Hou.
+On Mon, Jun 24, 2019 at 06:47:48AM +0000, Parshuram Raju Thombare wrote:
+> >Which Clause 45 PHY are you using?
+> 
+> I am using emulated PHY in our CSP environment.
 
-It has already been fixed. Please have a look at:
+Concentrated Solar Power?  Chartered Society of Physiotherapy?  Center
+for Space Physics?
 
-https://ozlabs.org/~akpm/mmotm/broken-out/mm-vmalloc-avoid-bogus-wmaybe-uni=
-nitialized-warning.patch
-https://ozlabs.org/~akpm/mmotm/broken-out/mm-vmalloc-avoid-bogus-wmaybe-uni=
-nitialized-warning-fix.patch
+Sorry, I don't know what a "CSP environment" is in this context, neither
+it seems does google.  TLAs in general tend to be bad when it comes to
+communication.
 
---
-Vlad Rezki
+However, it seems from that comment that you're not talking about real
+hardware.  Is there no real hardware out there supporting 10G mode with
+these proposed driver changes yet?
 
-On Mon, Jun 24, 2019 at 7:09 AM Weitao Hou <houweitaoo@gmail.com> wrote:
->
-> mm/vmalloc.c: In function =E2=80=98pcpu_get_vm_areas=E2=80=99:
-> mm/vmalloc.c:976:4: warning: =E2=80=98lva=E2=80=99 may be used uninitiali=
-zed in
-> this function [-Wmaybe-uninitialized]
-> insert_vmap_area_augment(lva, &va->rb_node,
->
-> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
-> ---
->  mm/vmalloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 4c9e150e5ad3..78c5617fdf3f 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -913,7 +913,7 @@ adjust_va_to_fit_type(struct vmap_area *va,
->         unsigned long nva_start_addr, unsigned long size,
->         enum fit_type type)
->  {
-> -       struct vmap_area *lva;
-> +       struct vmap_area *lva =3D NULL;
->
->         if (type =3D=3D FL_FIT_TYPE) {
->                 /*
-> --
-> 2.18.0
->
+> This is using 10G generic PHY driver, with PHY having compatible = "ethernet-phy-ieee802.3-c45"
 
+The generic 10G PHY driver is really dumb and basic - it only supports
+a very basic 10G mode.
 
---=20
-Uladzislau Rezki
+> 
+> Hi Andrew,
+> Can I add your "Reviewed-by" tag for this patch. You added it to this patch in last series.
+> 
+> Regards,
+> Parshuram Thombare
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
