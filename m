@@ -2,181 +2,136 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEABC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD882C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2848120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561358876;
-	bh=Z5He2uD9MlfIuLNKbxZIoYtCPRvHPO8k/v21KJxmYq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CRcvQk1TX4mk8mBVQ7a7sPN3PTKCyjj2ShEqvVRNn6YD4oStT5ilXftWG5feYDdl+
-	 CzJ/kFzlQ6br1KEn2UAFK6O+1GzhbZ2PaMnajQFIeCC7AyAP81KIWB1RdkdGIPzGkz
-	 wPScnoeO7gKvAZ4R/rKCNDd/4QhpkTDjyzc9bvPg=
+	by mail.kernel.org (Postfix) with ESMTP id 9253A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ealxeIkq";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZOdUzn5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfFXGry (ORCPT
+        id S1727090AbfFXGsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbfFXGry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:47:54 -0400
-Received: from localhost (unknown [106.201.35.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 337C120674;
-        Mon, 24 Jun 2019 06:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561358872;
-        bh=Z5He2uD9MlfIuLNKbxZIoYtCPRvHPO8k/v21KJxmYq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2QViUH+qEgmWJE4F5AvyDe6LvRqsgIt/PZ6vBKyrfY6vaFVugDnxfpJZvAd+hgVH2
-         iYZAucOQcIWIlVYGa2lnod/6QZkAnL1Zuf3EIHDkEodkglJmQFnKDv8f7umchVx4jH
-         xhYjd+JM+YtMIPmUUKJyPCR/t2Zmy2qHSwUOXYKQ=
-Date:   Mon, 24 Jun 2019 12:14:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     jassisinghbrar@gmail.com
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, orito.takao@socionext.com,
-        masami.hiramatsu@linaro.org, kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
- Milbeaut platforms
-Message-ID: <20190624064442.GW2962@vkoul-mobl>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005247.2048-1-jassisinghbrar@gmail.com>
+        Mon, 24 Jun 2019 02:48:02 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:41316 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726416AbfFXGsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 02:48:01 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O6bIk6031683;
+        Sun, 23 Jun 2019 23:47:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=2avDEnYKRK7mhfM7SsiMF04K3wliSvm5Ulug0rPG8Lo=;
+ b=ealxeIkqndyEo4nINtBOLwfr8WLBS537LgX8riTqdk8ejN+6Bl5b/byFQNU1+zpMPQf/
+ ybTCIQ/3Adf+DOU4u62S5SKWOUPchYCDsOclQ7lrnqhiE3Pd0GifJ6UIfuakMlFMPfd5
+ t7Mug2Z0bM5yVdPk4iwp5i/bbvQdOt8OtN/qMc/27mqtNEJbxobNPOHfP0r3aJAdorj9
+ hwb2wRKICwYzLFkIByo8gvFac2NgmBBmqspRuFAqPy7bh3VXKxQylmIpVNdt4dDraK4Y
+ VLOHoJe402MuNJ+iprQNlafdNvHihQ7HyiX8oRCunQBOUc+nnxMZDrgdltjDBVJzvIZs /Q== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2059.outbound.protection.outlook.com [104.47.33.59])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2t9gvs60nt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 23 Jun 2019 23:47:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2avDEnYKRK7mhfM7SsiMF04K3wliSvm5Ulug0rPG8Lo=;
+ b=ZOdUzn5xCHAXjl0zGL9aunpbGclwIrFrX0YjR7CkeX6FbK2g31ddq9fHsby0ZAt1ws6hT4KMrftkmXcnHQfmPOsZJr6MuLITKUoMR+u2v2Sm/3PvFVIE1ttEKiKyMsjUdkBv6mRYxiNnMhleMjWWN3zyeAkSAeDLVx18Wd6SaZ8=
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
+ CO2PR07MB2646.namprd07.prod.outlook.com (10.166.200.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 06:47:48 +0000
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1987.014; Mon, 24 Jun 2019
+ 06:47:48 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: RE: [PATCH v4 3/5] net: macb: add support for c45 PHY
+Thread-Topic: [PATCH v4 3/5] net: macb: add support for c45 PHY
+Thread-Index: AQHVKaVPGC45x6EWd0uJPVpf/aeuSqapBSQAgAFXn5A=
+Date:   Mon, 24 Jun 2019 06:47:48 +0000
+Message-ID: <CO2PR07MB24695E11E3931BE2E5664054C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
+ <1561281797-13796-1-git-send-email-pthombar@cadence.com>
+ <20190623101252.olfxbls3phgxttcb@shell.armlinux.org.uk>
+In-Reply-To: <20190623101252.olfxbls3phgxttcb@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1mODJiNGIzYy05NjRiLTExZTktODRmOC0wNGQzYjAyNzc0NGFcYW1lLXRlc3RcZjgyYjRiM2UtOTY0Yi0xMWU5LTg0ZjgtMDRkM2IwMjc3NDRhYm9keS50eHQiIHN6PSI0MDciIHQ9IjEzMjA1ODMyNDY1MTk2MDg2MyIgaD0iaHc3ZmZrZzVXZ0RrQVRaS2RPT2x2NEx1dHpZPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
+x-dg-rorf: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ff51698-6cce-457e-8c15-08d6f86fdee6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2646;
+x-ms-traffictypediagnostic: CO2PR07MB2646:
+x-microsoft-antispam-prvs: <CO2PR07MB26465CA9410122B1A9F41BC2C1E00@CO2PR07MB2646.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:983;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(189003)(36092001)(66946007)(73956011)(76116006)(66556008)(64756008)(66476007)(66446008)(476003)(486006)(11346002)(4326008)(52536014)(33656002)(186003)(5660300002)(4744005)(2906002)(102836004)(256004)(55236004)(6506007)(76176011)(26005)(74316002)(478600001)(66066001)(446003)(25786009)(6436002)(9686003)(78486014)(8936002)(305945005)(7736002)(99286004)(86362001)(14454004)(7696005)(229853002)(53936002)(6246003)(68736007)(71200400001)(71190400001)(107886003)(6916009)(54906003)(3846002)(316002)(55016002)(81166006)(81156014)(8676002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2646;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: B0o9CubzCS9rGeAaHiIeMOn24zIVG5g6UROdsut8S7UYcs7gVHtGI2hk0p7s7uIhDGJhbl/TNYwlIHdtKcgFGoHfb3P5cUcCpJe51FAQDui42KLCKISvzo+7aR1Qd020AwKZBOrTNmaW20ZKSJ/xNZ7eA5RR3zGgG3lopZv/oRRQtRToqukjrgezSSZR7jiRy2AGdL+tDXEenCRQ7syEEblj5RnLKc2526f6qOrzenjwoB8YtLOM9iudSuF7Ehh0cLGoFRewExWu8JDU1dzgujXwIKhdlXKqfB/WwQ938+YJwE6jFP3tCIpYpgRacwflhKDVH0R5iKESjG4KvwJn453aFR9RDqU6yZYFbJ8Jwq+v0zjpatC0+J3iYDxcI6vs+WAF07b/aZ9Al+T7aZupNC5uG7OCTrJQTyYa0JNUvf8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613005247.2048-1-jassisinghbrar@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ff51698-6cce-457e-8c15-08d6f86fdee6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 06:47:48.2391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2646
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=779 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
+>Which Clause 45 PHY are you using?
 
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
+I am using emulated PHY in our CSP environment.
+This is using 10G generic PHY driver, with PHY having compatible =3D "ether=
+net-phy-ieee802.3-c45"
 
-Do we need both, IIRC of_dma.h does include of.h!
+Hi Andrew,
+Can I add your "Reviewed-by" tag for this patch. You added it to this patch=
+ in last series.
 
-> +/* mc->vc.lock must be held by caller */
-> +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
-> +				struct milbeaut_hdmac_desc *md)
-> +{
-> +	struct scatterlist *sg;
-> +	u32  cb, ca, src_addr, dest_addr, len;
-           ^^
-double space
-
-> +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
-> +{
-> +	struct milbeaut_hdmac_chan *mc = dev_id;
-> +	struct milbeaut_hdmac_desc *md;
-> +	irqreturn_t ret = IRQ_HANDLED;
-> +	u32 val;
-> +
-> +	spin_lock(&mc->vc.lock);
-> +
-> +	/* Ack and Disable irqs */
-> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
-> +	val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
-                                         ^^^^
-Magic ..?
-
-> +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
-> +{
-> +	struct virt_dma_chan *vc = to_virt_chan(chan);
-> +	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-> +	u32 val;
-> +
-> +	spin_lock(&mc->vc.lock);
-> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
-> +	val |= MLB_HDMAC_PB;
-> +	writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
-
-We really should have an updatel() and friends in kernel, feel free to
-add in your driver though!
-
-> +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
-> +				    struct milbeaut_hdmac_device *mdev,
-> +				    int chan_id)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
-> +	char *irq_name;
-> +	int irq, ret;
-> +
-> +	irq = platform_get_irq(pdev, chan_id);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
-> +			chan_id);
-> +		return irq;
-> +	}
-> +
-> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
-> +				  chan_id);
-> +	if (!irq_name)
-> +		return -ENOMEM;
-> +
-> +	ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
-> +			       IRQF_SHARED, irq_name, mc);
-
-I tend to dislike using devm_request_irq(), we have no control over when
-the irq is freed and what is a spirious irq is running while we are
-unrolling, so IMHO it make sense to free up and ensure all tasklets are
-quiesced when remove returns
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	mc->mdev = mdev;
-> +	mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
-> +	mc->vc.desc_free = milbeaut_hdmac_desc_free;
-> +	vchan_init(&mc->vc, &mdev->ddev);
-
-who kills the vc->task?
-
-> +static int milbeaut_hdmac_remove(struct platform_device *pdev)
-> +{
-> +	struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
-> +	struct dma_chan *chan;
-> +	int ret;
-> +
-> +	/*
-> +	 * Before reaching here, almost all descriptors have been freed by the
-> +	 * ->device_free_chan_resources() hook. However, each channel might
-> +	 * be still holding one descriptor that was on-flight at that moment.
-> +	 * Terminate it to make sure this hardware is no longer running. Then,
-> +	 * free the channel resources once again to avoid memory leak.
-> +	 */
-> +	list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
-> +		ret = dmaengine_terminate_sync(chan);
-> +		if (ret)
-> +			return ret;
-> +		milbeaut_hdmac_free_chan_resources(chan);
-> +	}
-> +
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&mdev->ddev);
-> +	clk_disable_unprepare(mdev->clk);
-
-And as suspected we have active tasklets and irq at this time :(
--- 
-~Vinod
+Regards,
+Parshuram Thombare
