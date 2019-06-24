@@ -2,185 +2,140 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938FCC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645A6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F4420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446C020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfFXKyw (ORCPT
+        id S1729147AbfFXK5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:54:52 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42214 "EHLO inva021.nxp.com"
+        Mon, 24 Jun 2019 06:57:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:46956 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728761AbfFXKyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:54:52 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6FA6B2005E1;
-        Mon, 24 Jun 2019 12:54:49 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F92B2005D9;
-        Mon, 24 Jun 2019 12:54:49 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D2033205D1;
-        Mon, 24 Jun 2019 12:54:48 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] clk: imx8mm: Switch to platform driver
-Date:   Mon, 24 Jun 2019 13:54:32 +0300
-Message-Id: <1561373672-3533-1-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728477AbfFXK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:57:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CCEB2B;
+        Mon, 24 Jun 2019 03:57:39 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F3063F718;
+        Mon, 24 Jun 2019 03:57:38 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 11:57:36 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] kernel/isolation: Asset that a housekeeping CPU comes up
+ at boot time
+Message-ID: <20190624105729.3isejrp4455suxaz@e107158-lin.cambridge.arm.com>
+References: <20190601113919.2678-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190601113919.2678-1-npiggin@gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make the clock provider a platform driver
-all the data and code needs to be outside of .init section.
+On 06/01/19 21:39, Nicholas Piggin wrote:
+> With the change to allow the boot CPU0 to be isolated, it is possible
+> to specify command line options that result in no housekeeping CPU
+> online at boot.
+> 
+> An 8 CPU system booted with "nohz_full=0-6 maxcpus=4", for example.
+> 
+> It is not easily possible at housekeeping init time to know all the
+> various SMP options that will result in an invalid configuration, so
+> this patch adds a sanity check after SMP init, to ensure that a
+> housekeeping CPU has been onlined.
+> 
+> The panic is undesirable, but it's better than the alternative of an
+> obscure non deterministic failure. The panic will reliably happen
+> when advanced parameters are used incorrectly.
+> 
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  kernel/sched/isolation.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 123ea07a3f3b..7b9e1e0d4ec3 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -63,6 +63,29 @@ void __init housekeeping_init(void)
+>  	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
+>  }
+>  
+> +static int __init housekeeping_verify_smp(void)
+> +{
+> +	int cpu;
+> +
+> +	/*
+> +	 * Early housekeeping setup is done before CPUs come up, and there are
+> +	 * a range of options scattered around that can restrict which CPUs
+> +	 * come up. It is possible to pass in a combination of housekeeping
+> +	 * and SMP arguments that result in housekeeping assigned to an
+> +	 * offline CPU.
+> +	 *
+> +	 * Check that condition here after SMP comes up, and give a useful
+> +	 * error message rather than an obscure non deterministic crash or
+> +	 * hang later.
+> +	 */
+> +	for_each_online_cpu(cpu) {
+> +		if (cpumask_test_cpu(cpu, housekeeping_mask))
+> +			return 0;
+> +	}
+> +	panic("Housekeeping: nohz_full= or isolcpus= resulted in no online CPUs for housekeeping.\n");
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- drivers/clk/imx/clk-imx8mm.c | 52 +++++++++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 18 deletions(-)
+I am hitting this panic when I boot my juno board.
 
-diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-index 6b8e75d..f2516c5 100644
---- a/drivers/clk/imx/clk-imx8mm.c
-+++ b/drivers/clk/imx/clk-imx8mm.c
-@@ -68,43 +68,43 @@ static const struct imx_pll14xx_rate_table imx8mm_drampll_tbl[] = {
- 	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
- };
- 
--static struct imx_pll14xx_clk imx8mm_audio_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_audio_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mm_audiopll_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_audiopll_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_video_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_video_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mm_videopll_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_videopll_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_dram_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_dram_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mm_drampll_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_drampll_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_arm_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_arm_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mm_pll1416x_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_gpu_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_gpu_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mm_pll1416x_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_vpu_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_vpu_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mm_pll1416x_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
- };
- 
--static struct imx_pll14xx_clk imx8mm_sys_pll __initdata = {
-+static struct imx_pll14xx_clk imx8mm_sys_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mm_pll1416x_tbl,
- 		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
-@@ -374,7 +374,7 @@ static const char *imx8mm_clko1_sels[] = {"osc_24m", "sys_pll1_800m", "osc_27m",
- static struct clk *clks[IMX8MM_CLK_END];
- static struct clk_onecell_data clk_data;
- 
--static struct clk ** const uart_clks[] __initconst = {
-+static struct clk ** const uart_clks[] = {
- 	&clks[IMX8MM_CLK_UART1_ROOT],
- 	&clks[IMX8MM_CLK_UART2_ROOT],
- 	&clks[IMX8MM_CLK_UART3_ROOT],
-@@ -382,19 +382,20 @@ static struct clk ** const uart_clks[] __initconst = {
- 	NULL
- };
- 
--static int __init imx8mm_clocks_init(struct device_node *ccm_node)
-+static int imx8mm_clocks_probe(struct platform_device *pdev)
+
+I have CONFIG_CPU_ISOLATION=y but I don't pass nohuz_full nor isolcpus in the
+commandline. I think what's going on is that housekeeping_setup() doesn't get
+called and hence housekeeping_mask isn't initialized in my case, causing this
+check to fail and trigger the panic.
+
+The below seems to 'fix' it though not sure if it's the right way forward.
+A revert obviously fixes it too but I doubt we want that :-)
+
+
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 7b9e1e0d4ec3..a9ca8628c1a2 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -67,6 +67,9 @@ static int __init housekeeping_verify_smp(void)
  {
--	struct device_node *np;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	void __iomem *base;
- 	int ret;
+ 	int cpu;
  
- 	clks[IMX8MM_CLK_DUMMY] = imx_clk_fixed("dummy", 0);
--	clks[IMX8MM_CLK_24M] = of_clk_get_by_name(ccm_node, "osc_24m");
--	clks[IMX8MM_CLK_32K] = of_clk_get_by_name(ccm_node, "osc_32k");
--	clks[IMX8MM_CLK_EXT1] = of_clk_get_by_name(ccm_node, "clk_ext1");
--	clks[IMX8MM_CLK_EXT2] = of_clk_get_by_name(ccm_node, "clk_ext2");
--	clks[IMX8MM_CLK_EXT3] = of_clk_get_by_name(ccm_node, "clk_ext3");
--	clks[IMX8MM_CLK_EXT4] = of_clk_get_by_name(ccm_node, "clk_ext4");
-+	clks[IMX8MM_CLK_24M] = of_clk_get_by_name(np, "osc_24m");
-+	clks[IMX8MM_CLK_32K] = of_clk_get_by_name(np, "osc_32k");
-+	clks[IMX8MM_CLK_EXT1] = of_clk_get_by_name(np, "clk_ext1");
-+	clks[IMX8MM_CLK_EXT2] = of_clk_get_by_name(np, "clk_ext2");
-+	clks[IMX8MM_CLK_EXT3] = of_clk_get_by_name(np, "clk_ext3");
-+	clks[IMX8MM_CLK_EXT4] = of_clk_get_by_name(np, "clk_ext4");
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
- 	base = of_iomap(np, 0);
-@@ -480,7 +481,7 @@ static int __init imx8mm_clocks_init(struct device_node *ccm_node)
- 	clks[IMX8MM_SYS_PLL2_500M] = imx_clk_fixed_factor("sys_pll2_500m", "sys_pll2_out", 1, 2);
- 	clks[IMX8MM_SYS_PLL2_1000M] = imx_clk_fixed_factor("sys_pll2_1000m", "sys_pll2_out", 1, 1);
- 
--	np = ccm_node;
-+	np = dev->of_node;
- 	base = of_iomap(np, 0);
- 	if (WARN_ON(!base))
- 		return -ENOMEM;
-@@ -682,4 +683,19 @@ static int __init imx8mm_clocks_init(struct device_node *ccm_node)
- 
- 	return 0;
- }
--CLK_OF_DECLARE_DRIVER(imx8mm, "fsl,imx8mm-ccm", imx8mm_clocks_init);
++	if (!housekeeping_flags)
++		return 0;
 +
-+static const struct of_device_id imx8mm_clk_of_match[] = {
-+	{ .compatible = "fsl,imx8mm-ccm" },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, imx8mm_clk_of_match);
-+
-+
-+static struct platform_driver imx8mm_clk_driver = {
-+	.probe = imx8mm_clocks_probe,
-+	.driver = {
-+		.name = "imx8mm-ccm",
-+		.of_match_table = of_match_ptr(imx8mm_clk_of_match),
-+	},
-+};
-+module_platform_driver(imx8mm_clk_driver);
--- 
-2.7.4
+ 	/*
+ 	 * Early housekeeping setup is done before CPUs come up, and there are
+ 	 * a range of options scattered around that can restrict which CPUs
 
+
+Cheers
+
+--
+Qais Yousef
+
+
+> +}
+> +core_initcall(housekeeping_verify_smp);
+> +
+>  static int __init housekeeping_setup(char *str, enum hk_flags flags)
+>  {
+>  	cpumask_var_t non_housekeeping_mask;
+> -- 
+> 2.20.1
+> 
