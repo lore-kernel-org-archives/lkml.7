@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E972C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B21C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223F1214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0215208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370815;
-	bh=/lLAJYDQGzK0dJdUaekE5OmOKBa+Yz4MjnphOvkmKyA=;
+	s=default; t=1561370819;
+	bh=98xwHsstZrM34rlzeo3ta4SSHIeaWrCcpHnO3+wo7GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StJihqNUQO71FY6SaE8+wvIj5/gAGfTxjULwYBKEJVwnSFsEJ9yY10YjAPdxP35Eb
-	 HqMGoGvhkb/z6lTgc5CXvv3p+96vrC93JhLPKHB+K4T76H3Kljr39cNeD4KJRBGF/L
-	 hiQMCz3AoH5UjMWRaLNFCrKW34pjoCGK1le5BTWk=
+	b=1hdWDD/ZMaNT20QOlzAJBOlCtwTfUN9BQpnvzTrN6t47ekSUfOI0jiVi0eWod13QR
+	 B2sHJdM8UoK6W/+qaYKNAfKpf1HOh9hkePkdRmcPelCurbTE+Tex2nXCXWX/xDB9gw
+	 wEZTrg3a954yn9VK9CcGtDChpeNRMNf0jgX0/KjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbfFXKGx (ORCPT
+        id S1730222AbfFXKG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729599AbfFXKGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:50 -0400
+        id S1729777AbfFXKGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:55 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 982B421473;
-        Mon, 24 Jun 2019 10:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEB23208E3;
+        Mon, 24 Jun 2019 10:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370809;
-        bh=/lLAJYDQGzK0dJdUaekE5OmOKBa+Yz4MjnphOvkmKyA=;
+        s=default; t=1561370814;
+        bh=98xwHsstZrM34rlzeo3ta4SSHIeaWrCcpHnO3+wo7GM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W8cr9Jrl3Vy75fBe8bMzIIAlD/QYBOdqg+CImhixtREjER+nGpZ+UHaoCkKiIinJ8
-         9c9lv9g4bdNBEEX9/i+tTs+oycbiKohMhDkS3/8onL+mQFrII/mMdZwXe/55ZnagWA
-         Em+HLCF5ybRsMGcMGorPPzf333NUyiSFfN+rcOyw=
+        b=QrJB6Zs9vtjxOKvbJKGkCAOv160Em1gV4Fwkrc625CktnvTaiBQnLS4Q1XKJMdX9k
+         JnHKfca1USHXA7krissCYdaFLBoBgS1h/CCU4ENVppo+BJQai3UKUxctGX0aO0ZRvX
+         Vgr/70N19N1BdpNiEFSRgL0No3wTuFzV3vZLUK8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 001/121] tracing: Silence GCC 9 array bounds warning
-Date:   Mon, 24 Jun 2019 17:55:33 +0800
-Message-Id: <20190624092320.733047084@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.1 011/121] xhci: detect USB 3.2 capable host controllers correctly
+Date:   Mon, 24 Jun 2019 17:55:43 +0800
+Message-Id: <20190624092321.220227761@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,103 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 0c97bf863efce63d6ab7971dad811601e6171d2f upstream.
+commit ddd57980a0fde30f7b5d14b888a2cc84d01610e8 upstream.
 
-Starting with GCC 9, -Warray-bounds detects cases when memset is called
-starting on a member of a struct but the size to be cleared ends up
-writing over further members.
+USB 3.2 capability in a host can be detected from the
+xHCI Supported Protocol Capability major and minor revision fields.
 
-Such a call happens in the trace code to clear, at once, all members
-after and including `seq` on struct trace_iterator:
+If major is 0x3 and minor 0x20 then the host is USB 3.2 capable.
 
-    In function 'memset',
-        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-    [8505, 8560] from the object at 'iter' is out of the bounds of
-    referenced subobject 'seq' with type 'struct trace_seq' at offset
-    4368 [-Warray-bounds]
-      344 |  return __builtin_memset(p, c, size);
-          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For USB 3.2 capable hosts set the root hub lane count to 2.
 
-In order to avoid GCC complaining about it, we compute the address
-ourselves by adding the offsetof distance instead of referring
-directly to the member.
+The Major Revision and Minor Revision fields contain a BCD version number.
+The value of the Major Revision field is JJh and the value of the Minor
+Revision field is MNh for version JJ.M.N, where JJ = major revision number,
+M - minor version number, N = sub-minor version number,
+e.g. version 3.1 is represented with a value of 0310h.
 
-Since there are two places doing this clear (trace.c and trace_kdb.c),
-take the chance to move the workaround into a single place in
-the internal header.
+Also fix the extra whitespace printed out when announcing regular
+SuperSpeed hosts.
 
-Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
-
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-[ Removed unnecessary parenthesis around "iter" ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <stable@vger.kernel.org> # v4.18+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c     |    6 +-----
- kernel/trace/trace.h     |   18 ++++++++++++++++++
- kernel/trace/trace_kdb.c |    6 +-----
- 3 files changed, 20 insertions(+), 10 deletions(-)
+ drivers/usb/host/xhci.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8627,12 +8627,8 @@ void ftrace_dump(enum ftrace_dump_mode o
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
-+		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1964,4 +1964,22 @@ static inline void tracer_hardirqs_off(u
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/*
-+ * Reset the state of the trace_iterator so that it can read consumed data.
-+ * Normally, the trace_iterator is used for reading the data when it is not
-+ * consumed, and must retain state.
-+ */
-+static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
-+{
-+	const size_t offset = offsetof(struct trace_iterator, seq);
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -5029,16 +5029,26 @@ int xhci_gen_setup(struct usb_hcd *hcd,
+ 	} else {
+ 		/*
+ 		 * Some 3.1 hosts return sbrn 0x30, use xhci supported protocol
+-		 * minor revision instead of sbrn
++		 * minor revision instead of sbrn. Minor revision is a two digit
++		 * BCD containing minor and sub-minor numbers, only show minor.
+ 		 */
+-		minor_rev = xhci->usb3_rhub.min_rev;
+-		if (minor_rev) {
++		minor_rev = xhci->usb3_rhub.min_rev / 0x10;
 +
-+	/*
-+	 * Keep gcc from complaining about overwriting more than just one
-+	 * member in the structure.
-+	 */
-+	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
-+
-+	iter->pos = -1;
-+}
-+
- #endif /* _LINUX_KERNEL_TRACE_H */
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -41,12 +41,8 @@ static void ftrace_dump_buf(int skip_lin
++		switch (minor_rev) {
++		case 2:
++			hcd->speed = HCD_USB32;
++			hcd->self.root_hub->speed = USB_SPEED_SUPER_PLUS;
++			hcd->self.root_hub->rx_lanes = 2;
++			hcd->self.root_hub->tx_lanes = 2;
++			break;
++		case 1:
+ 			hcd->speed = HCD_USB31;
+ 			hcd->self.root_hub->speed = USB_SPEED_SUPER_PLUS;
++			break;
+ 		}
+-		xhci_info(xhci, "Host supports USB 3.%x %s SuperSpeed\n",
++		xhci_info(xhci, "Host supports USB 3.%x %sSuperSpeed\n",
+ 			  minor_rev,
+-			  minor_rev ? "Enhanced" : "");
++			  minor_rev ? "Enhanced " : "");
  
- 	kdb_printf("Dumping ftrace buffer:\n");
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
-+	trace_iterator_reset(&iter);
- 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
+ 		xhci->usb3_rhub.hcd = hcd;
+ 		/* xHCI private pointer was set in xhci_pci_probe for the second
 
 
