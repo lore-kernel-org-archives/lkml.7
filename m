@@ -2,106 +2,95 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4CFC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BE3205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D2uGrxuE"
+	by mail.kernel.org (Postfix) with ESMTP id 2802F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfFXQYm (ORCPT
+        id S1732101AbfFXQZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:24:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54368 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbfFXQYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=fbuOEGD6/p3KGLV+SsGx2RFhZqUs0c/4MZswvhidVf4=; b=D2uGrxuEdFzruVC29WTvIkFpCi
-        bN7wchEmq/rvf1zT2YMyFEcF27QgmyFgbSsivPFALpo53XmgCKP0xOg5aL79oIMMZZJW+bXPWIN2q
-        Z4a5M+Mh2wBSH/YuO3dWLF0f0wHNGqfTwjrejeyYIudJJWMuetxRZA9BNAr3M/brhG30=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hfRlf-0006oM-P5; Mon, 24 Jun 2019 18:24:31 +0200
-Date:   Mon, 24 Jun 2019 18:24:31 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Message-ID: <20190624162431.GX31306@lunn.ch>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+        Mon, 24 Jun 2019 12:25:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbfFXQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:25:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0AF07ADDA;
+        Mon, 24 Jun 2019 16:25:53 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 24 Jun 2019 18:25:52 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 13/14] epoll: implement epoll_create2() syscall
+In-Reply-To: <CAK8P3a3YgKZbF=nx4nsbj5mvgcSk8OfjU1HNvSjC19RPsyVMsQ@mail.gmail.com>
+References: <20190624144151.22688-1-rpenyaev@suse.de>
+ <20190624144151.22688-14-rpenyaev@suse.de>
+ <CAK8P3a3YgKZbF=nx4nsbj5mvgcSk8OfjU1HNvSjC19RPsyVMsQ@mail.gmail.com>
+Message-ID: <d1603e27672acbc72c20bd2b03b80f9c@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
-> Hi Andrew,
+On 2019-06-24 18:14, Arnd Bergmann wrote:
+> On Mon, Jun 24, 2019 at 4:42 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>> 
+>> epoll_create2() is needed to accept EPOLL_USERPOLL flags
+>> and size, i.e. this patch wires up polling from userspace.
 > 
-> The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > > 
-> > > > This configuration may look prettier on DSA, but the main restriction here
-> > > > is that the entire functionality is provided by the ocelot driver which is a
-> > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > > from ocelot to a separate dsa driver.
-> > > > 
-> > > 
-> > > We should probably make the ocelot driver a DSA driver then...
-> > An important part of DSA is being able to direct frames out specific
-> > ports when they ingress via the CPU port. Does the silicon support
-> > this? At the moment, i think it is using polled IO.
-> 
-> That is supported, it requires a bit of initial configuration of the Chip, but
-> nothing big (I believe this configuration is part of Claudiu's change-set).
-> 
-> But how do you envision this done?
-> 
-> - Let the existing SwitchDev driver and the DSA driver use a set of common
->   functions.
-> - Convert the existing Ocelot driver from SwitchDev to DSA
-> - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
->   Felix driver
-> 
-> My guess is the first one, but I would like to understand what you have in mind.
+> Can you explain in the patch description more what it's needed for?
 
-I don't know the various architectures the switch is used in. But it
-does seem like a core library, and then a switchdev wrapper for Ocelot
-and a DSA wrapper for Felix would make sense.
- 
-  Andrew
+Sure. Will update on next iteration.
+
+> 
+> The man page only states that "Since Linux 2.6.8, the size argument
+> is ignored", so your description above does not explain why you need
+> to add the size argument back.
+> 
+>> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl 
+>> b/arch/alpha/kernel/syscalls/syscall.tbl
+>> index 1db9bbcfb84e..a1d7b695063d 100644
+>> --- a/arch/alpha/kernel/syscalls/syscall.tbl
+>> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+>> @@ -474,3 +474,5 @@
+>>  542    common  fsmount                         sys_fsmount
+>>  543    common  fspick                          sys_fspick
+>>  544    common  pidfd_open                      sys_pidfd_open
+>> +# 546  common  clone3                  sys_clone3
+>> +547    common  epoll_create2                   sys_epoll_create2
+>> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+>> index ff45d8807cb8..1497f3c87d54 100644
+>> --- a/arch/arm/tools/syscall.tbl
+>> +++ b/arch/arm/tools/syscall.tbl
+>> @@ -449,3 +449,4 @@
+>>  433    common  fspick                          sys_fspick
+>>  434    common  pidfd_open                      sys_pidfd_open
+>>  436    common  clone3                          sys_clone3
+>> +437    common  epoll_create2                   sys_epoll_create2
+> 
+> The table changes all look correct and complete, provided we
+> don't get another patch picking the same number.
+
+Good.  I had doubts, because on some archs there is a gap,
+(sys_clone3 was missing).  So I left a placeholder, so
+can be uncommented when sys_clone3 is implemented.
+
+--
+Roman
+
