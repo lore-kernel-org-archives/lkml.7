@@ -2,147 +2,117 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6946EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B733CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381AB205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901262054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0ZP1Du4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iH/Ezv8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfFXBz4 (ORCPT
+        id S1726752AbfFXB52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:55:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34341 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFXBz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:55:56 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p17so10955507ljg.1;
-        Sun, 23 Jun 2019 18:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d/7wNA8MAMSp7e/mZW/Vod5RtNn1ZWLvCZTV21PmCFE=;
-        b=L0ZP1Du4UJarUZc83p78D1vv5rbMa++Zecy9gf2C/sEmE38z1CUDYNZtbdqay4oXjv
-         wtksAbW8ZJBl1zkRqiyZxBgkX8zxclNP3TDtki7UUCskO8f0x8dF/zo+PGkI3o1Wnqi/
-         i6i1VOtCbFLD/F3Q2v741iVE01LGiwX1OIlGCx2rdKdMxEs8UUvQzcLOIZkHeFzPEMmf
-         O+7ntMgJr7LbUvO4wcmhMT1Nfm4+tdl01l7NalOAjFOQbmQ3xeWcBteQdGUGixM2iFP7
-         l+1oKfaS1UXi747QDN2CI6R7McQFdu+ARuSVc4sAmUOw+bz4W9mIzlxY4kcIkY8+Jjrs
-         6Vlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d/7wNA8MAMSp7e/mZW/Vod5RtNn1ZWLvCZTV21PmCFE=;
-        b=eZjr3sCktWJDTIrLc0rBRoTeZ2d4QbmRI0P8IOZS4UWqt0pyU7djDWyxHsPV5GzsX6
-         hNmivaXrFz4nAeKJPTaXuq1Clf4clmwglvAVRV8Sk65jSZmK/3f0iCPM5N99byduvUxJ
-         MXJ+v7GClFYjNnsk8Qaz2MstWrI0+K2oPDlJhbe0rKuix/UNYJ11wC6LZsQp7RUX/mjG
-         Jjwnfh9nU0PIrtBj9RCzlvl54rU24ksnLFg6V0KVAx1CTZbyzVibh/C4cS+Hyg72/K42
-         23PL4duwgJV2EP3q8EkneumOPjY/YXUqxCGsSlU0eypzBPqAG7DM4COCV2hPY4B0roOZ
-         899Q==
-X-Gm-Message-State: APjAAAXoLoDZTga7CEoJJVbpDBKKf1vaRNHci3Uu1OT1WN8bUkecRpUX
-        F9tanAbAj0UVRlXDcElpZvD3LiDZ
-X-Google-Smtp-Source: APXvYqye4V5QSFOGkNtJMg/FAidBFWD3G9IlC1/a8d7S+Cona5FygRmeQ/8Dbd9tuc2t39l5UnZS1w==
-X-Received: by 2002:a2e:9250:: with SMTP id v16mr30382163ljg.89.1561326518772;
-        Sun, 23 Jun 2019 14:48:38 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 14:48:38 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 04/11] PM / devfreq: tegra30: Drop write-barrier
-Date:   Mon, 24 Jun 2019 00:46:51 +0300
-Message-Id: <20190623214658.11680-5-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
-References: <20190623214658.11680-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 21:57:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:52193 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfFXB50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:57:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XBLP6CHyz9sP1;
+        Mon, 24 Jun 2019 11:20:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561339233;
+        bh=tHpKwuHkDaYhqmZgfsFoheh7ykmCSOsO+dlIAnOp5YA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iH/Ezv8DzLvBwG2s0LQ7ZBM1welnN8fckpARVHddhZPLxtjELZrJzSp8tZYjclIHj
+         OiHAqv6wiLW5pCCaa9reiSr+VLvDsU4HFF6hKpNdx8mwP/+TMKGiaHvPmRS70uMSfT
+         1d2b5DZrek2rF+dHmCPF7+4RWTaw19TsknadJ7KEg7DKURj+1IWE29q0rY6TQJX8Sn
+         POZsWqoDp3665q0EDKriozuPffzKfV0xQPt73rUTT1gXEDINFIaMrUugDMEm1sekUa
+         z3I7ArxUhv/hmTqmhwVj5cIwMdm5dOfjhnHdboIGIkHiUyOXUgMKUsG/AJ7wTubPYC
+         7dJqjoN7uByRA==
+Date:   Mon, 24 Jun 2019 11:20:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>, linux-hyperv@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
+Message-ID: <20190624112029.4f42a8cd@canb.auug.org.au>
+In-Reply-To: <20190624002430.GN2226@sasha-vm>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+        <20190530141531.43462-19-vincenzo.frascino@arm.com>
+        <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+        <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+        <20190614211710.GQ1513@sasha-vm>
+        <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
+        <20190623190929.GL2226@sasha-vm>
+        <20190624075834.2491a61a@canb.auug.org.au>
+        <20190624002430.GN2226@sasha-vm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UW6IjEE3Jj_YtxhGwam1e.t"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need in a write-barrier now, given that interrupt masking is
-handled by CPU's GIC now. Hence we know exactly that interrupt won't fire
-after stopping the devfreq's governor. In other cases we don't care about
-potential buffering of the writes to hardware and thus there is no need to
-stall CPU.
+--Sig_/UW6IjEE3Jj_YtxhGwam1e.t
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 14 --------------
- 1 file changed, 14 deletions(-)
+Hi Sasha,
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 5e606ae3f238..4be7858c33bc 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -230,12 +230,6 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 		      ACTMON_DEV_LOWER_WMARK);
- }
- 
--static void actmon_write_barrier(struct tegra_devfreq *tegra)
--{
--	/* ensure the update has reached the ACTMON */
--	readl(tegra->regs + ACTMON_GLB_STATUS);
--}
--
- static void actmon_isr_device(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev)
- {
-@@ -287,8 +281,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
- 
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
--
--	actmon_write_barrier(tegra);
- }
- 
- static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
-@@ -376,8 +368,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- 		tegra_devfreq_update_wmark(tegra, dev);
- 	}
- 
--	actmon_write_barrier(tegra);
--
- 	return NOTIFY_OK;
- }
- 
-@@ -423,8 +413,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
- 	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
- 		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
- 
--	actmon_write_barrier(tegra);
--
- 	enable_irq(tegra->irq);
- }
- 
-@@ -439,8 +427,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
- 		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
- 			      ACTMON_DEV_INTR_STATUS);
- 	}
--
--	actmon_write_barrier(tegra);
- }
- 
- static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
--- 
-2.22.0
+On Sun, 23 Jun 2019 20:24:30 -0400 Sasha Levin <sashal@kernel.org> wrote:
+>
+> Pushed now. For some reason the airport wifi was blocking ssh :/
 
+Thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/UW6IjEE3Jj_YtxhGwam1e.t
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QJV0ACgkQAVBC80lX
+0GwUBQf/e/6tJWyAWMaopYMBDqN2qz4oN/vHsi0Cl4cEtZikDfm20K5/e1B/rwg4
+3AdDGd4MfB2z5/yvCCH0gZcA3R8U8r/OX6rpU6BHD6jewnLN813ja7GesU+lgWGE
+fDznHmIHmGaN2LljjUA34WkBymJGMDsOcA30q6ZIdO48ABULY+FstQOahDrTFMde
+Btm0wVAvmSOP5iIIXt64JWYPhNzGJljLoW9Y5SzpAQOIrTCzYaTIcKceQsBXmPoK
+XH6Ypn5GZCfCNZD/9reOW8IG8CNsSN+7OBdtFFC9W7/OGZdAmMz9n6eX+a/9WS3x
+VqP7o7p8NE5G2ug+cDsnFn1aIkDb6g==
+=/UhR
+-----END PGP SIGNATURE-----
+
+--Sig_/UW6IjEE3Jj_YtxhGwam1e.t--
