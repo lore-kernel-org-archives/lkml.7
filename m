@@ -2,52 +2,53 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D978C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD15C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164B4208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439E620848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370464;
-	bh=fOvlLthS1MK46WfcNPVYkleqoAPilf+fyWhHYHhB55U=;
+	s=default; t=1561370476;
+	bh=gPDJS2BRgZZhksIWhMsSPNA2jjSHp5BNn/u/f+zQW7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xfbgl+AAygTDxWRbLYlZR3i/5NSMTztbHoM8XWgKOdu+Lh7ohibjUycCm87XFB2H4
-	 bM2CQd/OY10u4vhWiaDMV80tImZl/QQvsiukDt54FjyciW3mo3gAX7DJMo9qfnRp/b
-	 y3WcMGBlc0zKzqdprICwgd3iDBBNRTep1kh+gONM=
+	b=V/kYBG5+E947qpfTJ812nkOC5KJPvPxunOK+REEzIaMpVccqPtSUl7sq07mo+CMEJ
+	 2PsqtNnV2MVzHFgR/zhREG74Q/bYI7WiZcW948I5B136v4NlxpcIk3L97Is0r/DmzW
+	 6TMsItFI513CQd09cSqmqdS69pplylRvq8I9FGg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfFXJ7H (ORCPT
+        id S1728980AbfFXKBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:01:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbfFXJ7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:05 -0400
+        id S1728270AbfFXJ6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:49 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE72213F2;
-        Mon, 24 Jun 2019 09:59:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1968208CA;
+        Mon, 24 Jun 2019 09:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370344;
-        bh=fOvlLthS1MK46WfcNPVYkleqoAPilf+fyWhHYHhB55U=;
+        s=default; t=1561370328;
+        bh=gPDJS2BRgZZhksIWhMsSPNA2jjSHp5BNn/u/f+zQW7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4pi3mOC88qo+4taDKupbK+WDQBRhZKvWW++MPp+zpUNJvnjSLi4S99cqgUalkx1r
-         hksX1sscnvifCVWysvmR75ryPA3L6K7uqv5ojYfWzNAHV43ZBccvstAS8IZw3TiCeZ
-         LkuP+l7YdNVFV/wm9vKJi1C/uwPDEv87zk1YetlU=
+        b=fAuKpXje45Cxygnt/fexlliP+JqtSQLQqySlFdUCR9f2mq65ETHFY9Sr8g7b+/cwn
+         Gwsa3M6dKy0oh6AtiLBXY7SPaP0eQV2vHjKzNJcbn/YGOsfwpgScgWiZUO7/rEpw5V
+         MwOvMZ05Qv9GhTbsaRVW1pcLodCcuIGSntoSvu9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 06/51] scsi: ufs: Avoid runtime suspend possibly being blocked forever
-Date:   Mon, 24 Jun 2019 17:56:24 +0800
-Message-Id: <20190624092306.788339647@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 31/51] scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
+Date:   Mon, 24 Jun 2019 17:56:49 +0800
+Message-Id: <20190624092309.933906253@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -60,69 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+[ Upstream commit 4f45d62a52297b10ded963412a158685647ecdec ]
 
-commit 24e2e7a19f7e4b83d0d5189040d997bce3596473 upstream.
+The following error occurs for the `make ARCH=arm64 checkstack` case:
 
-UFS runtime suspend can be triggered after pm_runtime_enable() is invoked
-in ufshcd_pltfrm_init(). However if the first runtime suspend is triggered
-before binding ufs_hba structure to ufs device structure via
-platform_set_drvdata(), then UFS runtime suspend will be no longer
-triggered in the future because its dev->power.runtime_error was set in the
-first triggering and does not have any chance to be cleared.
+aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
+perl ./scripts/checkstack.pl arm64
+wrong or unknown architecture "arm64"
 
-To be more clear, dev->power.runtime_error is set if hba is NULL in
-ufshcd_runtime_suspend() which returns -EINVAL to rpm_callback() where
-dev->power.runtime_error is set as -EINVAL. In this case, any future
-rpm_suspend() for UFS device fails because rpm_check_suspend_allowed()
-fails due to non-zero
-dev->power.runtime_error.
+As suggested by Masahiro Yamada, fix the above error using regular
+expressions in the same way it was fixed for the `ARCH=x86` case via
+commit fda9f9903be6 ("scripts/checkstack.pl: automatically handle
+32-bit and 64-bit mode for ARCH=x86").
 
-To resolve this issue, make sure the first UFS runtime suspend get valid
-"hba" in ufshcd_runtime_suspend(): Enable UFS runtime PM only after hba is
-successfully bound to UFS device structure.
-
-Fixes: 62694735ca95 ([SCSI] ufs: Add runtime PM support for UFS host controller driver)
-Cc: stable@vger.kernel.org
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd-pltfrm.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ scripts/checkstack.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -340,24 +340,21 @@ int ufshcd_pltfrm_init(struct platform_d
- 		goto dealloc_host;
- 	}
- 
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--
- 	ufshcd_init_lanes_per_dir(hba);
- 
- 	err = ufshcd_init(hba, mmio_base, irq);
- 	if (err) {
- 		dev_err(dev, "Initialization failed\n");
--		goto out_disable_rpm;
-+		goto dealloc_host;
- 	}
- 
- 	platform_set_drvdata(pdev, hba);
- 
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	return 0;
- 
--out_disable_rpm:
--	pm_runtime_disable(&pdev->dev);
--	pm_runtime_set_suspended(&pdev->dev);
- dealloc_host:
- 	ufshcd_dealloc_host(hba);
- out:
+diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+index 16dc157f9662..a3f895c216b6 100755
+--- a/scripts/checkstack.pl
++++ b/scripts/checkstack.pl
+@@ -45,7 +45,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
+ 	$x	= "[0-9a-f]";	# hex character
+ 	$xs	= "[0-9a-f ]";	# hex character or space
+ 	$funcre = qr/^$x* <(.*)>:$/;
+-	if ($arch eq 'aarch64') {
++	if ($arch =~ '^(aarch|arm)64$') {
+ 		#ffffffc0006325cc:       a9bb7bfd        stp     x29, x30, [sp, #-80]!
+ 		$re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
+ 	} elsif ($arch eq 'arm') {
+-- 
+2.20.1
+
 
 
