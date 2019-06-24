@@ -2,151 +2,150 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E289C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BA5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD177208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A21C208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Sx1zahOi"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ahHUisnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfFXJtV (ORCPT
+        id S1728597AbfFXJtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:49:21 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:40080 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfFXJtV (ORCPT
+        Mon, 24 Jun 2019 05:49:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33963 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFXJtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:49:21 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
-   d="scan'208";a="38732937"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2019 02:49:19 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 02:48:20 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 24 Jun 2019 02:49:17 -0700
+        Mon, 24 Jun 2019 05:49:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so13186381wrl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8HHa/2TRhb8sNnLAXClmCsglpdLm2WMqRTras05AIM=;
- b=Sx1zahOiEa0mZZTkbCgOZxsq8WkISVhET0R4crIqA65eW+nYPBHYfQoSUr/oqsXvvae7PfnDvESvlSm5+8U+qkiv/JdMkG6ZR1bGr7RnTKxBhRN8pY8X9Oqi7nVCXphd3v5sCGNlo7fZGZZm411+uZ5kEfk3F1ShPTGh2C519v4=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB0030.namprd11.prod.outlook.com (10.164.204.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 09:49:17 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 09:49:17 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <palmer@sifive.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] net: macb: Kconfig: Rename Atmel to Cadence
-Thread-Topic: [PATCH 2/2] net: macb: Kconfig: Rename Atmel to Cadence
-Thread-Index: AQHVKnIWNTWzxb1PyUmXl3jea+egkA==
-Date:   Mon, 24 Jun 2019 09:49:16 +0000
-Message-ID: <0c714db9-a3c1-e89b-8889-e9cdb2ac6c52@microchip.com>
-References: <20190624061603.1704-1-palmer@sifive.com>
- <20190624061603.1704-3-palmer@sifive.com>
-In-Reply-To: <20190624061603.1704-3-palmer@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0149.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1b::17) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bfb11cb9-dbaf-48f6-f4f5-08d6f88938af
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB0030;
-x-ms-traffictypediagnostic: MWHPR11MB0030:
-x-microsoft-antispam-prvs: <MWHPR11MB0030AFCFBC17EE00BE070234E0E00@MWHPR11MB0030.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(31696002)(6246003)(31686004)(71200400001)(71190400001)(386003)(53546011)(229853002)(6436002)(6486002)(6512007)(8936002)(2501003)(52116002)(66066001)(5660300002)(4326008)(99286004)(86362001)(76176011)(68736007)(25786009)(316002)(186003)(7736002)(476003)(26005)(6506007)(102836004)(110136005)(36756003)(2906002)(14454004)(8676002)(54906003)(305945005)(256004)(81166006)(66946007)(6116002)(14444005)(446003)(66446008)(64756008)(66556008)(81156014)(72206003)(66476007)(3846002)(73956011)(53936002)(11346002)(2616005)(478600001)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB0030;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sGge7R8gxYf452FtFmh4YZnOTz17xr0p0m1c1AcV4AKlUOlZfjm5GuATAEsvFvbQW9BmzQc3Yc9MwEp/kwQDgq/MlVrfvcpBY0WYNNaJkFXr+/wre3cpJacJ+0LcO/ogfR2iNiBQp/BbOga8BF3flnyTZwJX//BHkq5J+OsWDuVRbLXXEh4GQlJ3tPAY87XPA/DPhg+mJhf3B8NC0Kxw+dDR/2flslu+9AybdEPKJsyBY/urShPmdIdbCCe+Yjgf/Qx9VVCfEoSMu2HQbb50I8z+k4bC0/vGlAs8O86M0T2vSHQKZbm+PkEi5DkhNxp/2TcM2dLXp+QVpirOhJu4uMrgeBHzgbgFwJpFw/tj1KzsOhb2P3g0wZQJukP9fvUjyIl5d9u4eOqoY/Ss2smYM+hpiiqJENhYVohcFemFv3g=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4D8181CA2F84B6408EDD924C3BA214C4@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uMxls29yTU5DXxSZZDmKdMa/UJzxCvP3CHiUiso6rY8=;
+        b=ahHUisnqGggxi5Om3/YR8YhvER6syrrtsn254t8h29TKNZt91WURxPN1L4V1C9VSTa
+         4sYT97NwAFDV/Eu0nBSBnquJ+PWd2pLDGvWWv3ukYuawZF1zPG+ha8A1z4hnjD3A7IvR
+         g8zmDVOyPtWFljzZHb/8Jlc9S4IjEIrehCCyHYZCt03XsnSj6iXV5JDExg5rHqFUEB0q
+         w6qD9kai+Eh5woYeO4nLGAEZnL1dtOP5MBMqSyevkYjOPKm9fOAziolDm2NfmoN1cbxg
+         z0E3BppsWFWMbctUxvc82Bo9uICnsh5+Tic+bdF7j/2fEuLXviv326Q/PUKMWZRwH1+q
+         NFsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uMxls29yTU5DXxSZZDmKdMa/UJzxCvP3CHiUiso6rY8=;
+        b=JkIaXerplCs0PYEPV+QRx4oaFDyPC4LYqZLQ0mqi+wqw7mJWzhIwcsIoLBF7cG5PRJ
+         dXlqMjzX2pn1dcXtAv3GfCJy7h6zJqD4PxdoAxrLflvqf8LyyCy7AtZj/4dnRPkskSDJ
+         rn+YMCE20baDd55mzs3ZZKL3QCBhCHhRQHCmJRKu6ID71X0ZSx65kqVSLqu4LP6pK3DR
+         H1/R1sbGSSd7o+CJcM6UOTz0lPo57FghyLCTAYnuWBGeJB67ng6i4eAtv8RPTaBk8Jeo
+         e5laPtHgqRJJJ2bVQSipqfTnF+slevSY86pyD1MM6xeTOxhlA+gyee/GItMRJ8TE8PGj
+         AlDw==
+X-Gm-Message-State: APjAAAX3nl2cOUoChYU1wtsmnKqpduaFA8lFG5KgjaF/gHl7KuWheCOU
+        peTFP+/fTzHvbpNqoPUvGHl29g==
+X-Google-Smtp-Source: APXvYqyDG4Weyx6NRWhKYAqtLeKlZSx8B4fVIaDVkmaFDjev3UxPvLHB2ZuKWtqPwKzQz4yzqbRz8w==
+X-Received: by 2002:adf:e5d1:: with SMTP id a17mr17374709wrn.278.1561369783154;
+        Mon, 24 Jun 2019 02:49:43 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z76sm13987064wmc.16.2019.06.24.02.49.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 02:49:42 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 11:49:41 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] CLONE_PIDFD: do not use the value pointed by
+ parent_tidptr
+Message-ID: <20190624094940.24qrteybbcp25wq7@brauner.io>
+References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
+ <20190620110037.GA4998@altlinux.org>
+ <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
+ <20190621170613.GA26182@altlinux.org>
+ <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
+ <20190623112717.GA20697@altlinux.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfb11cb9-dbaf-48f6-f4f5-08d6f88938af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 09:49:16.8610
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0030
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190623112717.GA20697@altlinux.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjQvMDYvMjAxOSBhdCAwODoxNiwgUGFsbWVyIERhYmJlbHQgd3JvdGU6DQo+IEV4dGVybmFs
-IEUtTWFpbA0KPiANCj4gDQo+IFdoZW4gdG91Y2hpbmcgdGhlIEtjb25maWcgZm9yIHRoaXMgZHJp
-dmVyIEkgbm90aWNlZCB0aGF0IGJvdGggdGhlDQo+IEtjb25maWcgaGVscCB0ZXh0IGFuZCBhIGNv
-bW1lbnQgcmVmZXJyZWQgdG8gdGhpcyBiZWluZyBhbiBBdG1lbCBkcml2ZXIuDQo+IEFzIGZhciBh
-cyBJIGtub3csIHRoaXMgaXMgYSBDYWRlbmNlIGRyaXZlci4gIFRoZSBmaXggaXMganVzdA0KDQpJ
-bmRlZWQ6IHdhcyB3cml0dGVuIGFuZCB0aGVuIG1haW50YWluZWQgYnkgQXRtZWwgKG5vdyBNaWNy
-b2NoaXApIGZvciANCnllYXJzLi4uIFNvIEkgd291bGQgc2F5IHRoYXQgbW9yZSB0aGFuIGEgIkNh
-ZGVuY2UgZHJpdmVyIiBpdCdzIGEgZHJpdmVyIA0KdGhhdCBhcHBsaWVzIHRvIGEgQ2FkZW5jZSBw
-ZXJpcGhlcmFsLg0KDQpJIHdvbid0IGhvbGQgdGhlIHBhdGNoIGp1c3QgZm9yIHRoaXMgYXMgdGhl
-IHBhdGNoIG1ha2VzIHBlcmZlY3Qgc2Vuc2UsIA0KYnV0IHdvdWxkIGxvdmUgdGhhdCBpdCdzIGJl
-ZW4gaGlnaGxpZ2h0ZWQuLi4NCg0KPiBzL0F0bWVsL0NhZGVuY2UvLCBidXQgSSBkaWQgZ28gYW5k
-IHJlLXdyYXAgdGhlIEtjb25maWcgaGVscCB0ZXh0IGFzIHRoYXQNCj4gY2hhbmdlIGNhdXNlZCBp
-dCB0byBnbyBvdmVyIDgwIGNoYXJhY3RlcnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQYWxtZXIg
-RGFiYmVsdCA8cGFsbWVyQHNpZml2ZS5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbmV0L2V0aGVy
-bmV0L2NhZGVuY2UvS2NvbmZpZyB8IDYgKysrLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9jYWRlbmNlL0tjb25maWcgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNl
-L0tjb25maWcNCj4gaW5kZXggNzRlZTJiZmQyMzY5Li4yOWI2MTMyYjQxOGUgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9jYWRlbmNlL0tjb25maWcNCj4gQEAgLTEsNiArMSw2IEBADQo+ICAgIyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+ICAgIw0KPiAtIyBBdG1lbCBk
-ZXZpY2UgY29uZmlndXJhdGlvbg0KPiArIyBDYWRlbmNlIGRldmljZSBjb25maWd1cmF0aW9uDQo+
-ICAgIw0KPiAgIA0KPiAgIGNvbmZpZyBORVRfVkVORE9SX0NBREVOQ0UNCj4gQEAgLTEzLDggKzEz
-LDggQEAgY29uZmlnIE5FVF9WRU5ET1JfQ0FERU5DRQ0KPiAgIAkgIElmIHVuc3VyZSwgc2F5IFku
-DQo+ICAgDQo+ICAgCSAgTm90ZSB0aGF0IHRoZSBhbnN3ZXIgdG8gdGhpcyBxdWVzdGlvbiBkb2Vz
-bid0IGRpcmVjdGx5IGFmZmVjdCB0aGUNCj4gLQkgIGtlcm5lbDogc2F5aW5nIE4gd2lsbCBqdXN0
-IGNhdXNlIHRoZSBjb25maWd1cmF0b3IgdG8gc2tpcCBhbGwNCj4gLQkgIHRoZSByZW1haW5pbmcg
-QXRtZWwgbmV0d29yayBjYXJkIHF1ZXN0aW9ucy4gSWYgeW91IHNheSBZLCB5b3Ugd2lsbCBiZQ0K
-PiArCSAga2VybmVsOiBzYXlpbmcgTiB3aWxsIGp1c3QgY2F1c2UgdGhlIGNvbmZpZ3VyYXRvciB0
-byBza2lwIGFsbCB0aGUNCj4gKwkgIHJlbWFpbmluZyBDYWRlbmNlIG5ldHdvcmsgY2FyZCBxdWVz
-dGlvbnMuIElmIHlvdSBzYXkgWSwgeW91IHdpbGwgYmUNCj4gICAJICBhc2tlZCBmb3IgeW91ciBz
-cGVjaWZpYyBjYXJkIGluIHRoZSBmb2xsb3dpbmcgcXVlc3Rpb25zLg0KPiAgIA0KPiAgIGlmIE5F
-VF9WRU5ET1JfQ0FERU5DRQ0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+On Sun, Jun 23, 2019 at 02:27:17PM +0300, Dmitry V. Levin wrote:
+> Userspace needs a cheap and reliable way to tell whether CLONE_PIDFD
+> is supported by the kernel or not.
+> 
+> While older kernels without CLONE_PIDFD support just leave unchanged
+> the value pointed by parent_tidptr, current implementation fails with
+> EINVAL if that value is non-zero.
+> 
+> If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
+> pointed by parent_tidptr also remains unchanged, which effectively
+> means that userspace must either check CLONE_PIDFD support beforehand
+> or ensure that fd 0 is not closed when invoking CLONE_PIDFD.
+> 
+> The check for pidfd == 0 was introduced during v5.2 release cycle
+> by commit b3e583825266 ("clone: add CLONE_PIDFD") to ensure that
+> CLONE_PIDFD could be potentially extended by passing in flags through
+> the return argument.
+> 
+> However, that extension would look horrendous, and with introduction of
+> clone3 syscall in v5.3 there is no need to extend legacy clone syscall
+> this way.
+> 
+> So remove the pidfd == 0 check.  Userspace that needs to be portable
+> to kernels without CLONE_PIDFD support is advised to initialize pidfd
+> with -1 and check the pidfd value returned by CLONE_PIDFD.
+> 
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+
+Reviewed-by: Christian Brauner <christian@brauner.io>
+
+Thank you Dmitry, queueing this up for rc7.
+
+> ---
+>  kernel/fork.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 75675b9bf6df..39a3adaa4ad1 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1822,8 +1822,6 @@ static __latent_entropy struct task_struct *copy_process(
+>  	}
+>  
+>  	if (clone_flags & CLONE_PIDFD) {
+> -		int reserved;
+> -
+>  		/*
+>  		 * - CLONE_PARENT_SETTID is useless for pidfds and also
+>  		 *   parent_tidptr is used to return pidfds.
+> @@ -1834,16 +1832,6 @@ static __latent_entropy struct task_struct *copy_process(
+>  		if (clone_flags &
+>  		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
+>  			return ERR_PTR(-EINVAL);
+> -
+> -		/*
+> -		 * Verify that parent_tidptr is sane so we can potentially
+> -		 * reuse it later.
+> -		 */
+> -		if (get_user(reserved, parent_tidptr))
+> -			return ERR_PTR(-EFAULT);
+> -
+> -		if (reserved != 0)
+> -			return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	/*
+> -- 
+> ldv
