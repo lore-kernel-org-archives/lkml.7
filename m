@@ -2,52 +2,56 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386EBC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F08BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106D62063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727F02089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371074;
-	bh=36Uks9N0n+g+dl+fWGwq7q+BLR2zuL27kYpLylCMGSc=;
+	s=default; t=1561371077;
+	bh=J9Hue6YfvcDTPTSK7iPUAfw6PKHk/04g+wdvgzhrqRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9dZiVJ2Up0OzyRz8yJZJIhn4XqSNCLn+o5Dvf2mV1GugHKfTBaLw0Z6QbV9b/g5D
-	 BiSpoHEvqzcuiPYxYI0eyxndV8LRee3jLvAQUqJznDW0g63unw1Ku2RtJopdDVMN46
-	 qQ1Uw60z/zvDjOBRSqt8Tvf+mUg2et70HprNWpm0=
+	b=MoJM0PBRqoCz+CgdTjH1vTpwcfOGKTLPNEIqijczT+P9gH6uTzy7cykmzjt9VUILI
+	 G+ohMTwjB7kQ1/piil7ixFOETRX5d/kl9kNi+f7R1PoyZRVMtLqP+suB80XN1oa6lY
+	 NdxOKQdZHvO0CrIMLKqEKUoZR3PVs9rNvKulU2cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfFXKLN (ORCPT
+        id S1730649AbfFXKLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbfFXKGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:52 -0400
+        id S1730348AbfFXKLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:11:13 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF20214DA;
-        Mon, 24 Jun 2019 10:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE51205C9;
+        Mon, 24 Jun 2019 10:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370811;
-        bh=36Uks9N0n+g+dl+fWGwq7q+BLR2zuL27kYpLylCMGSc=;
+        s=default; t=1561371072;
+        bh=J9Hue6YfvcDTPTSK7iPUAfw6PKHk/04g+wdvgzhrqRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCI46K0wPPGpq9K12T9WkPSsF5CMcFE8vPpmw3zW5r6xsv1gS21A5DRafEeUmDw0z
-         VvX5yYzAnpcqDgBqbQi12KGEbNtA65mml6c9Aaeqe9YkwQjS1nOy2boQzbq8MhEtx+
-         XDSPrgVvkhxW4d5/AroXaqLS7IaNaZMZnuvBDOjs=
+        b=OwJy7hxxetQWVhqWzy6/9flV7dEGcf6HZbppSrz1g+I8oCJjbYy6yCTOF+XAUDbD+
+         ZKiAZzgnbKJrHWSp8W4UIwyVRh9wZEdU2Ed9M/iSDxdp61/q/wbdyuuooUs3Vh+byY
+         81McBiFM/WK9iGU2FUQuuSOHORZoNgTv41r9/rkQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.1 010/121] usb: chipidea: udc: workaround for endpoint conflict issue
-Date:   Mon, 24 Jun 2019 17:55:42 +0800
-Message-Id: <20190624092321.172344958@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Shi <alex.shi@linux.alibaba.com>,
+        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Claudio Zumbo <claudioz@fb.com>,
+        Claudio <claudiozumbo@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 059/121] kselftest/cgroup: fix incorrect test_core skip
+Date:   Mon, 24 Jun 2019 17:56:31 +0800
+Message-Id: <20190624092323.722052178@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,76 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+[ Upstream commit f97f3f8839eb9de5843066d80819884f7722c8c5 ]
 
-commit c19dffc0a9511a7d7493ec21019aefd97e9a111b upstream.
+The test_core will skip the
+test_cgcore_no_internal_process_constraint_on_threads test case if the
+'cpu' controller missing in root's subtree_control. In fact we need to
+set the 'cpu' in subtree_control, to make the testing meaningful.
 
-An endpoint conflict occurs when the USB is working in device mode
-during an isochronous communication. When the endpointA IN direction
-is an isochronous IN endpoint, and the host sends an IN token to
-endpointA on another device, then the OUT transaction may be missed
-regardless the OUT endpoint number. Generally, this occurs when the
-device is connected to the host through a hub and other devices are
-connected to the same hub.
+./test_core
+...
+ok 4 # skip test_cgcore_no_internal_process_constraint_on_threads
+...
 
-The affected OUT endpoint can be either control, bulk, isochronous, or
-an interrupt endpoint. After the OUT endpoint is primed, if an IN token
-to the same endpoint number on another device is received, then the OUT
-endpoint may be unprimed (cannot be detected by software), which causes
-this endpoint to no longer respond to the host OUT token, and thus, no
-corresponding interrupt occurs.
-
-There is no good workaround for this issue, the only thing the software
-could do is numbering isochronous IN from the highest endpoint since we
-have observed most of device number endpoint from the lowest.
-
-Cc: <stable@vger.kernel.org> #v3.14+
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Jun Li <jun.li@nxp.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Claudio Zumbo <claudioz@fb.com>
+Cc: Claudio <claudiozumbo@gmail.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/udc.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/testing/selftests/cgroup/test_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1622,6 +1622,25 @@ static int ci_udc_pullup(struct usb_gadg
- static int ci_udc_start(struct usb_gadget *gadget,
- 			 struct usb_gadget_driver *driver);
- static int ci_udc_stop(struct usb_gadget *gadget);
-+
-+/* Match ISOC IN from the highest endpoint */
-+static struct usb_ep *ci_udc_match_ep(struct usb_gadget *gadget,
-+			      struct usb_endpoint_descriptor *desc,
-+			      struct usb_ss_ep_comp_descriptor *comp_desc)
-+{
-+	struct ci_hdrc *ci = container_of(gadget, struct ci_hdrc, gadget);
-+	struct usb_ep *ep;
-+
-+	if (usb_endpoint_xfer_isoc(desc) && usb_endpoint_dir_in(desc)) {
-+		list_for_each_entry_reverse(ep, &ci->gadget.ep_list, ep_list) {
-+			if (ep->caps.dir_in && !ep->claimed)
-+				return ep;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-  * Device operations part of the API to the USB controller hardware,
-  * which don't involve endpoints (or i/o)
-@@ -1635,6 +1654,7 @@ static const struct usb_gadget_ops usb_g
- 	.vbus_draw	= ci_udc_vbus_draw,
- 	.udc_start	= ci_udc_start,
- 	.udc_stop	= ci_udc_stop,
-+	.match_ep 	= ci_udc_match_ep,
- };
+diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
+index d78f1c5366d3..79053a4f4783 100644
+--- a/tools/testing/selftests/cgroup/test_core.c
++++ b/tools/testing/selftests/cgroup/test_core.c
+@@ -198,7 +198,7 @@ static int test_cgcore_no_internal_process_constraint_on_threads(const char *roo
+ 	char *parent = NULL, *child = NULL;
  
- static int init_eps(struct ci_hdrc *ci)
+ 	if (cg_read_strstr(root, "cgroup.controllers", "cpu") ||
+-	    cg_read_strstr(root, "cgroup.subtree_control", "cpu")) {
++	    cg_write(root, "cgroup.subtree_control", "+cpu")) {
+ 		ret = KSFT_SKIP;
+ 		goto cleanup;
+ 	}
+-- 
+2.20.1
+
 
 
