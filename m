@@ -2,52 +2,54 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB1C48BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1950C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D5A20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E3E20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371031;
-	bh=Me5ZH5WNgfvvOavz611o8SnLtBSXHw0NStY2yeoBmU8=;
+	s=default; t=1561371036;
+	bh=waqXTwaY0VCyUvlzzqZ5JTTN5lmFWcixD7uBoIJW5wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHMVL1/+EMIyfw12CP4KlqCygkfp1hjRws4eTkxk0ZBXV/jjpn/RPIxrdoB0f2yj9
-	 U3W7Ye1xmQxSyo1EQnnp3KuUlAkXuaiqjEXkmfCi3MA7FWauOGGL3TlXTSiMR62WHF
-	 5kvaFAU/KWZtLpZGM0CUG+0Vaj+40oS/m/bmJrko=
+	b=1YCmrHfahwQEvgf9Qi7MVxF4PdfToLYctq3HUWjbTPN/o9mGBdWeENsI7W6L4R/HE
+	 2T+TSH94ITt9vI4B+xIKfDNcL+U9RIvz0AXdF4ZZTAMK2ASMxV4V3GJ35NvQtReS1z
+	 OSAOkJDBugSYusXUqxJM/3/HqSiJ1/54wzBZIviE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfFXKHy (ORCPT
+        id S1730630AbfFXKKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730340AbfFXKHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:40 -0400
+        id S1729805AbfFXKHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:46 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43DD72089F;
-        Mon, 24 Jun 2019 10:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3848205C9;
+        Mon, 24 Jun 2019 10:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370859;
-        bh=Me5ZH5WNgfvvOavz611o8SnLtBSXHw0NStY2yeoBmU8=;
+        s=default; t=1561370865;
+        bh=waqXTwaY0VCyUvlzzqZ5JTTN5lmFWcixD7uBoIJW5wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzN93yS64FG0ePJ0QdYrQKbYzJdegKFQudzfcXvc36mqiaAVSz2f26+cN13Y1Efva
-         qBFCvoZj0OmuTVXskpG7ABcGq9f/P0q0vVVQgEuldVGOJGP2sK7gxnzgZqoHsoi9i2
-         wVlkG8pxvncbpeMQOGPhFrU/O+eDsjCG/OC+jIF0=
+        b=R1dmkRY1Su7IwMtOehX0cAD0OV9vBFNvDhEwGvZmuIe3XTXDH7f9kM5xYwIkrry2V
+         N7posF6Gmuq0e2DuNyZqEl2N/2lF3JTr+8Q501vQJQdouNtarmYnzvnhrEwr+iw0jz
+         niki+ov1LOuE95UEPomLivBgpu+34Vn4HMqdVNtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Salvatore <mike.salvatore@canonical.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 5.1 027/121] apparmor: reset pos on failure to unpack for various functions
-Date:   Mon, 24 Jun 2019 17:55:59 +0800
-Message-Id: <20190624092322.128018773@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 029/121] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+Date:   Mon, 24 Jun 2019 17:56:01 +0800
+Message-Id: <20190624092322.322523215@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,167 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Salvatore <mike.salvatore@canonical.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 156e42996bd84eccb6acf319f19ce0cb140d00e3 upstream.
+commit 2de0b42da263c97d330d276f5ccf7c4470e3324f upstream.
 
-Each function that manipulates the aa_ext struct should reset it's "pos"
-member on failure. This ensures that, on failure, no changes are made to
-the state of the aa_ext struct.
+There are certain cases, notably when transitioning between sleep and
+active state, when Broadcom SDIO WiFi cards will produce errors on the
+SDIO bus.  This is evident from the source code where you can see that
+we try commands in a loop until we either get success or we've tried
+too many times.  The comment in the code reinforces this by saying
+"just one write attempt may fail"
 
-There are paths were elements are optional and the error path is
-used to indicate the optional element is not present. This means
-instead of just aborting on error the unpack stream can become
-unsynchronized on optional elements, if using one of the affected
-functions.
+Unfortunately these failures sometimes end up causing an "-EILSEQ"
+back to the core which triggers a retuning of the SDIO card and that
+blocks all traffic to the card until it's done.
 
-Cc: stable@vger.kernel.org
-Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
-Signed-off-by: Mike Salvatore <mike.salvatore@canonical.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Let's disable retuning around the commands we expect might fail.
+
+Cc: stable@vger.kernel.org #v4.18+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/policy_unpack.c |   47 +++++++++++++++++++++++++++++++-------
- 1 file changed, 39 insertions(+), 8 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -223,16 +223,21 @@ static void *kvmemdup(const void *src, s
- static size_t unpack_u16_chunk(struct aa_ext *e, char **chunk)
- {
- 	size_t size = 0;
-+	void *pos = e->pos;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -676,6 +676,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio
  
- 	if (!inbounds(e, sizeof(u16)))
--		return 0;
-+		goto fail;
- 	size = le16_to_cpu(get_unaligned((__le16 *) e->pos));
- 	e->pos += sizeof(__le16);
- 	if (!inbounds(e, size))
--		return 0;
-+		goto fail;
- 	*chunk = e->pos;
- 	e->pos += size;
- 	return size;
+ 	brcmf_dbg(TRACE, "Enter: on=%d\n", on);
+ 
++	sdio_retune_crc_disable(bus->sdiodev->func1);
 +
-+fail:
-+	e->pos = pos;
-+	return 0;
+ 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+ 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+ 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+@@ -736,6 +738,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio
+ 	if (try_cnt > MAX_KSO_ATTEMPTS)
+ 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ 
++	sdio_retune_crc_enable(bus->sdiodev->func1);
++
+ 	return err;
  }
  
- /* unpack control byte */
-@@ -294,62 +299,84 @@ fail:
- 
- static bool unpack_u8(struct aa_ext *e, u8 *data, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_U8, name)) {
- 		if (!inbounds(e, sizeof(u8)))
--			return 0;
-+			goto fail;
- 		if (data)
- 			*data = get_unaligned((u8 *)e->pos);
- 		e->pos += sizeof(u8);
- 		return 1;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static bool unpack_u32(struct aa_ext *e, u32 *data, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_U32, name)) {
- 		if (!inbounds(e, sizeof(u32)))
--			return 0;
-+			goto fail;
- 		if (data)
- 			*data = le32_to_cpu(get_unaligned((__le32 *) e->pos));
- 		e->pos += sizeof(u32);
- 		return 1;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static bool unpack_u64(struct aa_ext *e, u64 *data, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_U64, name)) {
- 		if (!inbounds(e, sizeof(u64)))
--			return 0;
-+			goto fail;
- 		if (data)
- 			*data = le64_to_cpu(get_unaligned((__le64 *) e->pos));
- 		e->pos += sizeof(u64);
- 		return 1;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static size_t unpack_array(struct aa_ext *e, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_ARRAY, name)) {
- 		int size;
- 		if (!inbounds(e, sizeof(u16)))
--			return 0;
-+			goto fail;
- 		size = (int)le16_to_cpu(get_unaligned((__le16 *) e->pos));
- 		e->pos += sizeof(u16);
- 		return size;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static size_t unpack_blob(struct aa_ext *e, char **blob, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_BLOB, name)) {
- 		u32 size;
- 		if (!inbounds(e, sizeof(u32)))
--			return 0;
-+			goto fail;
- 		size = le32_to_cpu(get_unaligned((__le32 *) e->pos));
- 		e->pos += sizeof(u32);
- 		if (inbounds(e, (size_t) size)) {
-@@ -358,6 +385,9 @@ static size_t unpack_blob(struct aa_ext
- 			return size;
- 		}
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
-@@ -374,9 +404,10 @@ static int unpack_str(struct aa_ext *e,
- 			if (src_str[size - 1] != 0)
- 				goto fail;
- 			*string = src_str;
-+
-+			return size;
- 		}
- 	}
--	return size;
- 
- fail:
- 	e->pos = pos;
 
 
