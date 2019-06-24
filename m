@@ -2,123 +2,78 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DBFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFC92083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF67A2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdD5hTA7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="C4Tw//dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfFXEjN (ORCPT
+        id S1727334AbfFXEmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:39:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39724 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfFXEjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:39:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z23so11829855wma.4;
-        Sun, 23 Jun 2019 21:39:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YNELeqsO3ONkBzigACa9WgfAHnyRLEL6gV/TACazJzc=;
-        b=GdD5hTA7BPb+tN5+F5Hd9Yjg3qpZhl/UDMGlGoEM7GFhcuPKCjk0fDtp6trqGu4LaZ
-         lvZ6ASMBEqBCwbDlZLWIct7GQlpvDPbQscSsh0OGcsO4nqEikUUVnb7hxe5h5ecAQ/+x
-         y5TX9lYlEQ0vRsrCzItt5ktQhH1F7Ffl0oWXTHP3u6/1e6hJZt3fg4VsTKqFGQru2cbt
-         uKaRHBxTbjBYrVvT22A/wpLycOGrxVzAPdHu+5NLjZcmhOpgXnoXjWQgIBW+r1UTZbB2
-         GEGIA5M5eZdYF+nUXT9aGHwjfZKMhZh6p7EasfxgJiJDES+T896MTBibUgxQSzVKnbxQ
-         PwRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YNELeqsO3ONkBzigACa9WgfAHnyRLEL6gV/TACazJzc=;
-        b=fR8N2L45m3hsik+bLgELB585Der7xf5N9/N3jUFE8nB+cIP8OrXMu0y3oxrDDIDYlN
-         R2KgmkLVltKlxmFYzrnXRupgL6X+K/dBBAISEotUg3AwPDh8JlW7wMg4hOta3H5dnq42
-         EAw2DV6nOX0P51KGUMpNZlnxFqehA/QvIEr8h0hi8aXMwVVPVspidsZktNzUKpBlJr3m
-         LjdFZ2GjT9D8+pIwricOeQKGHenuW4qXkIQmB+CpabCAtEpdTsp8Hfub5WogV3p9H6pM
-         osrhqZeMZYf5cK7J1gyr6ckGff/Vod3jKwKftITJxRXa6Sf4IRiUPaCVMtpBq6tVwiMA
-         vJPg==
-X-Gm-Message-State: APjAAAWxX1uMDi3BAHqPwQRYzBjrzlgNbolrfHc9+uBkZtHY6DQBHWvX
-        nSqXNFXBiwwFwGEnMk0EnrlQSr7mW1wcAUfZIMc=
-X-Google-Smtp-Source: APXvYqznBNXnEw5RZZ4tdgedDsRQHsK/vADIWjCrMTGOLQKAhTXeCoBTP+DgQlTl5assRWvi5M/A6fTORvagJxDrfCU=
-X-Received: by 2002:a05:600c:230b:: with SMTP id 11mr13181852wmo.85.1561351150527;
- Sun, 23 Jun 2019 21:39:10 -0700 (PDT)
+        Mon, 24 Jun 2019 00:42:08 -0400
+Received: from m15-33.126.com ([220.181.15.33]:64582 "EHLO m15-33.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfFXEmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 00:42:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=fr3xf
+        Wx23bz/Eqtr0uwAkowQvRgf1dRaxLibGwj+Yck=; b=C4Tw//dI66ALwU9ocLJ6P
+        ImFz151v7k3ARwzL+gyhefbbWqI/hrAkkuc1NvC+L5PvcfSDBsTE0fGfv3Xu4zE4
+        vdK4nfuzIJitCuY1R+NSPNVjNc3Iyi0b+d1o7Og078af1DY3lRAjrjYj7AHkfaC2
+        EUVY1UCs+kGCo3Dbt5L9ak=
+Received: from kernelpatch$126.com ( [222.90.31.26] ) by
+ ajax-webmail-wmsvr33 (Coremail) ; Mon, 24 Jun 2019 12:41:18 +0800 (CST)
+X-Originating-IP: [222.90.31.26]
+Date:   Mon, 24 Jun 2019 12:41:18 +0800 (CST)
+From:   "Tiezhu Yang" <kernelpatch@126.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, vgoyal@redhat.com
+Subject: [PATCH v2 RESEND] kexec: fix warnig of crash_zero_bytes in crash.c
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20190614(cb3344cf) Copyright (c) 2002-2019 www.mailtech.cn 126com
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-References: <000000000000a7776f058a3ce9db@google.com> <178c7ee0-46b7-8334-ef98-e530eb60a2cf@gmail.com>
- <CACT4Y+ZqM84Ny22p7=J6vVXG7XOkqVN_jjkb87DNetNCFQRFBQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZqM84Ny22p7=J6vVXG7XOkqVN_jjkb87DNetNCFQRFBQ@mail.gmail.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 24 Jun 2019 12:38:59 +0800
-Message-ID: <CADvbK_f0kZOZRUQ3eWNMiOUTC_JE6xsrdX2VzsHsAXKrq3D8ig@mail.gmail.com>
-Subject: Re: KASAN: user-memory-access Read in ip6_hold_safe (3)
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     David Ahern <dsahern@gmail.com>,
-        syzbot <syzbot+a5b6e01ec8116d046842@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <117ef0c6.3d30.16b87c9cfbf.Coremail.kernelpatch@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: IcqowAAnb_pvVBBdLWNGAA--.27613W
+X-CM-SenderInfo: xnhu0vxosd3ubk6rjloofrz/1tbi7w-d9VpD68ubhAAAsu
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 2:57 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Sat, Jun 1, 2019 at 7:15 PM David Ahern <dsahern@gmail.com> wrote:
-> >
-> > On 6/1/19 12:05 AM, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    dfb569f2 net: ll_temac: Fix compile error
-> > > git tree:       net-next
-> > syzbot team:
-> >
-> > Is there any way to know the history of syzbot runs to determine that
-> > crash X did not happen at commit Y but does happen at commit Z? That
-> > narrows the window when trying to find where a regression occurs.
->
-> Hi David,
->
-> All info is available on the dashboard:
->
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a5b6e01ec8116d046842
->
-> We don't keep any private info on top of that.
->
-> This crash happened 129 times in the past 9 days. This suggests this
-> is not a previous memory corruption, these usually happen at most few
-> times.
-> The first one was:
->
-> 2019/05/24 15:33 net-next dfb569f2
->
-> Then it was joined by bpf-next:
->
-> ci-upstream-bpf-next-kasan-gce 2019/06/01 15:51 bpf-next 0462eaac
->
-> Since it happens a dozen of times per day, most likely it was
-> introduced into net-next around dfb569f2 (syzbot should do new builds
-> every ~12h, minus broken trees).
-
-I think all these pcpu memory corruptions can be marked as Fixed-by:
-
-commit c3bcde026684c62d7a2b6f626dc7cf763833875c
-Author: Xin Long <lucien.xin@gmail.com>
-Date:   Mon Jun 17 21:34:15 2019 +0800
-
-    tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
+Rml4IHRoZSBmb2xsb3dpbmcgc3BhcnNlIHdhcm5pbmc6CgphcmNoL3g4Ni9rZXJuZWwvY3Jhc2gu
+Yzo1OToxNToKd2FybmluZzogc3ltYm9sICdjcmFzaF96ZXJvX2J5dGVzJyB3YXMgbm90IGRlY2xh
+cmVkLiBTaG91bGQgaXQgYmUgc3RhdGljPwoKRmlyc3QsIG1ha2UgY3Jhc2hfemVyb19ieXRlcyBz
+dGF0aWMuIEluIGFkZGl0aW9uLCBjcmFzaF96ZXJvX2J5dGVzCmlzIHVzZWQgd2hlbiBDT05GSUdf
+S0VYRUNfRklMRSBpcyBzZXQsIHNvIG1ha2UgaXQgb25seSBhdmFpbGFibGUKdW5kZXIgQ09ORklH
+X0tFWEVDX0ZJTEUuIE90aGVyd2lzZSwgaWYgQ09ORklHX0tFWEVDX0ZJTEUgaXMgbm90IHNldCwK
+dGhlIGZvbGxvd2luZyB3YXJuaW5nIHdpbGwgYXBwZWFyIHdoZW4gbWFrZSBjcmFzaF96ZXJvX2J5
+dGVzIHN0YXRpYzoKCmFyY2gveDg2L2tlcm5lbC9jcmFzaC5jOjU5OjIyOgp3YXJuaW5nOiChrmNy
+YXNoX3plcm9fYnl0ZXOhryBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtdmFyaWFibGVd
+CgpGaXhlczogZGQ1ZjcyNjA3NmNjICgia2V4ZWM6IHN1cHBvcnQgZm9yIGtleGVjIG9uIHBhbmlj
+IHVzaW5nIG5ldyBzeXN0ZW0gY2FsbCIpClNpZ25lZC1vZmYtYnk6IFRpZXpodSBZYW5nIDxrZXJu
+ZWxwYXRjaEAxMjYuY29tPgpBY2tlZC1ieTogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+
+CkNjOiBWaXZlayBHb3lhbCA8dmdveWFsQHJlZGhhdC5jb20+CkNjOiBrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCi0tLQogYXJjaC94ODYva2VybmVsL2NyYXNoLmMgfCA0ICsrKy0KIDEgZmlsZSBj
+aGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNo
+L3g4Ni9rZXJuZWwvY3Jhc2guYyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCmluZGV4IDU3NmIy
+ZTEuLmYxMzQ4MGUgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCisrKyBiL2Fy
+Y2gveDg2L2tlcm5lbC9jcmFzaC5jCkBAIC01Niw3ICs1Niw5IEBAIHN0cnVjdCBjcmFzaF9tZW1t
+YXBfZGF0YSB7CiAgKi8KIGNyYXNoX3ZtY2xlYXJfZm4gX19yY3UgKmNyYXNoX3ZtY2xlYXJfbG9h
+ZGVkX3ZtY3NzID0gTlVMTDsKIEVYUE9SVF9TWU1CT0xfR1BMKGNyYXNoX3ZtY2xlYXJfbG9hZGVk
+X3ZtY3NzKTsKLXVuc2lnbmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKKyNpZmRlZiBDT05GSUdf
+S0VYRUNfRklMRQorc3RhdGljIHVuc2lnbmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKKyNlbmRp
+ZgogCiBzdGF0aWMgaW5saW5lIHZvaWQgY3B1X2NyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKHZv
+aWQpCiB7Ci0tIAoxLjguMy4x
