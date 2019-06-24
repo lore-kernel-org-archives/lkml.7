@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC93C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46726208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7015205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370306;
-	bh=Zg15pztu//YRoIkB29z76JytlOishIF08DkqrF/PHKY=;
+	s=default; t=1561370309;
+	bh=iYtyVYN0qQk+nnWvLFrLp0Tx0AtoUE2TyWiogBWVQ54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GAVJsQ+tas0mLoNldzN4o8VpPHBavtFFEBboV60Mxjb7nRSD5LhqocnuKROm0ujOm
-	 R236O0pXMBR1G0zBbnXBw+xENOrskLo3ChxeunUh5Pc5KScydWLJItnAT8nQHCsYuh
-	 iu4KYztYMtwXMcFcdPK48xSsqmTrHqiDRYI1zYas=
+	b=JsJmcAg0cicIU/q3RRzYpMIH8eNeqsQHuZRN6oFX9IWXTbSQ9UcniICyPv7aoj1E8
+	 JWqLF2j2483dCevxZxpvbyQ4LPqlrhZHbMoMT2UAOAYDhO0dFAEuCvL+1/2GLaWccT
+	 W5OBurHDI4Ey/Wy9Wwehq5IerBZDG4gdgBQf32Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfFXJ6Z (ORCPT
+        id S1728991AbfFXJ61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728958AbfFXJ6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:19 -0400
+        id S1728975AbfFXJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:25 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70643214C6;
-        Mon, 24 Jun 2019 09:58:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B66D5208CA;
+        Mon, 24 Jun 2019 09:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370298;
-        bh=Zg15pztu//YRoIkB29z76JytlOishIF08DkqrF/PHKY=;
+        s=default; t=1561370304;
+        bh=iYtyVYN0qQk+nnWvLFrLp0Tx0AtoUE2TyWiogBWVQ54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K/8KxwFLH8aDnXKbuaUaK7wx1t3CZWaEmkdiwz73M+ZBzBS/GBMWMGObFvPSmSXAA
-         yo6k4oCLm7oFXkmGIdFWNpn3TVAg8er8fSjoV58wljh9cEgs6AvJGufq8AhYLO7cjR
-         Ep7WnvvUglE8JEZcBdj3uGVkrk5jWM/Kd60VTsA0=
+        b=rozWlK9yP0WnArYbrT5oMVf2mNZBdadz4wtqJJMdKNZ47OfSzaQqLQEdCsRzu31yW
+         dlyHjnZ3BcjQimL4cYF5HPbo7SMsDS3jWILpqfd5t27h+ZW6kTMFfCTm4dgz0yuor7
+         46vwTYd3rLe3cVss+wsrM5z0bx+bkI5WFdtCGYbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 21/51] MIPS: uprobes: remove set but not used variable epc
-Date:   Mon, 24 Jun 2019 17:56:39 +0800
-Message-Id: <20190624092308.703469152@linuxfoundation.org>
+Subject: [PATCH 4.14 23/51] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+Date:   Mon, 24 Jun 2019 17:56:41 +0800
+Message-Id: <20190624092309.005776678@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -61,41 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
+[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
+message is logged:
 
-arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
-arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
+failed to kill vid 0081/0 for device eth_cu_1000_4
 
-It's never used since introduction in
-commit 40e084a506eb ("MIPS: Add uprobes support.")
+This is caused by call from __vlan_vid_del() with vin set to zero, over
+call chain this results into _mv88e6xxx_port_vlan_del() called with
+vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
-Cc: <linux-mips@vger.kernel.org>
+On symmetric path moving port up, call goes through
+mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
+that returns -EOPNOTSUPP for zero vid.
+
+This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
+zero vid, then this error code is explicitly cleared in
+dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/uprobes.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
-index f7a0645ccb82..6305e91ffc44 100644
---- a/arch/mips/kernel/uprobes.c
-+++ b/arch/mips/kernel/uprobes.c
-@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
- 	 */
- 	aup->resume_epc = regs->cp0_epc + 4;
- 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
--		unsigned long epc;
--
--		epc = regs->cp0_epc;
- 		__compute_return_epc_for_insn(regs,
- 			(union mips_instruction) aup->insn[0]);
- 		aup->resume_epc = regs->cp0_epc;
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 172b13012e10..086603de1859 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1075,7 +1075,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
+ 	int err;
+ 
+ 	if (!vid)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 
+ 	entry->vid = vid - 1;
+ 	entry->valid = false;
 -- 
 2.20.1
 
