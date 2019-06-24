@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2675DC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2C4C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3EA721670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AB9212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370822;
-	bh=Cqsztwgw6cyqd/Wc2ilgeyQMFKLpUd9BF6QBomPX2H4=;
+	s=default; t=1561370826;
+	bh=SNyT30zTNR7FIwwROCLH1qOKMHdFefreBa9XQfNA9bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MpHZlJp7purmXtkfmkQ16qAkJG+nGRXUDDgLeWyGNFGsX3GE2BfVy8IFMkQVKqU1J
-	 1DJwCmOwpaAkBQO5GKZYq4twf7D/7W23/5xqsi0jAmMgJ8hM/vyjZopqD7T693297f
-	 ysB3nyVaoUsyA8C2lhYn6w7Nl+rfKi3FmTIn6slI=
+	b=puh3mNTtdLTT6gQbY+IOJjdhms0bpKtrAs5TlDCj5SNTRiN0QMdsD9p1VuqCshsbi
+	 xt5xv30fs3yfFVtwaG3kITHtMJH0QKckd5EX3vFDRJQQJJ3m5SWGyBHhWiPxlICGE5
+	 lif5cutPk5avsALrOoskgj3cGNNoLdaVUcmFZk/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfFXKHA (ORCPT
+        id S1730257AbfFXKHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbfFXKG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:57 -0400
+        id S1730242AbfFXKHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:03 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7E41208E3;
-        Mon, 24 Jun 2019 10:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF96217D7;
+        Mon, 24 Jun 2019 10:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370817;
-        bh=Cqsztwgw6cyqd/Wc2ilgeyQMFKLpUd9BF6QBomPX2H4=;
+        s=default; t=1561370822;
+        bh=SNyT30zTNR7FIwwROCLH1qOKMHdFefreBa9XQfNA9bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUZKiTpP5jiVc5bpEfCr1u2N/khulHfaH5PH66qBGqhaP7O9GLUW5I+yzKIhnnw/K
-         uu+RLdvVpufeZDC/9Q/l/a+qvAbnu5XCH7xDeFRKy8BLUhsxUjOQByUIruH7vcwRn6
-         Q+QaMjlhj1cP77vULhukPAOGIXQUlPCOPfQXuuqs=
+        b=zdq/Y54YztCea0OJ29TnMZQChRHyPY02++e61Ujst0SeKxa5zzi9//99ZZejibOfo
+         i0EB7p9KDFoOmrdwpFfiGC8A3yvNiMFDErFD2JhLwf50GvZgZ1rdKrc6yTy/pOXO41
+         oAI5uh5BZHuq0bK/+MdJTkf37/5B2v45uHPtKjnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.1 012/121] usb: xhci: Dont try to recover an endpoint if port is in error state.
-Date:   Mon, 24 Jun 2019 17:55:44 +0800
-Message-Id: <20190624092321.278695736@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.1 014/121] cifs: fix GlobalMid_Lock bug in cifs_reconnect
+Date:   Mon, 24 Jun 2019 17:55:46 +0800
+Message-Id: <20190624092321.371392266@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,118 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit b8c3b718087bf7c3c8e388eb1f72ac1108a4926e upstream.
+commit 61cabc7b0a5cf0d3c532cfa96594c801743fe7f6 upstream.
 
-A USB3 device needs to be reset and re-enumarated if the port it
-connects to goes to a error state, with link state inactive.
+We can not hold the GlobalMid_Lock spinlock during the
+dfs processing in cifs_reconnect since it invokes things that may sleep
+and thus trigger :
 
-There is no use in trying to recover failed transactions by resetting
-endpoints at this stage. Tests show that in rare cases, after multiple
-endpoint resets of a roothub port the whole host controller might stop
-completely.
+BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:23
 
-Several retries to recover from transaction error can happen as
-it can take a long time before the hub thread discovers the USB3
-port error and inactive link.
+Thus we need to drop the spinlock during this code block.
 
-We can't reliably detect the port error from slot or endpoint context
-due to a limitation in xhci, see xhci specs section 4.8.3:
-"There are several cases where the EP State field in the Output
-Endpoint Context may not reflect the current state of an endpoint"
-and
-"Software should maintain an accurate value for EP State, by tracking it
-with an internal variable that is driven by Events and Doorbell accesses"
+RHBZ: 1716743
 
-Same appears to be true for slot state.
-
-set a flag to the corresponding slot if a USB3 roothub port link goes
-inactive to prevent both queueing new URBs and resetting endpoints.
-
-Reported-by: Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>
-Tested-by: Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |   15 ++++++++++++++-
- drivers/usb/host/xhci.c      |    5 +++++
- drivers/usb/host/xhci.h      |    9 +++++++++
- 3 files changed, 28 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1608,8 +1608,13 @@ static void handle_port_status(struct xh
- 		usb_hcd_resume_root_hub(hcd);
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -478,6 +478,7 @@ cifs_reconnect(struct TCP_Server_Info *s
+ 	spin_lock(&GlobalMid_Lock);
+ 	server->nr_targets = 1;
+ #ifdef CONFIG_CIFS_DFS_UPCALL
++	spin_unlock(&GlobalMid_Lock);
+ 	cifs_sb = find_super_by_tcp(server);
+ 	if (IS_ERR(cifs_sb)) {
+ 		rc = PTR_ERR(cifs_sb);
+@@ -495,6 +496,7 @@ cifs_reconnect(struct TCP_Server_Info *s
  	}
- 
--	if (hcd->speed >= HCD_USB3 && (portsc & PORT_PLS_MASK) == XDEV_INACTIVE)
-+	if (hcd->speed >= HCD_USB3 &&
-+	    (portsc & PORT_PLS_MASK) == XDEV_INACTIVE) {
-+		slot_id = xhci_find_slot_id_by_port(hcd, xhci, hcd_portnum + 1);
-+		if (slot_id && xhci->devs[slot_id])
-+			xhci->devs[slot_id]->flags |= VDEV_PORT_ERROR;
- 		bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
-+	}
- 
- 	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_RESUME) {
- 		xhci_dbg(xhci, "port resume event for port %d\n", port_id);
-@@ -1797,6 +1802,14 @@ static void xhci_cleanup_halted_endpoint
- {
- 	struct xhci_virt_ep *ep = &xhci->devs[slot_id]->eps[ep_index];
- 	struct xhci_command *command;
-+
-+	/*
-+	 * Avoid resetting endpoint if link is inactive. Can cause host hang.
-+	 * Device will be reset soon to recover the link so don't do anything
-+	 */
-+	if (xhci->devs[slot_id]->flags & VDEV_PORT_ERROR)
-+		return;
-+
- 	command = xhci_alloc_command(xhci, false, GFP_ATOMIC);
- 	if (!command)
- 		return;
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1442,6 +1442,10 @@ static int xhci_urb_enqueue(struct usb_h
- 			xhci_dbg(xhci, "urb submitted during PCI suspend\n");
- 		return -ESHUTDOWN;
- 	}
-+	if (xhci->devs[slot_id]->flags & VDEV_PORT_ERROR) {
-+		xhci_dbg(xhci, "Can't queue urb, port error, link inactive\n");
-+		return -ENODEV;
-+	}
- 
- 	if (usb_endpoint_xfer_isoc(&urb->ep->desc))
- 		num_tds = urb->number_of_packets;
-@@ -3724,6 +3728,7 @@ static int xhci_discover_or_reset_device
- 	}
- 	/* If necessary, update the number of active TTs on this root port */
- 	xhci_update_tt_active_eps(xhci, virt_dev, old_active_eps);
-+	virt_dev->flags = 0;
- 	ret = 0;
- 
- command_cleanup:
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1010,6 +1010,15 @@ struct xhci_virt_device {
- 	u8				real_port;
- 	struct xhci_interval_bw_table	*bw_table;
- 	struct xhci_tt_bw_info		*tt_info;
-+	/*
-+	 * flags for state tracking based on events and issued commands.
-+	 * Software can not rely on states from output contexts because of
-+	 * latency between events and xHC updating output context values.
-+	 * See xhci 1.1 section 4.8.3 for more details
-+	 */
-+	unsigned long			flags;
-+#define VDEV_PORT_ERROR			BIT(0) /* Port error, link inactive */
-+
- 	/* The current max exit latency for the enabled USB3 link states. */
- 	u16				current_mel;
- 	/* Used for the debugfs interfaces. */
+ 	cifs_dbg(FYI, "%s: will retry %d target(s)\n", __func__,
+ 		 server->nr_targets);
++	spin_lock(&GlobalMid_Lock);
+ #endif
+ 	if (server->tcpStatus == CifsExiting) {
+ 		/* the demux thread will exit normally
 
 
