@@ -2,52 +2,54 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620EBC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5567CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3792145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE9820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370588;
-	bh=8p6CvQoZsI1qstbo/MkDljlgLADsxNqe5SQqKr0Q8wY=;
+	s=default; t=1561370594;
+	bh=9/5h1e+gmgiTzTUkmMFI0omFz26ZyuJlOy3B/+hi3l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XW+pq+eS+/9OlgQVSrMVvK3v31DQr7B41qUD5zNcuy5Ip5zeaEnjkXPC6HcialznP
-	 axltWqju+3y9y89Akaebn/8BuEOZBpHBKlmUfMC/sOzgHEMY64s8t3S8cLNFeEyBWV
-	 5ilbhEdZmI48pbPrUDMdwq6cp5ZZ3faJ6uyvbfyM=
+	b=gSccQB4+UffC/p7b3jL45hC6JGBsHfzsDmv6ci9YPkonicsLcYELrLH1fiTOqkdKY
+	 rNjT2NA0fHmF2N8YMzJ/tP4j4Me44e4XqrV/GDGDz6kxNEsZ/9as/9ZMF6trBjjujL
+	 zAxgNXQ0ZRS8dI0kWHmgYmP+1sW4T5t1ACsqXWKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbfFXKDF (ORCPT
+        id S1729540AbfFXKDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729479AbfFXKDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:03:01 -0400
+        id S1729524AbfFXKDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:08 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865AF213F2;
-        Mon, 24 Jun 2019 10:02:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6FBD205ED;
+        Mon, 24 Jun 2019 10:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370580;
-        bh=8p6CvQoZsI1qstbo/MkDljlgLADsxNqe5SQqKr0Q8wY=;
+        s=default; t=1561370588;
+        bh=9/5h1e+gmgiTzTUkmMFI0omFz26ZyuJlOy3B/+hi3l8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+QxH1IrGTpD9nG4j3DsJ+yOiMVCDnUuGpsu6YtApe96pN3P1zfShv9yHVS19T5+j
-         QGdig9bdR8CklZrJQDMiga/CG7X299KxKyfv1Xln9T7KHGLl1ePCts/GW2U531kCDl
-         bLLQmjhd9XL6dmDdfa0DSujk5bisHtx6Gn5d9cZI=
+        b=IKOScsI8qu+xdPFGckjG7+0AyK1i2k8bNdMymLK7oB5l90J1pucJRfy1rrBNQssRu
+         GM/Z8aEeG/oyzJ5nh4p6/YuOqNlHZbZ+HHDDxTj+DcyUUXhwHxzRTpBfCin9F4htQT
+         sgY/uZBPHNcHuhgVyUV2TqvQ6ifv83V09weKYZEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/90] ovl: fix bogus -Wmaybe-unitialized warning
-Date:   Mon, 24 Jun 2019 17:55:59 +0800
-Message-Id: <20190624092314.600497388@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 29/90] brcmfmac: sdio: Dont tune while the card is off
+Date:   Mon, 24 Jun 2019 17:56:19 +0800
+Message-Id: <20190624092316.147286844@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,45 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1dac6f5b0ed2601be21bb4e27a44b0c3e667b7f4 ]
+From: Douglas Anderson <dianders@chromium.org>
 
-gcc gets a bit confused by the logic in ovl_setup_trap() and
-can't figure out whether the local 'trap' variable in the caller
-was initialized or not:
+commit 65dade6044079a5c206fd1803642ff420061417a upstream.
 
-fs/overlayfs/super.c: In function 'ovl_fill_super':
-fs/overlayfs/super.c:1333:4: error: 'trap' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-    iput(trap);
-    ^~~~~~~~~~
-fs/overlayfs/super.c:1312:17: note: 'trap' was declared here
+When Broadcom SDIO cards are idled they go to sleep and a whole
+separate subsystem takes over their SDIO communication.  This is the
+Always-On-Subsystem (AOS) and it can't handle tuning requests.
 
-Reword slightly to make it easier for the compiler to understand.
+Specifically, as tested on rk3288-veyron-minnie (which reports having
+BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
+when "on = 1" (aka we're transition from sleep to wake) by whacking:
+  bus->sdiodev->func1->card->host->need_retune = 1
+...then I can often see tuning fail.  In this case dw_mmc reports "All
+phases bad!").  Note that I don't get 100% failure, presumably because
+sometimes the card itself has already transitioned away from the AOS
+itself by the time we try to wake it up.  If I force retuning when "on
+= 0" (AKA force retuning right before sending the command to go to
+sleep) then retuning is always OK.
 
-Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+NOTE: we need _both_ this patch and the patch to avoid triggering
+tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
+sdio: Disable auto-tuning around commands expected to fail").  Though
+both patches handle issues with Broadcom's AOS, the problems are
+distinct:
+1. We want to defer (but not ignore) asynchronous (like
+   timer-requested) tuning requests till the card is awake.  However,
+   we want to ignore CRC errors during the transition, we don't want
+   to queue deferred tuning request.
+2. You could imagine that the AOS could implement retuning but we
+   could still get errors while transitioning in and out of the AOS.
+   Similarly you could imagine a seamless transition into and out of
+   the AOS (with no CRC errors) even if the AOS couldn't handle
+   tuning.
+
+ALSO NOTE: presumably there is never a desperate need to retune in
+order to wake up the card, since doing so is impossible.  Luckily the
+only way the card can get into sleep state is if we had a good enough
+tuning to send it the command to put it into sleep, so presumably that
+"good enough" tuning is enough to wake us up, at least with a few
+retries.
+
+Cc: stable@vger.kernel.org #v4.18+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/overlayfs/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index d6e60a7156a1..2d028c02621f 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -996,8 +996,8 @@ static int ovl_setup_trap(struct super_block *sb, struct dentry *dir,
- 	int err;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -669,6 +669,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio
  
- 	trap = ovl_get_trap_inode(sb, dir);
--	err = PTR_ERR(trap);
--	if (IS_ERR(trap)) {
-+	err = PTR_ERR_OR_ZERO(trap);
-+	if (err) {
- 		if (err == -ELOOP)
- 			pr_err("overlayfs: conflicting %s path\n", name);
- 		return err;
--- 
-2.20.1
-
+ 	sdio_retune_crc_disable(bus->sdiodev->func1);
+ 
++	/* Cannot re-tune if device is asleep; defer till we're awake */
++	if (on)
++		sdio_retune_hold_now(bus->sdiodev->func1);
++
+ 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+ 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+ 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+@@ -721,6 +725,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio
+ 	if (try_cnt > MAX_KSO_ATTEMPTS)
+ 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ 
++	if (on)
++		sdio_retune_release(bus->sdiodev->func1);
++
+ 	sdio_retune_crc_enable(bus->sdiodev->func1);
+ 
+ 	return err;
 
 
