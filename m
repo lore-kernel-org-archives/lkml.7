@@ -2,84 +2,95 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4DEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F61EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6702133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304542083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0ZOIPzJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfFXHVC (ORCPT
+        id S1727876AbfFXHVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:21:02 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55488 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbfFXHU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:20:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9248E1A056C;
-        Mon, 24 Jun 2019 09:20:26 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 579C51A056D;
-        Mon, 24 Jun 2019 09:20:21 +0200 (CEST)
-Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 014374031F;
-        Mon, 24 Jun 2019 15:20:14 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com,
-        Ramneek Mehresh <ramneek.mehresh@freescale.com>,
-        Nikhil Badola <nikhil.badola@freescale.com>,
-        Ran Wang <ran.wang_1@nxp.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/5] usb: fsl: Set USB_EN bit to select ULPI phy
-Date:   Mon, 24 Jun 2019 15:22:15 +0800
-Message-Id: <20190624072219.15258-1-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 24 Jun 2019 03:21:20 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45027 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfFXHVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:21:20 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so1926153iob.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rRYD08uEOW6jHrjgv0dXHWz0dSOkoJBUbYYXM6hia+M=;
+        b=0ZOIPzJOIW81mQOo9Abzgc1wEIKgyK9mpk44HMHlNquRvqK1UJk9Z0J5QB0h9Wl6Xm
+         +RBZUo5G7lxjMfHHUsZi5afzbNtd+v65zeYjsEU5/mcyoZDR6uA90b8ozuYvCmxlSOEU
+         sNnlRlfK9QUuU6vVIU8GMkY8p7Wrx9ExfMtI/NCucCQDvVmlp2i0fPKdI03PsFLci1dV
+         kN5f1dsqr9PbBpoV2jmE//4nKtMFKtx+qSVHKIhjA3tKTJzL7jhg97g5pQM/kJQAvO6J
+         EnQfA71tnvEgEY7wWkQPg5FvRYWsVlbvKCb4LSi1LQCpsne7O0xrZOdhBllf2KK6NUsa
+         95NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rRYD08uEOW6jHrjgv0dXHWz0dSOkoJBUbYYXM6hia+M=;
+        b=kkna2/bFgDKGyxcwmf6SPjp28MR9FbdMh/TZwzybSetRiyzZJJhDcY0bGBgoeWVZtm
+         S4hIs01pWWHrRRxLvqYSYOH01LqgCLUWJUfU/P2ufZPCQSgvXuwr78Y0Ox+Ln1yvclzT
+         p1CrHwBBbChz2NQAzPkXikZVu7WtbgffpvJ/F75j59ClF+Q5Yhy2HmoedrWg7NQH9RvX
+         gTg2suVREooNv4mLg+i0VaUvZX/wuPrupD5HFEtFTmxXBStCilUe+BLgQhMb4WEBkN3g
+         FJv3C6ZfLaO881WyNPHRfGfFwSxOmkkbU1U3wFpQUJpRC7mQL1wAiBshES6tlRrNXk8K
+         g/aA==
+X-Gm-Message-State: APjAAAWOngs9SFF3Wtm20oCoLo9YS85JWQSraSVo1RnORtfgnXFQpX8o
+        TNVfz0Q/6ll8JL7bKRVnb/3wXo5qQePbfLlkHqSUiTN90Ag=
+X-Google-Smtp-Source: APXvYqwmfI+mGWxHOSQwh+smr+2AsnMoFa+nhOVINzC/PYNsF18ld5h/oPC845ZsqFBHEgBqdnp2ZEyQ1xFhL93MxyQ=
+X-Received: by 2002:a02:5b05:: with SMTP id g5mr120533961jab.114.1561360879228;
+ Mon, 24 Jun 2019 00:21:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190605083334.22383-1-brgl@bgdev.pl> <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
+ <1a66e067-631c-c7a4-288b-3934737bee8c@linaro.org>
+In-Reply-To: <1a66e067-631c-c7a4-288b-3934737bee8c@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 24 Jun 2019 09:21:08 +0200
+Message-ID: <CAMRc=MecrpzwC0-8x=1dAipf+j7h+C54pHCfbZidFGXtAyv7Pg@mail.gmail.com>
+Subject: Re: [RFC v3 0/2] clocksource: davinci-timer: new driver
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Badola <nikhil.badola@freescale.com>
+pon., 24 cze 2019 o 07:40 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
+=C5=82(a):
+>
+>
+> Sekhar, Bartosz,
+>
+> if the sparse warning is not fixed, the driver won't hit this kernel
+> version. Please fix it before the two next days otherwise it won't make
+> it for v5.4.
+>
+> Thanks
+>
 
-Set USB_EN bit to select ULPI phy for USB controller version 2.5
+Hi Daniel,
 
-Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
-Change in v2:
-		replace Yinbo.Zhu with Yinbo Zhu. 
-Change in v3:
-		Code base already has patch[5/6], so remove it.
-Change in v4:
-		Incorrect indentation of the continuation line.
+will do, I just came back to the office.
 
- drivers/usb/host/ehci-fsl.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sekhar, how do we want to handle the rest of the platform code with
+this driver? Do you think it can make it for the next release?
 
-diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-index e3d0c1c25160..38674b7aa51e 100644
---- a/drivers/usb/host/ehci-fsl.c
-+++ b/drivers/usb/host/ehci-fsl.c
-@@ -122,6 +122,12 @@ static int fsl_ehci_drv_probe(struct platform_device *pdev)
- 		tmp |= 0x4;
- 		iowrite32be(tmp, hcd->regs + FSL_SOC_USB_CTRL);
- 	}
-+
-+	/* Set USB_EN bit to select ULPI phy for USB controller version 2.5 */
-+	if (pdata->controller_ver == FSL_USB_VER_2_5 &&
-+	    pdata->phy_mode == FSL_USB2_PHY_ULPI)
-+		iowrite32be(USB_CTRL_USB_EN, hcd->regs + FSL_SOC_USB_CTRL);
-+
- 	/*
- 	 * Enable UTMI phy and program PTS field in UTMI mode before asserting
- 	 * controller reset for USB Controller version 2.5
--- 
-2.17.1
-
+Bart
