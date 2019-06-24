@@ -2,94 +2,99 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D4C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D048C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8137B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561341160;
-	bh=oPpq+YScZrWevywmu9N3ag0Ky3wXqEPlzcFQAwc4wac=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VZphb+emVrzmQozPe/W83bDeExWTwwyZooP3BAnF8x6tC/QzGaD2xfJpnj57YNT5k
-	 hGtyPbK/Co+PTeSy6KpfCan8GSnZRXzd7JHmKbGoL0jEYesAXDSMjySf/JIrYaQjLo
-	 k0BKkDey6kxL3rAGBCeNO8Nuddmu+vNFkRQpctqI=
+	by mail.kernel.org (Postfix) with ESMTP id 610DA2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfFXBwj (ORCPT
+        id S1726467AbfFXByH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
+        Sun, 23 Jun 2019 21:54:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38686 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfFXBw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:52:26 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726323AbfFXByH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:54:07 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D36622DCB
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561338947;
-        bh=oPpq+YScZrWevywmu9N3ag0Ky3wXqEPlzcFQAwc4wac=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZObr9Sve1fr7WfDRdAZ7O7pKw2lzSEd1p3K7pVFn8jwfqek+njnBSfU1sbxow578F
-         F3L2CcAeHPt3k4hmVjYWNM5uRXjlXxrtSgeEisWCC9Uq4HZjuqASVM4UZsrVcxDLnl
-         t5ja0wCLA+XZotal4ksNMp9wwleOlxtVrJ5K1QKc=
-Received: by mail-wm1-f50.google.com with SMTP id s15so11564418wmj.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 18:15:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAVj1pNGQmqAAW3QUOyzp4cttNabcKq7Iu0729lxScDzAQtTUR6p
-        TNTQMV3fu3wu5HCQw7YwR/6m+lNZ8U8NnlRQup86eQ==
-X-Google-Smtp-Source: APXvYqxXfZO9JbIsNZmRpKd7ahekmHh/DeHYGI38xrq+mQInt0q9I7titye+BRFoBLBaUaVpBy9Q+nBinA9a1jW5Vj4=
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr13710054wmi.0.1561338945460;
- Sun, 23 Jun 2019 18:15:45 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id A7D4A30832CE;
+        Mon, 24 Jun 2019 01:54:06 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-23.pek2.redhat.com [10.72.12.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60D995D739;
+        Mon, 24 Jun 2019 01:54:03 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 09:53:59 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Tiezhu Yang <kernelpatch@126.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+Subject: Re: [PATCH v2] kexec: fix warnig of crash_zero_bytes in crash.c
+Message-ID: <20190624015359.GC2976@dhcp-128-65.nay.redhat.com>
+References: <43d6fe3a.18e.16b814a09ba.Coremail.kernelpatch@126.com>
+ <20190624013520.GA2976@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com> <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 23 Jun 2019 18:15:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrV-suRS5=JqDjbouXciN_OPsguERjux7fQVFOKGmdrspA@mail.gmail.com>
-Message-ID: <CALCETrV-suRS5=JqDjbouXciN_OPsguERjux7fQVFOKGmdrspA@mail.gmail.com>
-Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190624013520.GA2976@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 24 Jun 2019 01:54:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 5:34 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> +GENERIC VDSO LIBRARY:
-> +M:     Andy Lutomirksy <luto@kernel.org>
+On 06/24/19 at 09:35am, Dave Young wrote:
+> On 06/23/19 at 06:24am, Tiezhu Yang wrote:
+> > Fix the following sparse warning:
+> > 
+> > arch/x86/kernel/crash.c:59:15:
+> > warning: symbol 'crash_zero_bytes' was not declared. Should it be static?
+> > 
+> > First, make crash_zero_bytes static. In addition, crash_zero_bytes
+> > is used when CONFIG_KEXEC_FILE is set, so make it only available
+> > under CONFIG_KEXEC_FILE. Otherwise, if CONFIG_KEXEC_FILE is not set,
+> > the following warning will appear when make crash_zero_bytes static:
+> > 
+> > arch/x86/kernel/crash.c:59:22:
+> > warning: ‘crash_zero_bytes’ defined but not used [-Wunused-variable]
+> > 
+> > Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+> > Signed-off-by: Tiezhu Yang <kernelpatch@126.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> >  arch/x86/kernel/crash.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> > index 576b2e1..f13480e 100644
+> > --- a/arch/x86/kernel/crash.c
+> > +++ b/arch/x86/kernel/crash.c
+> > @@ -56,7 +56,9 @@ struct crash_memmap_data {
+> >   */
+> >  crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
+> >  EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
+> > -unsigned long crash_zero_bytes;
+> > +#ifdef CONFIG_KEXEC_FILE
+> > +static unsigned long crash_zero_bytes;
+> > +#endif
+> >  
+> >  static inline void cpu_crash_vmclear_loaded_vmcss(void)
+> >  {
+> > -- 
+> > 1.8.3.1
+> 
+> Acked-by: Dave Young <dyoung@redhat.com>
 
-Lutomirski, perhaps?  Although I do appreciate the opportunity to say
-"not me!" :)
+BTW, a soft reminder, for kexec patches, it would be better to cc kexec mail
+list.
+
+> 
+> Thanks
+> Dave
+> 
