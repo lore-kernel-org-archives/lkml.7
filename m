@@ -2,65 +2,100 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D842C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF944C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBB32089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FF72089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:28:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R7sTpfaU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R7sTpfaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfFXJ1h (ORCPT
+        id S1727845AbfFXJ2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:27:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726631AbfFXJ1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:27:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 993F9AC66;
-        Mon, 24 Jun 2019 09:27:35 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 0/5] livepatch: new API to track system state changes
-References: <20190611135627.15556-1-pmladek@suse.com>
-Date:   Mon, 24 Jun 2019 11:27:34 +0200
-In-Reply-To: <20190611135627.15556-1-pmladek@suse.com> (Petr Mladek's message
-        of "Tue, 11 Jun 2019 15:56:22 +0200")
-Message-ID: <87o92n49kp.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 24 Jun 2019 05:28:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46860 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfFXJ2A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:28:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C8DED60A05; Mon, 24 Jun 2019 09:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561368479;
+        bh=Rxclg2J+fWA8GUEmOU6NUxxB+KBcECPCvwJIpsOLICs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=R7sTpfaUnBiAsHi9QzlvcwBvEgnqax/4UEsrkq3OvRM/v0oaOcrHTEBOSn9fuQHpB
+         FYOJhdyiXixMYbToP5dONeUR+9R6LrLQPkBsDhYJ5YnUQ3CSr7DBCRUouVc4l7FP3n
+         AZg5FIKSQv8/uT1Upxd+To/5PVCnt5/JwJRYy3rg=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B25560208;
+        Mon, 24 Jun 2019 09:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561368479;
+        bh=Rxclg2J+fWA8GUEmOU6NUxxB+KBcECPCvwJIpsOLICs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=R7sTpfaUnBiAsHi9QzlvcwBvEgnqax/4UEsrkq3OvRM/v0oaOcrHTEBOSn9fuQHpB
+         FYOJhdyiXixMYbToP5dONeUR+9R6LrLQPkBsDhYJ5YnUQ3CSr7DBCRUouVc4l7FP3n
+         AZg5FIKSQv8/uT1Upxd+To/5PVCnt5/JwJRYy3rg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B25560208
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU
+ phandle
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
+ <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
+ <4db99204-8553-7a80-f952-30cbd149593d@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <d1fadd8d-4b3d-38a4-1d26-e72e8eff8ff1@codeaurora.org>
+Date:   Mon, 24 Jun 2019 14:57:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <4db99204-8553-7a80-f952-30cbd149593d@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+On 6/24/2019 1:56 PM, Suzuki K Poulose wrote:
+> Sai,
+> 
+> Thanks for getting this done.
+> 
+> On 24/06/2019 04:36, Sai Prakash Ranjan wrote:
+>> Coresight platform support assumes that a missing "cpu" phandle
+>> defaults to CPU0. This could be problematic and unnecessarily binds
+>> components to CPU0, where they may not be. Let us make the DT binding
+>> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+>> affinity information.
+>>
+>> Also in coresight etm and cpu-debug drivers, abort the probe
+>> for such cases.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-> this is another piece in the puzzle that helps to maintain more
-> livepatches.
->
-> Especially pre/post (un)patch callbacks might change a system state.
-> Any newly installed livepatch has to somehow deal with system state
-> modifications done be already installed livepatches.
->
-> This patchset provides, hopefully, a simple and generic API that
-> helps to keep and pass information between the livepatches.
-> It is also usable to prevent loading incompatible livepatches.
+Thanks for the review Suzuki.
 
-I like it a lot, many thanks for doing this!
-
-Minor remarks/questions will follow inline.
-
-Nicolai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
