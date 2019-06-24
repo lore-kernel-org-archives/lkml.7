@@ -2,52 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81602C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE502145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CF4212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370750;
-	bh=W0Xsbqza/+fR8KzRJ6FPJFO9jlBLhM1du4QMqOW7tXs=;
+	s=default; t=1561370754;
+	bh=VUru6ZPh216BdAHCYLYH+RFIWY6SIvlGVpx5BvcCHi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9F3LtDGEYT3RMpI7b8VsAyZmU2aZdM+8ek+AkHnJDp+Fztrbjm5WAt5rqxjEPxUG
-	 AFl9o5NZKsW2zNbS0C6WcX6n4HbYgiFvHBdR7faV0R6kFgHlkVz/eBgQHgTSJNbQ7N
-	 6M+YVJuy12Qxo8IfYUN4dtbYDX25O5PvNWrOADEg=
+	b=b6i6wg+uYYfnM1x7NGnihRSK/g7opb2qFS89h7FxUqBUqlKq8xsxOxEw0LXb8l+27
+	 yuc1zQ7I312rM8rCNsfCdOhRBFR0L0trQlyjwyxZIuza4x39JvuXaiQ2Ihrc7xHseA
+	 +zl7zkufGyRppkNcnJ5q9JdbFOSmWOzHGLwV5CZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfFXKFt (ORCPT
+        id S1729527AbfFXKFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729478AbfFXKFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:45 -0400
+        id S1729989AbfFXKFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:48 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2492145D;
-        Mon, 24 Jun 2019 10:05:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77AA72145D;
+        Mon, 24 Jun 2019 10:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370744;
-        bh=W0Xsbqza/+fR8KzRJ6FPJFO9jlBLhM1du4QMqOW7tXs=;
+        s=default; t=1561370746;
+        bh=VUru6ZPh216BdAHCYLYH+RFIWY6SIvlGVpx5BvcCHi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMrUoZRuwmT1iLBUqoND0xed4r5GQK55HBI/1H9ySlV2WvdxNNN68WaYPFhU+H1cQ
-         U463KGpi7/+IqxUztQ0RXfPqT0CiyyWWl+76eoxHYu3yGB4AyZqdGEv+SYazCmohYy
-         o4jJkxnasEgN/MKxRc+z8EDGZ9JOucgQ6an59cMg=
+        b=p3ZDZUG63WzkZCfoo34Mwn1pGhB3nOf8+t+UM5IOxkmVH/cqH6lwhJAploQHhPIIC
+         Ky4b+p5c1zqDYAK5Jn1NwUjk2UHBbYBWwqbWHWNNdpe8AB//+gKv5xEM8BQznG7VRO
+         7cIDO5BhSDq9C6dYy+f0ItoZxJ1mMCpWJIv5X+XA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 48/90] selftests: vm: install test_vmalloc.sh for run_vmtests
-Date:   Mon, 24 Jun 2019 17:56:38 +0800
-Message-Id: <20190624092317.387371473@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.19 75/90] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
+Date:   Mon, 24 Jun 2019 17:57:05 +0800
+Message-Id: <20190624092318.900771558@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,38 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bc2cce3f2ebcae02aa4bb29e3436bf75ee674c32 ]
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-Add test_vmalloc.sh to TEST_FILES to make sure it gets installed for
-run_vmtests.
+commit c3c0b70cd3f801bded7a548198ee1c9851a0ca82 upstream.
 
-Fixed below error:
-./run_vmtests: line 217: ./test_vmalloc.sh: No such file or directory
+Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
+dra76x data manual[1]. The new iodelay values will have better marginality
+and should prevent issues in corner cases.
 
-Tested with: make TARGETS=vm install INSTALL_PATH=$PWD/x
+Also this particular pinctrl-array is using spaces instead of tabs for
+spacing between the values and the comments. Fix this as well.
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[1] http://www.ti.com/lit/ds/symlink/dra76p.pdf
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+[tony@atomide.com: updated description with a bit more info]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/vm/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi |   40 +++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-index dc68340a6a96..2cf3dc49bd03 100644
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@ -24,6 +24,8 @@ TEST_GEN_FILES += virtual_address_range
+--- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
++++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+@@ -22,7 +22,7 @@
+  *
+  * Datamanual Revisions:
+  *
+- * DRA76x Silicon Revision 1.0: SPRS993A, Revised July 2017
++ * DRA76x Silicon Revision 1.0: SPRS993E, Revised December 2018
+  *
+  */
  
- TEST_PROGS := run_vmtests
+@@ -169,25 +169,25 @@
+ 	/* Corresponds to MMC2_HS200_MANUAL1 in datamanual */
+ 	mmc2_iodelay_hs200_conf: mmc2_iodelay_hs200_conf {
+ 		pinctrl-pin-array = <
+-			0x190 A_DELAY_PS(384) G_DELAY_PS(0)       /* CFG_GPMC_A19_OEN */
+-			0x194 A_DELAY_PS(0) G_DELAY_PS(174)       /* CFG_GPMC_A19_OUT */
+-			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)       /* CFG_GPMC_A20_OEN */
+-			0x1ac A_DELAY_PS(85) G_DELAY_PS(0)        /* CFG_GPMC_A20_OUT */
+-			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)       /* CFG_GPMC_A21_OEN */
+-			0x1b8 A_DELAY_PS(139) G_DELAY_PS(0)       /* CFG_GPMC_A21_OUT */
+-			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)       /* CFG_GPMC_A22_OEN */
+-			0x1c4 A_DELAY_PS(69) G_DELAY_PS(0)        /* CFG_GPMC_A22_OUT */
+-			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	  /* CFG_GPMC_A23_OUT */
+-			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)       /* CFG_GPMC_A24_OEN */
+-			0x1dc A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A24_OUT */
+-			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)       /* CFG_GPMC_A25_OEN */
+-			0x1e8 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A25_OUT */
+-			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)       /* CFG_GPMC_A26_OEN */
+-			0x1f4 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A26_OUT */
+-			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)       /* CFG_GPMC_A27_OEN */
+-			0x200 A_DELAY_PS(36) G_DELAY_PS(0)        /* CFG_GPMC_A27_OUT */
+-			0x364 A_DELAY_PS(759) G_DELAY_PS(0)       /* CFG_GPMC_CS1_OEN */
+-			0x368 A_DELAY_PS(72) G_DELAY_PS(0)        /* CFG_GPMC_CS1_OUT */
++			0x190 A_DELAY_PS(384) G_DELAY_PS(0)	/* CFG_GPMC_A19_OEN */
++			0x194 A_DELAY_PS(350) G_DELAY_PS(174)	/* CFG_GPMC_A19_OUT */
++			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)	/* CFG_GPMC_A20_OEN */
++			0x1ac A_DELAY_PS(335) G_DELAY_PS(0)	/* CFG_GPMC_A20_OUT */
++			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)	/* CFG_GPMC_A21_OEN */
++			0x1b8 A_DELAY_PS(339) G_DELAY_PS(0)	/* CFG_GPMC_A21_OUT */
++			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)	/* CFG_GPMC_A22_OEN */
++			0x1c4 A_DELAY_PS(219) G_DELAY_PS(0)	/* CFG_GPMC_A22_OUT */
++			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	/* CFG_GPMC_A23_OUT */
++			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)	/* CFG_GPMC_A24_OEN */
++			0x1dc A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A24_OUT */
++			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)	/* CFG_GPMC_A25_OEN */
++			0x1e8 A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A25_OUT */
++			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)	/* CFG_GPMC_A26_OEN */
++			0x1f4 A_DELAY_PS(200) G_DELAY_PS(0)	/* CFG_GPMC_A26_OUT */
++			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)	/* CFG_GPMC_A27_OEN */
++			0x200 A_DELAY_PS(236) G_DELAY_PS(0)	/* CFG_GPMC_A27_OUT */
++			0x364 A_DELAY_PS(759) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OEN */
++			0x368 A_DELAY_PS(372) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OUT */
+ 	      >;
+ 	};
  
-+TEST_FILES := test_vmalloc.sh
-+
- KSFT_KHDR_INSTALL := 1
- include ../lib.mk
- 
--- 
-2.20.1
-
 
 
