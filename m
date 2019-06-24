@@ -2,93 +2,168 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B57DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AA12063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E9F20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561370903;
+	bh=WxEApTo0Goc840G+FER9x9kk6XQpZJV1dS/+Tj0WSW0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bJ5OqFg4y1AfQ/9Hve2CYzDjAQYmBkjUiaPHijTWSjWYpKkU3SVJU61dknTx0cOLK
+	 ZbQMPvpLown2CUYdtvQ34FMZ6JnpuFaw6BZIvd2kkwnmX9QA+ufVaAyFq4qc5eKx4u
+	 hmT7+yUpd0CrtH7JUeMcQcec7g0CAoTHonCtG4uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfFXKIS (ORCPT
+        id S1730439AbfFXKIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35822 "EHLO mx1.redhat.com"
+        Mon, 24 Jun 2019 06:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbfFXKHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:55 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729516AbfFXKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:57 -0400
+Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 31F9A356EA;
-        Mon, 24 Jun 2019 10:07:47 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D8BF5C1B5;
-        Mon, 24 Jun 2019 10:07:44 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 18:07:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kyle Pelton <kyle.d.pelton@intel.com>
-Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
- phys_p4d_init()
-Message-ID: <20190624100742.GM24419@MiWiFi-R3L-srv>
-References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
- <20190621090249.GL24419@MiWiFi-R3L-srv>
- <20190621105449.fp7h7tsmpitvplyr@box>
+        by mail.kernel.org (Postfix) with ESMTPSA id 75765205C9;
+        Mon, 24 Jun 2019 10:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561370875;
+        bh=WxEApTo0Goc840G+FER9x9kk6XQpZJV1dS/+Tj0WSW0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sOuTBovGhTqrt7/6T2Gu0xTQlTg6jMbX9JwgZ+hYip1DH/ypQbJrc80MEahmUh0JF
+         fS2yLPAYmz404PfAX0P1ceYt5QGhb6OX2Xiua8/NQYznvSaS8G5k5vfZMMCI4/8Uvj
+         QGBMGwzxZkjhkQqfTGoQI7x9k2n0byLKiWZyk5pc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jjian Zhou <jjian.zhou@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 004/121] mmc: mediatek: fix SDIO IRQ interrupt handle flow
+Date:   Mon, 24 Jun 2019 17:55:36 +0800
+Message-Id: <20190624092320.878211381@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
+References: <20190624092320.652599624@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621105449.fp7h7tsmpitvplyr@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 24 Jun 2019 10:07:55 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/21/19 at 01:54pm, Kirill A. Shutemov wrote:
-> > The code block as below is to zero p4d entries which are not coverred by
-> > the current memory range, and if haven't been mapped already. It's
-> > clearred away in this patch, could you also mention it in log, and tell
-> > why it doesn't matter now?
-> > 
-> > If it doesn't matter, should we clear away the simillar code in
-> > phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
-> > clean up?
-> 
-> It only matters for the levels that contains page table entries that can
-> point to pages, not page tables. There's no p4d or pgd huge pages on x86.
-> Otherwise we only leak page tables without any benefit.
+From: jjian zhou <jjian.zhou@mediatek.com>
 
-Ah, I checked git history, didn't find why it's added. I just Have a
-superficial knowledge of the clearing, but in a low-efficiency way.
+commit 8a5df8ac628f4febea1e6cd3044bff2d536dd096 upstream.
 
-> 
-> We might have this on all leveles under p?d_large() condition and don't
-> touch page tables at all.
+SDIO IRQ is triggered by low level. It need disable SDIO IRQ
+detected function. Otherwise the interrupt register can't be cleared.
+It will process the interrupt more.
 
-I see.
+Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+Fixes: 5215b2e952f3 ("mmc: mediatek: Add MMC_CAP_SDIO_IRQ support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> 
-> BTW, it all becomes rather risky for this late in the release cycle. Maybe
-> we should revert the original patch and try again later with more
-> comprehansive solution?
+---
+ drivers/mmc/host/mtk-sd.c |   37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-It's not added in one time. I am fine with your current change, would be
-much better if mention it in log, and also add code comment above the
-clearing code. Surely reverting and trying later with more comprehensive
-solution is also good to me, this need a little more effort.
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -1355,24 +1355,25 @@ static void msdc_request_timeout(struct
+ 	}
+ }
+ 
+-static void __msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
++static void __msdc_enable_sdio_irq(struct msdc_host *host, int enb)
+ {
+-	unsigned long flags;
+-	struct msdc_host *host = mmc_priv(mmc);
+-
+-	spin_lock_irqsave(&host->lock, flags);
+-	if (enb)
++	if (enb) {
+ 		sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+-	else
++		sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	} else {
+ 		sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+-	spin_unlock_irqrestore(&host->lock, flags);
++		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	}
+ }
+ 
+ static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
+ {
++	unsigned long flags;
+ 	struct msdc_host *host = mmc_priv(mmc);
+ 
+-	__msdc_enable_sdio_irq(mmc, enb);
++	spin_lock_irqsave(&host->lock, flags);
++	__msdc_enable_sdio_irq(host, enb);
++	spin_unlock_irqrestore(&host->lock, flags);
+ 
+ 	if (enb)
+ 		pm_runtime_get_noresume(host->dev);
+@@ -1394,6 +1395,8 @@ static irqreturn_t msdc_irq(int irq, voi
+ 		spin_lock_irqsave(&host->lock, flags);
+ 		events = readl(host->base + MSDC_INT);
+ 		event_mask = readl(host->base + MSDC_INTEN);
++		if ((events & event_mask) & MSDC_INT_SDIOIRQ)
++			__msdc_enable_sdio_irq(host, 0);
+ 		/* clear interrupts */
+ 		writel(events & event_mask, host->base + MSDC_INT);
+ 
+@@ -1402,10 +1405,8 @@ static irqreturn_t msdc_irq(int irq, voi
+ 		data = host->data;
+ 		spin_unlock_irqrestore(&host->lock, flags);
+ 
+-		if ((events & event_mask) & MSDC_INT_SDIOIRQ) {
+-			__msdc_enable_sdio_irq(host->mmc, 0);
++		if ((events & event_mask) & MSDC_INT_SDIOIRQ)
+ 			sdio_signal_irq(host->mmc);
+-		}
+ 
+ 		if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
+ 			break;
+@@ -1528,10 +1529,7 @@ static void msdc_init_hw(struct msdc_hos
+ 	sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIO);
+ 
+ 	/* Config SDIO device detect interrupt function */
+-	if (host->mmc->caps & MMC_CAP_SDIO_IRQ)
+-		sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+-	else
+-		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+ 
+ 	/* Configure to default data timeout */
+ 	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+@@ -2052,7 +2050,12 @@ static void msdc_hw_reset(struct mmc_hos
+ 
+ static void msdc_ack_sdio_irq(struct mmc_host *mmc)
+ {
+-	__msdc_enable_sdio_irq(mmc, 1);
++	unsigned long flags;
++	struct msdc_host *host = mmc_priv(mmc);
++
++	spin_lock_irqsave(&host->lock, flags);
++	__msdc_enable_sdio_irq(host, 1);
++	spin_unlock_irqrestore(&host->lock, flags);
+ }
+ 
+ static const struct mmc_host_ops mt_msdc_ops = {
 
-Thanks
-Baoquan
+
