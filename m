@@ -2,208 +2,157 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F1C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA61C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1C920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5709220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FYRfER6l"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Uu22pwaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfFXKtP (ORCPT
+        id S1729416AbfFXKvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:49:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:58643 "EHLO ozlabs.org"
+        Mon, 24 Jun 2019 06:51:36 -0400
+Received: from mout.web.de ([212.227.15.14]:48183 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfFXKtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:49:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XQyZ6Kbzz9s4Y;
-        Mon, 24 Jun 2019 20:49:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561373352;
-        bh=KPlgWvFZiDZ5hy8Bt/xNt0/hF2ihC/57SqKILC0Tmxc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FYRfER6lqUeB9CRm57EPLNuxXAV98Neh00396z86XrwwId6ZQYeyl63JMwkVs9B2K
-         EPwKyYlcFZFJTez0F1jDIm4fKifcyHsR4eRv6OA2Mz/svUZR/OwbDX6jPiv8gbLeH1
-         /+4axwQKJiWEJNhOCvX8m5RTQ9sISzEyN4c2ItusanqRT9FXXMYvLiZvuFUL8I9Amk
-         65Q7Okb9AtktgqM5orXDGJPiFWikrtZ0GCC0Fn19pl7/lhfhfzdIk3SzAGfJgn69cQ
-         Ii+4xL+P/6sv6pPVkYM2uXPkYjr36NX8a0PZPP56bycLzcq9WOnvD3vkC9b4FWom4R
-         V1CGPBNSTpG4A==
-Date:   Mon, 24 Jun 2019 20:49:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: linux-next: manual merge of the akpm-current tree with the drm tree
-Message-ID: <20190624204908.64a33862@canb.auug.org.au>
+        id S1726960AbfFXKvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1561373475;
+        bh=va9X6BekHg4ryvxfPgkOEdcMF+Bqg1ca0r0893l0PBY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Uu22pwaN4+5xknNs7InlX0w2gHMPwIByLFOJSKrNGgeC0Xp6jiX3cUSMWKZGJ2yRy
+         sxlre9Zr6XNHA57Jlh2cA4Kx1e7qf5bd3h2U+nzWckvTOUcSznUrawVDym/JMdRWvO
+         y8JUscKuJ1oidyBv2DUX2XNk5gFQ9ijxAP3qpLEk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.148.79]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZDki-1i0KIZ2CD6-00KyK0; Mon, 24
+ Jun 2019 12:51:15 +0200
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
+ devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel-janitors@vger.kernel.org
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Enrico Weigelt <lkml@metux.net>
+References: <20190221162627.3476-1-brgl@bgdev.pl>
+ <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+ <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a2c9c7f2-0efb-e56c-517e-f5c3fda4ee92@web.de>
+Date:   Mon, 24 Jun 2019 12:51:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/smpkyf3iKW.KYSxeqEWRcnh"; protocol="application/pgp-signature"
+In-Reply-To: <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SqOgSxHrt6dq/y7gRUAEPzZElRsr/T3ememjHK+/oMkPS6lp/SD
+ OuFWPYvagOXRFzVT6ybVuJ2YO9n6udB1QHqlSQ+CCXF09AHN4kctBunIBgftYpQafUhUBD6
+ fE7I3bsF9guCqsNR3NoBbajjXsKwYCjPLe5bryRHdXLmjwil44gBAuaR39ONUC+N+RZtvtf
+ TvIilNX2vfl6wODwrYjYA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+QnH5MqNw/4=:dezmi0lf2NjALPJGln6okK
+ 10jMxBREH57lkYP6zkZ3ht84U8xpsQa4wVju7lMSa3xeap2ceZYpZeoRg9zNSz31F97JhROK+
+ cdnM8hmF35Ead7lnSxAasH8rlVMKsANzeTXSGZAqTAuuW3gGgD8Dn/HeX/rmrs6+J6EfJGmyF
+ By3X/D+KfMHqZOSL5J54qiyCYHF7i24dOCkCBX+omT8URUE0fmAtsnfz/A0c+mlfg9UxNAAt9
+ AIbzjFng0FIJ5tf3N2FYQeLON2IWfiCBncQi34oHXDkJS2Zvgw9Ue7eNfWNQdyRWGBcWVBa4C
+ YbdtPHleHsxVV9pMV1qGCW6TDnFONgFB4RF0eTez13JIDS/37CcYUpg/Axe28CdRAog9RvjLR
+ E75V0y52GypbB/1rRLMrgBnlSPCe047NDdY3+zPKVJ8o1gAQ31rbouzvpxQLvlM22M/tNsb3l
+ JFm6Jf00eflT59JIAqXhXBHAonshsFGkW0XaaQvSBWddrH2lOHodVwzeCF+pGqRNEe6aPorNJ
+ NH3zeboLYV+AYvc98SePtOWF2FHT4hXCLH9DnzDdUIBbhLsqRTpNVKpsN3NJl51ODD9QIxpej
+ wzX8VkRlKivnoFHpKPMSpNdgMeGGX+JpJb/E6QIZdYMqYpiOsX4u7AywsByLfarifLDhjyrRG
+ eCVm0uUZiWzS6821BMigVm3whac61LQtFvdnTh4+MncsLXezgEp0CNHw67hxmBoaGBQ3SQIdq
+ FHd0CnA3RDVCZON/0Zac6t2W0y32Xo0FSqsynDSPEZiZV1EklhkMWDNU5pbWhoEuTWiSg19a1
+ FytcGQkpeGKYXdgZ6Vaj1w8FNwCuS1SXirv1UKDL23UTlv63WjHI7GdG/TiX7nh71mOUo9MOS
+ LA6NBdc+ncywss3SE8l1tO+8meFkg+kRxBQhjB7STBrNragCusS9L2IU+IE3qYvVINfok2rey
+ ojJwaeY8ydHE0uPnCEd9U4Xp6Q+wakpp5dq4zf/OzVyfKg2M0PYEy
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/smpkyf3iKW.KYSxeqEWRcnh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+>> +++ b/drivers/base/platform.c
+>> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platfor=
+m_device *dev,
+>>         return NULL;
+>>  }
+>>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>> +#ifdef CONFIG_HAS_IOMEM
+>>
+>>  /**
+>>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a=
+ platform
+>> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+>>   *        resource management
+>>   * @index: resource index
+>>   */
+>> -#ifdef CONFIG_HAS_IOMEM
+>>  void __iomem *devm_platform_ioremap_resource(struct platform_device *p=
+dev,
+>>                                              unsigned int index)
+>>  {
+=E2=80=A6
+> And what is the purpose of that?
 
-Hi all,
+I recommend to let the availability of additional documentation for this f=
+unction
+depend also on the mentioned preprocessor symbol
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
-
-  mm/memory.c
-
-between commit:
-
-  29875a52915e ("mm: Add an apply_to_pfn_range interface")
-
-from the drm tree and commit:
-
-  e972cea08fb3 ("mm/pgtable: drop pgtable_t variable from pte_fn_t function=
-s")
-
-from the akpm-current tree.
-
-I fixed it up (see below my signature, then added the following merge
-resolution patch as well) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 24 Jun 2019 20:40:46 +1000
-Subject: [PATCH] merge fixup for "mm: Add an apply_to_pfn_range interface"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/linux/mm.h    | 2 +-
- mm/as_dirty_helpers.c | 8 ++------
- 2 files changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 87d53de3dee4..4404e18443ef 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2673,7 +2673,7 @@ extern int apply_to_page_range(struct mm_struct *mm, =
-unsigned long address,
- 			       unsigned long size, pte_fn_t fn, void *data);
-=20
- struct pfn_range_apply;
--typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
-+typedef int (*pter_fn_t)(pte_t *pte, unsigned long addr,
- 			 struct pfn_range_apply *closure);
- struct pfn_range_apply {
- 	struct mm_struct *mm;
-diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
-index f600e31534fb..7c863626c2a4 100644
---- a/mm/as_dirty_helpers.c
-+++ b/mm/as_dirty_helpers.c
-@@ -26,7 +26,6 @@ struct apply_as {
- /**
-  * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
-  * @pte: Pointer to the pte
-- * @token: Page table token, see apply_to_pfn_range()
-  * @addr: The virtual page address
-  * @closure: Pointer to a struct pfn_range_apply embedded in a
-  * struct apply_as
-@@ -36,8 +35,7 @@ struct apply_as {
-  *
-  * Return: Always zero.
-  */
--static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
--			      unsigned long addr,
-+static int apply_pt_wrprotect(pte_t *pte, unsigned long addr,
- 			      struct pfn_range_apply *closure)
- {
- 	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
-@@ -78,7 +76,6 @@ struct apply_as_clean {
- /**
-  * apply_pt_clean - Leaf pte callback to clean a pte
-  * @pte: Pointer to the pte
-- * @token: Page table token, see apply_to_pfn_range()
-  * @addr: The virtual page address
-  * @closure: Pointer to a struct pfn_range_apply embedded in a
-  * struct apply_as_clean
-@@ -91,8 +88,7 @@ struct apply_as_clean {
-  *
-  * Return: Always zero.
-  */
--static int apply_pt_clean(pte_t *pte, pgtable_t token,
--			  unsigned long addr,
-+static int apply_pt_clean(pte_t *pte, unsigned long addr,
- 			  struct pfn_range_apply *closure)
- {
- 	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc mm/memory.c
-index 462aa47f8878,f8a75528658a..e7e37fcbd687
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@@ -2037,12 -2036,11 +2035,11 @@@ static int apply_to_pte_range(struct pf
-  {
-  	pte_t *pte;
-  	int err;
-- 	pgtable_t token;
-  	spinlock_t *uninitialized_var(ptl);
- =20
- -	pte =3D (mm =3D=3D &init_mm) ?
- +	pte =3D (closure->mm =3D=3D &init_mm) ?
-  		pte_alloc_kernel(pmd, addr) :
- -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
- +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
-  	if (!pte)
-  		return -ENOMEM;
- =20
-@@@ -2050,10 -2048,8 +2047,8 @@@
- =20
-  	arch_enter_lazy_mmu_mode();
- =20
-- 	token =3D pmd_pgtable(*pmd);
--=20
-  	do {
-- 		err =3D closure->ptefn(pte++, token, addr, closure);
- -		err =3D fn(pte++, addr, data);
-++		err =3D closure->ptefn(pte++, addr, closure);
-  		if (err)
-  			break;
-  	} while (addr +=3D PAGE_SIZE, addr !=3D end);
-
---Sig_/smpkyf3iKW.KYSxeqEWRcnh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QqqQACgkQAVBC80lX
-0Gy/HggAlUflCFAigIJCuwLXm9046cFZXhb3qCiDEGTFMH4jS/XFDxZ8TuO26F2t
-KKQU5tJbR9JD1OiU0Wop4WrpudTLPM10Tk9U1ppYQSrHUYU3cvE/bNrB+Ca5JqQ3
-9Gy6CnxMA7Uh7x9KhdeOdrYrbLVoR2rqsgmEdbssTG46mQG9G3C7by+hj0zHh9IY
-i75/DBJbCnIy+RRMYXyLR8cYhER32z81nlJhJBlZILn/KLbfXV8/ABji8hzEeOCE
-QKuDhJnyNp/cqoi4Eq6eEf+JJAWPqQT3VOA+TW87maDcOqadurFG6JBrV5ligshz
-VqMZYeF8H/SayiEwmLFL1+yGiKP8aw==
-=nei6
------END PGP SIGNATURE-----
-
---Sig_/smpkyf3iKW.KYSxeqEWRcnh--
+Regards,
+Markus
