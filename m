@@ -2,105 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9EEC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151EDC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202A120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNRvk4ji"
+	by mail.kernel.org (Postfix) with ESMTP id EC8B120679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfFXWVT (ORCPT
+        id S1727276AbfFXWV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:21:19 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38197 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfFXWVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:21:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so4513367ioa.5;
-        Mon, 24 Jun 2019 15:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C1hxUVhPxMAJ8iC1Jpoywv+GpiOlXAEZ3JQKKj0idbA=;
-        b=cNRvk4jikf3M94qtfs0doJvC56m6xUDf8lVQVIQlsKY3ojvMPoTaz2vmfm5Xog3xtb
-         8/2WGqdKWy+uu/7o2fNnZh7Avi25axp9SYpY6QO7WP/u4PtJ2Fbir9QXJJzz8A5JE4tv
-         8Fr+GgfuBewCi1Lw6lbVsBxcZVA9krmg5KyY4vORS77bDUpUa7k96gVk2VDT0jeWJ+sk
-         utABP5mcN9hMnaL4LzWvmxY4kCyjVlMdjQXQ4n2Zo5sOni8u1mQVOLN2iIJeN6BBXb4b
-         j8Reqdh+Z6FsJM+ePoQJE5IqK7U9BS44g70B3RGfTnli1jwkQqUTgt+rdCu/Rt46IJG4
-         i5GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C1hxUVhPxMAJ8iC1Jpoywv+GpiOlXAEZ3JQKKj0idbA=;
-        b=mq73THV5ie6oBYjiYY0KkvLvxoZ6WWlUW7Vdww6EJEUUvhZiRWIlyIDIIKcUyb6UOP
-         tlTVXasC0JO2AG8nqZ1HcPXD3GG8s1nkHj2Xy27r7HuauZSVUSXoZ7bXv6MY7/K/8Xl6
-         Is1VfEl8jrbwU7s2iFRLSrudFeiVOYKNPrHsOa6ac4T1dpRNg9lfl9BNpzhyXdUABZ83
-         ClOIGQlcYEZlWV7vFZz4KXOPP2ObWImB7uyPeNeRg2Pqg+ThVfWKTowILdPeV3y7p+S1
-         SmKLM7EAP+tpLsL3quAMntYvtLNs+wY2dJop9A5BZj4OPrX97wtFzWslJU6044JbGmz1
-         Ltew==
-X-Gm-Message-State: APjAAAWncYlS0dC9Z1LvzoS+gUbw80S2hQeddjHLrF/ch+Rs+Rmtfam7
-        SNAwiaSK/euIh+q2cPFZH0aQ5kFGrYkwnAd8NW4=
-X-Google-Smtp-Source: APXvYqyFWsOl+fg45q4H1f0m++1DSGjcTD7K0R/xRLC2C+yf1/Hj6drnDfWHx1wFtrD6k+/4rGRwk4rOL83I4swr8f0=
-X-Received: by 2002:a5d:8c81:: with SMTP id g1mr4054068ion.239.1561414877512;
- Mon, 24 Jun 2019 15:21:17 -0700 (PDT)
+        Mon, 24 Jun 2019 18:21:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52396 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfFXWV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 18:21:28 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 36C45C0546D3;
+        Mon, 24 Jun 2019 22:21:16 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E553F5D71A;
+        Mon, 24 Jun 2019 22:21:09 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 17:21:07 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, ast@kernel.org,
+        daniel@iogearbox.net, akpm@linux-foundation.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/3] notifier: Fix broken error handling pattern
+Message-ID: <20190624222107.wrmtww6b2be26wwl@treble>
+References: <20190624091843.859714294@infradead.org>
+ <20190624092109.745446564@infradead.org>
 MIME-Version: 1.0
-References: <20190604170146.12205-1-s-anna@ti.com> <47b8f278-85ff-18be-d5a0-fde9de6e17f2@ti.com>
-In-Reply-To: <47b8f278-85ff-18be-d5a0-fde9de6e17f2@ti.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Mon, 24 Jun 2019 17:21:06 -0500
-Message-ID: <CABb+yY0xOd_oJLg_BffKXuRtnpHeR-jg1EtKE4KVovy2u3MBuA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Add Mailbox support for TI K3 SoCs
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190624092109.745446564@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 24 Jun 2019 22:21:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 3:39 PM Suman Anna <s-anna@ti.com> wrote:
->
-> Hi Jassi,
->
-> On 6/4/19 12:01 PM, Suman Anna wrote:
-> > Hi Jassi,
-> >
-> > The following series adds the support for the Mailbox IP present
-> > within the Main NavSS module on the newer TI K3 AM65x and J721E SoCs.
-> >
-> > The Mailbox IP is similar to the previous generation IP on OMAP SoCs
-> > with a few differences:
-> >  - Multiple IP instances from previous DRA7/AM57 family each form a
-> >    cluster and are part of the same IP. The driver support will continue
-> >    to be based on a cluster.
-> >  - The IP is present within a Main NaVSS, and interrupts have to go
-> >    through an Interrupt Router within Main NavSS before they reach the
-> >    respective processor sub-system's interrupt controllers.
-> >  - The register layout is mostly same, with difference in two registers
-> >
-> > Support is added by enhancing the existing OMAP Mailbox driver to
-> > support the K3 IP using a new compatible. The driver also has to be
-> > adjusted to deal with the 32-bit mailbox payloads vs the 64-bit
-> > pointers used by the Mailbox API on these Arm v8 platforms.
-> >
-> > DT nodes will be posted separately once the binding is acked.
->
-> Can you please pick this series up for 5.3 merge window if you do not
-> have any comments.
->
-I will. Usually I leave the code to cook in the open for as long as
-possible, more so when no acks are coming.
-Cheers!
+On Mon, Jun 24, 2019 at 11:18:44AM +0200, Peter Zijlstra wrote:
+> The current notifiers have the following error handling pattern all
+> over the place:
+> 
+> 	int nr;
+> 
+> 	ret = __foo_notifier_call_chain(&chain, val_up, v, -1, &nr);
+> 	if (err & NOTIFIER_STOP_MASK)
+
+s/err/ret/
+
+> 		__foo_notifier_call_chain(&chain, val_down, v, nr-1, NULL)
+> 
+> And aside from the endless repetition thereof, it is broken. Consider
+> blocking notifiers; both calls take and drop the rwsem, this means
+> that the notifier list can change in between the two calls, making @nr
+> meaningless.
+> 
+> Fix this by replacing all the __foo_notifier_call_chain() functions
+> with foo_notifier_call_chain_error() that embeds the above patter, but
+> ensures it is inside a single lock region.
+
+The name "notifier_call_chain_error()" seems confusing, it almost sounds
+like it's notifying an error code.  Then again, I can't really think of
+a more reasonably succinct name.
+
+> @@ -25,8 +25,23 @@ static int cpu_pm_notify(enum cpu_pm_eve
+>  	 * RCU know this.
+>  	 */
+>  	rcu_irq_enter_irqson();
+> -	ret = __atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL,
+> -		nr_to_call, nr_calls);
+> +	ret = atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
+> +	rcu_irq_exit_irqson();
+> +
+> +	return notifier_to_errno(ret);
+> +}
+> +
+> +static int cpu_pm_notify_error(enum cpu_pm_event event_up, enum cpu_pm_event event_down)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * __atomic_notifier_call_chain has a RCU read critical section, which
+
+__atomic_notifier_call_chain() no longer exists.
+
+> +	 * could be disfunctional in cpu idle. Copy RCU_NONIDLE code to let
+
+"dysfunctional"
+
+> @@ -156,43 +169,30 @@ int atomic_notifier_chain_unregister(str
+>  }
+>  EXPORT_SYMBOL_GPL(atomic_notifier_chain_unregister);
+>  
+> -/**
+> - *	__atomic_notifier_call_chain - Call functions in an atomic notifier chain
+> - *	@nh: Pointer to head of the atomic notifier chain
+> - *	@val: Value passed unmodified to notifier function
+> - *	@v: Pointer passed unmodified to notifier function
+> - *	@nr_to_call: See the comment for notifier_call_chain.
+> - *	@nr_calls: See the comment for notifier_call_chain.
+> - *
+> - *	Calls each function in a notifier chain in turn.  The functions
+> - *	run in an atomic context, so they must not block.
+> - *	This routine uses RCU to synchronize with changes to the chain.
+> - *
+> - *	If the return value of the notifier can be and'ed
+> - *	with %NOTIFY_STOP_MASK then atomic_notifier_call_chain()
+> - *	will return immediately, with the return value of
+> - *	the notifier function which halted execution.
+> - *	Otherwise the return value is the return value
+> - *	of the last notifier function called.
+> - */
+
+Why remove the useful comment?
+
+Ditto for the blocking, raw, srcu, comments.
+
+-- 
+Josh
