@@ -2,123 +2,171 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB51CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4B7C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1520652
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5515E20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYAtPv+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbfFXPXs (ORCPT
+        id S1730814AbfFXPY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:23:48 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:12728 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfFXPXs (ORCPT
+        Mon, 24 Jun 2019 11:24:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38371 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbfFXPYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:23:48 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="35622915"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2019 08:23:47 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 08:22:48 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 24 Jun 2019 08:22:48 -0700
-Date:   Mon, 24 Jun 2019 17:23:45 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Message-ID: <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190624142625.GR31306@lunn.ch>
-User-Agent: NeoMutt/20180716
+        Mon, 24 Jun 2019 11:24:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z75so4689241pgz.5;
+        Mon, 24 Jun 2019 08:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lgND2Ln1TBQQyZCEAnGKpymz91Liq3socwltmWkX9XY=;
+        b=dYAtPv+90C/VZ7Prob7WQ5L59If12of+wMC6Hzb+7Dxwqz1ZgnNyG3pu8E4fGOUchx
+         drEImF0lbTOnCDOkUHGSZ7wbgkQYOSfBftt5Q2NIikF4PEKMSJOdhOUCOptP29vcLORw
+         4CctNYGVzXWa36/or8Mi3nVXspD7250Hy5k7ZffISYCusmRjAFkrze+gc227HLVWP4bC
+         DSO1o7pkfyEsrudhx5FZh3kbAJMRR1JBcozhBJN02fwQZFo4HwEq5u2nzCXIWxHSt25H
+         ycz2LRsZ58khQZoxbwBOK+QXlgmm393SvEZ7K8z1sKW6gnzzibIBjVLReb9U/sBvDyct
+         JUHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lgND2Ln1TBQQyZCEAnGKpymz91Liq3socwltmWkX9XY=;
+        b=CvRBx8XtBlAYaVsBwUpUMaUwA8AyDxkG0oGZuxibhrvdUeYu0pptsv7vIBZS2Hpu7Q
+         wVoOysE+pW4/6xpNWg0C8ZO8wf0E4LH7HbVFYmCgMV62ZXeyk6vExIuW22xqYjTFT6iF
+         QTnsDF3RjoR17MgN0Hc/2fLvjrrBCHDBMNXdHhHCose5KaIf3Ayy+vOKsQPYktjGp8V3
+         GLHWZAl4K7xr8bB/cElilIZcTTLB+UKWHl1JHWNiaXezvuWlbt4r9SkkQsQIUXb1mFku
+         ncYntF5h4PnpWsgYjEYsDicMkgzqUFW9t+ybHjunWBuUiHLxBMotyflzA5EFxoZlka6m
+         Emzw==
+X-Gm-Message-State: APjAAAXYXJVUTIqsMSvXWQusIxiNsGL+AG/1T6Zi9Mb6MijpXS/2JmGI
+        JxNiroCqGcTY0EVFjuBiAfDSogEm
+X-Google-Smtp-Source: APXvYqzU0xboNWcd1kQ0aKYSSAhpeljyXHqy7joHYSYu4QAPkAdS78BDlsinBHJX48WO1Ly5IHRJlA==
+X-Received: by 2002:a17:90b:d8a:: with SMTP id bg10mr25646706pjb.92.1561389865084;
+        Mon, 24 Jun 2019 08:24:25 -0700 (PDT)
+Received: from bridge.tencent.com ([119.28.31.106])
+        by smtp.gmail.com with ESMTPSA id e63sm20066869pgc.62.2019.06.24.08.24.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 08:24:24 -0700 (PDT)
+From:   Wenbin Zeng <wenbin.zeng@gmail.com>
+X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
+To:     axboe@kernel.dk, keith.busch@intel.com, hare@suse.com,
+        ming.lei@redhat.com, osandov@fb.com, sagi@grimberg.me,
+        bvanassche@acm.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wenbin Zeng <wenbinzeng@tencent.com>
+Subject: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug
+Date:   Mon, 24 Jun 2019 23:24:07 +0800
+Message-Id: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Currently hctx->cpumask is not updated when hot-plugging new cpus,
+as there are many chances kblockd_mod_delayed_work_on() getting
+called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
+on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
+reporting excessive "run queue from wrong CPU" messages because
+cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
 
-The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > 
-> > > This configuration may look prettier on DSA, but the main restriction here
-> > > is that the entire functionality is provided by the ocelot driver which is a
-> > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > from ocelot to a separate dsa driver.
-> > > 
-> > 
-> > We should probably make the ocelot driver a DSA driver then...
-> An important part of DSA is being able to direct frames out specific
-> ports when they ingress via the CPU port. Does the silicon support
-> this? At the moment, i think it is using polled IO.
+This patch added a cpu-hotplug handler into blk-mq, updating
+hctx->cpumask at cpu-hotplug.
 
-That is supported, it requires a bit of initial configuration of the Chip, but
-nothing big (I believe this configuration is part of Claudiu's change-set).
+Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
+---
+ block/blk-mq.c         | 29 +++++++++++++++++++++++++++++
+ include/linux/blk-mq.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-But how do you envision this done?
-
-- Let the existing SwitchDev driver and the DSA driver use a set of common
-  functions.
-- Convert the existing Ocelot driver from SwitchDev to DSA
-- Fork (copy) the existing driver of Ocelot, and modify it as needed for the
-  Felix driver
-
-My guess is the first one, but I would like to understand what you have in mind.
-
-BTW: The Ocelot switch does exist in an other (register compatible) version
-without the MIPS CPU. That version would use a MAC-2-MAC connection to an
-external CPU, and would fit the DSA model. And we have been considering how to
-best represent that version in the kernel.
-
-/Allan
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ce0f5f4..2e465fc 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -39,6 +39,8 @@
+ #include "blk-mq-sched.h"
+ #include "blk-rq-qos.h"
+ 
++static enum cpuhp_state cpuhp_blk_mq_online;
++
+ static void blk_mq_poll_stats_start(struct request_queue *q);
+ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
+ 
+@@ -2215,6 +2217,21 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+ 	return -ENOMEM;
+ }
+ 
++static int blk_mq_hctx_notify_online(unsigned int cpu, struct hlist_node *node)
++{
++	struct blk_mq_hw_ctx *hctx;
++
++	hctx = hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_online);
++
++	if (!cpumask_test_cpu(cpu, hctx->cpumask)) {
++		mutex_lock(&hctx->queue->sysfs_lock);
++		cpumask_set_cpu(cpu, hctx->cpumask);
++		mutex_unlock(&hctx->queue->sysfs_lock);
++	}
++
++	return 0;
++}
++
+ /*
+  * 'cpu' is going away. splice any existing rq_list entries from this
+  * software queue to the hw queue dispatch list, and ensure that it
+@@ -2251,6 +2268,9 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
+ 
+ static void blk_mq_remove_cpuhp(struct blk_mq_hw_ctx *hctx)
+ {
++	if (cpuhp_blk_mq_online > 0)
++		cpuhp_state_remove_instance_nocalls(cpuhp_blk_mq_online,
++						    &hctx->cpuhp_online);
+ 	cpuhp_state_remove_instance_nocalls(CPUHP_BLK_MQ_DEAD,
+ 					    &hctx->cpuhp_dead);
+ }
+@@ -2310,6 +2330,9 @@ static int blk_mq_init_hctx(struct request_queue *q,
+ {
+ 	hctx->queue_num = hctx_idx;
+ 
++	if (cpuhp_blk_mq_online > 0)
++		cpuhp_state_add_instance_nocalls(cpuhp_blk_mq_online,
++						 &hctx->cpuhp_online);
+ 	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
+ 
+ 	hctx->tags = set->tags[hctx_idx];
+@@ -3544,6 +3567,12 @@ unsigned int blk_mq_rq_cpu(struct request *rq)
+ 
+ static int __init blk_mq_init(void)
+ {
++	cpuhp_blk_mq_online = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
++					"block/mq:online",
++					blk_mq_hctx_notify_online, NULL);
++	if (cpuhp_blk_mq_online <= 0)
++		pr_warn("blk_mq_init: failed to setup cpu online callback\n");
++
+ 	cpuhp_setup_state_multi(CPUHP_BLK_MQ_DEAD, "block/mq:dead", NULL,
+ 				blk_mq_hctx_notify_dead);
+ 	return 0;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 15d1aa5..5241659 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -58,6 +58,7 @@ struct blk_mq_hw_ctx {
+ 
+ 	atomic_t		nr_active;
+ 
++	struct hlist_node	cpuhp_online;
+ 	struct hlist_node	cpuhp_dead;
+ 	struct kobject		kobj;
+ 
+-- 
+1.8.3.1
 
