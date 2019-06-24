@@ -2,115 +2,155 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9413AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E782C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692812089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="g3K+3sQD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T24kO8Yn"
+	by mail.kernel.org (Postfix) with ESMTP id 503A7208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561361837;
+	bh=x3aCy3cw4nqUw/E68KNlHb4J1hBjM6xKiEFbJNmuLeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1UpJ13cHo4DKbCSP3nYhvDEvq4cqiOlRfhES4A93X0+8S9U8uFQRq7ooTuHD95u08
+	 xfs4yPYJRsdaQqKPqRf6jVSGiAI6rUmkPd7PGctwYDKp+tR6SZ6ZwRwe7V0fbpboKM
+	 avB32AC/j0YNCSE82HMPT+PBa2Pb949HZUrW5crY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbfFXHhK (ORCPT
+        id S1728021AbfFXHhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:37:10 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:46281 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726077AbfFXHhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:37:10 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 8F0133F8;
-        Mon, 24 Jun 2019 03:37:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 24 Jun 2019 03:37:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=1+J5C2HWzRAWGr9qUi/dV7VOWB/
-        lXXCZf4VWBdCbOxE=; b=g3K+3sQDn4c+WQ7BN/Yf4iqSFAz7JeF62Y4qIKWKKP8
-        K/HCVktH3QNaiWY9FqoIk8EuPRvCRaSZZwJsVP4qY/xZWEIxtpA2BCG4EpXErQ+p
-        g8vRbb4zqg3VxbsAuZ8KVOPDM/22O0sJJ1AMwhRkhWvFqgASksdnTqen1Ul0sM4F
-        kTBPbPmd5vJ2IWV8HjR7qzoIyrvE7GvQsqkF5VvVDMFh76ZUaq9wOdFo6iHitq28
-        uiEqGztL9PLua0hjB1Ysgu+SccZ+1/hSYwBYUJDZsZdoYGqtKmMYdR4ujqUPF3Nq
-        cNCi3DSkhC5W7+IoRg/oorzQd+oCfKhZHSmh6EGJWyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=1+J5C2
-        HWzRAWGr9qUi/dV7VOWB/lXXCZf4VWBdCbOxE=; b=T24kO8Ynmc/MMjAOj4hhOj
-        IDuIVgpVAXkT2XaGkzoeMbl17mHQN7MYMU1XNrFi9eMPzWpnohauDClfU0y6y2V4
-        tw+uPDVsJBm1smL1gIcSAjyWvA4eJBABq7QJiorvLJWGcZ1ALgCMzlKy9suAWiql
-        H9iQ2JkGA9Y9rR2lNkP5pjqRTnpjcJPdEohgwdVQVNRqTrZMTHuhxFvHxdVkFH73
-        TGl2jA9wdNtOcJisHzSusaUp2q59FaSmNR7eLKTFOtQgi9IsNUR16GOM2uuKKx5W
-        dODG4KQcEAqZIQc6mhIQw7APa5Wx3Kv87TxmaG+FdvmJMoDwIwUWZoenV/iyDwQg
-        ==
-X-ME-Sender: <xms:o30QXbleGP7Hx66krWKlv_allmqAP1f7ya7ChKI0SDKWFNLcoGfByA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddugdduvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppedujedvrddutdegrddvge
-    ekrdeggeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-    necuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:o30QXTGAK3c5LrdHsb-EQ8r4ss3kEO79j9kYTI51qescz8Rg3ozatw>
-    <xmx:o30QXcqHiD9l23zn63Lmslgc-TxBSBEUDygWsXmwRfz-wFrRx775bQ>
-    <xmx:o30QXX5WWCBWCyIOILJmborWroz4ycwM5Wz7AsmmwUnoYZHIc7JxXQ>
-    <xmx:pH0QXZ0lKSu-QcedHo4lnr2K49mtL7tK0dCMxUE6UX7Agc7UeOxSbA>
+        Mon, 24 Jun 2019 03:37:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFXHhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:37:15 -0400
 Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2AA83380083;
-        Mon, 24 Jun 2019 03:37:05 -0400 (EDT)
-Date:   Mon, 24 Jun 2019 15:34:43 +0800
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: linux-next: manual merge of the usb tree with the pci tree
-Message-ID: <20190624073443.GA13830@kroah.com>
-References: <20190624171229.6415ca4f@canb.auug.org.au>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA3AE2089F;
+        Mon, 24 Jun 2019 07:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561361834;
+        bh=x3aCy3cw4nqUw/E68KNlHb4J1hBjM6xKiEFbJNmuLeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VH4pN3Hg6X32GIipweiPjWQNXUNkTYG4LTH0myZFrICQznUQrnUJ9AMyi/6/KegHw
+         P3YrhHNxl6k6p/c1XwHdQ95ue6PqTYEsp6sNJDhoQzC7XD7Qdw/fh4IH/CkF03d+ql
+         pjsiCmcyZVPhNivMoWtKR/+VH/uzTJiuhwMydzEk=
+Date:   Mon, 24 Jun 2019 15:36:59 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joel Fernandes <joelaf@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+Message-ID: <20190624073659.GA13957@kroah.com>
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com>
+ <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+ <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+ <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+ <CANA+-vCBW=P=dpJGfcKTt7SoNKzWcpP5pwZHSDMU6MkwBKoC9A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624171229.6415ca4f@canb.auug.org.au>
+In-Reply-To: <CANA+-vCBW=P=dpJGfcKTt7SoNKzWcpP5pwZHSDMU6MkwBKoC9A@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:12:29PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Sun, Jun 23, 2019 at 06:48:43PM -0700, Tri Vo wrote:
+> On Wed, Jun 19, 2019 at 1:35 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Wed, Jun 19, 2019 at 1:52 AM Joel Fernandes <joelaf@google.com> wrote:
+> > >
+> > > On Tue, Jun 18, 2019 at 7:15 PM Tri Vo <trong@android.com> wrote:
+> > > [snip]
+> > > > > > > >
+> > > > > > > > Android userspace reading wakeup_sources is not ideal because:
+> > > > > > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
+> > > > > > > > not guaranteed to be backward/forward compatible.
+> > > > > > > > - This file requires debugfs to be mounted, which itself is
+> > > > > > > > undesirable for security reasons.
+> > > > > > > >
+> > > > > > > > To address these problems, we want to contribute a way to expose these
+> > > > > > > > statistics that doesn't depend on debugfs.
+> > > > > > > >
+> > > > > > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
+> > > > > > > > Or maybe implement eBPF-based solution? What do you think?
+> > > > > >
+> > > > > > We are going through Android's out-of-tree kernel dependencies along with
+> > > > > > userspace APIs that are not necessarily considered "stable and forever
+> > > > > > supported" upstream. The debugfs dependencies showed up on our radar as a
+> > > > > > result and so we are wondering if we should worry about changes in debugfs
+> > > > > > interface and hence the question(s) below.
+> > > > > >
+> > > > > > So, can we rely on /d/wakeup_sources to be considered a userspace API and
+> > > > > > hence maintained stable as we do for other /proc and /sys entries?
+> > > > > >
+> > > > > > If yes, then we will go ahead and add tests for this in LTP or
+> > > > > > somewhere else suitable.
+> > > > >
+> > > > > No, debugfs is not ABI.
+> > > > >
+> > > > > > If no, then we would love to hear suggestions for any changes that need to be
+> > > > > > made or we simply just move the debugfs entry into somewhere like
+> > > > > > /sys/power/ ?
+> > > > >
+> > > > > No, moving that entire file from debugfs into sysfs is not an option either.
+> > > > >
+> > > > > The statistics for the wakeup sources associated with devices are already there
+> > > > > under /sys/devices/.../power/ , but I guess you want all wakeup sources?
+> > > > >
+> > > > > That would require adding a kobject to struct wakeup_source and exposing
+> > > > > all of the statistics as separate attributes under it.  In which case it would be
+> > > > > good to replace the existing wakeup statistics under /sys/devices/.../power/
+> > > > > with symbolic links to the attributes under the wakeup_source kobject.
+> > > >
+> > > > Thanks for your input, Rafael! Your suggestion makes sense. I'll work
+> > > > on a patch for this.
+> > >
+> > > Does that entail making each wake up source, a new sysfs node under a
+> > > particular device, and then adding stats under that new node?
+> >
+> > Not under a device, because there are wakeup source objects without
+> > associated devices.
+> >
+> > It is conceivable to have a "wakeup_sources" directory under
+> > /sys/power/ and sysfs nodes for all wakeup sources in there.
+> >
+> > Then, instead of exposing wakeup statistics directly under
+> > /sys/devices/.../power/, there can be symbolic links from there to the
+> > new wakeup source nodes under "wakeup_sources" (so as to avoid
+> > exposing the same data in two different places in sysfs, which may be
+> > confusing).
 > 
-> Today's linux-next merge of the usb tree got a conflict in:
-> 
->   Documentation/index.rst
-> 
-> between commit:
-> 
->   c42eaffa1656 ("Documentation: add Linux PCI to Sphinx TOC tree")
-> 
-> from the pci tree and commit:
-> 
->   ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-api")
-> 
-> from the usb tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
+> This may be a dumb question. Is it appropriate to make symbolic links
+> in sysfs from one attribute to another attribute? For example,
+> /sys/devices/.../power/wakeup_count ->
+> /sys/power/wakeup_sources/.../wakeup_count.
 
-No patch "below", but I'm sure the fixup is fine :)
+Why? would you want that?
+
+> I only see kobject to kobject symlinks around. And I don't think we
+> can make /sys/devices/.../power/ directory a symlink to where our new
+> wakeup stats will be, since the former contains attributes other than
+> wakeup ones.
+
+No, don't link attributes, they refer to the kobject that created them.
+I really doubt that this is the same kobject in both places :)
 
 thanks,
 
