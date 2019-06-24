@@ -2,95 +2,90 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82454C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB75C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5598020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B29F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561405529;
+	bh=n2b+nuA+X2CY6MpU/dv+MIG99d47st+jgZCetTZsj8o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JSKf+xqrmaHa6GsS5qfuwmtxsYCquuqwEpo8lIzFNcJ/CLIHKC6I6UBX2675xD/Tx
+	 5x22qUiGZSf7+z+VhaMYpw/yVoploMBBn5uzyyNVWDtSiQGNEtzlVrOx3A8MaFt5rr
+	 ZRiqLQUeUJYtUca1efuu4ApvOj5ORlkpb5JNTVbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfFXTpW (ORCPT
+        id S1730407AbfFXTp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:45:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36932 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfFXTpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:45:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98DDF2F8BEE;
-        Mon, 24 Jun 2019 19:45:09 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A19196085B;
-        Mon, 24 Jun 2019 19:45:05 +0000 (UTC)
-Subject: Re: [locking/rwsem] 4f23dbc1e6: reaim.jobs_per_min -37.0% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, tipbuild@zytor.com,
-        lkp@01.org
-References: <20190624054511.GA7221@shao2-debian>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f0381605-e266-4816-653a-91c6e17ca3a5@redhat.com>
-Date:   Mon, 24 Jun 2019 15:45:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 24 Jun 2019 15:45:27 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:39878 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFXTp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 15:45:27 -0400
+Received: by mail-lj1-f176.google.com with SMTP id v18so13786647ljh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rOESn/qQaoyqyNDPIMYen/vQAdPBp5pl7Zqakdc+XiE=;
+        b=bv6b0nQaSxv3RfGAtQsqlRoLkYuhh502/N0q7/XsVfyh9bA4BkYMrYmVw4sqKkctNv
+         WRTHWYeEVs4xTZttAh3BmYyMLufXRz6dzZQ7rvnem1ZFD2A2qRCFkiUvIhJ0ZSdCdhXx
+         i9YbKcQir1cwRedTfA14rtx6yM9WIGsyC0tPE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rOESn/qQaoyqyNDPIMYen/vQAdPBp5pl7Zqakdc+XiE=;
+        b=joGuamapWAPjb63nFcoGHRQNMaBBGjEhgG7irEW+Jhd81SKCwFqx+9Hw6IuXNtCPLh
+         wfIwIbeMoFrK69P/CwHO44vGQw345kpLWFicBHkVXK0ssWhqf26gBnyUVttBfCgm5vcE
+         6kRWSlo/3lNbUHLbAoGYI2rpya/Qq5M/mJRK9q+371Kbtfdar0q9pxfCEr4Wc3VjFYPX
+         /DRB6tcdDbcOr1c5LXvifF+FHexk8Ok+YqmyuDNDqlUZvbE1UtLWCI+STRmhTdmkTKdW
+         VD1iUCG7DNeMZeJJXCz8fPJYsqOVDfpuzsGmux0Kn50LhLIl3Vc6TmVNyZru80F/YmvD
+         15vg==
+X-Gm-Message-State: APjAAAWjaevaDgOupfebh5Cfx53dLUnWiiBO/401VAtHY91ZHmm8s1CN
+        zK6oNiB2ryWaOIvKwPoFvE+S403XrDQ=
+X-Google-Smtp-Source: APXvYqzZyQOdPOqVO+WlwaOmqvPwRd+6wK+DiAkAXYdXyHlAoW6xYi4Ft6Xyj0aCCxhh/pKhdFmhkA==
+X-Received: by 2002:a2e:6348:: with SMTP id x69mr72733684ljb.186.1561405524640;
+        Mon, 24 Jun 2019 12:45:24 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id l25sm1669917lfk.57.2019.06.24.12.45.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 12:45:23 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id v24so13764069ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:45:23 -0700 (PDT)
+X-Received: by 2002:a2e:95d5:: with SMTP id y21mr64383920ljh.84.1561405523515;
+ Mon, 24 Jun 2019 12:45:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190624054511.GA7221@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 24 Jun 2019 19:45:21 +0000 (UTC)
+References: <20190617100054.GE16364@dell> <20190624143411.GI4699@dell>
+In-Reply-To: <20190624143411.GI4699@dell>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 25 Jun 2019 03:45:07 +0800
+X-Gmail-Original-Message-ID: <CAHk-=wjFZr5xfa-8t=5nhcMDzXQeu4wBggJ1htc7Z5T84dQkXA@mail.gmail.com>
+Message-ID: <CAHk-=wjFZr5xfa-8t=5nhcMDzXQeu4wBggJ1htc7Z5T84dQkXA@mail.gmail.com>
+Subject: Re: [GIT PULL v2] MFD fixes for v5.2
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 1:45 AM, kernel test robot wrote:
-> Greeting,
+On Mon, Jun 24, 2019 at 10:34 PM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> FYI, we noticed a -37.0% regression of reaim.jobs_per_min due to commit:
->
->
-> commit: 4f23dbc1e657951e5d94c60369bc1db065961fb3 ("locking/rwsem: Implement lock handoff to prevent lock starvation")
-> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git locking/core
->
-> in testcase: reaim
-> on test machine: 48 threads Intel(R) Xeon(R) CPU E5-2697 v2 @ 2.70GHz with 64G memory
-> with following parameters:
->
-> 	runtime: 300s
-> 	nr_task: 7000t
-> 	test: shared_memory
-> 	cpufreq_governor: performance
-> 	ucode: 0x42e
->
-> test-description: REAIM is an updated and improved version of AIM 7 benchmark.
-> test-url: https://sourceforge.net/projects/re-aim-7/
+> Hopefully this is more to your liking.
 
-With 7000 users, there will be extreme contention on the rwsems. The
-lock handoff patch is known to reduce throughput with such level of lock
-contention. This is a tradeoff between throughput and fairness. I don't
-think this is a problem unless some real world workloads also have
-significant regression in performance. I will try to reproduce the
-regression and see if we can do something to reduce the performance
-regression.
+I would actually have preferred you to throw the old buggy "fix" away,
+and just do the final state.
 
-Cheers,
-Longman
+But the end result looks sane, so I pulled it.
 
-
+           Linus
