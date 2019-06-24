@@ -2,326 +2,235 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B48C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EA8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300FD208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371981;
-	bh=Bgo45ELP4Ju/A9tiOcqJ7Wqth8iVHeFxBk8b7zPOmG0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=pB7Bgn5bqBZLPF+SYhFXl5c7ZmaL0DCJPE1fErp6aNODKw7VPvY9XG569fv8ssEDt
-	 MiFo+A/d4qiZ4GKzoXko+qAq/Ou5A1dS5Oh4MSOx66IHNF3tyeKB3sE2qXY+1NnArw
-	 Hgj2bZ2lvpRVgwA3/D7i2gGWf2yTFVAfPYBo80WE=
+	by mail.kernel.org (Postfix) with ESMTP id 3C4DC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ae3GjDPO";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gDEuET4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfFXK0T (ORCPT
+        id S1728607AbfFXK2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfFXK0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:26:19 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Jun 2019 06:28:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42422 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfFXK2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:28:51 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1460D60A44; Mon, 24 Jun 2019 10:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561372129;
+        bh=Yo8X3dqiiQ1UfNiElYZLxap+rtuWrdAb9vMVVB+Ox+0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ae3GjDPONu0L4o01Dg+0ZPaoqbTuCx3E4go0l1apkykT3ssll2W0LxcKlIXoPuDcy
+         7ZT/N3bD78c5FiD7cRV481iMctHAd8dMc83WetlaHyZbLavVqJhOEaGMECP+qOAefZ
+         dBbVN8DhpFzKBrSr/XN4YqBs2/pHnytF2b9IA0B4=
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4A8520674;
-        Mon, 24 Jun 2019 10:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371978;
-        bh=Bgo45ELP4Ju/A9tiOcqJ7Wqth8iVHeFxBk8b7zPOmG0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BoPczUMSQU8hXcLsNPsDd7HLM/6jufV+Ib8cx+qi8V4Ew98p17kUXF+v3h/HVMbkj
-         hyN328T+HXJvrHLbs0rR5qYXT6UIdt/6VBMZ2OwIOjDbusoB9mcfHyQ0ec/rUzoQXj
-         OgONKy3kAHjMpTQhH7O/yBN4wczvj9aoWYElOq10=
-Message-ID: <f120875a67c1421dd7cebbb796b2c68ddf4babf6.camel@kernel.org>
-Subject: Re: [PATCH v3 1/2] ceph: fix buffer length handling in virtual
- xattrs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        agruenba@redhat.com, Joe Perches <joe@perches.com>,
-        geert+renesas@glider.be, andriy.shevchenko@linux.intel.com
-Date:   Mon, 24 Jun 2019 06:26:15 -0400
-In-Reply-To: <CAOi1vP8bJcW8ViXhfuoCUqntqLj0bC56dc-9+MGwZvR9yHRFLA@mail.gmail.com>
-References: <20190621141833.17551-1-jlayton@kernel.org>
-         <20190621141833.17551-2-jlayton@kernel.org>
-         <CAOi1vP8bJcW8ViXhfuoCUqntqLj0bC56dc-9+MGwZvR9yHRFLA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14CFB60741;
+        Mon, 24 Jun 2019 10:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561372126;
+        bh=Yo8X3dqiiQ1UfNiElYZLxap+rtuWrdAb9vMVVB+Ox+0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gDEuET4C0e23NAVMlDD0YYVtYeaZmhrDCpYHMy002urpTEz23zc3tLGyDg2gjdUUt
+         opfKWC41nGYYhIw0TUVpNNU5fUpTrM/aXR8Uk5+bEuT+pADrGXcgRuqiyyo1SaWWDV
+         0U9L8/Wn7opSTjmg3p94naSmpdMYaxdJl5Cd9ZG8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14CFB60741
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f42.google.com with SMTP id e3so20988188edr.10;
+        Mon, 24 Jun 2019 03:28:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4hCgXLh5Svq5C/sV93wasx6ZKVcN609hYtiBH76Fi0I6PTSww
+        KXUbqMhLDfAzHOVhjmMM316MfwDpQcknpjtJZQI=
+X-Google-Smtp-Source: APXvYqzS9YfgWqNtJBndTuIFVgJlLmOUhAdYZF1/h1ikpnhDX6yCJp0IUNtl0PCH/+Af5EI0Rq50UzRsBHoddpF7g0g=
+X-Received: by 2002:aa7:c515:: with SMTP id o21mr121190379edq.2.1561372124494;
+ Mon, 24 Jun 2019 03:28:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org> <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org> <20190618175218.GH4270@fuggles.cambridge.arm.com>
+In-Reply-To: <20190618175218.GH4270@fuggles.cambridge.arm.com>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Mon, 24 Jun 2019 15:58:32 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+Message-ID: <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "robh+dt" <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, pratikp@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 12:00 +0200, Ilya Dryomov wrote:
-> On Fri, Jun 21, 2019 at 4:18 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > The convention with xattrs is to not store the termination with string
-> > data, given that it returns the length. This is how setfattr/getfattr
-> > operate.
-> > 
-> > Most of ceph's virtual xattr routines use snprintf to plop the string
-> > directly into the destination buffer, but snprintf always NULL
-> > terminates the string. This means that if we send the kernel a buffer
-> > that is the exact length needed to hold the string, it'll end up
-> > truncated.
-> > 
-> > Add new routines to format the string into an on-stack buffer that is
-> > always large enough to hold the whole thing and then memcpy the result
-> > into the destination buffer. Then, change over the virtual xattr
-> > routines to use the new helper functions as appropriate.
-> > 
-> > Finally, make the code return ERANGE if the destination buffer size was
-> > too small to hold the returned value.
-> > 
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/ceph/xattr.c | 103 ++++++++++++++++++++++++++++++++++++------------
-> >  1 file changed, 78 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> > index 6621d27e64f5..359d3cbbb37b 100644
-> > --- a/fs/ceph/xattr.c
-> > +++ b/fs/ceph/xattr.c
-> > @@ -112,22 +112,47 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
-> >         return ret;
-> >  }
-> > 
-> > +/* Enough to hold any possible expression of integer TYPE in base 10 */
-> > +#define INT_STR_SIZE(_type)    3*sizeof(_type)+2
-> > +
-> > +/*
-> > + * snprintf always NULL terminates, but we need for xattrs to not be. For
-> > + * the integer vxattrs, just create an on-stack buffer for snprintf's
-> > + * destination, and just don't copy the termination to the actual buffer.
-> > + */
-> > +#define GENERATE_XATTR_INT_FORMATTER(_lbl, _format, _type)                  \
-> > +static size_t format_ ## _lbl ## _xattr(char *val, size_t size, _type src)   \
-> > +{                                                                           \
-> > +       size_t ret;                                                          \
-> > +       char buf[INT_STR_SIZE(_type)];                                       \
-> > +                                                                            \
-> > +       ret = snprintf(buf, size ? sizeof(buf) : 0, _format, src);           \
-> > +       if (ret <= size)                                                     \
-> > +               memcpy(val, buf, ret);                                       \
-> > +       return ret;                                                          \
-> > +}
-> > +
-> > +GENERATE_XATTR_INT_FORMATTER(u, "%u", unsigned int)
-> > +GENERATE_XATTR_INT_FORMATTER(d, "%d", int)
-> > +GENERATE_XATTR_INT_FORMATTER(lld, "%lld", long long)
-> > +GENERATE_XATTR_INT_FORMATTER(llu, "%llu", unsigned long long)
-> > +
-> >  static size_t ceph_vxattrcb_layout_stripe_unit(struct ceph_inode_info *ci,
-> >                                                char *val, size_t size)
-> >  {
-> > -       return snprintf(val, size, "%u", ci->i_layout.stripe_unit);
-> > +       return format_u_xattr(val, size, ci->i_layout.stripe_unit);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_layout_stripe_count(struct ceph_inode_info *ci,
-> >                                                 char *val, size_t size)
-> >  {
-> > -       return snprintf(val, size, "%u", ci->i_layout.stripe_count);
-> > +       return format_u_xattr(val, size, ci->i_layout.stripe_count);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_layout_object_size(struct ceph_inode_info *ci,
-> >                                                char *val, size_t size)
-> >  {
-> > -       return snprintf(val, size, "%u", ci->i_layout.object_size);
-> > +       return format_u_xattr(val, size, ci->i_layout.object_size);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
-> > @@ -141,10 +166,14 @@ static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
-> > 
-> >         down_read(&osdc->lock);
-> >         pool_name = ceph_pg_pool_name_by_id(osdc->osdmap, pool);
-> > -       if (pool_name)
-> > -               ret = snprintf(val, size, "%s", pool_name);
-> > -       else
-> > -               ret = snprintf(val, size, "%lld", (unsigned long long)pool);
-> > +       if (pool_name) {
-> > +               ret = strlen(pool_name);
-> > +
-> > +               if (ret <= size)
-> > +                       memcpy(val, pool_name, ret);
-> > +       } else {
-> > +               ret = format_lld_xattr(val, size, pool);
-> > +       }
-> >         up_read(&osdc->lock);
-> >         return ret;
-> >  }
-> > @@ -155,7 +184,11 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
-> >         int ret = 0;
-> >         struct ceph_string *ns = ceph_try_get_string(ci->i_layout.pool_ns);
-> >         if (ns) {
-> > -               ret = snprintf(val, size, "%.*s", (int)ns->len, ns->str);
-> > +               ret = ns->len;
-> > +
-> > +               if (ret <= size)
-> > +                       memcpy(val, ns->str, ns->len);
-> > +
-> >                 ceph_put_string(ns);
-> >         }
-> >         return ret;
-> > @@ -166,50 +199,61 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
-> >  static size_t ceph_vxattrcb_dir_entries(struct ceph_inode_info *ci, char *val,
-> >                                         size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_files + ci->i_subdirs);
-> > +       return format_lld_xattr(val, size, ci->i_files + ci->i_subdirs);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_files(struct ceph_inode_info *ci, char *val,
-> >                                       size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_files);
-> > +       return format_lld_xattr(val, size, ci->i_files);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_subdirs(struct ceph_inode_info *ci, char *val,
-> >                                         size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_subdirs);
-> > +       return format_lld_xattr(val, size, ci->i_subdirs);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_rentries(struct ceph_inode_info *ci, char *val,
-> >                                          size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_rfiles + ci->i_rsubdirs);
-> > +       return format_lld_xattr(val, size, ci->i_rfiles + ci->i_rsubdirs);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_rfiles(struct ceph_inode_info *ci, char *val,
-> >                                        size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_rfiles);
-> > +       return format_lld_xattr(val, size, ci->i_rfiles);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
-> >                                          size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_rsubdirs);
-> > +       return format_lld_xattr(val, size, ci->i_rsubdirs);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
-> >                                        size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld", ci->i_rbytes);
-> > +       return format_lld_xattr(val, size, ci->i_rbytes);
-> > +}
-> > +
-> > +static size_t format_ts64_xattr(char *val, size_t size, struct timespec64 *src)
-> > +{
-> > +       size_t ret;
-> > +       char buf[INT_STR_SIZE(long long) + 1 + 9];
-> > +
-> > +       ret = snprintf(buf, size ? sizeof(buf) : 0, "%lld.%09ld", src->tv_sec,
-> > +                      src->tv_nsec);
-> > +       if (ret <= size)
-> > +               memcpy(val, buf, ret);
-> > +       return ret;
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
-> >                                        size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
-> > -                       ci->i_rctime.tv_nsec);
-> > +       return format_ts64_xattr(val, size, &ci->i_rctime);
-> >  }
-> > 
-> >  /* dir pin */
-> > @@ -221,7 +265,7 @@ static bool ceph_vxattrcb_dir_pin_exists(struct ceph_inode_info *ci)
-> >  static size_t ceph_vxattrcb_dir_pin(struct ceph_inode_info *ci, char *val,
-> >                                      size_t size)
-> >  {
-> > -       return snprintf(val, size, "%d", (int)ci->i_dir_pin);
-> > +       return format_d_xattr(val, size, ci->i_dir_pin);
-> >  }
-> > 
-> >  /* quotas */
-> > @@ -241,20 +285,27 @@ static bool ceph_vxattrcb_quota_exists(struct ceph_inode_info *ci)
-> >  static size_t ceph_vxattrcb_quota(struct ceph_inode_info *ci, char *val,
-> >                                   size_t size)
-> >  {
-> > -       return snprintf(val, size, "max_bytes=%llu max_files=%llu",
-> > -                       ci->i_max_bytes, ci->i_max_files);
-> > +       size_t ret;
-> > +       char buf[(2*INT_STR_SIZE(unsigned long long)) + 10 + 11];
-> > +
-> > +       ret = snprintf(buf, size ? sizeof(buf) : 0,
-> > +                      "max_bytes=%llu max_files=%llu",
-> > +                      ci->i_max_bytes, ci->i_max_files);
-> > +       if (ret <= size)
-> > +               memcpy(val, buf, ret);
-> > +       return ret;
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_quota_max_bytes(struct ceph_inode_info *ci,
-> >                                             char *val, size_t size)
-> >  {
-> > -       return snprintf(val, size, "%llu", ci->i_max_bytes);
-> > +       return format_llu_xattr(val, size, ci->i_max_bytes);
-> >  }
-> > 
-> >  static size_t ceph_vxattrcb_quota_max_files(struct ceph_inode_info *ci,
-> >                                             char *val, size_t size)
-> >  {
-> > -       return snprintf(val, size, "%llu", ci->i_max_files);
-> > +       return format_llu_xattr(val, size, ci->i_max_files);
-> >  }
-> > 
-> >  /* snapshots */
-> > @@ -266,8 +317,7 @@ static bool ceph_vxattrcb_snap_btime_exists(struct ceph_inode_info *ci)
-> >  static size_t ceph_vxattrcb_snap_btime(struct ceph_inode_info *ci, char *val,
-> >                                        size_t size)
-> >  {
-> > -       return snprintf(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
-> > -                       ci->i_snap_btime.tv_nsec);
-> > +       return format_ts64_xattr(val, size, &ci->i_snap_btime);
-> >  }
-> > 
-> >  #define CEPH_XATTR_NAME(_type, _name)  XATTR_CEPH_PREFIX #_type "." #_name
-> 
-> Hi Jeff,
-> 
-> This seems over-engineered to me.  You have four functions just for
-> ints, two more for ts64 and quota and several ad-hoc %s memcpys.  Why
-> not define a single function with a generously-sized buffer, BUG in
-> case it's too small and take a format string?
+Hi Will,
 
-Having to declare a 64 byte (or 128 byte or whatever) buffer on the
-stack for an int seemed a bit wasteful, but ok. We can certainly do it
-that way instead.
+On Tue, Jun 18, 2019 at 11:22 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Vivek,
+>
+> On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
+> > On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> > > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+> > >
+> > > > Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+> > > > to address under-performance issues in real-time clients, such as
+> > > > Display, and Camera.
+> > > > On receiving an invalidation requests, the SMMU forwards SAFE request
+> > > > to these clients and waits for SAFE ack signal from real-time clients.
+> > > > The SAFE signal from such clients is used to qualify the start of
+> > > > invalidation.
+> > > > This logic is controlled by chicken bits, one for each - MDP (display),
+> > > > IFE0, and IFE1 (camera), that can be accessed only from secure software
+> > > > on sdm845.
+> > > >
+> > > > This configuration, however, degrades the performance of non-real time
+> > > > clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+> > > > logic enabled the hardware tries to throttle non-real time clients while
+> > > > waiting for SAFE ack signals from real-time clients.
+> > > >
+> > > > On MTP sdm845 devices, with wait-for-safe logic enabled at the boot time
+> > > > by the bootloaders we see degraded performance of USB and UFS when kernel
+> > > > enables the smmu stage-1 translations for these clients.
+> > > > Turn off this wait-for-safe logic from the kernel gets us back the perf
+> > > > of USB and UFS devices until we re-visit this when we start seeing perf
+> > > > issues on display/camera on upstream supported SDM845 platforms.
+>
+> Re-visit what exactly, and how?
+>
+> > > > Now, different bootloaders with their access control policies allow this
+> > > > register access differently through secure monitor calls -
+> > > > 1) With one we can issue io-read/write secure monitor call (qcom-scm)
+> > > >     to update the register, while,
+> > > > 2) With other, such as one on MTP sdm845 we should use the specific
+> > > >     qcom-scm command to send request to do the complete register
+> > > >     configuration.
+> > > > Adding a separate device tree flag for arm-smmu to identify which
+> > > > firmware configuration of the two mentioned above we use.
+> > > > Not adding code change to allow type-(1) bootloaders to toggle the
+> > > > safe using io-read/write qcom-scm call.
+> > > >
+> > > > This change is inspired by the downstream change from Patrick Daly
+> > > > to address performance issues with display and camera by handling
+> > > > this wait-for-safe within separte io-pagetable ops to do TLB
+> > > > maintenance. So a big thanks to him for the change.
+> > > >
+> > > > Without this change the UFS reads are pretty slow:
+> > > > $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+> > > > 10+0 records in
+> > > > 10+0 records out
+> > > > 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+> > > > real    0m 22.39s
+> > > > user    0m 0.00s
+> > > > sys     0m 0.01s
+> > > >
+> > > > With this change they are back to rock!
+> > > > $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+> > > > 300+0 records in
+> > > > 300+0 records out
+> > > > 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+> > > > real    0m 1.03s
+> > > > user    0m 0.00s
+> > > > sys     0m 0.54s
+> > > >
+> > > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > > > ---
+> > > >   drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
+> > > >   1 file changed, 16 insertions(+)
+> > > >
+> > > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > > index 0ad086da399c..3c3ad43eda97 100644
+> > > > --- a/drivers/iommu/arm-smmu.c
+> > > > +++ b/drivers/iommu/arm-smmu.c
+> > > > @@ -39,6 +39,7 @@
+> > > >   #include <linux/pci.h>
+> > > >   #include <linux/platform_device.h>
+> > > >   #include <linux/pm_runtime.h>
+> > > > +#include <linux/qcom_scm.h>
+> > > >   #include <linux/slab.h>
+> > > >   #include <linux/spinlock.h>
+> > > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
+> > > >           u32                             features;
+> > > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+> > > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+> > > >           u32                             options;
+> > > >           enum arm_smmu_arch_version      version;
+> > > >           enum arm_smmu_implementation    model;
+> > > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+> > > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
+> > > >           { ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+> > > > + { ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> > > This should be added to the DT binding as well.
+> >
+> > Ah right. I missed that. Will add this and respin unless Robin and Will have
+> > concerns with this change.
+>
+> My only concern really is whether it's safe for us to turn this off. It's
+> clear that somebody went to a lot of effort to add this extra goodness to
+> the IP, but your benchmarks suggest they never actually tried it out after
+> they finished building it.
+>
+> Is there some downside I'm not seeing from disabling this stuff?
 
-> Regardless, I would much prefer
-> 
->   char buf[64];
-> 
-> over
-> 
->   #define INT_STR_SIZE(_type)    3*sizeof(_type)+2
->   char buf[(2*INT_STR_SIZE(unsigned long long)) + 10 + 11];
-> 
+This wait-for-safe is a TLB invalidation enhancement to help display
+and camera devices.
+The SMMU hardware throttles the invalidations so that clients such as
+display and camera can indicate when to start the invalidation.
+So the SMMU essentially reduces the rate at which invalidations are
+serviced from its queue. This also throttles the invalidations from
+other masters too.
 
-We'll have to agree to disagree here. I rather like seeing the math for
-the buffer length calculations expanded out, particularly in the event
-that they need to be changed in the future.
--- 
-Jeff Layton <jlayton@kernel.org>
+On sdm845, the software is expected to serialize the invalidation
+command loading into SMMU invalidation FIFO using hardware locks
+(downstream code [2]), and is also expected to throttle non-real time
+clients while waiting for SAFE==1 (downstream code[2]). We don't do
+any of these yet, and as per my understanding as this wait-for-safe is
+enabled by the bootloader in a one time config, this logic reduces
+performance of devices such as usb and ufs.
 
+There's isn't any downside from disabling this logic until we have all
+the pieces together from downstream in upstream kernels, and until we
+have sdm845 devices that are running with full display/gfx stack
+running. That's when we plan to revisit this and enable all the pieces
+to get display and USB/UFS working with their optimum performance.
+
+[1] https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/iommu/arm-smmu.c?h=msm-4.9#n5172
+[2] https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/iommu/arm-smmu.c?h=msm-4.9#n5135
+
+Thanks
+Vivek
+
+>
+> We probably also need some co-ordination with Andy if we're going to
+> merge this, since he maintains the firmware calling code.
+>
+> Will
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
