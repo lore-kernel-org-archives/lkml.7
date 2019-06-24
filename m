@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6488C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FE6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA3D20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB95205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371162;
-	bh=QDjTKqNf3EIR6YyWhK76alWgvcTeu4rye7sa5YTk2RA=;
+	s=default; t=1561371168;
+	bh=J5xjZ0JdK0UapEOr+jfVUnHqFAm4TWfgo/4Ge+VZ7Qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMKMAxq7LyaOsKFwxrMw9JLN6RhONpDDM3rokQ6biPaQprJBJQCVU5lZrBKT6khsF
-	 TWxQL02GLjx+WT6cCGIuBf0xCKVIZHAmixuqa/VHFGa7BMw1P4FYvplxSP3jcH/UbI
-	 +G5w4tUQ6NhT9/hdEKAfwsuh0yA8mZs7xO+4N2ug=
+	b=06UvLn0gUnMkkyqhmeDDRBbzxCSQJFhD69HURF3VZa3V+O9DyoEuD2F7nX/PheeP/
+	 MIowWp6nBwlcpVEVcpZF/l20DteCSvYgrePtNqX712h8InKzHPt2l8XVTxOGcrSDum
+	 G7BKyFGw469KAjLiMsGXrmolw/k0Vi1SmBysvSJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfFXKMl (ORCPT
+        id S1730658AbfFXKMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729958AbfFXKFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:39 -0400
+        id S1728067AbfFXKF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:29 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 730AF208E3;
-        Mon, 24 Jun 2019 10:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87F1208E3;
+        Mon, 24 Jun 2019 10:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370738;
-        bh=QDjTKqNf3EIR6YyWhK76alWgvcTeu4rye7sa5YTk2RA=;
+        s=default; t=1561370728;
+        bh=J5xjZ0JdK0UapEOr+jfVUnHqFAm4TWfgo/4Ge+VZ7Qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGupMQrooLU34Vgz+7LDIuAoXBwJDq1n3I2ybRQnoK+iXPuR7LJ98cu71a5tf/rJx
-         O113cEp2z/t1APaUZHEJ8kNlQsLwaoPt/UPbYLa+e5h81OuSfM55fAWr5hbkPKj3vw
-         XNYIQRWMrTYRpburgEPld408B704nE4FmsXGZeR8=
+        b=wzuf7iCPpiHfII103pBXhlW+2cbveJiOBW2+pefn81njAwFbm28RZ28DPreBt5qnR
+         gh1UkZLbb/UG3kngNyAJXYsoitqjZHpnC6FCgh6pSO1LBVA/4s54uvH2O+bawSxsyb
+         1bRANB3XGyfJNP8JGHRuuGMujExq2HyDFxmkUGds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 73/90] powerpc/bpf: use unsigned division instruction for 64-bit operations
-Date:   Mon, 24 Jun 2019 17:57:03 +0800
-Message-Id: <20190624092318.795077804@linuxfoundation.org>
+        Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 69/90] can: xilinx_can: use correct bittiming_const for CAN FD core
+Date:   Mon, 24 Jun 2019 17:56:59 +0800
+Message-Id: <20190624092318.556365935@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,81 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-commit 758f2046ea040773ae8ea7f72dd3bbd8fa984501 upstream.
+commit 904044dd8fff43e289c11a2f90fa532e946a1d8b upstream.
 
-BPF_ALU64 div/mod operations are currently using signed division, unlike
-BPF_ALU32 operations. Fix the same. DIV64 and MOD64 overflow tests pass
-with this fix.
+Commit 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD
+core") added a new can_bittiming_const structure for CAN FD cores that
+support larger values for tseg1, tseg2, and sjw than previous Xilinx CAN
+cores, but the commit did not actually take that into use.
 
-Fixes: 156d0e290e969c ("powerpc/ebpf/jit: Implement JIT compiler for extended BPF")
-Cc: stable@vger.kernel.org # v4.8+
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fix that.
+
+Tested with CAN FD core on a ZynqMP board.
+
+Fixes: 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD core")
+Reported-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/ppc-opcode.h |    1 +
- arch/powerpc/net/bpf_jit.h            |    2 +-
- arch/powerpc/net/bpf_jit_comp64.c     |    8 ++++----
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/can/xilinx_can.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/ppc-opcode.h
-+++ b/arch/powerpc/include/asm/ppc-opcode.h
-@@ -336,6 +336,7 @@
- #define PPC_INST_MULLI			0x1c000000
- #define PPC_INST_DIVWU			0x7c000396
- #define PPC_INST_DIVD			0x7c0003d2
-+#define PPC_INST_DIVDU			0x7c000392
- #define PPC_INST_RLWINM			0x54000000
- #define PPC_INST_RLWIMI			0x50000000
- #define PPC_INST_RLDICL			0x78000000
---- a/arch/powerpc/net/bpf_jit.h
-+++ b/arch/powerpc/net/bpf_jit.h
-@@ -116,7 +116,7 @@
- 				     ___PPC_RA(a) | IMM_L(i))
- #define PPC_DIVWU(d, a, b)	EMIT(PPC_INST_DIVWU | ___PPC_RT(d) |	      \
- 				     ___PPC_RA(a) | ___PPC_RB(b))
--#define PPC_DIVD(d, a, b)	EMIT(PPC_INST_DIVD | ___PPC_RT(d) |	      \
-+#define PPC_DIVDU(d, a, b)	EMIT(PPC_INST_DIVDU | ___PPC_RT(d) |	      \
- 				     ___PPC_RA(a) | ___PPC_RB(b))
- #define PPC_AND(d, a, b)	EMIT(PPC_INST_AND | ___PPC_RA(d) |	      \
- 				     ___PPC_RS(a) | ___PPC_RB(b))
---- a/arch/powerpc/net/bpf_jit_comp64.c
-+++ b/arch/powerpc/net/bpf_jit_comp64.c
-@@ -372,12 +372,12 @@ static int bpf_jit_build_body(struct bpf
- 		case BPF_ALU64 | BPF_DIV | BPF_X: /* dst /= src */
- 		case BPF_ALU64 | BPF_MOD | BPF_X: /* dst %= src */
- 			if (BPF_OP(code) == BPF_MOD) {
--				PPC_DIVD(b2p[TMP_REG_1], dst_reg, src_reg);
-+				PPC_DIVDU(b2p[TMP_REG_1], dst_reg, src_reg);
- 				PPC_MULD(b2p[TMP_REG_1], src_reg,
- 						b2p[TMP_REG_1]);
- 				PPC_SUB(dst_reg, dst_reg, b2p[TMP_REG_1]);
- 			} else
--				PPC_DIVD(dst_reg, dst_reg, src_reg);
-+				PPC_DIVDU(dst_reg, dst_reg, src_reg);
- 			break;
- 		case BPF_ALU | BPF_MOD | BPF_K: /* (u32) dst %= (u32) imm */
- 		case BPF_ALU | BPF_DIV | BPF_K: /* (u32) dst /= (u32) imm */
-@@ -405,7 +405,7 @@ static int bpf_jit_build_body(struct bpf
- 				break;
- 			case BPF_ALU64:
- 				if (BPF_OP(code) == BPF_MOD) {
--					PPC_DIVD(b2p[TMP_REG_2], dst_reg,
-+					PPC_DIVDU(b2p[TMP_REG_2], dst_reg,
- 							b2p[TMP_REG_1]);
- 					PPC_MULD(b2p[TMP_REG_1],
- 							b2p[TMP_REG_1],
-@@ -413,7 +413,7 @@ static int bpf_jit_build_body(struct bpf
- 					PPC_SUB(dst_reg, dst_reg,
- 							b2p[TMP_REG_1]);
- 				} else
--					PPC_DIVD(dst_reg, dst_reg,
-+					PPC_DIVDU(dst_reg, dst_reg,
- 							b2p[TMP_REG_1]);
- 				break;
- 			}
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -1424,7 +1424,7 @@ static const struct xcan_devtype_data xc
+ 		 XCAN_FLAG_RXMNF |
+ 		 XCAN_FLAG_TX_MAILBOXES |
+ 		 XCAN_FLAG_RX_FIFO_MULTI,
+-	.bittiming_const = &xcan_bittiming_const,
++	.bittiming_const = &xcan_bittiming_const_canfd,
+ 	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT_CANFD,
+ 	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT_CANFD,
+ 	.bus_clk_name = "s_axi_aclk",
 
 
