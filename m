@@ -2,109 +2,95 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9865FC4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E544C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FD820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201EA20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732859AbfFXS0U (ORCPT
+        id S1728763AbfFXS2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:26:20 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39951 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfFXS0U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:26:20 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4A0E5E0008;
-        Mon, 24 Jun 2019 18:26:15 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 20:26:14 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Message-ID: <20190624182614.GC5690@piout.net>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch>
+        Mon, 24 Jun 2019 14:28:47 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40200 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbfFXS2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 14:28:47 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfThm-0001JO-NG; Mon, 24 Jun 2019 12:28:39 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <20190620193353.GF19891@ziepe.ca> <20190624073126.GB3954@lst.de>
+ <20190624134641.GA8268@ziepe.ca> <20190624135024.GA11248@lst.de>
+ <20190624135550.GB8268@ziepe.ca>
+ <7210ba39-c923-79ca-57bb-7cf9afe21d54@deltatee.com>
+ <20190624181632.GC8268@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <bbd81ef9-b4f7-3ba7-7f93-85f602495e19@deltatee.com>
+Date:   Mon, 24 Jun 2019 12:28:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624162431.GX31306@lunn.ch>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190624181632.GC8268@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
-> On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
-> > Hi Andrew,
-> > 
-> > The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > > > 
-> > > > > This configuration may look prettier on DSA, but the main restriction here
-> > > > > is that the entire functionality is provided by the ocelot driver which is a
-> > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > > > from ocelot to a separate dsa driver.
-> > > > > 
-> > > > 
-> > > > We should probably make the ocelot driver a DSA driver then...
-> > > An important part of DSA is being able to direct frames out specific
-> > > ports when they ingress via the CPU port. Does the silicon support
-> > > this? At the moment, i think it is using polled IO.
-> > 
-> > That is supported, it requires a bit of initial configuration of the Chip, but
-> > nothing big (I believe this configuration is part of Claudiu's change-set).
-> > 
-> > But how do you envision this done?
-> > 
-> > - Let the existing SwitchDev driver and the DSA driver use a set of common
-> >   functions.
-> > - Convert the existing Ocelot driver from SwitchDev to DSA
-> > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
-> >   Felix driver
-> > 
-> > My guess is the first one, but I would like to understand what you have in mind.
+
+
+On 2019-06-24 12:16 p.m., Jason Gunthorpe wrote:
+> On Mon, Jun 24, 2019 at 10:53:38AM -0600, Logan Gunthorpe wrote:
+>>> It is only a very narrow case where you can take shortcuts with
+>>> dma_addr_t, and I don't think shortcuts like are are appropriate for
+>>> the mainline kernel..
+>>
+>> I don't think it's that narrow and it opens up a lot of avenues for
+>> system design that people are wanting to go. If your high speed data
+>> path can avoid the root complex and CPU, you can design a system which a
+>> much smaller CPU and fewer lanes directed at the CPU.
 > 
-> I don't know the various architectures the switch is used in. But it
-> does seem like a core library, and then a switchdev wrapper for Ocelot
-> and a DSA wrapper for Felix would make sense.
+> I mean the shortcut that something generates dma_addr_t for Device A
+> and then passes it to Device B - that is too hacky for mainline.
 
-Ocelot could also be used in a DSA setting where one port can be
-connected to an external MAC and be used to inject/extract frames
-to/from any other ports. In that case, the IFH would serve as the DSA
-tag.
+Oh, that's not a shortcut. It's completely invalid and not likely to
+work in any case. If you're mapping something you have to pass the
+device that the dma_addr_t is being programmed into.
 
+> Sounded like this series does generate the dma_addr for the correct
+> device..
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This series doesn't generate any DMA addresses with dma_map(). The
+current p2pdma code ensures everything is behind the same root port and
+only uses the pci bus address. This is valid and correct, but yes it's
+something to expand upon.
+
+I'll be doing some work shortly to add transactions that go through the
+IOMMU and calls dma_map_* when appropriate.
+
+Logan
