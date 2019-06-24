@@ -2,229 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050D7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB66CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05F920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00872133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HofRi30R"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T7DpsKTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfFXL2u (ORCPT
+        id S1729722AbfFXLbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:28:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42243 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728169AbfFXL2u (ORCPT
+        Mon, 24 Jun 2019 07:31:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33774 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfFXLbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:28:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so13472120wrl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UNcy8eWqctDZ/B0vQmCYKv2pj1uHfmf+ueIIuptmq+g=;
-        b=HofRi30RbWmoIRYk082kCxt/H5Be+HRHLSug71DnVgsW1wmNEH1LPvTG3PsCttbvvC
-         dtgv/zgBiH8OcGz6bjsS+7FCSFCUUKoTnHE73WfOV5DzNs+J9G3iHEFI01fSqUDb4WiP
-         DD1uXfJgSvKavkWwFeOqvzsVA0ysnXDZLodb3SzosUwEiqzCMpjIf0Wj9dwrujNb/FMj
-         A/SM1HD1ACjmDGDvr4ePjLI8NkmXQ3ntpR4oh50Uka9zAsBoO354aXnu9yU2SIszxli1
-         Nw6EUWjdsKmvji+uM12gtlfuYf3uqQ74XZR5TI6X5qiiSkkBYCAPOtDYZ4GIcOQWx1F/
-         G2UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UNcy8eWqctDZ/B0vQmCYKv2pj1uHfmf+ueIIuptmq+g=;
-        b=ieqRpmh4iZOBecplo4kj1TMIHR/t/ocO900S7Ttj0VIFZWNPHc5ABhBIuDM6i+CQrD
-         W9PkolPxZwlzjN8V5GvNgGzX5mDtMmkCAKT6GtIIYCe5u5K79TYDBPVNhVlpD6DVDg+Z
-         b6I5HMqitz+mF6HZGDhWS7ly4DheC2eom4KwTulmupM2ftkY56K0M5YpjSychj1qXBu1
-         BP9+F2QEZL9kUM/237pjFzoW8rac4EiELaaRFvW4DMucdjv/8qNFh2CQU2+YBNKCCiBR
-         WBUGmyVQco9w3/TT0wL4clrxU2bH+7SJQb9aQQfiwynSbFrOjqd33plajczPYcO3VOts
-         W17Q==
-X-Gm-Message-State: APjAAAV+gepEpPsD5buI4j0VweuLX8mnG3E0Zdpkk5rJ3cCvCYUQYHK+
-        MIkamGMtoC0nMJ1YII4QKPUwrA==
-X-Google-Smtp-Source: APXvYqx2FMSxOtUi9i/iRHzrVCNGDY7XivA/wMjvC/gHwJYcWyvkHAQGW/e4L15l5LzoWyz6R8VRig==
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr59955676wrs.215.1561375727072;
-        Mon, 24 Jun 2019 04:28:47 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id h8sm8951645wmf.12.2019.06.24.04.28.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 04:28:46 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 12:28:44 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
-References: <20190522163428.7078-1-paul@crapouillou.net>
- <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
- <20190621135608.GB11839@ulmo>
+        Mon, 24 Jun 2019 07:31:39 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54BBD323;
+        Mon, 24 Jun 2019 13:31:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1561375898;
+        bh=TTMoZ7L0TvwNHbazuq/zwIiZIs9paL/P68Ui7Cjouyc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T7DpsKTaR9/3ZvSzOgeS4b4LBK0i6+ZgRoYkX5bXOyfnMgVGltTTwbeRfO5UvHdJq
+         +WxmuSTy/Ntp1eSlzg0Rdq0nSpBDb65EAdSVbztbt2xVD/0emnxYtHgwrKngW9SgVO
+         A+JWXhl8xhRUcE54OrD9xsC0Z9pII1FxMorvqcDs=
+Date:   Mon, 24 Jun 2019 14:31:19 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Jonas Karlman <jonas@kwiboo.se>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH] MAINTAINERS: Update Maintainers and Reviewers of DRM
+ Bridge Drivers
+Message-ID: <20190624113119.GD5737@pendragon.ideasonboard.com>
+References: <20190624090851.17859-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190621135608.GB11839@ulmo>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190624090851.17859-1-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
-> On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
-> > On 22/05/2019 17:34, Paul Cercueil wrote:
-> > > When the driver probes, the PWM pin is automatically configured to its
-> > > default state, which should be the "pwm" function.
-> > 
-> > At which point in the probe... and by who?
-> 
-> The driver core will select the "default" state of a device right before
-> calling the driver's probe, see:
-> 
-> 	drivers/base/pinctrl.c: pinctrl_bind_pins()
-> 
-> which is called from:
-> 
-> 	drivers/base/dd.c: really_probe()
-> 
+Hi Neil,
 
-Thanks. I assumed it would be something like that... although given
-pwm-backlight is essentially a wrapper driver round a PWM I wondered why
-the pinctrl was on the backlight node (rather than the PWM node).
+Thank you for the patch.
 
-Looking at the DTs in the upstream kernel it looks like ~20% of the
-backlight drivers have pinctrl on the backlight node. Others presumable
-have none or have it on the PWM node (and it looks like support for
-sleeping the pins is *very* rare amoung the PWM drivers).
-
-
-> > > However, at this
-> > > point we don't know the actual level of the pin, which may be active or
-> > > inactive. As a result, if the driver probes without enabling the
-> > > backlight, the PWM pin might be active, and the backlight would be
-> > > lit way before being officially enabled.
-> > > 
-> > > To work around this, if the probe function doesn't enable the backlight,
-> > > the pin is set to its sleep state instead of the default one, until the
-> > > backlight is enabled. Whenk the backlight is disabled, the pin is reset
-> > > to its sleep state.
-> > Doesn't this workaround result in a backlight flash between whatever enables
-> > it and the new code turning it off again?
+On Mon, Jun 24, 2019 at 11:08:51AM +0200, Neil Armstrong wrote:
+> Add myself as co-maintainer of DRM Bridge Drivers then add Jonas Karlman
+> and Jernej Škrabec as Reviewers of DRM Bridge Drivers.
 > 
-> Yeah, I think it would. I guess if you're very careful on how you set up
-> the device tree you might be able to work around it. Besides the default
-> and idle standard pinctrl states, there's also the "init" state. The
-> core will select that instead of the default state if available. However
-> there's also pinctrl_init_done() which will try again to switch to the
-> default state after probe has finished and the driver didn't switch away
-> from the init state.
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Jonas Karlman <jonas@kwiboo.se>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Jernej Škrabec <jernej.skrabec@siol.net>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  MAINTAINERS | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> So you could presumably set up the device tree such that you have three
-> states defined: "default" would be the one where the PWM pin is active,
-> "idle" would be used when backlight is off (PWM pin inactive) and then
-> another "init" state that would be the same as "idle" to be used during
-> probe. During probe the driver could then switch to the "idle" state so
-> that the pin shouldn't glitch.
-> 
-> I'm not sure this would actually work because I think the way that
-> pinctrl handles states both "init" and "idle" would be the same pointer
-> values and therefore pinctrl_init_done() would think the driver didn't
-> change away from the "init" state because it is the same pointer value
-> as the "idle" state that the driver selected. One way to work around
-> that would be to duplicate the "idle" state definition and associate one
-> instance of it with the "idle" state and the other with the "init"
-> state. At that point both states should be different (different pointer
-> values) and we'd get the init state selected automatically before probe,
-> select "idle" during probe and then the core will leave it alone. That's
-> of course ugly because we duplicate the pinctrl state in DT, but perhaps
-> it's the least ugly solution.
-> Adding Linus for visibility. Perhaps he can share some insight.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2abf6d28db64..dd8dacc61e79 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5253,7 +5253,10 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
+>  
+>  DRM DRIVERS FOR BRIDGE CHIPS
+>  M:	Andrzej Hajda <a.hajda@samsung.com>
+> +M:	Neil Armstrong <narmstrong@baylibre.com>
+>  R:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> +R:	Jonas Karlman <jonas@kwiboo.se>
+> +R:	Jernej Skrabec <jernej.skrabec@siol.net>
+>  S:	Maintained
+>  T:	git git://anongit.freedesktop.org/drm/drm-misc
+>  F:	drivers/gpu/drm/bridge/
 
-To be honest I'm happy to summarize in my head as "if it flashes then it's not
-a pwm_bl.c's problem" ;-).
+-- 
+Regards,
 
-
-Daniel.
-
-
-> 
-> On that note, I'm wondering if perhaps it'd make sense for pinctrl to
-> support some mode where a device would start out in idle mode. That is,
-> where pinctrl_bind_pins() would select the "idle" mode as the default
-> before probe. With something like that we could easily support this
-> use-case without glitching.
-> 
-> I suppose yet another variant would be for the PWM backlight to not use
-> any of the standard pinctrl states at all. Instead it could just define
-> custom states, say "active" and "inactive". Looking at the code that
-> would prevent pinctrl_bind_pins() from doing anything with pinctrl
-> states and given the driver exact control over when each of the states
-> will be selected. That's somewhat suboptimal because we can't make use
-> of the pinctrl PM helpers and it'd require more boilerplate.
-> 
-> Thierry
-> 
-> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net> > ---
-> > >   drivers/video/backlight/pwm_bl.c | 9 +++++++++
-> > >   1 file changed, 9 insertions(+)
-> > > 
-> > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > > index fb45f866b923..422f7903b382 100644
-> > > --- a/drivers/video/backlight/pwm_bl.c
-> > > +++ b/drivers/video/backlight/pwm_bl.c
-> > > @@ -16,6 +16,7 @@
-> > >   #include <linux/module.h>
-> > >   #include <linux/kernel.h>
-> > >   #include <linux/init.h>
-> > > +#include <linux/pinctrl/consumer.h>
-> > >   #include <linux/platform_device.h>
-> > >   #include <linux/fb.h>
-> > >   #include <linux/backlight.h>
-> > > @@ -50,6 +51,8 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
-> > >   	struct pwm_state state;
-> > >   	int err;
-> > > +	pinctrl_pm_select_default_state(pb->dev);
-> > > +
-> > >   	pwm_get_state(pb->pwm, &state);
-> > >   	if (pb->enabled)
-> > >   		return;
-> > > @@ -90,6 +93,8 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
-> > >   	regulator_disable(pb->power_supply);
-> > >   	pb->enabled = false;
-> > > +
-> > > +	pinctrl_pm_select_sleep_state(pb->dev);
-> > >   }
-> > >   static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
-> > > @@ -626,6 +631,10 @@ static int pwm_backlight_probe(struct platform_device *pdev)
-> > >   	backlight_update_status(bl);
-> > >   	platform_set_drvdata(pdev, bl);
-> > > +
-> > > +	if (bl->props.power == FB_BLANK_POWERDOWN)
-> > > +		pinctrl_pm_select_sleep_state(&pdev->dev);
-> > 
-> > Didn't backlight_update_status(bl) already do this?
-> > 
-> > 
-> > Daniel.
-> > 
-> > 
-> > > +
-> > >   	return 0;
-> > >   err_alloc:
-> > > 
-> > 
-
-
+Laurent Pinchart
