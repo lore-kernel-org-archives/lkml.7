@@ -2,125 +2,88 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838EDC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C991DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1C9212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="O33JM0SQ"
+	by mail.kernel.org (Postfix) with ESMTP id A271C212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561377849;
+	bh=Oz3COF33WpA043TGrrlVv1NbWayAXkghVvgEFRTlZ/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=szbcnUULm2l7qjFRuIh+N2CscyMrmXKvvktcnhHO9lOcrcgUbkETLMRyz1T4dgzTZ
+	 GUnE/LWXLedkn3RChOvRV35pxSnlhasVjrM6aXXF6VjPTtr4ZyZYtPxhUr9+TngX9J
+	 53fOFWpPfdrha9b9IM3FdPr9UIDq3V11/97e9Qvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfFXL7s (ORCPT
+        id S1728103AbfFXMEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:59:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35545 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfFXL7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:59:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so13125480wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NISf2AF+teimA9xsNpoKX9LvLTU//qt9iSbtSvGhumw=;
-        b=O33JM0SQsoxgxG2UxDCzjJt5FATg92mACnzbJMOJ77sZn/u3/ZkeQMZe+44zyPFGFy
-         azEIg/a/j6bQ62w12aW1UhqEjbzphb6ucFWHtE/9KOXYAA/QBPc92y9/CFLB2p7VYxyE
-         KN/Lig39fYFeU5wlSB7JhOX/1StAcz9efFdJ1B/fOz0uU6k/ViJIuhFhgqYO9aDDDu1o
-         SWdMhVNBoh0scdsdFhZeX6GY31qP6jfT3DuVZeCd7OWql8DZJ4wBi8zTcHRjEhIATAWy
-         PxNsFyyX06R3vxUWF1CMot/Wi3UsysFBxit5k/umwYwAs8spQsp1WxgIZBkw3MD4Ybt7
-         iUqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NISf2AF+teimA9xsNpoKX9LvLTU//qt9iSbtSvGhumw=;
-        b=Rn8w/UPWC4sMRW0mJd3W8PtDzKuLKzRtMUXgfWJ0c0l+SPMGJLCOEgE3bsuYLvjDBQ
-         sDOG6EIKWf3rUvPaiyS0ZLA5l7Hby+cu3znE1Ihuo9NhUWADBJv7XM6I6yRvaYnt36LE
-         la14wqgJ01MVLAcMwOWe9LQJnos9V9yaMEF7tXG9XJtYKIMH2zDRBP2DA3EfJ1ylPMjx
-         YSY2C9GYzgiX8G5e7z9QYFB6HZFxRJucwx9Y4cKpXDVwWvXhIfWV9RgjT/zPrjHms5i3
-         5XGrIYFjSwoyLE1j8f/U+1NlzT2A6GzqyDSHm/TVI0x8BwdZyb0v0pZ3qlyymaQHTSNb
-         iUvQ==
-X-Gm-Message-State: APjAAAV2ITE5BhIph8wJqE09CUV6WcHOZt+da3sbq8TX38Y4KkEzVQBK
-        XaSH33HKtJYmHimB4YaB5nLnHw==
-X-Google-Smtp-Source: APXvYqzbvN//jhpLvthmB++J02P6cMJxBojLpsBGnGF5magVaxEUPJO2AWmZrViBtMYJg98kV8Cg3w==
-X-Received: by 2002:a1c:a6d3:: with SMTP id p202mr16445912wme.26.1561377584822;
-        Mon, 24 Jun 2019 04:59:44 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id l1sm32113168wrf.46.2019.06.24.04.59.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 04:59:44 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 13:59:43 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] CLONE_PIDFD: do not use the value pointed by
- parent_tidptr
-Message-ID: <20190624115942.g6vyis3zy4ptt3fc@brauner.io>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
- <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
- <20190621170613.GA26182@altlinux.org>
- <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
- <20190623112717.GA20697@altlinux.org>
- <20190624094940.24qrteybbcp25wq7@brauner.io>
+        Mon, 24 Jun 2019 08:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726375AbfFXMEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 08:04:07 -0400
+Received: from localhost (unknown [106.201.35.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12539212F5;
+        Mon, 24 Jun 2019 12:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561377846;
+        bh=Oz3COF33WpA043TGrrlVv1NbWayAXkghVvgEFRTlZ/E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BTRWMzH8naU0/87BsjrJicex3tVnB4dgKpKjYzEo7TCi30MNMaJXC/rIz2YsO97li
+         Q8MpYUT0kQDq4SlMQoY2AI11743HqbzFsEloorlsDm3XyGGYvk5pcO85CO5hqaQSKj
+         urdX2ebL6w9eNcT6i25nUauGxRAPywbAuh0fE//0=
+Date:   Mon, 24 Jun 2019 17:30:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [V2] dmaengine: fsl-edma: support little endian for edma driver
+Message-ID: <20190624120055.GB2962@vkoul-mobl>
+References: <20190613102708.21606-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624094940.24qrteybbcp25wq7@brauner.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190613102708.21606-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:49:40AM +0200, Christian Brauner wrote:
-> On Sun, Jun 23, 2019 at 02:27:17PM +0300, Dmitry V. Levin wrote:
-> > Userspace needs a cheap and reliable way to tell whether CLONE_PIDFD
-> > is supported by the kernel or not.
-> > 
-> > While older kernels without CLONE_PIDFD support just leave unchanged
-> > the value pointed by parent_tidptr, current implementation fails with
-> > EINVAL if that value is non-zero.
-> > 
-> > If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
-> > pointed by parent_tidptr also remains unchanged, which effectively
-> > means that userspace must either check CLONE_PIDFD support beforehand
-> > or ensure that fd 0 is not closed when invoking CLONE_PIDFD.
-> > 
-> > The check for pidfd == 0 was introduced during v5.2 release cycle
-> > by commit b3e583825266 ("clone: add CLONE_PIDFD") to ensure that
-> > CLONE_PIDFD could be potentially extended by passing in flags through
-> > the return argument.
-> > 
-> > However, that extension would look horrendous, and with introduction of
-> > clone3 syscall in v5.3 there is no need to extend legacy clone syscall
-> > this way.
-> > 
-> > So remove the pidfd == 0 check.  Userspace that needs to be portable
-> > to kernels without CLONE_PIDFD support is advised to initialize pidfd
-> > with -1 and check the pidfd value returned by CLONE_PIDFD.
-> > 
-> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+On 13-06-19, 10:27, Peng Ma wrote:
+> Our platforms with below registers(CHCFG0 - CHCFG15) of eDMA
+> *-----------------------------------------------------------*
+> |     Offset   | Big endian Register| Little endian Register|
+> |--------------|--------------------|-----------------------|
+> |     0x0      |        CHCFG0      |           CHCFG3      |
+> |--------------|--------------------|-----------------------|
+> |     0x1      |        CHCFG1      |           CHCFG2      |
+> |--------------|--------------------|-----------------------|
+> |     0x2      |        CHCFG2      |           CHCFG1      |
+> |--------------|--------------------|-----------------------|
+> |     0x3      |        CHCFG3      |           CHCFG0      |
+> |--------------|--------------------|-----------------------|
+> |     ...      |        ......      |           ......      |
+> |--------------|--------------------|-----------------------|
+> |     0xC      |        CHCFG12     |           CHCFG15     |
+> |--------------|--------------------|-----------------------|
+> |     0xD      |        CHCFG13     |           CHCFG14     |
+> |--------------|--------------------|-----------------------|
+> |     0xE      |        CHCFG14     |           CHCFG13     |
+> |--------------|--------------------|-----------------------|
+> |     0xF      |        CHCFG15     |           CHCFG12     |
+> *-----------------------------------------------------------*
 > 
-> Reviewed-by: Christian Brauner <christian@brauner.io>
-> 
-> Thank you Dmitry, queueing this up for rc7.
+> Current eDMA driver does not support Little endian, so this
+> patch is to improve edma driver to support little endian.
 
-This is now sitting in
+Applied, thanks
 
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=43754d05f235dd1b6c7f8ab9f42007770d721f10
-
-I reformulated the commit message a bit and gave it a Fixes tag. Dmitry,
-if you want you can take a look and tell me if that's acceptable to you.
-
-Thanks!
-Christian
+-- 
+~Vinod
