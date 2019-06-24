@@ -2,96 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C359BC4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1958AC4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AAC20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC15D20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfFXWhf (ORCPT
+        id S1727051AbfFXWhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:37:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:1686 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbfFXWhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:37:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 15:37:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
-   d="scan'208";a="172143160"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga002.jf.intel.com with ESMTP; 24 Jun 2019 15:37:31 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v1 1/1] PCI/ERR: Update error status after reset_link()
-Date:   Mon, 24 Jun 2019 15:35:23 -0700
-Message-Id: <20190624223523.115019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 24 Jun 2019 18:37:47 -0400
+Received: from smtprelay0249.hostedemail.com ([216.40.44.249]:55905 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726413AbfFXWhr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 18:37:47 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 72975181D3402;
+        Mon, 24 Jun 2019 22:37:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rod05_7db6cd2afbd24
+X-Filterd-Recvd-Size: 2664
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 24 Jun 2019 22:37:43 +0000 (UTC)
+Message-ID: <74833f93f6082c7b44f4fa8a3093ea1a751d5539.camel@perches.com>
+Subject: Re: [PATCH 0/3] Clean up crypto documentation
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Gary R Hook <ghook@amd.com>, "Hook, Gary" <Gary.Hook@amd.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Date:   Mon, 24 Jun 2019 15:37:42 -0700
+In-Reply-To: <20190624143748.7fcfe623@lwn.net>
+References: <156140322426.29777.8610751479936722967.stgit@taos>
+         <23a5979082c89d7028409ad9ae082840411e1ca6.camel@perches.com>
+         <d8b359ff-5891-7bb8-d292-9f10cca04f17@amd.com>
+         <977bc7c484ef55ff78de51d7555afcc3c3350b1e.camel@perches.com>
+         <20190624143748.7fcfe623@lwn.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Mon, 2019-06-24 at 14:37 -0600, Jonathan Corbet wrote:
+> On Mon, 24 Jun 2019 13:29:42 -0700
+> Joe Perches <joe@perches.com> wrote:
+> 
+> > > Finally, would you prefer a v2 of the patch set? Happy to do
+> > > whatever is preferred, of course.  
+> > 
+> > Whatever Jonathan decides is fine with me.
+> > Mine was just a plea to avoid unnecessarily
+> > making the source text harder to read as
+> > that's what I mostly use.
+> 
+> Usually Herbert seems to take crypto docs, so it's not necessarily up to
+> me :)
+> 
+> I don't see much that's objectionable here.  But...
+> 
+> > I don't know if this extension is valid yet, but
+> > I believe just using <function_name>() is more
+> > readable as text than ``<function_name>`` or
+> > :c:func:`<function_name>`
+> 
+> It's been "valid" since I wrote it...it's just not upstream yet :)  I
+> expect it to be in 5.3, though.  So the best way to refer to a kernel
+> function, going forward, is just function() with no markup needed.
 
-Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-reset_link() to recover from fatal errors. But, if the reset is
-successful there is no need to continue the rest of the error recovery
-checks. Also, during fatal error recovery, if the initial value of error
-status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-even after successful recovery (using reset_link()) pcie_do_recovery()
-will report the recovery result as failure. So update the status of
-error after reset_link().
+When that's actually "valid" I suggest doing:
 
-Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pcie/err.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+$ git ls-files -- 'Documentation/*.rst' | \
+ xargs perl -pi -e 's/:c:func:`(\w+)(?:\(\))?`/\1()/g; s/``(\w+)\(\)``/\1()/g'
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 773197a12568..aecec124a829 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -204,9 +204,13 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	else
- 		pci_walk_bus(bus, report_normal_detected, &status);
- 
--	if (state == pci_channel_io_frozen &&
--	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
--		goto failed;
-+	if (state == pci_channel_io_frozen) {
-+		status = reset_link(dev, service);
-+		if (status != PCI_ERS_RESULT_RECOVERED)
-+			goto failed;
-+		else
-+			goto done;
-+	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
- 		status = PCI_ERS_RESULT_RECOVERED;
-@@ -228,6 +232,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	if (status != PCI_ERS_RESULT_RECOVERED)
- 		goto failed;
- 
-+done:
- 	pci_dbg(dev, "broadcast resume message\n");
- 	pci_walk_bus(bus, report_resume, &status);
- 
--- 
-2.21.0
+so function designations in Documentation are simpler to read.
+
+Right now that's:
+
+$ git diff --shortstat Documentation/
+ 125 files changed, 1680 insertions(+), 1680 deletions(-)
+
 
