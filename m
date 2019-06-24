@@ -2,172 +2,103 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387FCC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B1C48BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08942208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nl7WANT+"
+	by mail.kernel.org (Postfix) with ESMTP id E053C2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfFXOey (ORCPT
+        id S1728768AbfFXOgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:34:54 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:57286 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfFXOdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:33:14 -0400
-Received: by mail-qk1-f201.google.com with SMTP id j128so16247052qkd.23
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=QQXMFisLcqxTDxCx7mpHBfkykflxcDxM95yy0y46L4c=;
-        b=nl7WANT+T3zzJdQNSfB9+m3b8ydqMfXiozgRLYeQCHFc4zWOn1Q8HlSZi7DGmunKcG
-         m48YCubQKuyc5mIC9PWmc95WNcaYrn+rBkilmeEtWye/vcm/w7SgqxmZ+eLuRWNk+dBe
-         ilcc0xwMAFdqkWVOavUtr03O5uEwSiv8ah8EA2ZNm/JYdo0vp1VaJuLVzssnLAaxlz0W
-         +bGemSNE16fXrFDUhV0Eo7CJiC+zuIHkEvL14QgEfP6YhZ1zpRezDVdue+M4lC6Urd5x
-         s/pZSUm/6UDNd/YlF2uYqWPTYuto+748pEjr815zYdNJlDljrtH9f8RpmzII6hCRLyFl
-         B0aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=QQXMFisLcqxTDxCx7mpHBfkykflxcDxM95yy0y46L4c=;
-        b=HmYPPngry2IxzgJVdDWv+TvhUlVi+nE4SINIZc5Sp8hxsLFOKSneyLElnl86GgAsWz
-         qJH4GbaHJzp3auQ8FaQlSibccYVPQNaRN//AxOgF2P5JGAJ6ONUoJ+NgsKyvHU9wGNU6
-         XZFKGYjllFHz2AYj8U6eD0kvWXp8HnUFhOI+sJBRMqM/j5vUHYt06imk9KttDX/7POWx
-         76Iz9sSEQUGoLUWo9WrUG63zClScj5TMxMFHShiSi4RlkBAdSrqL0iIwahtn6ZMM2F1d
-         A8qLXgW+oy8oDUa89+jfLX9HTERO4iLUpqIwWhDVvhgu5pVRHBw978IM56VdRnMmdg5u
-         EfhA==
-X-Gm-Message-State: APjAAAXv4SHj5AscrOD33y8+HlNDYpM2gUuyDwTf9gAOeUPXcD+/BXTv
-        wHGflXONny3Jy7hoTMGQt/SfycIm7m2Q8zb+
-X-Google-Smtp-Source: APXvYqzup51zNJearylpYQzBo2BoCcuJ3XXHspU9PtHQODnUVY/RZyP6CGJqukGO0YgO4GkOlCbGA2J//cHunZZU
-X-Received: by 2002:a37:a2cc:: with SMTP id l195mr16730110qke.362.1561386793770;
- Mon, 24 Jun 2019 07:33:13 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:32:48 +0200
-In-Reply-To: <cover.1561386715.git.andreyknvl@google.com>
-Message-Id: <1a53da43d69d644793110e85671d20158ebf29cb.1561386715.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1561386715.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v18 03/15] lib: untag user pointers in strn*_user
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Jun 2019 10:36:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33264 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727344AbfFXOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:36:39 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 45CACF383ECDD524113B;
+        Mon, 24 Jun 2019 22:36:37 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 24 Jun 2019 22:36:28 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <arnd@arndb.de>, <olof@lixom.net>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 4/6] bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
+Date:   Mon, 24 Jun 2019 22:35:06 +0800
+Message-ID: <1561386908-31884-5-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+References: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends kernel ABI to allow to pass
-tagged user pointers (with the top byte set to something else other than
-0x00) as syscall arguments.
+If, after registering a logical PIO range, the driver probe later fails,
+the logical PIO range memory will be released automatically.
 
-strncpy_from_user and strnlen_user accept user addresses as arguments, and
-do not go through the same path as copy_from_user and others, so here we
-need to handle the case of tagged user addresses separately.
+This causes an issue, in that the logical PIO range is not unregistered
+and the released range memory may be later referenced.
 
-Untag user pointers passed to these functions.
+Fix by unregistering the logical PIO range.
 
-Note, that this patch only temporarily untags the pointers to perform
-validity checks, but then uses them as is to perform user memory accesses.
+And since we now unregister the logical PIO range for probe failure, avoid
+the special ordering of setting logical PIO range ops, which was the
+previous (poor) attempt at a safeguard against this.
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Fixes: adf38bb0b595 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- lib/strncpy_from_user.c | 3 ++-
- lib/strnlen_user.c      | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/bus/hisi_lpc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 023ba9f3b99f..dccb95af6003 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -6,6 +6,7 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-+#include <linux/mm.h>
+diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+index 19d7b6ff2f17..6d301aafcad2 100644
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -606,24 +606,25 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+ 	range->fwnode = dev->fwnode;
+ 	range->flags = LOGIC_PIO_INDIRECT;
+ 	range->size = PIO_INDIRECT_SIZE;
++	range->hostdata = lpcdev;
++	range->ops = &hisi_lpc_ops;
++	lpcdev->io_host = range;
  
- #include <asm/byteorder.h>
- #include <asm/word-at-a-time.h>
-@@ -108,7 +109,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 		return 0;
+ 	ret = logic_pio_register_range(range);
+ 	if (ret) {
+ 		dev_err(dev, "register IO range failed (%d)!\n", ret);
+ 		return ret;
+ 	}
+-	lpcdev->io_host = range;
  
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)src;
-+	src_addr = (unsigned long)untagged_addr(src);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 7f2db3fe311f..28ff554a1be8 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -2,6 +2,7 @@
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/uaccess.h>
-+#include <linux/mm.h>
+ 	/* register the LPC host PIO resources */
+ 	if (acpi_device)
+ 		ret = hisi_lpc_acpi_probe(dev);
+ 	else
+ 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+-	if (ret)
++	if (ret) {
++		logic_pio_unregister_range(range);
+ 		return ret;
+-
+-	lpcdev->io_host->hostdata = lpcdev;
+-	lpcdev->io_host->ops = &hisi_lpc_ops;
++	}
  
- #include <asm/word-at-a-time.h>
- 
-@@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
- 		return 0;
- 
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)str;
-+	src_addr = (unsigned long)untagged_addr(str);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
+ 	io_end = lpcdev->io_host->io_start + lpcdev->io_host->size;
+ 	dev_info(dev, "registered range [%pa - %pa]\n",
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.17.1
 
