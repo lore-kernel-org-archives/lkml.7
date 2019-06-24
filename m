@@ -2,181 +2,129 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F97CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA31C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE4A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAEE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gCesECnI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UNJNGd1q";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="PuqZY328"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfFXFrz (ORCPT
+        id S1726509AbfFXFu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:47:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFXFry (ORCPT
+        Mon, 24 Jun 2019 01:50:57 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:31158 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFXFu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:47:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cI5ESyw+Iq18O8e33ryH8TCCdHen6nuLvHUOfsxNyOI=; b=gCesECnIRfFXD9GuZknMwOvdeR
-        TYvLB4zrxrJUBN/4Wp5/G4533FVQy9u+fOBOth2IMjO9h/G2Oe5H3TcoNddfWo3Zhgx7oPQfIxBbC
-        gTxhFcwzzOZ9lFC3ITBdzIFz8OwFvhtP6I4EgUnRuw8knw1w+1x+gG7MUI8RSlShFhrmfEphZooYE
-        5tudyHzG5fca51XbJcuHW8kcoZj7DjZ3to09ftF/MkQ3etAl6sMCqO1olLTodjeoIrjEqLEPyZMOD
-        zNm97jYcmA4nwCIRIKxi5WqZRyMFpLv3/QlJrbenwLahGKcSs0twUb6BCaYlEi5k2FqMEuWU+0EDr
-        x8CZ1zMA==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHpT-0000ac-NY; Mon, 24 Jun 2019 05:47:48 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] asm-generic: remove ptrace.h
-Date:   Mon, 24 Jun 2019 07:47:28 +0200
-Message-Id: <20190624054728.30966-6-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190624054728.30966-1-hch@lst.de>
-References: <20190624054728.30966-1-hch@lst.de>
+        Mon, 24 Jun 2019 01:50:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561355456; x=1592891456;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ae3YgcVwCDrnTxYqAN6YBVv3IyIZuFFaOBX4kDD5Xr0=;
+  b=UNJNGd1q2at29fwUmX9sxspVP2VVM4H6dXR9CQjPqsdGky1tjOxsMSOR
+   2+7yb+OERphM1ysMjGsiNruIoLWEgSMjOMIUOVN2HZ1KE/7YE2zV9H/AT
+   6AEcDhFKBxaYfcNusxAS0lB2/XV7O2c0xyj8X6cwU+lKvrhQqOsAchm5b
+   rJNbUjFjWFSZI9BtgJ0NnJPSHAGAh8x9AuvD4JsG3NO6NHahZig2DJh+e
+   9LKgq3a5+Rs+b8HYUDGeamq2TL+7x/x7mhPDE+azA25eKVt5LSSJuC5F9
+   ANVLwuZIkLT0k8SHK5Kbn7z95iUJ/V6x+1wsJ+2Yq3X5Ql2tfjnJiW1Vv
+   w==;
+X-IronPort-AV: E=Sophos;i="5.63,411,1557158400"; 
+   d="scan'208";a="217722677"
+Received: from mail-by2nam01lp2054.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.54])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Jun 2019 13:50:55 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NtI+8h6xfOReEQr+7bNpmyjv0rvw6KWJYQlb579mKIU=;
+ b=PuqZY3281AfhXwqeLOATP0g7VHjlrCy0P8FuhfNeIN6gq9lCpIL8Vkk4ou451rSh3I03xo1KdSv8+g7UxgQGAffsSASR4L80K1NTOUsqWj+pv1lLqjLNga83OBb2Ope7m3hCrvN/e6NsmnfgA3ZRoc0VUuxfbAf6TGLoTPCHhd8=
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
+ SN6PR04MB4864.namprd04.prod.outlook.com (52.135.114.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 05:50:54 +0000
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::c5b2:c213:37f6:819a]) by SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::c5b2:c213:37f6:819a%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 05:50:54 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
+Thread-Topic: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
+Thread-Index: AdUp6BAI7ZILf7ZTT5ms/BIKCU7S/AAaJsqw
+Date:   Mon, 24 Jun 2019 05:50:54 +0000
+Message-ID: <SN6PR04MB4925C03088D2D715A9ADAB84FCE00@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+In-Reply-To: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1c7802dd-921f-437f-8ef1-08d6f867ec35
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4864;
+x-ms-traffictypediagnostic: SN6PR04MB4864:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB48644E291C207970EF600AB1FCE00@SN6PR04MB4864.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(396003)(346002)(39860400002)(366004)(199004)(189003)(102836004)(229853002)(6116002)(256004)(14444005)(446003)(11346002)(305945005)(74316002)(476003)(9686003)(81166006)(68736007)(81156014)(486006)(6506007)(54906003)(66066001)(55016002)(76176011)(7696005)(7736002)(3846002)(6436002)(53936002)(110136005)(316002)(8936002)(2906002)(99286004)(6246003)(4326008)(26005)(186003)(33656002)(8676002)(72206003)(73956011)(66556008)(66446008)(52536014)(76116006)(66946007)(66476007)(64756008)(14454004)(86362001)(5660300002)(25786009)(4744005)(71190400001)(71200400001)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4864;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oqafVsPJxw2fxKZ4L7HnPNVOlCN1uP0UfEei76wZNIMCbYkABGwkC3WgOs/KM+Ld8KFX+o0Qcm1Wo41lU0uGAP+35pKXtMDZNHyRBL4n9BOqREwClJNRe7tAk8lO9HttA5Zv0/kCixv8t37LkvGdnv+FqwwL5CdnNfHS8fO/BGVQicNXsvIXEx5gXXpXY6UgRpl452wElAYAZLRJzzodYcQ4VVMVfTMspR8Agb1dwDaKLFxjtNrRCmgp1t2E89pRJr2ETskEnn7hAy3sPE6vzbBFmqG/HK7f4r08vnG8peTfbuihdWBfC4ujiqgwn+X2cZhF2GyPIgv/8CsJ3hh2ylX8liBFf51nLXuDghImXHAZ1XxIJVRL6Q9ezl/TzviCb+wWU6fgKFjifFHp+d+z07A446IVQoEM6Jg8S6dt6ZI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c7802dd-921f-437f-8ef1-08d6f867ec35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 05:50:54.5927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No one is using this header anymore.
+Hi,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
----
- MAINTAINERS                    |  1 -
- arch/mips/include/asm/ptrace.h |  5 ---
- include/asm-generic/ptrace.h   | 73 ----------------------------------
- 3 files changed, 79 deletions(-)
- delete mode 100644 include/asm-generic/ptrace.h
+>=20
+>=20
+> From: Bean Huo <beanhuo@micron.com>
+>=20
+> This series patch is to fix several typos and fix one issue of twice
+> completing ufs-bsg job in case of UPIU/DME command failed.
+>=20
+> Changed since v1:
+>     - split v1 patch
+>     - add fixes tag
+>     - delete needless blank line
+>=20
+> Bean Huo (3):
+>   scsi: ufs: fix typos in comment of ufshcd_uic_change_pwr_mode
+>   scsi: ufs-bsg: fix typo in ufs_bsg_request
+>   scsi: ufs-bsg: complete ufs-bsg job only if no error
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0ed735994a5..43e5b6e215a9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12778,7 +12778,6 @@ F:	include/linux/regset.h
- F:	include/linux/tracehook.h
- F:	include/uapi/linux/ptrace.h
- F:	include/uapi/linux/ptrace.h
--F:	include/asm-generic/ptrace.h
- F:	kernel/ptrace.c
- F:	arch/*/ptrace*.c
- F:	arch/*/*/ptrace*.c
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index b6578611dddb..1e76774b36dd 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -56,11 +56,6 @@ static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
- 	return regs->regs[31];
- }
- 
--/*
-- * Don't use asm-generic/ptrace.h it defines FP accessors that don't make
-- * sense on MIPS.  We rather want an error if they get invoked.
-- */
--
- static inline void instruction_pointer_set(struct pt_regs *regs,
-                                            unsigned long val)
- {
-diff --git a/include/asm-generic/ptrace.h b/include/asm-generic/ptrace.h
-deleted file mode 100644
-index ab16b6cb1028..000000000000
---- a/include/asm-generic/ptrace.h
-+++ /dev/null
-@@ -1,73 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Common low level (register) ptrace helpers
-- *
-- * Copyright 2004-2011 Analog Devices Inc.
-- */
--
--#ifndef __ASM_GENERIC_PTRACE_H__
--#define __ASM_GENERIC_PTRACE_H__
--
--#ifndef __ASSEMBLY__
--
--/* Helpers for working with the instruction pointer */
--#ifndef GET_IP
--#define GET_IP(regs) ((regs)->pc)
--#endif
--#ifndef SET_IP
--#define SET_IP(regs, val) (GET_IP(regs) = (val))
--#endif
--
--static inline unsigned long instruction_pointer(struct pt_regs *regs)
--{
--	return GET_IP(regs);
--}
--static inline void instruction_pointer_set(struct pt_regs *regs,
--                                           unsigned long val)
--{
--	SET_IP(regs, val);
--}
--
--#ifndef profile_pc
--#define profile_pc(regs) instruction_pointer(regs)
--#endif
--
--/* Helpers for working with the user stack pointer */
--#ifndef GET_USP
--#define GET_USP(regs) ((regs)->usp)
--#endif
--#ifndef SET_USP
--#define SET_USP(regs, val) (GET_USP(regs) = (val))
--#endif
--
--static inline unsigned long user_stack_pointer(struct pt_regs *regs)
--{
--	return GET_USP(regs);
--}
--static inline void user_stack_pointer_set(struct pt_regs *regs,
--                                          unsigned long val)
--{
--	SET_USP(regs, val);
--}
--
--/* Helpers for working with the frame pointer */
--#ifndef GET_FP
--#define GET_FP(regs) ((regs)->fp)
--#endif
--#ifndef SET_FP
--#define SET_FP(regs, val) (GET_FP(regs) = (val))
--#endif
--
--static inline unsigned long frame_pointer(struct pt_regs *regs)
--{
--	return GET_FP(regs);
--}
--static inline void frame_pointer_set(struct pt_regs *regs,
--                                     unsigned long val)
--{
--	SET_FP(regs, val);
--}
--
--#endif /* __ASSEMBLY__ */
--
--#endif
--- 
-2.20.1
-
+This series looks good to me.
+Thanks,
+Avri
