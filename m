@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C6DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FE12089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A331E2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371532;
-	bh=wmC6sIKsGuYIVEGrslgGVmYB1d51672VeR1UWq/sook=;
+	s=default; t=1561371536;
+	bh=B8haucdH0Bac5XxjC19HYszcAgma7sNI2LLJyXDiMss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFajCLwk6TXYmxBnmwMYPdP/kw2ZoAGEmuOugBQIfJxToLlcM7ZFzj4NtxHpCzZMs
-	 7EWXKw/0Vx16oDt3attC/OvPKEr3mvZOjfokR2qrdAK5cSkmuT06BsrX+vIdtiFuyn
-	 bW5b9++NokVUhNQ8kG8hcUeEq+pEDfelMjMY+pyU=
+	b=ySLIHr5Z/gA0sIWep8X2zp1ICBqZ8yrIe91TNUXIYujoMiDiCWEi1KU3dHUTxuu9c
+	 TXCcdTcUdwLFMkdVmw5cDKhTH18HgEGMxwYN0myiNBe8vOydOy04pvM/IQQTSEN/1c
+	 BYFb6MgJos44TojZ2tP8iH7y5wtCoeHUxSVy2tnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfFXKSv (ORCPT
+        id S1730001AbfFXKPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53094 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730084AbfFXKPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:15:45 -0400
+        id S1730379AbfFXKOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:14:44 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17D58205ED;
-        Mon, 24 Jun 2019 10:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CEC9205C9;
+        Mon, 24 Jun 2019 10:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371344;
-        bh=wmC6sIKsGuYIVEGrslgGVmYB1d51672VeR1UWq/sook=;
+        s=default; t=1561371284;
+        bh=B8haucdH0Bac5XxjC19HYszcAgma7sNI2LLJyXDiMss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzoQ+WATQamKZISpr7+KQZYWrsonvJ/IBKI0Ed5WRQ//4KPYa7mhLr+VmGw80YGEh
-         6j1u9KJ5Pg7JoZpZd3jmqyT+rBYCGGMMGXSXCRiUKTsrDiwk/yEg2KYAHsr6B8oRPU
-         B6Qty0UefSKSddlu0dpI9+lrczGdVpUNbPVYC6dg=
+        b=esuQWnoSLb11kZY7VkZljHEGPv5sVZd5YZKAnYE7jXmbtTKBh98fj3QZaqJ7lduG1
+         DMVvkIQLRIzH0p0tL0NaAoTsDupfHvIUrxAFKMfDFJ1oo6NtTbkvM5J7crntMjl2yZ
+         R6cZ/PIB3hkoU8j9sE1PyWmIczwLmSdxc7akCTek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
+        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 067/121] net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
-Date:   Mon, 24 Jun 2019 17:56:39 +0800
-Message-Id: <20190624092324.278858135@linuxfoundation.org>
+Subject: [PATCH 5.1 065/121] mdesc: fix a missing-check bug in get_vdev_port_node_info()
+Date:   Mon, 24 Jun 2019 17:56:37 +0800
+Message-Id: <20190624092324.129228105@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,67 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e4f56f1a7f3287718d0083b5cb85298dc05a5fd ]
+[ Upstream commit 80caf43549e7e41a695c6d1e11066286538b336f ]
 
-Should hw_feature as hardware capability flags to check if hardware LRO
-got support.
+In get_vdev_port_node_info(), 'node_info->vdev_port.name' is allcoated
+by kstrdup_const(), and it returns NULL when fails. So
+'node_info->vdev_port.name' should be checked.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/sparc/kernel/mdesc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 549d36497b8c..59601cb5aeee 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2297,13 +2297,13 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+diff --git a/arch/sparc/kernel/mdesc.c b/arch/sparc/kernel/mdesc.c
+index 9a26b442f820..8e645ddac58e 100644
+--- a/arch/sparc/kernel/mdesc.c
++++ b/arch/sparc/kernel/mdesc.c
+@@ -356,6 +356,8 @@ static int get_vdev_port_node_info(struct mdesc_handle *md, u64 node,
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_GRXRINGS:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			cmd->data = MTK_MAX_RX_RING_NUM;
- 			ret = 0;
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRLCNT:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			struct mtk_mac *mac = netdev_priv(dev);
+ 	node_info->vdev_port.id = *idp;
+ 	node_info->vdev_port.name = kstrdup_const(name, GFP_KERNEL);
++	if (!node_info->vdev_port.name)
++		return -1;
+ 	node_info->vdev_port.parent_cfg_hdl = *parent_cfg_hdlp;
  
- 			cmd->rule_cnt = mac->hwlro_ip_cnt;
-@@ -2311,11 +2311,11 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRULE:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_entry(dev, cmd);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_all(dev, cmd,
- 						     rule_locs);
- 		break;
-@@ -2332,11 +2332,11 @@ static int mtk_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
- 
- 	switch (cmd->cmd) {
- 	case ETHTOOL_SRXCLSRLINS:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_add_ipaddr(dev, cmd);
- 		break;
- 	case ETHTOOL_SRXCLSRLDEL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_del_ipaddr(dev, cmd);
- 		break;
- 	default:
+ 	return 0;
 -- 
 2.20.1
 
