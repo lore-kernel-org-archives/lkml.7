@@ -2,284 +2,122 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F1EC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3516CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF66921473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="km7JeQ3v"
+	by mail.kernel.org (Postfix) with ESMTP id 1883B208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfFXOWr (ORCPT
+        id S1728199AbfFXOXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:22:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39191 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfFXOWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:22:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so6990064pls.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gAszyd6Rkh0AyBVnY2MGQeafDGFV/B/Xjwc7nOHGBTU=;
-        b=km7JeQ3vyTD2UtwSHCAAp4q4at1sY/ltJPO5wzrrkqMzNLeQZPjXSnOQ7VtkWA81dl
-         HEFVLO9l5VlkdkocDhA+ezC7dKtBn4IeaF4UZLWnOmGq0Ok4r2E9GR7Hoa79HLNOGJVe
-         0AHZ3EJWZEjcDwF6xOVW5nBJXR6vOtRMH7oBaouWSEKGFrWAIrbWb9kQA+Hlo7SIhUEB
-         uGLPh5fQQfh1ibByxQrZM4UE+cDk+UJmRIBMFqrJwcIDdYtIIT+tU41CsIi86+tplFna
-         0qMXAZhS5viMtSm5pwtZ6YrDben3dB8l27s4Hd+Xtz7mclZlxhwdWOJHEC5Ft/EzKQyl
-         VZSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gAszyd6Rkh0AyBVnY2MGQeafDGFV/B/Xjwc7nOHGBTU=;
-        b=fFfGhPtgJ/xYF+JIgutc/P19qsJqFKFk7CZ2J1ZB+OFMQCSwyrJCunlosM50XsqsHb
-         twiE2wF42RsCIhQIy4AYbV2cRWxbi1jco+JkIQDNBkQfYB0RhyhUvLweQX8nCWC+4n+F
-         u1wl8oydTQN55QI3/IuYyplBjPEjBD5NsvDGpI63/bU4LQjp2cVUqkG83n3/mjTvZZME
-         5YXOnVB/0FNalihZl5h9IA5U/4yUtA061/ftkpzNDKNxVxg3r5T98XRAhTjMJSGIWIIB
-         YpxdRUV4Cra5oXF0aUMNQcQLZXWGwkAfePvGaST0EnJznB6ePnU2TT+nOPCGf3yWt0S0
-         Ve5w==
-X-Gm-Message-State: APjAAAWEnNJl6vIM+/yB8evGIS6roR+K0o84C+DVrefqSwI2QdaozF4z
-        6hJAc2a6Hkli5l7hMlpoKM4Ya4vMAgK1/w5OINAqGQ==
-X-Google-Smtp-Source: APXvYqx/7NbeFZuwI48tclTUh11xegUV5UsdKc2ldTOnN03zOVYnpDOwlkZEMuzBYRoM7kFvSzXnjLxRZwjrOwVDnPw=
-X-Received: by 2002:a17:902:4183:: with SMTP id f3mr32179784pld.336.1561386165165;
- Mon, 24 Jun 2019 07:22:45 -0700 (PDT)
+        Mon, 24 Jun 2019 10:23:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:51752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbfFXOXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:23:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4151B344;
+        Mon, 24 Jun 2019 07:23:12 -0700 (PDT)
+Received: from [10.1.32.158] (unknown [10.1.32.158])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9083F71E;
+        Mon, 24 Jun 2019 07:23:10 -0700 (PDT)
+Subject: Re: [PATCH 1/7] arm-nommu: remove the partial DMA_ATTR_NON_CONSISTENT
+ support
+To:     Christoph Hellwig <hch@lst.de>, Vineet Gupta <vgupta@synopsys.com>
+Cc:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20190614144431.21760-1-hch@lst.de>
+ <20190614144431.21760-2-hch@lst.de>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <a017e704-c6c4-7718-7f8b-eb8a0eced14d@arm.com>
+Date:   Mon, 24 Jun 2019 15:23:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <cover.1560339705.git.andreyknvl@google.com> <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
- <a5e0e465-89d5-91d0-c6a4-39674269bbf2@oracle.com> <c4bdd767-eb3f-6668-0f49-4aaf4bc7689d@oracle.com>
-In-Reply-To: <c4bdd767-eb3f-6668-0f49-4aaf4bc7689d@oracle.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 24 Jun 2019 16:22:34 +0200
-Message-ID: <CAAeHK+zceAZ0Mqhz3t6Ob71-Dgk4DNHRrzr72r+qEsUugwzTsg@mail.gmail.com>
-Subject: Re: [PATCH v17 04/15] mm, arm64: untag user pointers passed to memory syscalls
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190614144431.21760-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 6:46 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
->
-> On 6/19/19 9:55 AM, Khalid Aziz wrote:
-> > On 6/12/19 5:43 AM, Andrey Konovalov wrote:
-> >> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> >> pass tagged user pointers (with the top byte set to something else other
-> >> than 0x00) as syscall arguments.
-> >>
-> >> This patch allows tagged pointers to be passed to the following memory
-> >> syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprotect,
-> >> mremap, msync, munlock, move_pages.
-> >>
-> >> The mmap and mremap syscalls do not currently accept tagged addresses.
-> >> Architectures may interpret the tag as a background colour for the
-> >> corresponding vma.
-> >>
-> >> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> >> Reviewed-by: Kees Cook <keescook@chromium.org>
-> >> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> >> ---
-> >
-> > Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-> >
-> >
->
-> I would also recommend updating commit log for all the patches in this
-> series that are changing files under mm/ as opposed to arch/arm64 to not
-> reference arm64 kernel ABI since the change applies to every
-> architecture. So something along the lines of "This patch is part of a
-> series that extends kernel ABI to allow......."
+On 6/14/19 3:44 PM, Christoph Hellwig wrote:
+> The arm-nommu DMA code supports DMA_ATTR_NON_CONSISTENT allocations, but
+> does not provide a cache_sync operation.  This means any user of it
+> will never be able to actually transfer cache ownership and thus cause
+> coherency bugs.
 
-Sure, will do in v18, thanks!
+By the way, Documentation/DMA-attributes.txt doesn't specify cache_sync() as
+requirement for DMA_ATTR_NON_CONSISTENT it only states that it is responsibility
+of the driver to have all the correct and necessary sync points.
 
->
-> --
-> Khalid
->
->
-> >>  mm/madvise.c   | 2 ++
-> >>  mm/mempolicy.c | 3 +++
-> >>  mm/migrate.c   | 2 +-
-> >>  mm/mincore.c   | 2 ++
-> >>  mm/mlock.c     | 4 ++++
-> >>  mm/mprotect.c  | 2 ++
-> >>  mm/mremap.c    | 7 +++++++
-> >>  mm/msync.c     | 2 ++
-> >>  8 files changed, 23 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/mm/madvise.c b/mm/madvise.c
-> >> index 628022e674a7..39b82f8a698f 100644
-> >> --- a/mm/madvise.c
-> >> +++ b/mm/madvise.c
-> >> @@ -810,6 +810,8 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> >>      size_t len;
-> >>      struct blk_plug plug;
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      if (!madvise_behavior_valid(behavior))
-> >>              return error;
-> >>
-> >> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> >> index 01600d80ae01..78e0a88b2680 100644
-> >> --- a/mm/mempolicy.c
-> >> +++ b/mm/mempolicy.c
-> >> @@ -1360,6 +1360,7 @@ static long kernel_mbind(unsigned long start, unsigned long len,
-> >>      int err;
-> >>      unsigned short mode_flags;
-> >>
-> >> +    start = untagged_addr(start);
-> >>      mode_flags = mode & MPOL_MODE_FLAGS;
-> >>      mode &= ~MPOL_MODE_FLAGS;
-> >>      if (mode >= MPOL_MAX)
-> >> @@ -1517,6 +1518,8 @@ static int kernel_get_mempolicy(int __user *policy,
-> >>      int uninitialized_var(pval);
-> >>      nodemask_t nodes;
-> >>
-> >> +    addr = untagged_addr(addr);
-> >> +
-> >>      if (nmask != NULL && maxnode < nr_node_ids)
-> >>              return -EINVAL;
-> >>
-> >> diff --git a/mm/migrate.c b/mm/migrate.c
-> >> index f2ecc2855a12..d22c45cf36b2 100644
-> >> --- a/mm/migrate.c
-> >> +++ b/mm/migrate.c
-> >> @@ -1616,7 +1616,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-> >>                      goto out_flush;
-> >>              if (get_user(node, nodes + i))
-> >>                      goto out_flush;
-> >> -            addr = (unsigned long)p;
-> >> +            addr = (unsigned long)untagged_addr(p);
-> >>
-> >>              err = -ENODEV;
-> >>              if (node < 0 || node >= MAX_NUMNODES)
-> >> diff --git a/mm/mincore.c b/mm/mincore.c
-> >> index c3f058bd0faf..64c322ed845c 100644
-> >> --- a/mm/mincore.c
-> >> +++ b/mm/mincore.c
-> >> @@ -249,6 +249,8 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, size_t, len,
-> >>      unsigned long pages;
-> >>      unsigned char *tmp;
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      /* Check the start address: needs to be page-aligned.. */
-> >>      if (start & ~PAGE_MASK)
-> >>              return -EINVAL;fixup_user_fault
-> >> diff --git a/mm/mlock.c b/mm/mlock.c
-> >> index 080f3b36415b..e82609eaa428 100644
-> >> --- a/mm/mlock.c
-> >> +++ b/mm/mlock.c
-> >> @@ -674,6 +674,8 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
-> >>      unsigned long lock_limit;
-> >>      int error = -ENOMEM;
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      if (!can_do_mlock())
-> >>              return -EPERM;
-> >>
-> >> @@ -735,6 +737,8 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
-> >>  {
-> >>      int ret;
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      len = PAGE_ALIGN(len + (offset_in_page(start)));
-> >>      start &= PAGE_MASK;
-> >>
-> >> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> >> index bf38dfbbb4b4..19f981b733bc 100644
-> >> --- a/mm/mprotect.c
-> >> +++ b/mm/mprotect.c
-> >> @@ -465,6 +465,8 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
-> >>      const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
-> >>                              (prot & PROT_READ);
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      prot &= ~(PROT_GROWSDOWN|PROT_GROWSUP);
-> >>      if (grows == (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
-> >>              return -EINVAL;
-> >> diff --git a/mm/mremap.c b/mm/mremap.c
-> >> index fc241d23cd97..64c9a3b8be0a 100644
-> >> --- a/mm/mremap.c
-> >> +++ b/mm/mremap.c
-> >> @@ -606,6 +606,13 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
-> >>      LIST_HEAD(uf_unmap_early);
-> >>      LIST_HEAD(uf_unmap);
-> >>
-> >> +    /*
-> >> +     * Architectures may interpret the tag passed to mmap as a background
-> >> +     * colour for the corresponding vma. For mremap we don't allow tagged
-> >> +     * new_addr to preserve similar behaviour to mmap.
-> >> +     */
-> >> +    addr = untagged_addr(addr);
-> >> +
-> >>      if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
-> >>              return ret;
-> >>
-> >> diff --git a/mm/msync.c b/mm/msync.c
-> >> index ef30a429623a..c3bd3e75f687 100644
-> >> --- a/mm/msync.c
-> >> +++ b/mm/msync.c
-> >> @@ -37,6 +37,8 @@ SYSCALL_DEFINE3(msync, unsigned long, start, size_t, len, int, flags)
-> >>      int unmapped_error = 0;
-> >>      int error = -EINVAL;
-> >>
-> >> +    start = untagged_addr(start);
-> >> +
-> >>      if (flags & ~(MS_ASYNC | MS_INVALIDATE | MS_SYNC))
-> >>              goto out;
-> >>      if (offset_in_page(start))
-> >>
-> >
-> >
->
->
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm/mm/dma-mapping-nommu.c | 24 +++---------------------
+>  1 file changed, 3 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
+> index f304b10e23a4..bc003df45546 100644
+> --- a/arch/arm/mm/dma-mapping-nommu.c
+> +++ b/arch/arm/mm/dma-mapping-nommu.c
+> @@ -39,18 +39,7 @@ static void *arm_nommu_dma_alloc(struct device *dev, size_t size,
+>  				 unsigned long attrs)
+>  
+>  {
+> -	void *ret;
+> -
+> -	/*
+> -	 * Try generic allocator first if we are advertised that
+> -	 * consistency is not required.
+> -	 */
+> -
+> -	if (attrs & DMA_ATTR_NON_CONSISTENT)
+> -		return dma_direct_alloc_pages(dev, size, dma_handle, gfp,
+> -				attrs);
+> -
+> -	ret = dma_alloc_from_global_coherent(size, dma_handle);
+> +	void *ret = dma_alloc_from_global_coherent(size, dma_handle);
+>  
+>  	/*
+>  	 * dma_alloc_from_global_coherent() may fail because:
+> @@ -70,16 +59,9 @@ static void arm_nommu_dma_free(struct device *dev, size_t size,
+>  			       void *cpu_addr, dma_addr_t dma_addr,
+>  			       unsigned long attrs)
+>  {
+> -	if (attrs & DMA_ATTR_NON_CONSISTENT) {
+> -		dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
+> -	} else {
+> -		int ret = dma_release_from_global_coherent(get_order(size),
+> -							   cpu_addr);
+> -
+> -		WARN_ON_ONCE(ret == 0);
+> -	}
+> +	int ret = dma_release_from_global_coherent(get_order(size), cpu_addr);
+>  
+> -	return;
+> +	WARN_ON_ONCE(ret == 0);
+>  }
+>  
+>  static int arm_nommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+> 
+
+FWIW:
+
+Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+
+Cheers
+Vladimir
