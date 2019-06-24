@@ -2,111 +2,149 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286A2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7579EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B04D20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E611208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="L0aOs5+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfFXN4a (ORCPT
+        id S1729444AbfFXN55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:56:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:51050 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfFXN4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:56:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6DF344;
-        Mon, 24 Jun 2019 06:56:29 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58ED3F71E;
-        Mon, 24 Jun 2019 06:56:26 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 14:56:24 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 01/25] kernel: Standardize vdso_datapage
-Message-ID: <20190624135624.GB29120@arrakis.emea.arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-2-vincenzo.frascino@arm.com>
+        Mon, 24 Jun 2019 09:57:57 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34784 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfFXN55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:57:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=J+znOVyKIP4YC32RqBS1C9KhPqih43zJm7vHjG7mLE8=; b=L0aOs5+8LuV5WNLDJCJxTC4o+
+        6AyC48v+UQfYq79WfO5ytWyy4l5TcxrddC2ehtlDX95f4oqzxU2LzggM2duS1PZ4cwD2cFJF42Rdv
+        QEgl94LTcRYgdyeVQP7kK9hiz/G5QBRMNksBnGjaQb57612kM8csbmJCvPMI7Fr2DJ71gKKKKRxs3
+        JNEWhrrTfkSfe5u/pKMmhV1bd8An723+q2VvIKyFAddQAJW8fpFhqhSgQb+Z+TVN4yT9Tho2Xkl7U
+        70pH3gJyMz8ZtAq4vjt87Jlt4bmjhS83h5iFJfdz791q7KRqREIkmOK05+LjkAPYWZal68fqnn7WA
+        G8evw7PpA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59936)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfPTZ-0008PC-EF; Mon, 24 Jun 2019 14:57:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfPTN-0006L1-Tn; Mon, 24 Jun 2019 14:57:29 +0100
+Date:   Mon, 24 Jun 2019 14:57:29 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        alexander.sverdlin@gmail.com, allison@lohutok.net, andrew@lunn.ch,
+        ast@kernel.org, bgolaszewski@baylibre.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
+        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
+        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
+        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
+        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
+        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
+        krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, liviu.dudau@arm.com,
+        lkundrak@v3.sk, lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        nsekhar@ti.com, peterz@infradead.org, robert.jarzmik@free.fr,
+        s.hauer@pengutronix.de, sebastian.hesselbarth@gmail.com,
+        shawnguo@kernel.org, songliubraving@fb.com, sudeep.holla@arm.com,
+        swinslow@gmail.com, tglx@linutronix.de, tony@atomide.com,
+        will@kernel.org, yhs@fb.com
+Subject: Re: [PATCH V2 12/15] ARM: vexpress: cleanup cppcheck shifting error
+Message-ID: <20190624135729.q6k5hjq3ajwhi4gb@shell.armlinux.org.uk>
+References: <20190623151313.970-1-tranmanphong@gmail.com>
+ <20190624135105.15579-1-tranmanphong@gmail.com>
+ <20190624135105.15579-13-tranmanphong@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190621095252.32307-2-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190624135105.15579-13-tranmanphong@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:52:28AM +0100, Vincenzo Frascino wrote:
-> In an effort to unify the common code for managing the vdso library in
-> between all the architectures that support it, this patch tries to
-> provide a common format for the vdso datapage.
+On Mon, Jun 24, 2019 at 08:51:02PM +0700, Phong Tran wrote:
+> [arch/arm/mach-vexpress/spc.c:366]: (error) Shifting signed 32-bit value
+> by 31 bits is undefined behaviour
 > 
-> As a result of this, this patch generalized the data structures in vgtod.h
-> from x86 private includes to general includes (include/vdso).
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  arch/arm/mach-vexpress/spc.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Tested-by: Shijith Thotton <sthotton@marvell.com>
-> Tested-by: Andre Przywara <andre.przywara@arm.com>
+> diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
+> index 0f5381d13494..425ce633667a 100644
+> --- a/arch/arm/mach-vexpress/spc.c
+> +++ b/arch/arm/mach-vexpress/spc.c
+> @@ -57,8 +57,8 @@
+>  
+>  /* SPC CPU/cluster reset statue */
+>  #define STANDBYWFI_STAT		0x3c
+> -#define STANDBYWFI_STAT_A15_CPU_MASK(cpu)	(1 << (cpu))
+> -#define STANDBYWFI_STAT_A7_CPU_MASK(cpu)	(1 << (3 + (cpu)))
+> +#define STANDBYWFI_STAT_A15_CPU_MASK(cpu)	BIT((cpu))
+> +#define STANDBYWFI_STAT_A7_CPU_MASK(cpu)	BIT((3 + (cpu)))
 
-Minor clean-up patch (on top of the tip timers/vdso branch):
+I guess you did this using a script, however, in the above two cases,
+you don't need the extra parens - it was necessary in the original
+though.
 
-------------8<------------------------------
-From 2e09fa6fca341b3ec7ecaf0b67a313a167bb4ff2 Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Mon, 24 Jun 2019 12:19:23 +0100
-Subject: [PATCH] vdso: Remove superfluous #ifdef __KERNEL__ in
- vdso/datapage.h
+>  
+>  /* SPC system config interface registers */
+>  #define SYSCFG_WDATA		0x70
+> @@ -69,7 +69,7 @@
+>  #define A7_PERFVAL_BASE		0xC30
+>  
+>  /* Config interface control bits */
+> -#define SYSCFG_START		(1 << 31)
+> +#define SYSCFG_START		BIT(31)
+>  #define SYSCFG_SCC		(6 << 20)
+>  #define SYSCFG_STAT		(14 << 20)
+>  
+> @@ -90,8 +90,8 @@
+>  #define CA15_DVFS	0
+>  #define CA7_DVFS	1
+>  #define SPC_SYS_CFG	2
+> -#define STAT_COMPLETE(type)	((1 << 0) << (type << 2))
+> -#define STAT_ERR(type)		((1 << 1) << (type << 2))
+> +#define STAT_COMPLETE(type)	(BIT(0) << (type << 2))
+> +#define STAT_ERR(type)		(BIT(1) << (type << 2))
+>  #define RESPONSE_MASK(type)	(STAT_COMPLETE(type) | STAT_ERR(type))
+>  
+>  struct ve_spc_opp {
+> @@ -162,7 +162,7 @@ void ve_spc_cpu_wakeup_irq(u32 cluster, u32 cpu, bool set)
+>  	if (cluster >= MAX_CLUSTERS)
+>  		return;
+>  
+> -	mask = 1 << cpu;
+> +	mask = BIT(cpu);
+>  
+>  	if (!cluster_is_a15(cluster))
+>  		mask <<= 4;
+> -- 
+> 2.11.0
+> 
+> 
 
-With the move to UAPI headers, such #ifdefs are no longer necessary.
-
-Fixes: 361f8aee9b09 ("vdso: Define standardized vdso_datapage")
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- include/vdso/datapage.h | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index e6eb36c3d54f..2e302c0f41f7 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -2,8 +2,6 @@
- #ifndef __VDSO_DATAPAGE_H
- #define __VDSO_DATAPAGE_H
- 
--#ifdef __KERNEL__
--
- #ifndef __ASSEMBLY__
- 
- #include <linux/bits.h>
-@@ -88,6 +86,4 @@ extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")
- 
- #endif /* !__ASSEMBLY__ */
- 
--#endif /* __KERNEL__ */
--
- #endif /* __VDSO_DATAPAGE_H */
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
