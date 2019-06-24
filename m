@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18ABC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A561C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9434205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BAD205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370955;
-	bh=/LuzipxlxcA01dUG2PDDkaVnU54GDF4QMOE/ETs3E9o=;
+	s=default; t=1561370961;
+	bh=hwX8jqJDODpfp7mZIgOC0uQF0I4HYA6THLExm7VxaZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ho6yqS3UQeqgSv6IwJCKLDzPLxzUJLBIYNOBib05J6elechLXNiHezG9lIXh9tq1Y
-	 UsbX/2Ukghyx3rvxHUPpmq7PO/XN02sesSPue5DE73uKFLVbtWBN5+neSBZUoX6hMq
-	 a226F4xUijotFNwICNtWHW7ZaP8mK0qFXf2Y7518=
+	b=O1T74ewzEFyuA7g9VhYof19m26Z2jZRh6Y+BGAr/RGTxn/Bp6clkBRETbNWQ0fzJu
+	 JXcAnaUEeW+MRzxq4cKNMQzluIt0a+itRHn/LKazlFS1+nIwOzPDgOea3UYM+Zp1bh
+	 LrNh0sTpzwyMdxq+JfG5NBYAKSA0ok4gn0ykntiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfFXKJO (ORCPT
+        id S1730539AbfFXKIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbfFXKIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:53 -0400
+        id S1728671AbfFXKIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:37 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5E21473;
-        Mon, 24 Jun 2019 10:08:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0A1214DA;
+        Mon, 24 Jun 2019 10:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370932;
-        bh=/LuzipxlxcA01dUG2PDDkaVnU54GDF4QMOE/ETs3E9o=;
+        s=default; t=1561370916;
+        bh=hwX8jqJDODpfp7mZIgOC0uQF0I4HYA6THLExm7VxaZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXOg0NrQRirhFAaGXmxuGB+omwsdJAwQL8CfgrSBFuqRxbsrNyNk3y7N2PAcLJ/XK
-         vkxzIkA/jP6mfz2L09mBx1Gqh22dK1zfpCqdhYSlM5X4CNbQWpdgXm/UukWej6kOjk
-         GfsDPduTWnE3lPIYCAAA7pG8kM5JEparFfSOKg8k=
+        b=Zj44TLBz970hpFdmFv4vDdAckkIUVfWfwRdmT9Jkc3gofXvwVJIACdo5gzwDIVobV
+         XpulnrZt5TOJ2WJePqMFIe2RE6OACnKci0TqQNM03SIIJ5Czad/iq4dAz5mg9eJ2YS
+         FqHDbwOK8yeSRsbJgncVntpvIt3PWvMgQtqqkmq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 054/121] MIPS: uprobes: remove set but not used variable epc
-Date:   Mon, 24 Jun 2019 17:56:26 +0800
-Message-Id: <20190624092323.477620929@linuxfoundation.org>
+Subject: [PATCH 5.1 049/121] habanalabs: fix bug in checking huge page optimization
+Date:   Mon, 24 Jun 2019 17:56:21 +0800
+Message-Id: <20190624092323.261803905@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,41 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
+[ Upstream commit d724170160f800fa8dfd3c0cdebb8b093570b504 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch fix a bug in the mmu code that checks whether we can use huge
+page mappings for host pages.
 
-arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
-arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
+The code is supposed to enable huge page mappings only if ALL DMA
+addresses are aligned to 2MB AND the number of pages in each DMA chunk is
+a modulo of the number of pages in 2MB. However, the code ignored the
+first requirement for the first DMA chunk.
 
-It's never used since introduction in
-commit 40e084a506eb ("MIPS: Add uprobes support.")
+This patch fix that issue by making sure the requirement of address
+alignment is validated against all DMA chunks.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
-Cc: <linux-mips@vger.kernel.org>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/uprobes.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/misc/habanalabs/memory.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
-index 4aaff3b3175c..6dbe4eab0a0e 100644
---- a/arch/mips/kernel/uprobes.c
-+++ b/arch/mips/kernel/uprobes.c
-@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
- 	 */
- 	aup->resume_epc = regs->cp0_epc + 4;
- 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
--		unsigned long epc;
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index fadaf557603f..425442819d31 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -675,11 +675,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
+ 
+ 		total_npages += npages;
+ 
+-		if (first) {
+-			first = false;
+-			dma_addr &= PAGE_MASK_2MB;
+-		}
 -
--		epc = regs->cp0_epc;
- 		__compute_return_epc_for_insn(regs,
- 			(union mips_instruction) aup->insn[0]);
- 		aup->resume_epc = regs->cp0_epc;
+ 		if ((npages % PGS_IN_2MB_PAGE) ||
+ 					(dma_addr & (PAGE_SIZE_2MB - 1)))
+ 			is_huge_page_opt = false;
+@@ -704,7 +699,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
+ 	phys_pg_pack->total_size = total_npages * page_size;
+ 
+ 	j = 0;
+-	first = true;
+ 	for_each_sg(userptr->sgt->sgl, sg, userptr->sgt->nents, i) {
+ 		npages = get_sg_info(sg, &dma_addr);
+ 
 -- 
 2.20.1
 
