@@ -2,104 +2,156 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE7AC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C766BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851BC208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdj85HFc"
+	by mail.kernel.org (Postfix) with ESMTP id A4968208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfFXD6P (ORCPT
+        id S1727735AbfFXD7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:58:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35699 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfFXD6O (ORCPT
+        Sun, 23 Jun 2019 23:59:49 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43901 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfFXD7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:58:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so6712578pfd.2;
-        Sun, 23 Jun 2019 20:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nWWiPHYit7Qus1hmeGWbbQu5rustmlCbo6YPElzD50s=;
-        b=mdj85HFcY0xn+qv5zGY3QGYAb5wwa1GgWRbgrLLEmWzmJhGXOrQEytAz59MpBvV9GO
-         rmbVjy8r9cSnHxKiAIu1vBAIOozadSDLcXrM5CTZjNWLbGNPMNXWYuRcVFVbF68AFtPB
-         +mJZDRK7+0gxymIYkQa6I9cyGA500fogbjX6HFUDJEWTMn+OsQV9IPqeWKY1Q3CKcX9k
-         67vz6cvyHay3T7IF57WogUHgvnDzXOPDn+2rxgz65vZdwd2NroJAKFS4Bj54PvgyT/Vh
-         qE/rYLYsigQCZu8QV8YJcnv9WtnUdnGzHfvz+U0J8K3t87f8nWzpByIxHmxKdqAbvz2V
-         JNeg==
+        Sun, 23 Jun 2019 23:59:48 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so6693863pfg.10
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 20:59:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nWWiPHYit7Qus1hmeGWbbQu5rustmlCbo6YPElzD50s=;
-        b=o+An96IjVteyLP3hrubTLuOAwDabsoq0vmHhbYbOBRDyeYvRNS+Z/a77xq3WFTQ501
-         6bi0xKYswg48h4DCDT3r+w5MF8rhriX8jLTdXwRH7ixGhcOdqFUB/io4IOTlrj9MBMX1
-         nY5FRXMn9O50QuFcDWixS7dbMI60yE67SWseV1eInwJAuNUt0MSTUFU05NZgntov1tQN
-         8kHqwpNyLb9PEfv/Wp8C/KtNqfAMataWx0LmDa0YobNjLmVp62j+8MHAK9McPyvebYBQ
-         lskubudjSMLsdSxr1D2J4wbe/oISfmFITp1u2FD35kRFQSEAesvMAkzcYs7s9pY60qqO
-         X/6w==
-X-Gm-Message-State: APjAAAW/X1S7ee+ucb5kFE34ylCwUSmbX0sbKIa33MkvTcZ3CYF8fbbz
-        7kmObXoJuJ8vWxgyn0qlfc8=
-X-Google-Smtp-Source: APXvYqzh8mSCwlNtO9O8ohKHk9HhjAhYM3nUMzwBz3JCNrOsPcnPsNlo401HSpeUOrKeGOry0Ude9Q==
-X-Received: by 2002:a63:d950:: with SMTP id e16mr32232330pgj.271.1561348694184;
-        Sun, 23 Jun 2019 20:58:14 -0700 (PDT)
-Received: from masabert (150-66-68-254m5.mineo.jp. [150.66.68.254])
-        by smtp.gmail.com with ESMTPSA id k3sm8739003pju.27.2019.06.23.20.58.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 20:58:13 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id 328262011C8; Mon, 24 Jun 2019 12:58:09 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, corbet@lwn.net, linux-media@vger.kernel.org
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] node: Fix warning while make xmldocs
-Date:   Mon, 24 Jun 2019 12:58:07 +0900
-Message-Id: <20190624035807.20628-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.22.0.190.ga6a95cd1b46e
-MIME-Version: 1.0
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=DephS9aF1RqbAgEf2w/teieLK755TA9/UUG6864ldTk=;
+        b=jT/wq8XmUCz8Im8200YDWVs5dje0T+QGCmO5uSugbAC1PeL/PQgjnKSfwebDtHvf3n
+         YldtzdHrE/5KKVZmbJziVLUtAx6SVLxutPXLLF+MHR3fvJbd/QJWTueh0pzR4t5AkQGF
+         WRHi7MxYHtca7JNfQBUaViLHjuBQ3BJ/iei2xoOztQMKceDgC5vHBxMyAWD7ztp+2s3Q
+         eQdQUiyk4+Q8xOP2PkDxfOdd4JKnreswB7Lr92GC+u7+SJL73h0WQsxFI0/bO5TP20pk
+         bCavE76fh34nKkUhNZq7JkCV2cTGThiNzeopAVWjO+BqPYSs3OH7k3IU6xkjDNJ/70+J
+         7Dyg==
+X-Gm-Message-State: APjAAAWUO8+uaTT7FgS5j1eHN7qDMOTPApfS2DHx17iShTUwErTFn04N
+        DOp3kbfCTJgdVnheVPmH+KelSw==
+X-Google-Smtp-Source: APXvYqx0vYrtGNTNl5KXc2DpVQEG5bwKvqspWyryVid6mzUIPcvfQcnDFMCtCb5rPpbnT1bu7BxQuw==
+X-Received: by 2002:a63:3d09:: with SMTP id k9mr24980118pga.321.1561348787037;
+        Sun, 23 Jun 2019 20:59:47 -0700 (PDT)
+Received: from localhost (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id t24sm9569893pfh.113.2019.06.23.20.59.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 23 Jun 2019 20:59:46 -0700 (PDT)
+Date:   Sun, 23 Jun 2019 20:59:46 -0700 (PDT)
+X-Google-Original-Date: Sun, 23 Jun 2019 20:59:43 PDT (-0700)
+Subject:     Re: linux-next: build failure after merge of the net-next tree
+In-Reply-To: <20190624131245.359e59a4@canb.auug.org.au>
+CC:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yash.shah@sifive.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Message-ID: <mhng-24035d0e-a382-4a48-89eb-eb00213fca7e@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes following warning while make xmldocs.
-./drivers/base/node.c:690: warning: Excess function parameter
- 'mem_node' description in 'register_memory_node_under_compute_node'
-./drivers/base/node.c:690: warning: Excess function parameter
- 'cpu_node' description in 'register_memory_node_under_compute_node'
+On Sun, 23 Jun 2019 20:12:45 PDT (-0700), Stephen Rothwell wrote:
+> Hi all,
+>
+> On Thu, 20 Jun 2019 19:13:48 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> After merging the net-next tree, today's linux-next build (powerpc
+>> allyesconfig) failed like this:
+>> 
+>> drivers/net/ethernet/cadence/macb_main.c:48:16: error: field 'hw' has incomplete type
+>>   struct clk_hw hw;
+>>                 ^~
+>> drivers/net/ethernet/cadence/macb_main.c:4003:21: error: variable 'fu540_c000_ops' has initializer but incomplete type
+>>  static const struct clk_ops fu540_c000_ops = {
+>>                      ^~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4004:3: error: 'const struct clk_ops' has no member named 'recalc_rate'
+>>   .recalc_rate = fu540_macb_tx_recalc_rate,
+>>    ^~~~~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4004:17: warning: excess elements in struct initializer
+>>   .recalc_rate = fu540_macb_tx_recalc_rate,
+>>                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4004:17: note: (near initialization for 'fu540_c000_ops')
+>> drivers/net/ethernet/cadence/macb_main.c:4005:3: error: 'const struct clk_ops' has no member named 'round_rate'
+>>   .round_rate = fu540_macb_tx_round_rate,
+>>    ^~~~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4005:16: warning: excess elements in struct initializer
+>>   .round_rate = fu540_macb_tx_round_rate,
+>>                 ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4005:16: note: (near initialization for 'fu540_c000_ops')
+>> drivers/net/ethernet/cadence/macb_main.c:4006:3: error: 'const struct clk_ops' has no member named 'set_rate'
+>>   .set_rate = fu540_macb_tx_set_rate,
+>>    ^~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4006:14: warning: excess elements in struct initializer
+>>   .set_rate = fu540_macb_tx_set_rate,
+>>               ^~~~~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4006:14: note: (near initialization for 'fu540_c000_ops')
+>> drivers/net/ethernet/cadence/macb_main.c: In function 'fu540_c000_clk_init':
+>> drivers/net/ethernet/cadence/macb_main.c:4013:23: error: storage size of 'init' isn't known
+>>   struct clk_init_data init;
+>>                        ^~~~
+>> drivers/net/ethernet/cadence/macb_main.c:4032:12: error: implicit declaration of function 'clk_register'; did you mean 'sock_register'? [-Werror=implicit-function-declaration]
+>>   *tx_clk = clk_register(NULL, &mgmt->hw);
+>>             ^~~~~~~~~~~~
+>>             sock_register
+>> drivers/net/ethernet/cadence/macb_main.c:4013:23: warning: unused variable 'init' [-Wunused-variable]
+>>   struct clk_init_data init;
+>>                        ^~~~
+>> drivers/net/ethernet/cadence/macb_main.c: In function 'macb_probe':
+>> drivers/net/ethernet/cadence/macb_main.c:4366:2: error: implicit declaration of function 'clk_unregister'; did you mean 'sock_unregister'? [-Werror=implicit-function-declaration]
+>>   clk_unregister(tx_clk);
+>>   ^~~~~~~~~~~~~~
+>>   sock_unregister
+>> drivers/net/ethernet/cadence/macb_main.c: At top level:
+>> drivers/net/ethernet/cadence/macb_main.c:4003:29: error: storage size of 'fu540_c000_ops' isn't known
+>>  static const struct clk_ops fu540_c000_ops = {
+>>                              ^~~~~~~~~~~~~~
+>> 
+>> Caused by commit
+>> 
+>>   c218ad559020 ("macb: Add support for SiFive FU540-C000")
+>> 
+>> CONFIG_COMMON_CLK is not set for this build.
+>> 
+>> I have reverted that commit for today.
+>
+> I am still reverting that commit.  Has this problem been fixed in some
+> subtle way?
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- drivers/base/node.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't think so.  I'm assuming something like this is necessary
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index d8c02e65df68..944ee45d122f 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -673,8 +673,8 @@ int register_cpu_under_node(unsigned int cpu, unsigned int nid)
- /**
-  * register_memory_node_under_compute_node - link memory node to its compute
-  *					     node for a given access class.
-- * @mem_node:	Memory node number
-- * @cpu_node:	Cpu  node number
-+ * @mem_nid:	Memory node identifier
-+ * @cpu_nid:	Cpu  node identifier
-  * @access:	Access class to register
-  *
-  * Description:
--- 
-2.22.0.190.ga6a95cd1b46e
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 1766697c9c5a..d13db9e9c818 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -23,6 +23,7 @@ config MACB
+        tristate "Cadence MACB/GEM support"
+        depends on HAS_DMA
+        select PHYLIB
++       depends on COMMON_CLK
+        ---help---
+          The Cadence MACB ethernet interface is found on many Atmel AT32 and
+          AT91 parts.  This driver also supports the Cadence GEM (Gigabit
+@@ -42,7 +43,7 @@ config MACB_USE_HWSTAMP
 
+ config MACB_PCI
+        tristate "Cadence PCI MACB/GEM support"
+-       depends on MACB && PCI && COMMON_CLK
++       depends on MACB && PCI
+        ---help---
+          This is PCI wrapper for MACB driver.
+
+at a minimum, though it may be saner to #ifdef support for the SiFive clock
+driver as that's only useful on some systems.  Assuming I can reproduce the
+build failure (which shouldn't be too hard), I'll send out a patch that adds a
+Kconfig for the FU540 clock driver to avoid adding a COMMON_CLK dependency for
+all MACB systems.
