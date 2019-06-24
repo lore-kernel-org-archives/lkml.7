@@ -2,137 +2,100 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC70C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B3C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39F620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="CKlrlyGm"
+	by mail.kernel.org (Postfix) with ESMTP id E7DD320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfFXUeC (ORCPT
+        id S1728771AbfFXUgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:34:02 -0400
-Received: from mail-eopbgr730105.outbound.protection.outlook.com ([40.107.73.105]:59557
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727592AbfFXUeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:34:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hpj2ln9PdF2iw8CTNKfMyvckw7/rfWmo7YDhUidEPTU=;
- b=CKlrlyGmhJ/QCyiCLX8NQhhVLKb9sH2j/eupCg474rMbmvTDeCr7AGHihTiJuz2GzMGdwvAfc3ovxv2uyeRMyCVj0tNtAPsBb31uv1OwnJNGzQ7YW+2gk5MlVJ1+ufcKyvCgj9DcHy2yEAfXvDPAWPE8Xp88uLXquvXCcLan3Rg=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1054.namprd22.prod.outlook.com (10.174.169.140) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 20:33:58 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 20:33:58 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] asm-generic: remove ptrace.h
-Thread-Topic: [PATCH 5/5] asm-generic: remove ptrace.h
-Thread-Index: AQHVKlBfN/z+ea/vT02hAZbwmFNTNqarQ6qA
-Date:   Mon, 24 Jun 2019 20:33:58 +0000
-Message-ID: <20190624203357.cgybfqklcflll2ti@pburton-laptop>
-References: <20190624054728.30966-1-hch@lst.de>
- <20190624054728.30966-6-hch@lst.de>
-In-Reply-To: <20190624054728.30966-6-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR21CA0016.namprd21.prod.outlook.com
- (2603:10b6:a03:114::26) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00576424-0e94-4dec-ebb0-08d6f8e348bd
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1054;
-x-ms-traffictypediagnostic: MWHPR2201MB1054:
-x-microsoft-antispam-prvs: <MWHPR2201MB10547E2A5FAB871CBCBC78F0C1E00@MWHPR2201MB1054.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:324;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(346002)(366004)(136003)(39840400004)(396003)(199004)(189003)(4326008)(54906003)(8936002)(14454004)(58126008)(316002)(1076003)(7416002)(25786009)(6916009)(8676002)(73956011)(81166006)(81156014)(2906002)(66066001)(6436002)(66946007)(66446008)(3846002)(42882007)(64756008)(66556008)(6246003)(66476007)(6486002)(44832011)(6116002)(33716001)(9686003)(6512007)(486006)(26005)(11346002)(446003)(186003)(7736002)(68736007)(305945005)(476003)(229853002)(256004)(14444005)(478600001)(5660300002)(52116002)(76176011)(99286004)(53936002)(71190400001)(71200400001)(6506007)(386003)(102836004)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1054;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1o+p+e7S28HMuolVpWY64pfIILQb2dMbrDbcOGciaGoS1LXGJlr7ehnAHp9Ycl6pInnLSSHXLBrmjxD2nhzpvkx6BWCBDK9u52gqwDxJ5Fout54XxI2fy+MGo6qyttipUcv2XOOVnWqxCl/ILzLFSqGZVq5nKzK3lWtjeoHACRyLrV5zsqIYrfBupUjTEw33WanaTTvWYlcv+0mdWFX+DJsZ9kfHAoys2DAzHpb5kk5eWZEkcDMiY+t5uSNUS++2Xf7n8d+IVDrGCH1Z44Y9KNM2QJChm0zMIH8OPuwH6fU3+G65lSIQw1+O3zqWFgusIEIGrLtLxE+CapTrztWLmtxSFCG6D1aRDewri+FvG89kUg5pLHWFmexREBv+wmbnkWGGSSOGcbkW5TPEgJLSUdQnZhZaAx0W6d62WAPHBg8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B945272A94CC124191D61CF8D0443342@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00576424-0e94-4dec-ebb0-08d6f8e348bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 20:33:58.4037
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1054
+        Mon, 24 Jun 2019 16:36:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25682 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727418AbfFXUgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 16:36:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 13:36:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
+   d="scan'208";a="312828574"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by orsmga004.jf.intel.com with ESMTP; 24 Jun 2019 13:36:20 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH] x86/resctrl: Cleanup cbm_ensure_valid()
+Date:   Mon, 24 Jun 2019 13:34:27 -0700
+Message-Id: <15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:47:28AM +0200, Christoph Hellwig wrote:
-> No one is using this header anymore.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  MAINTAINERS                    |  1 -
->  arch/mips/include/asm/ptrace.h |  5 ---
->  include/asm-generic/ptrace.h   | 73 ----------------------------------
->  3 files changed, 79 deletions(-)
->  delete mode 100644 include/asm-generic/ptrace.h
+A recent fix to the cbm_ensure_valid() function left
+some coding style issues that are now addressed:
+- Follow reverse fir tree ordering of variable declarations
+- Use if (!val) instead of if (val == 0)
+- Return a value instead of using a function parameter as input and
+output
 
-FWIW:
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index b63e50b1a096..e63cef0a09cc 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2496,21 +2496,21 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
+  * modification to the CBM if the default does not satisfy the
+  * requirements.
+  */
+-static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
++static u32 cbm_ensure_valid(u32 _val, struct rdt_resource *r)
+ {
+-	unsigned long val = *_val;
+ 	unsigned int cbm_len = r->cache.cbm_len;
+ 	unsigned long first_bit, zero_bit;
++	unsigned long val = _val;
+ 
+-	if (val == 0)
+-		return;
++	if (!val)
++		return 0;
+ 
+ 	first_bit = find_first_bit(&val, cbm_len);
+ 	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
+ 
+ 	/* Clear any remaining bits to ensure contiguous region */
+ 	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
+-	*_val = (u32)val;
++	return (u32)val;
+ }
+ 
+ /*
+@@ -2563,7 +2563,7 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
+ 	 * Force the initial CBM to be valid, user can
+ 	 * modify the CBM based on system availability.
+ 	 */
+-	cbm_ensure_valid(&d->new_ctrl, r);
++	d->new_ctrl = cbm_ensure_valid(d->new_ctrl, r);
+ 	/*
+ 	 * Assign the u32 CBM to an unsigned long to ensure that
+ 	 * bitmap_weight() does not access out-of-bound memory.
+-- 
+2.17.2
 
-Thanks,
-    Paul
-
-> diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrac=
-e.h
-> index b6578611dddb..1e76774b36dd 100644
-> --- a/arch/mips/include/asm/ptrace.h
-> +++ b/arch/mips/include/asm/ptrace.h
-> @@ -56,11 +56,6 @@ static inline unsigned long kernel_stack_pointer(struc=
-t pt_regs *regs)
->  	return regs->regs[31];
->  }
-> =20
-> -/*
-> - * Don't use asm-generic/ptrace.h it defines FP accessors that don't mak=
-e
-> - * sense on MIPS.  We rather want an error if they get invoked.
-> - */
-> -
->  static inline void instruction_pointer_set(struct pt_regs *regs,
->                                             unsigned long val)
->  {
