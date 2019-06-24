@@ -2,109 +2,100 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16520C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41FE620644
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90DE20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfFXOt3 (ORCPT
+        id S1730355AbfFXOtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:49:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40950 "EHLO mga06.intel.com"
+        Mon, 24 Jun 2019 10:49:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:52588 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbfFXOt2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:49:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 07:49:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="163342375"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.94]) ([10.254.211.94])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Jun 2019 07:49:25 -0700
-Subject: Re: [PATCH v4 4/7] perf diff: Use hists to manage basic blocks per
- symbol
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1561041402-29444-1-git-send-email-yao.jin@linux.intel.com>
- <1561041402-29444-5-git-send-email-yao.jin@linux.intel.com>
- <20190624075718.GE5471@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <cdc87d42-8a5c-5b12-c746-896e3324cb35@linux.intel.com>
-Date:   Mon, 24 Jun 2019 22:49:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1728127AbfFXOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:49:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C1F7344;
+        Mon, 24 Jun 2019 07:49:30 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12ADD3F71E;
+        Mon, 24 Jun 2019 07:49:26 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 15:49:24 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Will Deacon <will.deacon@arm.com>, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-arch@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Peter Collingbourne <pcc@google.com>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Huw Davies <huw@codeweavers.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
+Message-ID: <20190624144924.GE29120@arrakis.emea.arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906241613280.32342@nanos.tec.linutronix.de>
+ <20190624142346.pxljv3m4npatdiyk@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190624075718.GE5471@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624142346.pxljv3m4npatdiyk@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/24/2019 3:57 PM, Jiri Olsa wrote:
-> On Thu, Jun 20, 2019 at 10:36:39PM +0800, Jin Yao wrote:
+On Mon, Jun 24, 2019 at 03:23:46PM +0100, Russell King wrote:
+> On Mon, Jun 24, 2019 at 04:18:28PM +0200, Thomas Gleixner wrote:
+> > Vincenzo,
+> > 
+> > On Mon, 24 Jun 2019, Thomas Gleixner wrote:
+> > 
+> > > I did not merge the ARM and MIPS parts as they lack any form of
+> > > acknowlegment from their maintainers. Please talk to those folks. If they
+> > > ack/review the changes then I can pick them up and they go into 5.3 or they
+> > > have to go in a later cycle. Nevertheless it was well worth the trouble to
+> > > have those conversions done to confirm that the new common library fits a
+> > > bunch of different architectures.
+> > 
+> > I talked to Russell King and he suggested to file the ARM parts into his
+> > patch system and he'll pick them up after 5.3-rc1.
+> > 
+> >    https://www.arm.linux.org.uk/developer/patches/
+> > 
+> > I paged out how to deal with it, but you'll surely manage :)
 > 
-> SNIP
-> 
->> +
->> +static void *block_entry_zalloc(size_t size)
->> +{
->> +	return zalloc(size + sizeof(struct hist_entry));
->> +}
->> +
->> +static void block_entry_free(void *he)
->> +{
->> +	struct block_info *bi = ((struct hist_entry *)he)->block_info;
->> +
->> +	block_info__put(bi);
->> +	free(he);
->> +}
->> +
->> +struct hist_entry_ops block_entry_ops = {
->> +	.new    = block_entry_zalloc,
->> +	.free   = block_entry_free,
->> +};
-> 
-> hum, so there's already block_hist_ops moving that stuff into 'struct block_hist',
-> which is great, but why don't we have 'struct block_entry' in here? that would
-> keep the 'struct block_info'
-> 
-> thanks,
-> jirka
-> 
+> Easy way: ask git to add the "KernelVersion" tag as a header to the
+> email using --add-header to e.g. git format-patch, and just mail them
+> to patches@armlinux.org.uk
 
-Hi Jiri,
+Although I haven't send patches to Russell in a while, I still have a
+git alias in my .gitconfig (only works with one patch at a time IIRC,
+sending multiple patches may arrive in a different order):
 
-If I define 'struct block_entry' as following and cast 'he' to 'struct 
-block_entry' in some places, such as in block_cmp(), we can get the 
-'struct block_entry'.
+[alias]
+	send-rmk-email = !git send-email --add-header=\"KernelVersion: $(git describe --abbrev=0)\" --no-thread --suppress-cc=all --to="patches@arm.linux.org.uk"
 
-struct block_entry {
-	struct block_info bi;
-	struct hist_entry he;
-};
-
-But I don't know when I can set the 'bi' of 'struct block_entry'. Before 
-or after calling hists__add_entry_xxx()? Before calling 
-hists__add_entry_xxx(), we don't know the hist_entry. After calling 
-hists__add_entry_xxx(), actually the hist_entry__cmp doesn't work (no bi ).
-
-That's why I create block_info in hist_entry. Maybe I misunderstand what 
-your suggested, correct me if I'm wrong.
-
-Thanks
-Jin Yao
+-- 
+Catalin
