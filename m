@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28047C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE41214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968EB208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371408;
-	bh=Bmlf/63L1YzhRKCsfRGGeoOTY9ucH6F4dWz5ixnJi0A=;
+	s=default; t=1561371411;
+	bh=mOxxpGB/oDd0cH0mmpuJKpZv7IMSYaE70omrEujUuis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/wP6FQiCILKcDvRdIci1y9Ufc6m5R3voKwboyNvtcI//rFxImkyKbITzfMF5wrv+
-	 tV+edtb8PWKOY9uwPm/npuuPl7Eb4ct3xaHYWBMX2HMXbJPz5L8NvFzXLF6HWdS7L+
-	 ujMSV1UThp6EDhbHSOjoKz84DLBUFP7pxQN95P/w=
+	b=hqsOvfmMzYTrOaereMBkK+nJfMav+rg3EcrnpV6zByqrSJ6PXHJN342hewcTI16EC
+	 /HABYMk6v5iI6lk62vOdL3Eyc0vAwjESIH8UfpaYlLb0oPYPAua0hDT0m1ypjFqDwo
+	 H53RfgvdP+PK3I57Fdyrnv+O7xblIXrdHLQiL3D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfFXKQp (ORCPT
+        id S1730807AbfFXKQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730781AbfFXKQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:41 -0400
+        id S1730781AbfFXKQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:46 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BCD21655;
-        Mon, 24 Jun 2019 10:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B74A2146E;
+        Mon, 24 Jun 2019 10:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371400;
-        bh=Bmlf/63L1YzhRKCsfRGGeoOTY9ucH6F4dWz5ixnJi0A=;
+        s=default; t=1561371406;
+        bh=mOxxpGB/oDd0cH0mmpuJKpZv7IMSYaE70omrEujUuis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nepFQr3sR+RuwUEpQTLFk6UXN+K0RiYz3vEOXWE1rukQgQWIUgl1cn3GSwbXCXJNF
-         8YWPl7EMrGpQRZHr9eJXrTjfTR5LULTvyiMRVpQH8NaZnQUQOSHXt8MSpC28OBicZ9
-         QIZLETYLUuToK5J89iVMvMDV5g+B1wN4gzgi4cPE=
+        b=qHL+c0vRRFrJ2IFm9MOYFj866JDTw9TR54euwaZAYEJEK+a9iv2Kj3nzsW2Z+yzbE
+         sPSGuHYFKNqBje0iL48/gu+uQlpnLFLr/SGrkAPwrEVr848CB4rjIWJ3cf6TFfZ4dL
+         ovmpSWBCpAsh6VWSskgruCMsKRF3YyFHCIFZMh6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 072/121] drm/arm/hdlcd: Allow a bit of clock tolerance
-Date:   Mon, 24 Jun 2019 17:56:44 +0800
-Message-Id: <20190624092324.588994531@linuxfoundation.org>
+Subject: [PATCH 5.1 091/121] ovl: fix bogus -Wmaybe-unitialized warning
+Date:   Mon, 24 Jun 2019 17:57:03 +0800
+Message-Id: <20190624092325.446437178@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,37 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c810739097fdeb31b393b67a0a1e3d7ffdd9f63 ]
+[ Upstream commit 1dac6f5b0ed2601be21bb4e27a44b0c3e667b7f4 ]
 
-On the Arm Juno platform, the HDLCD pixel clock is constrained to 250KHz
-resolution in order to avoid the tiny System Control Processor spending
-aeons trying to calculate exact PLL coefficients. This means that modes
-like my oddball 1600x1200 with 130.89MHz clock get rejected since the
-rate cannot be matched exactly. In practice, though, this mode works
-quite happily with the clock at 131MHz, so let's relax the check to
-allow a little bit of slop.
+gcc gets a bit confused by the logic in ovl_setup_trap() and
+can't figure out whether the local 'trap' variable in the caller
+was initialized or not:
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
+fs/overlayfs/super.c: In function 'ovl_fill_super':
+fs/overlayfs/super.c:1333:4: error: 'trap' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    iput(trap);
+    ^~~~~~~~~~
+fs/overlayfs/super.c:1312:17: note: 'trap' was declared here
+
+Reword slightly to make it easier for the compiler to understand.
+
+Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/arm/hdlcd_crtc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/overlayfs/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-index ecac6fe0b213..a3efa28436ea 100644
---- a/drivers/gpu/drm/arm/hdlcd_crtc.c
-+++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
-@@ -193,7 +193,8 @@ static enum drm_mode_status hdlcd_crtc_mode_valid(struct drm_crtc *crtc,
- 	long rate, clk_rate = mode->clock * 1000;
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index fa5060f59b88..9780617c69ee 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -996,8 +996,8 @@ static int ovl_setup_trap(struct super_block *sb, struct dentry *dir,
+ 	int err;
  
- 	rate = clk_round_rate(hdlcd->clk, clk_rate);
--	if (rate != clk_rate) {
-+	/* 0.1% seems a close enough tolerance for the TDA19988 on Juno */
-+	if (abs(rate - clk_rate) * 1000 > clk_rate) {
- 		/* clock required by mode not supported by hardware */
- 		return MODE_NOCLOCK;
- 	}
+ 	trap = ovl_get_trap_inode(sb, dir);
+-	err = PTR_ERR(trap);
+-	if (IS_ERR(trap)) {
++	err = PTR_ERR_OR_ZERO(trap);
++	if (err) {
+ 		if (err == -ELOOP)
+ 			pr_err("overlayfs: conflicting %s path\n", name);
+ 		return err;
 -- 
 2.20.1
 
