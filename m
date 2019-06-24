@@ -2,191 +2,211 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D35C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA7EC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E5420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H6hDKzNt"
+	by mail.kernel.org (Postfix) with ESMTP id 95F21208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfFXIml (ORCPT
+        id S1728153AbfFXInD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:42:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39180 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfFXImk (ORCPT
+        Mon, 24 Jun 2019 04:43:03 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42400 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfFXInD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:42:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so20581946edv.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X9V0I0rT3Iuwr77W2nr5FjsCxhtOBnuvS2mOp7LZweg=;
-        b=H6hDKzNtCd7adLn/KUBkZ0Uf2qlQpq1e/fO+KMsRaIbR2iE4bsUAvqEWLCCKkI31mH
-         YP899xwf3+kMbVMVar5LTtE7bcbyuc0PfsTEJY5W1Eky85kgxv7nHvMGPjLYXxRqmfKB
-         YQEWgFzlolfDhKKUejA5VspYHSu33zngw0UEI=
+        Mon, 24 Jun 2019 04:43:03 -0400
+Received: by mail-oi1-f194.google.com with SMTP id s184so9141794oie.9;
+        Mon, 24 Jun 2019 01:43:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=X9V0I0rT3Iuwr77W2nr5FjsCxhtOBnuvS2mOp7LZweg=;
-        b=R0cXhYZuFS4nPudFLTij6cDagROi60AWLlQV7rqtOYRsVKj0u+nkH2KJpAyhtg23L8
-         v5s/8iXSE6souAaQYivXy7kixNoCdMLPmsYs49EQhjWcttNyc1aRMFXunr0aOhchpyNx
-         i3TtEK2Aq1NdcFAWSuh+iQB5ebThzKkvZy1bOytsGO6G3GJMzS6hnH1YH4XFXCa7EuPi
-         lGzi0LFimlus0JyvAB+AlkVshmoido9Ra8A4Kb9OiVTPBOaipMICObb4HPO6yJL6XmWe
-         wiZa61zR3nE3hsTfG8XYGt4vgLzCt5jzMW+udI3UDsTYdv8vo9LcN5gNp8/Y/7LbkjTA
-         CbKg==
-X-Gm-Message-State: APjAAAXCUKFzFFuKeXKqJzIVl7WKb+XHZxlX7wV61ti36qmdqNmV5OyA
-        kl4wjUsTySfRaIVPWNk4xdHClA==
-X-Google-Smtp-Source: APXvYqwjxUt5EgAa2KN9wJES9BzXYjxnZlRD+K5nF0JIffYSpNBVeb7k63n+bBOh0BkltvgY/14EWw==
-X-Received: by 2002:a17:906:d797:: with SMTP id pj23mr80092489ejb.223.1561365758561;
-        Mon, 24 Jun 2019 01:42:38 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id l10sm1778061ejh.53.2019.06.24.01.42.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 01:42:37 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 10:42:35 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>
-Subject: Re: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
-Message-ID: <20190624084235.GN12905@phenom.ffwll.local>
-Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>
-References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
- <085dc3be-20e5-b2fe-4c02-bf4a4d1473da@baylibre.com>
- <20190621090125.GX12905@phenom.ffwll.local>
- <20190623233017.GI6124@pendragon.ideasonboard.com>
- <58243243-fbd8-e67b-a050-baa9757be43e@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/c1meAnqJmzcYQFemk4BXY3H3LbuKNOUcsx8YXjSj/I=;
+        b=BF+J+K4JNo8bRJTYdazn563Ewix+T+Lz3S6bKm6xE5mqkbzsgKOvOd9WAlB3g3d/DP
+         VnMhlME0kEnfpD0bmrC64W+TeLLyjX3MH0KlBDi149zj9gkqC/DhhOxjpYbvn1/LKfeD
+         nktB/WBoVZg5OOhj3fSoVhnoZK5V7yExTBC6k26cnQ71HC8qqQvGkM60E4taaCTj2CQP
+         bNK91BgdDTVNBBP2eXmScZ2wYDA8ukRuTLdHZVbB+4b/ywUqzlW/b8R/ULL1r/py28Fc
+         jmtwBE0kMcFequfmHMimPPoKjide7kxztU2YdZLbxHiclXMTlrRW6hUkP8gesiMBm4ut
+         LvPg==
+X-Gm-Message-State: APjAAAVWHiL74avHLuz7/0GDy2CGZZ5rf7ZuFeN1wH45Rx/KNI9d02D6
+        Q5WWK2sdIsCy1jiJYfZUAWeZWxVtMPidnyOvVOI=
+X-Google-Smtp-Source: APXvYqw7uVRKxSXEhTujdrIedhEVP77/f0iFG4RBcTwvRyglA23qNfZl+H6IoVVC+4XnnDMgq9++Ma3MUrUn5rL4MQY=
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr9417693oif.148.1561365781918;
+ Mon, 24 Jun 2019 01:43:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58243243-fbd8-e67b-a050-baa9757be43e@baylibre.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190620062420.11650-1-sr@denx.de>
+In-Reply-To: <20190620062420.11650-1-sr@denx.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 24 Jun 2019 10:42:49 +0200
+Message-ID: <CAMuHMdXMpS_pg9N0qSW=Li0QavAMRG79RJcS4s0w6NTCxv_zzg@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v9] serial: mctrl_gpio: Check if GPIO property exisits
+ before requesting it
+To:     Stefan Roese <sr@denx.de>
+Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:19:34AM +0200, Neil Armstrong wrote:
-> Hi Daniel, Laurent, Andrzej,
-> 
-> On 24/06/2019 01:30, Laurent Pinchart wrote:
-> > On Fri, Jun 21, 2019 at 11:01:25AM +0200, Daniel Vetter wrote:
-> >> On Thu, Jun 20, 2019 at 04:40:12PM +0200, Neil Armstrong wrote:
-> >>> Hi Andrzej,
-> >>>
-> >>> Gentle ping, could you review the dw-hdmi changes here ?
-> >>
-> >> btw not sure you absolutely need review from Andrzej, we're currently a
-> >> bit undersupplied with bridge reviewers I think ... Better to ramp up
-> >> more.
-> > 
-> > I try to review DRM bridge patches when possible, but dw-hdmi is a
-> > special case. I was told by the supplier of an SoC datasheet that
-> > contains the HDMI encoder IP core documentation that Synopsys required
-> > them to route all contributions made based on that documentation through
-> > Synopsys' internal legal review before publishing them. I thus decided
-> > to not contribute to the driver anymore, at least for areas that require
-> > access to documentation.
-> 
-> I'd like to propose myself as co-maintainer of the DRM bridge subsystem if
-> everybody agrees, following the excellent work Laurent and Andrzej did.
-> I have a very little knowledge of DSI, & other bridge drivers, but I'll do
-> my best.
+CC gpio
 
-Yay volunteers!
+This is now commit d99482673f950817 ("serial: mctrl_gpio: Check if GPIO
+property exisits before requesting it") in tty-next.
 
-Make MAINTAINERS patch to add you, cc relevant people, get acks, merge,
-tag you're it :-) Ok, co-it, the point is to have teams as much as
-possible.
+On Thu, Jun 20, 2019 at 8:24 AM Stefan Roese <sr@denx.de> wrote:
+> This patch adds a check for the GPIOs property existence, before the
+> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+> support is added (2nd patch in this patch series) on x86 platforms using
+> ACPI.
+>
+> Here Mika's comments from 2016-08-09:
+>
+> "
+> I noticed that with v4.8-rc1 serial console of some of our Broxton
+> systems does not work properly anymore. I'm able to see output but input
+> does not work.
+>
+> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+> ("tty/serial/8250: use mctrl_gpio helpers").
+>
+> The reason why it fails is that in ACPI we do not have names for GPIOs
+> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+> UART device in Broxton has following (simplified) ACPI description:
+>
+>     Device (URT4)
+>     {
+>         ...
+>         Name (_CRS, ResourceTemplate () {
+>             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+>             {
+>                 0x003A
+>             }
+>             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+>             {
+>                 0x003D
+>             }
+>         })
+>
+> In this case it finds the first GPIO (0x003A which happens to be RX pin
+> for that UART), turns it into GPIO which then breaks input for the UART
+> device. This also breaks systems with bluetooth connected to UART (those
+> typically have some GPIOs in their _CRS).
+>
+> Any ideas how to fix this?
+>
+> We cannot just drop the _CRS index lookup fallback because that would
+> break many existing machines out there so maybe we can limit this to
+> only DT enabled machines. Or alternatively probe if the property first
+> exists before trying to acquire the GPIOs (using
+> device_property_present()).
+> "
+>
+> This patch implements the fix suggested by Mika in his statement above.
+>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+> v9:
+> - Rebased on top of "tty-next", patch 2/3 dropped as its already applied
+>
+> v8:
+> - Rebased on top of "tty-next"
+>
+> v7:
+> - Include <linux/property.h> to fix compile breakage on OMAP
+>
+> v6:
+> - No change
+>
+> v5:
+> - Simplified the code a bit (Andy)
+> - Added gpio_str == NULL handling (Andy)
+>
+> v4:
+> - Add missing free() calls (Johan)
+> - Added Mika's reviewed by tag
+> - Added Johan to Cc
+>
+> v3:
+> - No change
+>
+> v2:
+> - Include the problem description and analysis from Mika into the commit
+>   text, as suggested by Greg.
+>
+>  drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 39ed56214cd3..2b400189be91 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/termios.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>
+>  #include "serial_mctrl_gpio.h"
+>
+> @@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+>
+>         for (i = 0; i < UART_GPIO_MAX; i++) {
+>                 enum gpiod_flags flags;
+> +               char *gpio_str;
+> +               bool present;
+> +
+> +               /* Check if GPIO property exists and continue if not */
+> +               gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+> +                                    mctrl_gpios_desc[i].name);
 
-Cheers, Daniel
-> 
-> For the dw-hdmi driver, we have a big roadmap including :
-> - HDR (this patchset)
-> - HDCP 1/2
-> - YUV420, YUV422, YUV44, 10bit/12bit/16bit HDMI output
-> - Enhanced audio support and ELD notification to ASoC
-> ...
-> 
-> Having a more active maintainer/reviewer team would be needed, at least for
-> the dw-hdmi bridge.
-> 
-> I'll also propose Jonas Karlman <jonas@kwiboo.se> as reviewer since he is very
-> active for the multimedia support on RockChip, Allwinner and Amlogic SoCs.
-> I'll also propose Jernej Skrabec@siol.net <jernej.skrabec@siol.net>, if he wants,
-> as reviewer since he is very active on the Allwinner SoCs side.
-> 
-> Neil
-> 
-> > 
-> >>> On 26/05/2019 23:18, Jonas Karlman wrote:
-> >>>> Add support for HDR metadata using the hdr_output_metadata connector property,
-> >>>> configure Dynamic Range and Mastering InfoFrame accordingly.
-> >>>>
-> >>>> A drm_infoframe flag is added to dw_hdmi_plat_data that platform drivers
-> >>>> can use to signal when Dynamic Range and Mastering infoframes is supported.
-> >>>> This flag is needed because Amlogic GXBB and GXL report same DW-HDMI version,
-> >>>> and only GXL support DRM InfoFrame.
-> >>>>
-> >>>> The first patch add functionality to configure DRM InfoFrame based on the
-> >>>> hdr_output_metadata connector property.
-> >>>>
-> >>>> The remaining patches sets the drm_infoframe flag on some SoCs supporting
-> >>>> Dynamic Range and Mastering InfoFrame.
-> >>>>
-> >>>> Note that this was based on top of drm-misc-next and Neil Armstrong's
-> >>>> "drm/meson: Add support for HDMI2.0 YUV420 4k60" series at [1]
-> >>>>
-> >>>> [1] https://patchwork.freedesktop.org/series/58725/#rev2
-> >>>>
-> >>>> Jonas Karlman (4):
-> >>>>   drm/bridge: dw-hdmi: Add Dynamic Range and Mastering InfoFrame support
-> >>>>   drm/rockchip: Enable DRM InfoFrame support on RK3328 and RK3399
-> >>>>   drm/meson: Enable DRM InfoFrame support on GXL, GXM and G12A
-> >>>>   drm/sun4i: Enable DRM InfoFrame support on H6
-> >>>>
-> >>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 109 ++++++++++++++++++++
-> >>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h   |  37 +++++++
-> >>>>  drivers/gpu/drm/meson/meson_dw_hdmi.c       |   5 +
-> >>>>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |   2 +
-> >>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c       |   2 +
-> >>>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h       |   1 +
-> >>>>  include/drm/bridge/dw_hdmi.h                |   1 +
-> >>>>  7 files changed, 157 insertions(+)
-> > 
-> 
+This will silently break DTBs using "(cts|dsr|dcd|rng|rts|dtr)-gpio" instead
+of "(cts|dsr|dcd|rng|rts|dtr)-gpios".
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> +               if (!gpio_str)
+> +                       continue;
+> +
+> +               present = device_property_present(dev, gpio_str);
+> +               kfree(gpio_str);
+> +               if (!present)
+> +                       continue;
+>
+>                 if (mctrl_gpios_desc[i].dir_out)
+>                         flags = GPIOD_OUT_LOW;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
