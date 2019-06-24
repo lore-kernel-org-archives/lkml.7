@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C55C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FAFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24361208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABFB213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370281;
-	bh=29XaB1Kr/S/ex/Qsue3XS8TIrFUIlDqc+lXTxFPKfX8=;
+	s=default; t=1561370284;
+	bh=D4RMN1f/DLIbKHDKcjd5wfl1Siuho9V4f9ky9WSofjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lVQ4EiqYcZMrgPUlVuHN//8qmsaEdAmKwvayenPk0o9oXfeLqjcbZzwSRcYE8lBGG
-	 iZjNAWZpZ/sgFMOrB+IcG6ZPEPJcVrOaDKZZcITRD0S7gNMopsD2+TxeL9e/KxJmdl
-	 GLCAclDm0V2Ad9cOzUbGHwbVPK1tGGq0Zskbj01I=
+	b=BQWntPnwY4czwYez7QrlGiWhEdRHEazCEgAJ+ou8mfXk6+18XYOMR2XS/ilGb4YMy
+	 UBiK8RM3HwdLYf7j50LgX1cxhyOuNq7oYQ4IKDR5QS0A1Kr672R3QlDiA6nyppQ9z7
+	 5GavIBQe2YsXiad8MN4MD6vTiojrN4EfhxXs6sL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfFXJ57 (ORCPT
+        id S1728922AbfFXJ6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56292 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbfFXJ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:57:58 -0400
+        id S1728487AbfFXJ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:00 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99CC208E4;
-        Mon, 24 Jun 2019 09:57:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD1F208CA;
+        Mon, 24 Jun 2019 09:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370277;
-        bh=29XaB1Kr/S/ex/Qsue3XS8TIrFUIlDqc+lXTxFPKfX8=;
+        s=default; t=1561370280;
+        bh=D4RMN1f/DLIbKHDKcjd5wfl1Siuho9V4f9ky9WSofjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cGnQAqzsV1M1NkI9RQAw+PHWQCNMgpJRH60qNXvuUJ48IV/sIwOtRXqNMjgcEBsBW
-         qJiCfmPLEkCaHwKc99TJ0apao4W7zSnwGpsSkiy6hp52HBNfv8lcKlMNp2p+DzJfYa
-         n5LFcMHzCZlbBUQG1TEV7tkm7WkB3AqJjajgGFxQ=
+        b=ibNR+x6E+WtT1FIoRMStPLa7itDTe+aZ6aSXUxYRiq/977Fc1Vfi8ayiIDUGTrGc7
+         8pW9Yx0IM5qgZXE7XOmbKhJTHCTWJXiAu37i1nRN+8zDuPxRBI/ADqg0Jujgn0rkbw
+         Kgj0eIEYeBDtxZRukG99aMe2uB1uD384UGdXXZUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/51] ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
-Date:   Mon, 24 Jun 2019 17:56:32 +0800
-Message-Id: <20190624092308.011664466@linuxfoundation.org>
+Subject: [PATCH 4.14 15/51] parport: Fix mem leak in parport_register_dev_model
+Date:   Mon, 24 Jun 2019 17:56:33 +0800
+Message-Id: <20190624092308.098826071@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -65,37 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c70850aeb2e40016722cd1abd43c679666d3ca0 ]
+[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
 
-Add the binding for RX/TX fifo size of GMAC node.
+BUG: memory leak
+unreferenced object 0xffff8881df48cda0 (size 16):
+  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
+  hex dump (first 16 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
+    [<00000000782f6dab>] 0xffffffffc15d1196
+    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
+    [<00000000628c2a94>] really_probe+0x342/0x4d0
+    [<000000006874f5da>] driver_probe_device+0x8c/0x170
+    [<00000000424de37a>] __device_attach_driver+0xda/0x100
+    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
+    [<000000003d9e5f31>] __device_attach+0x190/0x230
+    [<0000000035d32f80>] bus_probe_device+0x123/0x140
+    [<00000000a05ba627>] device_add+0x7cc/0xce0
+    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
+    [<000000002a0be07d>] 0xffffffffc15d0949
+    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
+    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
+    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
+    [<00000000987f06fc>] 0xffffffffc15d803e
 
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+After commit 4e5a74f1db8d ("parport: Revert "parport: fix
+memory leak""), free_pardevice do not free par_dev->state,
+we should free it in error path of parport_register_dev_model
+before return.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/parport/share.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index c033ae45fe42..57d81c6aa379 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -170,6 +170,9 @@
- 			resets = <&cgu_rst HSDK_ETH_RESET>;
- 			reset-names = "stmmaceth";
- 
-+			tx-fifo-depth = <4096>;
-+			rx-fifo-depth = <4096>;
-+
- 			mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index 5dc53d420ca8..7b4ee33c1935 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 	par_dev->devmodel = true;
+ 	ret = device_register(&par_dev->dev);
+ 	if (ret) {
++		kfree(par_dev->state);
+ 		put_device(&par_dev->dev);
+ 		goto err_put_port;
+ 	}
+@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 			spin_unlock(&port->physport->pardevice_lock);
+ 			pr_debug("%s: cannot grant exclusive access for device %s\n",
+ 				 port->name, name);
++			kfree(par_dev->state);
+ 			device_unregister(&par_dev->dev);
+ 			goto err_put_port;
+ 		}
 -- 
 2.20.1
 
