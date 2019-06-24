@@ -2,154 +2,115 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5688C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95269C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934A42145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78558212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfFXMjq (ORCPT
+        id S1728125AbfFXMk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:39:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48230 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfFXMjo (ORCPT
+        Mon, 24 Jun 2019 08:40:26 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:36429 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbfFXMk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:39:44 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:d719:dd85:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3800A260ED4;
-        Mon, 24 Jun 2019 13:39:39 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2 3/5] media: vimc: stream: format comments as kernel-doc
-Date:   Mon, 24 Jun 2019 09:37:27 -0300
-Message-Id: <20190624123729.5847-3-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624123729.5847-1-andrealmeid@collabora.com>
-References: <20190624123729.5847-1-andrealmeid@collabora.com>
+        Mon, 24 Jun 2019 08:40:26 -0400
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 285C810000F;
+        Mon, 24 Jun 2019 12:40:20 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 14:40:19 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 1/9] pinctrl: sunxi: v3s: introduce support for V3
+Message-ID: <20190624124019.o6acnnkjikekshl5@flea>
+References: <20190623043801.14040-1-icenowy@aosc.io>
+ <20190623043801.14040-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2wajni7mcz7mizzf"
+Content-Disposition: inline
+In-Reply-To: <20190623043801.14040-2-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Format the current existing comments as kernel-doc comments, to be
-reused at kernel documention. Add opening marks (/**) and return values.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
+--2wajni7mcz7mizzf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes in v2: replace ``vimc_streamer_s_stream`` for
-vimc_streamer_s_stream().
+On Sun, Jun 23, 2019 at 12:37:53PM +0800, Icenowy Zheng wrote:
+> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> V3s pinctrl driver.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v3:
+> - Fixed code alignment.
+> - Fixed LVDS function number.
+>
+> Changes in v2:
+> - Dropped the driver rename patch and apply the changes directly on V3s
+>   driver.
+>
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c | 473 +++++++++++++++++-----
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |   2 +
+>  2 files changed, 366 insertions(+), 109 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> index 6704ce8e5e3d..721c997d472b 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Allwinner V3s SoCs pinctrl driver.
+> + * Allwinner V3/V3s SoCs pinctrl driver.
+>   *
+>   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+>   *
+> @@ -28,235 +28,433 @@ static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> -		  SUNXI_FUNCTION(0x2, "uart2"),		/* TX */
+> -		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PB_EINT0 */
+> +		  SUNXI_FUNCTION(0x2, "uart2"),			/* TX */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),		/* PB_EINT0 */
 
- drivers/media/platform/vimc/vimc-streamer.c | 38 +++++++++++++--------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+I'm not sure why all that churn is needed.
 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index 3b3f36357a0e..62dde7d74c24 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -20,6 +20,8 @@
-  *
-  * Helper function that returns the media entity containing the source pad
-  * linked with the first sink pad from the given media entity pad list.
-+ *
-+ * Return: The source pad or NULL, if it wasn't found.
-  */
- static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
- {
-@@ -35,7 +37,7 @@ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
- 	return NULL;
- }
- 
--/*
-+/**
-  * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
-  *
-  * @stream: the pointer to the stream structure with the pipeline to be
-@@ -63,15 +65,18 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
- 	}
- }
- 
--/*
-- * vimc_streamer_pipeline_init - initializes the stream structure
-+/**
-+ * vimc_streamer_pipeline_init - Initializes the stream structure
-  *
-  * @stream: the pointer to the stream structure to be initialized
-  * @ved:    the pointer to the vimc entity initializing the stream
-  *
-  * Initializes the stream structure. Walks through the entity graph to
-  * construct the pipeline used later on the streamer thread.
-- * Calls s_stream to enable stream in all entities of the pipeline.
-+ * Calls vimc_streamer_s_stream() to enable stream in all entities of
-+ * the pipeline.
-+ *
-+ * Return: 0 if success, error code otherwise.
-  */
- static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 				       struct vimc_ent_device *ved)
-@@ -122,13 +127,17 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 	return -EINVAL;
- }
- 
--/*
-- * vimc_streamer_thread - process frames through the pipeline
-+/**
-+ * vimc_streamer_thread - Process frames through the pipeline
-  *
-  * @data:	vimc_stream struct of the current stream
-  *
-  * From the source to the sink, gets a frame from each subdevice and send to
-  * the next one of the pipeline at a fixed framerate.
-+ *
-+ * Return:
-+ * Always zero (created as ``int`` instead of ``void`` to comply with
-+ * kthread API).
-  */
- static int vimc_streamer_thread(void *data)
- {
-@@ -157,19 +166,20 @@ static int vimc_streamer_thread(void *data)
- 	return 0;
- }
- 
--/*
-- * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
-+/**
-+ * vimc_streamer_s_stream - Start/stop the streaming on the media pipeline
-  *
-  * @stream:	the pointer to the stream structure of the current stream
-  * @ved:	pointer to the vimc entity of the entity of the stream
-  * @enable:	flag to determine if stream should start/stop
-  *
-- * When starting, check if there is no stream->kthread allocated. This should
-- * indicate that a stream is already running. Then, it initializes
-- * the pipeline, creates and runs a kthread to consume buffers through the
-- * pipeline.
-- * When stopping, analogously check if there is a stream running, stop
-- * the thread and terminates the pipeline.
-+ * When starting, check if there is no ``stream->kthread`` allocated. This
-+ * should indicate that a stream is already running. Then, it initializes the
-+ * pipeline, creates and runs a kthread to consume buffers through the pipeline.
-+ * When stopping, analogously check if there is a stream running, stop the
-+ * thread and terminates the pipeline.
-+ *
-+ * Return: 0 if success, error code otherwise.
-  */
- int vimc_streamer_s_stream(struct vimc_stream *stream,
- 			   struct vimc_ent_device *ved,
--- 
-2.22.0
+Looks good otherwise.
 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2wajni7mcz7mizzf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRDEswAKCRDj7w1vZxhR
+xcUqAP96jDUQxD5ktA8bJadn0csZC5zu80WvAEMGgbNIXKKLTAD/U+6znAbbceG1
+7MaO9SVfGDrn45QzR2JTKu4r3t/2VAw=
+=tGMg
+-----END PGP SIGNATURE-----
+
+--2wajni7mcz7mizzf--
