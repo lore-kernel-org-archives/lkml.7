@@ -2,48 +2,48 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380A3C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25EE2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1506B2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbfFXI0N (ORCPT
+        id S1728018AbfFXI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:26:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:43574 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 04:26:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:43596 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFXI0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:26:13 -0400
+        id S1726077AbfFXI0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:26:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81D042B;
-        Mon, 24 Jun 2019 01:26:12 -0700 (PDT)
-Received: from [10.162.41.123] (p8cg001049571a15.blr.arm.com [10.162.41.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5533C3F71E;
-        Mon, 24 Jun 2019 01:26:10 -0700 (PDT)
-Subject: Re: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate
- away smaller huge page
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1561350068-8966-1-git-send-email-kernelfans@gmail.com>
- <216a335d-f7c6-26ad-2ac1-427c8a73ca2f@arm.com>
- <CAFgQCTs14R5P7RpCTMwLCMJrGgPzbTGp4tvxCJA0kFgD8_y==g@mail.gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <5fe6bd80-7801-d81e-7a5e-a90afb697c33@arm.com>
-Date:   Mon, 24 Jun 2019 13:56:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2D8BC0A;
+        Mon, 24 Jun 2019 01:26:20 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C84BB3F71E;
+        Mon, 24 Jun 2019 01:26:18 -0700 (PDT)
+Subject: Re: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU
+ phandle
+To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, andy.gross@linaro.org,
+        david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
+ <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <4db99204-8553-7a80-f952-30cbd149593d@arm.com>
+Date:   Mon, 24 Jun 2019 09:26:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFgQCTs14R5P7RpCTMwLCMJrGgPzbTGp4tvxCJA0kFgD8_y==g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,32 +51,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sai,
 
+Thanks for getting this done.
 
-On 06/24/2019 11:40 AM, Pingfan Liu wrote:
-> On Mon, Jun 24, 2019 at 1:16 PM Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->>
->>
->> On 06/24/2019 09:51 AM, Pingfan Liu wrote:
->>> The current pfn_range_valid_gigantic() rejects the pud huge page allocation
->>> if there is a pmd huge page inside the candidate range.
->>>
->>> But pud huge resource is more rare, which should align on 1GB on x86. It is
->>> worth to allow migrating away pmd huge page to make room for a pud huge
->>> page.
->>>
->>> The same logic is applied to pgd and pud huge pages.
->>
->> The huge page in the range can either be a THP or HugeTLB and migrating them has
->> different costs and chances of success. THP migration will involve splitting if
->> THP migration is not enabled and all related TLB related costs. Are you sure
->> that a PUD HugeTLB allocation really should go through these ? Is there any
-> PUD hugetlb has already driven out PMD thp in current. This patch just
-> want to make PUD hugetlb survives PMD hugetlb.
+On 24/06/2019 04:36, Sai Prakash Ranjan wrote:
+> Coresight platform support assumes that a missing "cpu" phandle
+> defaults to CPU0. This could be problematic and unnecessarily binds
+> components to CPU0, where they may not be. Let us make the DT binding
+> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+> affinity information.
+> 
+> Also in coresight etm and cpu-debug drivers, abort the probe
+> for such cases.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-You are right. PageHuge() is true only for HugeTLB pages unlike PageTransHuge()
-which is true for both HugeTLB and THP pages. So the current code does migrate
-the THP out in order to allocate a gigantic HugeTLB. While here just wondering
-should not we exclude THP as well unless it supports ARCH_HAS_THP_MIGRATION.
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
