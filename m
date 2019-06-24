@@ -2,176 +2,187 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF31C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF626C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC55208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yuYGx49T"
+	by mail.kernel.org (Postfix) with ESMTP id 8D721208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbfFXNkr (ORCPT
+        id S1731222AbfFXNlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:40:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48962 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfFXNkr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:40:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODd6aD182875;
-        Mon, 24 Jun 2019 13:40:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=K7gxshFfPe2+xR4//0ULdZekh1PFmPKPu4U8BpZy7mA=;
- b=yuYGx49Tzx/Jtm8s465BBJcEzBNkqNtBd40c78YE4O31ukp5rIf6N3L0m7FAbk+8MgPQ
- WvgNwQcn0V4gi4lLtQrtbL7AIwyIO0PrYTKdZqShSwo5whlCbi0D5qAc/eh0suGBqg/o
- Yuq7w2L87U02b5a+an6qjUBM0igjU/4LM+6EusScHP7CJzmAQv16DB/6UfBUG6v0VaC1
- zZWurWYMiGIS3rKEtnmwk8/DC2U2y111cu191sk4cxpl/cANWtzYoFXCrmaVJh3O66w5
- qaszDMICh2vnb31LM7job2wVJaHpg+/AczkvNY0SzjFkJdTZO/LfNNUAXuKoFRNFGCwC gQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2t9cyq6e2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 13:40:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODdnAB027610;
-        Mon, 24 Jun 2019 13:40:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t99f39d48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 13:40:19 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ODeH4k007088;
-        Mon, 24 Jun 2019 13:40:17 GMT
-Received: from [10.172.157.165] (/10.172.157.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 06:40:17 -0700
-Subject: Re: [PATCH] RDMA/core: Fix race when resolving IP address
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     dledford@redhat.com, leon@kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Parav Pandit <parav@mellanox.com>
-References: <1561126156-10162-1-git-send-email-dag.moxnes@oracle.com>
- <20190621145604.GS19891@ziepe.ca>
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-Message-ID: <e9b4abe6-0acb-c169-fbac-4e62d2ad2808@oracle.com>
-Date:   Mon, 24 Jun 2019 15:40:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 24 Jun 2019 09:41:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42086 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728933AbfFXNlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:41:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20D583086220;
+        Mon, 24 Jun 2019 13:41:35 +0000 (UTC)
+Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E9F060143;
+        Mon, 24 Jun 2019 13:41:28 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 21:41:25 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kyle Pelton <kyle.d.pelton@intel.com>
+Subject: Re: [PATCHv2] x86/mm: Handle physical-virtual alignment mismatch in
+ phys_p4d_init()
+Message-ID: <20190624134125.GN24419@MiWiFi-R3L-srv>
+References: <20190624123150.920-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621145604.GS19891@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624123150.920-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 24 Jun 2019 13:41:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On 06/24/19 at 03:31pm, Kirill A. Shutemov wrote:
+> Kyle has reported that kernel crashes sometimes when it boots in
+> 5-level paging mode with KASLR enabled:
+> 
+>   WARNING: CPU: 0 PID: 0 at arch/x86/mm/init_64.c:87 phys_p4d_init+0x1d4/0x1ea
+>   RIP: 0010:phys_p4d_init+0x1d4/0x1ea
+>   Call Trace:
+>    __kernel_physical_mapping_init+0x10a/0x35c
+>    kernel_physical_mapping_init+0xe/0x10
+>    init_memory_mapping+0x1aa/0x3b0
+>    init_range_memory_mapping+0xc8/0x116
+>    init_mem_mapping+0x225/0x2eb
+>    setup_arch+0x6ff/0xcf5
+>    start_kernel+0x64/0x53b
+>    ? copy_bootdata+0x1f/0xce
+>    x86_64_start_reservations+0x24/0x26
+>    x86_64_start_kernel+0x8a/0x8d
+>    secondary_startup_64+0xb6/0xc0
+> 
+> which causes later:
+> 
+>   BUG: unable to handle page fault for address: ff484d019580eff8
+>   #PF: supervisor read access in kernel mode
+>   #PF: error_code(0x0000) - not-present page
+>   BAD
+>   Oops: 0000 [#1] SMP NOPTI
+>   RIP: 0010:fill_pud+0x13/0x130
+>   Call Trace:
+>    set_pte_vaddr_p4d+0x2e/0x50
+>    set_pte_vaddr+0x6f/0xb0
+>    __native_set_fixmap+0x28/0x40
+>    native_set_fixmap+0x39/0x70
+>    register_lapic_address+0x49/0xb6
+>    early_acpi_boot_init+0xa5/0xde
+>    setup_arch+0x944/0xcf5
+>    start_kernel+0x64/0x53b
+> 
+> Kyle bisected the issue to commit b569c1843498 ("x86/mm/KASLR: Reduce
+> randomization granularity for 5-level paging to 1GB")
+> 
+> Before the commit PAGE_OFFSET is always aligned to P4D_SIZE if we boot in
+> 5-level paging mode. But now only PUD_SIZE alignment is guaranteed.
+> 
+> For phys_p4d_init() it means that 'paddr_next' after the first iteration
+> can belong to the same p4d entry.
+> 
+> In the case I was able to reproduce the 'vaddr' on the first iteration
+> is 0xff4228027fe00000 and 'paddr' is 0x33fe00000. On the second
+> iteration 'vaddr' becomes 0xff42287f40000000 and 'paddr' is
+> 0x8000000000. The 'vaddr' in both cases belong to the same p4d entry.
+> 
+> It screws up 'i' count: we miss the last entry in the page table
+> completely.  And it confuses the branch under 'paddr >= paddr_end'
+> condition: the p4d entry can be cleared where must not to.
+> 
+> The patch makes phys_p4d_init() walk by virtual address space, like
+> __kernel_physical_mapping_init() does. It makes it work correctly with
+> phys-virt mismatch.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-and-tested-by: Kyle Pelton <kyle.d.pelton@intel.com>
+> Fixes: b569c1843498 ("x86/mm/KASLR: Reduce randomization granularity for 5-level paging to 1GB")
+> Cc: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  arch/x86/mm/init_64.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
 
+Looks good to me, thanks.
 
-Thanks for the review.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-
-On 6/21/19 4:56 PM, Jason Gunthorpe wrote:
-> On Fri, Jun 21, 2019 at 04:09:16PM +0200, Dag Moxnes wrote:
->> Use neighbour lock when copying MAC address from neighbour data struct
->> in dst_fetch_ha.
->>
->> When not using the lock, it is possible for the function to race with
->> neigh_update, causing it to copy an invalid MAC address.
->>
->> It is possible to provoke this error by calling rdma_resolve_addr in a
->> tight loop, while deleting the corresponding ARP entry in another tight
->> loop.
->>
->> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
->> Change-Id: I3c5f982b304457f0a83ea7def2fac70315ed38b4
->>   drivers/infiniband/core/addr.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
->> index 2f7d141598..e4945fd1bb 100644
->> +++ b/drivers/infiniband/core/addr.c
->> @@ -333,12 +333,16 @@ static int dst_fetch_ha(const struct dst_entry *dst,
->>   	if (!n)
->>   		return -ENODATA;
->>   
->> +	read_lock_bh(&n->lock)
-Miising semicolon at end of statement. Sorry about that.
->>   	if (!(n->nud_state & NUD_VALID)) {
->> -		neigh_event_send(n, NULL);
->>   		ret = -ENODATA;
->>   	} else {
->>   		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
->>   	}
->> +	read_unlock_bh(&n->lock);
->> +
->> +	if (ret)
->> +		neigh_event_send(n, NULL);
->>   
->>   	neigh_release(n);
-> Can we write this with less spaghetti please, maybe:
->
-> static int dst_fetch_ha(const struct dst_entry *dst,
-> 			struct rdma_dev_addr *dev_addr,
-> 			const void *daddr)
-> {
-> 	struct neighbour *n;
-> 	int ret = 0;
->
-> 	n = dst_neigh_lookup(dst, daddr);
-> 	if (!n)
-> 		return -ENODATA;
->
-> 	read_lock_bh(&n->lock);
-> 	if (!(n->nud_state & NUD_VALID)) {
-> 		read_unlock_bh(&n->lock);
-> 		goto out_send;
-> 	}
-> 	memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-> 	read_unlock_bh(&n->lock);
->
-> 	goto out_release;
->
-> out_send:
-> 	neigh_event_send(n, NULL);
-> 	ret = -ENODATA;
-> out_release:
-> 	neigh_release(n);
->
-> 	return ret;
-> }
-
-Personally I find it more readable when the unlock is done in one place,
-
-but sure, I can rewrite it the way you suggest if the reviewers agree that
-
-that way is preferable.
-
-Regards,
-
--Dag
-
-
-> Also, Parav should look at it.
->
-> Thanks,
-> Jason
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index 693aaf28d5fe..0f01c7b1d217 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -671,23 +671,25 @@ static unsigned long __meminit
+>  phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+>  	      unsigned long page_size_mask, bool init)
+>  {
+> -	unsigned long paddr_next, paddr_last = paddr_end;
+> -	unsigned long vaddr = (unsigned long)__va(paddr);
+> -	int i = p4d_index(vaddr);
+> +	unsigned long vaddr, vaddr_end, vaddr_next, paddr_next, paddr_last;
+> +
+> +	paddr_last = paddr_end;
+> +	vaddr = (unsigned long)__va(paddr);
+> +	vaddr_end = (unsigned long)__va(paddr_end);
+>  
+>  	if (!pgtable_l5_enabled())
+>  		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
+>  				     page_size_mask, init);
+>  
+> -	for (; i < PTRS_PER_P4D; i++, paddr = paddr_next) {
+> -		p4d_t *p4d;
+> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
+> +		p4d_t *p4d = p4d_page + p4d_index(vaddr);
+>  		pud_t *pud;
+>  
+> -		vaddr = (unsigned long)__va(paddr);
+> -		p4d = p4d_page + p4d_index(vaddr);
+> -		paddr_next = (paddr & P4D_MASK) + P4D_SIZE;
+> +		vaddr_next = (vaddr & P4D_MASK) + P4D_SIZE;
+> +		paddr = __pa(vaddr);
+>  
+>  		if (paddr >= paddr_end) {
+> +			paddr_next = __pa(vaddr_next);
+>  			if (!after_bootmem &&
+>  			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
+>  					     E820_TYPE_RAM) &&
+> @@ -699,13 +701,13 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+>  
+>  		if (!p4d_none(*p4d)) {
+>  			pud = pud_offset(p4d, 0);
+> -			paddr_last = phys_pud_init(pud, paddr, paddr_end,
+> -						   page_size_mask, init);
+> +			paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
+> +					page_size_mask, init);
+>  			continue;
+>  		}
+>  
+>  		pud = alloc_low_page();
+> -		paddr_last = phys_pud_init(pud, paddr, paddr_end,
+> +		paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
+>  					   page_size_mask, init);
+>  
+>  		spin_lock(&init_mm.page_table_lock);
+> -- 
+> 2.21.0
+> 
