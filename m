@@ -2,194 +2,243 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C579C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF6AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305E72089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954272089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBLAGF8U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cy07rfej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfFXIxd (ORCPT
+        id S1728214AbfFXIyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:53:33 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45618 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXIxd (ORCPT
+        Mon, 24 Jun 2019 04:54:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36941 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfFXIyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:53:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so12923856wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:53:30 -0700 (PDT)
+        Mon, 24 Jun 2019 04:54:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t76so9202097oih.4;
+        Mon, 24 Jun 2019 01:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pdxa+ToJ1R+2Tzesi5Xn409BT83/J4lNVYaSiLAFQ8I=;
-        b=IBLAGF8UWI0UQDG2QhhbwME/VLHe85bq1ugpqhy8WFwDucj/jSk6Q14M0Zg47eU76I
-         CkROB3VoHm5godOLkao8QrUi5HAet5fPYpZVgEMqznq5Y738QbgVo7aEmvrbyfThXWFa
-         ZiHz3VcMGlONzY0EbeTRdOeYIB+QAVJjgvQDjVScJUjffAodkXkNa8Vxj5AS8z11jBEi
-         YDfQGgN3MGk4MEyJYO6nkKVHs/mNSoZUmAJQVh3rf8h6mAgKvIPpn5ZRKIvRiWUuE6Ts
-         Iw4dB3a9n2oAqOcJUOOg6s2Yh0lmprQb8IbMq6MAyDEUPYfcaSWU6WscTki77y7K8es+
-         qJRA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V52MSPvHj58XWNWF/lx8FueRvOpPktrVCgVXMsv1ZfY=;
+        b=Cy07rfej7m2r7xdhNhIjAcurx/BuLOjFrCIZjkl8NpafWjliGTyuoeWBC9FKVEBvna
+         o3q4ib8z9Zt49wRm88ahBRsEqtbhozdKYHOPoXuwEjQmO3HjvWycGnDqKsdkpdrtrGYW
+         TCdrp3ZYAGCuAsVsWHDU1iEy+NRIb6X61cWiQYeEuVXRyynZ7XJ/0OopJLGRnEpj9QcT
+         1qrOSN+XhYuv4hy69oKocBT1VKoSR9NJcyUIclnf2c8XM+JrZrN56E7VKxhamWnK7MJN
+         kuXMDsAcRktpBTDgW6KfX6iEJKBpBtEARQxEdWm3QyQa5f40vmctKwosmVdQAJtwyTgZ
+         iJ1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pdxa+ToJ1R+2Tzesi5Xn409BT83/J4lNVYaSiLAFQ8I=;
-        b=cc8mIexH9FQn+D/KTkNKIyGYyPN8ylFsh5+wLyhOtssY2FcvB921UnmXKwtuuud2qy
-         w37/ieVidJxGbpxQV12njrnaGYLeDokgzPLUXCN4HIWNmXzyW0K+mTkeeOjhKMZAiAGe
-         D785KwHuBNXe9KAncml2BFW9mMWBNVwHGSh9TjQ4c76IsUIVoU6xmY/ZDV3h4cY/3tTF
-         dEpMpQ2vAuGD9PMb1yrSqHRrJJv3bMiklJC6NyQYP4mGVrCXxzeslyO8ODLg2q4RFHh1
-         aJwIlquVgPo8rNv1DbShOAFcUXp0igNMA5l8edwZnE2Swdj1XDbEttjX6ZxDCnpncUhq
-         3DoQ==
-X-Gm-Message-State: APjAAAXdwY2VLW0iRYnh6zfcWsyOS98lZIIBqLWt0oL9SavX20bVXRX7
-        +fgZfqtMn7SoX9/E1XG9s45PTblyVdo=
-X-Google-Smtp-Source: APXvYqwZEbIsAMg2iYM50ynASS+Nnx5o9w/muAnmcB6bA/m9fb4k2buyBRe03peBeeli+2Y9lUGFBg==
-X-Received: by 2002:adf:ec49:: with SMTP id w9mr38982756wrn.303.1561366410172;
-        Mon, 24 Jun 2019 01:53:30 -0700 (PDT)
-Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
-        by smtp.googlemail.com with ESMTPSA id c6sm16762575wma.25.2019.06.24.01.53.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 01:53:29 -0700 (PDT)
-Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of
- IS_ENABLED macro
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     viresh.kumar@linaro.org
-Cc:     edubezval@gmail.com, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
-        <linux-pm@vger.kernel.org>
-References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <0ce0d1ca-154d-fca3-f739-573ecbd2b0db@linaro.org>
-Date:   Mon, 24 Jun 2019 10:53:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V52MSPvHj58XWNWF/lx8FueRvOpPktrVCgVXMsv1ZfY=;
+        b=p24tPTimV9mRL8S9s0U0Ykxh51mx87t6l4fSICxkrKZsIhrxDNfPXinabxLo8R1ET+
+         nS/ih+VjkUkXKMRla4ZUVfc1x1/NvVceHTykT7slEBG+W9k1CCM7f62iTLHRUPFAD+fu
+         3d/UXO6kpZ0bFyLzm89vT8KBTY/URzMOfshmxwuynM1a5k7a6DPHxYFr346TKQ8tAD6V
+         nqJx5YDUb2G05VheGceEN+39FORVV0IJF5kZuhUStBkyw69znsBc5Z5HV87uCGCx7Oxo
+         sY92nrNRBzzhj0YpkTIUzD6QLnTnJ0dulTAiq8QID6/VflB+yjAeUD3njPgSUJdYbGfD
+         20tA==
+X-Gm-Message-State: APjAAAUPV2vSOinpR8LoKQPKbbS39ya+NGJnn02bdhqNKoxzHiT5Ude+
+        Ou1ZbVOkkwrtd/FYtzib08KG4eL3Gn8VatHVHLiLFA==
+X-Google-Smtp-Source: APXvYqx0DAEftYzn3A4LrGe+jRiky1nawSDQr98J+TNY+CDV3EY0U9cZr6KFaWAKlPETVBgoGN0fwL6/e6DPaDn5/3c=
+X-Received: by 2002:a05:6808:3:: with SMTP id u3mr9702787oic.141.1561366446032;
+ Mon, 24 Jun 2019 01:54:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190621132302.30414-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com> <20190618133541.GA3932@amt.cnet>
+ <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
+ <20190619210346.GA13033@amt.cnet> <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+ <20190621214205.GA4751@amt.cnet>
+In-Reply-To: <20190621214205.GA4751@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 24 Jun 2019 16:53:53 +0800
+Message-ID: <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
+> > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wro=
+te:
+> > >
+> > > Hi Li,
+> > >
+> > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
+> > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com>=
+ wrote:
+> > > > >
+> > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
+> > > > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > >
+> > > > > > Dedicated instances are currently disturbed by unnecessary jitt=
+er due
+> > > > > > to the emulated lapic timers fire on the same pCPUs which vCPUs=
+ resident.
+> > > > > > There is no hardware virtual timer on Intel for guest like ARM.=
+ Both
+> > > > > > programming timer in guest and the emulated timer fires incur v=
+mexits.
+> > > > > > This patch tries to avoid vmexit which is incurred by the emula=
+ted
+> > > > > > timer fires in dedicated instance scenario.
+> > > > > >
+> > > > > > When nohz_full is enabled in dedicated instances scenario, the =
+emulated
+> > > > > > timers can be offload to the nearest busy housekeeping cpus sin=
+ce APICv
+> > > > > > is really common in recent years. The guest timer interrupt is =
+injected
+> > > > > > by posted-interrupt which is delivered by housekeeping cpu once=
+ the emulated
+> > > > > > timer fires.
+> > > > > >
+> > > > > > The host admin should fine tuned, e.g. dedicated instances scen=
+ario w/
+> > > > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs s=
+urplus
+> > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep =
+in non-root
+> > > > > > mode, ~3% redis performance benefit can be observed on Skylake =
+server.
+> > > > > >
+> > > > > > w/o patch:
+> > > > > >
+> > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max T=
+ime   Avg time
+> > > > > >
+> > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.0=
+9us   0.71us ( +-   1.09% )
+> > > > > >
+> > > > > > w/ patch:
+> > > > > >
+> > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max T=
+ime         Avg time
+> > > > > >
+> > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.8=
+8us   0.72us ( +-   4.02% )
+> > > > > >
+> > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > ---
+> > > > > >  arch/x86/kvm/lapic.c            | 33 +++++++++++++++++++++++++=
++-------
+> > > > > >  arch/x86/kvm/lapic.h            |  1 +
+> > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> > > > > >  arch/x86/kvm/x86.c              |  5 +++++
+> > > > > >  arch/x86/kvm/x86.h              |  2 ++
+> > > > > >  include/linux/sched/isolation.h |  2 ++
+> > > > > >  kernel/sched/isolation.c        |  6 ++++++
+> > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
+> > > > > >
+> > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > > > > index 87ecb56..9ceeee5 100644
+> > > > > > --- a/arch/x86/kvm/lapic.c
+> > > > > > +++ b/arch/x86/kvm/lapic.c
+> > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm=
+_lapic *apic)
+> > > > > >       return apic->vcpu->vcpu_id;
+> > > > > >  }
+> > > > > >
+> > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > > > > +{
+> > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> > > > >
+> > > > > Paolo, can you explain the reasoning behind this?
+> > > > >
+> > > > > Should not be necessary...
+> >
+> > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
+> > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
+> > through kvm_apic_expired if the guest needs to be woken up from
+> > kvm_vcpu_block."
+>
+> Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
+> be woken up, if it receives a timer interrupt.
+>
+> But your patch will go through:
+>
+> kvm_apic_inject_pending_timer_irqs
+> __apic_accept_irq ->
+> vmx_deliver_posted_interrupt ->
+> kvm_vcpu_trigger_posted_interrupt returns false
+> (because vcpu->mode !=3D IN_GUEST_MODE) ->
+> kvm_vcpu_kick
+>
+> Which will wakeup the vcpu.
 
-Hi Viresh,
+Hi Marcelo,
 
-On 21/06/2019 15:22, Daniel Lezcano wrote:
-> The functions stub already exist for the condition the IS_ENABLED
-> is trying to avoid.
-> 
-> Remove the IS_ENABLED macros as they are pointless.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>
+> Apart from this oops, which triggers when running:
+> taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b 40
 
-what about this one?
+I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
+enabled, and expose mwait as your config, however, there is no oops.
+Can you reproduce steadily or encounter casually? Can you reproduce
+w/o the patchset?
 
-> ---
->  drivers/cpufreq/cpufreq.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 85ff958e01f1..7c72f7d3509c 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1378,8 +1378,7 @@ static int cpufreq_online(unsigned int cpu)
->  	if (cpufreq_driver->ready)
->  		cpufreq_driver->ready(policy);
->  
-> -	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
-> -	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
-> +	if (cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
->  		policy->cdev = of_cpufreq_cooling_register(policy);
->  
->  	pr_debug("initialization complete\n");
-> @@ -1469,8 +1468,7 @@ static int cpufreq_offline(unsigned int cpu)
->  		goto unlock;
->  	}
->  
-> -	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
-> -	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
-> +	if (cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
->  		cpufreq_cooling_unregister(policy->cdev);
->  		policy->cdev = NULL;
->  	}
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+>
+> Timer interruption from housekeeping vcpus is normal to me
+> (without requiring kvm_hlt_in_guest).
+>
+> [ 1145.849646] BUG: kernel NULL pointer dereference, address:
+> 0000000000000000
+> [ 1145.850481] #PF: supervisor instruction fetch in kernel mode
+> [ 1145.851161] #PF: error_code(0x0010) - not-present page
+> [ 1145.851772] PGD 80000002a9fa5067 P4D 80000002a9fa5067 PUD 2abcbb067
+> PMD 0
+> [ 1145.852578] Oops: 0010 [#1] PREEMPT SMP PTI
+> [ 1145.853066] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.2.0-rc1+ #11
+> [ 1145.853809] Hardware name: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
+> [ 1145.854554] RIP: 0010:0x0
+> [ 1145.854879] Code: Bad RIP value.
+> [ 1145.855270] RSP: 0018:ffffc90001903e68 EFLAGS: 00010013
+> [ 1145.855902] RAX: 0000010ac9f60043 RBX: ffff8882b58a8320 RCX:
+> 00000000c526b7c4
+> [ 1145.856726] RDX: 0000000000000000 RSI: ffffffff820d9640 RDI:
+> ffff8882b58a8320
+> [ 1145.857560] RBP: ffffffff820d9640 R08: 00000000c526b7c4 R09:
+> 0000000000000832
+> [ 1145.858390] R10: 0000000000000000 R11: 0000000000000000 R12:
+> 0000000000000000
+> [ 1145.859222] R13: ffffffff820d9658 R14: ffff8881063b2880 R15:
+> 0000000000000002
+> [ 1145.860047] FS:  0000000000000000(0000) GS:ffff8882b5880000(0000)
+> knlGS:0000000000000000
+> [ 1145.860994] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1145.861692] CR2: ffffffffffffffd6 CR3: 00000002ab1de001 CR4:
+> 0000000000160ee0
+> [ 1145.862570] Call Trace:
+> [ 1145.862877]  cpuidle_enter_state+0x7c/0x3e0
+> [ 1145.863392]  cpuidle_enter+0x29/0x40
+>
+>
+> > I think we can still be woken up from kvm_vcpu_block() if pir is set.
+>
+> Exactly.
+>
