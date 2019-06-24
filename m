@@ -2,108 +2,74 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644C9C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FE3C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430592083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146842083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfFXFds (ORCPT
+        id S1726741AbfFXFeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:33:48 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:38219 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFXFdr (ORCPT
+        Mon, 24 Jun 2019 01:34:07 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:21082 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXFeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:33:47 -0400
-Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MvaO8-1iXnw932v8-00sfNC; Mon, 24 Jun 2019 07:33:43 +0200
-Subject: Re: [PATCH v2 1/2] include: linux: siox: more for declaring siox
- drivers
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org, t.scherer@eckelmann.de
-References: <1560854427-27537-1-git-send-email-info@metux.net>
- <1560854427-27537-2-git-send-email-info@metux.net>
- <20190618161747.65y52fqr6toavdtb@pengutronix.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <33a51598-bf79-90a4-5cd8-906498d264e1@metux.net>
-Date:   Mon, 24 Jun 2019 07:33:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 24 Jun 2019 01:34:06 -0400
+Received: from localhost.localdomain ([86.243.180.47])
+        by mwinf5d04 with ME
+        id UVZv2000C11lVym03VZwBJ; Mon, 24 Jun 2019 07:34:03 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Jun 2019 07:34:03 +0200
+X-ME-IP: 86.243.180.47
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     eric@anholt.net, stefan.wahren@i2se.com,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tuomas.tynkkynen@iki.fi,
+        inf.braun@fau.de, tobias.buettner@fau.de, hofrat@osadl.org
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] staging: bcm2835-camera: Avoid apotential sleep while holding a spin_lock
+Date:   Mon, 24 Jun 2019 07:33:51 +0200
+Message-Id: <20190624053351.5217-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190618161747.65y52fqr6toavdtb@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ttQ0DNsB4PXv7hh8eeoe97pj/lSopBnCBLsYfA74MXIW6ErCJyD
- be3WUs6JEULh4bu1BjiMcMCb1ZrOPqB5fxLcNBgWghYHoWMo2+XWf3WTTnPKHsbVxh4zF7n
- 2SdzegIBGENUgh0T7d2BZqDGScPTQ+4h26W+MDzdKgOXEyhmrQvU83sOZ1RmqH9iJfnr7iQ
- 2xvFcCcvFIcSBzkaqj1HA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:98874X0gkJ4=:U/fimL8PjsZ2FDYpggj2EJ
- 4E2prPaYrvO92XhO1z0lqOgBnubhuv6qxyzuMsRFOTpAp5mjKD/JcnJey+L3VHGsZi/wl1mbg
- 8cAQDBzKJwd7uv0RRx14o2greVqMiFtvPhrzjZuflb3qKxhJu579dMzwnr40/0ASIjVYlVQs7
- i5Q+jBiuGaI01qB82zL0gc5x/TZnB1t2yjAF2gRvSNcS1Y4R8nSw8WCVmJq+53TYqvSBuYQb4
- 065K/Nj27gTcysX6ksK9HdMPpTFKqHCda1SACAxyxEs9LT0LF8bi+lhgalWOe8rVCpJZi2wpl
- KRRHnhRjTZubOjt+ELjA0D6ob2ZN1Id4TxrRpjULdnXrHjH7Ckph35SUr7wjZIlcF930fLB6m
- uN9UT3pCo7Qg+CzkPtUXxpKhFRnjXPGuGIYu2RwQZ/TtGr79SfNR7crpBYmeIoy+KgmAH41WM
- sVb47+aMKb9S75d8y/46ncdvlSpUfZW69RiYJ5x5QenBPm3KVVHCRtexVX3mgu7KfDDU1wbem
- Q3shF8G8rNn7EPrZ5qh90XTiZ4onsRYMQbX77xF9NbA0wfcKT+m8tK9YTbkoJJjTKPgTjRY1z
- nCFzNm9ZAdJxXSTTvKnfgkgr07WvJ4Ur6f/flbeEsQB8423h5dSefiKFWFDy/L5MrxPZfevdp
- v+mjiTnJr2UNgDlgMei4oyNSf1c4qdiLh/XyxxCMNrwd9vyOTfuIbsTv0J2PeCj8R4SkLamfm
- ZONhp1sDOnCJ4SYjyHww7PeEGhx+lnxuuV8aWWUhorCEoz5kPtBauBuVTc8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.06.19 18:17, Uwe Kleine-König wrote:
+Do not allocate memory with GFP_KERNEL when holding a spin_lock, it may
+sleep. Use GFP_NOWAIT instead.
 
-Hi,
+Fixes: 950fd867c635 ("staging: bcm2835-camera: Replace open-coded idr with a struct idr.")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I like the change. Just noticed that the Subject line is a bit strange> though. if "more for" is proper English then it's news to me. I'd
-write:> > 	siox: add helper macro to simplify driver registration
-Good point, seems I've must have been totally under-coffeined, and
-some words on nasty phone interrupts :o
-
-I'll fix that.
-
-<snip>
-
->> diff --git a/include/linux/siox.h b/include/linux/siox.h>> index d79624e..d53b2b2 100644>> --- a/include/linux/siox.h>> +++
-b/include/linux/siox.h>> @@ -75,3 +75,12 @@ static inline void
-siox_driver_unregister(struct siox_driver *sdriver)>>  {>>  	return
-driver_unregister(&sdriver->driver);>>  }>> +>> +/* module_siox_driver()
-- Helper macro for drivers that don't do> > I'd prefer /* on a separate
-line as documented in> Documentation/process/coding-style.rst (for
-non-net code).
-Done.
-
-Do we have a tool to check for that ? checkpatch doesn't seem to care
-about it.
-
->> + * anything special in module init/exit.  This eliminates a lot of>> + * boilerplate.  Each module may only use this macro once, and>> + *
-calling it replaces module_init() and module_exit()>> + */>> +#define
-module_siox_driver(__siox_driver) \>> +	module_driver(__siox_driver,
-siox_driver_register, \>> +			siox_driver_unregister)>> -- > > Sorry I
-didn't notice these two things in the first round already.
-No problem, that's why we have multiple rounds :)
-
-
-I'll send v3 in a few minutes ...
-
-
---mtx
-
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
+index 16af735af5c3..438d548c6e24 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
+@@ -186,7 +186,7 @@ get_msg_context(struct vchiq_mmal_instance *instance)
+ 	 */
+ 	spin_lock(&instance->context_map_lock);
+ 	handle = idr_alloc(&instance->context_map, msg_context,
+-			   0, 0, GFP_KERNEL);
++			   0, 0, GFP_NOWAIT);
+ 	spin_unlock(&instance->context_map_lock);
+ 
+ 	if (handle < 0) {
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.1
+
