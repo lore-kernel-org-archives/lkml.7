@@ -2,119 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2602DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0026DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047FE20449
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0CA20449
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m/jK0RHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfFXQBL (ORCPT
+        id S1729658AbfFXQBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:01:11 -0400
-Received: from smtprz15.163.net ([106.3.154.248]:9418 "EHLO smtp.tom.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726774AbfFXQBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:01:11 -0400
-Received: from my-app01.tom.com (my-app01.tom.com [127.0.0.1])
-        by freemail01.tom.com (Postfix) with ESMTP id 120301C819E4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:00:59 +0800 (CST)
-Received: from my-app01.tom.com (HELO smtp.tom.com) ([127.0.0.1])
-          by my-app01 (TOM SMTP Server) with SMTP ID -1293139326
-          for <linux-kernel@vger.kernel.org>;
-          Tue, 25 Jun 2019 00:00:59 +0800 (CST)
-Received: from antispam1.tom.com (unknown [172.25.16.55])
-        by freemail01.tom.com (Postfix) with ESMTP id 059DC1C81A7C
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:00:59 +0800 (CST)
-Received: from antispam1.tom.com (antispam1.tom.com [127.0.0.1])
-        by antispam1.tom.com (Postfix) with ESMTP id 072BD1001982
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:00:58 +0800 (CST)
-X-Virus-Scanned: Debian amavisd-new at antispam1.tom.com
-Received: from antispam1.tom.com ([127.0.0.1])
-        by antispam1.tom.com (antispam1.tom.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vCMF3mqm9TeS for <linux-kernel@vger.kernel.org>;
-        Tue, 25 Jun 2019 00:00:56 +0800 (CST)
-Received: from localhost (unknown [222.209.17.143])
-        by antispam1.tom.com (Postfix) with ESMTPA id 7BCBF100177F;
-        Tue, 25 Jun 2019 00:00:55 +0800 (CST)
-From:   Liu Xiang <liu.xiang6@zte.com.cn>
-To:     linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, tudor.ambarus@microchip.com,
-        marek.vasut@gmail.com, dwmw2@infradead.org,
-        computersforpeace@gmail.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, liuxiang_1999@126.com,
-        Liu Xiang <liu.xiang6@zte.com.cn>
-Subject: [PATCH v4] mtd: spi-nor: fix nor->addr_width when its value configured from SFDP does not match the actual width
-Date:   Tue, 25 Jun 2019 00:00:46 +0800
-Message-Id: <1561392046-10487-1-git-send-email-liu.xiang6@zte.com.cn>
-X-Mailer: git-send-email 1.9.1
+        Mon, 24 Jun 2019 12:01:19 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51252 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfFXQBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:01:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFxKPh013673;
+        Mon, 24 Jun 2019 16:00:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=V3ndcbQ+TD0LKSqQzM3594IpMdqXKhrtNeECQwftLGg=;
+ b=m/jK0RHjc6e19DnNRpaH326/Sd3WoZnVNM6LuWd5CqrxEpraHwHJiRjFqmbkocm6rdkd
+ Wk63oRCGUr22uSLQWdeF6DPABbMed+nshfq5g6E2Awhx4Cbi44wavPeVJW5eYmlsfNoa
+ T8cBvlmVWxqInzZxySncLgE97qr9M8KMPbVNrOFTacny8BXANNS+DQwO6UuYDOQJ7qOe
+ 0cgm5uKnFd1Z0p5hBNB0r/3vjxSGK4Wwq4kpNT/ZGSvFnCX1o47wUt4IOZcfLRxaoiUL
+ BlDlFvf1pSIZVmJQXnMOlcTKV+y7hPWV9ZTL9TIjXHWdHqbrkSF2dTSQwZYwdWpz+XCK 0A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pf97e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 16:00:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFxocm018126;
+        Mon, 24 Jun 2019 16:00:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2t99f3btjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 16:00:58 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5OG0wBD006770;
+        Mon, 24 Jun 2019 16:00:58 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 09:00:57 -0700
+Date:   Mon, 24 Jun 2019 09:00:56 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/12] xfs: simplify xfs_ioend_can_merge
+Message-ID: <20190624160056.GN5387@magnolia>
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-9-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624055253.31183-9-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IS25LP256 gets BFPT_DWORD1_ADDRESS_BYTES_3_ONLY from BFPT table for
-address width. But in actual fact the flash can support 4-byte address.
-Use a post bfpt fixup hook to overwrite the address width advertised by
-the BFPT.
+On Mon, Jun 24, 2019 at 07:52:49AM +0200, Christoph Hellwig wrote:
+> Compare the block layer status directly instead of converting it to
+> an errno first.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Suggested-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
----
+--D
 
-Changes in v4:
- update the comment suggested by Tudor.
----
- drivers/mtd/spi-nor/spi-nor.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 73172d7..ce153c4 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1687,6 +1687,28 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 		.flags = SPI_NOR_NO_FR | SPI_S3AN,
- 
- static int
-+is25lp256_post_bfpt_fixups(struct spi_nor *nor,
-+			   const struct sfdp_parameter_header *bfpt_header,
-+			   const struct sfdp_bfpt *bfpt,
-+			   struct spi_nor_flash_parameter *params)
-+{
-+	/*
-+	 * IS25LP256 supports 4B opcodes, but the BFPT advertises a
-+	 * BFPT_DWORD1_ADDRESS_BYTES_3_ONLY address width.
-+	 * Overwrite the address width advertised by the BFPT.
-+	 */
-+	if ((bfpt->dwords[BFPT_DWORD(1)] & BFPT_DWORD1_ADDRESS_BYTES_MASK) ==
-+		BFPT_DWORD1_ADDRESS_BYTES_3_ONLY)
-+		nor->addr_width = 4;
-+
-+	return 0;
-+}
-+
-+static struct spi_nor_fixups is25lp256_fixups = {
-+	.post_bfpt = is25lp256_post_bfpt_fixups,
-+};
-+
-+static int
- mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
- 			    const struct sfdp_parameter_header *bfpt_header,
- 			    const struct sfdp_bfpt *bfpt,
-@@ -1827,7 +1849,8 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 			SECT_4K | SPI_NOR_DUAL_READ) },
- 	{ "is25lp256",  INFO(0x9d6019, 0, 64 * 1024, 512,
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_4B_OPCODES) },
-+			SPI_NOR_4B_OPCODES)
-+			.fixups = &is25lp256_fixups },
- 	{ "is25wp032",  INFO(0x9d7016, 0, 64 * 1024,  64,
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "is25wp064",  INFO(0x9d7017, 0, 64 * 1024, 128,
--- 
-1.9.1
-
+> ---
+>  fs/xfs/xfs_aops.c | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 017b87b7765f..acbd73976067 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -226,13 +226,9 @@ xfs_end_ioend(
+>  static bool
+>  xfs_ioend_can_merge(
+>  	struct xfs_ioend	*ioend,
+> -	int			ioend_error,
+>  	struct xfs_ioend	*next)
+>  {
+> -	int			next_error;
+> -
+> -	next_error = blk_status_to_errno(next->io_bio->bi_status);
+> -	if (ioend_error != next_error)
+> +	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
+>  		return false;
+>  	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
+>  		return false;
+> @@ -251,17 +247,11 @@ xfs_ioend_try_merge(
+>  	struct list_head	*more_ioends)
+>  {
+>  	struct xfs_ioend	*next_ioend;
+> -	int			ioend_error;
+> -
+> -	if (list_empty(more_ioends))
+> -		return;
+> -
+> -	ioend_error = blk_status_to_errno(ioend->io_bio->bi_status);
+>  
+>  	while (!list_empty(more_ioends)) {
+>  		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
+>  				io_list);
+> -		if (!xfs_ioend_can_merge(ioend, ioend_error, next_ioend))
+> +		if (!xfs_ioend_can_merge(ioend, next_ioend))
+>  			break;
+>  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+>  		ioend->io_size += next_ioend->io_size;
+> -- 
+> 2.20.1
+> 
