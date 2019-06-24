@@ -2,105 +2,121 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CDCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C398C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0F92083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V/yp/xFp"
+	by mail.kernel.org (Postfix) with ESMTP id 32D122083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfFXHzf (ORCPT
+        id S1728065AbfFXH4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:55:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41492 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXHzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:55:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YKFDzPGybk5R8ch9oFESg0knJ0Pigl4fK6opa7BBhXs=; b=V/yp/xFpxovkcAEcUvqU2xT2w
-        qZ1urH3v0huiIIxE8ng2FZ16RZ70VMmsBfveNRAEXtlOyufCpaMhYw5iQet+dPtxzV5LunBfZeJ4G
-        4HajUwoG5PQce29O0CDx+kZL3A4lJ9hid6H9v4p9Mt1D5Dol+Ojc/CJ2vzLWHFJS2+7kha2UZzvZ6
-        5tgGA4cI/PBbY8Rxb8LXuyMjwd0kVzzVQ4+xNgyOld88OQwXHIu67FDhw7S3qOdyMm2FcHyPTqDCq
-        hys5xkq/YBuxtuq2/4aE3VveM5+I8weU1ke5TsvZC4dQefBvmASfU7DAcAaHIb8JZ4LgMzMKgTEBa
-        l+qv6HU3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfJov-0005PR-8T; Mon, 24 Jun 2019 07:55:21 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2002D203C05DA; Mon, 24 Jun 2019 09:55:20 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 09:55:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups
- unnecessarily
-Message-ID: <20190624075520.GC3436@hirez.programming.kicks-ass.net>
-References: <20190601082722.44543-1-irogers@google.com>
- <20190621082422.GH3436@hirez.programming.kicks-ass.net>
- <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
+        Mon, 24 Jun 2019 03:56:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:22094 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbfFXH4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:56:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 00:55:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
+   d="scan'208";a="187844126"
+Received: from yhuang-dev.sh.intel.com ([10.239.159.29])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2019 00:55:23 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH -mm -V2] mm, swap: Fix THP swap out
+Date:   Mon, 24 Jun 2019 15:55:15 +0800
+Message-Id: <20190624075515.31040-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:01:29AM -0700, Ian Rogers wrote:
-> On Fri, Jun 21, 2019 at 1:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Sat, Jun 01, 2019 at 01:27:22AM -0700, Ian Rogers wrote:
-> > > @@ -3325,6 +3331,15 @@ static int flexible_sched_in(struct perf_event *event, void *data)
-> > >                       sid->can_add_hw = 0;
-> > >       }
-> > >
-> > > +     /*
-> > > +      * If the group wasn't scheduled then set that multiplexing is necessary
-> > > +      * for the context. Note, this won't be set if the event wasn't
-> > > +      * scheduled due to event_filter_match failing due to the earlier
-> > > +      * return.
-> > > +      */
-> > > +     if (event->state == PERF_EVENT_STATE_INACTIVE)
-> > > +             sid->ctx->rotate_necessary = 1;
-> > > +
-> > >       return 0;
-> > >  }
-> >
-> > That looked odd; which had me look harder at this function which
-> > resulted in the below. Should we not terminate the context interation
-> > the moment one flexible thingy fails to schedule?
-> 
-> If we knew all the events were hardware events then this would be
-> true, as there may be software events that always schedule then the
-> continued iteration is necessary.
+From: Huang Ying <ying.huang@intel.com>
 
-But this is the 'old' code, where this is guaranteed by the context.
-That is, if this is a hardware context; there wil only be software
-events due to them being in a group with hardware events.
+0-Day test system reported some OOM regressions for several
+THP (Transparent Huge Page) swap test cases.  These regressions are
+bisected to 6861428921b5 ("block: always define BIO_MAX_PAGES as
+256").  In the commit, BIO_MAX_PAGES is set to 256 even when THP swap
+is enabled.  So the bio_alloc(gfp_flags, 512) in get_swap_bio() may
+fail when swapping out THP.  That causes the OOM.
 
-If this is a software group, then we'll never fail to schedule and we'll
-not get in this branch to begin with.
+As in the patch description of 6861428921b5 ("block: always define
+BIO_MAX_PAGES as 256"), THP swap should use multi-page bvec to write
+THP to swap space.  So the issue is fixed via doing that in
+get_swap_bio().
 
-Or am I now confused for having been staring at two different code-bases
-at the same time?
+BTW: I remember I have checked the THP swap code when
+6861428921b5 ("block: always define BIO_MAX_PAGES as 256") was merged,
+and thought the THP swap code needn't to be changed.  But apparently,
+I was wrong.  I should have done this at that time.
+
+Fixes: 6861428921b5 ("block: always define BIO_MAX_PAGES as 256")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+
+Changelogs:
+
+V2:
+
+- Replace __bio_add_page() with bio_add_page() per Ming's comments.
+
+---
+ mm/page_io.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 2e8019d0e048..189415852077 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -29,10 +29,9 @@
+ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 				struct page *page, bio_end_io_t end_io)
+ {
+-	int i, nr = hpage_nr_pages(page);
+ 	struct bio *bio;
+ 
+-	bio = bio_alloc(gfp_flags, nr);
++	bio = bio_alloc(gfp_flags, 1);
+ 	if (bio) {
+ 		struct block_device *bdev;
+ 
+@@ -41,9 +40,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+ 		bio->bi_end_io = end_io;
+ 
+-		for (i = 0; i < nr; i++)
+-			bio_add_page(bio, page + i, PAGE_SIZE, 0);
+-		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
++		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+ 	}
+ 	return bio;
+ }
+-- 
+2.20.1
+
