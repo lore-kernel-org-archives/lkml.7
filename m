@@ -2,143 +2,352 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA6BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB66C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BFF212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="qimuzTLh"
+	by mail.kernel.org (Postfix) with ESMTP id 52BCA213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbfFXOIf (ORCPT
+        id S1730011AbfFXOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:08:35 -0400
-Received: from mail-eopbgr10126.outbound.protection.outlook.com ([40.107.1.126]:59703
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbfFXOIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:08:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=roLeey6sLYOWB452lKz7QVsZlbn5CO1EhRed5UBnmtk=;
- b=qimuzTLhE5UKkckIFsgxZvvO0Bu/NxMMjxcDKun+VZ+BMOogJwhoNy7gWj7vMJrnCh1veU2OaaeKu6C2iqllRowyLo1pFwNSGhY5zumG7t72ik2dWbhhuG9PtugPi0r+ErPzC04o31oMT6VxIkJqY2tHTV8ZrChY6qgnH2Uugvo=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3401.eurprd02.prod.outlook.com (52.134.73.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 14:07:50 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::29c5:d1ae:8855:3153]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::29c5:d1ae:8855:3153%3]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 14:07:50 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "atull@kernel.org" <atull@kernel.org>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jslaby@suse.com" <jslaby@suse.com>
-Subject: Re: [PATCH v2 13/28] drivers: Introduce
- class_find_device_by_of_node() helper
-Thread-Topic: [PATCH v2 13/28] drivers: Introduce
- class_find_device_by_of_node() helper
-Thread-Index: AQHVItpTYJEjQBlMB0GJ7sFY1WhfUKanUbUAgAM37ACAAF0PAA==
-Date:   Mon, 24 Jun 2019 14:07:50 +0000
-Message-ID: <528dcb2e-3611-00a7-abb2-cc18001f4f8f@axentia.se>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-14-git-send-email-suzuki.poulose@arm.com>
- <325e46fd-a480-78ed-81fd-55e993fbc06f@axentia.se>
- <5cf1a8e2-bb1e-b6bc-32fe-93db0a6b5efd@arm.com>
-In-Reply-To: <5cf1a8e2-bb1e-b6bc-32fe-93db0a6b5efd@arm.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR07CA0024.eurprd07.prod.outlook.com
- (2603:10a6:7:67::34) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f90e74f5-d6ca-4396-c533-08d6f8ad57c7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3401;
-x-ms-traffictypediagnostic: DB3PR0202MB3401:
-x-microsoft-antispam-prvs: <DB3PR0202MB34011A231A599ACFF2460F7CBCE00@DB3PR0202MB3401.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(376002)(366004)(346002)(136003)(189003)(199004)(81156014)(7416002)(6246003)(68736007)(229853002)(26005)(81166006)(316002)(54906003)(110136005)(8676002)(25786009)(58126008)(2906002)(99286004)(86362001)(3846002)(31696002)(102836004)(386003)(256004)(53546011)(6506007)(53936002)(486006)(4326008)(446003)(65806001)(65956001)(2616005)(476003)(14454004)(74482002)(11346002)(31686004)(66066001)(6486002)(36756003)(6116002)(6436002)(73956011)(66946007)(66476007)(66556008)(64756008)(66446008)(5660300002)(7736002)(305945005)(76176011)(71190400001)(71200400001)(64126003)(186003)(65826007)(2501003)(52116002)(8936002)(508600001)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3401;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xQAsXOTqbwmbZKVfxVpNEZcHaRw6yV5hwMgr4lj3pGuqU61W9fKi6OgfJA9N5ykHtgtWdzGzAazF4bl1mRhlGO/qmRJDZyb+NI4+9y8orvr8N6vTczR6uLa1dgUh6sZzhxK6E+IidWqTlz80eBd75ZWHIdbj8pUQ5Ymbs5fKEDQlfBvdM8TbQYsE4/CjAjeuW8LHOZsoswbQrwcOnPejWdJQ2Jov6d7lS9EOEhTdP9qp+LD7ETzyz4ESRDkcivTtD4R3U7tAG/ey8CoeHGIhMA5OjFobTdRewKQpocMmsrIn/uLDkXntxdPBKRfm0o9vy2gvNwKtIZwsU7xhZWxQyzut4MVpIu4y/j+WFjy28F1t+u6y190KEzTDZ64zFug9DVJW8l0/GduTl4A972aatEFgNDfBFEGZzflFpn2Wh+c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <72F156B1EDA57447A18381C603F9D997@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 10:08:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:23078 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbfFXOIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:08:54 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C99E83082B68;
+        Mon, 24 Jun 2019 14:08:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09286600D1;
+        Mon, 24 Jun 2019 14:08:45 +0000 (UTC)
+Subject: [PATCH 00/25] VFS: Introduce filesystem information query syscall
+ [ver #14]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Jun 2019 15:08:45 +0100
+Message-ID: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: f90e74f5-d6ca-4396-c533-08d6f8ad57c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:07:50.7383
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3401
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 24 Jun 2019 14:08:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0yNCAxMDozNCwgU3V6dWtpIEsgUG91bG9zZSB3cm90ZToNCj4gSGkgUGV0ZXIs
-DQo+IA0KPiBPbiAyMi8wNi8yMDE5IDA2OjI1LCBQZXRlciBSb3NpbiB3cm90ZToNCj4+IE9uIDIw
-MTktMDYtMTQgMTk6NTQsIFN1enVraSBLIFBvdWxvc2Ugd3JvdGU6DQo+Pj4gQWRkIGEgd3JhcHBl
-ciB0byBjbGFzc19maW5kX2RldmljZSgpIHRvIHNlYXJjaCBmb3IgYSBkZXZpY2UNCj4+PiBieSB0
-aGUgb2Zfbm9kZSBwb2ludGVyLCByZXVzaW5nIHRoZSBnZW5lcmljIG1hdGNoIGZ1bmN0aW9uLg0K
-Pj4+IEFsc28gY29udmVydCB0aGUgZXhpc3RpbmcgdXNlcnMgdG8gbWFrZSB1c2Ugb2YgdGhlIG5l
-dyBoZWxwZXIuDQo+Pj4NCj4+PiBDYzogQWxhbiBUdWxsIDxhdHVsbEBrZXJuZWwub3JnPg0KPj4+
-IENjOiBNb3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+DQo+Pj4gQ2M6IGxpbnV4LWZwZ2FA
-dmdlci5rZXJuZWwub3JnDQo+Pj4gQ2M6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQo+
-Pj4gQ2M6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCj4+PiBDYzogRmxvcmlhbiBG
-YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+Pj4gQ2M6IEhlaW5lciBLYWxsd2VpdCA8
-aGthbGx3ZWl0MUBnbWFpbC5jb20+DQo+Pj4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxkYXZlbUBk
-YXZlbWxvZnQubmV0Pg0KPj4+IENjOiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQo+Pj4g
-Q2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+DQo+Pj4gQ2M6IEdyZWcgS3Jv
-YWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+Pj4gQ2M6ICJSYWZhZWwg
-Si4gV3lzb2NraSIgPHJhZmFlbEBrZXJuZWwub3JnPg0KPj4+IENjOiBKaXJpIFNsYWJ5IDxqc2xh
-YnlAc3VzZS5jb20+DQo+Pj4gQWNrZWQtYnk6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9y
-Zz4NCj4+PiBSZXZpZXdlZC1ieTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPj4+IFJl
-dmlld2VkLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPg0KPj4NCj4+IFdob29vYSEg
-SSByZXZpZXdlZCBvbmx5IHRoZSBkcml2ZXJzL211eC9jb3JlLmMgY2hhbmdlcyB3aGVuIHRoaXMg
-d2FzIGRvbmUNCj4+IGluIGEgc2VyaWVzIG9mIG11Y2ggc21hbGxlciBwYXRjaGVzLiBUaGlzIHRh
-ZyBtYWtlcyBpdCBzZWVtIGFzIGlmIEkgaGF2ZQ0KPj4gcmV2aWV3ZWQgdGhlIHdob2xlIHRoaW5n
-LCB3aGljaCBJIGhhZCBub3QgZG9uZSB3aGVuIHlvdSBhZGRlZCB0aGlzIHRhZyBvdXQNCj4+IG9m
-IHRoZSBibHVlLg0KPiANCj4gQXBvbG9naWVzIGZvciB0aGUgc3VycHJpc2UuIFRoZSBwYXRjaCB3
-YXMgc2ltcGx5IHNxdWFzaGVkIHdpdGggdGhlIGNoYW5nZSB0aGF0DQo+IGludHJvZHVjZWQgdGhl
-ICJoZWxwZXIiIHRvIGJldHRlciBhaWQgdGhlIHJldmlld2VycywgYmFzZWQgb24gc3VnZ2VzdGlv
-bnMgb24gdGhlDQo+IGxpc3QuIEkga2VwdCB5b3VyIHRhZ3MsIG9ubHkgYmVjYXVzZSB0aGVyZSB3
-ZXJlIG5vIGNoYW5nZXMsIGJ1dCBzb21lIGFkZGl0aW9uYWwNCj4gY29udGV4dCBvbiB0aGUgY29y
-ZSBkcml2ZXIuDQoNCllvdSBjb3VsZCBlLmcuIGhhdmUgd3JpdHRlbjoNCg0KCS4uLg0KCVtGb3Ig
-dGhlIGRyaXZlcnMvbXV4L2NvcmUuYyBwYXJ0XQ0KCVJldmlld2VkLWJ5OiBQZXRlciBSb3NpbiA8
-cGVkYUBheGVudGlhLnNlPg0KCS4uLg0KDQo+Pg0KPj4gTm93LCB0aGlzIHN0dWZmIGlzIHRyaXZp
-YWwgYW5kIGJ5IG5vdyBJIGhhdmUgbG9va2VkIGF0IHRoZSBvdGhlciBmaWxlcw0KPj4gYW5kIGl0
-IGFsbCBzZWVtcyBzaW1wbGUgZW5vdWdoLiBTbywgeW91IGNhbiBrZWVwIHRoZSB0YWcsIGJ1dCBp
-dCBpcyBOT1QNCj4+IG9rIHRvIGhhbmRsZSB0YWdzIGxpa2UgeW91IGhhdmUgZG9uZSBoZXJlLg0K
-PiANCj4gU3VyZSwgSSB3aWxsIGtlZXAgdGhhdCBpbiBtaW5kLg0KDQpHcmVhdCENCg0KQ2hlZXJz
-LA0KUGV0ZXINCg==
+
+Hi Al,
+
+Here are a set of patches that adds a syscall, fsinfo(), that allows
+attributes of a filesystem/superblock to be queried.  Attribute values are
+of four basic types:
+
+ (1) Version dependent-length structure (size defined by type).
+
+ (2) Variable-length string (up to PAGE_SIZE).
+
+ (3) Array of fixed-length structures (up to INT_MAX size).
+
+ (4) Opaque blob (up to INT_MAX size).
+
+Attributes can have multiple values in up to two dimensions and all the
+values of a particular attribute must have the same type.
+
+Note that the attribute values *are* allowed to vary between dentries
+within a single superblock, depending on the specific dentry that you're
+looking at.
+
+I've tried to make the interface as light as possible, so integer/enum
+attribute selector rather than string and the core does all the allocation
+and extensibility support work rather than leaving that to the filesystems.
+That means that for the first two attribute types, sb->s_op->fsinfo() may
+assume that the provided buffer is always present and always big enough.
+
+Further, this removes the possibility of the filesystem gaining access to the
+userspace buffer.
+
+
+fsinfo() allows a variety of information to be retrieved about a filesystem
+and the mount topology:
+
+ (1) General superblock attributes:
+
+      - The amount of space/free space in a filesystem (as statfs()).
+      - Filesystem identifiers (UUID, volume label, device numbers, ...)
+      - The limits on a filesystem's capabilities
+      - Information on supported statx fields and attributes and IOC flags.
+      - A variety single-bit flags indicating supported capabilities.
+      - Timestamp resolution and range.
+      - Sources (as per mount(2), but fsconfig() allows multiple sources).
+      - In-filesystem filename format information.
+      - Filesystem parameters ("mount -o xxx"-type things).
+      - LSM parameters (again "mount -o xxx"-type things).
+
+ (2) Filesystem-specific superblock attributes:
+
+      - Server names and addresses.
+      - Cell name.
+
+ (3) Filesystem configuration metadata attributes:
+
+      - Filesystem parameter type descriptions.
+      - Name -> parameter mappings.
+      - Simple enumeration name -> value mappings.
+
+ (4) Mount topology:
+
+      - General information about a mount object.
+      - Mount device name(s).
+      - Children of a mount object and their relative paths.
+
+ (5) Information about what the fsinfo() syscall itself supports, including
+     the number of attibutes supported and the number of capability bits
+     supported.
+
+
+The system is extensible:
+
+ (1) New attributes can be added.  There is no requirement that a
+     filesystem implement every attribute.  Note that the core VFS keeps a
+     table of types and sizes so it can handle future extensibility rather
+     than delegating this to the filesystems.
+
+ (2) Version length-dependent structure attributes can be made larger and
+     have additional information tacked on the end, provided it keeps the
+     layout of the existing fields.  If an older process asks for a shorter
+     structure, it will only be given the bits it asks for.  If a newer
+     process asks for a longer structure on an older kernel, the extra
+     space will be set to 0.  In all cases, the size of the data actually
+     available is returned.
+
+     In essence, the size of a structure is that structure's version: a
+     smaller size is an earlier version and a later version includes
+     everything that the earlier version did.
+
+ (3) New single-bit capability flags can be added.  This is a structure-typed
+     attribute and, as such, (2) applies.  Any bits you wanted but the kernel
+     doesn't support are automatically set to 0.
+
+If a filesystem-specific attribute is added, it should just take up the next
+number in the enumeration.  Currently, I do not intend that the number space
+should be subdivided between interested parties.
+
+
+fsinfo() may be called like the following, for example:
+
+	struct fsinfo_params params = {
+		.at_flags	= AT_SYMLINK_NOFOLLOW,
+		.request	= FSINFO_ATTR_SERVER_ADDRESS;
+		.Nth		= 2;
+		.Mth		= 1;
+	};
+	struct fsinfo_server_address address;
+
+	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
+		     &address, sizeof(address));
+
+The above example would query a network filesystem, such as AFS or NFS, and
+ask what the 2nd address (Mth) of the 3rd server (Nth) that the superblock is
+using is.  Whereas:
+
+	struct fsinfo_params params = {
+		.at_flags	= AT_SYMLINK_NOFOLLOW,
+		.request	= FSINFO_ATTR_CELL_NAME;
+	};
+	char cell_name[256];
+
+	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
+		     &cell_name, sizeof(cell_name));
+
+would retrieve the name of an AFS cell as a string.
+
+fsinfo() can also be used to query a context from fsopen() or fspick():
+
+	fd = fsopen("ext4", 0);
+	struct fsinfo_params params = {
+		.request	= FSINFO_ATTR_PARAM_DESCRIPTION;
+	};
+	struct fsinfo_param_description desc;
+	fsinfo(fd, NULL, &params, &desc, sizeof(desc));
+
+even if that context doesn't currently have a superblock attached (though if
+there's no superblock attached, only filesystem-specific things like parameter
+descriptions can be accessed).
+
+The patches can be found here also:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+
+on branch:
+
+	fsinfo
+
+
+===================
+SIGNIFICANT CHANGES
+===================
+
+ ver #14:
+
+ (*) Increase to 128-bit the fields for number of blocks and files in the
+     filesystem and also the max file size and max inode number fields.
+
+ (*) Increase to 64-bit the fields for max hard links and max xattr body
+     length.
+
+ (*) Provide struct fsinfo_timestamp_one to represent the characteristics
+     of a single timestamp and move the range into it.  FAT, for example,
+     has different ranges for different timestamps.  Each timestamp is then
+     represented by one of these structs.
+
+ (*) Don't expose MS_* flags (such as MS_RDONLY) through this interface as
+     they ought to be considered deprecated; instead anyone who wants them
+     should parse FSINFO_ATTR_PARAMETERS for the string equivalents.
+
+ (*) Add a flag, AT_FSINFO_FROM_FSOPEN, to indicate that the fd being
+     accessed is from fsopen()/fspick() and that fsinfo() should look
+     inside and access the filesystem referred to by the fs_context.
+
+ (*) If the filesystem implements FSINFO_ATTR_PARAMETERS for itself, don't
+     automatically include flags for the SB_* bits that are normally
+     rendered by, say, /proc/mounts (such as SB_RDONLY).  Rather, a helper
+     is provided that the filesystem must call with an appropriately
+     wangled s_flags.
+
+ (*) Drop the NFS fsinfo patch for now as NFS fs_context support is
+     unlikely to get upstream in the upcoming merge window.
+
+ ver #13:
+
+ (*) Provided a "fixed-struct array" type so that the list of children of a
+     mount and all their change counters can be read atomically.
+
+ (*) Additional filesystem examples.
+
+ (*) Documented the API.
+
+ ver #12:
+
+ (*) Rename ->get_fsinfo() to ->fsinfo().
+
+ (*) Pass the path through to to ->fsinfo() as it's needed for NFS to
+     retrocalculate the source name.
+
+ (*) Indicated which is the source parameter in the param-description
+     attribute.
+
+ (*) Dropped the realm attribute.
+
+David
+---
+David Howells (17):
+      vfs: syscall: Add fsinfo() to query filesystem information
+      fsinfo: Add syscalls to other arches
+      vfs: Allow fsinfo() to query what's in an fs_context
+      vfs: Allow fsinfo() to be used to query an fs parameter description
+      vfs: Implement parameter value retrieval with fsinfo()
+      fsinfo: Implement retrieval of LSM parameters with fsinfo()
+      vfs: Introduce a non-repeating system-unique superblock ID
+      vfs: Allow fsinfo() to look up a mount object by ID
+      vfs: Add mount notification count
+      vfs: Allow mount information to be queried by fsinfo()
+      vfs: fsinfo sample: Mount listing program
+      fsinfo: Add API documentation
+      hugetlbfs: Add support for fsinfo()
+      kernfs, cgroup: Add fsinfo support
+      fsinfo: Support SELinux superblock parameter retrieval
+      fsinfo: Support Smack superblock parameter retrieval
+      afs: Support fsinfo()
+
+Ian Kent (8):
+      fsinfo: proc - add sb operation fsinfo()
+      fsinfo: autofs - add sb operation fsinfo()
+      fsinfo: shmem - add tmpfs sb operation fsinfo()
+      fsinfo: devpts - add sb operation fsinfo()
+      fsinfo: pstore - add sb operation fsinfo()
+      fsinfo: debugfs - add sb operation fsinfo()
+      fsinfo: bpf - add sb operation fsinfo()
+      fsinfo: ufs - add sb operation fsinfo()
+
+
+ Documentation/filesystems/fsinfo.rst        |  596 ++++++++++++++++++
+ arch/alpha/kernel/syscalls/syscall.tbl      |    1 
+ arch/arm/tools/syscall.tbl                  |    1 
+ arch/arm64/include/asm/unistd.h             |    2 
+ arch/ia64/kernel/syscalls/syscall.tbl       |    1 
+ arch/m68k/kernel/syscalls/syscall.tbl       |    1 
+ arch/microblaze/kernel/syscalls/syscall.tbl |    1 
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 
+ arch/parisc/kernel/syscalls/syscall.tbl     |    1 
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    1 
+ arch/s390/kernel/syscalls/syscall.tbl       |    1 
+ arch/sh/kernel/syscalls/syscall.tbl         |    1 
+ arch/sparc/kernel/syscalls/syscall.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_32.tbl      |    1 
+ arch/x86/entry/syscalls/syscall_64.tbl      |    1 
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    1 
+ fs/Kconfig                                  |    7 
+ fs/Makefile                                 |    1 
+ fs/afs/internal.h                           |    1 
+ fs/afs/super.c                              |  180 +++++-
+ fs/autofs/inode.c                           |   64 ++
+ fs/d_path.c                                 |    2 
+ fs/debugfs/inode.c                          |   38 +
+ fs/devpts/inode.c                           |   43 +
+ fs/fsinfo.c                                 |  877 +++++++++++++++++++++++++++
+ fs/hugetlbfs/inode.c                        |   57 ++
+ fs/internal.h                               |   11 
+ fs/kernfs/mount.c                           |   20 +
+ fs/mount.h                                  |   22 +
+ fs/namespace.c                              |  307 +++++++++
+ fs/proc/inode.c                             |   37 +
+ fs/pstore/inode.c                           |   32 +
+ fs/statfs.c                                 |    2 
+ fs/super.c                                  |   24 +
+ fs/ufs/super.c                              |   58 ++
+ include/linux/fs.h                          |    8 
+ include/linux/fsinfo.h                      |   70 ++
+ include/linux/kernfs.h                      |    4 
+ include/linux/lsm_hooks.h                   |   13 
+ include/linux/security.h                    |   11 
+ include/linux/syscalls.h                    |    4 
+ include/uapi/asm-generic/unistd.h           |    4 
+ include/uapi/linux/fcntl.h                  |    3 
+ include/uapi/linux/fsinfo.h                 |  319 ++++++++++
+ kernel/bpf/inode.c                          |   25 +
+ kernel/cgroup/cgroup-v1.c                   |   44 +
+ kernel/cgroup/cgroup.c                      |   19 +
+ kernel/sys_ni.c                             |    1 
+ mm/shmem.c                                  |   72 ++
+ samples/vfs/Makefile                        |    9 
+ samples/vfs/test-fs-query.c                 |  138 ++++
+ samples/vfs/test-fsinfo.c                   |  682 +++++++++++++++++++++
+ samples/vfs/test-mntinfo.c                  |  241 +++++++
+ security/security.c                         |   12 
+ security/selinux/hooks.c                    |   41 +
+ security/selinux/include/security.h         |    2 
+ security/selinux/ss/services.c              |   49 ++
+ security/smack/smack_lsm.c                  |   43 +
+ 60 files changed, 4202 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/filesystems/fsinfo.rst
+ create mode 100644 fs/fsinfo.c
+ create mode 100644 include/linux/fsinfo.h
+ create mode 100644 include/uapi/linux/fsinfo.h
+ create mode 100644 samples/vfs/test-fs-query.c
+ create mode 100644 samples/vfs/test-fsinfo.c
+ create mode 100644 samples/vfs/test-mntinfo.c
+
