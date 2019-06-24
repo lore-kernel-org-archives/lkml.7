@@ -2,74 +2,142 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A17C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1844CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB1B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE96E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BdSYOGyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfFXKoz (ORCPT
+        id S1729304AbfFXKqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:44:55 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41449 "EHLO
+        Mon, 24 Jun 2019 06:46:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34100 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbfFXKoz (ORCPT
+        with ESMTP id S1728117AbfFXKqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:44:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so383749ioc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 03:44:54 -0700 (PDT)
+        Mon, 24 Jun 2019 06:46:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so469403iot.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 03:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fBt9QktoLd64Chah7MFgGo/Ww4Rt6gZg9l4gfXKcmpI=;
+        b=BdSYOGyiwQEVHWX5UU8ZLqciWdf/4508u9hIvRwfy6/rOlHok3nrDXGlOI8L34d0j4
+         IxFRRK1iYL0fWOTz+lxXjYaWc8Q1NdfJVN6WlYMLCF1DdbdmuM6YgcCdQHDIofOHErUm
+         LsdJ462/cM7FfcbN7lCFOvtOr2lpV+JXpzMTs8fVcTfd47eNWJpkJnbl56fMARw7oqIy
+         lZSJUoA0b1L6CBwYFgeW0dP1kvZc+xlMsAm+UoQeaxtZUa1KKpc/9jw35oTX8RCgRMAy
+         XdkLWN8/xVghtWNIKtjoO77HAGYgoIOMH6h5MHyaWd2YtG7BlK7vsop6klNPR78G+Z0B
+         84uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BCgJq21igY0KSeVe2g6442gqLYQ5ESADKLIyY02vYSc=;
-        b=sWpjryLMWC9Jck5BhvBy818vz025w73m+vxk+5cRSNFChosTUbM8Ibsf/oUZCg1i91
-         eFz4UuoPLt9N/qOCfGRFVV8lH35YUJzRzsniR9zA+9OreKfdbvIiph8izSWCv2vOplYy
-         Kyfpe/ykH5GfYmkiY3U0RktDIuItXnnX1sF+gDg6ip0LSNXuiHHx8TbM2bZ0Fa+ff4gu
-         oIo7dMNnuVM50xv86XdZnmJB9BlDKa6pD6Mc8JDLOTOkMK0diabW5kZ2UgDHO/ExPBey
-         LlBiBkPK6b3+Yo9GojDv1LfADJp60ojVN0UFgvuQq/3vJPI12KKHvi8tudrOEQ8J9D+o
-         6XrQ==
-X-Gm-Message-State: APjAAAVt+NvNxDcMxYlMP5VvHkI7EBn3PoY/DWN+gxbWK3k03QQDoKRb
-        RzWR6nOdhdnKA1arbLi18mXX55/Gza7LgSPqOy8iag==
-X-Google-Smtp-Source: APXvYqyDcUV7/ft0Fe+wYR8jAaVZC48EZPDjC0/hFh9o1V9pGhwVl+uquTsaMxl4rwUCXSCbvah6+NItemUjJReLvCc=
-X-Received: by 2002:a02:ccdc:: with SMTP id k28mr16948024jaq.41.1561373094455;
- Mon, 24 Jun 2019 03:44:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fBt9QktoLd64Chah7MFgGo/Ww4Rt6gZg9l4gfXKcmpI=;
+        b=FrJMw8adSqV8opkAuMKEIjueLoueJQowwb1Cjdahet85Y5yI42aSHfAEQ5dcj11NcP
+         OuOEU0URkxSKbXDfDu7IIV4NIrczqTB2VgDeGj2qupoZMVv5MjVO6kk1WlqAz7kBR5DO
+         6/4p2sf2ZCTXl+V+YsNMBUnp2sQNWS5r4+k/uK0fxlA8HHFcSP4p8OBZCuJKPcXHdfSE
+         dMv+shR86yPwZ5/OswU2nDFZ1dM93kD28WcHFdcsenrlOhVrJjMFDBLef6BqanVsDNb3
+         NGpwmdOApRIZJt+eKRsHXXI6sdfDGKMqjOmwW42qffxGuYfO4xZszMMCyOP0CcOChvAK
+         Ei+g==
+X-Gm-Message-State: APjAAAXQ+XBFUrdLPa1mBSw/1jHNqZ6h4fm4bUyQmGDd+1PrhAzMY7Z7
+        NufZXjlFtJuEdMC6c91YHn5WvxDkQx7dPNcrCDVGWg==
+X-Google-Smtp-Source: APXvYqyh2MI1zxwKuqXI8jRvu7DwGxjtl7DyQm6NOa5vKvlv0rMY6C/dY8JslfYzmK2w+S1dLofjYB7Neqi7l01DiJE=
+X-Received: by 2002:a5e:a712:: with SMTP id b18mr19413363iod.220.1561373193303;
+ Mon, 24 Jun 2019 03:46:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190619123019.30032-1-mszeredi@redhat.com> <20190619123019.30032-5-mszeredi@redhat.com>
- <1ea8ec52ce19499f021510b5c9e38be8d8ebe38f.camel@themaw.net>
- <CAOssrKcU2JKDYMDbW7V6jpM7_4WFSMA91h9AjpjoYmX=H4ybeg@mail.gmail.com> <30205.1561372589@warthog.procyon.org.uk>
-In-Reply-To: <30205.1561372589@warthog.procyon.org.uk>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Mon, 24 Jun 2019 12:44:43 +0200
-Message-ID: <CAOssrKdGSRVSc38X1J0zCQQN+tUhiwPA4bCL0rHCZ-O8iVzzeQ@mail.gmail.com>
-Subject: Re: [PATCH 05/13] vfs: don't parse "silent" option
-To:     David Howells <dhowells@redhat.com>
-Cc:     Ian Kent <raven@themaw.net>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20190221162627.3476-1-brgl@bgdev.pl> <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+ <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com> <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
+In-Reply-To: <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 24 Jun 2019 12:46:22 +0200
+Message-ID: <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 12:36 PM David Howells <dhowells@redhat.com> wrote:
+pon., 24 cze 2019 o 12:05 Enrico Weigelt, metux IT consult
+<lkml@metux.net> napisa=C5=82(a):
 >
-> Miklos Szeredi <mszeredi@redhat.com> wrote:
+> On 24.06.19 10:29, Bartosz Golaszewski wrote:
+> > pt., 14 cze 2019 o 18:50 Markus Elfring <Markus.Elfring@web.de> napisa=
+=C5=82(a):
+> >>
+> >> From: Markus Elfring <elfring@users.sourceforge.net>
+> >> Date: Fri, 14 Jun 2019 17:45:13 +0200
+> >>
+> >> Move the preprocessor statement =E2=80=9C#ifdef CONFIG_HAS_IOMEM=E2=80=
+=9D so that
+> >> the corresponding scope for conditional compilation includes also comm=
+ents
+> >> for this function implementation.
+> >>
+> >> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> >> ---
+> >>  drivers/base/platform.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> >> index 4d1729853d1a..a5f40974a6ef 100644
+> >> --- a/drivers/base/platform.c
+> >> +++ b/drivers/base/platform.c
+> >> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platfo=
+rm_device *dev,
+> >>         return NULL;
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(platform_get_resource);
+> >> +#ifdef CONFIG_HAS_IOMEM
+> >>
+> >>  /**
+> >>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for =
+a platform
+> >> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+> >>   *        resource management
+> >>   * @index: resource index
+> >>   */
+> >> -#ifdef CONFIG_HAS_IOMEM
+> >>  void __iomem *devm_platform_ioremap_resource(struct platform_device *=
+pdev,
+> >>                                              unsigned int index)
+> >>  {
+> >> --
+> >> 2.22.0
+> >>
+> >
+> > And what is the purpose of that?
 >
-> > What I'm saying is that with a new interface the rules need not follow
-> > the rules of the old interface, because at the start no one is using
-> > the new interface, so no chance of breaking anything.
+> I can imagine that this could improve readability a little bit. Maybe if
+> one uses same fancy ide/editor that can fold code blocks like functions
+> and conditionals, this patch could make the code prettier.
 >
-> Er. No.  That's not true, since the old interface comes through the new one.
+> The patch seems pretty trivial and doesn't change any actual code, so
+> I don't see hard resons for rejecting it.
+>
 
-No, old interface sets SB_* directly from arg 4 of mount(2) and not
-via parsing arg 5.
+In its current form it makes the code even less readable. The #ifdef
+should actually be one line lower and touch the comment instead of the
+EXPORT_SYMBOL() related to a different function.
 
-Thanks,
-Miklos
+Bart
