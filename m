@@ -2,111 +2,182 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79751C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FBC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48ECC20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561405747;
-	bh=YS7krK6pwOnDCSR2Dz5EYSKEqmWSoCDbfsVQV5IxsSI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wxDGoeHFrBFklkG2CduVfmt8PxpkqwZ68kGSKqn5vVnJyW7xZuLm/mzzWTgmIGOPW
-	 1GdEOpVEgIgN+AQCpkyyJ1jJlC4U7430jXQGfWItWh27VTrgJ7vKswV3988Eme1GOA
-	 IUDIWL/OqebNZonlZ3MpSHBlKHq8q8ABWY80g+4I=
+	by mail.kernel.org (Postfix) with ESMTP id 11C0020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmV7vfx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfFXTtG (ORCPT
+        id S1730621AbfFXTtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:49:06 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40844 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728473AbfFXTtF (ORCPT
+        Mon, 24 Jun 2019 15:49:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38210 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728473AbfFXTtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:49:05 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a21so13798494ljh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:49:04 -0700 (PDT)
+        Mon, 24 Jun 2019 15:49:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g4so7463824plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q0QcUYzpRrkg9pWxPfvUVU3Rs8HMzzByn0cblozJ9x0=;
-        b=R7WMJ8FHrch3Kl42vaN6VjhTyL4k7RQ9YSaseThbyq4jINbU5qdWjzaGkplY3mdIio
-         qMjxnZt0sIL/vKJi9ZiNJXVRRzVUt9Z4hTOj9MP/KrrV32zZbe8bAD8mT9qtRcAB+zcP
-         rBYdvXUiBVcKEI6yFepafKp3F4gukJf8pqFH8=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dwFqV91KqH1mK3/9wT2wWG2wDV0aDU1ov+CsBgMWwUE=;
+        b=AmV7vfx5CGF4aKpWDx8j1xkohSfbcl709wpiY009FPnbsIsKYfselAK2Etw4zf2ZLP
+         i3bZ33PuHyn5iuOiL4oLrVl+1yDzI54MDbF5J6n6XTuDvmXysIQ1nd24fddXcouBdde4
+         KIOG5tyXCbQp+R0cz3ZrXNlvNPvN9//QMkSklcRkdM381MC2u0kY+cWy3s1ctPXi+l0C
+         tAMsyXqhc5ZVA6LnqBxRuJU0cTufCVghODPcBh8Z8yxVcWmFGwDuPlSk254qXP8ZVCM9
+         +N+D2gVKYQ0jvRJBefC1fACRCunhwE5X0SAynWEibTGZikAl39h8a1xXbwTd3C1w4ICc
+         9MzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0QcUYzpRrkg9pWxPfvUVU3Rs8HMzzByn0cblozJ9x0=;
-        b=CGJ1P+3R2kzvi7QC8xdlToouWjy9uoPloDSRp8b8qq5l8TB66TZBbfS00zyGeEcaQs
-         C+YPmNSjdaesUVfmfEgYnVcDM4zrAWTWrx0kQB2GC4hjmwMtJTVQuAX5PDzm0z2DvGDU
-         t8284y8M4ExgRopkvCYrK9roah+uNNn5zp7fMJ9tN5PQKJ5Nyt1COoUgORV5jUj4fUiw
-         ygFgBBv+x7ux4F3dFjKVIOo9SzD0SrXBjBqIS8+ZTNAgAMA6r6A6X7UF7lhhqP4NMJrS
-         PX06Zqw0X1OQE5K8k9m0FGZtTS/VLurGPoX5YZT0v3U3THu4SpglPyGY4A90Q0wBrvSE
-         tiVg==
-X-Gm-Message-State: APjAAAUJsjKreB3CfTs9zD7uqIdW2mO93UGagREmXlJtCLoxfjn6kVNe
-        Rift0/xrH3v9IiK8aRFQJ9mfN8qJqio=
-X-Google-Smtp-Source: APXvYqwtafdWpvP0XTJrwMxDYYbVSlQonjI/bEh6QK5EEbYOmWjT0r93li40Uj6ws5q7WTxmWc+h5w==
-X-Received: by 2002:a2e:2993:: with SMTP id p19mr53220336ljp.202.1561405743303;
-        Mon, 24 Jun 2019 12:49:03 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id t4sm575348ljh.9.2019.06.24.12.49.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 12:49:02 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id x25so13837070ljh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:49:02 -0700 (PDT)
-X-Received: by 2002:a2e:95d5:: with SMTP id y21mr64392011ljh.84.1561405741968;
- Mon, 24 Jun 2019 12:49:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org>
- <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org> <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
- <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org> <alpine.DEB.2.21.1906221523340.5503@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1906231448540.32342@nanos.tec.linutronix.de> <098de4c3-5f71-f84d-8b49-d2f43e18ed91@alvarezp.org>
-In-Reply-To: <098de4c3-5f71-f84d-8b49-d2f43e18ed91@alvarezp.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 25 Jun 2019 03:48:45 +0800
-X-Gmail-Original-Message-ID: <CAHk-=wgwKVnod6a030iRDWTbkV_no+ggRzMUFAws0iEbYe=jqw@mail.gmail.com>
-Message-ID: <CAHk-=wgwKVnod6a030iRDWTbkV_no+ggRzMUFAws0iEbYe=jqw@mail.gmail.com>
-Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
-To:     Octavio Alvarez <octallk1@alvarezp.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiang Biao <jiang.biao2@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dwFqV91KqH1mK3/9wT2wWG2wDV0aDU1ov+CsBgMWwUE=;
+        b=MiXfzccJ5XTdcIROwckRWdv/5U9ZCfbiDRJa8IMIdmaZJwA4ncuYYDCRnweDpx5YSo
+         d/8VDRvNIqbDrqeo2ypGp5OoNTjpUFyDc1bZpMUfqofrVuR7ZP7APehVp+O6jKWcx0Xz
+         rnZwW4E5ciDVaL7U2T9u3/u+dM6FYQQHkcwBHZyXtdGGVGcjgYpTuaAY51muEBmA0LFm
+         UoRLD/NL6YvpsFUC2nE1Fzx++gY0nCz9vY8ySiq3HWC+5E/JQXwZGqKSNgHQfhS+NoaM
+         HM+P3L0VBWrrpDg7ZZtZtIwGTMhf5Bf073npjda8fz2O2Q2sU4VKF1ChjMetD6InQnmA
+         S8ww==
+X-Gm-Message-State: APjAAAXH0JneRfX/a+F0AQTSEZC6nZQJyxo4XshuWY8qKdGnBosy+NQw
+        q0Ga9RRF6rhFd6+YBsZzpSJsh/R4r4U=
+X-Google-Smtp-Source: APXvYqzaURlUIDNW/F4nWEPzG6zzTznkqS21+reIy8WqS0zn3dfgfRnGgBpOQfK1xpINj35aHy63iw==
+X-Received: by 2002:a17:902:e582:: with SMTP id cl2mr135278814plb.60.1561405753588;
+        Mon, 24 Jun 2019 12:49:13 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id v3sm7957031pfm.188.2019.06.24.12.49.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 12:49:12 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v6 0/5] DMA-BUF Heaps (destaging ION)
+Date:   Mon, 24 Jun 2019 19:49:03 +0000
+Message-Id: <20190624194908.121273-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 1:08 AM Octavio Alvarez <octallk1@alvarezp.org> wrote:
->
-> If I boot regularly (disable_msi not set) and then do modprobe -r sky2;
-> modprobe sky2 disable_msi=1, the problem stays (when back from
-> hibernation, the NIC does not work).
+Here is another pass at the dma-buf heaps patchset Andrew and I
+have been working on which tries to destage a fair chunk of ION
+functionality.
 
-Side note: some distros end up unloading and reloading modules over suspend.
+The patchset implements per-heap devices which can be opened
+directly and then an ioctl is used to allocate a dmabuf from the
+heap.
 
-I wonder if perhaps your system does that, and then when it resumes it
-has reloaded the sky2 driver, but without your manual "disable_msi=1"?
+The interface is similar, but much simpler then IONs, only
+providing an ALLOC ioctl.
 
-Because it sounds odd that it would work with the kernel command line
-but not manually, and so I wonder if perhaps there's a hidden module
-unload/load that causes that second case..
+Also, I've provided relatively simple system and cma heaps.
 
-              Linus
+I've booted and tested these patches with AOSP on the HiKey960
+using the kernel tree here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+
+And the userspace changes here:
+  https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+
+Compared to ION, this patchset is missing the system-contig,
+carveout and chunk heaps, as I don't have a device that uses
+those, so I'm unable to do much useful validation there.
+Additionally we have no upstream users of chunk or carveout,
+and the system-contig has been deprecated in the common/andoid-*
+kernels, so this should be ok.
+
+I've also removed the stats accounting for now, since any such
+accounting should be implemented by dma-buf core or the heaps
+themselves.
+
+
+New in v6:
+* Number of cleanups and error path fixes suggested by Brian Starkey,
+  many thanks for his close review and suggestions!
+
+
+Outstanding concerns:
+* Need to better understand various secure heap implementations.
+  Some concern that heap private flags will be needed, but its
+  also possible that dma-buf heaps can't solve everyone's needs,
+  in which case, a vendor's secure buffer driver can implement
+  their own dma-buf exporter. So I'm not too worried here.
+
+Thoughts and feedback would be greatly appreciated!
+
+thanks
+-john
+
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: dri-devel@lists.freedesktop.org
+
+Andrew F. Davis (1):
+  dma-buf: Add dma-buf heaps framework
+
+John Stultz (4):
+  dma-buf: heaps: Add heap helpers
+  dma-buf: heaps: Add system heap to dmabuf heaps
+  dma-buf: heaps: Add CMA heap to dmabuf heaps
+  kselftests: Add dma-heap test
+
+ MAINTAINERS                                   |  18 ++
+ drivers/dma-buf/Kconfig                       |  10 +
+ drivers/dma-buf/Makefile                      |   2 +
+ drivers/dma-buf/dma-heap.c                    | 249 +++++++++++++++++
+ drivers/dma-buf/heaps/Kconfig                 |  14 +
+ drivers/dma-buf/heaps/Makefile                |   4 +
+ drivers/dma-buf/heaps/cma_heap.c              | 169 +++++++++++
+ drivers/dma-buf/heaps/heap-helpers.c          | 262 ++++++++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.h          |  54 ++++
+ drivers/dma-buf/heaps/system_heap.c           | 121 ++++++++
+ include/linux/dma-heap.h                      |  59 ++++
+ include/uapi/linux/dma-heap.h                 |  55 ++++
+ tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
+ .../selftests/dmabuf-heaps/dmabuf-heap.c      | 234 ++++++++++++++++
+ 14 files changed, 1260 insertions(+)
+ create mode 100644 drivers/dma-buf/dma-heap.c
+ create mode 100644 drivers/dma-buf/heaps/Kconfig
+ create mode 100644 drivers/dma-buf/heaps/Makefile
+ create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+ create mode 100644 drivers/dma-buf/heaps/system_heap.c
+ create mode 100644 include/linux/dma-heap.h
+ create mode 100644 include/uapi/linux/dma-heap.h
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+
+-- 
+2.17.1
+
