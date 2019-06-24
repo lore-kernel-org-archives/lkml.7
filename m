@@ -2,129 +2,109 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E16C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748D420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbt8OgtQ"
+	by mail.kernel.org (Postfix) with ESMTP id B585A20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbfFXQUR (ORCPT
+        id S1731933AbfFXQUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:20:17 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39387 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfFXQUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:20:16 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so10184697qkd.6;
-        Mon, 24 Jun 2019 09:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F8G1ZU8aLmBB851d3XszgyNFlWq4phgeEtPxU6njY4Y=;
-        b=gbt8OgtQzgv/jH0rf8KkXB0a5vX2itANSwBh6Ctlu/q6iJtAWGPd1Pqc5JYPCcbdPG
-         ZHzNUK0dYLCS4na219eqKiIUa1NtAx0MqvC1FmBIFIZDQBdl5RPBfHB5VGA8s8GjUqPh
-         +XB5Pgy4j2SMBcWiNQ011RuaJxwMYNcUWejXiqD+i/gsw+p4Mirz0Hgc8sK0ejLbqimb
-         RF1OrUvx4RsQM85tLI0O+OrEu2M9PAxttIfI8PZPYDY/U9AhL+xRC7a9QN8Cxldl7aPO
-         qNpWMHf/D8nHFrsYnSis6JMhcdg7o8yjaRTdJrkVl+YAn5af9MyBTv5OJt0x//Gd1/Z8
-         hRAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F8G1ZU8aLmBB851d3XszgyNFlWq4phgeEtPxU6njY4Y=;
-        b=DHumLIZ0ZxRYJHcyn6tzlhDSiJ5IdP2IYCpi9uAm4UFsoJdMSgHG8HF/VXEw6Autwy
-         8lRuAo0nf+WNFaSPa/jIu+CuuP5W7bI4+IwUNU89Jo76pcA1H4U3RoCmEOONxv46spTy
-         A9MUI6AsEanl2SB/sz9AiZJ/UhQwitwyEzoibtTY1TyO2v/F1RMTL1QaA1B42ZBd+obC
-         YofbI4b4TNYGrE7Z96pabajF32muGREFtGcbAgF0kf9CyANkhWrPbHx2Un438tn2x9aX
-         MypBqnXsP+c56bn/7rhWjxMMzosQtKJh3ts2DIlfgLpBTbJWs9pYDqJSJllSwU92ns2p
-         sVaA==
-X-Gm-Message-State: APjAAAWRKwSj/4CmGmyy+y2BaifYXpX/GM5b+oJ+oLLrRMm7LJATcFQv
-        ijtWofYWxrDTTIuW67+GIRQ=
-X-Google-Smtp-Source: APXvYqzE2RTS/1lKwqd40dzMd8XsVBX00jpPN0aKk3Yc2XPJlwzdJ9osP0igg2X2h1+Wlvfr5M+wAg==
-X-Received: by 2002:a37:7cf:: with SMTP id 198mr18037508qkh.450.1561393215159;
-        Mon, 24 Jun 2019 09:20:15 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id r17sm5950946qtf.26.2019.06.24.09.20.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 09:20:14 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm/a3xx: remove TPL1 regs from snapshot
-Date:   Mon, 24 Jun 2019 09:19:54 -0700
-Message-Id: <20190624162008.21744-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 24 Jun 2019 12:20:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:54258 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfFXQUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:20:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03E392B;
+        Mon, 24 Jun 2019 09:20:29 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFDC83F71E;
+        Mon, 24 Jun 2019 09:20:25 -0700 (PDT)
+Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Will Deacon <will.deacon@arm.com>, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-arch@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Peter Collingbourne <pcc@google.com>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Huw Davies <huw@codeweavers.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906241613280.32342@nanos.tec.linutronix.de>
+ <20190624142346.pxljv3m4npatdiyk@shell.armlinux.org.uk>
+ <20190624144924.GE29120@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <f631ecc1-662c-f652-324f-955ee3be23b0@arm.com>
+Date:   Mon, 24 Jun 2019 17:20:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190624144924.GE29120@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On 24/06/2019 15:49, Catalin Marinas wrote:
+> On Mon, Jun 24, 2019 at 03:23:46PM +0100, Russell King wrote:
+>> On Mon, Jun 24, 2019 at 04:18:28PM +0200, Thomas Gleixner wrote:
+>>> Vincenzo,
+>>>
+>>> On Mon, 24 Jun 2019, Thomas Gleixner wrote:
+>>>
+>>>> I did not merge the ARM and MIPS parts as they lack any form of
+>>>> acknowlegment from their maintainers. Please talk to those folks. If they
+>>>> ack/review the changes then I can pick them up and they go into 5.3 or they
+>>>> have to go in a later cycle. Nevertheless it was well worth the trouble to
+>>>> have those conversions done to confirm that the new common library fits a
+>>>> bunch of different architectures.
+>>>
+>>> I talked to Russell King and he suggested to file the ARM parts into his
+>>> patch system and he'll pick them up after 5.3-rc1.
+>>>
+>>>    https://www.arm.linux.org.uk/developer/patches/
+>>>
+>>> I paged out how to deal with it, but you'll surely manage :)
+>>
+>> Easy way: ask git to add the "KernelVersion" tag as a header to the
+>> email using --add-header to e.g. git format-patch, and just mail them
+>> to patches@armlinux.org.uk
+> 
+> Although I haven't send patches to Russell in a while, I still have a
+> git alias in my .gitconfig (only works with one patch at a time IIRC,
+> sending multiple patches may arrive in a different order):
+> 
+> [alias]
+> 	send-rmk-email = !git send-email --add-header=\"KernelVersion: $(git describe --abbrev=0)\" --no-thread --suppress-cc=all --to="patches@arm.linux.org.uk"
+> 
 
-These regs are write-only, and the hw throws a hissy-fit (ie. reboots)
-when we try to read them for GPU state snapshot, in response to a GPU
-hang.  It is rather impolite when GPU recovery triggers an insta-
-reboot, so lets remove the TPL1 registers from the snapshot.
+Thanks to all for the hints and the support. I will send the patches to Russel
+as agreed.
 
-Fixes: 7198e6b03155 drm/msm: add a3xx gpu support
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index c3b4bc6e4155..13078c4975ff 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -395,19 +395,17 @@ static const unsigned int a3xx_registers[] = {
- 	0x2200, 0x2212, 0x2214, 0x2217, 0x221a, 0x221a, 0x2240, 0x227e,
- 	0x2280, 0x228b, 0x22c0, 0x22c0, 0x22c4, 0x22ce, 0x22d0, 0x22d8,
- 	0x22df, 0x22e6, 0x22e8, 0x22e9, 0x22ec, 0x22ec, 0x22f0, 0x22f7,
--	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2348, 0x2349, 0x2350, 0x2356,
--	0x2360, 0x2360, 0x2440, 0x2440, 0x2444, 0x2444, 0x2448, 0x244d,
--	0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470, 0x2472, 0x2472,
--	0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3, 0x24e4, 0x24ef,
--	0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e, 0x2510, 0x2511,
--	0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea, 0x25ec, 0x25ed,
--	0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617, 0x261a, 0x261a,
--	0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0, 0x26c4, 0x26ce,
--	0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9, 0x26ec, 0x26ec,
--	0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743, 0x2748, 0x2749,
--	0x2750, 0x2756, 0x2760, 0x2760, 0x300c, 0x300e, 0x301c, 0x301d,
--	0x302a, 0x302a, 0x302c, 0x302d, 0x3030, 0x3031, 0x3034, 0x3036,
--	0x303c, 0x303c, 0x305e, 0x305f,
-+	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2440, 0x2440, 0x2444, 0x2444,
-+	0x2448, 0x244d, 0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470,
-+	0x2472, 0x2472, 0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3,
-+	0x24e4, 0x24ef, 0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e,
-+	0x2510, 0x2511, 0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea,
-+	0x25ec, 0x25ed, 0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617,
-+	0x261a, 0x261a, 0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0,
-+	0x26c4, 0x26ce, 0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9,
-+	0x26ec, 0x26ec, 0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743,
-+	0x300c, 0x300e, 0x301c, 0x301d, 0x302a, 0x302a, 0x302c, 0x302d,
-+	0x3030, 0x3031, 0x3034, 0x3036, 0x303c, 0x303c, 0x305e, 0x305f,
- 	~0   /* sentinel */
- };
- 
 -- 
-2.20.1
-
+Regards,
+Vincenzo
