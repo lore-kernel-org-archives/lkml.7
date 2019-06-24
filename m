@@ -2,215 +2,130 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D4C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C3C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A83E212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EE8212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Aw1qVF90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfFXOJK (ORCPT
+        id S1730013AbfFXOJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:09:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40458 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbfFXOJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:09:09 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D095710C94;
-        Mon, 24 Jun 2019 14:09:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AAA15D9C5;
-        Mon, 24 Jun 2019 14:09:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 02/25] fsinfo: Add syscalls to other arches [ver #14]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 24 Jun 2019 15:09:05 +0100
-Message-ID: <156138534520.25627.6299627770679918852.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
+        Mon, 24 Jun 2019 10:09:14 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:43886 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731756AbfFXOJM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:09:12 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OE8ZFb004224;
+        Mon, 24 Jun 2019 10:08:48 -0400
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2057.outbound.protection.outlook.com [104.47.49.57])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2t9e63dupf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 10:08:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tbtYM6TFQdOxKuLzKw5MOPPqicJtbW7agMipMrUmpEE=;
+ b=Aw1qVF90vKKQBnGt21mkS05mR2Y4HUbMwTxOnlJx+RiaLXcNkMdraFmpxoLH9BuIH2JBeRijUsHLdfrMbiWaSpjMPmkfTfiOc2g17wSMTM+NzL9cyiR6xGwtgqjwO8dRBik7OqRdymW5QuuIjpBIImVJetTqvhCDaEeiH7MY2Ps=
+Received: from DM6PR03MB3658.namprd03.prod.outlook.com (20.176.85.151) by
+ DM6PR03MB4412.namprd03.prod.outlook.com (20.178.25.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Mon, 24 Jun 2019 14:08:46 +0000
+Received: from DM6PR03MB3658.namprd03.prod.outlook.com
+ ([fe80::3d04:7ea3:14e6:de91]) by DM6PR03MB3658.namprd03.prod.outlook.com
+ ([fe80::3d04:7ea3:14e6:de91%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 14:08:46 +0000
+From:   "Caprioru, Mircea" <Mircea.Caprioru@analog.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V3 4/5] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+Thread-Topic: [PATCH V3 4/5] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+Thread-Index: AQHVKmQnaX7c8Zkm3k6sgnGGJOqaBKaq0qgAgAAFKwA=
+Date:   Mon, 24 Jun 2019 14:08:46 +0000
+Message-ID: <6d9ae527d98c77812d5d261419db3e1ddd5e0e2e.camel@analog.com>
+References: <20190624080845.18537-1-mircea.caprioru@analog.com>
+         <20190624080845.18537-4-mircea.caprioru@analog.com>
+         <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5b438869-c3c2-42a6-3a6c-08d6f8ad794e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR03MB4412;
+x-ms-traffictypediagnostic: DM6PR03MB4412:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR03MB4412648EA90994299E985C1581E00@DM6PR03MB4412.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(54534003)(199004)(189003)(2616005)(68736007)(8936002)(2906002)(316002)(186003)(4326008)(81156014)(81166006)(3846002)(86362001)(8676002)(54906003)(66066001)(102836004)(53546011)(6506007)(26005)(229853002)(76176011)(6116002)(99286004)(53936002)(36756003)(66946007)(66476007)(66556008)(64756008)(66446008)(76116006)(73956011)(91956017)(6436002)(25786009)(6486002)(118296001)(6512007)(71190400001)(71200400001)(486006)(6246003)(5660300002)(14454004)(305945005)(478600001)(446003)(72206003)(256004)(11346002)(476003)(7736002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4412;H:DM6PR03MB3658.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EIuw3d45G2dYf1vgG8YcAa+RlsJgnpv64iEGHIub1r/jy93mM2Pb1hxPCIqYzU2qGd/KJ9XgBdTBge4a7EpPFULoCG6pTSC8wz81O4J9vAiv/uew7wBHb8M5+VWf7JQixp7GYUB1RiYwCs6oHxRBhpo6pAbDkkVYhI6qSwdzCoYvnXKLags2Ed1B5y3+fn/4aaicLyixnBYSSanraiHfC5VRv8JL9HjNTBpMtnkrRfa9nQMqKj3IHodAa4ZIeb5JO0VCe5WBC35+/vFiZp7SmTLXASQXatTnfqRpLx8NkvpRT2TvvX6xJUjwKJbiklOg0+DhSQvb04YojYONLZHFw3vb9BKeu1PbUKSTtSi3+Pz6U5GvubAzVVoPLZu9E7IwTEhZbCM+sTjxidHESXSpjbTsca+yMbu1KOtU2doH5hg=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 24 Jun 2019 14:09:08 +0000 (UTC)
+Content-ID: <9548103C6EA45F488CC1EB5B5F0929A9@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b438869-c3c2-42a6-3a6c-08d6f8ad794e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:08:46.5945
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Mircea.Caprioru@analog.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4412
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the fsinfo syscall to the other arches.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
- arch/arm/tools/syscall.tbl                  |    1 +
- arch/arm64/include/asm/unistd.h             |    2 +-
- arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
- arch/s390/kernel/syscalls/syscall.tbl       |    1 +
- arch/sh/kernel/syscalls/syscall.tbl         |    1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
- 15 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 9e7704e44f6d..624d01c3c8eb 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -473,3 +473,4 @@
- 541	common	fsconfig			sys_fsconfig
- 542	common	fsmount				sys_fsmount
- 543	common	fspick				sys_fspick
-+544	common	fsinfo				sys_fsinfo
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index aaf479a9e92d..ad608b49808c 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -447,3 +447,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 70e6882853c0..e8f7d95a1481 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -44,7 +44,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		434
-+#define __NR_compat_syscalls		435
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index e01df3f2f80d..68314763ad16 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -354,3 +354,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 7e3d0734b2f3..ee73a7534b1b 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 26339e417695..7bc067f4b713 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -439,3 +439,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 0e2dd68ade57..29b76bd67cc0 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -372,3 +372,4 @@
- 431	n32	fsconfig			sys_fsconfig
- 432	n32	fsmount				sys_fsmount
- 433	n32	fspick				sys_fspick
-+434	n32	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 5eebfa0d155c..349fb30bb8b5 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -348,3 +348,4 @@
- 431	n64	fsconfig			sys_fsconfig
- 432	n64	fsmount				sys_fsmount
- 433	n64	fspick				sys_fspick
-+434	n64	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 3cc1374e02d0..71057426b503 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -421,3 +421,4 @@
- 431	o32	fsconfig			sys_fsconfig
- 432	o32	fsmount				sys_fsmount
- 433	o32	fspick				sys_fspick
-+434	o32	fsinfo				sys_fsinfo
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index c9e377d59232..32cff48a1ebd 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 103655d84b4b..e5755eb6fb84 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -515,3 +515,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index e822b2964a83..bcd54116e107 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -436,3 +436,4 @@
- 431  common	fsconfig		sys_fsconfig			sys_fsconfig
- 432  common	fsmount			sys_fsmount			sys_fsmount
- 433  common	fspick			sys_fspick			sys_fspick
-+434	common	fsinfo			sys_fsinfo			sys_fsinfo
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 016a727d4357..0320a5c63cbd 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -436,3 +436,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index e047480b1605..f81b1f9402bd 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -479,3 +479,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 5fa0ee1c8e00..729795148850 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -404,3 +404,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+434	common	fsinfo				sys_fsinfo
-
+T24gTW9uLCAyMDE5LTA2LTI0IGF0IDA3OjUwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gDQo+IE9uIE1vbiwgSnVuIDI0LCAyMDE5IGF0IDI6MDkgQU0gTWly
+Y2VhIENhcHJpb3J1DQo+IDxtaXJjZWEuY2FwcmlvcnVAYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4g
+DQo+ID4gQ29udmVydCBBRDcxMjQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiB0byBZQU1MIGZvcm1h
+dC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXJjZWEgQ2FwcmlvcnUgPG1pcmNlYS5jYXBy
+aW9ydUBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZWxvZyB2MjoNCj4gPiAt
+IG1vZGlmaWVkIFNQRFggbGljZW5zZSB0byBHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZQ0KPiA+IC0g
+YWRkZWQgcmVnZXggZm9yIGEgcmFuZ2UgZnJvbSAwIHRvIDE1DQo+ID4gLSBhZGRlZCBtaW5pbXVt
+IGFuZCBtYXhpbXVtIGNvbnN0cmFpbnRzIGZvciByZWcgcHJvcGVydHkNCj4gPiAtIHNldCB0eXBl
+IGFuZCByYW5nZSBvZiB2YWx1ZXMgZm9yIGFkaSxyZWZlcmVuY2Utc2VsZWN0IHByb3BlcnR5DQo+
+ID4gLSB1c2VkIGl0ZW1zIGZvciBkaWZmLWNoYW5uZWxzIHByb3BlcnR5DQo+ID4gLSBzZXQgYmlw
+b2xhciwgYWRpLGJ1ZmZlcmVkLXBvc2l0aXZlIGFuZCBuZWdhdGl2ZSB0byB0eXBlOiBib29sZWFu
+DQo+ID4gDQo+ID4gQ2hhbmdlbG9nIHYzOg0KPiA+IC0gbW92ZWQgYWRpLGJ1ZmZlcmVkLXBvc2l0
+aXZlIGFuZCBuZWdhdGl2ZSBwcm9wZXJ0aWVzIHRvIG93biBjb21taXQNCj4gPiANCj4gPiAgLi4u
+L2JpbmRpbmdzL2lpby9hZGMvYWRpLGFkNzEyNC55YW1sICAgICAgICAgIHwgMTQ0DQo+ID4gKysr
+KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNDQgaW5zZXJ0aW9ucygrKQ0K
+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaWlvL2FkYy9hZGksYWQ3MTI0LnlhbWwNCj4gDQo+IFRoZSBzdWJqZWN0IHNheXMgJ0Nv
+bnZlcnQnLCBidXQgd2hlcmUncyB0aGUgcmVtb3ZhbCBvZiB0aGUgb2xkDQo+IGJpbmRpbmc/DQo+
+IA0KPiBSb2INCg0KWW91IGFyZSByaWdodCBJIHdhcyBub3Qgc3VyZSBpZiBJIHNob3VsZCBhbHNv
+IHJlbW92ZSB0aGUgb2xkIGJpbmRpbmcuDQpJJ2xsIGRvIGEgdjQgdG8gZGVsZXRlIGl0IGluIHRo
+aXMgcGF0Y2guDQoNClRoYW5rcywNCk1pcmNlYQ0K
