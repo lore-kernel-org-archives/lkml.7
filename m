@@ -2,233 +2,105 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33153C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E93DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD7D208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A83208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Bhigd78A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="nDmzM6de"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfFXOj4 (ORCPT
+        id S1728305AbfFXOlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:39:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38916 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfFXOjz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:39:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561387193; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2QvYrE3ls/QXOBjihXF5hG/izh16IQcN2h5MrNGxNC8=;
-        b=Bhigd78ANkGaYmYI+0oAYzU8YmsKJKpGucWHCgAFcpgfWaU3meL5LseFh10NK0JeR5KmaM
-        12aEdcqwu8iiOZlWEOUx6HTENsi+bWOCqdoD7FO+fT75BOEoG6IBkftSspiT9/Scfd69v3
-        BqpepJB6H/+J64wFIT4/1DgXmX4rXVg=
-Date:   Mon, 24 Jun 2019 16:39:46 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1561387186.20436.1@crapouillou.net>
-In-Reply-To: <20190621135608.GB11839@ulmo>
-References: <20190522163428.7078-1-paul@crapouillou.net>
-        <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
-        <20190621135608.GB11839@ulmo>
+        Mon, 24 Jun 2019 10:41:15 -0400
+Received: from m15-41.126.com ([220.181.15.41]:33066 "EHLO m15-41.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfFXOlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:41:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=+sdgh
+        JB/TLNpVA12VTC+HwIxrI+KvMHiMNktZnWRL0I=; b=nDmzM6deNuzbSwrhibezr
+        9HRUmNgQwaPkgOLR/tLJWvg9VdbeCmCCq4XWftTp7b1lvGlRvRJ/D0bnDnugkck4
+        8XL93ko6VLkMun3KxTMiCzwXnVuC1B5+HoatRWX+nt3Rq4nPQvPm+eJtjwuf+FQt
+        rvCtj0IlZWZ2L7YvigS3ng=
+Received: from liuxiang_1999$126.com ( [222.209.17.143] ) by
+ ajax-webmail-wmsvr41 (Coremail) ; Mon, 24 Jun 2019 22:38:35 +0800 (CST)
+X-Originating-IP: [222.209.17.143]
+Date:   Mon, 24 Jun 2019 22:38:35 +0800 (CST)
+From:   "Liu Xiang" <liuxiang_1999@126.com>
+To:     Tudor.Ambarus@microchip.com
+Cc:     liu.xiang6@zte.com.cn, linux-mtd@lists.infradead.org,
+        bbrezillon@kernel.org, richard@nod.at,
+        linux-kernel@vger.kernel.org, marek.vasut@gmail.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        nagasure@xilinx.com, vigneshr@ti.com
+Subject: Re:Re: [PATCH v3] mtd: spi-nor: fix nor->addr_width when its value
+ configured from SFDP does not match the actual width
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20190614(cb3344cf) Copyright (c) 2002-2019 www.mailtech.cn 126com
+In-Reply-To: <5ffc9e32-ff69-9819-7bfd-ad9f793bb629@microchip.com>
+References: <1554018157-10860-1-git-send-email-liu.xiang6@zte.com.cn>
+ <5ffc9e32-ff69-9819-7bfd-ad9f793bb629@microchip.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <675ae013.8c92.16b89eca4a9.Coremail.liuxiang_1999@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: KcqowAD3VIFs4BBduQhHAA--.19543W
+X-CM-SenderInfo: xolx5x5dqjsiqzzzqiyswou0bp/1tbi2wndsFpD9RwKmQABsd
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le ven. 21 juin 2019 =E0 15:56, Thierry Reding=20
-<thierry.reding@gmail.com> a =E9crit :
-> On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
->>  On 22/05/2019 17:34, Paul Cercueil wrote:
->>  > When the driver probes, the PWM pin is automatically configured=20
->> to its
->>  > default state, which should be the "pwm" function.
->>=20
->>  At which point in the probe... and by who?
->=20
-> The driver core will select the "default" state of a device right=20
-> before
-> calling the driver's probe, see:
->=20
-> 	drivers/base/pinctrl.c: pinctrl_bind_pins()
->=20
-> which is called from:
->=20
-> 	drivers/base/dd.c: really_probe()
->=20
->>  > However, at this
->>  > point we don't know the actual level of the pin, which may be=20
->> active or
->>  > inactive. As a result, if the driver probes without enabling the
->>  > backlight, the PWM pin might be active, and the backlight would be
->>  > lit way before being officially enabled.
->>  >
->>  > To work around this, if the probe function doesn't enable the=20
->> backlight,
->>  > the pin is set to its sleep state instead of the default one,=20
->> until the
->>  > backlight is enabled. Whenk the backlight is disabled, the pin is=20
->> reset
->>  > to its sleep state.
->>  Doesn't this workaround result in a backlight flash between=20
->> whatever enables
->>  it and the new code turning it off again?
->=20
-> Yeah, I think it would. I guess if you're very careful on how you set=20
-> up
-> the device tree you might be able to work around it. Besides the=20
-> default
-> and idle standard pinctrl states, there's also the "init" state. The
-> core will select that instead of the default state if available.=20
-> However
-> there's also pinctrl_init_done() which will try again to switch to the
-> default state after probe has finished and the driver didn't switch=20
-> away
-> from the init state.
->=20
-> So you could presumably set up the device tree such that you have=20
-> three
-> states defined: "default" would be the one where the PWM pin is=20
-> active,
-> "idle" would be used when backlight is off (PWM pin inactive) and then
-> another "init" state that would be the same as "idle" to be used=20
-> during
-> probe. During probe the driver could then switch to the "idle" state=20
-> so
-> that the pin shouldn't glitch.
-
-That's exactly what I'm doing, yes (with the minor difference that your
-"idle" state is my "sleep" state).
-
-> I'm not sure this would actually work because I think the way that
-> pinctrl handles states both "init" and "idle" would be the same=20
-> pointer
-> values and therefore pinctrl_init_done() would think the driver didn't
-> change away from the "init" state because it is the same pointer value
-> as the "idle" state that the driver selected. One way to work around
-> that would be to duplicate the "idle" state definition and associate=20
-> one
-> instance of it with the "idle" state and the other with the "init"
-> state. At that point both states should be different (different=20
-> pointer
-> values) and we'd get the init state selected automatically before=20
-> probe,
-> select "idle" during probe and then the core will leave it alone.=20
-> That's
-> of course ugly because we duplicate the pinctrl state in DT, but=20
-> perhaps
-> it's the least ugly solution.
-
-That works perfectly on my side. I didn't have to duplicate the states=20
-in DT.
-
-> Adding Linus for visibility. Perhaps he can share some insight.
->=20
-> On that note, I'm wondering if perhaps it'd make sense for pinctrl to
-> support some mode where a device would start out in idle mode. That=20
-> is,
-> where pinctrl_bind_pins() would select the "idle" mode as the default
-> before probe. With something like that we could easily support this
-> use-case without glitching.
-
-You'd still need the driver to switch back between "default" and "idle"
-states, and switching to the "idle" state in the probe is a one-liner,
-so probably not worth the trouble, unless I don't understand the whole
-picture.
-
-Thanks,
--Paul
-
-> I suppose yet another variant would be for the PWM backlight to not=20
-> use
-> any of the standard pinctrl states at all. Instead it could just=20
-> define
-> custom states, say "active" and "inactive". Looking at the code that
-> would prevent pinctrl_bind_pins() from doing anything with pinctrl
-> states and given the driver exact control over when each of the states
-> will be selected. That's somewhat suboptimal because we can't make use
-> of the pinctrl PM helpers and it'd require more boilerplate.
->=20
-> Thierry
->=20
->>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net> > ---
->>  >   drivers/video/backlight/pwm_bl.c | 9 +++++++++
->>  >   1 file changed, 9 insertions(+)
->>  >
->>  > diff --git a/drivers/video/backlight/pwm_bl.c=20
->> b/drivers/video/backlight/pwm_bl.c
->>  > index fb45f866b923..422f7903b382 100644
->>  > --- a/drivers/video/backlight/pwm_bl.c
->>  > +++ b/drivers/video/backlight/pwm_bl.c
->>  > @@ -16,6 +16,7 @@
->>  >   #include <linux/module.h>
->>  >   #include <linux/kernel.h>
->>  >   #include <linux/init.h>
->>  > +#include <linux/pinctrl/consumer.h>
->>  >   #include <linux/platform_device.h>
->>  >   #include <linux/fb.h>
->>  >   #include <linux/backlight.h>
->>  > @@ -50,6 +51,8 @@ static void pwm_backlight_power_on(struct=20
->> pwm_bl_data *pb)
->>  >   	struct pwm_state state;
->>  >   	int err;
->>  > +	pinctrl_pm_select_default_state(pb->dev);
->>  > +
->>  >   	pwm_get_state(pb->pwm, &state);
->>  >   	if (pb->enabled)
->>  >   		return;
->>  > @@ -90,6 +93,8 @@ static void pwm_backlight_power_off(struct=20
->> pwm_bl_data *pb)
->>  >   	regulator_disable(pb->power_supply);
->>  >   	pb->enabled =3D false;
->>  > +
->>  > +	pinctrl_pm_select_sleep_state(pb->dev);
->>  >   }
->>  >   static int compute_duty_cycle(struct pwm_bl_data *pb, int=20
->> brightness)
->>  > @@ -626,6 +631,10 @@ static int pwm_backlight_probe(struct=20
->> platform_device *pdev)
->>  >   	backlight_update_status(bl);
->>  >   	platform_set_drvdata(pdev, bl);
->>  > +
->>  > +	if (bl->props.power =3D=3D FB_BLANK_POWERDOWN)
->>  > +		pinctrl_pm_select_sleep_state(&pdev->dev);
->>=20
->>  Didn't backlight_update_status(bl) already do this?
->>=20
->>=20
->>  Daniel.
->>=20
->>=20
->>  > +
->>  >   	return 0;
->>  >   err_alloc:
->>  >
->>=20
-
-=
-
+CgpIaSwgdGEKClRoYW5rcyBmb3IgeW91ciBhZHZpY2UhIEkgd2lsbCBzZW5kIHRoZSB1cGRhdGUg
+cGF0Y2ggaW4gc29vbi4KCgoKCkF0IDIwMTktMDYtMjIgMTk6NDk6MjUsIFR1ZG9yLkFtYmFydXNA
+bWljcm9jaGlwLmNvbSB3cm90ZToKPkhpLCBMaXUsCj4KPk9uIDAzLzMxLzIwMTkgMTA6NDIgQU0s
+IExpdSBYaWFuZyB3cm90ZToKPgo+PiBTb21lIGlzMjVscDI1NiBnZXQgQkZQVF9EV09SRDFfQURE
+UkVTU19CWVRFU18zX09OTFkgZnJvbSBCRlBUIHRhYmxlIGZvcgo+PiBhZGRyZXNzIHdpZHRoLiBC
+dXQgaW4gYWN0dWFsIGZhY3QgdGhlIGZsYXNoIGNhbiBzdXBwb3J0IDQtYnl0ZSBhZGRyZXNzLgo+
+PiBTbyB3ZSBzaG91bGQgZml4IGl0Lgo+Cj5JdCdzIGJldHRlciB0byBiZSBpbXBlcmF0aXZlLiBT
+dWJzdGl0dXRlICJTbyB3ZSBzaG91bGQgZml4IGl0IiB3aXRoIHNvbWV0aGluZwo+bGlrZSAiVXNl
+IGEgcG9zdCBiZnB0IGZpeHVwIGhvb2sgdG8gb3ZlcndyaXRlIHRoZSBhZGRyZXNzIHdpZHRoIGFk
+dmVydGlzZWQgYnkKPnRoZSBCRlBUIi4KPgo+Pgo+Cj5XZSdsbCBuZWVkIGEgZml4ZXMgdGFnIGhl
+cmUuPiBTdWdnZXN0ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8YmJyZXppbGxvbkBrZXJuZWwub3Jn
+Pgo+PiBTdWdnZXN0ZWQtYnk6IFZpZ25lc2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT4K
+Pgo+V2hlbj8gSWYgdGhleSBkaWRuJ3QgZXhwbGljaXRseSBzdWdnZXN0ZWQgdGhpcyBhcHByb2Fj
+aCwgbGV0cyBkcm9wIHRoZSBTLWIgdGFncy4KPgo+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWGlhbmcg
+PGxpdS54aWFuZzZAenRlLmNvbS5jbj4KPj4gLS0tCj4+IAo+PiBDaGFuZ2VzIGluIHYzOgo+PiAg
+YWRkIGEgZml4dXAgZm9yIGlzMjVscDI1NiB0byBzb2x2ZSB0aGUgYWRkcmVzcyB3aWR0aCBwcm9i
+bGVtLgo+PiAKPj4gIGRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIHwgMjUgKysrKysrKysr
+KysrKysrKysrKysrKysrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1u
+b3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+IGluZGV4IDZlMTNiYmQuLmQy
+NTJhNjYgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+ICsr
+KyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+IEBAIC0xNjgyLDYgKzE2ODIsMjgg
+QEAgc3RhdGljIGludCBzcjJfYml0N19xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQo+
+PiAgCQkuZmxhZ3MgPSBTUElfTk9SX05PX0ZSIHwgU1BJX1MzQU4sCj4+ICAKPj4gIHN0YXRpYyBp
+bnQKPj4gK2lzMjVscDI1Nl9wb3N0X2JmcHRfZml4dXBzKHN0cnVjdCBzcGlfbm9yICpub3IsCj4+
+ICsJCQkgICBjb25zdCBzdHJ1Y3Qgc2ZkcF9wYXJhbWV0ZXJfaGVhZGVyICpiZnB0X2hlYWRlciwK
+Pj4gKwkJCSAgIGNvbnN0IHN0cnVjdCBzZmRwX2JmcHQgKmJmcHQsCj4+ICsJCQkgICBzdHJ1Y3Qg
+c3BpX25vcl9mbGFzaF9wYXJhbWV0ZXIgKnBhcmFtcykKPj4gK3sKPj4gKwkvKgo+PiArCSAqIElT
+MjVMUDI1NiBzdXBwb3J0cyA0QiBvcGNvZGVzLgo+PiArCSAqIFVuZm9ydHVuYXRlbHksIHNvbWUg
+ZGV2aWNlcyBnZXQgQkZQVF9EV09SRDFfQUREUkVTU19CWVRFU18zX09OTFkKPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBeIHdoaWNoIGRldmljZXMsIGRpZCB5b3UgZ2V0IGEgbGlzdCBmcm9t
+IGlzc2k/Cj4KPj4gKwkgKiBmcm9tIEJGUFQgdGFibGUgZm9yIGFkZHJlc3Mgd2lkdGguIFdlIHNo
+b3VsZCBmaXggaXQuCj4KPkhvdyBhYm91dCAiSVMyNUxQMjU2IHN1cHBvcnRzIDRCIG9wY29kZXMs
+IGJ1dCB0aGUgQkZQVCBhZHZlcnRpc2VzIGEKPkJGUFRfRFdPUkQxX0FERFJFU1NfQllURVNfM19P
+TkxZIGFkZHJlc3Mgd2lkdGguIE92ZXJ3cml0ZSB0aGUgYWRkcmVzcyB3aWR0aAo+YWR2ZXJ0aXNl
+ZCBieSB0aGUgQkZQVC4iCj4KPj4gKwkgKi8KPj4gKwlpZiAoKGJmcHQtPmR3b3Jkc1tCRlBUX0RX
+T1JEKDEpXSAmIEJGUFRfRFdPUkQxX0FERFJFU1NfQllURVNfTUFTSykgPT0KPj4gKwkJQkZQVF9E
+V09SRDFfQUREUkVTU19CWVRFU18zX09OTFkpCj4+ICsJCW5vci0+YWRkcl93aWR0aCA9IDQ7Cj4+
+ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGljIHN0cnVjdCBzcGlfbm9yX2Zp
+eHVwcyBpczI1bHAyNTZfZml4dXBzID0gewo+Cj5OYWdhIHdpbGwgdXNlICJpczI1bHAyNTZfZml4
+dXBzIiBmb3IgdGhlIGlzMjV3cDI1NiB0b28sIGJ1dCBpdCdzIG5vdCB0aGUgY2FzZSB0bwo+Y2hh
+bmdlIHRoZSBuYW1lIHlldC4gQWxsIGdvb2QgaGVyZS4KPgo+SSByZWFsbHkgd2FudCB0byBoYXZl
+IHRoaXMgaW4gbmV4dCwgY2FuIEkgaGF2ZSBhbiB1cGRhdGUgaW4gdGhlIG5leHQgZmV3IGRheXM/
+Cj4KPkNoZWVycywKPnRhCg==
