@@ -2,179 +2,194 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4244C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C579C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8120A2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305E72089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bQa7w3w9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBLAGF8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfFXIxK (ORCPT
+        id S1728203AbfFXIxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:53:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46594 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXIxI (ORCPT
+        Mon, 24 Jun 2019 04:53:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45618 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfFXIxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:53:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so544277iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:53:08 -0700 (PDT)
+        Mon, 24 Jun 2019 04:53:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so12923856wre.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G8nkLyiOaKgOFrbXNHkWxjnqz5OluwUUizZDLmikCzc=;
-        b=bQa7w3w9/tWFlqTl3ELpwdzGQDB+EPZzU7W2gMufCdWT1u4LtQjwwKHj9CsaYLT4PM
-         0JG06gaRGRWkCLsd2vl1uHTSvidjZb8DMvpSe4PFcET2cf2zO+kFhYO3YFZMz7NXeqX3
-         E8UsbVgASYcuCGL2fFoPDQVWFONW9BOa5eNV8=
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pdxa+ToJ1R+2Tzesi5Xn409BT83/J4lNVYaSiLAFQ8I=;
+        b=IBLAGF8UWI0UQDG2QhhbwME/VLHe85bq1ugpqhy8WFwDucj/jSk6Q14M0Zg47eU76I
+         CkROB3VoHm5godOLkao8QrUi5HAet5fPYpZVgEMqznq5Y738QbgVo7aEmvrbyfThXWFa
+         ZiHz3VcMGlONzY0EbeTRdOeYIB+QAVJjgvQDjVScJUjffAodkXkNa8Vxj5AS8z11jBEi
+         YDfQGgN3MGk4MEyJYO6nkKVHs/mNSoZUmAJQVh3rf8h6mAgKvIPpn5ZRKIvRiWUuE6Ts
+         Iw4dB3a9n2oAqOcJUOOg6s2Yh0lmprQb8IbMq6MAyDEUPYfcaSWU6WscTki77y7K8es+
+         qJRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G8nkLyiOaKgOFrbXNHkWxjnqz5OluwUUizZDLmikCzc=;
-        b=NcHg5QXC4i8w7HvfYBTgW2zSNzyFFARNaLka7/DmuVedskn4xK2TRnoCsPeQLiHO/n
-         LFdoorvOdlc/nZ3M8z0hMRmyTJcn+7EX3DjoajUtbGW1Hd+CJacjJI58MVb3i24egDrb
-         Dxt70r41s1N68Ve7EsKb+JAimjuU/d37Fhi6C67Pf3BjcxjJBDucQntxXhmBOW2bK8SW
-         6D2ebL5cvbIzsNVqjqlkO/KYwt/ZWEN5MUNwhdeafo9A7F0TqeqC14UNa/Dide2huPyK
-         VnZdRL+eEukv/bReZ4EPe0fm/BrNnQTzQsbbFn89nP5iduBkN0aXM7k1aLhbDoIImm3P
-         z1xA==
-X-Gm-Message-State: APjAAAWKs1ANSJ94ktvGx6LX7FrnIkPN0VQRAXldDh6ynjOOxLyBdXDN
-        60q9hF4N1Em1bv7pTCctZZmHr47gtPGhmU/JO5Hj8A==
-X-Google-Smtp-Source: APXvYqwMdAYjeq4CKzrllSK9uqFTO/tWs5fwsktXXlwIZt4LNDMpnzAmyrl5/0Wg5WytuKtm3+Y47WeYvP0jfFtfIn0=
-X-Received: by 2002:a05:6602:2253:: with SMTP id o19mr16852836ioo.297.1561366387533;
- Mon, 24 Jun 2019 01:53:07 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pdxa+ToJ1R+2Tzesi5Xn409BT83/J4lNVYaSiLAFQ8I=;
+        b=cc8mIexH9FQn+D/KTkNKIyGYyPN8ylFsh5+wLyhOtssY2FcvB921UnmXKwtuuud2qy
+         w37/ieVidJxGbpxQV12njrnaGYLeDokgzPLUXCN4HIWNmXzyW0K+mTkeeOjhKMZAiAGe
+         D785KwHuBNXe9KAncml2BFW9mMWBNVwHGSh9TjQ4c76IsUIVoU6xmY/ZDV3h4cY/3tTF
+         dEpMpQ2vAuGD9PMb1yrSqHRrJJv3bMiklJC6NyQYP4mGVrCXxzeslyO8ODLg2q4RFHh1
+         aJwIlquVgPo8rNv1DbShOAFcUXp0igNMA5l8edwZnE2Swdj1XDbEttjX6ZxDCnpncUhq
+         3DoQ==
+X-Gm-Message-State: APjAAAXdwY2VLW0iRYnh6zfcWsyOS98lZIIBqLWt0oL9SavX20bVXRX7
+        +fgZfqtMn7SoX9/E1XG9s45PTblyVdo=
+X-Google-Smtp-Source: APXvYqwZEbIsAMg2iYM50ynASS+Nnx5o9w/muAnmcB6bA/m9fb4k2buyBRe03peBeeli+2Y9lUGFBg==
+X-Received: by 2002:adf:ec49:: with SMTP id w9mr38982756wrn.303.1561366410172;
+        Mon, 24 Jun 2019 01:53:30 -0700 (PDT)
+Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
+        by smtp.googlemail.com with ESMTPSA id c6sm16762575wma.25.2019.06.24.01.53.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 01:53:29 -0700 (PDT)
+Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of
+ IS_ENABLED macro
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     viresh.kumar@linaro.org
+Cc:     edubezval@gmail.com, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0ce0d1ca-154d-fca3-f739-573ecbd2b0db@linaro.org>
+Date:   Mon, 24 Jun 2019 10:53:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-4-jagan@amarulasolutions.com> <20190523203836.xy7nmte3ubyxwg27@flea>
- <CAMty3ZA2mZugso_rMy+anp1i1bSL5FtB2mAyN1v_gE3rds0LgA@mail.gmail.com> <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
-In-Reply-To: <CAGb2v67He9t3RhHJAW5ph_1Wgrj0eqRAF7Xg1Weh8Do3tBFyeQ@mail.gmail.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 24 Jun 2019 14:22:56 +0530
-Message-ID: <CAMty3ZCEz7nMmVp6D99nFRfS4n_uwLgmveRz5Dp5rCrKL9dF5Q@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v10 03/11] drm/sun4i: dsi: Fix video
- start delay computation
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190621132302.30414-1-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 2:05 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Fri, May 24, 2019 at 6:27 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Mon, May 20, 2019 at 02:33:10PM +0530, Jagan Teki wrote:
-> > > > The current code is computing vertical video start delay as
-> > > >
-> > > > delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
-> > > >
-> > > > On which the second parameter
-> > > >
-> > > > mode->vsync_end - mode->vdisplay = front porch + sync timings
-> > > >
-> > > > according to "DRM kernel-internal display mode structure" in
-> > > > include/drm/drm_modes.h
-> > > >
-> > > > With adding additional sync timings, the desired video start delay
-> > > > value as 510 for "bananapi,s070wv20-ct16" panel timings which indeed
-> > > > trigger panel flip_done timed out as:
-> > > >
-> > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > >  Modules linked in:
-> > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
-> > > >  Hardware name: Allwinner sun8i Family
-> > > >  Workqueue: events deferred_probe_work_func
-> > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
-> > > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
-> > > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
-> > > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
-> > > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
-> > > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
-> > > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
-> > > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
-> > > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
-> > > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > >  ---[ end trace 495200a78b24980e ]---
-> > > >  random: fast init done
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > >
-> > > > But the expected video start delay value is 513 which states that
-> > > > the second parameter on the computation is "front porch" value
-> > > > (no sync timings included).
-> > > >
-> > > > This is clearly confirmed from the legacy [1] and new [2] bsp codes
-> > > > that the second parameter on the video start delay is "front porch"
-> > > >
-> > > > Here is the detailed evidence for calculating front porch as per
-> > > > bsp code.
-> > > >
-> > > > vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp
-> > > > => (panel->lcd_vt) - panel->lcd_y - panel->lcd_vbp
-> > > > => (tt->ver_front_porch + lcdp->panel_info.lcd_vbp
-> > > >     + lcdp->panel_info.lcd_y) -  panel->lcd_y - panel->lcd_vbp
-> > > > => tt->ver_front_porch
-> > >
-> > > The comment on patch 1 still applies on this patch
-> >
-> > Thanks, I have responded on that. Same applies here.
->
-> So this patch fixes the misinterpretation of Allwinner's back porch value,
-> much like patch 1, but this one is for the vertical back porch. So I think
-> you should follow the same advice I gave you for patch 1.
 
-Yes, indeed I'm planning to do the same. thanks!
+Hi Viresh,
+
+On 21/06/2019 15:22, Daniel Lezcano wrote:
+> The functions stub already exist for the condition the IS_ENABLED
+> is trying to avoid.
+> 
+> Remove the IS_ENABLED macros as they are pointless.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+what about this one?
+
+> ---
+>  drivers/cpufreq/cpufreq.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 85ff958e01f1..7c72f7d3509c 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1378,8 +1378,7 @@ static int cpufreq_online(unsigned int cpu)
+>  	if (cpufreq_driver->ready)
+>  		cpufreq_driver->ready(policy);
+>  
+> -	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
+> -	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
+> +	if (cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
+>  		policy->cdev = of_cpufreq_cooling_register(policy);
+>  
+>  	pr_debug("initialization complete\n");
+> @@ -1469,8 +1468,7 @@ static int cpufreq_offline(unsigned int cpu)
+>  		goto unlock;
+>  	}
+>  
+> -	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
+> -	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
+> +	if (cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
+>  		cpufreq_cooling_unregister(policy->cdev);
+>  		policy->cdev = NULL;
+>  	}
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
