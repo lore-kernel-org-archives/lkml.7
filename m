@@ -2,126 +2,135 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B93C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBE7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4D820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="YrAMsLbO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kr2YtGPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfFXJuw (ORCPT
+        id S1728611AbfFXJvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:50:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39425 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfFXJuw (ORCPT
+        Mon, 24 Jun 2019 05:51:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45968 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFXJvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:50:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z23so12668663wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:50:50 -0700 (PDT)
+        Mon, 24 Jun 2019 05:51:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so13124462wre.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4NNAG9I48YK3TjGzt1EON8fog028feKahD05Bs4bPfI=;
-        b=YrAMsLbOFa6qo4SqNzKc2huf4LtNfLM9NRM79nctBqcc3wyIQr7pGjXSzyHyG9/6KG
-         hSYR7+PJ4EhVZNXtenb/9HKygjhaKNq8N6Clb8C6wcfQ2nVneMfTQdMNsXH5gTex4t4O
-         y4rjC3dKFXWznd5fbM4cFhCHzncG7P0dupYz1AJ/L5PCplRQkqA4Uxb+AOaB4RJifIB7
-         Vd0R+zMiFsmcKG2g2llcAFScJWQSTWkm8Llnz3IxEdzxezaDgNv0j+oi+WUDlehoVUfx
-         Gy0eRADcU7Qp9sIBNvHbGrGPLuQqul4b+UbDVBO4LJ2YClX2ovxbUwnpYmXDJY0I1TIJ
-         QQ/A==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVmGEJyQPDHoch+b6BWewi3xs9P5Dw405kJdnxVdR0M=;
+        b=kr2YtGPzC3J6vReJFFvpNeYI8P2G7TzBXWRjt4IONsx8qu/O5IbzGWf4XfDBgQEdVB
+         OwcMNpoUNmMJWeLUNXPP9RmyA8+ow5fiKS5O/1jIm0BZr6BbA0EvFB+4mT7v0ztYwMX/
+         N1BYBfnqqNwFImvTUwOhPYiMutavibtxd1AUXNdcmN5cM50gQ0Jdo3v7ruGeYi0tKgee
+         mil9VPdAstj2a8xGFV6b7ob4WfIOp47KtVIJd2xlUotkrVJgjVS/RGTD5yX7mAEh4/WY
+         Zf6frsWL+i+43vZE9v7Rv2BgOQjZ5Cyxa7uHWUslfyYBpAfOOdsMnbOR4kXeM1vy27WW
+         oUkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4NNAG9I48YK3TjGzt1EON8fog028feKahD05Bs4bPfI=;
-        b=pbNPnGzCB8tjxtkEbOY9fr/uJ+juHqGF1EBYiYXgSMJjUrustY1KMW6UrOn745ieQ6
-         BNzsf7deepZJjn09XwPIPxOo83DdVuAu/XD4FE1Pw/6ggMja+8WTOpUT/6p1EUVW/3Gf
-         zyaQQmqx1a6d1YGfWWYsdHBu1ScaldoEhx38w2ODpZb4qXzOaOONL3afdzM1s1vYxyiE
-         fUVeVuLRcPMYjYOIvuXAENLOqRYGAc0VGymjmIxrQ2ujKFWzG2Ombp+z06+8QhJT8X6R
-         Vbo2ODI9UBE1z4fwSXw9AHDd5XTuToY4SYdcItT6sxMIkKiU5jUZcyJPGe64OAKCWfIx
-         pn7g==
-X-Gm-Message-State: APjAAAX7mdgBgJMUWxSltHSzK1LbDKgOUIapmJCjyGRLA9fwqD/Tc1zJ
-        YYqATvRyHuw1AQ9RXywSCVmpjp1kGoaWHw==
-X-Google-Smtp-Source: APXvYqyShlMqnwZgT9Ce0Dr4d8PaoHyu+NJgeYFWEmHFnHgaWVaqpcpV8RV7C88/2eW9vklXON7kfg==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr15612703wma.164.1561369849990;
-        Mon, 24 Jun 2019 02:50:49 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id r12sm11097613wrt.95.2019.06.24.02.50.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 02:50:49 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:50:48 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] samples: make pidfd-metadata fail gracefully on
- older kernels
-Message-ID: <20190624095047.2ixebkmurvv4qjrk@brauner.io>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
- <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
- <20190621170613.GA26182@altlinux.org>
- <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
- <20190623112717.GA20697@altlinux.org>
- <20190623112800.GB20697@altlinux.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVmGEJyQPDHoch+b6BWewi3xs9P5Dw405kJdnxVdR0M=;
+        b=Gr0q57dR6tZQ/gy7BoD/kpa3tDMPzbqYad3Y4dPSTN52kEyN771S++dRYOjCYRTMgh
+         zmtbJJSBMkj37FBlVH4fNSDkc1X7MH+pN50UK4J0dUbFk4G6lE6oUhGz5JSnB2bRiE9G
+         WToj7/LflOmhGmqdXtaMfI+qoI+WqPTqgH36RSD3DTcgzQ/bMLNufFrCYkr5ihZMTwuB
+         z3Rs1wsmz8iRYpOp7g12QQ4gHxD/GZYqpYNFvWxvyrRbYU4Qk40dqRyqDs0KbYPnYd47
+         S639A1tO1oq7+PtAMMmdY3PGv4Ou9SRZ7Me+ij3amVGQXfSrxVNN1J6MdpSc/Cqwn0dg
+         V2MQ==
+X-Gm-Message-State: APjAAAWTu2D0INeIxVhEG4DclLMUS+oip22iq8x7/mxLB8Sicb0OdoOD
+        7VlSjpC3AN9F7hIn8PePjRBQ5A==
+X-Google-Smtp-Source: APXvYqwOYNWFj4G2lFccqRsQzHMY3FxP9ZPFXZjzlJFp4+nV2YP4HV6nLizVMISKYY8c9e+bP8227A==
+X-Received: by 2002:adf:df0b:: with SMTP id y11mr47776110wrl.176.1561369859479;
+        Mon, 24 Jun 2019 02:50:59 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id y17sm17364483wrg.18.2019.06.24.02.50.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 02:50:58 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v8 0/2] clocksource: davinci-timer: new driver
+Date:   Mon, 24 Jun 2019 11:50:54 +0200
+Message-Id: <20190624095056.21296-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190623112800.GB20697@altlinux.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 02:28:00PM +0300, Dmitry V. Levin wrote:
-> Initialize pidfd to an invalid descriptor, to fail gracefully on
-> those kernels that do not implement CLONE_PIDFD and leave pidfd
-> unchanged.
-> 
-> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Reviewed-by: Christian Brauner <christian@brauner.io>
+Now that we have an agreement on the driver and only minor issues are left
+to fix, I'm dropping the RFC tag and continuing the numbering from before
+RFCs.
 
-Thank you Dmitry, queueing this up for rc7.
+This is the davinci clocksource driver but it with a sparse warning fixed
+and with a small tweak to kzalloc() call.
 
-> ---
->  samples/pidfd/pidfd-metadata.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
-> index 14b454448429..c459155daf9a 100644
-> --- a/samples/pidfd/pidfd-metadata.c
-> +++ b/samples/pidfd/pidfd-metadata.c
-> @@ -83,7 +83,7 @@ static int pidfd_metadata_fd(pid_t pid, int pidfd)
->  
->  int main(int argc, char *argv[])
->  {
-> -	int pidfd = 0, ret = EXIT_FAILURE;
-> +	int pidfd = -1, ret = EXIT_FAILURE;
->  	char buf[4096] = { 0 };
->  	pid_t pid;
->  	int procfd, statusfd;
-> @@ -91,7 +91,11 @@ int main(int argc, char *argv[])
->  
->  	pid = pidfd_clone(CLONE_PIDFD, &pidfd);
->  	if (pid < 0)
-> -		exit(ret);
-> +		err(ret, "CLONE_PIDFD");
-> +	if (pidfd == -1) {
-> +		warnx("CLONE_PIDFD is not supported by the kernel");
-> +		goto out;
-> +	}
->  
->  	procfd = pidfd_metadata_fd(pid, pidfd);
->  	close(pidfd);
-> -- 
-> ldv
+RFC history:
+
+v1 -> v2:
+- changed the format of the copyright notice
+- removed all mentiones of the periodic timer setting
+- added caching of the TCR register value so that its updating doesn't
+  require a read
+- split the timer configuration for clock events into the
+  set_state_oneshot() and set_state_shutdown() callbacks
+
+v2 -> v3:
+- tim34, if used, should run in periodic mode for clocksource, now fixed
+- dropped all the configuration variables from struct davinci_clockevent
+  as clockevent always uses tim12
+- dropped caching of the TCR register with the following reasoning: on
+  systems using tim34 for clocksource, the TCR register is only touched
+  by the clock driver and we know that we need to keep tim34 in periodic
+  mode; on da830 the RTOS running on the DSP may modify the TCR register
+  but we on the other hand never change its settings when only using tim12
+- subsequently the whole routine for TCR updating was dropped
+- dropped the shift variable from most places
+- added separate routines for initializing clocksource for da830 and all
+  other systems
+- sprinkled a bunch of comments all over the driver to explain things
+  that caused confusion before
+
+Changes since last RFC:
+
+- fixed the following sparse warning:
+
+>> drivers/clocksource/timer-davinci.c:198:14: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected void [noderef] <asn:2> *base @@    got oderef] <asn:2> *base @@
+>> drivers/clocksource/timer-davinci.c:198:14: sparse:    expected void [noderef] <asn:2> *base
+>> drivers/clocksource/timer-davinci.c:198:14: sparse:    got struct resource *
+
+- added the __GFP_NOFAIL flag to kzalloc() call so that we don't get warnings
+  about not freeing the memory later
+
+Bartosz Golaszewski (2):
+  clocksource: davinci-timer: add support for clockevents
+  clocksource: timer-davinci: add support for clocksource
+
+ drivers/clocksource/Kconfig         |   5 +
+ drivers/clocksource/Makefile        |   1 +
+ drivers/clocksource/timer-davinci.c | 369 ++++++++++++++++++++++++++++
+ include/clocksource/timer-davinci.h |  44 ++++
+ 4 files changed, 419 insertions(+)
+ create mode 100644 drivers/clocksource/timer-davinci.c
+ create mode 100644 include/clocksource/timer-davinci.h
+
+-- 
+2.21.0
+
