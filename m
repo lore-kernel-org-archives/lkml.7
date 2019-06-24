@@ -2,111 +2,97 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E393C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54C7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE162146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561382496;
-	bh=9ELmp3ckM1SNaxjhHehS21dBJzYbmjQUXzH1W0gDRd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h4qUeoAOhCt5SHofkb3ca6JYhYtfRqYQrIp6KEdCIhppCIikG2p2zkVkanNKLb3is
-	 sbeH9wgdEyVRzXoWv5B4G0rhJqW/o8AmhIvma0/k2BfcYvu7AlbGnf1C5L3kYu89fC
-	 ydrP92ojjpkqTUSVesT7m+z2xMm7Ywa/PjsIaZ9M=
+	by mail.kernel.org (Postfix) with ESMTP id A9C97204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y9x1+Nca";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U6n0smKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfFXNVg (ORCPT
+        id S1730862AbfFXNWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfFXNVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:21:35 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        Mon, 24 Jun 2019 09:22:37 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39162 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbfFXNWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:22:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0736E60F3A; Mon, 24 Jun 2019 13:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561382556;
+        bh=/MhzFPrOnJsUwbR+A+aF2D34pmO0qEliUUfT/mjNyNs=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=Y9x1+NcaLtpIN7gPioOPg/8z8wwHa2FSqJtAgONCDtRTeyGCQZ+o9HPn4XkND86hE
+         raV9/MPJ8zG4zkt2IK+lkHMTE3Ja+9vBME185EMC03/xg+yT9Ll7ZpZbmdl34sYY4C
+         patxw1w+WtWHvmIhxnCmxqxzj2YzZLr+AUReCzGA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48C92133F;
-        Mon, 24 Jun 2019 13:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561382494;
-        bh=9ELmp3ckM1SNaxjhHehS21dBJzYbmjQUXzH1W0gDRd4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eDt6mjboezKiMPi593uwLjkuZhgMZpY9mcTV9T6q5lXacg1nyN2aPv747AJtlrKFI
-         Sgv5uLIFoA0URSp+YDVd2ZzylWbFIxFdUAOBKWS73kO2diXRFrmu9n4PhkmGUayWJE
-         AgdIbj45lYu0/YFzxaxVT32ITEnUa35TY5Kcr1KQ=
-Date:   Mon, 24 Jun 2019 14:21:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     jinho lim <jordan.lim@samsung.com>
-Cc:     will.deacon@arm.com, mark.rutland@arm.com,
-        anshuman.khandual@arm.com, marc.zyngier@arm.com,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        seroto7@gmail.com, ebiederm@xmission.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: rename dump_instr as dump_kernel_instr
-Message-ID: <20190624132129.4c772nkjbrilxtcy@willie-the-truck>
-References: <CGME20190620065254epcas1p48539060e94433cc254a1650cdc359ac4@epcas1p4.samsung.com>
- <20190620065249.24112-1-jordan.lim@samsung.com>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D6B7615AD;
+        Mon, 24 Jun 2019 13:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561382554;
+        bh=/MhzFPrOnJsUwbR+A+aF2D34pmO0qEliUUfT/mjNyNs=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=U6n0smKxOy260RvyjFc69NoBQy+7qpriFKg9Nwkc5Kx9v4vPaoSVIeKW7gRhbeofr
+         n1kShrSS+zkt0YsbIeA4sbwHG+O7mIiTRVdSo9vHVgriFsCGcaQ5BZBwJafPRJOlPA
+         /oVPB1KWtQnXL0wA33EoYCLN+WX3ZV9uT0nZGpCo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D6B7615AD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620065249.24112-1-jordan.lim@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190614171713.89262-1-nhuck@google.com>
+References: <20190614171713.89262-1-nhuck@google.com>
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190624132236.0736E60F3A@smtp.codeaurora.org>
+Date:   Mon, 24 Jun 2019 13:22:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 03:52:49PM +0900, jinho lim wrote:
-> [v2]
+Nathan Huckleberry <nhuck@google.com> wrote:
 
-The version information is not usually part of the commit message. Please
-drop that...
-
-> dump_kernel_instr does not work for user mode.
-> rename dump_instr function and remove __dump_instr.
-
-... and rewrite this so it explains the problem that you're solving.
-
-> Signed-off-by: jinho lim <jordan.lim@samsung.com>
-> ---
+> Clang produces the following warning
 > 
-> Thanks for review, I rename dump_instr function and merge __dump_instr in it.
+> drivers/net/wireless/ti/wl18xx/main.c:1850:43: warning: unused variable
+> 'wl18xx_iface_ap_cl_limits' [-Wunused-const-variable] static const struct
+> ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = { ^
+> drivers/net/wireless/ti/wl18xx/main.c:1869:43: warning: unused variable
+> 'wl18xx_iface_ap_go_limits' [-Wunused-const-variable] static const struct
+> ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = { ^
 > 
->  arch/arm64/kernel/traps.c | 29 ++++++++++++++---------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
+> The commit that added these variables never used them. Removing them.
 > 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index ccc13b45d9b1..7053165cb31a 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -66,11 +66,20 @@ static void dump_backtrace_entry(unsigned long where)
->  	printk(" %pS\n", (void *)where);
->  }
->  
-> -static void __dump_instr(const char *lvl, struct pt_regs *regs)
-> +static void dump_kernel_instr(const char *lvl, struct pt_regs *regs)
->  {
-> -	unsigned long addr = instruction_pointer(regs);
-> +	unsigned long addr;
->  	char str[sizeof("00000000 ") * 5 + 2 + 1], *p = str;
->  	int i;
-> +	mm_segment_t fs;
-> +
-> +	if (user_mode(regs))
-> +		return;
-> +
-> +	addr = instruction_pointer(regs);
-> +
-> +	fs = get_fs();
-> +	set_fs(KERNEL_DS);
+> Cc: clang-built-linux@googlegroups.com
+> Link: https://github.com/ClangBuiltLinux/linux/issues/530
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Actually, if we use aarch64_insn_read() instead of get_user() then we can
-avoid having to mess directly with the fs and we'll also get endianness
-correction for free when running a big-endian kernel.
+Patch applied to wireless-drivers.git, thanks.
 
-Will
+608fd7214323 wl18xx: Fix Wunused-const-variable
+
+-- 
+https://patchwork.kernel.org/patch/10996073/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
