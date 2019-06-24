@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC82C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474E5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F8D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D02621473
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371389;
-	bh=OYzrlx2PcG/tyb34xB667l00sDOGV1VV1As7ECozjiw=;
+	s=default; t=1561371392;
+	bh=H7KcwCPzwp32GeAwrWEZjLk6EOetBgEastjIgXmS3yQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5sTIvTiNaGGIfkQVXRlZXBHvuaOKElfSqnpejSTRsTG+/DX25tQXQkBTkUIXfpFs
-	 HfY41kM4Fz7a+kCygjFvIQ/ryPPu/er2IT+qxBV3O5dx4tyNBPOaPY23X/NMwEF/9q
-	 kuF3NLiMeTrrSiyip8XA7wq7/PxoWMimn2kCWWRM=
+	b=Zit4aEYNNq+AMRcniI8UDDglCuOrHUF8Q2grl4gXheCgWYKp74U3Z2pXmY6hr8sOX
+	 UxWxIFH+BZk1zPX48iYqDakhm/JJ3ogIl0t0r5QVznNatqFcOay0aTPzmJIXNAYG/8
+	 +jZuCw0VL/w4WEZCPYdM4gl7GrKgN3hR5V4BgyMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfFXKQ2 (ORCPT
+        id S1729303AbfFXKQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbfFXKQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:25 -0400
+        id S1730716AbfFXKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:23 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 329942089F;
-        Mon, 24 Jun 2019 10:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7FC205ED;
+        Mon, 24 Jun 2019 10:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371384;
-        bh=OYzrlx2PcG/tyb34xB667l00sDOGV1VV1As7ECozjiw=;
+        s=default; t=1561371382;
+        bh=H7KcwCPzwp32GeAwrWEZjLk6EOetBgEastjIgXmS3yQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2GtARzehQJQTTJdgzlrvMVGURRwiW6R1hNvKMTyd+7we4oe9if+3uI4MLD1m8LnC
-         CtYgdyfhPctK2M3jr66RV2maMPNi2tjnQ0tmxk28HOtZhugoqAT6pjTKBSZ+YB0kh4
-         g5YQlc9wESEu8HbWeg6eIlQEFEx6kmkP8UdYsTRs=
+        b=vPzakvMUuUBJ9dPhT8epxeu3+tgryp52op+iBRU7xb5lf6YpyQQe3PWx8b6geIh7S
+         vy9i1NXIVx0rLDK3+7Js60fu949yqeZZpP64Qr0j/lT0R/SqWXXay4Eirif04LI6Pr
+         eqXxOcrLDPUzyi5AjSO0GiT8SykxQgW83k+5W+/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 084/121] s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
-Date:   Mon, 24 Jun 2019 17:56:56 +0800
-Message-Id: <20190624092325.137038420@linuxfoundation.org>
+Subject: [PATCH 5.1 083/121] s390/qeth: check dst entry before use
+Date:   Mon, 24 Jun 2019 17:56:55 +0800
+Message-Id: <20190624092325.085560220@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,49 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 335726195e460cb6b3f795b695bfd31f0ea70ef0 ]
+[ Upstream commit 0cd6783d3c7d40be165d1f3c811cedf0e3dfcdf1 ]
 
-Enabling sysfs attribute bridge_hostnotify triggers a series of udev events
-for the MAC addresses of all currently connected peers. In case no VLAN is
-set for a peer, the device reports the corresponding MAC addresses with
-VLAN ID 4096. This currently results in attribute VLAN=4096 for all
-non-VLAN interfaces in the initial series of events after host-notify is
-enabled.
+While qeth_l3 uses netif_keep_dst() to hold onto the dst, a skb's dst
+may still have been obsoleted (via dst_dev_put()) by the time that we
+end up using it. The dst then points to the loopback interface, which
+means the neighbour lookup in qeth_l3_get_cast_type() determines a bogus
+cast type of RTN_BROADCAST.
+For IQD interfaces this causes us to place such skbs on the wrong
+HW queue, resulting in TX errors.
 
-Instead, no VLAN attribute should be reported in the udev event for
-non-VLAN interfaces.
+Fix-up the various call sites to first validate the dst entry with
+dst_check(), and fall back accordingly.
 
-Only the initial events face this issue. For dynamic changes that are
-reported later, the device uses a validity flag.
-
-This also changes the code so that it now sets the VLAN attribute for
-MAC addresses with VID 0. On Linux, no qeth interface will ever be
-registered with VID 0: Linux kernel registers VID 0 on all network
-interfaces initially, but qeth will drop .ndo_vlan_rx_add_vid for VID 0.
-Peers with other OSs could register MACs with VID 0.
-
-Fixes: 9f48b9db9a22 ("qeth: bridgeport support - address notifications")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/qeth_l3_main.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index c3067fd3bd9e..fece768efcb1 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1679,7 +1679,7 @@ static void qeth_bridgeport_an_set_cb(void *priv,
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index cb641fd303d3..93a5748036de 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -1883,13 +1883,20 @@ static int qeth_l3_do_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
  
- 	l2entry = (struct qdio_brinfo_entry_l2 *)entry;
- 	code = IPA_ADDR_CHANGE_CODE_MACADDR;
--	if (l2entry->addr_lnid.lnid)
-+	if (l2entry->addr_lnid.lnid < VLAN_N_VID)
- 		code |= IPA_ADDR_CHANGE_CODE_VLANID;
- 	qeth_bridge_emit_host_event(card, anev_reg_unreg, code,
- 		(struct net_if_token *)&l2entry->nit,
+ static int qeth_l3_get_cast_type(struct sk_buff *skb)
+ {
++	int ipv = qeth_get_ip_version(skb);
+ 	struct neighbour *n = NULL;
+ 	struct dst_entry *dst;
+ 
+ 	rcu_read_lock();
+ 	dst = skb_dst(skb);
+-	if (dst)
+-		n = dst_neigh_lookup_skb(dst, skb);
++	if (dst) {
++		struct rt6_info *rt = (struct rt6_info *) dst;
++
++		dst = dst_check(dst, (ipv == 6) ? rt6_get_cookie(rt) : 0);
++		if (dst)
++			n = dst_neigh_lookup_skb(dst, skb);
++	}
++
+ 	if (n) {
+ 		int cast_type = n->type;
+ 
+@@ -1904,7 +1911,7 @@ static int qeth_l3_get_cast_type(struct sk_buff *skb)
+ 	rcu_read_unlock();
+ 
+ 	/* no neighbour (eg AF_PACKET), fall back to target's IP address ... */
+-	switch (qeth_get_ip_version(skb)) {
++	switch (ipv) {
+ 	case 4:
+ 		if (ipv4_is_lbcast(ip_hdr(skb)->daddr))
+ 			return RTN_BROADCAST;
+@@ -1943,6 +1950,7 @@ static void qeth_l3_fill_header(struct qeth_qdio_out_q *queue,
+ 	struct qeth_hdr_layer3 *l3_hdr = &hdr->hdr.l3;
+ 	struct vlan_ethhdr *veth = vlan_eth_hdr(skb);
+ 	struct qeth_card *card = queue->card;
++	struct dst_entry *dst;
+ 
+ 	hdr->hdr.l3.length = data_len;
+ 
+@@ -1993,15 +2001,27 @@ static void qeth_l3_fill_header(struct qeth_qdio_out_q *queue,
+ 
+ 	hdr->hdr.l3.flags = qeth_l3_cast_type_to_flag(cast_type);
+ 	rcu_read_lock();
++	dst = skb_dst(skb);
++
+ 	if (ipv == 4) {
+-		struct rtable *rt = skb_rtable(skb);
++		struct rtable *rt;
++
++		if (dst)
++			dst = dst_check(dst, 0);
++		rt = (struct rtable *) dst;
+ 
+ 		*((__be32 *) &hdr->hdr.l3.next_hop.ipv4.addr) = (rt) ?
+ 				rt_nexthop(rt, ip_hdr(skb)->daddr) :
+ 				ip_hdr(skb)->daddr;
+ 	} else {
+ 		/* IPv6 */
+-		const struct rt6_info *rt = skb_rt6_info(skb);
++		struct rt6_info *rt;
++
++		if (dst) {
++			rt = (struct rt6_info *) dst;
++			dst = dst_check(dst, rt6_get_cookie(rt));
++		}
++		rt = (struct rt6_info *) dst;
+ 
+ 		if (rt && !ipv6_addr_any(&rt->rt6i_gateway))
+ 			l3_hdr->next_hop.ipv6_addr = rt->rt6i_gateway;
 -- 
 2.20.1
 
