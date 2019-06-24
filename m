@@ -2,115 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8634C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB4C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A5B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561393661;
-	bh=PC1Tg5AS0+Xg6rrqM9JqWZimf5Eqphufa1WUi9rPCUM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6MK3SbjELiDgi88SeQq+QO1C/yx5VYnSRgqJYg6cDeogRpnnTiLqLaxRZ6ik+qIz
-	 1iBnsEJaMuPigsON7HtbJRzRFRdPA9iSS1kxAJeXXNawlGwJ/F+RJUTzQ12fddJeam
-	 EMNrI5SAByRXyRBMp461S4MBiAac31c22cIAqcsA=
+	by mail.kernel.org (Postfix) with ESMTP id D20AD205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mn0cXMbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732154AbfFXQ1k (ORCPT
+        id S1732159AbfFXQai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732112AbfFXQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:27:31 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F3020674;
-        Mon, 24 Jun 2019 16:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561393650;
-        bh=PC1Tg5AS0+Xg6rrqM9JqWZimf5Eqphufa1WUi9rPCUM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s8mZpzy7YYP1pdQDFYOl+beEyYCgieVcLHsMDvq2bMLmCYyumWP6JZM0ixIcYgDMq
-         Yn2V0fCoF0MeERVLgMu20whvNaW16tgo9QavOrkV6hMKTFPS2MLPRgJWFwBb/lip5b
-         NrA5WbspOjwbtB8R/jT5xyTt3TcnTD0jtN2ouDik=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc:     idryomov@gmail.com, zyan@redhat.com, sage@redhat.com,
-        agruenba@redhat.com
-Subject: [PATCH v4 2/3] ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-Date:   Mon, 24 Jun 2019 12:27:25 -0400
-Message-Id: <20190624162726.17413-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190624162726.17413-1-jlayton@kernel.org>
-References: <20190624162726.17413-1-jlayton@kernel.org>
+        Mon, 24 Jun 2019 12:30:38 -0400
+Received: from mail-io1-f49.google.com ([209.85.166.49]:41491 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730472AbfFXQai (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:30:38 -0400
+Received: by mail-io1-f49.google.com with SMTP id w25so2930190ioc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Wulrto/HXlEP0Cxmn+aSmPqpiH4PSf21/9EuSwKYHd4=;
+        b=Mn0cXMbFYMBl0SszZa7WI2WTD5T6951RjYiCrZy61CKf7Cm2DTD9UiLUXwJ0nx0zBY
+         1ujuIMMLx77NflyHWBE1yHJcYVq4eHb2AFI56KEKa6Ixd5wfgzHDtkT0WQXMURcOSVAl
+         O7Vkq2+51rP5ijLHFX1ZeCKQOT/dDYZntnHe5jyJwkHd7wAslrFu8N5j0IFVI/bIEuwq
+         GEjmX3B6uGzH6yZ+b7nKqHGaETy/LXWhmuYf6hpvua3ECqdLlCvvyEH0+IU7TOktpF4M
+         zyORQJmP8JKT7T81fNiN8Gbe0OZtEXP/NYrDuoZf7q8Lzo97joLIHKPPtTkz0yI5kWnm
+         20kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Wulrto/HXlEP0Cxmn+aSmPqpiH4PSf21/9EuSwKYHd4=;
+        b=NxSbSUJ8lc7sjekT54KmReS+PyRT3rE4HvNHigPFEhRRnWxD2ySBlc2VEXwCh9y7ex
+         Nm82CxBQsHntI3xyhzs2A8TXof/QUDpQGxEGAgCxV3yB4zBLd4aEE3aJymwNB5DtyCfs
+         RmU+rgFsLyOOPrvOMGxMKJI0yWb8F90huNuoycqQSYb0YzKaFDc0yVOpDwZUFNm3NE8j
+         UHkqOkvDoMAiPn2pWwjAKIlAZ2bgcbA6HNtCng9/aucUN71rKvfxrKjKWKY6YcnLslMS
+         h04Fx5tE1xnkk69uOf6as/vmSdyxi/akXKQbZXJbruvqGAyWENAa1oxAsi7y0IpLoG5P
+         vGiw==
+X-Gm-Message-State: APjAAAU6UMhkgs/w6z5zzfvANRH4wcRFJJbPaPWj01lN1iB7+bcJq3mb
+        Dj6vxSNQol1CtHlGRP3uagEugA==
+X-Google-Smtp-Source: APXvYqxdhhVgzPshhJyQgs10Hk+zfOquGsuDDw6awgazoiRekD4XFtjDBCvTdDE3FewywU+/yE2bnw==
+X-Received: by 2002:a02:5185:: with SMTP id s127mr26639219jaa.44.1561393837131;
+        Mon, 24 Jun 2019 09:30:37 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id p25sm13692350iol.48.2019.06.24.09.30.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 09:30:36 -0700 (PDT)
+Subject: WWAN Controller Framework (was IPA [PATCH v2 00/17])
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
+        ilias.apalodimas@linaro.org
+Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
+        cpratapa@codeaurora.org, syadagir@codeaurora.org,
+        subashab@codeaurora.org, abhishek.esse@gmail.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20190531035348.7194-1-elder@linaro.org>
+Message-ID: <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+Date:   Mon, 24 Jun 2019 11:30:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The getxattr manpage states that we should return ERANGE if the
-destination buffer size is too small to hold the value.
-ceph_vxattrcb_layout does this internally, but we should be doing
-this for all vxattrs.
+OK I want to try to organize a little more concisely some of the
+discussion on this, because there is a very large amount of volume
+to date and I think we need to try to narrow the focus back down
+again.
 
-Fix the only caller of getxattr_cb to check the returned size
-against the buffer length and return -ERANGE if it doesn't fit.
-Drop the same check in ceph_vxattrcb_layout and just rely on the
-caller to handle it.
+I'm going to use a few terms here.  Some of these I really don't
+like, but I want to be unambiguous *and* (at least for now) I want
+to avoid the very overloaded term "device".
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/ceph/xattr.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+I have lots more to say, but let's start with a top-level picture,
+to make sure we're all on the same page.
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index e90e19e9660b..9b77dca0b786 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -63,7 +63,7 @@ static ssize_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	const char *ns_field = " pool_namespace=";
- 	char buf[128];
- 	size_t len, total_len = 0;
--	int ret;
-+	ssize_t ret;
- 
- 	pool_ns = ceph_try_get_string(ci->i_layout.pool_ns);
- 
-@@ -87,11 +87,8 @@ static ssize_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	if (pool_ns)
- 		total_len += strlen(ns_field) + pool_ns->len;
- 
--	if (!size) {
--		ret = total_len;
--	} else if (total_len > size) {
--		ret = -ERANGE;
--	} else {
-+	ret = total_len;
-+	if (size >= total_len) {
- 		memcpy(val, buf, len);
- 		ret = len;
- 		if (pool_name) {
-@@ -803,8 +800,11 @@ ssize_t __ceph_getxattr(struct inode *inode, const char *name, void *value,
- 		if (err)
- 			return err;
- 		err = -ENODATA;
--		if (!(vxattr->exists_cb && !vxattr->exists_cb(ci)))
-+		if (!(vxattr->exists_cb && !vxattr->exists_cb(ci))) {
- 			err = vxattr->getxattr_cb(ci, value, size);
-+			if (size && size < err)
-+				err = -ERANGE;
-+		}
- 		return err;
- 	}
- 
--- 
-2.21.0
+         WWAN Communication
+         Channel (Physical)
+                 |     ------------------------
+------------     v     |           :+ Control |  \
+|          |-----------|           :+ Data    |  |
+|    AP    |           | WWAN unit :+ Voice   |   > Functions
+|          |===========|           :+ GPS     |  |
+------------     ^     |           :+ ...     |  /
+                 |     -------------------------
+          Multiplexed WWAN
+           Communication
+         Channel (Physical)
 
+- The *AP* is the main CPU complex that's running Linux on one or
+  more CPU cores.
+- A *WWAN unit* is an entity that shares one or more physical
+  *WWAN communication channels* with the AP.
+- A *WWAN communication channel* is a bidirectional means of
+  carrying data between the AP and WWAN unit.
+- A WWAN communication channel carries data using a *WWAN protocol*.
+- A WWAN unit implements one or more *WWAN functions*, such as
+  5G data, LTE voice, GPS, and so on.
+- A WWAN unit shall implement a *WWAN control function*, used to
+  manage the use of other WWAN functions, as well as the WWAN unit
+  itself.
+- The AP communicates with a WWAN function using a WWAN protocol.
+- A WWAN physical channel can be *multiplexed*, in which case it
+  carries the data for one or more *WWAN logical channels*.
+- A multiplexed WWAN communication channel uses a *WWAN wultiplexing
+  protocol*, which is used to separate independent data streams
+  carrying other WWAN protocols.
+- A WWAN logical channel carries a bidirectional stream of WWAN
+  protocol data between an entity on the AP and a WWAN function.
+
+Does that adequately represent a very high-level picture of what
+we're trying to manage?
+
+And if I understand it right, the purpose of the generic framework
+being discussed is to define a common mechanism for managing (i.e.,
+discovering, creating, destroying, querying, configuring, enabling,
+disabling, etc.) WWAN units and the functions they implement, along
+with the communication and logical channels used to communicate with
+them.
+
+Comments?
+
+					-Alex
