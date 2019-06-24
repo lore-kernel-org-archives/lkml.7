@@ -2,91 +2,97 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F42C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2D8C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA9820673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23855204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XO1svo7H"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="qj0Og56e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732307AbfFXVoZ (ORCPT
+        id S1732324AbfFXVp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:44:25 -0400
-Received: from mout.gmx.net ([212.227.15.18]:53305 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbfFXVoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:44:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1561412653;
-        bh=VfU45A+TCZs81IW1811J5XbDAucySKVUe2Hrt0lPo8A=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=XO1svo7HpdIIZI3RWZeJlVCQcSTIgsKT5w+zAAyn3xnkfq8yoICDovU/VdRQ9Wmf0
-         lKRTVNDFe+XIt326s8gwMTDkOw2AQb7sHl6n/qm3DgOpb+Acf+PM3wVfYZauwGM28G
-         kR7MGP9DWaA5qxhvzwFrBQ7q78oP6uM15zWnQyVg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.dellerweb.de ([92.116.168.122]) by mail.gmx.com
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MTiPv-1i8vCK2xu1-00U544; Mon, 24 Jun 2019 23:44:13 +0200
-Date:   Mon, 24 Jun 2019 23:44:08 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Cc:     Jeroen Roovers <jer@gentoo.org>
-Subject: [GIT PULL] parisc architecture fix for kernel v5.2-rc7
-Message-ID: <20190624214408.GA9531@ls3530.dellerweb.de>
+        Mon, 24 Jun 2019 17:45:57 -0400
+Received: from mail-eopbgr690113.outbound.protection.outlook.com ([40.107.69.113]:50915
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727855AbfFXVp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 17:45:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4S1K9DoUGotL3ZjR2VBVarLi3Q/iPNyngliRDFa4v5c=;
+ b=qj0Og56ev7cVUHPPn+00Gh/xbr+rZDeT+1kKBkbg46xH9L6S03ZET5x3eNF5ayn3HuXiG3ihJ0WOTRnfPkllkZANTNYdgOA/u3WeVNcP7a43plSi+dE7j1gFjJjtscarGcKy2y5kzD8DK2C6M1P8lCnB1owQXbCaDixLy3voyW8=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1022.namprd22.prod.outlook.com (10.174.167.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 21:45:55 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 21:45:54 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MAINTAINERS: Correct path to moved files
+Thread-Topic: [PATCH 1/2] MAINTAINERS: Correct path to moved files
+Thread-Index: AQHVKtO6mWCxXn0WVkqmIwpKP9EzaqarVryA
+Date:   Mon, 24 Jun 2019 21:45:54 +0000
+Message-ID: <MWHPR2201MB1277225D41843F4DC67880F6C1E00@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190624212752.6816-1-paul@crapouillou.net>
+In-Reply-To: <20190624212752.6816-1-paul@crapouillou.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0030.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::40) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b84b878a-6769-44d5-b166-08d6f8ed5585
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1022;
+x-ms-traffictypediagnostic: MWHPR2201MB1022:
+x-microsoft-antispam-prvs: <MWHPR2201MB10225B18D9D6E8543E45C1A2C1E00@MWHPR2201MB1022.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(346002)(366004)(136003)(376002)(199004)(189003)(2906002)(52116002)(7696005)(76176011)(33656002)(53936002)(478600001)(99286004)(11346002)(446003)(42882007)(6436002)(74316002)(316002)(14454004)(6246003)(55016002)(66066001)(305945005)(26005)(6916009)(9686003)(4744005)(68736007)(25786009)(6116002)(486006)(476003)(44832011)(81166006)(8936002)(256004)(73956011)(81156014)(54906003)(3846002)(5660300002)(71200400001)(66476007)(186003)(66946007)(7736002)(229853002)(386003)(6506007)(8676002)(4326008)(52536014)(66446008)(66556008)(64756008)(71190400001)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ou8w2ZFtkv7wfHEUn+E6UmCh/y3h2bINMJRa/B3Zn0CzyugPkXOispMert5It3ssWbvHorAn4vAM7AuBV/6kEVJ2ymlMAkDm6l+r0YYbysWY1YnJynExuYwWK3u9z2/C8nk4xMlYPKcXTxU9FwPlXyAS6NGJZ8AumjHIURXZnZiFnkt7Pid6QZaN2y8hUUNT1tnoWmmm4y0whKOmTKQsVMjDe8w5pdRsvqYbutloNJVipu4XBCI0jZbcbJKqPdbORTuHtQbnt4d8Aj7ol4PnFe7RAIzvSleUbt2+W4E4DEh79aQyLoiPbycY0HtNdZzbH94Lz9ii62owoMP9O47RPc43zKxpqTc7TiSh58aCQQ01DlOGR9bPQbDjj77hVeN3ikSbk7z6h75TFmXwn7UpWFam9Heep4gzCRxrI6kEL9o=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Provags-ID: V03:K1:/u6W4v8kpGXw0N2E0ST14IxQ4Yq4jVXGEqvQll7FOug73LZ1R6Y
- 9R5sJwKCoQVBYWU7cgGmRMxLe/LQ+1WejjFGHF0FSyqNG/ZFhuI1GHvnQDoJWr29I0+oK7s
- F4/H10mVVBja5pNeiBojJuGtwpjpG11ULge2xH7T61+C78Pq47AYnsFBbVWdp4n1Z2BXV2K
- i8LsC26Lglk1Tk8U/iYTw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S9baFugE5Tg=:Q+8OqgKvLkqOm0cRj9UkUh
- W2z5TvNJ25NnEQwtxquLBAwwtARNCe65jCCBeYEeMiDwiTrXbQQD4yFNsRKXefiUYilaC3f1T
- 6gn0ecBARWqYtgb1xF7JlRZ1Gowb+1IVoIwBLwVHUDCHef6NaNIcX+pPJwLKnYAawlrxggepf
- T+F7tBb17xS6XpWbdMiVdw6p7bTOxoZPPIv/Th0MyNXJxTUcnXrhDBWeIb6ks/DNhypvf4txb
- LXRlwfXpuLrqZTKgFu/R8UB+XfZkRZ6XFs7BCgfxqT8RFatT4PQDefdR4Cn97MoKv+LLWom44
- 8129/1497TByGup2Wql6BcMCNT8ZsIZYoOL/A2m74nATThbn2UursGOy4UpYb/IHr1GHWVjlA
- Oi+mzB8bRnYrriMba5Oazt20uPgTE9P79b12l84MSQTwjcg1NpC3WCvQ63uHS0y5RS4JV8CU0
- PVKuW4Bdxk3PLXaynLhgDcpkwNc2o5A81HHwDimCgUOH5TLa0KLZX4J8TO19wzIu8NMNax1iv
- /reLml4SY32C5gvbofmOuO68vcRRMCOC68Ht1P9bEh5w6fcNYTMqQltCOBmlhwtQA0VhDsLOS
- i0cqnLKn1dfabugLXNxWIHoVv5t9vtqSlC2uinw0gre3arc05K0XUE2g0inhH5cRq/4alc++r
- ayQedJx78/UoVynSvKCet7kHb1uZOdgfZKPOfBu1j/3S2w3WRyErZB+CUiGOh7o+e/hCWEn6x
- ZfKbhEzBeVovPNTbTUV1sr9LRmAlHI2iUwhdDdHh95JuBWflV6kL5UTzBHPRhgcUfVzw2nnkh
- /V27vOrXVN4xAeaC0Ync1aya2QFaDcnD0uuu3B6swFSlDnkec0fyavv9mC0Bbj2PsTWCbHSIf
- ylw1SzCjtyDRLzZbXIcuJbDvxyByRCYxSTA5DBRm+FT5YIjq9w5UZ9Z7L6Bvzl470ABbCt6Hf
- haFLHpzaE5AZfY5+Fy7lTqiaU+xQ8zItaCUrclBLdL0iS8LAuIvsTTUcn+ygqsb/4Xj2sto7z
- PzpJ53bSsqcNq6LzaY1o/z0FmgJ7yLbW+qBLeeiJmsL9StYgKRzx/gVfa9zmvzwd8Pti2JE2u
- rYoC2tTbPugVGg=
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b84b878a-6769-44d5-b166-08d6f8ed5585
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 21:45:54.8108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-please pull one fix for the parisc architecture for kernel 5.2-rc7 from:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.2-4
-
-Add missing PCREL64 relocation in module loader to fix module load errors when
-the static branch and JUMP_LABEL feature is enabled on a 64-bit kernel.
-
-Thanks,
-Helge
-
-----------------------------------------------------------------
-Helge Deller (1):
-      parisc: Fix module loading error with JUMP_LABEL feature
-
- arch/parisc/kernel/module.c | 4 ++++
- 1 file changed, 4 insertions(+)
+SGVsbG8sDQoNClBhdWwgQ2VyY3VlaWwgd3JvdGU6DQo+IFRoZSBkcml2ZXIgd2FzIG1vdmVkIGlu
+IGNvbW1pdCAxODM4YTdiMzFmY2IgKCJtdGQ6IHJhd25hbmQ6IE1vdmUNCj4gZHJpdmVycyBmb3Ig
+SW5nZW5pYyBTb0NzIHRvIHN1YmZvbGRlciIpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGF1bCBD
+ZXJjdWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+DQoNCkFwcGxpZWQgdG8gbWlwcy1maXhlcy4N
+Cg0KVGhhbmtzLA0KICAgIFBhdWwNCg0KWyBUaGlzIG1lc3NhZ2Ugd2FzIGF1dG8tZ2VuZXJhdGVk
+OyBpZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBpcyBpbmNvcnJlY3QNCiAgdGhlbiBwbGVhc2UgZW1h
+aWwgcGF1bC5idXJ0b25AbWlwcy5jb20gdG8gcmVwb3J0IGl0LiBdDQo=
