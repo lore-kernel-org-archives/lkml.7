@@ -2,55 +2,58 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3042C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB818208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3204B212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370531;
-	bh=ZjXbcl2HzBrbEaA87WBxn+Rzg5TuVhePEGJ75auhC4M=;
+	s=default; t=1561370537;
+	bh=plZOkWaLb4yy5BvUkpSJ/NwGDi97Ob4vcXUWQKp9oBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCZMMPUjYarc0GaXwnVE6blb810sTStgX8uYm5yH5T80uvrpmu+FWvLRiDo3VwrB7
-	 PYYQTOEgBU7EGsLr3SMPS5lJY7odtR+/HsHO3vAjounElvkT4etq1pSFsb9rI3htDI
-	 HGPYwc7BIdzyWRvZd6fez2o9RMV+aTVJWPP4ZF1Y=
+	b=TSdiJlxX5JiMS34mdTcCl/yuti+w3GwQDEXwbtwhIzOWO0vias2FtQVynXWaVJeb+
+	 cch/R7pNulOMAexKz5nrmWR5GLelKRea1/7Udf/Kw0CZ5vibORerwXp/nDqARCs9QV
+	 kVVNzUAiRKDKdWR8NooF8a10YdXOxbYTxbV+i6So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfFXJ5z (ORCPT
+        id S1729167AbfFXKCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfFXJ5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:57:53 -0400
+        id S1727284AbfFXKCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:02:12 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4A1208CA;
-        Mon, 24 Jun 2019 09:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A072146F;
+        Mon, 24 Jun 2019 10:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370272;
-        bh=ZjXbcl2HzBrbEaA87WBxn+Rzg5TuVhePEGJ75auhC4M=;
+        s=default; t=1561370531;
+        bh=plZOkWaLb4yy5BvUkpSJ/NwGDi97Ob4vcXUWQKp9oBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbXXxmKuPXmtBw1M7p13PbrKUFrvH/QnCw8g6bkO1lBIXhx2nUDo0/Ffz2ve0/0jk
-         lf9Hu/nGFnfyhsNNLAn/BSti8sN647t3TvUutdpDtItPflbzIPaVdRQ3b1BiB8mC3U
-         crQTgALucn5qsYomgq6Uwtq7Nd2c0m09E+WS5Jck=
+        b=nVmf+DgRrS80lvELxEXOMQXLL8FXWOc7K9UG+zShHIidJLwCROIbPW+AF/C6gBLla
+         8ifXyktGhMBH5jvmd4R9jur64WAVwChhMVOv/Vwtp1Aufebv7RtmNSmz7ORmzmWkS5
+         jJHmRBJXbobIWWtC5cBLVRcmXpVVIm/WqW3aRE7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/51] ARC: fix build warnings
-Date:   Mon, 24 Jun 2019 17:56:30 +0800
-Message-Id: <20190624092307.871716208@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 01/90] tracing: Silence GCC 9 array bounds warning
+Date:   Mon, 24 Jun 2019 17:55:51 +0800
+Message-Id: <20190624092313.930230995@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
-References: <20190624092305.919204959@linuxfoundation.org>
+In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
+References: <20190624092313.788773607@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,99 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
-| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
+commit 0c97bf863efce63d6ab7971dad811601e6171d2f upstream.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Starting with GCC 9, -Warray-bounds detects cases when memset is called
+starting on a member of a struct but the size to be cleared ends up
+writing over further members.
+
+Such a call happens in the trace code to clear, at once, all members
+after and including `seq` on struct trace_iterator:
+
+    In function 'memset',
+        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
+    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
+    [8505, 8560] from the object at 'iter' is out of the bounds of
+    referenced subobject 'seq' with type 'struct trace_seq' at offset
+    4368 [-Warray-bounds]
+      344 |  return __builtin_memset(p, c, size);
+          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to avoid GCC complaining about it, we compute the address
+ourselves by adding the offsetof distance instead of referring
+directly to the member.
+
+Since there are two places doing this clear (trace.c and trace_kdb.c),
+take the chance to move the workaround into a single place in
+the internal header.
+
+Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
+
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+[ Removed unnecessary parenthesis around "iter" ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
- arch/arc/mm/tlb.c              | 13 ++++++++-----
- 2 files changed, 18 insertions(+), 9 deletions(-)
+ kernel/trace/trace.c     |    6 +-----
+ kernel/trace/trace.h     |   18 ++++++++++++++++++
+ kernel/trace/trace_kdb.c |    6 +-----
+ 3 files changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index d819de1c5d10..3ea4112c8302 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8351,12 +8351,8 @@ void ftrace_dump(enum ftrace_dump_mode o
  
- #endif /* CONFIG_ARC_HAS_LLSC */
+ 		cnt++;
  
--#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
--				(unsigned long)(o), (unsigned long)(n)))
-+#define cmpxchg(ptr, o, n) ({				\
-+	(typeof(*(ptr)))__cmpxchg((ptr),		\
-+				  (unsigned long)(o),	\
-+				  (unsigned long)(n));	\
-+})
+-		/* reset all but tr, trace, and overruns */
+-		memset(&iter.seq, 0,
+-		       sizeof(struct trace_iterator) -
+-		       offsetof(struct trace_iterator, seq));
++		trace_iterator_reset(&iter);
+ 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-		iter.pos = -1;
  
- /*
-  * atomic_cmpxchg is same as cmpxchg
-@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
- 	return __xchg_bad_pointer();
- }
+ 		if (trace_find_next_entry_inc(&iter) != NULL) {
+ 			int ret;
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1895,4 +1895,22 @@ static inline void tracer_hardirqs_off(u
  
--#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
--						 sizeof(*(ptr))))
-+#define xchg(ptr, with) ({				\
-+	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
-+			       (ptr),			\
-+			       sizeof(*(ptr)));		\
-+})
+ extern struct trace_iterator *tracepoint_print_iter;
  
- #endif /* CONFIG_ARC_PLAT_EZNPS */
- 
-diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
-index 8ceefbf72fb0..e5817b9b2c3f 100644
---- a/arch/arc/mm/tlb.c
-+++ b/arch/arc/mm/tlb.c
-@@ -902,9 +902,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			  struct pt_regs *regs)
- {
- 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
--	unsigned int pd0[mmu->ways];
- 	unsigned long flags;
--	int set;
-+	int set, n_ways = mmu->ways;
++/*
++ * Reset the state of the trace_iterator so that it can read consumed data.
++ * Normally, the trace_iterator is used for reading the data when it is not
++ * consumed, and must retain state.
++ */
++static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
++{
++	const size_t offset = offsetof(struct trace_iterator, seq);
 +
-+	n_ways = min(n_ways, 4);
-+	BUG_ON(mmu->ways > 4);
++	/*
++	 * Keep gcc from complaining about overwriting more than just one
++	 * member in the structure.
++	 */
++	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
++
++	iter->pos = -1;
++}
++
+ #endif /* _LINUX_KERNEL_TRACE_H */
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -41,12 +41,8 @@ static void ftrace_dump_buf(int skip_lin
  
- 	local_irq_save(flags);
+ 	kdb_printf("Dumping ftrace buffer:\n");
  
-@@ -912,9 +914,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 	for (set = 0; set < mmu->sets; set++) {
+-	/* reset all but tr, trace, and overruns */
+-	memset(&iter.seq, 0,
+-		   sizeof(struct trace_iterator) -
+-		   offsetof(struct trace_iterator, seq));
++	trace_iterator_reset(&iter);
+ 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-	iter.pos = -1;
  
- 		int is_valid, way;
-+		unsigned int pd0[4];
- 
- 		/* read out all the ways of current set */
--		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
-+		for (way = 0, is_valid = 0; way < n_ways; way++) {
- 			write_aux_reg(ARC_REG_TLBINDEX,
- 					  SET_WAY_TO_IDX(mmu, set, way));
- 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
-@@ -928,14 +931,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			continue;
- 
- 		/* Scan the set for duplicate ways: needs a nested loop */
--		for (way = 0; way < mmu->ways - 1; way++) {
-+		for (way = 0; way < n_ways - 1; way++) {
- 
- 			int n;
- 
- 			if (!pd0[way])
- 				continue;
- 
--			for (n = way + 1; n < mmu->ways; n++) {
-+			for (n = way + 1; n < n_ways; n++) {
- 				if (pd0[way] != pd0[n])
- 					continue;
- 
--- 
-2.20.1
-
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
 
 
