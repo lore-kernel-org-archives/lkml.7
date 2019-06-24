@@ -2,51 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9127C48BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A60DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83C92146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F337420645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371138;
-	bh=8J2ek7vj1Ztw0cwOVrjW589wi/e/fWDGfafVoe4r+Zc=;
+	s=default; t=1561371144;
+	bh=J3lk6Rg+8MdhODyh01OhUMDKDNclpoK0P14pEu19wDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ygc/kaleGEJ0cQKCiMzoyoKf+pd70q7ABFJOv+x6ez4Pfd/LCQ525QqE5ovzTkLf9
-	 bojafXkMoUjNf6zsD5gpif+KbCnBNOMtQddCTBg1oAv+3Nf8LfA5u7uhQZvfyr22w9
-	 fbgmcoVEjgL7Rj3oO+LqRfI4qg2MaE5gbufOC9Fw=
+	b=HQolWtLMf7MJYn6BwdD+HiQQaY/5l+rl55OgtRucN1L3xjDtqAi1MWqiQvLirvrwS
+	 PzTiWZS4YJ4NS64ckg6kiWOAusZv9Jph56e9rdxQ8D/xaPhJiczbhZZhQhrneglhwT
+	 ErZ0SxjRsDOQbrZ2kzx1UBcLjUe6UmzfNbMk6Ob8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfFXKGH (ORCPT
+        id S1729832AbfFXKF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbfFXKGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:04 -0400
+        id S1728846AbfFXKFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:53 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A12208E3;
-        Mon, 24 Jun 2019 10:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D11D32145D;
+        Mon, 24 Jun 2019 10:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370763;
-        bh=8J2ek7vj1Ztw0cwOVrjW589wi/e/fWDGfafVoe4r+Zc=;
+        s=default; t=1561370752;
+        bh=J3lk6Rg+8MdhODyh01OhUMDKDNclpoK0P14pEu19wDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSmGjZs7kzLGqIQ6RATf54nmqgamuQY+jExBBN1fWA7AjPyQfX1XhUuHB341o7XlU
-         huxHf9i5x6vVv4JqGxuMaDKbOGKm34DiBMMo5HAgXQyGhezb8pIurPWIiV+H5W4O6i
-         fWxjabBVin4Dc0HkfpdfMYlvcMitFVUjZha7pKmA=
+        b=ej6siDs5ms4gJ0R5tFjBZpR9fTcz7JP8V3LsqQTnjLcwcZ4uy7r5j1VGh6fsJ55Sr
+         ikFEJbxep1L5hbyhbMrn0SGVAXKlScfBLAusi5t6uzdECFwUijZzpYE51/RiRK/7IX
+         20OF1zoT+QPBQ2/4ZXLQDICT5jxobQG4HTE3pEIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.19 81/90] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-Date:   Mon, 24 Jun 2019 17:57:11 +0800
-Message-Id: <20190624092319.233578744@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Anisse Astier <aastier@freebox.fr>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 77/90] arm64/sve: <uapi/asm/ptrace.h> should not depend on <uapi/linux/prctl.h>
+Date:   Mon, 24 Jun 2019 17:57:07 +0800
+Message-Id: <20190624092319.002811331@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -59,52 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Anisse Astier <aastier@freebox.fr>
 
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+commit 35341ca0614ab13e1ef34ad4f29a39e15ef31fa8 upstream.
 
-The minimum encryption key size for LE connections is 56 bits and to
-align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
-BR/EDR connections as well.
+Pulling linux/prctl.h into asm/ptrace.h in the arm64 UAPI headers causes
+userspace build issues for any program (e.g. strace and qemu) that
+includes both <sys/prctl.h> and <linux/ptrace.h> when using musl libc:
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+  | error: redefinition of 'struct prctl_mm_map'
+  |  struct prctl_mm_map {
+
+See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
+for a public example of people working around this issue.
+
+Although it's a bit grotty, fix this breakage by duplicating the prctl
+constant definitions. Since these are part of the kernel ABI, they
+cannot be changed in future and so it's not the end of the world to have
+them open-coded.
+
+Fixes: 43d4da2c45b2 ("arm64/sve: ptrace and ELF coredump support")
 Cc: stable@vger.kernel.org
+Acked-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Anisse Astier <aastier@freebox.fr>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/hci_core.h |    3 +++
- net/bluetooth/hci_conn.c         |    8 ++++++++
- 2 files changed, 11 insertions(+)
+ arch/arm64/include/uapi/asm/ptrace.h |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -182,6 +182,9 @@ struct adv_info {
+--- a/arch/arm64/include/uapi/asm/ptrace.h
++++ b/arch/arm64/include/uapi/asm/ptrace.h
+@@ -64,8 +64,6 @@
  
- #define HCI_MAX_SHORT_NAME_LENGTH	10
+ #ifndef __ASSEMBLY__
  
-+/* Min encryption key size to match with SMP */
-+#define HCI_MIN_ENC_KEY_SIZE		7
-+
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+-#include <linux/prctl.h>
+-
+ /*
+  * User structures for general purpose, floating point and debug registers.
+  */
+@@ -112,10 +110,10 @@ struct user_sve_header {
  
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
+ /*
+  * Common SVE_PT_* flags:
+- * These must be kept in sync with prctl interface in <linux/ptrace.h>
++ * These must be kept in sync with prctl interface in <linux/prctl.h>
+  */
+-#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
+-#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
++#define SVE_PT_VL_INHERIT		((1 << 17) /* PR_SVE_VL_INHERIT */ >> 16)
++#define SVE_PT_VL_ONEXEC		((1 << 18) /* PR_SVE_SET_VL_ONEXEC */ >> 16)
  
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
-+	 */
-+	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
-+		return 0;
-+
- 	return 1;
- }
  
+ /*
 
 
