@@ -2,107 +2,110 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AFCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EBAC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79DB208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zpj6fpMA"
+	by mail.kernel.org (Postfix) with ESMTP id 594C82133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbfFXJI5 (ORCPT
+        id S1728326AbfFXJJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:08:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40910 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfFXJI5 (ORCPT
+        Mon, 24 Jun 2019 05:09:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35448 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbfFXJJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:08:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so12499527wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CEu52n+Y1evOTBr/RTN/Q2dwwvERmXBMuN5/hCbfulk=;
-        b=zpj6fpMApTCm1uSb0baA4zRqXFozjA1NmbDfYrIbC5puqTTVVr4Ip4tuf78NfHLMPW
-         jRHxSv33gZcEw3lNw800YMoIxvguJGQ4UccHw7fV1bcUT9+xOYaMMZttaCoiRIV1t4x0
-         yw3HCSakiGKLxpgVVMCL8kICcu2Ft9ns/uNQHY5ILUWk6nBpj+HYpzvMeqG45eM8M8hp
-         PRMBWFq2+GWkoMIi9vj1FTVey7LiEuKUWBf8/+wHLmVg2gXxfxtuXhSsrM7EPIwdtm67
-         Mpm+6X7uiV76HxU1So8tRso+Ca3qlNxMskPITNrLemqE4Gw97mTMQpD0H/XxPHM3XisZ
-         Kxwg==
+        Mon, 24 Jun 2019 05:09:43 -0400
+Received: from mail-pl1-f199.google.com ([209.85.214.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hfKyr-00079S-Fb
+        for linux-kernel@vger.kernel.org; Mon, 24 Jun 2019 09:09:41 +0000
+Received: by mail-pl1-f199.google.com with SMTP id y9so7011989plp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:09:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CEu52n+Y1evOTBr/RTN/Q2dwwvERmXBMuN5/hCbfulk=;
-        b=ZAK/FbxyRVs/uGS9kpUsIXmUJafjna//MqkRFT8BG1YMArmQY6rAMMNVDy3me26BFL
-         qo+oijf2G3YTzSOVyMLte9KLTI0B4l23n/z7OWy+t7QzL1DyKS1Adk3nlAUYOagY+wzy
-         xwN6ihnVO2lIG35DxU8y0FFWZiGrCcjmFFgxwipDyCuFKizdf4OVgWgrIbVLGkQSx3aT
-         cYtY7NHdejpSnmWxyYTV64IIbUahkPLSa86BUXzk9K5Frw4vTcQciyORtIyAsc0dtCfL
-         Pra0fo3iQ0bykIl7NPhDID5cT2pbHb0uBTJ5Bg3CsFL33q7SZTOf8prpirufiPlyU1Nb
-         Mc5A==
-X-Gm-Message-State: APjAAAV1z+w0/HtqsRLHYPyws9ClrhZ6aexhZ8UQ9d2F+ShpHisaEqNA
-        /UW3i9EMJYo4SV+qGcffJ182lg==
-X-Google-Smtp-Source: APXvYqyuOUxAk76rjGNPPMmM7yFsLswDOXGsFqw/0ITcLsTGxOqVZbjDNuuDpg6k52rVA5PxBoP+Yg==
-X-Received: by 2002:a1c:c549:: with SMTP id v70mr14632320wmf.135.1561367334867;
-        Mon, 24 Jun 2019 02:08:54 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f12sm23457566wrg.5.2019.06.24.02.08.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 24 Jun 2019 02:08:54 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
-        daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@siol.net>
-Subject: [PATCH] MAINTAINERS: Update Maintainers and Reviewers of DRM Bridge Drivers
-Date:   Mon, 24 Jun 2019 11:08:51 +0200
-Message-Id: <20190624090851.17859-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=QJC6ineKcWeeajSasIMjIMAW2KBfua6rzVpCvcG7Tos=;
+        b=VRk9loNBn1bAqPcIBwrUxLCQehBu31rlb+bj3YpOIt0HPZwyAevMUM/+q36yYGROFa
+         XaUmv+geniWcYUgbscO4AGYAUhvT6J31/k2STUQ4SegraAUFvlFHQJAFBt1tU6Wxofr5
+         zlpj/mdxxDnuyFhcMdbo9vydtbsbERtmLTRKMlpuFxSSFr+xiqcE+y8q13PUWqBD8V10
+         pR/dqjGM0cdXcJ0Bj3h5eAprMDPHwpYSMYyBljqlaWKScIsVAEcZm6pCOR+c0F7It7M4
+         mHJrw8ILX/uqBdei8Ra125w+YpDzkMwVC1PD5dMAIIv/dhjreUT3VwsLORr24VWPmaTu
+         KEEQ==
+X-Gm-Message-State: APjAAAWLPrtC9QgtZRS7EJqpq67cWCgvZk/ghfUkzmujREn3Mfj5Llpd
+        l+SqZYqJz/jLoMXDULSz9nsXm5Z0fh+tPX08pfPgqCSsedel9W3ygxs1LHbS1PxdH4xQvMHyaNR
+        Sxp6HQMPctIjviBkpvMVGw3u4nvmzViTX1qz09/YL6Q==
+X-Received: by 2002:a63:6146:: with SMTP id v67mr26601242pgb.116.1561367380036;
+        Mon, 24 Jun 2019 02:09:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwUBA29vHrYby9DlI0HUkgkMFFp3ZlV+TTMcwiU5vgOmnXsH6y1N10N6w9VuDG0KK+KnwHL1A==
+X-Received: by 2002:a63:6146:: with SMTP id v67mr26601205pgb.116.1561367379553;
+        Mon, 24 Jun 2019 02:09:39 -0700 (PDT)
+Received: from 2001-b011-380f-3511-4d72-4f7c-d6a5-6121.dynamic-ip6.hinet.net (2001-b011-380f-3511-4d72-4f7c-d6a5-6121.dynamic-ip6.hinet.net. [2001:b011:380f:3511:4d72:4f7c:d6a5:6121])
+        by smtp.gmail.com with ESMTPSA id n184sm10261480pfn.21.2019.06.24.02.09.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 02:09:39 -0700 (PDT)
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
 Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: RX CRC errors on I219-V (6) 8086:15be
+Message-Id: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
+Date:   Mon, 24 Jun 2019 17:09:37 +0800
+Cc:     Anthony Wong <anthony.wong@canonical.com>,
+        intel-wired-lan@lists.osuosl.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+To:     jeffrey.t.kirsher@intel.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as co-maintainer of DRM Bridge Drivers then add Jonas Karlman
-and Jernej Škrabec as Reviewers of DRM Bridge Drivers.
+Hi Jeffrey,
 
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Jernej Škrabec <jernej.skrabec@siol.net>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+We’ve encountered another issue, which causes multiple CRC errors and  
+renders ethernet completely useless, here’s the network stats:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2abf6d28db64..dd8dacc61e79 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5253,7 +5253,10 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
- 
- DRM DRIVERS FOR BRIDGE CHIPS
- M:	Andrzej Hajda <a.hajda@samsung.com>
-+M:	Neil Armstrong <narmstrong@baylibre.com>
- R:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-+R:	Jonas Karlman <jonas@kwiboo.se>
-+R:	Jernej Skrabec <jernej.skrabec@siol.net>
- S:	Maintained
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	drivers/gpu/drm/bridge/
--- 
-2.21.0
+/sys/class/net/eno1/statistics$ grep . *
+collisions:0
+multicast:95
+rx_bytes:1499851
+rx_compressed:0
+rx_crc_errors:1165
+rx_dropped:0
+rx_errors:2330
+rx_fifo_errors:0
+rx_frame_errors:0
+rx_length_errors:0
+rx_missed_errors:0
+rx_nohandler:0
+rx_over_errors:0
+rx_packets:4789
+tx_aborted_errors:0
+tx_bytes:864312
+tx_carrier_errors:0
+tx_compressed:0
+tx_dropped:0
+tx_errors:0
+tx_fifo_errors:0
+tx_heartbeat_errors:0
+tx_packets:7370
+tx_window_errors:0
 
+Same behavior can be observed on both mainline kernel and on your dev-queue  
+branch.
+OTOH, the same issue can’t be observed on out-of-tree e1000e.
+
+Is there any plan to close the gap between upstream and out-of-tree version?
+
+Kai-Heng
