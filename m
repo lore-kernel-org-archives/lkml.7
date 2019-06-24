@@ -2,119 +2,176 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2BBC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82136C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFE92073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516F32073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IpCOSL/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfFXDBn (ORCPT
+        id S1726633AbfFXDDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:01:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34569 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfFXDBl (ORCPT
+        Sun, 23 Jun 2019 23:03:07 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13165 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfFXDDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:01:41 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfBA2-0007QU-DG; Mon, 24 Jun 2019 00:40:35 +0200
-Date:   Mon, 24 Jun 2019 00:40:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v5 4/5] x86/umwait: Add sysfs interface to control umwait
- maximum time
-In-Reply-To: <1560994438-235698-5-git-send-email-fenghua.yu@intel.com>
-Message-ID: <alpine.DEB.2.21.1906232246380.32342@nanos.tec.linutronix.de>
-References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com> <1560994438-235698-5-git-send-email-fenghua.yu@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 23 Jun 2019 23:03:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d103d670001>; Sun, 23 Jun 2019 20:03:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 23 Jun 2019 20:03:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:04 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 03:03:03 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 03:03:03 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Jun 2019 03:03:03 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.126]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d103d650000>; Sun, 23 Jun 2019 20:03:03 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH V4 00/18] SC7 entry and exit support for Tegra210
+Date:   Sun, 23 Jun 2019 20:02:41 -0700
+Message-ID: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561345383; bh=FXKH8IMDorFgav/DVdwP1OzQMzFRRIOPr/T/3uTyBFU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=IpCOSL/++rOP3zioi/NBgfIA6zsHbAjJJ24ukprP13lUzOAxnN2GiEvaiwmb7w58E
+         qGSq8jMusbPDKl4Y+9zQ4eoYjiK6uhKJP27/EKvf4k6iI+w8JwEVASr9LMjSGmf2Uz
+         Q6wy8Dc8uWeSkGCumppxlCCJ6g9q7UXdvsQ23SzlxoXpy+Xc6iLxrzN8UJJ4+xlzaj
+         8sSGNG6Teyuk6/EBLuG7asHCddGLsKy57KfSbsXjljUQ/BqdJSodLg0meOj4YLLQ1t
+         smhCJYwoGq7P031IaID+NefAxIec7M3i4rqYRT0w3uoLCgjhL3kaJiMLKZbPraX5q7
+         /Yjnmdo8DUV7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Jun 2019, Fenghua Yu wrote:
+This patch series includes Tegra210 deepsleep support with RTC alarm
+wake event.
 
-> Users can write an unsigned 32-bit number to
-> /sys/devices/system/cpu/umwait_control/max_time to change the default
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
 
-Users? Administrators can. Users NOT.
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
 
-> value. Note that a value of zero means there is no limit. Low order
-> two bits must be zero.
+[V4]: Changes between V3 & V4 are
+	- V3 feedback fixes
+	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
+	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
+	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
+	  as well and thierry posted patch series for this.
+	- Implemented all peripheral clocks save and restore through their
+	  corresponding clk_ops save_context and restore_context and removed
+	  all direct registers store and restore in clk-tegra210 driver.
+	- Created separate patch for fence_delay update during PLLU init based
+	  on V3 feedback.
+	- Added more comments in tegra210_clk_resume regarding dfll restore
+	  sequence and its dependency on peripheral clocks restore.
 
-...
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
 
-> +static ssize_t max_time_store(struct device *kobj,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	u32 max_time;
-> +	int ret;
-> +
-> +	ret = kstrtou32(buf, 0, &max_time);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* bits[1:0] must be zero */
-> +	if (max_time & ~MSR_IA32_UMWAIT_CONTROL_MAX_TIME)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&umwait_lock);
-> +
-> +	if (max_time == get_umwait_ctrl_max_time())
-> +		goto out_unlock;
-> +
-> +	WRITE_ONCE(umwait_control_cached,
-> +		   UMWAIT_CTRL_VAL(max_time, get_umwait_ctrl_c02()));
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
 
-Same convoluted logic with reading the cached value twice to confuse the
-reader.
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
 
-	ctrl = READ_ONCE(umwait_control_cached);
-	if (max_time == umwait_ctrl_max_time(ctrl))
-		goto out_unlock;
 
-	ctrl = (ctrl & ~MSR_IA32_UMWAIT_CONTROL_TIME_MASK) | max_time;
-	WRITE_ONCE(umwait_control_cached, ctrl);
 
-Simple, right?
+Sowjanya Komatineni (18):
+  irqchip: tegra: do not disable COP IRQ during suspend
+  pinctrl: tegra: add suspend and resume support
+  gpio: tegra: use resume_noirq for tegra gpio resume
+  clk: tegra: save and restore divider rate
+  clk: tegra: pllout: save and restore pllout context
+  clk: tegra: pll: save and restore pll context
+  clk: tegra: save and restore CPU and System clocks context
+  clk: tegra: support for saving and restoring OSC context
+  clk: tegra: add suspend resume support for DFLL
+  clk: tegra: add save and restore context support for peripheral clocks
+  clk: tegra210: use fence_udelay during PLLU init
+  clk: tegra210: support for Tegra210 clocks suspend and resume
+  soc/tegra: pmc: allow support for more tegra wake
+  soc/tegra: pmc: add pmc wake support for tegra210
+  arm64: tegra: enable wake from deep sleep on RTC alarm.
+  soc/tegra: pmc: configure core power request polarity
+  soc/tegra: pmc: configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
 
-But this can be done even simpler with a shared update function:
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 ++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
+ drivers/clk/tegra/clk-dfll.c                   |  78 ++++++++++++++
+ drivers/clk/tegra/clk-dfll.h                   |   2 +
+ drivers/clk/tegra/clk-divider.c                |  23 ++++
+ drivers/clk/tegra/clk-periph-fixed.c           |  31 ++++++
+ drivers/clk/tegra/clk-periph-gate.c            |  34 ++++++
+ drivers/clk/tegra/clk-periph.c                 |  43 ++++++++
+ drivers/clk/tegra/clk-pll-out.c                |  28 +++++
+ drivers/clk/tegra/clk-pll.c                    | 115 ++++++++++++++------
+ drivers/clk/tegra/clk-sdmmc-mux.c              |  30 ++++++
+ drivers/clk/tegra/clk-tegra-fixed.c            |  14 +++
+ drivers/clk/tegra/clk-tegra-super-gen4.c       |   4 -
+ drivers/clk/tegra/clk-tegra210.c               | 123 +++++++++++++++++++--
+ drivers/clk/tegra/clk.c                        |  94 ++++++++++++++++
+ drivers/clk/tegra/clk.h                        |  35 +++++-
+ drivers/gpio/gpio-tegra.c                      |   5 +-
+ drivers/irqchip/irq-tegra.c                    |  20 +++-
+ drivers/pinctrl/tegra/pinctrl-tegra.c          |  47 ++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h          |   4 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c       |   6 ++
+ drivers/soc/tegra/pmc.c                        | 143 ++++++++++++++++++++++++-
+ 22 files changed, 838 insertions(+), 53 deletions(-)
 
-static void umwait_update_control(u32 maxtime, bool c02_enable)
-{
-        u32 ctrl = maxtime & MSR_IA32_UMWAIT_CONTROL_TIME_MASK;
+-- 
+2.7.4
 
-        if (!c02_enable)
-                ctrl |= MSR_IA32_UMWAIT_CONTROL_C02_DISABLE;
-
-        WRITE_ONCE(umwait_control_cached, ctrl);
-        /* Propagate to all CPUs */
-        on_each_cpu(umwait_update_control_msr, NULL, 1);
-}
-
-With that both functions become trivial and do not have duplicated code.
-
-Thanks,
-
-	tglx
