@@ -2,116 +2,110 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D693C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E792C48BD3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6063D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183D420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="itKtxDwu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QSe0zP7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfFXWde (ORCPT
+        id S1726699AbfFXWeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:33:34 -0400
-Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:58946
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726388AbfFXWde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+wFFYaWWuUevbmSaloUuLSlosgeVtyPpmefuFpmHz78=;
- b=itKtxDwujiFxqWkQV254ZxOORNYZLEai7NTEVVkn8tjlhLqKCpFRBz+Bdtpf+j+LoEtAeU1Ngtpje56dJ3l0oRp0ZhOtz/3ye/7Q4ddURczlYGb5RN3OKUvMuZiRwNJ4BeToIywQQXs8w4kc0o+cq87wq7HKVclcZzz245XCoco=
-Received: from AM6PR0502CA0044.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::21) by DB6PR0501MB2341.eurprd05.prod.outlook.com
- (2603:10a6:4:4e::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16; Mon, 24 Jun
- 2019 22:33:30 +0000
-Received: from VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::201) by AM6PR0502CA0044.outlook.office365.com
- (2603:10a6:20b:56::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2008.13 via Frontend
- Transport; Mon, 24 Jun 2019 22:33:30 +0000
-Authentication-Results: spf=pass (sender IP is 193.47.165.134)
- smtp.mailfrom=mellanox.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none
- header.from=mellanox.com;
-Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
- 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
-Received: from mtlcas13.mtl.com (193.47.165.134) by
- VE1EUR03FT036.mail.protection.outlook.com (10.152.19.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2008.13 via Frontend Transport; Mon, 24 Jun 2019 22:33:30 +0000
-Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4; Tue, 25 Jun 2019 01:33:29
- +0300
-Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Tue,
- 25 Jun 2019 01:33:29 +0300
-Received: from [172.16.0.6] (172.16.0.6) by MTLCAS01.mtl.com (10.0.8.71) with
- Microsoft SMTP Server (TLS) id 14.3.301.0; Tue, 25 Jun 2019 01:33:27 +0300
-Subject: Re: [PATCH 6/8] IB/srp: set virt_boundary_mask in the scsi host
-To:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-CC:     Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        <linux-rdma@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <megaraidlinux.pdl@broadcom.com>,
-        <MPT-FusionLinux.pdl@broadcom.com>, <linux-hyperv@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190617122000.22181-1-hch@lst.de>
- <20190617122000.22181-7-hch@lst.de>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <2d4774b0-4977-23d1-ade1-7cae900f92ab@mellanox.com>
-Date:   Tue, 25 Jun 2019 01:33:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 24 Jun 2019 18:34:44 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40961 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfFXWen (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 18:34:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 136so11190304lfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y8eI1qO6AFmOqg+DGNHTfaHm/FdxuE7uuuEzH8JMWmA=;
+        b=QSe0zP7x1PhqeFm5Pa1g378mzzZ9F4w1zBJn8qZeqnRDI9KV/yXGJRMQzdGKm8ZUgM
+         ixEcJO5JNi7MHG9Ry+Xmb17GQNKPjDakyNvN6vMbO3YS+BkBvuIF79xwNWqUM/hmufCH
+         1h2TXBqR7yMD4Bt5H3LvAyESbfAVNfgYjX5REfOYMLCxcd3rL6Xvka5TDM7zoSZH7tw+
+         FZJTaOQ4evD0HamcazF6LA7ghv7gapAci8IVBNM8TYj2DLbj3alkIPZMvTKbZznDfxiL
+         6OuJCyyot+2ls0X0JcFnRBfcW2kFMaZyaUs775cOcEXOOCGezhTRgUDYaR+3ZeZPt1Xj
+         +4NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y8eI1qO6AFmOqg+DGNHTfaHm/FdxuE7uuuEzH8JMWmA=;
+        b=sE/xw2HA699AD4hQaUwOsaVg/QxoVQ0WEQ3vJUXZc6mPbxE5cGSBe2uoERCEC3xlve
+         /37VgyuR/ydtCZ1xSZgxOy8q1HXGR1M/CBZtL9LP6K+7Uqo0iVPt6Ud0rCML2EOcUPpb
+         r/tldJWV+F1x+Z93DEqCdG2qObsvNcDAGndYla+/yJ0tFLnVuGedFtiDNmBcHJKOKITP
+         JlZcx31G+yfCM+M5aiIB20/pCdjGamvAwAdz22Q3c8uyfdY0rFRU8k6A2TV2tJF/WSzj
+         UTyiDX66cpM5/L+wfi0Lwk82F6Qu1Gs2fyHOfjPoXU+4AL9IXugWBa4mkdDBHUFeH77f
+         6B5g==
+X-Gm-Message-State: APjAAAV98X++HhXY7OitCUk+bBauXNvGa2HWFDfoqiPtWKKOWi6RxeUf
+        mpCQKqr+sgOv+fGRELyoG1slW0kba6ISoy3Ors1IzA==
+X-Google-Smtp-Source: APXvYqxFHSmad1x1wi9PdCcVTpSY3IPLSnbObJWPfhnJk0sD/mXvfU9nvhf52ekQIxfe3n4jChqssFab3rPEkOYHe0M=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr74724539lfn.165.1561415681723;
+ Mon, 24 Jun 2019 15:34:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190617122000.22181-7-hch@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.16.0.6]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(396003)(346002)(2980300002)(189003)(199004)(65826007)(36756003)(47776003)(64126003)(86362001)(486006)(356004)(476003)(478600001)(2616005)(186003)(77096007)(16526019)(4326008)(26005)(305945005)(7736002)(558084003)(126002)(336012)(8676002)(2906002)(106002)(230700001)(110136005)(7416002)(11346002)(8936002)(23676004)(316002)(2486003)(81156014)(76176011)(6246003)(81166006)(5660300002)(31686004)(31696002)(50466002)(54906003)(16576012)(65806001)(446003)(65956001)(67846002)(229853002)(6116002)(53546011)(70206006)(70586007)(58126008)(3846002)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2341;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f3b33571-05b2-43ea-2baa-08d6f8f3fbd4
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:DB6PR0501MB2341;
-X-MS-TrafficTypeDiagnostic: DB6PR0501MB2341:
-X-Microsoft-Antispam-PRVS: <DB6PR0501MB2341239B17FA22012660CE28B6E00@DB6PR0501MB2341.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:813;
-X-Forefront-PRVS: 007814487B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: SPWdBfbZWEE7ET54OKcd7IYh2oYws2mdFDUNfB8sRJ7MMYLsXHee+Fm+bMWoP1pZO9LXGcnv0g4edaeEvTliU7WHvfFHUgHnV3IPjrwY2KlUobcTUIjFckFbxPR+AzI5IqQUB8z5olxtHUlhKxfCvIo5VblFh1FlXVLrMJ+eIKaMXnw5OldHn6kEu/CjMhgUxM8jn9hG7ZmYQQpwe6cSF68k/iY6ETtRZaoLJSWZCVMpP0qkSuydy9DYYzMCAkMimGnAjvw2h9+hKT/nnBCzN58pBb7yr863oi7EgBEmFJRCM0pZo6hTONMGevhx1lGNYz81VCMKCZVwtqARslAZvCWdpZyWjiWwb44iANWaDFE/wgMH84MQyNBJwY3L81yT4kbsnJUWubNSYwIHaZZ+5Md9NPt2ijfqJlHU0tom/Nk=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 22:33:30.1278
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3b33571-05b2-43ea-2baa-08d6f8f3fbd4
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2341
+References: <20190621152329.21072-1-thierry.reding@gmail.com>
+In-Reply-To: <20190621152329.21072-1-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 00:34:30 +0200
+Message-ID: <CACRpkdbKCOgJDYWx0hJ+tYyimXbShMNV00oHsVAskeJm1kT0Jg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Add device link support
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 5:23 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-On 6/17/2019 3:19 PM, Christoph Hellwig wrote:
-> This ensures all proper DMA layer handling is taken care of by the
-> SCSI midlayer.
+> From: Thierry Reding <treding@nvidia.com>
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Create a device link between a GPIO consumer and the GPIO supplier (i.e.
+> the GPIO chip's parent). This makes the driver core aware of the
+> dependency between the two devices so that it can properly order the
+> suspend/resume sequence.
+>
+> As a side-effect the GPIO consumer will be force unloaded when the GPIO
+> supplier goes away, which prevents the consumer from accessing dangling
+> GPIOs.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-Looks good,
+I was thinking we were gonna see this soon :D
 
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+> +void gpiod_add_device_link(struct gpio_desc *desc, struct device *consumer)
+> +{
+> +       struct device_link *link;
+> +
+> +       link = device_link_add(consumer, desc->gdev->dev.parent,
+> +                              DL_FLAG_AUTOREMOVE_CONSUMER);
 
+I think this needs a NULL check.
+
+Some GPIO chips still have NULL as parent here, they just
+register a gpio_chip right out of boardfile code without any
+corresponding device. MIPS does this for example IIRC.
+
+> +               device_link_remove(desc->consumer, desc->gdev->dev.parent);
+
+And same on remove.
+
+But why not use desc->gdev->dev as link, simply?
+That device has the same lifetime as the gpio_chip, sometimes
+even longer I think, if e.g. there is userspace holding the
+GPIOs.
+
+Yours,
+Linus Walleij
