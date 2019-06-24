@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE94C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C4B208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43AA208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370871;
-	bh=d/cT9knU3Q7SoiUiMZRHfIV+IRBC2ybsYASLgBI09oI=;
+	s=default; t=1561370881;
+	bh=ECy2ZQeCJqHP2x9qvZA0fKlRWNpSNPyicrZYRdLcbmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SwluUPa8s4pIFlqi07McmDaHBLR/SBNDH/vqG1lONDH460lx1QP8LZTHs8kdUyOHy
-	 5z62/Ui42fZAKz4YjopOycM2q3lTjszduvDXy7mftaMmmUXLDaJWCbp8isGSqCPBLO
-	 GrH/MURVUWlxce3vrfTGEvjqeywIJEUCxjrb9BcU=
+	b=b0vcOxhMLXdZh9IlaaYhqsh8rLOA4Bd7ylS6gh7jZK9L43Vfpl+r/ksTL9dxZRpJG
+	 gpTEDkQy8feei4MH0Z6ddTEnqTtXFl8CdTueZ7VvXy90bmYF4Ijjhep1KzoLQ7yKcw
+	 6rAX/goAOAFcS7ca78b5T40OQ/CjpexcB88lMt/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfFXKHt (ORCPT
+        id S1729755AbfFXKIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40114 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbfFXKHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:35 -0400
+        id S1730352AbfFXKHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:43 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0728205C9;
-        Mon, 24 Jun 2019 10:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E806C205C9;
+        Mon, 24 Jun 2019 10:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370854;
-        bh=d/cT9knU3Q7SoiUiMZRHfIV+IRBC2ybsYASLgBI09oI=;
+        s=default; t=1561370862;
+        bh=ECy2ZQeCJqHP2x9qvZA0fKlRWNpSNPyicrZYRdLcbmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DGyL/7v3s8G3K7qJwgCQ6I0wuuGIuaOM8tqXilH3wRB7YK2aaIe+07xq9HkY1KWD9
-         x3F8IYfHKT/nOgihGtvIyXFwrVJ3Fa/ppdxCvhD0FGGqe7VDx1C9s2TI8etl7v2z+k
-         VAhIzqQRB514btzY000OM7/tqhGdAzQvGD9wUS+4=
+        b=0nqlRvO3xFUUr+QklLaJ3HB5mJUM0j+nH46AZcXdc/WJ/Tld6fczHyDW3j5CSuhYp
+         nafBh3U91WvDEkScu10p6f2A5//KMB4p0qRX45jge1MmcHP3ya3nP21/bBJh5BeXwq
+         fBYRNbmICUuycK2L0Uay4HLQXR7JsGgTMaX1v1BI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 5.1 025/121] apparmor: fix PROFILE_MEDIATES for untrusted input
-Date:   Mon, 24 Jun 2019 17:55:57 +0800
-Message-Id: <20190624092321.992568736@linuxfoundation.org>
+        stable@vger.kernel.org, Wright Feng <wright.feng@cypress.com>,
+        Double Lo <double.lo@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 028/121] Revert "brcmfmac: disable command decode in sdio_aos"
+Date:   Mon, 24 Jun 2019 17:56:00 +0800
+Message-Id: <20190624092322.193778572@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -58,52 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Johansen <john.johansen@canonical.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 23375b13f98c5464c2b4d15f983cc062940f1f4e upstream.
+commit abdd5dcc00207e7c38680f3754d1bfffafff1093 upstream.
 
-While commit 11c236b89d7c2 ("apparmor: add a default null dfa") ensure
-every profile has a policy.dfa it does not resize the policy.start[]
-to have entries for every possible start value. Which means
-PROFILE_MEDIATES is not safe to use on untrusted input. Unforunately
-commit b9590ad4c4f2 ("apparmor: remove POLICY_MEDIATES_SAFE") did not
-take into account the start value usage.
+This reverts commit 29f6589140a10ece8c1d73f58043ea5b3473ab3e.
 
-The input string in profile_query_cb() is user controlled and is not
-properly checked to be within the limited start[] entries, even worse
-it can't be as userspace policy is allowed to make us of entries types
-the kernel does not know about. This mean usespace can currently cause
-the kernel to access memory up to 240 entries beyond the start array
-bounds.
+After that patch landed I find that my kernel log on
+rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
 
+This seems to happen every time the Broadcom WiFi transitions out of
+sleep mode.  Reverting the commit fixes the problem for me, so that's
+what this patch does.
+
+Note that, in general, the justification in the original commit seemed
+a little weak.  It looked like someone was testing on a SD card
+controller that would sometimes die if there were CRC errors on the
+bus.  This used to happen back in early days of dw_mmc (the controller
+on my boards), but we fixed it.  Disabling a feature on all boards
+just because one SD card controller is broken seems bad.
+
+Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: Double Lo <double.lo@cypress.com>
+Cc: Madhan Mohan R <madhanmohan.r@cypress.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Cc: stable@vger.kernel.org
-Fixes: b9590ad4c4f2 ("apparmor: remove POLICY_MEDIATES_SAFE")
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/include/policy.h |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/security/apparmor/include/policy.h
-+++ b/security/apparmor/include/policy.h
-@@ -217,7 +217,16 @@ static inline struct aa_profile *aa_get_
- 	return labels_profile(aa_get_newest_label(&p->label));
- }
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -3373,11 +3373,7 @@ err:
  
--#define PROFILE_MEDIATES(P, T)  ((P)->policy.start[(unsigned char) (T)])
-+static inline unsigned int PROFILE_MEDIATES(struct aa_profile *profile,
-+					    unsigned char class)
-+{
-+	if (class <= AA_CLASS_LAST)
-+		return profile->policy.start[class];
-+	else
-+		return aa_dfa_match_len(profile->policy.dfa,
-+					profile->policy.start[0], &class, 1);
-+}
-+
- static inline unsigned int PROFILE_MEDIATES_AF(struct aa_profile *profile,
- 					       u16 AF) {
- 	unsigned int state = PROFILE_MEDIATES(profile, AA_CLASS_NET);
+ static bool brcmf_sdio_aos_no_decode(struct brcmf_sdio *bus)
+ {
+-	if (bus->ci->chip == CY_CC_43012_CHIP_ID ||
+-	    bus->ci->chip == CY_CC_4373_CHIP_ID ||
+-	    bus->ci->chip == BRCM_CC_4339_CHIP_ID ||
+-	    bus->ci->chip == BRCM_CC_4345_CHIP_ID ||
+-	    bus->ci->chip == BRCM_CC_4354_CHIP_ID)
++	if (bus->ci->chip == CY_CC_43012_CHIP_ID)
+ 		return true;
+ 	else
+ 		return false;
 
 
