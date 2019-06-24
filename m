@@ -2,177 +2,229 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EACDC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050D7C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C7120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05F920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HofRi30R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfFXL2E (ORCPT
+        id S1729813AbfFXL2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:28:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:9448 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfFXL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:28:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 04:28:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="182617283"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2019 04:27:58 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
-In-Reply-To: <20190621235159.6992-2-corbet@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190621235159.6992-1-corbet@lwn.net> <20190621235159.6992-2-corbet@lwn.net>
-Date:   Mon, 24 Jun 2019 14:30:47 +0300
-Message-ID: <87k1dbrziw.fsf@intel.com>
+        Mon, 24 Jun 2019 07:28:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42243 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfFXL2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:28:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so13472120wrl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UNcy8eWqctDZ/B0vQmCYKv2pj1uHfmf+ueIIuptmq+g=;
+        b=HofRi30RbWmoIRYk082kCxt/H5Be+HRHLSug71DnVgsW1wmNEH1LPvTG3PsCttbvvC
+         dtgv/zgBiH8OcGz6bjsS+7FCSFCUUKoTnHE73WfOV5DzNs+J9G3iHEFI01fSqUDb4WiP
+         DD1uXfJgSvKavkWwFeOqvzsVA0ysnXDZLodb3SzosUwEiqzCMpjIf0Wj9dwrujNb/FMj
+         A/SM1HD1ACjmDGDvr4ePjLI8NkmXQ3ntpR4oh50Uka9zAsBoO354aXnu9yU2SIszxli1
+         Nw6EUWjdsKmvji+uM12gtlfuYf3uqQ74XZR5TI6X5qiiSkkBYCAPOtDYZ4GIcOQWx1F/
+         G2UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UNcy8eWqctDZ/B0vQmCYKv2pj1uHfmf+ueIIuptmq+g=;
+        b=ieqRpmh4iZOBecplo4kj1TMIHR/t/ocO900S7Ttj0VIFZWNPHc5ABhBIuDM6i+CQrD
+         W9PkolPxZwlzjN8V5GvNgGzX5mDtMmkCAKT6GtIIYCe5u5K79TYDBPVNhVlpD6DVDg+Z
+         b6I5HMqitz+mF6HZGDhWS7ly4DheC2eom4KwTulmupM2ftkY56K0M5YpjSychj1qXBu1
+         BP9+F2QEZL9kUM/237pjFzoW8rac4EiELaaRFvW4DMucdjv/8qNFh2CQU2+YBNKCCiBR
+         WBUGmyVQco9w3/TT0wL4clrxU2bH+7SJQb9aQQfiwynSbFrOjqd33plajczPYcO3VOts
+         W17Q==
+X-Gm-Message-State: APjAAAV+gepEpPsD5buI4j0VweuLX8mnG3E0Zdpkk5rJ3cCvCYUQYHK+
+        MIkamGMtoC0nMJ1YII4QKPUwrA==
+X-Google-Smtp-Source: APXvYqx2FMSxOtUi9i/iRHzrVCNGDY7XivA/wMjvC/gHwJYcWyvkHAQGW/e4L15l5LzoWyz6R8VRig==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr59955676wrs.215.1561375727072;
+        Mon, 24 Jun 2019 04:28:47 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id h8sm8951645wmf.12.2019.06.24.04.28.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 04:28:46 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 12:28:44 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+ <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621135608.GB11839@ulmo>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> Rather than fill our text files with :c:func:`function()` syntax, just do
-> the markup via a hook into the sphinx build process.
->
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> ---
->  Documentation/conf.py              |  3 +-
->  Documentation/sphinx/automarkup.py | 80 ++++++++++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/sphinx/automarkup.py
->
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index 7ace3f8852bd..a502baecbb85 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -34,7 +34,8 @@ needs_sphinx = '1.3'
->  # Add any Sphinx extension module names here, as strings. They can be
->  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
->  # ones.
-> -extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig']
-> +extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
-> +              'kfigure', 'sphinx.ext.ifconfig', 'automarkup']
->  
->  # The name of the math extension changed on Sphinx 1.4
->  if (major == 1 and minor > 3) or (major > 1):
-> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-> new file mode 100644
-> index 000000000000..14b09b5d145e
-> --- /dev/null
-> +++ b/Documentation/sphinx/automarkup.py
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019 Jonathan Corbet <corbet@lwn.net>
-> +#
-> +# Apply kernel-specific tweaks after the initial document processing
-> +# has been done.
-> +#
-> +from docutils import nodes
-> +from sphinx import addnodes
-> +import re
-> +
-> +#
-> +# Regex nastiness.  Of course.
-> +# Try to identify "function()" that's not already marked up some
-> +# other way.  Sphinx doesn't like a lot of stuff right after a
-> +# :c:func: block (i.e. ":c:func:`mmap()`s" flakes out), so the last
-> +# bit tries to restrict matches to things that won't create trouble.
-> +#
-> +RE_function = re.compile(r'([\w_][\w\d_]+\(\))')
-> +
-> +#
-> +# The DVB docs create references for these basic system calls, leading
-> +# to lots of confusing links.  So just don't link them.
-> +#
-> +Skipfuncs = [ 'open', 'close', 'write' ]
-> +
-> +#
-> +# Find all occurrences of function() and try to replace them with
-> +# appropriate cross references.
-> +#
-> +def markup_funcs(docname, app, node):
-> +    cdom = app.env.domains['c']
-> +    t = node.astext()
-> +    done = 0
-> +    repl = [ ]
-> +    for m in RE_function.finditer(t):
-> +        #
-> +        # Include any text prior to function() as a normal text node.
-> +        #
-> +        if m.start() > done:
-> +            repl.append(nodes.Text(t[done:m.start()]))
-> +        #
-> +        # Go through the dance of getting an xref out of the C domain
-> +        #
-> +        target = m.group(1)[:-2]
-> +        target_text = nodes.Text(target + '()')
-> +        xref = None
-> +        if target not in Skipfuncs:
-> +            lit_text = nodes.literal(classes=['xref', 'c', 'c-func'])
-> +            lit_text += target_text
-> +            pxref = addnodes.pending_xref('', refdomain = 'c',
-> +                                          reftype = 'function',
-> +                                          reftarget = target, modname = None,
-> +                                          classname = None)
-> +            xref = cdom.resolve_xref(app.env, docname, app.builder,
-> +                                     'function', target, pxref, lit_text)
-> +        #
-> +        # Toss the xref into the list if we got it; otherwise just put
-> +        # the function text.
-> +        #
-> +        if xref:
-> +            repl.append(xref)
-> +        else:
-> +            repl.append(target_text)
-> +        done = m.end()
-> +    if done < len(t):
-> +        repl.append(nodes.Text(t[done:]))
-> +    return repl
-> +
-> +def auto_markup(app, doctree, name):
-> +    for para in doctree.traverse(nodes.paragraph):
-> +        for node in para.traverse(nodes.Text):
-> +            if not isinstance(node.parent, nodes.literal):
-> +                node.parent.replace(node, markup_funcs(name, app, node))
+On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
+> On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
+> > On 22/05/2019 17:34, Paul Cercueil wrote:
+> > > When the driver probes, the PWM pin is automatically configured to its
+> > > default state, which should be the "pwm" function.
+> > 
+> > At which point in the probe... and by who?
+> 
+> The driver core will select the "default" state of a device right before
+> calling the driver's probe, see:
+> 
+> 	drivers/base/pinctrl.c: pinctrl_bind_pins()
+> 
+> which is called from:
+> 
+> 	drivers/base/dd.c: really_probe()
+> 
 
-I think overall this is a better approach than preprocessing. Thanks for
-doing this!
+Thanks. I assumed it would be something like that... although given
+pwm-backlight is essentially a wrapper driver round a PWM I wondered why
+the pinctrl was on the backlight node (rather than the PWM node).
 
-I toyed with something like this before, and the key difference here
-seems to be ignoring literal blocks. The problem seemed to be that
-replacing blocks with syntax highlighting also removed the syntax
-highlighting, with no way that I could find to bring it back.
-
-Obviously it would be great to be able to add the cross references in
-more places than just bulk text nodes, but this is a good start.
-
-BR,
-Jani.
+Looking at the DTs in the upstream kernel it looks like ~20% of the
+backlight drivers have pinctrl on the backlight node. Others presumable
+have none or have it on the PWM node (and it looks like support for
+sleeping the pins is *very* rare amoung the PWM drivers).
 
 
-> +
-> +def setup(app):
-> +    app.connect('doctree-resolved', auto_markup)
-> +    return {
-> +        'parallel_read_safe': True,
-> +        'parallel_write_safe': True,
-> +        }
+> > > However, at this
+> > > point we don't know the actual level of the pin, which may be active or
+> > > inactive. As a result, if the driver probes without enabling the
+> > > backlight, the PWM pin might be active, and the backlight would be
+> > > lit way before being officially enabled.
+> > > 
+> > > To work around this, if the probe function doesn't enable the backlight,
+> > > the pin is set to its sleep state instead of the default one, until the
+> > > backlight is enabled. Whenk the backlight is disabled, the pin is reset
+> > > to its sleep state.
+> > Doesn't this workaround result in a backlight flash between whatever enables
+> > it and the new code turning it off again?
+> 
+> Yeah, I think it would. I guess if you're very careful on how you set up
+> the device tree you might be able to work around it. Besides the default
+> and idle standard pinctrl states, there's also the "init" state. The
+> core will select that instead of the default state if available. However
+> there's also pinctrl_init_done() which will try again to switch to the
+> default state after probe has finished and the driver didn't switch away
+> from the init state.
+> 
+> So you could presumably set up the device tree such that you have three
+> states defined: "default" would be the one where the PWM pin is active,
+> "idle" would be used when backlight is off (PWM pin inactive) and then
+> another "init" state that would be the same as "idle" to be used during
+> probe. During probe the driver could then switch to the "idle" state so
+> that the pin shouldn't glitch.
+> 
+> I'm not sure this would actually work because I think the way that
+> pinctrl handles states both "init" and "idle" would be the same pointer
+> values and therefore pinctrl_init_done() would think the driver didn't
+> change away from the "init" state because it is the same pointer value
+> as the "idle" state that the driver selected. One way to work around
+> that would be to duplicate the "idle" state definition and associate one
+> instance of it with the "idle" state and the other with the "init"
+> state. At that point both states should be different (different pointer
+> values) and we'd get the init state selected automatically before probe,
+> select "idle" during probe and then the core will leave it alone. That's
+> of course ugly because we duplicate the pinctrl state in DT, but perhaps
+> it's the least ugly solution.
+> Adding Linus for visibility. Perhaps he can share some insight.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+To be honest I'm happy to summarize in my head as "if it flashes then it's not
+a pwm_bl.c's problem" ;-).
+
+
+Daniel.
+
+
+> 
+> On that note, I'm wondering if perhaps it'd make sense for pinctrl to
+> support some mode where a device would start out in idle mode. That is,
+> where pinctrl_bind_pins() would select the "idle" mode as the default
+> before probe. With something like that we could easily support this
+> use-case without glitching.
+> 
+> I suppose yet another variant would be for the PWM backlight to not use
+> any of the standard pinctrl states at all. Instead it could just define
+> custom states, say "active" and "inactive". Looking at the code that
+> would prevent pinctrl_bind_pins() from doing anything with pinctrl
+> states and given the driver exact control over when each of the states
+> will be selected. That's somewhat suboptimal because we can't make use
+> of the pinctrl PM helpers and it'd require more boilerplate.
+> 
+> Thierry
+> 
+> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net> > ---
+> > >   drivers/video/backlight/pwm_bl.c | 9 +++++++++
+> > >   1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > > index fb45f866b923..422f7903b382 100644
+> > > --- a/drivers/video/backlight/pwm_bl.c
+> > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > @@ -16,6 +16,7 @@
+> > >   #include <linux/module.h>
+> > >   #include <linux/kernel.h>
+> > >   #include <linux/init.h>
+> > > +#include <linux/pinctrl/consumer.h>
+> > >   #include <linux/platform_device.h>
+> > >   #include <linux/fb.h>
+> > >   #include <linux/backlight.h>
+> > > @@ -50,6 +51,8 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+> > >   	struct pwm_state state;
+> > >   	int err;
+> > > +	pinctrl_pm_select_default_state(pb->dev);
+> > > +
+> > >   	pwm_get_state(pb->pwm, &state);
+> > >   	if (pb->enabled)
+> > >   		return;
+> > > @@ -90,6 +93,8 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+> > >   	regulator_disable(pb->power_supply);
+> > >   	pb->enabled = false;
+> > > +
+> > > +	pinctrl_pm_select_sleep_state(pb->dev);
+> > >   }
+> > >   static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
+> > > @@ -626,6 +631,10 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> > >   	backlight_update_status(bl);
+> > >   	platform_set_drvdata(pdev, bl);
+> > > +
+> > > +	if (bl->props.power == FB_BLANK_POWERDOWN)
+> > > +		pinctrl_pm_select_sleep_state(&pdev->dev);
+> > 
+> > Didn't backlight_update_status(bl) already do this?
+> > 
+> > 
+> > Daniel.
+> > 
+> > 
+> > > +
+> > >   	return 0;
+> > >   err_alloc:
+> > > 
+> > 
+
+
