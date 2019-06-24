@@ -7,98 +7,72 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10DDC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0385AC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966802077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E921206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HUXUAlmq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pP5EQZ+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfFXX4k (ORCPT
+        id S1728879AbfFXX4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:56:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45242 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbfFXX4i (ORCPT
+        Mon, 24 Jun 2019 19:56:55 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45213 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728671AbfFXX4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:56:38 -0400
-Received: by mail-io1-f65.google.com with SMTP id e3so1049608ioc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:56:38 -0700 (PDT)
+        Mon, 24 Jun 2019 19:56:54 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a14so24183829edv.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:56:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qbOrnIupVUW58CvYWuTxi+TaCWansJx4UnWPnwoZyJY=;
-        b=HUXUAlmqADW2TvklcTS8vLxmQ564rKI+gpHW3ckU8mFGROi3j1s/fMq9zvwOcD+GR/
-         Ejy70MnCirzz9M9UbGuGbPLeezKbqoKj5JhUclzQLUQP28sgxW820TLZ5lbacxE8hQVj
-         x4uw9hzl639jgHDZ9UO3wpxo8Un3RGw4P0LCSzGhvIDVlg6UdGz3N8h2s5TUacfgJvvt
-         Pfjo3cZvMqWAUxDZP8GviI08ewLTXJMN/ALlSa5C0CgSVWdjy2beq6N+kPRv2Nus+C56
-         PN1V00fo3fGRDTYnUHm3vvref5BiDeYLvYvEoZngc27qwYQ8qOB4lozFsNR4aA/IipUt
-         kA4A==
+        bh=WJB0CFLYwTIUULDoeP21WrS2Yg7QC8IxRDJ2iUsn4AI=;
+        b=pP5EQZ+oW3XstA7p2mr1uQyDkp74c9m7haJVL5BKgdFCQdkM4v1CZeppMNpJEWD4zw
+         5e4MyNVL/PmaHVGuOZEDUZDUJ2V56e2iePORcy4BKQC/yQzVzTErTBstR3Fl6iI3yTsQ
+         Ro1vvAdspGw9Uwg603Al1dRYMoE3fUma8YJ7iIiQwPCPnBIh94DuyGlWBmp9LKWUiN4H
+         0eQk9/r5FeHZE4x+58qTbcyCoQ/WD0fkrUmGwiUj6wHakQQ3aGf8vaDbUiMFAN28J6bL
+         iXCbtEYXZgQXWMe67RM92ZqTb44sSKxVGiggZQe9lzhdEH2ITcXxPixLXYJW3S0vbzD1
+         Q6eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qbOrnIupVUW58CvYWuTxi+TaCWansJx4UnWPnwoZyJY=;
-        b=m+PXKyqCPEoHJrrMnYCV+YWhsrwU+zEl9cYWB70qebGXOBZEe2prEs4aSjxhpu8nKa
-         vodvOsFxmsE2qgBld0WN4hz+4NNO6ZfT6kaLPU2Xj/uOUEF/xwWGGvrYJ89pi8sJJw6j
-         CjF00eljOX1Y4mrxzpweYPfyvZHPA2+TCelDnGx/Z3tlmdNGRekC5iyHKWuau3Vmj8fV
-         fw5Z+U0zlDOX8yqbGRXDLBuJRBhmgPNkbEo4Os64Vv3of/UrTKftiJgzTH1AnyBGWxuK
-         mv9RwI7qbRMSR9sJIUyH4kcZ5ad+ZIz9f4PdkWVF0OZlcjyZYV6U9+DrtiluytjdmsVw
-         3ZjQ==
-X-Gm-Message-State: APjAAAWpkBsHioKOEEgiXF9g3zIb5LAU7msIneNIqUWbSQewW7cmrhYb
-        v+GraqOuoMwCCbVaEu7hBQnB+ByuKa/c9hFFdyVtMUDELiw=
-X-Google-Smtp-Source: APXvYqyJ78ZTsA34HUGlgKawtoKMfnBRG3TGL+IoK1XwzWW+xnzC8aP35qDBpYttWG4XrxgtQu1mEyJbU+viiisuDtA=
-X-Received: by 2002:a6b:8dcf:: with SMTP id p198mr8001652iod.46.1561420597592;
- Mon, 24 Jun 2019 16:56:37 -0700 (PDT)
+        bh=WJB0CFLYwTIUULDoeP21WrS2Yg7QC8IxRDJ2iUsn4AI=;
+        b=HRitBnQhioN0qPh2NRRUj10TAJq1/ddru5LFD3YNm5KFGYI1vajOfv7XrBeA0mMBVm
+         XVQA2Ey1fER//xxJoewHTGlItQm+waIF6iqP4PhIgc4bjcGe40LXW0h2SWuyZAlmGBeY
+         pTGnawS87rtQb+XfTe3xFmm2Q7oGoXDjs83FSiy9U2hT154MRr08sqWRNMYEXipd6Mt1
+         bsmH4AQZBsnwU3+xwcCh79ltA9hcw1MQelwcdEWUIFPvgmlqBc0jKzbzsqM93wJol0VC
+         ReDniBd0qxbdkj2ht32Pb5F9nF3jtuBQD6DepRLcGPWX8n8DycBopJCnVr+T9F+qnRJr
+         UPRw==
+X-Gm-Message-State: APjAAAVi1Rho5FijWFnHZr/AADKx/5E1lE1BcjQNB+fwaAwdmRyFPG84
+        xcILYLMrda4gQtLMF50aIVjpw5i4xYuU8xKK0aSBiQ==
+X-Google-Smtp-Source: APXvYqyFUhz6SPn4aBkx0KWHeoOdAa3ZkXgYUoR/wiTHnbC7xEPggCjNIsFAY+G/btOFIm6lrDc35PuG6eeixGJpptM=
+X-Received: by 2002:a17:906:470a:: with SMTP id y10mr76707823ejq.115.1561420612583;
+ Mon, 24 Jun 2019 16:56:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190622000358.19895-1-matthewgarrett@google.com> <alpine.LRH.2.21.1906250853290.7826@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1906250853290.7826@namei.org>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Mon, 24 Jun 2019 16:56:25 -0700
-Message-ID: <CACdnJut2erF9ZKeJQ+uvWZeEnHh=stmEioi_P36DF9mN5i2RGQ@mail.gmail.com>
-Subject: Re: [PATCH V34 00/29] Lockdown as an LSM
-To:     James Morris <jmorris@namei.org>
-Cc:     LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@amacapital.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+ <877e9g9lpu.fsf@firstfloor.org>
+In-Reply-To: <877e9g9lpu.fsf@firstfloor.org>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Mon, 24 Jun 2019 16:56:41 -0700
+Message-ID: <CAOyeoRVncfuFjrseenE5c2qw3hBT_TM+YeQK-ZN=y-WE=gkc3Q@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 4:01 PM James Morris <jmorris@namei.org> wrote:
->
-> On Fri, 21 Jun 2019, Matthew Garrett wrote:
->
-> > Minor updates over V33 - security_is_locked_down renamed to
-> > security_locked_down, return value of security_locked_down is returned
-> > in most cases, one unnecessary patch was dropped, couple of minor nits
-> > fixed.
->
-> Thanks for the respin.
->
-> We are still not resolved on granularity. Stephen has said he's not sure
-> if a useful policy can be constructed with just confidentiality and
-> integrity settings. I'd be interested to know JJ and Casey's thoughts on
-> lockdown policy flexibility wrt their respective LSMs.
+> Consider what happens when tmp.num_events is large enough to wrap size.
+> I suspect that's a kernel exploit as written.
 
-This implementation provides arbitrary granularity at the LSM level,
-though the lockdown LSM itself only provides two levels. Other LSMs
-can choose an appropriate level of exposure.
+Thanks for pointing this out - I'll fix it in the next iteration.
 
-> These are also "all or nothing" choices which may prevent deployment due
-> to a user needing to allow (presumably controlled or mitigated) exceptions
-> to the policy.
-
-Distributions have been deploying the "all or nothing" solution for
-several years now, which implies that it's adequate for the common
-case. I think it's reasonable to punt finer grained policies over to
-other LSMs - people who want that are probably already using custom
-LSM policy.
+> Also don't you need to copy tmp to new?
+Yep - somehow I accidentally deleted the lines that did this before I
+sent out the patch. I'll also fix this.
