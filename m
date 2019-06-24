@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB88C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E1FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE3D21537
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CD921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370545;
-	bh=4Zi5ayb+WA2bZIyp+jOi5idTye1Efj6rfvQauYuZFos=;
+	s=default; t=1561370550;
+	bh=1SKhh12LS84tpsXfKN2vWKpB6nAz91sJg50C3dxaYsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MN6ULPpExpymlgFVdOZOVggcZnC2ztCURM9eTzbfY71R0x1yeOmxu88PB6y3AXWd
-	 R5Jv1mpslIAebuF5hYD4gcwQNe721P+F6FFIocvXBN7zu0rG4lROAUDBU1qDfz7XPK
-	 zVbkHyClSJPoyWty6Biu8nCyluKKRCR/fZB1A+Ug=
+	b=S/DkFz1xyWIHBUR8WyQDBijImRePYTu8BYoYIk6wz+XtMpwYIwZO7/LSftC3X1nPd
+	 mmlVGCdMgO9bpgyfskkvPplwNJoM8PBXU2i0+yL8DgQmP5ONWvJrh0hICGzHybzkN9
+	 3NpZrliFZXro40quBOaQTkt+SMQiQLoYfjnEtc6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfFXKCY (ORCPT
+        id S1729388AbfFXKC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729323AbfFXKCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:02:20 -0400
+        id S1729372AbfFXKCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:02:25 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D879205ED;
-        Mon, 24 Jun 2019 10:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72EE3208E4;
+        Mon, 24 Jun 2019 10:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370539;
-        bh=4Zi5ayb+WA2bZIyp+jOi5idTye1Efj6rfvQauYuZFos=;
+        s=default; t=1561370544;
+        bh=1SKhh12LS84tpsXfKN2vWKpB6nAz91sJg50C3dxaYsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z9wAxgnYrYlYuwwM4a+MRGOjMPypfnxzSm5zUTHVvOZKxRN1bq+yIzDuP6gaIVh6E
-         aUbIcsQWvbqTrlKdFaSiSGqPM2kAqoC3NIJYWakjZJJsDTFw0C4leWBkzsCnqTHeeg
-         XWpApT+7hnJvvIhI5O3U6OBj58cd2VGHPPB39Dx8=
+        b=GuQfmggL2u0FkDZ4gh1r7znLqUXxdQNeXnY1qFd8eZUBt6GVc0/W4/KRdOh187ERQ
+         if6G8IrAZ5wdc4ZvPUFJwFMmoTAvkeHCPTuDfBB5XKMDSZta/lflLxJAvKRLMGZMz7
+         LIJPrkW1n29cfaC5ST8MqqO5SQjCburshWvyOlXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-        Amir Goldstein <amir73il@gmail.com>,
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
         Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/90] ovl: support the FS_IOC_FS[SG]ETXATTR ioctls
-Date:   Mon, 24 Jun 2019 17:55:54 +0800
-Message-Id: <20190624092314.225510275@linuxfoundation.org>
+Subject: [PATCH 4.19 06/90] ovl: make i_ino consistent with st_ino in more cases
+Date:   Mon, 24 Jun 2019 17:55:56 +0800
+Message-Id: <20190624092314.401598163@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,62 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b21d9c435f935014d3e3fa6914f2e4fbabb0e94d ]
+[ Upstream commit 6dde1e42f497b2d4e22466f23019016775607947 ]
 
-They are the extended version of FS_IOC_FS[SG]ETFLAGS ioctls.
-xfs_io -c "chattr <flags>" uses the new ioctls for setting flags.
+Relax the condition that overlayfs supports nfs export, to require
+that i_ino is consistent with st_ino/d_ino.
 
-This used to work in kernel pre v4.19, before stacked file ops
-introduced the ovl_ioctl whitelist.
+It is enough to require that st_ino and d_ino are consistent.
 
-Reported-by: Dave Chinner <david@fromorbit.com>
-Fixes: d1d04ef8572b ("ovl: stack file ops")
+This fixes the failure of xfstest generic/504, due to mismatch of
+st_ino to inode number in the output of /proc/locks.
+
+Fixes: 12574a9f4c9c ("ovl: consistent i_ino for non-samefs with xino")
 Cc: <stable@vger.kernel.org> # v4.19
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/overlayfs/inode.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 00338b828f76..749532fd51d7 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -426,7 +426,8 @@ static unsigned int ovl_get_inode_flags(struct inode *inode)
- 	return ovl_iflags;
- }
+diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+index b48273e846ad..373ccff9880c 100644
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -553,15 +553,15 @@ static void ovl_fill_inode(struct inode *inode, umode_t mode, dev_t rdev,
+ 	int xinobits = ovl_xino_bits(inode->i_sb);
  
--static long ovl_ioctl_set_flags(struct file *file, unsigned long arg)
-+static long ovl_ioctl_set_flags(struct file *file, unsigned int cmd,
-+				unsigned long arg)
- {
- 	long ret;
- 	struct inode *inode = file_inode(file);
-@@ -456,7 +457,7 @@ static long ovl_ioctl_set_flags(struct file *file, unsigned long arg)
- 	if (ret)
- 		goto unlock;
- 
--	ret = ovl_real_ioctl(file, FS_IOC_SETFLAGS, arg);
-+	ret = ovl_real_ioctl(file, cmd, arg);
- 
- 	ovl_copyflags(ovl_inode_real(inode), inode);
- unlock:
-@@ -474,11 +475,13 @@ static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 	switch (cmd) {
- 	case FS_IOC_GETFLAGS:
-+	case FS_IOC_FSGETXATTR:
- 		ret = ovl_real_ioctl(file, cmd, arg);
- 		break;
- 
- 	case FS_IOC_SETFLAGS:
--		ret = ovl_ioctl_set_flags(file, arg);
-+	case FS_IOC_FSSETXATTR:
-+		ret = ovl_ioctl_set_flags(file, cmd, arg);
- 		break;
- 
- 	default:
+ 	/*
+-	 * When NFS export is enabled and d_ino is consistent with st_ino
+-	 * (samefs or i_ino has enough bits to encode layer), set the same
+-	 * value used for d_ino to i_ino, because nfsd readdirplus compares
+-	 * d_ino values to i_ino values of child entries. When called from
++	 * When d_ino is consistent with st_ino (samefs or i_ino has enough
++	 * bits to encode layer), set the same value used for st_ino to i_ino,
++	 * so inode number exposed via /proc/locks and a like will be
++	 * consistent with d_ino and st_ino values. An i_ino value inconsistent
++	 * with d_ino also causes nfsd readdirplus to fail.  When called from
+ 	 * ovl_new_inode(), ino arg is 0, so i_ino will be updated to real
+ 	 * upper inode i_ino on ovl_inode_init() or ovl_inode_update().
+ 	 */
+-	if (inode->i_sb->s_export_op &&
+-	    (ovl_same_sb(inode->i_sb) || xinobits)) {
++	if (ovl_same_sb(inode->i_sb) || xinobits) {
+ 		inode->i_ino = ino;
+ 		if (xinobits && fsid && !(ino >> (64 - xinobits)))
+ 			inode->i_ino |= (unsigned long)fsid << (64 - xinobits);
 -- 
 2.20.1
 
