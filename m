@@ -2,222 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BC9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7F420449
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9730220449
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d+iVvU18"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rBOwuvT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfFXQFH (ORCPT
+        id S1731455AbfFXQFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:05:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50594 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfFXQFH (ORCPT
+        Mon, 24 Jun 2019 12:05:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50299 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbfFXQFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:05:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFxD38102539;
-        Mon, 24 Jun 2019 16:04:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=41sMWJSvnLAsRg6ez6H1oy7Azi3oAaiWmBUqC3HmD1c=;
- b=d+iVvU182KeWLCIxwR84lKkvldN63MA0JYNwLkIQE/W0BCoNXXyjUPYJs8AO6YIFr8P3
- Qd7A6a5DKf1YgoUcS1JPAmUmOpi3f84PZ1kkpXZ/aiG7pzfIYN1IKmXKwgl7mUhxO6BE
- FBDtaKy0Nmmk1++NcEzHFxPQSjwZiDqOrlrcIDosUksJQW7+DQvs0sTt1poruZhW/eew
- i2iafeOcbPFUuRCt3p1yEjGyQvgQ6fqDD0qBcokOTfD5XsDOeIg/ZpTF/eJXoJh/Bu/t
- WPVpTDZIAbPQIG7zJkb5J1f0C8pPlb7zcZP+N5lZvDH5GDIxdb5UudafqGeVtF5muQIx rQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brsybsj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:04:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OG4g5o029842;
-        Mon, 24 Jun 2019 16:04:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tnus3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:04:53 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5OG4pHj017154;
-        Mon, 24 Jun 2019 16:04:51 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 09:04:51 -0700
-Date:   Mon, 24 Jun 2019 09:04:50 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
-Message-ID: <20190624160450.GO5387@magnolia>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-10-hch@lst.de>
+        Mon, 24 Jun 2019 12:05:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c66so13363151wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xouu44fqjlv7JQDT+qbIueXk9S6w+hQkAwhhVNFigiQ=;
+        b=rBOwuvT2XaPBwzjuEWGnNam5nqc8sk+jcYFMhnw9L37guSIWOCaPY9fVew+yAckovQ
+         36AWptOryF9Hc2VeBPxX2+uyNAjeZp7Zkoa6cHtb50MPIbSKZ5+29vmdv799BNy2lexd
+         jEtomRMUtMq/Ha1ahwLGFwGTAR9dHRUF/EFy/cvPo/irf/CNOf35RcuqNkA2CvNbWk5w
+         uxYFSBc2+EhCHMF85bloi/3GqxI7dmtr2JC0/LpInOBW6BQs+nGXedCzCFr3vfAxMONa
+         t6MnjSvuLR2z9LSMZGktm4rPITdUOhQ265lru5ZVg3Y/aEtsoTDO9UsrFrdTYk8plvdK
+         amdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xouu44fqjlv7JQDT+qbIueXk9S6w+hQkAwhhVNFigiQ=;
+        b=GpzxCHK4uw4KBXtakYJ4HKgSQHRygamz/WjbRsxHKGN+DHvROIEal9zZwv6GsERsQn
+         2HCDcTNAA0rd67YMd8nsdc4T0Roq4d4Pm1i593cPr2HAaX4iC1jG7c+qfa7UKwb5qOYV
+         +U2vR1oUnlI/QmXnQwPAeCzFP25o4/jcHJXr2tk/549vA/S2tf30fan0C0M2GbCsA6Zy
+         oUpAXCWujU2rf9XAgUWUk8BI3rRW91y54ZY1G0k7TPWTBuJqe1eS0Erx4MxKdc+fHwgs
+         kLxPelxT+Ds50AoO5zzHbLlAA+GGvPbWWZOg6xAWYFAONmW9SLx5vWnZR/bTAdoRNZly
+         hFwQ==
+X-Gm-Message-State: APjAAAVliZLOqHrX4OZiRQT0IXorBAIVPElOpYut1pZAENQSdbOgMOGx
+        Q0WB0eriu4tV1rLkYBdwo5ESI8ErBE4=
+X-Google-Smtp-Source: APXvYqz1LwStXFafT6XoFqGlXha3P3A2v96+uUg6eeEc7Fvxuy8sIer+WwACTkL4bekJe0CfcvlHnw==
+X-Received: by 2002:a1c:c6:: with SMTP id 189mr8028605wma.112.1561392322852;
+        Mon, 24 Jun 2019 09:05:22 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id f190sm4296255wmg.13.2019.06.24.09.05.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 09:05:22 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 17:05:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] MAINAINERS: Swap words in INTEL PMIC MULTIFUNCTION
+ DEVICE DRIVERS
+Message-ID: <20190624160520.GA21119@dell>
+References: <20190211105710.37800-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-10-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190211105710.37800-1-andriy.shevchenko@linux.intel.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:50AM +0200, Christoph Hellwig wrote:
-> Introduce two nicely abstracted helper, which can be moved to the
-> iomap code later.  Also use list_pop and list_first_entry_or_null
-> to simplify the code a bit.
+On Mon, 11 Feb 2019, Andy Shevchenko wrote:
+
+> Swap PMIC and MULTIFUNCTION words in the title to:
+> - show that this is about Intel PMICs
+> - keep MAINTAINERS properly sorted
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  fs/xfs/xfs_aops.c | 66 ++++++++++++++++++++++++++---------------------
->  1 file changed, 36 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index acbd73976067..5d302ebe2a33 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -121,6 +121,19 @@ xfs_destroy_ioend(
->  	}
->  }
->  
-> +static void
-> +xfs_destroy_ioends(
-> +	struct xfs_ioend	*ioend,
-> +	int			error)
-> +{
-> +	struct list_head	tmp;
-> +
-> +	list_replace_init(&ioend->io_list, &tmp);
-> +	xfs_destroy_ioend(ioend, error);
-> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
-> +		xfs_destroy_ioend(ioend, error);
-> +}
-> +
->  /*
->   * Fast and loose check if this write could update the on-disk inode size.
->   */
-> @@ -173,7 +186,6 @@ xfs_end_ioend(
->  	struct xfs_ioend	*ioend)
->  {
->  	unsigned int		nofs_flag = memalloc_nofs_save();
-> -	struct list_head	ioend_list;
->  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
->  	xfs_off_t		offset = ioend->io_offset;
->  	size_t			size = ioend->io_size;
-> @@ -207,16 +219,7 @@ xfs_end_ioend(
->  	if (!error && xfs_ioend_is_append(ioend))
->  		error = xfs_setfilesize(ip, offset, size);
->  done:
-> -	list_replace_init(&ioend->io_list, &ioend_list);
-> -	xfs_destroy_ioend(ioend, error);
-> -
-> -	while (!list_empty(&ioend_list)) {
-> -		ioend = list_first_entry(&ioend_list, struct xfs_ioend,
-> -				io_list);
-> -		list_del_init(&ioend->io_list);
-> -		xfs_destroy_ioend(ioend, error);
-> -	}
-> -
-> +	xfs_destroy_ioends(ioend, error);
->  	memalloc_nofs_restore(nofs_flag);
->  }
->  
-> @@ -246,15 +249,16 @@ xfs_ioend_try_merge(
->  	struct xfs_ioend	*ioend,
->  	struct list_head	*more_ioends)
->  {
-> -	struct xfs_ioend	*next_ioend;
-> +	struct xfs_ioend	*next;
->  
-> -	while (!list_empty(more_ioends)) {
-> -		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
-> -				io_list);
-> -		if (!xfs_ioend_can_merge(ioend, next_ioend))
-> +	INIT_LIST_HEAD(&ioend->io_list);
-> +
-> +	while ((next = list_first_entry_or_null(more_ioends, struct xfs_ioend,
-> +			io_list))) {
-> +		if (!xfs_ioend_can_merge(ioend, next))
->  			break;
-> -		list_move_tail(&next_ioend->io_list, &ioend->io_list);
-> -		ioend->io_size += next_ioend->io_size;
-> +		list_move_tail(&next->io_list, &ioend->io_list);
-> +		ioend->io_size += next->io_size;
->  	}
->  }
->  
-> @@ -277,29 +281,31 @@ xfs_ioend_compare(
->  	return 0;
->  }
->  
-> +static void
-> +xfs_sort_ioends(
-> +	struct list_head	*ioend_list)
-> +{
-> +	list_sort(NULL, ioend_list, xfs_ioend_compare);
-> +}
-> +
->  /* Finish all pending io completions. */
->  void
->  xfs_end_io(
->  	struct work_struct	*work)
->  {
-> -	struct xfs_inode	*ip;
-> +	struct xfs_inode	*ip =
-> +		container_of(work, struct xfs_inode, i_ioend_work);
->  	struct xfs_ioend	*ioend;
-> -	struct list_head	completion_list;
-> +	struct list_head	tmp;
->  	unsigned long		flags;
->  
-> -	ip = container_of(work, struct xfs_inode, i_ioend_work);
-> -
->  	spin_lock_irqsave(&ip->i_ioend_lock, flags);
-> -	list_replace_init(&ip->i_ioend_list, &completion_list);
-> +	list_replace_init(&ip->i_ioend_list, &tmp);
->  	spin_unlock_irqrestore(&ip->i_ioend_lock, flags);
->  
-> -	list_sort(NULL, &completion_list, xfs_ioend_compare);
-> -
-> -	while (!list_empty(&completion_list)) {
-> -		ioend = list_first_entry(&completion_list, struct xfs_ioend,
-> -				io_list);
-> -		list_del_init(&ioend->io_list);
-> -		xfs_ioend_try_merge(ioend, &completion_list);
-> +	xfs_sort_ioends(&tmp);
-> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list))) {
-> +		xfs_ioend_try_merge(ioend, &tmp);
->  		xfs_end_ioend(ioend);
->  	}
->  }
-> -- 
-> 2.20.1
-> 
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
