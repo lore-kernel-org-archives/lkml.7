@@ -2,79 +2,101 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2A8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D69C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9366D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C021208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfFXOgv (ORCPT
+        id S1728360AbfFXOgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:36:51 -0400
-Received: from sleepmap.de ([85.10.206.218]:43998 "EHLO mail.sleepmap.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728985AbfFXOgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:36:49 -0400
-Date:   Mon, 24 Jun 2019 16:36:46 +0200
-From:   David Runge <dave@sleepmap.de>
-To:     John Kacur <jkacur@redhat.com>
-Cc:     Linux RT Users <linux-rt-users@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Clark Williams <williams@redhat.com>
-Subject: Re: [ANNOUNCE] New release rt-tests-1.4
-Message-ID: <20190624143646.GX20165@dvzrv.localdomain>
-References: <alpine.LFD.2.21.1906201444220.6702@planxty>
- <20190621065807.GJ20165@dvzrv.localdomain>
- <alpine.LFD.2.21.1906211407410.3661@planxty>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="j13PAD5Nz8dz2ik7"
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1906211407410.3661@planxty>
+        Mon, 24 Jun 2019 10:36:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19067 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727627AbfFXOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:36:39 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 116C6F2CF14767A30AAD;
+        Mon, 24 Jun 2019 22:36:37 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 24 Jun 2019 22:36:28 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <arnd@arndb.de>, <olof@lixom.net>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 3/6] lib: logic_pio: Add logic_pio_unregister_range()
+Date:   Mon, 24 Jun 2019 22:35:05 +0800
+Message-ID: <1561386908-31884-4-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+References: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a function to unregister a logical PIO range.
 
---j13PAD5Nz8dz2ik7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Logical PIO space can still be leaked when unregistering certain
+LOGIC_PIO_CPU_MMIO regions, but this acceptable for now since there are no
+callers to unregister LOGIC_PIO_CPU_MMIO regions, and the logical PIO
+region allocation scheme would need significant work to improve this.
 
-On 2019-06-21 14:08:01 (+0200), John Kacur wrote:
-> I just pushed the tags, let me know if you can see them now.
-Whoops, forgot to answer!
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ include/linux/logic_pio.h |  1 +
+ lib/logic_pio.c           | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Yes, already pushed the new package. Thank you! :)
+diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
+index cbd9d8495690..88e1e6304a71 100644
+--- a/include/linux/logic_pio.h
++++ b/include/linux/logic_pio.h
+@@ -117,6 +117,7 @@ struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode);
+ unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
+ 			resource_size_t hw_addr, resource_size_t size);
+ int logic_pio_register_range(struct logic_pio_hwaddr *newrange);
++void logic_pio_unregister_range(struct logic_pio_hwaddr *range);
+ resource_size_t logic_pio_to_hwaddr(unsigned long pio);
+ unsigned long logic_pio_trans_cpuaddr(resource_size_t hw_addr);
+ 
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index d0165c88f705..905027574e5d 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -98,6 +98,20 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	return ret;
+ }
+ 
++/**
++ * logic_pio_unregister_range - unregister a logical PIO range for a host
++ * @range: pointer to the IO range which has been already registered.
++ *
++ * Unregister a previously-registered IO range node.
++ */
++void logic_pio_unregister_range(struct logic_pio_hwaddr *range)
++{
++	mutex_lock(&io_range_mutex);
++	list_del_rcu(&range->list);
++	mutex_unlock(&io_range_mutex);
++	synchronize_rcu();
++}
++
+ /**
+  * find_io_range_by_fwnode - find logical PIO range for given FW node
+  * @fwnode: FW node handle associated with logical PIO range
+-- 
+2.17.1
 
-Best,
-David
-
---=20
-https://sleepmap.de
-
---j13PAD5Nz8dz2ik7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEkb2IFf4AQPp/9daHVMKPT/WhqUkFAl0Q3/4ACgkQVMKPT/Wh
-qUlR4xAAlrPVvdheEv5HRnV2BsVSdbAmSpdSN+lMadsgYQFSkoquFlIeKiFDDPry
-c00G1+F47mPpf4SzhI9zwN98ibsHBzNnLQ/Aj4MmGhwjzQ/t6Q3jMLDFlYLOKJjD
-YvuYJy5xHcQNNPBmtuCsiUiC5ZUUueMHDKERi6jUK7C0Ji0faitiomRuPPkppZUI
-4AMPESl48AGQYZ3bexxSgaxsM+YmO9s38Vv++cU2TT+qTuXsXd3B8ShTG6tiY7Nj
-/W6YEs4lwYpEYXy6lEleLat913fTn8qcD+AqPpnLpfTB1RBxTzM7m+nK2MhX5sCs
-iMb66xuWdiAtwgFl6L5AkpB4z008fdpWS+WAkp1d7aiVROwxt2Pi/MvyXQY11g/m
-k/qJvxHwluIt5duIda0iP4eGiodbgaLYJ9m3zjHrCvqufJ/eiRp+tgzH/VpIpdV6
-JYDmv+ThZnTrE2lVinOQwoZjsU8jcKDTTWn031Ks//70czlgq7FkJOzoHt3GG2RC
-2PwzbHp5iSbjIwXCQdpOTOXhjKuqSv3HtNCf5mUE/js3+ge8a1EWWl89RRVUguRh
-LalwdHr2UQhrr2oIu6L2ln2m0P0Jr3LbDBa0voy6JbA7lGPTdgEWomQ7ibJXsTYB
-KYiHV31VoMK3tRk1pwjQ6y7J1Oz4A7jdjgD0UmSn0mwrIkOuido=
-=MXJN
------END PGP SIGNATURE-----
-
---j13PAD5Nz8dz2ik7--
