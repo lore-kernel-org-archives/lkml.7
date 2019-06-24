@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C60C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8047C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9272063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FF12063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371022;
-	bh=DUFMgnssTbGIMl+18y8NzDV0gu9yv0m/to1vbGlRUpE=;
+	s=default; t=1561371023;
+	bh=k1UeBPaMg9crGnvIX9XG0jozyYs+NYomN/H3UaM7mo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRMv3EQzpS/SbAHFFCP4mrPdlLF6SOQ6XwdC50iiCSzyb4sMAh7VS408D0F4Gsgm4
-	 aT1Ktq9DgHKMIcMwX2OuSZxlBOFhVKu4G99cd2LvYzh+5aV4LWHLr4hcLcNBET64fc
-	 GR26URrdZULwwDo5HE6jWG2P7AJQSSeQJTiFcnCw=
+	b=PpEZPUK3lNvKuEAcOZMJ/5kX+6Dr6doNLSUbMIhgoaEznhE26XYQTyJVLYF8k0SiD
+	 9omwCWnUlG3x1i3ODBLb9Hl9MNQ//STMStKG69quE3Pml5EwLu/w/JK+Qq6U+c/7Gi
+	 tOBG7Y//ArNoK3VNNZATmLia/bsaF+q6r6sVnx58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbfFXKIK (ORCPT
+        id S1730039AbfFXKIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbfFXKHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:51 -0400
+        id S1730359AbfFXKHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:48 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B6E8205C9;
-        Mon, 24 Jun 2019 10:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3BA20644;
+        Mon, 24 Jun 2019 10:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370870;
-        bh=DUFMgnssTbGIMl+18y8NzDV0gu9yv0m/to1vbGlRUpE=;
+        s=default; t=1561370867;
+        bh=k1UeBPaMg9crGnvIX9XG0jozyYs+NYomN/H3UaM7mo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZhfKS3Scp1N6zylS4XwD2lGMCQpbTIrzKNYnUFaOM9NNuEoQJv6QAM2cBm1gLO0d
-         JV9okF+HKjP9Io2zvdHoP3NNwt5xLrn9fIaKJj8ZWtgo9+KMM9ivza1Thia/7POSDQ
-         BsYa3bAVTfs3uoGxhfz0BnHxKwvmtgWUOqeVwEoM=
+        b=sgKnEw4jwhrs66XvYA04HnAM8W2/nUfcUhkrqDlyDGwMBF0cXoyR4Zb2WLsARDLOw
+         +P2z2Y3jzj9501iAXw1hZBScsKJ2fsTRzINdmceaGBrXxqLulcMWN51SnHEAQlgi7d
+         TVJxI/NCu4y8MHv/M81IOpGvyTbk1V+7LCAq27Yk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 030/121] brcmfmac: sdio: Dont tune while the card is off
-Date:   Mon, 24 Jun 2019 17:56:02 +0800
-Message-Id: <20190624092322.370827148@linuxfoundation.org>
+Subject: [PATCH 5.1 003/121] mmc: sdhi: disallow HS400 for M3-W ES1.2, RZ/G2M, and V3H
+Date:   Mon, 24 Jun 2019 17:55:35 +0800
+Message-Id: <20190624092320.828212800@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -62,81 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit 65dade6044079a5c206fd1803642ff420061417a upstream.
+commit 97bf85b6ec9e6597ce81c79b26a28f7918fc4eaf upstream.
 
-When Broadcom SDIO cards are idled they go to sleep and a whole
-separate subsystem takes over their SDIO communication.  This is the
-Always-On-Subsystem (AOS) and it can't handle tuning requests.
+Our HW engineers informed us that HS400 is not working on these SoC
+revisions.
 
-Specifically, as tested on rk3288-veyron-minnie (which reports having
-BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
-when "on = 1" (aka we're transition from sleep to wake) by whacking:
-  bus->sdiodev->func1->card->host->need_retune = 1
-...then I can often see tuning fail.  In this case dw_mmc reports "All
-phases bad!").  Note that I don't get 100% failure, presumably because
-sometimes the card itself has already transitioned away from the AOS
-itself by the time we try to wake it up.  If I force retuning when "on
-= 0" (AKA force retuning right before sending the command to go to
-sleep) then retuning is always OK.
-
-NOTE: we need _both_ this patch and the patch to avoid triggering
-tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
-sdio: Disable auto-tuning around commands expected to fail").  Though
-both patches handle issues with Broadcom's AOS, the problems are
-distinct:
-1. We want to defer (but not ignore) asynchronous (like
-   timer-requested) tuning requests till the card is awake.  However,
-   we want to ignore CRC errors during the transition, we don't want
-   to queue deferred tuning request.
-2. You could imagine that the AOS could implement retuning but we
-   could still get errors while transitioning in and out of the AOS.
-   Similarly you could imagine a seamless transition into and out of
-   the AOS (with no CRC errors) even if the AOS couldn't handle
-   tuning.
-
-ALSO NOTE: presumably there is never a desperate need to retune in
-order to wake up the card, since doing so is impossible.  Luckily the
-only way the card can get into sleep state is if we had a good enough
-tuning to send it the command to put it into sleep, so presumably that
-"good enough" tuning is enough to wake us up, at least with a few
-retries.
-
-Cc: stable@vger.kernel.org #v4.18+
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 0f4e2054c971 ("mmc: renesas_sdhi: disable HS400 on H3 ES1.x and M3-W ES1.[012]")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mmc/host/renesas_sdhi_core.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -678,6 +678,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio
+--- a/drivers/mmc/host/renesas_sdhi_core.c
++++ b/drivers/mmc/host/renesas_sdhi_core.c
+@@ -620,11 +620,16 @@ static const struct renesas_sdhi_quirks
+ 	.hs400_4taps = true,
+ };
  
- 	sdio_retune_crc_disable(bus->sdiodev->func1);
- 
-+	/* Cannot re-tune if device is asleep; defer till we're awake */
-+	if (on)
-+		sdio_retune_hold_now(bus->sdiodev->func1);
++static const struct renesas_sdhi_quirks sdhi_quirks_nohs400 = {
++	.hs400_disabled = true,
++};
 +
- 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
- 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
- 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-@@ -738,6 +742,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio
- 	if (try_cnt > MAX_KSO_ATTEMPTS)
- 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ static const struct soc_device_attribute sdhi_quirks_match[]  = {
+ 	{ .soc_id = "r8a7795", .revision = "ES1.*", .data = &sdhi_quirks_h3_m3w_es1 },
+ 	{ .soc_id = "r8a7795", .revision = "ES2.0", .data = &sdhi_quirks_h3_es2 },
+-	{ .soc_id = "r8a7796", .revision = "ES1.0", .data = &sdhi_quirks_h3_m3w_es1 },
+-	{ .soc_id = "r8a7796", .revision = "ES1.1", .data = &sdhi_quirks_h3_m3w_es1 },
++	{ .soc_id = "r8a7796", .revision = "ES1.[012]", .data = &sdhi_quirks_h3_m3w_es1 },
++	{ .soc_id = "r8a774a1", .revision = "ES1.[012]", .data = &sdhi_quirks_h3_m3w_es1 },
++	{ .soc_id = "r8a77980", .data = &sdhi_quirks_nohs400 },
+ 	{ /* Sentinel. */ },
+ };
  
-+	if (on)
-+		sdio_retune_release(bus->sdiodev->func1);
-+
- 	sdio_retune_crc_enable(bus->sdiodev->func1);
- 
- 	return err;
 
 
