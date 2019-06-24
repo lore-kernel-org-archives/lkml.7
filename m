@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F16FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A39BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF73205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA85205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371370;
-	bh=v+IwFrdi4BQ08J+jykljVYxNyUuhyTGsvKuAF//izhM=;
+	s=default; t=1561371375;
+	bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s2X9xMF5mW5i+9CiKrlucOj/j0qS1tzs4CToI9Ogb5dEte2AZ8neZZxY3MtK3X+Th
-	 kKURj6pupBSnCJvJXTj4JZXov6ASnhSqI14MjkHIvVTKoA6hxFEaHd8MPB5ozeq+X+
-	 9orydGW2LJ7MCAOCX9914vBPiUzvhnpDfaMicTEA=
+	b=i99LEavO3eqn6PWeVVVLzCxs99LTbX7KPr1eByGkjA7oR1C3eOpmTuNmB8/cf+YD8
+	 gpbo/1JlUit+4rvmlvlcsCkSjDdwY5COQP79+3W6PAsU8OzbGGKbWiIZVN3EPNsepx
+	 zvhF5jJFN6ggiQVjLWhNwZzIlxvyz6URz+B7nR04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbfFXKQI (ORCPT
+        id S1730689AbfFXKQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfFXKQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:06 -0400
+        id S1729670AbfFXKQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:09 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DCA1205ED;
-        Mon, 24 Jun 2019 10:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 325F620645;
+        Mon, 24 Jun 2019 10:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371365;
-        bh=v+IwFrdi4BQ08J+jykljVYxNyUuhyTGsvKuAF//izhM=;
+        s=default; t=1561371368;
+        bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfSAw1m5LXUBZ5rNaUbF3uhRaXeHBWqjMtgEnBB2Py4zdYloGK8OXoe3pdIYFUKwx
-         N7TFbs+tV38yLdiZpGP7WDXBFncVHrORQOsQFwUfSdk0fuVoHpodQePwFbTUT2lwYw
-         esdW0LV9V4aglx4LLFfzJzLwMciHLWFg6j6vuJQ4=
+        b=BJRl8gw3UuiFxdmQ5ghs1Mf3aQuD37B5jX9Cq1vn5rQy/73tf9J/luSyqVgXNwILU
+         5k4q5x87lut460Qot2cKOz4Ab2E5fLMWibStaS29nFjPDW+xYmhnSQAMPmcpVGKP7j
+         DWXTuCSHUMOZokYx+SfhN9G31rLWQLPoNbr3Er1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Pinto <jpinto@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 041/121] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
-Date:   Mon, 24 Jun 2019 17:56:13 +0800
-Message-Id: <20190624092322.893406687@linuxfoundation.org>
+Subject: [PATCH 5.1 032/121] ARC: fix build warnings
+Date:   Mon, 24 Jun 2019 17:56:04 +0800
+Message-Id: <20190624092322.470688892@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -65,36 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
+[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
 
-GMAC controller on HSDK boards supports 256 Hash Table size so we need to
-add the multicast filter bins property. This allows for the Hash filter
-to work properly using stmmac driver.
+| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
+| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
 
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
+ arch/arc/mm/tlb.c              | 13 ++++++++-----
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 7425bb0f2d1b..699f372b2a6f 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -187,6 +187,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = <32>;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&gmacclk>;
- 			clock-names = "stmmaceth";
- 			phy-handle = <&phy0>;
+diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+index d819de1c5d10..3ea4112c8302 100644
+--- a/arch/arc/include/asm/cmpxchg.h
++++ b/arch/arc/include/asm/cmpxchg.h
+@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
+ 
+ #endif /* CONFIG_ARC_HAS_LLSC */
+ 
+-#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
+-				(unsigned long)(o), (unsigned long)(n)))
++#define cmpxchg(ptr, o, n) ({				\
++	(typeof(*(ptr)))__cmpxchg((ptr),		\
++				  (unsigned long)(o),	\
++				  (unsigned long)(n));	\
++})
+ 
+ /*
+  * atomic_cmpxchg is same as cmpxchg
+@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
+ 	return __xchg_bad_pointer();
+ }
+ 
+-#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
+-						 sizeof(*(ptr))))
++#define xchg(ptr, with) ({				\
++	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
++			       (ptr),			\
++			       sizeof(*(ptr)));		\
++})
+ 
+ #endif /* CONFIG_ARC_PLAT_EZNPS */
+ 
+diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
+index 4097764fea23..fa18c00b0cfd 100644
+--- a/arch/arc/mm/tlb.c
++++ b/arch/arc/mm/tlb.c
+@@ -911,9 +911,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			  struct pt_regs *regs)
+ {
+ 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
+-	unsigned int pd0[mmu->ways];
+ 	unsigned long flags;
+-	int set;
++	int set, n_ways = mmu->ways;
++
++	n_ways = min(n_ways, 4);
++	BUG_ON(mmu->ways > 4);
+ 
+ 	local_irq_save(flags);
+ 
+@@ -921,9 +923,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 	for (set = 0; set < mmu->sets; set++) {
+ 
+ 		int is_valid, way;
++		unsigned int pd0[4];
+ 
+ 		/* read out all the ways of current set */
+-		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
++		for (way = 0, is_valid = 0; way < n_ways; way++) {
+ 			write_aux_reg(ARC_REG_TLBINDEX,
+ 					  SET_WAY_TO_IDX(mmu, set, way));
+ 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
+@@ -937,14 +940,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			continue;
+ 
+ 		/* Scan the set for duplicate ways: needs a nested loop */
+-		for (way = 0; way < mmu->ways - 1; way++) {
++		for (way = 0; way < n_ways - 1; way++) {
+ 
+ 			int n;
+ 
+ 			if (!pd0[way])
+ 				continue;
+ 
+-			for (n = way + 1; n < mmu->ways; n++) {
++			for (n = way + 1; n < n_ways; n++) {
+ 				if (pd0[way] != pd0[n])
+ 					continue;
+ 
 -- 
 2.20.1
 
