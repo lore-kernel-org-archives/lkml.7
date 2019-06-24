@@ -2,168 +2,162 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5075AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30232C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0EB20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="fRuTNwa+"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6EF20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfFXP4P (ORCPT
+        id S1731391AbfFXP4q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:56:15 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62564 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726774AbfFXP4O (ORCPT
+        Mon, 24 Jun 2019 11:56:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34898 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfFXP4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:56:14 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OEw7ew031348;
-        Mon, 24 Jun 2019 11:14:03 -0400
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2056.outbound.protection.outlook.com [104.47.46.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2t9h86dvj7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jun 2019 11:14:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vww7HDk56cmYccz3zZ5GIDpckPeL++iVrcsHf+rTX/A=;
- b=fRuTNwa+7KbtBWIVJ3bcd9gdXgJEETiJmT6V5axbIrtxNVWPN0Y0wcLkMTEW/4cN82Sj1LH77J+Cfzxl6ChG/UX2+rptrEX4fyDXLEmq1yHbiCIkGhRkdV2WlpT5+8LHYiP2Cmf9lhrjRr+yLWsoYh/nvxrsm5wyZ2IuxxTLFRA=
-Received: from CY4PR03CA0004.namprd03.prod.outlook.com (2603:10b6:903:33::14)
- by BN3PR03MB2258.namprd03.prod.outlook.com (2a01:111:e400:7bbf::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.15; Mon, 24 Jun
- 2019 15:14:01 +0000
-Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::205) by CY4PR03CA0004.outlook.office365.com
- (2603:10b6:903:33::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16 via Frontend
- Transport; Mon, 24 Jun 2019 15:14:01 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Mon, 24 Jun 2019 15:14:00 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5OFE0Ve005078
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 24 Jun 2019 08:14:00 -0700
-Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Mon, 24 Jun 2019
- 11:14:00 -0400
-From:   Stefan Popa <stefan.popa@analog.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stefan.popa@analog.com>
-Subject: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
-Date:   Mon, 24 Jun 2019 18:13:56 +0300
-Message-ID: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 24 Jun 2019 11:56:45 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w20so14876775edd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:56:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mMUgs4HoLKDmtg/T/uzM5Qeyyd0kP1F7cWc1uMkgeRs=;
+        b=f6MpH70T/k12GzVORXWXsIR5heiROU0PHkVp7O3nLmesMTRtGRU2q4qux4S17fPm8e
+         bjpIce4BQxwKkLtPH17KSvdkicwRqwwo5rSZhITaF4FrjoWa3zM+BHGP30yYAS/AnxFS
+         OaXm0mFmQTwkf0xkdNfNcs1qdcKpfzwWEW2eTIqdtbErrsv3ThAQfP9EOQFXzQHKJVP6
+         CP7iEi/ZHJ92LxFnYZhPeAqXcymKo72+w6qNMZul4f8hEr9nL12h3mW7PgzPjxQko5fH
+         c7S3ATWSkYvaYeBgkSeTACm2k3zB/ZDwT6diszCKJXmg9pP1Xj6NDWX+H8+mFOrxo8+u
+         YEZg==
+X-Gm-Message-State: APjAAAUYVcKldjQBAClNtCOo1epXa20vQPisPgjHHvZpT4Wxn+MDdDjd
+        PPjf8oOQKH6tSmxEBE+1UGM165qiXaE=
+X-Google-Smtp-Source: APXvYqzZQUQotwQYrqZNCYZXQ+x2MO1sWW0bFtMWPMBHT7pd0Hr3s1ChG62EqI7GxXj2lQdpXiLUjA==
+X-Received: by 2002:a50:aa7c:: with SMTP id p57mr116794659edc.179.1561391803332;
+        Mon, 24 Jun 2019 08:56:43 -0700 (PDT)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id me3sm1942965ejb.21.2019.06.24.08.56.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 08:56:42 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id v19so13898197wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:56:42 -0700 (PDT)
+X-Received: by 2002:a1c:f512:: with SMTP id t18mr16201190wmh.47.1561391801973;
+ Mon, 24 Jun 2019 08:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(376002)(346002)(2980300002)(199004)(189003)(8676002)(50466002)(8936002)(48376002)(72206003)(7696005)(50226002)(51416003)(356004)(6666004)(77096007)(316002)(16586007)(47776003)(5660300002)(186003)(26005)(486006)(107886003)(7636002)(305945005)(476003)(126002)(2906002)(246002)(426003)(44832011)(7416002)(2616005)(110136005)(14444005)(54906003)(36756003)(4326008)(70586007)(70206006)(336012)(106002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR03MB2258;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 114e134d-9bc0-4324-a7b0-08d6f8b6965d
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN3PR03MB2258;
-X-MS-TrafficTypeDiagnostic: BN3PR03MB2258:
-X-Microsoft-Antispam-PRVS: <BN3PR03MB22580F797F34475FE9ACD33C9DE00@BN3PR03MB2258.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 007814487B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: V1b3skHKnU76/cFd4+ln50URT19VYShvobTzmsR9A+rpN+3IvFtkWqNS1kdFq8RYAFb48WzQXbNwW7/miO0K9w8S5GVvWwWKdPdyk+b0V8YOkN+/RxesJnbJzP6dH4UTj3rrB6MG9Luyt+zS/WLbiQiEHTLOPmN3IZRtXCcnlwnh+NroORGKiACy8GTgVpx+wrPjukUAVtVo7W2npl9HaeVajCmovZ8XVnjeWMayX6Q6dVVHRaLjoSZ8DfPDkXDHlAuaYhOHw/+Scki/YMOCF5kM4pmuOGcJnes1bhMQR4MLql43hsX7bNJe4kQYtcjIEtU0nZCPJxm7gmHU+Uo9Nneqhb4HnAt61VMCZPYPONcSG6dcwsN3YCg6xULV2SJYvFC0UkswAQTfruuvlTFOcbSOdpxlXwZs4Z968fgCiYQ=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 15:14:00.8989
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 114e134d-9bc0-4324-a7b0-08d6f8b6965d
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR03MB2258
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240122
+References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+ <VI1PR03MB4206740285A775280063E303AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+ <baf95e6b-bfcf-27e7-1a00-ca877ae6f82d@samsung.com> <CGME20190624150546epcas1p1da19043e13dd3604a546f7983fc089b9@epcas1p1.samsung.com>
+ <6819050.kFKQ8T6p8H@jernej-laptop> <3f9e51d5-8ca5-a439-943c-26de92dd52fe@samsung.com>
+In-Reply-To: <3f9e51d5-8ca5-a439-943c-26de92dd52fe@samsung.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 24 Jun 2019 23:56:30 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67FF3k9wZu7K+Z5yKFFeh8A_4iuEXfh+tO65UvVRfY-sA@mail.gmail.com>
+Message-ID: <CAGb2v67FF3k9wZu7K+Z5yKFFeh8A_4iuEXfh+tO65UvVRfY-sA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/sun4i: Enable DRM InfoFrame support on H6
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another feature of the ADF4371/ADF4372 is that the supply current to the
-RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
-as measured by the digital lock detect circuitry. The mute to lock
-detect bit (MUTE_LD) in REG25 enables this function.
+On Mon, Jun 24, 2019 at 11:49 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 24.06.2019 17:05, Jernej Škrabec wrote:
+> > Dne ponedeljek, 24. junij 2019 ob 17:03:31 CEST je Andrzej Hajda napisal(a):
+> >> On 26.05.2019 23:20, Jonas Karlman wrote:
+> >>> This patch enables Dynamic Range and Mastering InfoFrame on H6.
+> >>>
+> >>> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> >>> Cc: Jernej Skrabec <jernej.skrabec@siol.net>
+> >>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> >>> ---
+> >>>
+> >>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 2 ++
+> >>>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
+> >>>  2 files changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> >>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..b80164dd8ad8
+> >>> 100644
+> >>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> >>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> >>> @@ -189,6 +189,7 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> >>> struct device *master,>
+> >>>     sun8i_hdmi_phy_init(hdmi->phy);
+> >>>
+> >>>     plat_data->mode_valid = hdmi->quirks->mode_valid;
+> >>>
+> >>> +   plat_data->drm_infoframe = hdmi->quirks->drm_infoframe;
+> >>>
+> >>>     sun8i_hdmi_phy_set_ops(hdmi->phy, plat_data);
+> >>>
+> >>>     platform_set_drvdata(pdev, hdmi);
+> >>>
+> >>> @@ -255,6 +256,7 @@ static const struct sun8i_dw_hdmi_quirks
+> >>> sun8i_a83t_quirks = {>
+> >>>  static const struct sun8i_dw_hdmi_quirks sun50i_h6_quirks = {
+> >>>
+> >>>     .mode_valid = sun8i_dw_hdmi_mode_valid_h6,
+> >>>
+> >>> +   .drm_infoframe = true,
+> >>>
+> >>>  };
+> >>>
+> >>>  static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
+> >>>
+> >>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> >>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..2a0ec08ee236
+> >>> 100644
+> >>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> >>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> >>> @@ -178,6 +178,7 @@ struct sun8i_dw_hdmi_quirks {
+> >>>
+> >>>     enum drm_mode_status (*mode_valid)(struct drm_connector
+> > *connector,
+> >>>
+> >>>                                        const struct
+> > drm_display_mode *mode);
+> >>>
+> >>>     unsigned int set_rate : 1;
+> >>>
+> >>> +   unsigned int drm_infoframe : 1;
+> >> Again, drm_infoframe suggests it contains inforframe, but in fact it
+> >> just informs infoframe can be used, so again my suggestion
+> >> use_drm_infoframe.
+> >>
+> >> Moreover bool type seems more appropriate here.
+> > checkpatch will give warning if bool is used.
+>
+>
+> Then I would say "fix/ignore checkpatch" :)
+>
+> But maybe there is a reason.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
- .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++
- drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+Here's an old one from Linus: https://lkml.org/lkml/2013/9/1/154
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-index a268a9d..6db8742 100644
---- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -32,6 +32,12 @@ properties:
-     items:
-       - clkin
- 
-+  adi,mute-till-lock-en:
-+    description:
-+      If this property is present, then the supply current to RF8P and RF8N
-+      output stage will shut down until the ADF4371/ADF4372 achieves lock as
-+      measured by the digital lock detect circuitry.
-+
- required:
-   - compatible
-   - reg
-diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
-index f874219..e48f15c 100644
---- a/drivers/iio/frequency/adf4371.c
-+++ b/drivers/iio/frequency/adf4371.c
-@@ -45,6 +45,10 @@
- #define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
- #define ADF4371_RF_DIV_SEL(x)		FIELD_PREP(ADF4371_RF_DIV_SEL_MSK, x)
- 
-+/* ADF4371_REG25 */
-+#define ADF4371_MUTE_LD_MSK		BIT(7)
-+#define ADF4371_MUTE_LD(x)		FIELD_PREP(ADF4371_MUTE_LD_MSK, x)
-+
- /* ADF4371_REG32 */
- #define ADF4371_TIMEOUT_MSK		GENMASK(1, 0)
- #define ADF4371_TIMEOUT(x)		FIELD_PREP(ADF4371_TIMEOUT_MSK, x)
-@@ -484,6 +488,15 @@ static int adf4371_setup(struct adf4371_state *st)
- 	if (ret < 0)
- 		return ret;
- 
-+	/* Mute to Lock Detect */
-+	if (device_property_read_bool(&st->spi->dev, "adi,mute-till-lock-en")) {
-+		ret = regmap_update_bits(st->regmap, ADF4371_REG(0x25),
-+					 ADF4371_MUTE_LD_MSK,
-+					 ADF4371_MUTE_LD(1));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	/* Set address in ascending order, so the bulk_write() will work */
- 	ret = regmap_update_bits(st->regmap, ADF4371_REG(0x0),
- 				 ADF4371_ADDR_ASC_MSK | ADF4371_ADDR_ASC_R_MSK,
--- 
-2.7.4
+I'd say that bool in a struct is a waste of space compared to a 1 bit bitfield,
+especially when there already are other bitfields in the same struct.
 
+> Anyway I've tested and I do not see the warning, could you elaborate it.
+
+Maybe checkpatch.pl --strict?
+
+ChenYu
