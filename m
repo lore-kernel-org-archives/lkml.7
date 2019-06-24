@@ -2,131 +2,126 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0E9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E57C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F35208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gBTyaRm7"
+	by mail.kernel.org (Postfix) with ESMTP id C55B02089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfFXHA0 (ORCPT
+        id S1727459AbfFXHDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:00:26 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:50048 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFXHA0 (ORCPT
+        Mon, 24 Jun 2019 03:03:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59998 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFXHDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:00:26 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190624070022epoutp0156737211b93880737e305a02423651b4~rEE3ctaYD3223232232epoutp01D
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:00:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190624070022epoutp0156737211b93880737e305a02423651b4~rEE3ctaYD3223232232epoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561359622;
-        bh=gjOb94pyYvpO/imGBEoJBVAesPbCsDcNH0NJiUfAVno=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=gBTyaRm7fkRfIvlXNMvcOdrC5EoUcrG6XFX+qrnIJ2J1cK8E+8FzSjQKzxdWEYoIZ
-         wZWnwHieo4RkEtTaPtsSpRiDsunUY2wx9uePnG9G+GMywE4yRmwZ+WHPJdAdkO/RSj
-         LKLoB/ORsu3BHcpywVXwFHChJdf2wuA5CydbS9CE=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190624070011epcas1p21937d6d1c96c66e4c069cf5d2a85770a~rEEttDfw01292512925epcas1p2l;
-        Mon, 24 Jun 2019 07:00:11 +0000 (GMT)
-X-AuditID: b6c32a36-ce1ff7000000102e-74-5d1074c7993a
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        67.CD.04142.7C4701D5; Mon, 24 Jun 2019 15:59:19 +0900 (KST)
-Mime-Version: 1.0
-Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     "digetx@gmail.com" <digetx@gmail.com>,
-        "janathanh@nvidia.com" <janathanh@nvidia.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
-Date:   Mon, 24 Jun 2019 15:59:19 +0900
-X-CMS-MailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdlhTV/d4iUCswbwD8hYvD2laXP/ynNVi
-        9cfHjBYzpv9hsri8aw6bxefeI4wWnV9msTmwe+ycdZfdo7f5HZtH35ZVjB6fN8kFsERl22Sk
-        JqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYAHaCkUJaYUwoU
-        CkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM6YcGcl
-        Y8FTzorTX1ayNDA+Ye9i5OSQEDCROPRrEyuILSSwg1HiwFH1LkYODl4BQYm/O4RBwsICThLN
-        Py6yQZQoSTTc3McMEdeX6HiwjRHEZhPQldi64S4LiC0i0MAosX2mQxcjFwezwE5GiXdb7kPt
-        4pWY0f6UBcKWlti+fCsjhC0qcXP1W3YY+/2x+VBxEYnWe2eZIWxBiQc/dzPC9M6Y8h9qTrXE
-        temL2UGWSQi0MEr0rp4CVaQvcWbuSbCreQV8JaZ2/gFrYBFQlfj47THUMheJ/c/ugtUzC8hL
-        bH87hxnkeWYBTYn1u/QhShQldv6eywhzf8PG3+zobGYBPol3X3tYYeI75j1hgrDVJA7tXgJV
-        LyNxevpCqF88JF6c2Mc6gVFxFiKoZyE5YhbCEQsYmVcxiqUWFOempxYbFhghR+4mRnBa1DLb
-        wbjonM8hRgEORiUeXoEN/LFCrIllxZW5hxglOJiVRHiXJgrECvGmJFZWpRblxxeV5qQWH2I0
-        BYbFRGYp0eR8YMrOK4k3NDUyNja2MDE0MzU0VBLnjee+GSMkkJ5YkpqdmlqQWgTTx8TBKdXA
-        eDxr9sVini0/jlbFZGe9W8Bu9S/HR8j25c2zyudsLH6Kh05Tf/ElovbOFyWryY5aH312Rba1
-        bz0gL/DjpFHH3Vam2H71hMWHj86f6PJrfY4Cx3Szr0ELhcNZStUMvP9yljy+/LlWuspLk5cr
-        9Hr/kny9pIeXLuy+/1CFq4W94M+X0DU7jr0xVmIpzkg01GIuKk4EAIGly8ShAwAA
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
-References: <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+        Mon, 24 Jun 2019 03:03:23 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hfJ0b-0000cT-52
+        for linux-kernel@vger.kernel.org; Mon, 24 Jun 2019 07:03:21 +0000
+Received: by mail-pf1-f199.google.com with SMTP id x9so8989378pfm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:03:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VgUEc8232HEbDcNbWBe1DLHeVAFqFByxVy9pHNe5ej4=;
+        b=okWhpAV279uL8YA3NeNq3SQ8HmiwgZhKiY3GbgDNgp3djZTfwNKiuj1NX6MQozY6NQ
+         VgNgEzlaZOsLRIsOeOsv02cbUqiJ9PYM/Xwkzs+qgle8qIr3qH9QCSAl892Xn68Jmx03
+         Hg8ABVXvB6/33qsmAhV6D8hD1398V3DxeKgepVw/4RV+EaTSfglmX0nfMJfIWVBRPMVZ
+         O2Y+62DDe+gbLvMI1dlq+R5S9+N2c4EmUSjyjzF/jFKWXVs4A06MdBkl/IA5B9XYGWl7
+         88ECuksorF1KuP6238E6LtwtjGmfYGuKHfoQx9O+PYxrWK/7lRCTFExqT7TJnDxQGOFn
+         DRvQ==
+X-Gm-Message-State: APjAAAXW7mQ7Wp+e4G5ZqoGu9Z52EhAAzzyp58YCg3Yoaq1Rb7qDH/ZK
+        et+QpsOS8GPcZ+js1cLpgubYVNrXSHFKy3elo/p7ZFluIattxx7Ybi/wDqD+ZJhmL8fL5XfBh8g
+        T40wbKAbViVdkYFjEPXjH1x6acXqsHvqJdpRDgkhaMw==
+X-Received: by 2002:a17:902:296a:: with SMTP id g97mr72320031plb.115.1561359799845;
+        Mon, 24 Jun 2019 00:03:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyShOHIK0XoPW/T+X8rCgw0nfFWgSa/8lV7g4xHQe7ILDTZirejduPKv2P9rOxAqINp3wSXSQ==
+X-Received: by 2002:a17:902:296a:: with SMTP id g97mr72320003plb.115.1561359799577;
+        Mon, 24 Jun 2019 00:03:19 -0700 (PDT)
+Received: from 2001-b011-380f-3511-4d72-4f7c-d6a5-6121.dynamic-ip6.hinet.net (2001-b011-380f-3511-4d72-4f7c-d6a5-6121.dynamic-ip6.hinet.net. [2001:b011:380f:3511:4d72:4f7c:d6a5:6121])
+        by smtp.gmail.com with ESMTPSA id p3sm10353968pgh.90.2019.06.24.00.03.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 00:03:18 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Opportunistic S0ix blocked by e1000e when ethernet is in use
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <074E1145-A512-4835-9A6D-8FB6634DBD3C@canonical.com>
+Date:   Mon, 24 Jun 2019 15:03:16 +0800
+Cc:     Anthony Wong <anthony.wong@canonical.com>,
+        intel-wired-lan@lists.osuosl.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <E2D5225B-D683-4895-AC4F-EE01C339262B@canonical.com>
+References: <074E1145-A512-4835-9A6D-8FB6634DBD3C@canonical.com>
+To:     jeffrey.t.kirsher@intel.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, May 02, 2019 at 02:38:12AM +0300, Dmitry Osipenko wrote:
-> > The devfreq driver can be used on Tegra30 without any code change and
-> > it works perfectly fine, the default Tegra124 parameters are good enough
-> > for Tegra30.
-> > 
-> > Reviewed-by: Chanwoo Choi 
-> > Signed-off-by: Dmitry Osipenko 
-> > ---
-> >  drivers/devfreq/Kconfig         | 4 ++--
-> >  drivers/devfreq/tegra-devfreq.c | 1 +
-> >  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> Acked-by: Thierry Reding 
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 7dd46d4..b291803 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -93,8 +93,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
->  	  This does not yet operate with optimal voltages.
->  
->  config ARM_TEGRA_DEVFREQ
-> -	tristate "Tegra DEVFREQ Driver"
-> -	depends on ARCH_TEGRA_124_SOC
-> +	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
-> +	depends on ARCH_TEGRA
->  	select PM_OPP
->  	help
->  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+Hi Jeffrey,
 
-A question:
+at 19:08, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-Does this driver support Tegra20 as well?
-I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
-according to /drivers/soc/tegra/Kconfig.
+> Hi Jeffrey,
+>
+> There are several platforms that uses e1000e can’t enter Opportunistic  
+> S0ix (PC10) when the ethernet has a link partner.
+>
+> This behavior also exits in out-of-tree e1000e driver 3.4.2.1, but seems  
+> like 3.4.2.3 fixes the issue.
+>
+> A quick diff between the two versions shows that this code section may be  
+> our solution:
+>
+>         /* Read from EXTCNF_CTRL in e1000_acquire_swflag_ich8lan function
+>          * may occur during global reset and cause system hang.
+>          * Configuration space access creates the needed delay.
+>          * Write to E1000_STRAP RO register E1000_PCI_VENDOR_ID_REGISTER value
+>          * insures configuration space read is done before global reset.
+>          */
+>         pci_read_config_word(hw->adapter->pdev, E1000_PCI_VENDOR_ID_REGISTER,
+>                              &pci_cfg);
+>         ew32(STRAP, pci_cfg);
+>         e_dbg("Issuing a global reset to ich8lan\n");
+>         ew32(CTRL, (ctrl | E1000_CTRL_RST));
+>         /* cannot issue a flush here because it hangs the hardware */
+>         msleep(20);
+>
+>         /* Configuration space access improve HW level time sync mechanism.
+>          * Write to E1000_STRAP RO register E1000_PCI_VENDOR_ID_REGISTER
+>          * value to insure configuration space read is done
+>          * before any access to mac register.
+>          */
+>         pci_read_config_word(hw->adapter->pdev, E1000_PCI_VENDOR_ID_REGISTER,
+>                              &pci_cfg);
+>         ew32(STRAP, pci_cfg);
 
-Cheers,
-MyungJoo.
+Turns out the "extra sauce” is not this part, it’s called “Dynamic LTR  
+support”.
+
+>
+> Is there any plan to support this in the upstream kernel?
+
+Is there any plan to support Dynamic LTR in upstream e1000e?
+
+Kai-Heng
+
+>
+> Kai-Heng
+
 
