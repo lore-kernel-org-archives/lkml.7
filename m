@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31280C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E22C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06485215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADD8213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lXHRsLKG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ql48XStL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfFXOdw (ORCPT
+        id S1729926AbfFXOd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:33:52 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:40581 "EHLO
+        Mon, 24 Jun 2019 10:33:57 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:55688 "EHLO
         mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729744AbfFXOds (ORCPT
+        with ESMTP id S1729818AbfFXOdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:33:48 -0400
-Received: by mail-vs1-f74.google.com with SMTP id v9so3938106vsq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:33:48 -0700 (PDT)
+        Mon, 24 Jun 2019 10:33:51 -0400
+Received: by mail-vs1-f74.google.com with SMTP id w23so3928078vsj.22
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=cqAi+OvlHabK4r0DKR/uDYr47zBS8kkFmriW/t8FK6c=;
-        b=lXHRsLKGuntJdIfx4IktI470fGbyq/kS83cL/1CQ6KcaqQfI5cgbGIOLx+on2O/XRl
-         TyhQq0vCGRVG2NDDFcvggYJ0wxa3AKn2CR+yK/03NNoH4bycNdBR8ox3sdPwTeSrQLuo
-         rHeW6O5U9Mg0jIkwq44zjpbQCUdfc3U4ayQ8Dr3awwdf8ADrTM4zsPAD1J2Hva/3oEGx
-         iuAfMdkeDB0VVqrLEmMomvjY9gvAQgEF5ueMNKjNbD3E+c53zhezKvbXOoKR1nLLue5p
-         C6JfI9UG0Qq2Dtp4qvSg2UI+NSz05kgH40lBS5dNGwoMFiWCdzLiE4V8NQ/k/pPRpCug
-         2y1w==
+        bh=/YALAWfXM1Ec4B1lOAT/D+NA+cyFiVncn64tZ/r98OM=;
+        b=Ql48XStLri/shxEZnh2m2bPKZuWW0LbLVZb7Ke39XzoW6tnlHJqvY/w3tAOiQXd+HY
+         +m0w0vy4Nc92IOCtwaAefDtVWKaMPae0qEokqCFh/15Etg3mPj9l+0y/QojMsq+32GDL
+         FCc4x1guuctj7Dh9w2rpqoJJMnqXSJhRdYAnuBaH1m5ApCPzHjNZOJsEgqVYOMqcq1IK
+         z4bmcgqikB0YNciNmYj3+oZnFq+Z3IRAKc7+MbjrKJ0m2yo/N7qQZlR4Wduu+I3SYaAM
+         An3oELmPbKJBGAW9gnsznPT0Ku3QQIngN9+ygpAFQEEHuUfYflrAf46HUzwiWP0xvwhX
+         EWWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=cqAi+OvlHabK4r0DKR/uDYr47zBS8kkFmriW/t8FK6c=;
-        b=X07OgcA5VNDw5Txja/rMgOBvJylob9BL7UmMbFbGGzbTUoIe7Ib9UM1czoBu+Jq6ty
-         da3t1U8TVkY7ylqQFY9b1sXWzJxImKSvKE4OoR2BA6BSJ7VHXgu6h/Oz9Y8q6NOFCMwa
-         pGhsjpSzIvO8JjXX/vwfxvptFwUvkJoJIV4LSWpthVUqJwCm3LIHn+9Cc1DGI+AnZDIg
-         R+CftY6PNEsWg1aaIRXxacwyozubTyQJPsctixR6eE/tXdSdKhoITLg7D8cSxSyZGiKp
-         nsEJbZ6NixvgktCAVMll48KThKZiUUUBI+9+kOoXVi7V16+egpubS9/7Z/I2ewhcS2Y5
-         8Hdg==
-X-Gm-Message-State: APjAAAWTdaWh5tzklB2AgZueKxzd14EzV6d+OFhJgVoEeOLuaQTs0wdu
-        w5I5/e9U6WcBLdEIADWNDrq0MjSepB3F4RJk
-X-Google-Smtp-Source: APXvYqzY+u8RznlTrOWrBgn25HhvDfTMe7SZyf9e34JUgJZBNd08PatZvu4lGf3zfqdvX7DoXuI91wYnbBpoYfQ0
-X-Received: by 2002:ab0:7848:: with SMTP id y8mr60797129uaq.58.1561386827462;
- Mon, 24 Jun 2019 07:33:47 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:32:58 +0200
+        bh=/YALAWfXM1Ec4B1lOAT/D+NA+cyFiVncn64tZ/r98OM=;
+        b=bvCHlD2EqAdXiy7m//0qlGBYNGm/5XsHA/tM5bkCTyJ8PK4l3kFFRV9/TGrWliYUlj
+         n3Xrgp2zDjD4wAMLwtCSVY7gTFy/+jo1ARD0+2YwCW96DFt5D/78hS8SIsEpUi2BW56+
+         +nQ1s0OPUyFdV5MuNEjqjd1POoAnnBaTwifWZmhicqpALStxahk/EwZNjn0rSL2tbjmE
+         5r3qTjlUeIWY/K+Zg4y1mkX0jbmt6tYR9Z5+PzPH2nc5TUVV+tUEj+8MXxNCMtt7Wdi0
+         ct7oafuFa15bBHLuLCfiWr3MkaQESmQqRQq2rTxnVUCWCAPwEXlkcqx0yMApphQu3Axl
+         p99Q==
+X-Gm-Message-State: APjAAAVfJaJJY2fbiAn9lSn1vr+0lSpgTUqQ1EApNWHdOLgXnfTgHZa6
+        GyUTUFlatRcn1elysUzULyaaXLxFYzhNoo4X
+X-Google-Smtp-Source: APXvYqzcPL+MfuI0G9Nd/HSZW5720Hxob5Qe3sb32I8/yavc0Ub0kNUbvXmDnUxRuwL2tRyo+O0TaelZxw+BF2mv
+X-Received: by 2002:a1f:7dc2:: with SMTP id y185mr1688822vkc.51.1561386830607;
+ Mon, 24 Jun 2019 07:33:50 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 16:32:59 +0200
 In-Reply-To: <cover.1561386715.git.andreyknvl@google.com>
-Message-Id: <280ca5496fe82873caac306ca76fb40d702979ff.1561386715.git.andreyknvl@google.com>
+Message-Id: <125994bfab8f29da8f58c8fcd0d94ef4bf55b3ea.1561386715.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1561386715.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v18 13/15] tee/shm: untag user pointers in tee_shm_register
+Subject: [PATCH v18 14/15] vfio/type1: untag user pointers in vaddr_get_pfn
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -96,7 +96,8 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Kevin Brodsky <kevin.brodsky@arm.com>,
         Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
+        Andrey Konovalov <andreyknvl@google.com>,
+        Eric Auger <eric.auger@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -107,31 +108,33 @@ This patch is a part of a series that extends kernel ABI to allow to pass
 tagged user pointers (with the top byte set to something else other than
 0x00) as syscall arguments.
 
-tee_shm_register()->optee_shm_unregister()->check_mem_type() uses provided
-user pointers for vma lookups (via __check_mem_type()), which can only by
-done with untagged pointers.
+vaddr_get_pfn() uses provided user pointers for vma lookups, which can
+only by done with untagged pointers.
 
 Untag user pointers in this function.
 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/tee/tee_shm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/vfio/vfio_iommu_type1.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index 2da026fd12c9..09ddcd06c715 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -254,6 +254,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- 	shm->teedev = teedev;
- 	shm->ctx = ctx;
- 	shm->id = -1;
-+	addr = untagged_addr(addr);
- 	start = rounddown(addr, PAGE_SIZE);
- 	shm->offset = addr - start;
- 	shm->size = length;
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index add34adfadc7..7b8283e33d10 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -381,6 +381,8 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 
+ 	down_read(&mm->mmap_sem);
+ 
++	vaddr = untagged_addr(vaddr);
++
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
