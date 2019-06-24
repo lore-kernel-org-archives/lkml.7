@@ -2,87 +2,128 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CFDC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF9C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE7520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC05215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561456443;
+	bh=0dk1ob6uwx3n/tJE8t3lUPeIoU6KYjq4ct8XUWm8Qtw=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=mGPB00cBpjTI1ImCoOvftNsAFyTnSGyRXF84kNnb9TmHGbF/DeADSHVSR0rVCh6rd
+	 29PZzn1JnMTgdjHQBXrcuMy+8aAEX9DQ1A9BMy0K+ZFMGw/6DOudJjR2ULXmkxR+1J
+	 Rj9C/Mr8UEDo1S4coJgVGC9ieVC+J9BfjU94Dxww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfFYJxr (ORCPT
+        id S1729946AbfFYJyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:53:47 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56737 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729329AbfFYJxr (ORCPT
+        Tue, 25 Jun 2019 05:54:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37074 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727613AbfFYJyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:53:47 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5P9qhph083468;
-        Tue, 25 Jun 2019 18:52:43 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
- Tue, 25 Jun 2019 18:52:43 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5P9qcbs083454
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 25 Jun 2019 18:52:43 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: possible deadlock in console_trylock_spinning
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-References: <0000000000007b0e26058c2215d3@google.com>
-Cc:     syzbot <syzbot+fc1da0f1a577d15b64fc@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <8999365f-9de0-c850-087e-be9a7eb04547@i-love.sakura.ne.jp>
-Date:   Tue, 25 Jun 2019 18:52:36 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <0000000000007b0e26058c2215d3@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Jun 2019 05:54:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=cUVbQo3ot022TbqV5UdlVztC91EzyvQI8RT4N5SREkc=; b=TTxEke6uG1dE
+        K/YrJsNLx87qrJ4zxgsRAKZIdoBDSRXm5E+Eet7fBYicQz/4HxlmzuT5OkdAem6DAoLJ3vVTiTk0q
+        5SsPvQ+WzEzYPOBmBK6dFSOG9wR+RPbLwSidWrFueGchyjErceC2mtgVE62cnqfATmR5TnqCRyP4l
+        CsGe8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hfi9G-0004mh-LJ; Tue, 25 Jun 2019 09:53:58 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 863AC44006A; Mon, 24 Jun 2019 17:32:21 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        bjorn.andersson@linaro.org, broonie@kernel.org,
+        jorge.ramirez-ortiz@linaro.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: qcom_spmi: Do NULL check for lvs" to the regulator tree
+In-Reply-To: <20190620142228.11773-1-jeffrey.l.hugo@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190624163221.863AC44006A@finisterre.sirena.org.uk>
+Date:   Mon, 24 Jun 2019 17:32:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/25 17:55, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit e80b18599a39a625bc8b2e39ba3004a62f78805a
-> Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Date:   Fri Apr 12 11:04:54 2019 +0000
-> 
->     tomoyo: Add a kernel config option for fuzzing testing.
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=156e43cea00000
-> start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=176e43cea00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=136e43cea00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fc1da0f1a577d15b64fc
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1357add6a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1611ac89a00000
-> 
-> Reported-by: syzbot+fc1da0f1a577d15b64fc@syzkaller.appspotmail.com
-> Fixes: e80b18599a39 ("tomoyo: Add a kernel config option for fuzzing testing.")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
+The patch
 
-This is not a TOMOYO's problem because that commit simply confused inject_fault(4)
-by adding memory allocation from TOMOYO's hook. Anyway, this bug should be sent to
-printk() people.
+   regulator: qcom_spmi: Do NULL check for lvs
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From b01d18232587881ae813d4a1d14c8d9a2ac36b15 Mon Sep 17 00:00:00 2001
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date: Thu, 20 Jun 2019 07:22:28 -0700
+Subject: [PATCH] regulator: qcom_spmi: Do NULL check for lvs
+
+Low-voltage switches (lvs) don't have set_points since the voltage ranges
+of the output are really controlled by the inputs.  This is a problem for
+the newly added linear range support in the probe(), as that will cause
+a null pointer dereference error on older platforms like msm8974 which
+happen to need to control some of the implemented lvs.
+
+Fix this by adding the appropriate null check.
+
+Fixes: 86f4ff7a0c0c ("regulator: qcom_spmi: enable linear range info")
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/qcom_spmi-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index 877df33e0246..7f51c5fc8194 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -2045,7 +2045,7 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
+-		if (vreg->set_points->count == 1) {
++		if (vreg->set_points && vreg->set_points->count == 1) {
+ 			/* since there is only one range */
+ 			range = vreg->set_points->range;
+ 			vreg->desc.uV_step = range->step_uV;
+-- 
+2.20.1
 
