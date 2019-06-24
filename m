@@ -2,178 +2,135 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2810DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE5208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFED92083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LGLIvNnh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dkbiwb35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfFXF0n (ORCPT
+        id S1726678AbfFXFcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:26:43 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3437 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFXF0m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:26:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d105f0e0000>; Sun, 23 Jun 2019 22:26:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 22:26:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 22:26:40 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 05:26:39 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 05:26:39 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d105f0c0001>; Sun, 23 Jun 2019 22:26:39 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>,
-        <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V8 3/3] PCI: dwc: Export APIs to support .remove() implementation
-Date:   Mon, 24 Jun 2019 10:56:11 +0530
-Message-ID: <20190624052611.11279-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624052611.11279-1-vidyas@nvidia.com>
-References: <20190624052611.11279-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 24 Jun 2019 01:32:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42873 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726469AbfFXFcq (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:32:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id u19so273698ior.9
+        for <Linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 22:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/l5qUlzkkXSn8Rj4gRqkwVlRMYz6YfXqXzcoaQu0DB4=;
+        b=Dkbiwb35Z4XCd7jAlpAZCQu5U6vQ2IJMnfRSCFrBUb+0AD++dGclfZL2qAFUVugf9q
+         cUnF8CJHMh2e1Y2kwP/3P+4vHjICpw5lRXFrR75FNpAOxz4UyV/NWmUBlx5OX663D6b3
+         FpjNyvXxm2+UK741ClSkR+a6xyMg/8mHcFOpRl4CDHUJnY0Pxz5Ywn7fT3+Hf6Nx991+
+         WCTtn8lQkJbVEqqQKZXc5VljE/9+bsxN4bJtL5w6NXn54UH/1XSi7bsSKrP9f3QBwPys
+         SWb6/JhlZvRJd9GHNzdgugfJ782MbwIJulfvwNr471wDzJpW/sBRYyeAm07BCOosFi9P
+         roJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/l5qUlzkkXSn8Rj4gRqkwVlRMYz6YfXqXzcoaQu0DB4=;
+        b=OsTS4Zy8mIAbe99OGRrfZfJMgxao9NObbadVMg2xAUevr/TXTIXXUWgPDkDyRKgnlq
+         iy+1XGDuPLqhvrQNdQuCdnmrQsDFjxjp8sLKc+XpOcaJ4f6OFUSV9SeCrWMgIomcTdjo
+         YMLv9CEeCHOIeK/wH+fux2CbuT4fSW247/VTeHgb3gsVQ5DZWFAD/TED3Lt7lakqbFm3
+         bFJ3vjv2P4GqbgvZqMuycuaqNoZmgxXqq/3V0f+E/p0OMQqY1B8/itJjukssoND+P2nq
+         aCGgsAL5v/eXhomABARgA11WRz2A7MF2bynXvoLjFKPQfahk4RWJut+ZEREA8J9mB8b/
+         2ymw==
+X-Gm-Message-State: APjAAAVt54113m2FxGh7uJcaJF74YTZmFXHaKUE/sDHPMwVge6JJWNwh
+        zzU2rn2sc3RI6scq8fpIHeyEumo/+iHiyLaVjg==
+X-Google-Smtp-Source: APXvYqzlHl65VPmh6Fpk+kxQ+1lgOSdmQFpOTpFQfFvOCSSDU3U1pIGJZHw/K1MdWEGG1h+GA1/Q71eEsPHo6r3vczg=
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr52432551ioc.32.1561354365683;
+ Sun, 23 Jun 2019 22:32:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561353999; bh=LDgBBF10ruebzeoWMV3UtGDcG1o6y/1uPq4y4hbspTM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=LGLIvNnh9r1tFaS3Tks2Mwtbmb/yXGmPsyZOYnGe0VlUY1Tg+7BvwfqcjmSTFGxGZ
-         baQkOwnUQ1bJuBnLRwLLrXmPG8d2qfv5lp3kl4EqO/T4wtMvTtLMksBvvISgIXT9vH
-         JeNBQpqMsiupsIgiW+Dh7cbGw1lx6yAgKlpntwQuZFb++j27KOaOlkix+5FBu6i4w3
-         ezP6sW+XQfIOkbSfPx0OUA7ize61NeT9xWgw84BKsXqamKQuorbvp5PprNjWN75p3d
-         mLzarxMK4a+iqqEa/aL7cvq06hZaZopIuZPwUB/6VnAdByq/5FXgDkQAQP66x1Vhkf
-         s7cVim7JHGUIg==
+References: <1561349561-8302-1-git-send-email-kernelfans@gmail.com> <20190624044305.GA30102@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190624044305.GA30102@iweiny-DESK2.sc.intel.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 24 Jun 2019 13:32:34 +0800
+Message-ID: <CAFgQCTuMVdrjkiQ5H3xUuME16g-xNUFXtvU1p+=P4-pujXcSAA@mail.gmail.com>
+Subject: Re: [PATCHv2] mm/gup: speed up check_and_migrate_cma_pages() on huge page
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        LKML <Linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export all configuration space access APIs and also other APIs to
-support host controller drivers of DesignWare core based implementations
-while adding support for .remove() hook to build their respective drivers
-as modules
+On Mon, Jun 24, 2019 at 12:43 PM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Mon, Jun 24, 2019 at 12:12:41PM +0800, Pingfan Liu wrote:
+> > Both hugetlb and thp locate on the same migration type of pageblock, since
+> > they are allocated from a free_list[]. Based on this fact, it is enough to
+> > check on a single subpage to decide the migration type of the whole huge
+> > page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+> > similar on other archs.
+> >
+> > Furthermore, when executing isolate_huge_page(), it avoid taking global
+> > hugetlb_lock many times, and meanless remove/add to the local link list
+> > cma_page_list.
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> > Cc: Linux-kernel@vger.kernel.org
+> > ---
+> >  mm/gup.c | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index ddde097..544f5de 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1342,19 +1342,22 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+> >       LIST_HEAD(cma_page_list);
+> >
+> >  check_again:
+> > -     for (i = 0; i < nr_pages; i++) {
+> > +     for (i = 0; i < nr_pages;) {
+> > +
+> > +             struct page *head = compound_head(pages[i]);
+> > +             long step = 1;
+> > +
+> > +             if (PageCompound(head))
+> > +                     step = compound_order(head) - (pages[i] - head);
+>
+> Sorry if I missed this last time.  compound_order() is not correct here.
+For thp, prep_transhuge_page()->prep_compound_page()->set_compound_order().
+For smaller hugetlb,
+prep_new_huge_page()->prep_compound_page()->set_compound_order().
+For gigantic page, prep_compound_gigantic_page()->set_compound_order().
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes from v7:
-* None
+Do I miss anything?
 
-Changes from v6:
-* None
-
-Changes from v5:
-* None
-
-Changes from v4:
-* Removed __ (underscore) from dw_pcie_{write/read}_dbi API names
-
-Changes from v3:
-* Exported only __dw_pcie_{read/write}_dbi() APIs instead of
-  dw_pcie_read{l/w/b}_dbi & dw_pcie_write{l/w/b}_dbi APIs.
-
-Changes from v2:
-* Rebased on top of linux-next top of the tree branch
-
-Changes from v1:
-* s/Designware/DesignWare
-
- drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
- drivers/pci/controller/dwc/pcie-designware.c      | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d069e4290180..f93252d0da5b 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -311,6 +311,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
- 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
- 			    upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
- 
- int dw_pcie_host_init(struct pcie_port *pp)
- {
-@@ -495,6 +496,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dw_pcie_free_msi(pp);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_init);
- 
- void dw_pcie_host_deinit(struct pcie_port *pp)
- {
-@@ -503,6 +505,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
- 	if (pci_msi_enabled() && !pp->ops->msi_host_init)
- 		dw_pcie_free_msi(pp);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
- 
- static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				     u32 devfn, int where, int size, u32 *val,
-@@ -695,3 +698,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 665a76f11318..b832a49de9c0 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -34,6 +34,7 @@ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read);
- 
- int dw_pcie_write(void __iomem *addr, int size, u32 val)
- {
-@@ -51,6 +52,7 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write);
- 
- u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- {
-@@ -66,6 +68,7 @@ u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
- 
- 	return val;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_read_dbi);
- 
- void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- {
-@@ -80,6 +83,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
- 	if (ret)
- 		dev_err(pci->dev, "Write DBI address failed\n");
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_write_dbi);
- 
- u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size)
- {
--- 
-2.17.1
-
+Thanks,
+  Pingfan
+[...]
