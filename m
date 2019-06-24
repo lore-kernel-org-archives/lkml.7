@@ -2,119 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1436BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC4A208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561374968;
-	bh=LFqck4CeV3jBrl7Yqgi21ZqUHc7BseQ2I38AyrN4b3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lBYCQ5F1up0vRZgB3ayssWDqlNEJiNYTSB+xz65kDhoGUgC+nyDgpGCAM5CvS9GCK
-	 h7gzpWm1Jry+DeRtTxqBAgr/sqcB2SEOZfeORegkBgGKaw8CV/MP3CVthKqQrNEnR5
-	 gtg4OFJwGLXmGqPWs6sONYB6tdkEiKD4tzIfKcTk=
+	by mail.kernel.org (Postfix) with ESMTP id 8DC9820449
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfFXLQH (ORCPT
+        id S1729611AbfFXLQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbfFXLQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:16:07 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1020449;
-        Mon, 24 Jun 2019 11:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561374966;
-        bh=LFqck4CeV3jBrl7Yqgi21ZqUHc7BseQ2I38AyrN4b3s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XSvX2o0P97KVpBlCPX61upv01HnSc9kZCztiFA3NLNpGco45CIh/rZ67XWlja2EVr
-         vksn2UCldeO7t0n/lzFgMDLAb+ugyZ8v5hdUSmooKB4SZEXomTxQOY3AJWcU1Zq7VW
-         ethUEz3+FgM9Le+Eh4bevMMllLhxj6571CK2n9Jk=
-Date:   Mon, 24 Jun 2019 12:16:01 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        Nadav Amit <namit@vmware.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 0/4] arm64: wire up VM_FLUSH_RESET_PERMS
-Message-ID: <20190624111600.b7e5kkfvuszj6522@willie-the-truck>
-References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
- <20190528100413.GA20809@fuggles.cambridge.arm.com>
+        Mon, 24 Jun 2019 07:16:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19064 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727953AbfFXLQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:16:33 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 722C6F7675D79B1559C7;
+        Mon, 24 Jun 2019 19:16:29 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 24 Jun 2019 19:16:22 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <dan.carpenter@oracle.com>, <julia.lawall@lip6.fr>
+CC:     <kernel-janitors@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <jonathan.kim@amd.com>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed in amdgpu_pmu_init
+Date:   Mon, 24 Jun 2019 19:23:18 +0800
+Message-ID: <20190624112318.149299-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190624094850.GQ18776@kadam>
+References: <20190624094850.GQ18776@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528100413.GA20809@fuggles.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:04:20AM +0100, Will Deacon wrote:
-> On Thu, May 23, 2019 at 11:22:52AM +0100, Ard Biesheuvel wrote:
-> > Wire up the code introduced in v5.2 to manage the permissions
-> > of executable vmalloc regions (and their linear aliases) more
-> > strictly.
-> > 
-> > One of the things that came up in the internal discussion is
-> > whether non-x86 architectures have any benefit at all from the
-> > lazy vunmap feature, and whether it would perhaps be better to
-> > implement eager vunmap instead.
-> > 
-> > Cc: Nadav Amit <namit@vmware.com>
-> > Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: James Morse <james.morse@arm.com>
-> > 
-> > Ard Biesheuvel (4):
-> >   arm64: module: create module allocations without exec permissions
-> >   arm64/mm: wire up CONFIG_ARCH_HAS_SET_DIRECT_MAP
-> >   arm64/kprobes: set VM_FLUSH_RESET_PERMS on kprobe instruction pages
-> >   arm64: bpf: do not allocate executable memory
-> > 
-> >  arch/arm64/Kconfig                  |  1 +
-> >  arch/arm64/include/asm/cacheflush.h |  3 ++
-> >  arch/arm64/kernel/module.c          |  4 +-
-> >  arch/arm64/kernel/probes/kprobes.c  |  4 +-
-> >  arch/arm64/mm/pageattr.c            | 48 ++++++++++++++++----
-> >  arch/arm64/net/bpf_jit_comp.c       |  2 +-
-> >  mm/vmalloc.c                        | 11 -----
-> >  7 files changed, 50 insertions(+), 23 deletions(-)
-> 
-> Thanks, this all looks good to me. I can get pick this up for 5.2 if
-> Rick's fixes [1] land soon enough.
+There is one warning:
+drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
+drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+  int ret = 0;
+      ^
+amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
+which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
+amdgpu_device_init()
+	r = amdgpu_pmu_init(adev);
 
-Bah, I missed these landing in -rc5 and I think it's a bit too late for
-us to take this for 5.2. now particularly with our limited ability to
-fix any late regressions that might arise.
+Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
 
-In which case, Catalin, please can you take these for 5.3? You might run
-into some testing failures with for-next/core due to the late of Rick's
-fixes, but linux-next should be alright and I don't think you'll get any
-conflicts.
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
+ amdgpu_pmu_init().
+ v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
+ v3->v4: delete the indenting for init_pmu_by_type() arguments. The original indenting is correct.
 
-Acked-by: Will Deacon <will@kernel.org>
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Ard: are you ok with that?
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+index 0e6dba9f60f0..c98cf77a37f3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+@@ -254,6 +254,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+ 		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
+ 				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+ 				       DF_V3_6_MAX_COUNTERS);
++		if (ret)
++			return ret;
+ 
+ 		/* other pmu types go here*/
+ 		break;
+-- 
+2.20.1
 
-Thanks,
-
-Will
