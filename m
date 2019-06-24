@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF75C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8824EC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02157213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5705320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c/f5f/Ez"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sm2RVRXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfFXLqH (ORCPT
+        id S1729781AbfFXLq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:46:07 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43819 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfFXLqH (ORCPT
+        Mon, 24 Jun 2019 07:46:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40047 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfFXLqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:46:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id k20so808768ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:46:06 -0700 (PDT)
+        Mon, 24 Jun 2019 07:46:25 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so6755974pla.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xjyC1woOCk6QoSm3J7dmvFYHQ65jTUd0WwHup6buLdA=;
-        b=c/f5f/Ezq3qoosgf0iqgNPPcbIYUobo1qpnTyfBhKYcJlD4mJXs5nY2Fk/i59Ypocr
-         oQFMXxWneqxFDJ3UlvFYhCbMzeaD0RwSQIePTpoE5ZabZmOc1ubkk2xy9XaV16k1mWpG
-         uhW5uB/qv024uac34FQoadj7MRiYeO6H4o0MhAbsqH09bTa0F0KQpiaQXFET3z1MtT/d
-         Oju2FzIw+5E6M8TP+z8WD0t/uffACrjPTXLSo1MYDaEtdGk+3Hm/PaRXl5EZWsdpLsO8
-         3k6Ap14uTP2sPWcBeX+6gjzk8vGBecUobCh1G6MaumuEeR7EXuz9p88d7wEt2SPezw97
-         FmjQ==
+        bh=4sCioPXlb29uCUXcWaSeu3ouKfJt5j/bFJ2w/CyNw2c=;
+        b=sm2RVRXAjwVlXYZLx7geioGtk+BR242iTE1ahR9xHr0PmrJjewpjBjtvnvs/qIFqp/
+         abD3pOu/UOwmqUWwwoz0bkUvBMFuuWaXQFhjAYGad/dxwR0f4Yp/p4RLynZO0bl6cB1V
+         1ZyAUXh+Yd4XNJ06zBDrmW/UCque+MpGgUQtsNQ1tt+eMg+1fKBtRcLSMQ+q/Tbpty5b
+         jCWWBeJWWo8u045J3E9ZVtqB0tk/dsl2ryXKOqdlynQ8YipfI1qGXIScDJ1RhHHu7w6Y
+         9C1bXNH2/eJ6LC0wnSD0Henu0S2E6xfL7xnFb63mnmeByrHaxchCLGPrHiJdecHasvM4
+         TMZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xjyC1woOCk6QoSm3J7dmvFYHQ65jTUd0WwHup6buLdA=;
-        b=nx8xKt/Z/0zs4S5vR7na6qB1B0GY0jTnlslc9Uh3cI6DgPAw+RQlioZUxCOjm2kitr
-         GLIukitlsyfiWoK84YKFnTnUI5+AUlhCOOjJg4XVKIAtovUz4J1hYvyjDqhmbte0rC02
-         AsL3ZQYt1e1RHtxT3dGgD17XeBkZPxNii2cw6l1XgmYhAfaH4vRspfDozCHESYUFRRPT
-         V3gmeOsWHfBiC/jNNxkYDEc/0vJghi+MxwnK/OxIufArvETi22tzRJz5GTus3W2omf8Z
-         Y4FNI+YEIqLnu0pvGwvLSn6keZo/IUR2kwng3mvZzHcx6qCU/UayVj8gpTNW5crGzzwq
-         ltSg==
-X-Gm-Message-State: APjAAAVGn7QibZLfa+sJgtAe8w1nccnaBb4r76O2aAdCYtKi9IDBPuzM
-        /QEul7oSSg2Yid9PnL7K4jOXIS2XG6wlGNAlhgUFsA==
-X-Google-Smtp-Source: APXvYqx6HEUoIqfS52gzn8y0KrQsf7q1x4CiJ/9P8zJ9QW7nroLu9eqcvYa+03rEne+EbXrDQjNrpkGRT2bTR5Pv1mU=
-X-Received: by 2002:a6b:4101:: with SMTP id n1mr14151102ioa.138.1561376765960;
- Mon, 24 Jun 2019 04:46:05 -0700 (PDT)
+        bh=4sCioPXlb29uCUXcWaSeu3ouKfJt5j/bFJ2w/CyNw2c=;
+        b=sH2jzA951KTM7msjqssylk+4MkcztGGvFE0tHdJ01PZsOFi8LtfWfAlg9CKkTV0KSS
+         yDrMS1Qn6qtmqZwwpF20gjNeunrFYOP7AvskVDKejcXBdc/8sXSmp3OlxElcDXGNPyQl
+         igKXUb9u9p8myex+wT6LUoXv4bl3UyB7vbKk0AWvEniP/mpLDqZyJJcin5J0LvsuU8WP
+         A/SEmF0uPHjNuVwP1nqywu66PdTdCLbR9CC/XSRqq6jStaW0lgYIqsBH9yDOA9iFUBu1
+         c34wxjiUB3tlRDWuKszBrAgds1FbW+V6QnWrlUhZJzFR2RVOopS9C37ISkFxlx3D6CuL
+         QfVg==
+X-Gm-Message-State: APjAAAUU57/lLaYrZBIuIbvsygW6wLVw/qFNY+WRZASHYHcqtxEv4JDd
+        Qweebn7mWjoru7sgLSOMpb9bAul1gCorGxfmdYyiXw==
+X-Google-Smtp-Source: APXvYqwtGwqXfKf0YFqGGNqqaIODSyYzqBP+opW0jxwa9SyEbdSS0oG3ciF67nSp+8tfpiP0kQFKFzXpMmOfeZVvhtQ=
+X-Received: by 2002:a17:902:4183:: with SMTP id f3mr31396406pld.336.1561376784423;
+ Mon, 24 Jun 2019 04:46:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190624110532.41065-1-elver@google.com>
 In-Reply-To: <20190624110532.41065-1-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 24 Jun 2019 13:45:53 +0200
-Message-ID: <CACT4Y+ZP4gkLh5zbwSLzV+ZwJCq_zSrsaQE+1Y94iU0JJzJNqw@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 24 Jun 2019 13:46:12 +0200
+Message-ID: <CAAeHK+w5oNt+3wvHr2W2+ikd8J=psk2YSjRSARF4P+W7UgUX_Q@mail.gmail.com>
 Subject: Re: [PATCH] mm/kasan: Add shadow memory validation in ksize()
 To:     Marco Elver <elver@google.com>
 Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
@@ -70,7 +70,7 @@ Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>
+        Linux Memory Management List <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -185,11 +185,6 @@ On Mon, Jun 24, 2019 at 1:05 PM Marco Elver <elver@google.com> wrote:
 > +       size_t size = 16;
 > +
 > +       pr_info("kmalloc pagealloc allocation: double-free (kzfree)\n");
-
-This does not have anything to do with pagealloc, right?
-If so, remove pagealloc here and in the function name. kzfree also
-implies kmalloc, so this could be just double_kzfree().
-
 > +       ptr = kmalloc(size, GFP_KERNEL);
 > +       if (!ptr) {
 > +               pr_err("Allocation failed\n");
@@ -235,6 +230,10 @@ implies kmalloc, so this could be just double_kzfree().
 >  {
 > -       s8 shadow_byte;
 >         u8 tag;
+
+The tag variable is not used any more in this function, right? If so,
+it can be removed.
+
 >         void *tagged_object;
 >         unsigned long rounded_up_size;
 > @@ -435,8 +445,7 @@ static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
@@ -283,32 +282,19 @@ implies kmalloc, so this could be just double_kzfree().
 > -        */
 > -       kasan_unpoison_shadow(object, size);
 > +       if (!kasan_shadow_invalid(object)) {
-
-
-I am thinking if we should call kasan_check_read(object, 1) here...
-This would not produce a double-free error (use-after-free read
-instead), but conceptually why we would allow calling ksize on freed
-objects? But more importantly, we just skip unpoisoning shadow, but we
-still smash the object contents on the second kzfree, right? This
-means that the heap is corrupted after running the tests. As far as I
-remember we avoided corrupting heap in tests and in particular a
-normal double-free does not. As of now we've smashed the quarantine
-link, but if we move the free metadata back into the object (e.g. to
-resolve https://bugzilla.kernel.org/show_bug.cgi?id=198437) we also
-smash free metadata before we print the double free report (at the
-very least we will fail to print free stack, and crash at worst).
-
-Doing kasan_check_read() in ksize() will cause a report _before_ we
-smashed the object at the cost of an imprecise report title.
-And fixing all of the issues will require changing kzfree I think.
-
-
 > +               /*
 > +                * We assume that ksize callers could use whole allocated area,
 > +                * so we need to unpoison this area.
 > +                */
 > +               kasan_unpoison_shadow(object, size);
 > +       }
+
+I think it's better to add a kasan_ksize() hook that implements this
+logic. This way we don't have to duplicate it for SLAB and SLUB.
+
+In this case we also don't need an exported kasan_shadow_invalid()
+hook, and its logic can be moved into shadow_invalid().
+
 >         return size;
 >  }
 >  EXPORT_SYMBOL(ksize);
