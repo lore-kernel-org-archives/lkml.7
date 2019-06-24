@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74740C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C184DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FEB20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4D2205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371010;
-	bh=S5Ih/cw815bVGp1ee991/jgGq5ib6H35gmUvCouQTgc=;
+	s=default; t=1561371016;
+	bh=InnUAcskl1+Nq8HujBZuuO9oVUwRKPIL3VUFQVlFKk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTIe/l5vudqwsR/npyWZqD1JnB6MN15UK4iwPTEoNE0V8BRk/oJtERbJv3AZieaj8
-	 /2/fgLxPhm8PIrZwC/rYnNwFmswCfijEHF6R5niMQQevnvx8LX/7u0V9Walnom+N6M
-	 +v/ysjfKyUKclQ69iEQFQhVgGwPrboJGqYV5UJ2M=
+	b=BrQ90GaCmTh5Lh/v2YSA8Q4gqZTZ3SvXVP+0dXFE62br7MBh/E4UY4/Z0km/AU6EH
+	 kpJicuvD4PB7fnc5uX6dVllRzT7xNqQQBhf3YiIPjFyOfP5Q7HZe2IDmwp1n+8+p2E
+	 rPlGAflEcU2FC2R/n7GBGWewP/obn5NwfVX0lrVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbfFXKKJ (ORCPT
+        id S1730628AbfFXKKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41814 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbfFXKIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:23 -0400
+        id S1730434AbfFXKIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:20 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AADD2063F;
-        Mon, 24 Jun 2019 10:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDA0C2089F;
+        Mon, 24 Jun 2019 10:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370903;
-        bh=S5Ih/cw815bVGp1ee991/jgGq5ib6H35gmUvCouQTgc=;
+        s=default; t=1561370900;
+        bh=InnUAcskl1+Nq8HujBZuuO9oVUwRKPIL3VUFQVlFKk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMlmajK6jcTOEQWZpijbabRzAGJ1Z34PPfbx23dTJPLLY+LHREPn6pJwlUtNIqKEv
-         xFxxMIwsqdOtBah+o9s2euDEFCYF4uEzyTIpdnVHxi132TpEZ/Ii43l65RUNb/bA72
-         NDaFzMKMDJGI7sOKhljZco5WV5YWgFt7r1picObA=
+        b=v3U5ysA1VK5fDL+uHbRMIGDo+RYoHST4c8srAPY2HrrGBpJOKAOElM6n6gUzdC/8J
+         qu81Z4Gcu79av5HryD+gAjkGK3/z36IGFGrMNRe0ML2EIb9NBeQdy/RXv10dNMAYsU
+         F3/nOEDBOf+eNVugWbnINPzG1gpg3LNkMYV529Oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-fpga@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 044/121] fpga: stratix10-soc: fix use-after-free on s10_init()
-Date:   Mon, 24 Jun 2019 17:56:16 +0800
-Message-Id: <20190624092323.034944246@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 043/121] MIPS: mark ginvt() as __always_inline
+Date:   Mon, 24 Jun 2019 17:56:15 +0800
+Message-Id: <20190624092322.981619939@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,51 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f5dd87326fefe42a4b1a4b1a1a695060c33a88d6 ]
+[ Upstream commit 6074c33c6b2eabc70867ef76d57ca256e9ea9da7 ]
 
-The refcount of fw_np has already been decreased by of_find_matching_node()
-so it shouldn't be used anymore.
-This patch adds an of_node_get() before of_find_matching_node() to avoid
-the use-after-free problem.
+To meet the 'i' (immediate) constraint for the asm operands,
+this function must be always inlined.
 
-Fixes: e7eef1d7633a ("fpga: add intel stratix10 soc fpga manager driver")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: linux-fpga@vger.kernel.org
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Moritz Fischer <mdf@kernel.org>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Acked-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/stratix10-soc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/mips/include/asm/ginvt.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-index 13851b3d1c56..215d33789c74 100644
---- a/drivers/fpga/stratix10-soc.c
-+++ b/drivers/fpga/stratix10-soc.c
-@@ -507,12 +507,16 @@ static int __init s10_init(void)
- 	if (!fw_np)
- 		return -ENODEV;
+diff --git a/arch/mips/include/asm/ginvt.h b/arch/mips/include/asm/ginvt.h
+index 49c6dbe37338..6eb7c2b94dc7 100644
+--- a/arch/mips/include/asm/ginvt.h
++++ b/arch/mips/include/asm/ginvt.h
+@@ -19,7 +19,7 @@ _ASM_MACRO_1R1I(ginvt, rs, type,
+ # define _ASM_SET_GINV
+ #endif
  
-+	of_node_get(fw_np);
- 	np = of_find_matching_node(fw_np, s10_of_match);
--	if (!np)
-+	if (!np) {
-+		of_node_put(fw_np);
- 		return -ENODEV;
-+	}
- 
- 	of_node_put(np);
- 	ret = of_platform_populate(fw_np, s10_of_match, NULL, NULL);
-+	of_node_put(fw_np);
- 	if (ret)
- 		return ret;
- 
+-static inline void ginvt(unsigned long addr, enum ginvt_type type)
++static __always_inline void ginvt(unsigned long addr, enum ginvt_type type)
+ {
+ 	asm volatile(
+ 		".set	push\n"
 -- 
 2.20.1
 
