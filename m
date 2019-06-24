@@ -2,209 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E7BC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A43C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1032212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="mziuWN5k"
+	by mail.kernel.org (Postfix) with ESMTP id 35A5F212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfFXMFk (ORCPT
+        id S1729206AbfFXMGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:05:40 -0400
-Received: from vps.xff.cz ([195.181.215.36]:47542 "EHLO vps.xff.cz"
+        Mon, 24 Jun 2019 08:06:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:53063 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbfFXMFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:05:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1561377938; bh=T4BXa4VwDBoEc4A4HcwS0Dl0bssMv2ECXblVliRU+Rc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mziuWN5kTFFpcq304OoQGK6gxdzqSCt3c4v+QPAJAN2Xr/rjVgJt8bguMb+m+Bs0+
-         vDVZ1NmuEY1NyjB18a9F+pwxlCIMHxTyDOcZCQvhN8Zz//HRyQr+mAtuE+Xl8Kl2Lr
-         IWjXiq/GG8qikZgtD4XyWJPxehxIBwPjI1F10fGA=
-Date:   Mon, 24 Jun 2019 14:05:37 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        mchehab+samsung@kernel.org, linus.walleij@linaro.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 11/11] thermal: sun8i: add thermal driver for h3
-Message-ID: <20190624120537.sxdm4y3jec3ksr4u@core.my.home>
-Mail-Followup-To: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        mchehab+samsung@kernel.org, linus.walleij@linaro.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-References: <20190623164206.7467-1-tiny.windzz@gmail.com>
- <20190623164206.7467-12-tiny.windzz@gmail.com>
+        id S1726923AbfFXMGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 08:06:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 05:06:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
+   d="scan'208";a="166312876"
+Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.129.47]) ([10.238.129.47])
+  by orsmga006.jf.intel.com with ESMTP; 24 Jun 2019 05:06:34 -0700
+Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
+References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
+ <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
+ <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
+ <384bc07d-6105-d380-cd44-4518870c15f1@linux.intel.com>
+ <fb749626-1d9e-138f-c673-14b52fe7170c@linux.intel.com>
+ <7d304ae7-73c0-d2a9-cd3e-975941a91266@redhat.com>
+From:   Jing Liu <jing2.liu@linux.intel.com>
+Message-ID: <2a2b395b-0bad-5022-9698-9beb87f55ec6@linux.intel.com>
+Date:   Mon, 24 Jun 2019 20:06:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623164206.7467-12-tiny.windzz@gmail.com>
+In-Reply-To: <7d304ae7-73c0-d2a9-cd3e-975941a91266@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yangtao,
+Hi Paolo,
 
-On Sun, Jun 23, 2019 at 12:42:06PM -0400, Yangtao Li wrote:
-> This patch adds the support for allwinner h3 thermal sensor.
+On 6/24/2019 4:33 PM, Paolo Bonzini wrote:
+> On 24/06/19 05:10, Jing Liu wrote:
+>>> What do you think about @index in current function? Does it mean, we
+>>> need put cpuid from index to max subleaf to @entry[i]? If so, the logic
+>>> seems as follows,
+>>>
+>>> if (index == 0) {
+>>>       // Put subleaf 0 into @entry
+>>>       // Put subleaf 1 into @entry[1]
+>>> } else if (index < entry->eax) {
+>>>       // Put subleaf 1 into @entry
+>>> } else {
+>>>       // Put all zero into @entry
+>>> }
+>>>
+>>> But this seems not identical with other cases, for current caller
+>>> function. Or we can simply ignore @index in 0x07 and just put all
+>>> possible subleaf info back?
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/thermal/sun8i_thermal.c | 72 +++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
+> There are indeed quite some cleanups to be made there.  Let me post a
+> series as soon as possible, and you can base your work on it.
 > 
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index 260b24340f5b..c8ee291f3b17 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -27,6 +27,14 @@
->  #define TEMP_TO_REG				672
->  #define CALIBRATE_DEFAULT			0x800
->  
-> +#define SUN8I_THS_CTRL0				0x00
-> +#define SUN8I_THS_CTRL2				0x40
-> +#define SUN8I_THS_IC				0x44
-> +#define SUN8I_THS_IS				0x48
-> +#define SUN8I_THS_MFC				0x70
-> +#define SUN8I_THS_TEMP_CALIB			0x74
-> +#define SUN8I_THS_TEMP_DATA			0x80
-> +
->  #define SUN50I_THS_CTRL0			0x00
->  #define SUN50I_H6_THS_ENABLE			0x04
->  #define SUN50I_H6_THS_PC			0x08
-> @@ -36,6 +44,9 @@
->  #define SUN50I_H6_THS_TEMP_CALIB		0xa0
->  #define SUN50I_H6_THS_TEMP_DATA			0xc0
->  
-> +#define SUN8I_THS_CTRL0_T_ACQ0(x)		(GENMASK(15, 0) & (x))
-> +#define SUN8I_THS_CTRL2_T_ACQ1(x)		((GENMASK(15, 0) & (x)) << 16)
-> +
->  #define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
->  #define SUN50I_THS_FILTER_EN			BIT(2)
->  #define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
-> @@ -121,6 +132,21 @@ static const struct regmap_config config = {
->  	.fast_io = true,
->  };
->  
-> +static int sun8i_h3_irq_ack(struct ths_device *tmdev)
-> +{
-> +	int state, ret = 0;
-> +
-> +	regmap_read(tmdev->regmap, SUN8I_THS_IS, &state);
-> +
-> +	if (state & BIT(8)) {
-> +		regmap_write(tmdev->regmap, SUN8I_THS_IS,
-> +			     BIT(8));
-> +		ret |= BIT(1);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int sun50i_h6_irq_ack(struct ths_device *tmdev)
->  {
->  	int i, state, ret = 0;
-> @@ -154,6 +180,14 @@ static irqreturn_t sun8i_irq_thread(int irq, void *data)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int sun8i_h3_ths_calibrate(struct ths_device *tmdev,
-> +			       u16 *caldata, int callen)
-> +{
-> +	regmap_write(tmdev->regmap, SUN8I_THS_TEMP_CALIB, *caldata);
 
-You're missing a sanity check for callen here.
+Thanks. I just had another mail (replying you in this serial) appending
+some codes to deal with case 7. If you prefer to firstly cleanup, I can
+wait for the patch then. :)
 
-regards,
-	o.
+Thanks,
+Jing
 
-> +	return 0;
-> +}
-> +
->  static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
->  				   u16 *caldata, int callen)
->  {
-> @@ -325,6 +359,32 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
->  	return ret;
->  }
->  
-> +static int sun8i_h3_thermal_init(struct ths_device *tmdev)
-> +{
-> +	/* average over 4 samples */
-> +	regmap_write(tmdev->regmap, SUN8I_THS_MFC,
-> +		     SUN50I_THS_FILTER_EN |
-> +		     SUN50I_THS_FILTER_TYPE(1));
-> +	/*
-> +	 * period = (x + 1) * 4096 / clkin; ~10ms
-> +	 * enable data interrupt
-> +	 */
-> +	regmap_write(tmdev->regmap, SUN8I_THS_IC,
-> +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58) | BIT(8));
-> +	/*
-> +	 * clkin = 24MHz
-> +	 * T acquire = clkin / (x + 1)
-> +	 *           = 20us
-> +	 * enable sensor
-> +	 */
-> +	regmap_write(tmdev->regmap, SUN8I_THS_CTRL0,
-> +		     SUN8I_THS_CTRL0_T_ACQ0(479));
-> +	regmap_write(tmdev->regmap, SUN8I_THS_CTRL2,
-> +		     SUN8I_THS_CTRL2_T_ACQ1(479) | BIT(0));
-> +
-> +	return 0;
-> +}
-> +
->  static int sun50i_thermal_init(struct ths_device *tmdev)
->  {
->  	int val;
-> @@ -431,6 +491,17 @@ static int sun8i_ths_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct ths_thermal_chip sun8i_h3_ths = {
-> +	.sensor_num = 1,
-> +	.offset = -1794,
-> +	.scale = -121,
-> +	.has_ahb_clk = true,
-> +	.temp_data_base = SUN8I_THS_TEMP_DATA,
-> +	.calibrate = sun8i_h3_ths_calibrate,
-> +	.init = sun8i_h3_thermal_init,
-> +	.irq_ack = sun8i_h3_irq_ack,
-> +};
-> +
->  static const struct ths_thermal_chip sun50i_h6_ths = {
->  	.sensor_num = 2,
->  	.offset = -2794,
-> @@ -443,6 +514,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
->  };
->  
->  static const struct of_device_id of_ths_match[] = {
-> +	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
->  	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
->  	{ /* sentinel */ },
->  };
-> -- 
-> 2.17.1
+> Paolo
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
