@@ -2,204 +2,135 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBBBC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A0120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBC220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kRGp38NK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VRfzqrCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfFXSwS (ORCPT
+        id S1729583AbfFXSyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:52:18 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33854 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfFXSwR (ORCPT
+        Mon, 24 Jun 2019 14:54:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32858 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfFXSyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:52:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m29so15683396qtu.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:52:16 -0700 (PDT)
+        Mon, 24 Jun 2019 14:54:12 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so8062402pfq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=FdoCyudKahKj0SWzDQQDRaNFjjN47T56TpYdFnqFN6Q=;
-        b=kRGp38NKS88PVk+PViUY9+FG3kBjzBKqSGfcz5+5Y/W1/Jr3BFxvcCOuP4Qw0e2AFh
-         wyrqr51vZkMW0DZdoGKB/tmVWR/CceaUKmxuF/RVBO05jo34VAEDxe6UOfmG7RbiBNcK
-         JgcXh21EPzd8g8mq2UI/qbk9CH2EdMoBLaxgs=
+        bh=b5H8RtrC0Gc1uC0P9BdPRFehSMvKPE2eLTGWQg50TOo=;
+        b=VRfzqrCH2jFEWWjjlDlGd02Xe8ZQsb0AVWLLZIFUZPGPtVv9VLFJ+zz8bC8OUOaOUx
+         Oqcae7vUarDSmjpET3Ghcc9JlKP5Vf1bg21hv25Rq8NQJgF9ue1AbbSuNNetGP6GzyMs
+         qfJaOC3Qph/i6rx21qTIWZqCKCXB8QBPi1VFQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FdoCyudKahKj0SWzDQQDRaNFjjN47T56TpYdFnqFN6Q=;
-        b=hlRvivR+Oi3vihn9ofk8/f+62UpbX5+xFhnLtp+WR28Qmtlo11xgXv7DeKuiIzQBuN
-         egehYPQYA8LrKWi3h5dA5W+b4QP3wcHqIbkycEnTfLPPOCJVDVVxi/jFWm8TbZegYwbS
-         P2qBPmHkPRR5d8oQ7z8njr0hAL6vztGBHBoQToVdAzn/GruFD5DHaLgw5F+CO10TMxTn
-         qxG9TE91FPCnH+H+KQ9Kh34q6XEHAHIiExwpfRuAg19a4M/iktRyDZ1zP0/tafQvsc0w
-         80RwCn/qLlp5A5f/hRE1FgqpmgRFE9lRzoerPdkqoHkRpFXropgg8Falrw79csY3Lckv
-         VF5w==
-X-Gm-Message-State: APjAAAW8qRT+WB5m4tiMxvxnOWdmBcjUhJuVTPrvItRT9kMCk2ZKVYJo
-        S/6IbIHzmm2swVJNpRHWaUwf01Zk6k43ag==
-X-Google-Smtp-Source: APXvYqzlPMsfW8n2Fv5r2ooDKckw1uxgUmNEhj3pMv44Vv4CLYlBzRSS8TeY1keIvJ9fHxuKW3rh7Q==
-X-Received: by 2002:a0c:8705:: with SMTP id 5mr3904110qvh.32.1561402335797;
-        Mon, 24 Jun 2019 11:52:15 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a15sm7176651qtb.43.2019.06.24.11.52.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 11:52:15 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 14:52:14 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     jannh@google.com, oleg@redhat.com, mathieu.desnoyers@efficios.com,
-        willy@infradead.org, peterz@infradead.org, will.deacon@arm.com,
-        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
-        keescook@chromium.org, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH RFC v2] Convert struct pid count to refcount_t
-Message-ID: <20190624185214.GA211230@google.com>
-References: <20190624184534.209896-1-joel@joelfernandes.org>
+        bh=b5H8RtrC0Gc1uC0P9BdPRFehSMvKPE2eLTGWQg50TOo=;
+        b=Hv/oDoGF31l2zpCIwhQ/MHtXFMcy6+8KjbBycTueaCF0qyIeuky8/1vuiGXWytSTTk
+         nuiWp5dk4l/wWwKrjE+Or/PfFSd/5Wig6IgBI/W7DH4OhJ+Ppt8QSdYK1Zu8K1nPbEqG
+         u5Gfh+so39jypgVbphP0EctPm0Wh0WVW/Xfgd5LTJy6nrkrDivdKtSj/NpNLCq8HOhE+
+         dsaAB2JUUM9KvXLw9/5iLxb6C2Met1klIAldWab2v8FWC2DOvC+/3sOfrH3MPczlQmvy
+         jIN4Wz5Oyyp0EoW9UN8jGb8nQQPHhtz9aLWe3Ec/IyiDOU/Wft9sPpqdBJ5wyW0Aq0Ij
+         PDIg==
+X-Gm-Message-State: APjAAAXVZsp+RYDFZ1151wdyW9hp0Sl+oEXvGAuCCthw/tQcae9bMGZn
+        ZOaHzjf0dT+nYWvtY2RBfqwhBw==
+X-Google-Smtp-Source: APXvYqyXn1SQMUZwvxp4v/17SbLT1K8S5ekQlOyMcC+7be/m4tA2Bnx7hthlNDGzX/lhBeNI08UitQ==
+X-Received: by 2002:a17:90a:8a0b:: with SMTP id w11mr26442545pjn.125.1561402452192;
+        Mon, 24 Jun 2019 11:54:12 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id l7sm14434756pfl.9.2019.06.24.11.54.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 11:54:11 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 11:54:08 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 4/4] backlight: pwm_bl: Set scale type for brightness
+ curves specified in the DT
+Message-ID: <20190624185408.GB137143@google.com>
+References: <20190613194326.180889-1-mka@chromium.org>
+ <20190613194326.180889-5-mka@chromium.org>
+ <9ea1bb40-95a6-7a67-a8a6-ecc77a70e547@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190624184534.209896-1-joel@joelfernandes.org>
+In-Reply-To: <9ea1bb40-95a6-7a67-a8a6-ecc77a70e547@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 02:45:34PM -0400, Joel Fernandes (Google) wrote:
-> struct pid's count is an atomic_t field used as a refcount. Use
-> refcount_t for it which is basically atomic_t but does additional
-> checking to prevent use-after-free bugs.
+Hi Daniel,
+
+On Fri, Jun 21, 2019 at 02:10:19PM +0100, Daniel Thompson wrote:
+> On 13/06/2019 20:43, Matthias Kaehlcke wrote:
+> > Check if a brightness curve specified in the device tree is linear or
+> > not and set the corresponding property accordingly. This makes the
+> > scale type available to userspace via the 'scale' sysfs attribute.
+> > 
+> > To determine if a curve is linear it is compared to a interpolated linear
+> > curve between min and max brightness. The curve is considered linear if
+> > no value deviates more than +/-5% of ${brightness_range} from their
+> > interpolated value.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >   drivers/video/backlight/pwm_bl.c | 25 +++++++++++++++++++++++++
+> >   1 file changed, 25 insertions(+)
+> > 
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > index f067fe7aa35d..912407b6d67f 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -404,6 +404,26 @@ int pwm_backlight_brightness_default(struct device *dev,
+> >   }
+> >   #endif
+> > +static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
+> > +{
+> > +	unsigned int nlevels = data->max_brightness + 1;
+> > +	unsigned int min_val = data->levels[0];
+> > +	unsigned int max_val = data->levels[nlevels - 1];
+> > +	unsigned int slope = (100 * (max_val - min_val)) / nlevels;
 > 
-> For memory ordering, the only change is with the following:
->  -	if ((atomic_read(&pid->count) == 1) ||
->  -	     atomic_dec_and_test(&pid->count)) {
->  +	if (refcount_dec_and_test(&pid->count)) {
->  		kmem_cache_free(ns->pid_cachep, pid);
+> Why 100 (rather than a power of 2)?
+
+I guess it came from the decimal part of my brain, I can change it to
+128 ;-)
+
+> It would also be good to have a comment here saying what the maximum
+> quantization error is. Doesn't have to be over complex just mentioning
+> something like the following (assuming you agree that its true ;-) ):
 > 
-> Here the change is from:
-> Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
-> This ACQUIRE should take care of making sure the free happens after the
-> refcount_dec_and_test().
-> 
-> The above hunk also removes atomic_read() since it is not needed for the
-> code to work and it is unclear how beneficial it is. The removal lets
-> refcount_dec_and_test() check for cases where get_pid() happened before
-> the object was freed.
-> 
-> Cc: jannh@google.com
-> Cc: oleg@redhat.com
-> Cc: mathieu.desnoyers@efficios.com
-> Cc: willy@infradead.org
-> Cc: peterz@infradead.org
-> Cc: will.deacon@arm.com
-> Cc: paulmck@linux.vnet.ibm.com
-> Cc: elena.reshetova@intel.com
-> Cc: keescook@chromium.org
-> Cc: kernel-team@android.com
-> Cc: kernel-hardening@lists.openwall.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> ---
-> Changed to RFC to get any feedback on the memory ordering.
+>   Multiplying by XXX means that even in pathalogical cases such as
+>   (max_val - min_val) == nlevels then the error at max_val is less than
+>   1%.
 
-I had a question about refcount_inc().
+Sounds good, thanks for the suggestion!
 
-As per Documentation/core-api/refcount-vs-atomic.rst , it says:
+> With a suitable comment in the fixed point code:
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-A control dependency (on success) for refcounters guarantees that
-if a reference for an object was successfully obtained (reference
-counter increment or addition happened, function returned true),
-then further stores are ordered against this operation.
-
-However, in refcount_inc() I don't see any memory barriers (in the case where
-CONFIG_REFCOUNT_FULL=n). Is the documentation wrong?
-
-get_pid() does a refcount_inc() but doesn't have any memory barriers either.
-
-thanks,
-
- - Joel
-
-
-> 
->  include/linux/pid.h | 5 +++--
->  kernel/pid.c        | 7 +++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 14a9a39da9c7..8cb86d377ff5 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_PID_H
->  
->  #include <linux/rculist.h>
-> +#include <linux/refcount.h>
->  
->  enum pid_type
->  {
-> @@ -56,7 +57,7 @@ struct upid {
->  
->  struct pid
->  {
-> -	atomic_t count;
-> +	refcount_t count;
->  	unsigned int level;
->  	/* lists of tasks that use this pid */
->  	struct hlist_head tasks[PIDTYPE_MAX];
-> @@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
->  static inline struct pid *get_pid(struct pid *pid)
->  {
->  	if (pid)
-> -		atomic_inc(&pid->count);
-> +		refcount_inc(&pid->count);
->  	return pid;
->  }
->  
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 20881598bdfa..89c4849fab5d 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -37,7 +37,7 @@
->  #include <linux/init_task.h>
->  #include <linux/syscalls.h>
->  #include <linux/proc_ns.h>
-> -#include <linux/proc_fs.h>
-> +#include <linux/refcount.h>
->  #include <linux/sched/task.h>
->  #include <linux/idr.h>
->  
-> @@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
->  		return;
->  
->  	ns = pid->numbers[pid->level].ns;
-> -	if ((atomic_read(&pid->count) == 1) ||
-> -	     atomic_dec_and_test(&pid->count)) {
-> +	if (refcount_dec_and_test(&pid->count)) {
->  		kmem_cache_free(ns->pid_cachep, pid);
->  		put_pid_ns(ns);
->  	}
-> @@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  	}
->  
->  	get_pid_ns(ns);
-> -	atomic_set(&pid->count, 1);
-> +	refcount_set(&pid->count, 1);
->  	for (type = 0; type < PIDTYPE_MAX; ++type)
->  		INIT_HLIST_HEAD(&pid->tasks[type]);
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
+Thanks
