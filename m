@@ -2,125 +2,140 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC27FC4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB7EC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8354720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="fk47Ys0d"
+	by mail.kernel.org (Postfix) with ESMTP id 671D6205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561411062;
+	bh=zOBYbFXqM8DxgurbaRhW+kE+i14AA0Y+8NLki53wcTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=og+IfV8oJP57YqH+lx7O+QR3AjqYU04Slg4vn+18ILvJyA8MefwO2lz0feoRRt09O
+	 wtGhS2Lmay4bN4D67YfdZg5D20eQCcDhekuiThVYhEFXfe6CN8S4Gqp0162Z6VwXty
+	 RhuFr13OmsyGbPhylLxGIa1wbyM2J9Ya3PWZTu6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbfFXVQT (ORCPT
+        id S1732247AbfFXVRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:16:19 -0400
-Received: from mail-eopbgr790137.outbound.protection.outlook.com ([40.107.79.137]:43339
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731729AbfFXVQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:16:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lFRSrt0kaEpYNUooKthsj5/OGNwsXz2LtaVtteVrN4g=;
- b=fk47Ys0dgvUMms8JJf5oZjRX9VnoOZa+xPpAHPQssFt4LLEgDWVlalpCAZsfZ6/TZKKJ5hdG4IKEPeinhQLT+1z+2S4jIFsK4DFXFxV3kNyiTQLfT8Qeb8iexsLQjm5iuKMnEk+Q2lsXpN0unyVpb6l4aDMShx5hWCXZk/vvKW4=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1375.namprd22.prod.outlook.com (10.174.160.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 21:16:11 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 21:16:11 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-Thread-Topic: [PATCH] mips: Remove q-accessors from non-64bit platforms
-Thread-Index: AQHVInt4cLa0IUSxeEKd/1SMoCpE8aarXx6A
-Date:   Mon, 24 Jun 2019 21:16:10 +0000
-Message-ID: <MWHPR2201MB127741C612E43E450EA063D3C1E00@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190614063341.1672-1-fancer.lancer@gmail.com>
-In-Reply-To: <20190614063341.1672-1-fancer.lancer@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0065.namprd07.prod.outlook.com
- (2603:10b6:a03:60::42) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0d75f961-ca82-48ef-78f1-08d6f8e92e37
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1375;
-x-ms-traffictypediagnostic: MWHPR2201MB1375:
-x-microsoft-antispam-prvs: <MWHPR2201MB13755E0054FD6B3B4E72B31FC1E00@MWHPR2201MB1375.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39840400004)(366004)(136003)(189003)(199004)(186003)(305945005)(26005)(3846002)(11346002)(33656002)(446003)(81166006)(81156014)(8676002)(6916009)(54906003)(99286004)(14454004)(102836004)(386003)(6506007)(2906002)(25786009)(4326008)(8936002)(6116002)(66066001)(9686003)(476003)(66556008)(66446008)(52116002)(53936002)(64756008)(73956011)(7696005)(66476007)(42882007)(66946007)(6436002)(316002)(74316002)(6246003)(71190400001)(71200400001)(5660300002)(486006)(52536014)(7736002)(256004)(68736007)(55016002)(478600001)(14444005)(44832011)(229853002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1375;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZdSGBaPQtFAGytwx6VHs7iWIMIRe6GZ3k5mFho32VCXhuPjBLxATovygKAcbXCoxtqONme0EU/lFehNHYNw0V/qqHdgOaZw2ynn++vRAQSS/1Q3OavwuPRlU15CKSb6PefGXsxBPwKzvyD0aFWF6qvW6FMJzq0ZQmacgdSuqGDp0ns1Ex1qFf5mpCOXuLzCjDRRlqV2qkDMCM93ulYWwSYaV6FWpct7j3BGmDSdN0byoD+BUMFevunXk1d1d92BMVZAFsWXaB+rF8ugZcofWM+4cExnaKFNEzDAL6C96RQ5l2IX5GyHqhgPY9zGXGXMHSD/2jOgtTyXX9lDXngbeARtDN4jZVMsfuxWmvl+XPbtCBnI4togZ666pktP1VpUIocQUdwCMQ1m9BynCLbxDX+hopTLJU241sKX8iStDhO8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 17:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbfFXVRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 17:17:40 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27569205F4;
+        Mon, 24 Jun 2019 21:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561411059;
+        bh=zOBYbFXqM8DxgurbaRhW+kE+i14AA0Y+8NLki53wcTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=waLY1k8P6FJMdjUwsPgNvvgYFeQZXZwOIamcvkCbdQu289JkncbHHDtycSm65OapF
+         wNxNIidoA2Ym6QYRowuSqUwqDnkKWdaZ6Jp9BYufjGezsdPzE35lBd1goJUAZgBWIk
+         XJaGZnOk39lWQHd/QV5NV1bWE6h866lH8cfQ/pg0=
+Date:   Mon, 24 Jun 2019 14:17:37 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     syzbot <syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: lib/mpi: Fix karactx leak in mpi_powm
+Message-ID: <20190624211736.GA237341@gmail.com>
+References: <000000000000617b4a058c0cbd60@google.com>
+ <20190624103226.fbjvc6eumu325ifw@gondor.apana.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d75f961-ca82-48ef-78f1-08d6f8e92e37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 21:16:10.9182
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1375
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624103226.fbjvc6eumu325ifw@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNClNlcmdlIFNlbWluIHdyb3RlOg0KPiBUaGVyZSBhcmUgc29tZSBnZW5lcmljIGRy
-aXZlcnMgaW4gdGhlIGtlcm5lbCwgd2hpY2ggbWFrZSB1c2Ugb2YgdGhlDQo+IHEtYWNjZXNzb3Jz
-IG9yIHRoZWlyIGRlcml2YXRpdmVzLiBXaGlsZSBhdCBjdXJyZW50IGFzbS9pby5oIHRoZSBhY2Nl
-c3NvcnMNCj4gYXJlIGRlZmluZWQsIHRoZWlyIGltcGxlbWVudGF0aW9uIGlzIG9ubHkgYXBwbGlj
-YWJsZSBlaXRoZXIgZm9yIDY0Yml0DQo+IHN5c3RlbXMsIG9yIGZvciBzeXN0ZW1zIHdpdGggY3B1
-X2hhc182NGJpdHMgZmxhZyBzZXQuIE9idmlvdXNseSB0aGVyZQ0KPiBhcmUgTUlQUyBzeXN0ZW1z
-IHdoaWNoIGFyZSBuZWl0aGVyIG9mIHRoZXNlLCBidXQgc3RpbGwgbmVlZCB0byBoYXZlDQo+IHRo
-b3NlIGRyaXZlcnMgc3VwcG9ydGVkLiBJbiB0aGlzIGNhc2UgdGhlIHNvbHV0aW9uIGlzIHRvIGRl
-ZmluZSBzb21lDQo+IGdlbmVyaWMgdmVyc2lvbnMgb2YgdGhlIHEtYWNjZXNzb3JzLCBidXQgd2l0
-aCBhIGxpbWl0YXRpb24gdG8gYmUNCj4gbm9uLWF0b21pYy4gU3VjaCBhY2Nlc3NvcnMgYXJlIGRl
-ZmluZWQgaW4gdGhlDQo+IGlvLTY0LW5vbmF0b21pYy17aGktbG8sbG8taGl9LmggZmlsZS4gVGhl
-IGRyaXZlcnMgd2hpY2ggdXRpbGl6ZSB0aGUNCj4gcS1zdWZmaXhlZCBJTy1tZXRob2RzIGFyZSBz
-dXBwb3NlZCB0byBpbmNsdWRlIHRoZSBoZWFkZXIgZmlsZSwgc28NCj4gaW4gY2FzZSBpZiB0aGVz
-ZSBhY2Nlc3NvcnMgYXJlbid0IGRlZmluZWQgZm9yIHRoZSBwbGF0Zm9ybSwgdGhlIGdlbmVyaWMN
-Cj4gbm9uLWF0b21pYyB2ZXJzaW9ucyBhcmUgdXRpbGl6ZWQuIEN1cnJlbnRseSB0aGUgTUlQUy1z
-cGVjaWZpYyBhc20vaW8uaA0KPiBmaWxlIHByb3ZpZGVzIHRoZSBxLWFjY2Vzc29ycyBmb3IgYW55
-IE1JUFMgc3lzdGVtIGV2ZW4gZm9yIG9uZXMsIHdoaWNoDQo+IGluIGZhY3QgZG9uJ3Qgc3VwcG9y
-dCB0aGVtIGFuZCByYWlzZSBCVUcoKSBpbiBjYXNlIGlmIGFueSBvZiB0aGVtIGlzDQo+IGNhbGxl
-ZC4gRHVlIHRvIHRoaXMgdGhlIGdlbmVyaWMgdmVyc2lvbnMgb2YgdGhlIGFjY2Vzc29ycyBhcmUg
-bmV2ZXINCj4gdXNlZCB3aGlsZSBhbiBhdHRlbXB0IHRvIGNhbGwgdGhlIElPLW1ldGhvZHMgY2F1
-c2VzIHRoZSBrZXJuZWwgQlVHKCkuDQo+IEluIG9yZGVyIHRvIGZpeCB0aGlzIHdlIG5lZWQgdG8g
-ZGVmaW5lIHRoZSBxLWFjY2Vzc29ycyBvbmx5IGZvcg0KPiB0aGUgTUlQUyBzeXN0ZW1zLCB3aGlj
-aCBhY3R1YWxseSBzdXBwb3J0IHRoZW0sIGFuZCBkb24ndCBkZWZpbmUgdGhlbQ0KPiBvdGhlcndp
-c2UsIHNvIHRvIGxldCB0aGUgY29ycmVzcG9uZGluZyBkcml2ZXJzIHRvIHVzZSB0aGUgbm9uLWF0
-b21pYw0KPiBxLXN1ZmZpeGVkIGFjY2Vzc29ycy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFNlcmdl
-IFNlbWluIDxmYW5jZXIubGFuY2VyQGdtYWlsLmNvbT4NCj4gU3VnZ2VzdGVkLWJ5OiBBcm5kIEJl
-cmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBDYzogVmFkaW0gVi4gVmxhc292IDx2YWRpbS52bGFz
-b3ZAdC1wbGF0Zm9ybXMucnU+DQoNCkFwcGxpZWQgdG8gbWlwcy1uZXh0Lg0KDQpUaGFua3MsDQog
-ICAgUGF1bA0KDQpbIFRoaXMgbWVzc2FnZSB3YXMgYXV0by1nZW5lcmF0ZWQ7IGlmIHlvdSBiZWxp
-ZXZlIGFueXRoaW5nIGlzIGluY29ycmVjdA0KICB0aGVuIHBsZWFzZSBlbWFpbCBwYXVsLmJ1cnRv
-bkBtaXBzLmNvbSB0byByZXBvcnQgaXQuIF0NCg==
+On Mon, Jun 24, 2019 at 06:32:26PM +0800, Herbert Xu wrote:
+> On Mon, Jun 24, 2019 at 12:27:08AM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17a8bfeaa00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=f7baccc38dcc1e094e77
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171aa7e6a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153306cea00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+> 
+> The only memory leak that I can find is on the out-of-memory error
+> path:
+> 
+> ---8<---
+> Sometimes mpi_powm will leak karactx because a memory allocation
+> failure causes a bail-out that skips the freeing of karactx.  This
+> patch moves the freeing of karactx to the end of the function like
+> everything else so that it can't be skipped.
+> 
+> Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+> Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/lib/mpi/mpi-pow.c b/lib/mpi/mpi-pow.c
+> index 82b19e4f1189..2fd7a46d55ec 100644
+> --- a/lib/mpi/mpi-pow.c
+> +++ b/lib/mpi/mpi-pow.c
+> @@ -24,6 +24,7 @@
+>  int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+>  {
+>  	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
+> +	struct karatsuba_ctx karactx = {};
+>  	mpi_ptr_t xp_marker = NULL;
+>  	mpi_ptr_t tspace = NULL;
+>  	mpi_ptr_t rp, ep, mp, bp;
+> @@ -150,13 +151,11 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+>  		int c;
+>  		mpi_limb_t e;
+>  		mpi_limb_t carry_limb;
+> -		struct karatsuba_ctx karactx;
+>  
+>  		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
+>  		if (!xp)
+>  			goto enomem;
+>  
+> -		memset(&karactx, 0, sizeof karactx);
+>  		negative_result = (ep[0] & 1) && base->sign;
+>  
+>  		i = esize - 1;
+> @@ -281,8 +280,6 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+>  		if (mod_shift_cnt)
+>  			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
+>  		MPN_NORMALIZE(rp, rsize);
+> -
+> -		mpihelp_release_karatsuba_ctx(&karactx);
+>  	}
+>  
+>  	if (negative_result && rsize) {
+> @@ -299,6 +296,7 @@ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+>  leave:
+>  	rc = 0;
+>  enomem:
+> +	mpihelp_release_karatsuba_ctx(&karactx);
+>  	if (assign_rp)
+>  		mpi_assign_limb_space(res, rp, size);
+>  	if (mp_marker)
+> -- 
+
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+
+- Eric
