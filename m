@@ -2,119 +2,136 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAEDC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05917C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75C820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC4B20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rLqqpYL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbfFXRuS (ORCPT
+        id S1731960AbfFXRu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:50:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:56026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfFXRuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:50:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0CA2360;
-        Mon, 24 Jun 2019 10:50:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5FBC3F718;
-        Mon, 24 Jun 2019 10:50:11 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 18:50:09 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 24 Jun 2019 13:50:59 -0400
+Received: from mail.efficios.com ([167.114.142.138]:56186 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfFXRu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:50:58 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 048B225B682;
+        Mon, 24 Jun 2019 13:50:57 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id kubqiW463fQT; Mon, 24 Jun 2019 13:50:56 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 7489F25B67D;
+        Mon, 24 Jun 2019 13:50:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7489F25B67D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1561398656;
+        bh=YgTDjKzulnpRdHN03BOtIF36ow3kBCQn4Ff76WlCgv4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=rLqqpYL/J/9XfjfblU5xlkvGWUSmihnJQ1Jj+o+LyOs12tFBNAr1nEfFtsTTbHkTC
+         z3JpCf3sxds6+xj+N6N+eAdu7PLH7IjyKqW4xBvTXwFly76m0Z2u1YBoTOLJczUkM0
+         af9cCewWfDNX+TUVdoyv4nYvprFyIJtB1nvenD1tXHWmGLa8EHo2puqwvwnu2QYy1W
+         PvyXm2wRevcjxansTh7n/NsUEb3gbqk1qJ6384uCbaMkHkEfq9bKz3fzKAtgks5juq
+         4N4+Q4+vUaz04xgJ2Fxkw02Rkug7uDoWxy7xwJKtj0Bu9sdZNz+g/zGn2CWy9wYqoC
+         9BAjlgFEQGuLA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 6I-HKbAyDBuh; Mon, 24 Jun 2019 13:50:56 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 575FD25B675;
+        Mon, 24 Jun 2019 13:50:56 -0400 (EDT)
+Date:   Mon, 24 Jun 2019 13:50:56 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     "Joel Fernandes, Google" <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>, Jessica Yu <jeyu@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, jikos <jikos@kernel.org>,
+        mbenes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v18 07/15] fs/namespace: untag user pointers in
- copy_mount_options
-Message-ID: <20190624175009.GM29120@arrakis.emea.arm.com>
-References: <cover.1561386715.git.andreyknvl@google.com>
- <41e0a911e4e4d533486a1468114e6878e21f9f84.1561386715.git.andreyknvl@google.com>
+        Robert Richter <rric@kernel.org>,
+        rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        paulmck <paulmck@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        oprofile-list <oprofile-list@lists.sf.net>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Message-ID: <2125299316.352.1561398656224.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190624155213.GB261936@google.com>
+References: <20190624091843.859714294@infradead.org> <20190624092109.805742823@infradead.org> <320564860.243.1561384864186.JavaMail.zimbra@efficios.com> <20190624155213.GB261936@google.com>
+Subject: Re: [PATCH 2/3] module: Fix up module_notifier return values.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41e0a911e4e4d533486a1468114e6878e21f9f84.1561386715.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: module: Fix up module_notifier return values.
+Thread-Index: YqiVsEGYR43tan1IptAyCZzN3mIl4w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:32:52PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends kernel ABI to allow to pass
-> tagged user pointers (with the top byte set to something else other than
-> 0x00) as syscall arguments.
-> 
-> In copy_mount_options a user address is being subtracted from TASK_SIZE.
-> If the address is lower than TASK_SIZE, the size is calculated to not
-> allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-> However if the address is tagged, then the size will be calculated
-> incorrectly.
-> 
-> Untag the address before subtracting.
-> 
-> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  fs/namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 7660c2749c96..ec78f7223917 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2994,7 +2994,7 @@ void *copy_mount_options(const void __user * data)
->  	 * the remainder of the page.
->  	 */
->  	/* copy_from_user cannot cross TASK_SIZE ! */
-> -	size = TASK_SIZE - (unsigned long)data;
-> +	size = TASK_SIZE - (unsigned long)untagged_addr(data);
->  	if (size > PAGE_SIZE)
->  		size = PAGE_SIZE;
+----- On Jun 24, 2019, at 11:52 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
 
-I think this patch needs an ack from Al Viro (cc'ed).
+> On Mon, Jun 24, 2019 at 10:01:04AM -0400, Mathieu Desnoyers wrote:
+>> ----- On Jun 24, 2019, at 5:18 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> 
+>> > While auditing all module notifiers I noticed a whole bunch of fail
+>> > wrt the return value. Notifiers have a 'special' return semantics.
+>> > 
+>> > Cc: Robert Richter <rric@kernel.org>
+>> > Cc: Steven Rostedt <rostedt@goodmis.org>
+>> > Cc: Ingo Molnar <mingo@redhat.com>
+>> > Cc: Alexei Starovoitov <ast@kernel.org>
+>> > Cc: Daniel Borkmann <daniel@iogearbox.net>
+>> > Cc: Martin KaFai Lau <kafai@fb.com>
+>> > Cc: Song Liu <songliubraving@fb.com>
+>> > Cc: Yonghong Song <yhs@fb.com>
+>> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+>> > Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+>> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> > Cc: Thomas Gleixner <tglx@linutronix.de>
+>> > Cc: oprofile-list@lists.sf.net
+>> > Cc: linux-kernel@vger.kernel.org
+>> > Cc: netdev@vger.kernel.org
+>> > Cc: bpf@vger.kernel.org
+>> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> 
+>> Thanks Peter for looking into this, especially considering your
+>> endless love for kernel modules! ;)
+>> 
+>> It's not directly related to your changes, but I notice that
+>> kernel/trace/trace_printk.c:hold_module_trace_bprintk_format()
+>> appears to leak memory. Am I missing something ?
+> 
+> Could you elaborate? Do you mean there is no MODULE_STATE_GOING notifier
+> check? If that's what you mean then I agree, there should be some place
+> where the format structures are freed when the module is unloaded no?
+
+Yes, the lack of GOING notifier is worrying considering that GOING
+performs memory allocation.
+
+Thanks,
+
+Mathieu
 
 -- 
-Catalin
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
