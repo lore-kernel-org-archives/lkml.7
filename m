@@ -2,146 +2,120 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE706C48BD3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B501C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8869620665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6147B20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2DbmdT88"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f+Aol/jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfFXXZC (ORCPT
+        id S1728429AbfFXXZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:25:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42158 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfFXXZB (ORCPT
+        Mon, 24 Jun 2019 19:25:24 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45949 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfFXXZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:25:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ONJB6c147243;
-        Mon, 24 Jun 2019 23:24:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=aTZd3V8YKxC9aVHKIjLqupfycJYEaoqqnVsM2irnK+k=;
- b=2DbmdT8817TsXxhodPMLfTrvd92O0rNIIIESCqWO+JWnGoSLMSp1lGpHLe8j4HYqEBHt
- UoErpCJKAltSbnB9HLyrF8MsZ4RF4lovMvm8pcshAaoJrIbGIyic3c7W2rcUN90+SAyq
- gq2gtPcFK4rB79is4KWZCSSb5LOICXZXzVFDiCLHFYCkfb11Q4Q72FYfC4BrXFri3Yfe
- DYgqoMvLZEHKc1+m4cJAKLGAUBeP4CRRHejw/+b5tnaaMd3P9g/avAf+569vgv9OhCkq
- ApvuizHTO+jv1uN1FkkUpL/W4jjI1o//KcFkB04yRnBOvRXWnCzRSUx78N1ht5ovzn6R hw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pgy89-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:24:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ONNS9m134943;
-        Mon, 24 Jun 2019 23:24:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tat7bwgg5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:24:54 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ONOnLt013227;
-        Mon, 24 Jun 2019 23:24:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 16:24:49 -0700
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list\:BCACHE \(BLOCK LAYER CACHE\)" 
-        <linux-bcache@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
-        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-        <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
-        <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
-Date:   Mon, 24 Jun 2019 19:24:44 -0400
-In-Reply-To: <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net> (Eric
-        Wheeler's message of "Mon, 24 Jun 2019 18:14:59 +0000 (UTC)")
-Message-ID: <yq17e9ao9c3.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 24 Jun 2019 19:25:23 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s22so11124591qkj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=0K4AayEvyC8tuCGamcfvuz4SEF7qHpfHWbMwtIK1ew8=;
+        b=f+Aol/jhJxqWROn5hqlq8RfXeWDsFcZsHuHyt/f0ovQScbmkgV87LzypsaJ/bCsUep
+         a7rWko5WL0RF/N0QGAAnq8I2CCm2bzHNj8R2MUS7HUwV99mya1ijH4Vb7P7RkasT/Fe4
+         pQeSdvsYiuAJ91Tgj9FUFzi/YTM2RDrwoLeds=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=0K4AayEvyC8tuCGamcfvuz4SEF7qHpfHWbMwtIK1ew8=;
+        b=GPJ3AQaGKb3YXYMXQAaqSHVWEWmJwESuRYRD50IsI0ornqYySLV8ek5sBkEF63nfJk
+         fKqNOEtl8NLvAN9Uv+B60wj8Zwk7qeyGjUHhumgIYS3MbBgqx32qjaUJKKrAHSlw/hem
+         HQwfaM/7yVxE+tTVjCJng6yq60XmvgLglVGVMUJuAHdc1FvPZwCEJwOyIVdIYzjYmR0R
+         +4GqlGzdJzK1PYyu3PugrSNoMyJQDBhqtVW5gqphriSBqCrl/A81PHwwNQv1wlauszVr
+         WnP5erVqQ1693av0cqGizr1ZbCincbaaQ3QdpC4sQN9iP7tk8th8AyUTMuU5lXTQWq4c
+         0y0Q==
+X-Gm-Message-State: APjAAAVCQlwrbcDVBD12QZPFvMUGD8Lz6DtAhb5aLDJLKfu6p5T5sLjs
+        ornUzistkHjTn5Z1nmat9G5a11t8MzwuYfbkVMETIQ==
+X-Google-Smtp-Source: APXvYqygGP9QddTsQ0SFt8FpF9IKYbLSjITz3B58ECyT4vbLUFXLY9PLq33WblBJcqEp7qon9vDoHmgOFMfGw4gMijY=
+X-Received: by 2002:a37:9307:: with SMTP id v7mr19255465qkd.495.1561418722995;
+ Mon, 24 Jun 2019 16:25:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240184
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240184
+References: <20190619175142.237794-1-ravisadineni@chromium.org>
+In-Reply-To: <20190619175142.237794-1-ravisadineni@chromium.org>
+From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Date:   Mon, 24 Jun 2019 16:25:12 -0700
+Message-ID: <CAEZbON4e1=w6G4KEqq2qP0nTD4z00fcqHErWTBVGFGb17f=+1Q@mail.gmail.com>
+Subject: Re: [PATCH] power: Do not clear events_check_enabled in pm_wakeup_pending()
+To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, linux-pm@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Todd Broch <tbroch@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Eric,
+Just wanted to check if this is o.k.
 
-> Perhaps they do not set stripe_width using io_opt? I did a grep to see
-> if any of them did, but I didn't see them. How is stripe_width
-> indicated by RAID controllers?
+Thanks,
+Ravi
 
-The values are reported in the Block Limits VPD page for each SCSI block
-device and are thus set by the SCSI disk driver. IOW, the RAID
-controller device drivers have nothing to do with this.
-
-For RAID controllers specifically, the controller firmware will fill out
-the VPD fields for each virtual SCSI disk when you configure a RAID
-set. For pretty much everything else, the Block Limits come straight
-from the device itself.
-
-Also note that these values aren't specific to RAID controllers at
-all. Most new SCSI devices, including disk drives and SSDs, will fill
-out the Block Limits VPD page one way or the other. Even some USB
-storage devices are providing this page.
-
-> If they do set io_opt, then at least my Areca 1883 does not set io_opt
-> as of 4.19.x. I also have a LSI MegaRAID 3108 which does not report
-> io_opt as of 4.1.x, but that is an older kernel so maybe support has
-> been added since then.
-
-I have several MegaRAIDs that all report it. But it depends on the
-controller firmware.
-
-> Is it visible through sysfs or debugfs so I can check my hardware
-> support without hacking debugging the kernel?
-
-To print the block device topology:
-
-  # lsblk -t
-
-or look up io_opt in sysfs:
-
-  # grep . /sys/block/sdX/queue/optimal_io_size
-
-You can also query a SCSI device's Block Limits directly:
-
-  # sg_vpd -p bl /dev/sdX
-
-If you want to tinker, you can simulate a SCSI disk with your choice of
-io_opt:
-
-  # modprobe scsi_debug opt_blks=N
-
-where N is the number of logical blocks to report as being the optimal
-I/O size.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+On Wed, Jun 19, 2019 at 10:52 AM Ravi Chandra Sadineni
+<ravisadineni@chromium.org> wrote:
+>
+> events_check_enabled bool is set when wakeup_count sysfs attribute
+> is written. User level daemon is expected to write this attribute
+> just before suspend.
+>
+> When this boolean is set, calls to pm_wakeup_event() will result in
+> increment of per device and global wakeup count that helps in
+> identifying the wake source. global wakeup count is also used by
+> pm_wakeup_pending() to identify if there are any pending events that
+> should result in an suspend abort.
+>
+> Currently calls to pm_wakeup_pending() also clears events_check_enabled.
+> This can be a problem when there are multiple wake events or when the
+> suspend is aborted due to an interrupt on a shared interrupt line.
+> For example an Mfd device can create several platform devices which
+> might fetch the state on resume in the driver resume method and increment
+> the wakeup count if needed. But if events_check_enabled is cleared before
+> resume methods get to execute, wakeup count will not be incremented. Thus
+> let us not reset the bool here.
+>
+> Note that events_check_enabled is also cleared in suspend.c/enter_state()
+> on every resume at the end.
+>
+> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> ---
+>  drivers/base/power/wakeup.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5b2b6a05a4f3..88aade871589 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -838,7 +838,6 @@ bool pm_wakeup_pending(void)
+>
+>                 split_counters(&cnt, &inpr);
+>                 ret = (cnt != saved_count || inpr > 0);
+> -               events_check_enabled = !ret;
+>         }
+>         raw_spin_unlock_irqrestore(&events_lock, flags);
+>
+> --
+> 2.20.1
+>
