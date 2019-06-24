@@ -2,260 +2,147 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD05C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192C8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B501220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE76E20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kxg1bZHp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bY0p7VGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfFXMTL (ORCPT
+        id S1730154AbfFXMUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:19:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49978 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfFXMTL (ORCPT
+        Mon, 24 Jun 2019 08:20:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57960 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbfFXMUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:19:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A1g5jb0f1PT7FiwReN2bplW7lWOU5rCUs31n68KL20w=; b=Kxg1bZHppSq24QLamx0FSoPQ/
-        Htn3DgKzISv3diNPTZPVcggPLdIvjgJjKuy4559+YFaHlQLpxXbRt73+Lt2t9MfeBDJXMJ6ri8f56
-        XKQLTiXRALhpelESsM6eN1MmkysFQ/JZUPb1gmNui26wCtDzE+ESrQSHFRAzN1mvJijEeCQv87iRf
-        Vl7l99AM3dyW3A8BuX0DzoxMn7bFe3UdD0iSUhateFoOLN7O9oGanMONE5DEIAH0W6ZXII1sdIfSs
-        fpahCJboRCXV9GaB74PEAvBvgPQOS4xuPbCF4Hsm7DAuFgvw1D0sHIg0el58k6vUPxrCpE8shI3Rr
-        oRGCkIMxQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfNw8-0000Io-7B; Mon, 24 Jun 2019 12:19:04 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10317209C958D; Mon, 24 Jun 2019 14:19:02 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 14:19:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, dvyukov@google.com, namhyung@kernel.org,
-        xiexiuqi@huawei.com,
-        syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
-Subject: Re: [RFC PATCH] perf: Paper over the hw.target problems
-Message-ID: <20190624121902.GE3436@hirez.programming.kicks-ass.net>
-References: <278ac311-d8f3-2832-5fa1-522471c8c31c@huawei.com>
- <20190228140109.64238-1-alexander.shishkin@linux.intel.com>
- <20190308155429.GB10860@lakrids.cambridge.arm.com>
+        Mon, 24 Jun 2019 08:20:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5OCK22H005047;
+        Mon, 24 Jun 2019 07:20:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561378802;
+        bh=Krm1ng6sEwbBnXkhtb2p05GFEfZus+RD81OkWvgmAlA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=bY0p7VGuVzt/RUM9Ys68FE/URbB6yuzPYGEJhVhieFRCxUwLX05tT6XfmU1ROYMts
+         Ovji8nVCntG6Uz6x29Qg+4Me1rcniw7WCYkOU+/YfflgPCiYsEiUhc9V95iHwDyD8i
+         48jYT45SH1yAc0k7olhFZ0vb3vt14s17G0xqf3nU=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5OCK2Cq063885
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Jun 2019 07:20:02 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 24
+ Jun 2019 07:20:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 24 Jun 2019 07:20:01 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x5OCK16g088278;
+        Mon, 24 Jun 2019 07:20:01 -0500
+Date:   Mon, 24 Jun 2019 07:21:20 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 1/1] Input: edt-ft5x06 - disable irq handling during
+ suspend
+Message-ID: <20190624122120.hq7of57loegwudiv@ti.com>
+References: <20190621185124.28966-1-bparrot@ti.com>
+ <CAHp75VdcAfmn8u0du-Y95SjMcmuJa2402tdXCNHMcme1Y925xg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190308155429.GB10860@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VdcAfmn8u0du-Y95SjMcmuJa2402tdXCNHMcme1Y925xg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 03:54:29PM +0000, Mark Rutland wrote:
-> Hi Alex,
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Sat [2019-Jun-22 13:37:10 +0300]:
+> On Fri, Jun 21, 2019 at 9:53 PM Benoit Parrot <bparrot@ti.com> wrote:
+> >
+> > As a wakeup source when the system is in suspend there is little point
+> > trying to access a register across the i2c bus as it is probably still
+> > inactive. We need to prevent the irq handler from being called during
+> > suspend.
+> >
 > 
-> On Thu, Feb 28, 2019 at 04:01:09PM +0200, Alexander Shishkin wrote:
-> > First, we have a race between perf_event_release_kernel() and
-> > perf_free_event(), which happens when parent's event is released while the
-> > child's fork fails (because of a fatal signal, for example), that looks
-> > like this:
-> > 
-> > cpu X                            cpu Y
-> > -----                            -----
-> >                                  copy_process() error path
-> > perf_release(parent)             +->perf_event_free_task()
-> > +-> lock(child_ctx->mutex)       |  |
-> > +-> remove_from_context(child)   |  |
-> > +-> unlock(child_ctx->mutex)     |  |
-> > |                                |  +-> lock(child_ctx->mutex)
-> > |                                |  +-> unlock(child_ctx->mutex)
-> > |                                +-> free_task(child_task)
-> > +-> put_task_struct(child_task)
+> Hmm... But how OS will know what the event to handle afterwards?
+> I mean shouldn't we guarantee somehow the delivery of the event to the
+> input, in this case, subsystem followed by corresponding user space?
 
-I had a wee bit of bother following that, it's this, right?
+I am not sure I understand, do you mean that you want the input wake up event
+being processed by the edt_ft50x6 driver as it happens? How can we do that
+if we can't access the device through the bus? Are we trying to capture
+specific gesture here (given that the display should be off during
+sleep/suspend)?
 
-	close()						clone()
+Anyhow here I am just trying to eliminate the runtime error caused by
+trying to access a resource which we know is unavailable at the time.
+What method would you suggest we use to achieve this? 
 
-							  copy_process()
-							    perf_event_init_task()
-							      perf_event_init_context()
-							        mutex_lock(parent_ctx->mutex)
-								inherit_task_group()
-								  inherit_group()
-								    inherit_event()
-								      mutex_lock(event->child_mutex)
-								      // expose event on child list
-								      list_add_tail()
-								      mutex_unlock(event->child_mutex)
-							        mutex_unlock(parent_ctx->mutex)
+Benoit
 
-							    ...
-							    goto bad_fork_*
-
-							  bad_fork_cleanup_perf:
-							    perf_event_free_task()
-
-	  perf_release()
-	    perf_event_release_kernel()
-	      list_for_each_entry()
-		mutex_lock(ctx->mutex)
-		mutex_lock(event->child_mutex)
-		// event is from the failing inherit
-		// on the other CPU
-		perf_remove_from_context()
-		list_move()
-		mutex_unlock(event->child_mutex)
-		mutex_unlock(ctx->mutex)
-
-							      mutex_lock(ctx->mutex)
-							      list_for_each_entry_safe()
-							        // event already stolen
-							      mutex_unlock(ctx->mutex)
-
-							    delayed_free_task()
-							      free_task()
-
-	     list_for_each_entry_safe()
-	       list_del()
-	       free_event()
-	         _free_event()
-		   // and so event->hw.target
-		   // is the already freed failed clone()
-		   if (event->hw.target)
-		     put_task_struct(event->hw.target)
-		       // WHOOPSIE, already quite dead
-
-
-Which puts the lie to the the comment on perf_event_free_task();
-'unexposed, unused context' my ass.
-
-Which is a 'fun' confluence of fail; copy_process() doing an
-unconditional free_task() and not respecting refcounts, and perf having
-creative locking. In particular:
-
-  82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-
-seems to have overlooked this 'fun' parade.
-
-> > Technically, we're still holding a reference to the task via
-> > parent->hw.target, that's not stopping free_task(), so we end up poking at
-> > free'd memory, as is pointed out by KASAN in the syzkaller report (see Link
-> > below). The straightforward fix is to drop the hw.target reference while
-> > the task is still around.
-
-Right.
-
-> > Therein lies the second problem: the users of hw.target (uprobe) assume
-> > that it's around at ->destroy() callback time, where they use it for
-> > context. So, in order to not break the uprobe teardown and avoid leaking
-> > stuff, we need to call ->destroy() at the same time.
 > 
-> I had not spotted that case. That's rather horrid. :/
-
-Such joy..
-
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 36b8320590e8..640695d114f8 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -2105,6 +2105,27 @@ static void perf_remove_from_context(struct perf_event *event, unsigned long fla
-> >  
-> >  	event_function_call(event, __perf_remove_from_context, (void *)flags);
-> >  
-> > +	/*
-> > +	 * This is as passable as any hw.target handling out there;
-> > +	 * hw.target implies task context, therefore, no migration.
-> > +	 * Which means that we can only get here at the teardown.
-> > +	 */
-> > +	if (event->hw.target) {
-> > +		/*
-> > +		 * Now, the problem with, say uprobes, is that they
-> > +		 * use hw.target for context in their ->destroy()
-> > +		 * callbacks. Supposedly, they may need to poke at
-> > +		 * its contents, so better call it while we still
-> > +		 * have the task.
-> > +		 */
-> > +		if (event->destroy) {
-> > +			event->destroy(event);
-> > +			event->destroy = NULL;
-> > +		}
-> > +		put_task_struct(event->hw.target);
-> > +		event->hw.target = NULL;
-> > +	}
+> > Without this modification upon wakeup you would see the following kernel
+> > error:
+> >
+> > [ 118.733717] PM: Wakeup source GPIO0
+> > [ 118.751933] edt_ft5x06 1-0038: Unable to fetch data, error: -13
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/input/touchscreen/edt-ft5x06.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > index c639ebce914c..c885bfe783a4 100644
+> > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > @@ -1200,8 +1200,10 @@ static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
+> >  {
+> >         struct i2c_client *client = to_i2c_client(dev);
+> >
+> > -       if (device_may_wakeup(dev))
+> > +       if (device_may_wakeup(dev)) {
+> >                 enable_irq_wake(client->irq);
+> > +               disable_irq(client->irq);
+> > +       }
+> >
+> >         return 0;
+> >  }
+> > @@ -1210,8 +1212,10 @@ static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
+> >  {
+> >         struct i2c_client *client = to_i2c_client(dev);
+> >
+> > -       if (device_may_wakeup(dev))
+> > +       if (device_may_wakeup(dev)) {
+> >                 disable_irq_wake(client->irq);
+> > +               enable_irq(client->irq);
+> > +       }
+> >
+> >         return 0;
+> >  }
+> > --
+> > 2.17.1
+> >
 > 
-> We also use perf_remove_from_context() in perf_event_open() when we move
-> events from a SW context to a HW context, so we can't destroy the event
-> here.
-
-Also perf_pmu_migrate_context(), and yes, we must not call ->destroy()
-from remove_context, or rather, not unconditional. We could make it
-conditional on DETACH_GROUP or better add another DETACH_ flags.
-
-> I think we need something more like the below (untested), but I fear
-> that it's not safe to call perf_event::destroy() in this context.
-
-> ---->8----
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 26d6edab051a..b32f2cac5563 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4532,6 +4532,24 @@ static void put_event(struct perf_event *event)
->         _free_event(event);
->  }
->  
-> +void perf_event_detach_target(struct perf_event *event)
-> +{
-> +       if (!event->hw.target)
-> +               return;
-> +
-> +       /*
-> +        * The uprobes perf_event::destroy() callback needs the target, so call
-> +        * that while the target is still valid.
-> +        */
-> +       if (event->destroy) {
-> +               event->destroy(event);
-> +               event->destroy = NULL;
-> +       }
-> +
-> +       put_task_struct(event->hw.target);
-> +       event->hw.target = NULL;
-> +}
-> +
->  /*
->   * Kill an event dead; while event:refcount will preserve the event
->   * object, it will not preserve its functionality. Once the last 'user'
-> @@ -4559,6 +4577,7 @@ int perf_event_release_kernel(struct perf_event *event)
->         ctx = perf_event_ctx_lock(event);
->         WARN_ON_ONCE(ctx->parent_ctx);
->         perf_remove_from_context(event, DETACH_GROUP);
-> +       perf_event_detach_target(event);
->  
->         raw_spin_lock_irq(&ctx->lock);
->         /*
-> @@ -4614,6 +4633,7 @@ int perf_event_release_kernel(struct perf_event *event)
->                                                struct perf_event, child_list);
->                 if (tmp == child) {
->                         perf_remove_from_context(child, DETACH_GROUP);
-> +                       perf_event_detach_target(child);
->                         list_move(&child->child_list, &free_list);
->                         /*
->                          * This matches the refcount bump in inherit_event();
-
-And doesn't this re-introduce the problem we fixed with 82d94856fa22 ?
-
-By doing ->destroy() while holding ctx->mutex, we re-establish that
-#5->#0 link and close the cycle again.
-
-More thinking required...
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
