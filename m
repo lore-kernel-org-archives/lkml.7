@@ -2,97 +2,760 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA460C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB1FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948DD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 04:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBXS7Cm1"
+	by mail.kernel.org (Postfix) with ESMTP id 12838208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561352482;
+	bh=ADot+W8I1hkzu8qVB1/J7+nTgi8pMdUde9V3VSUCje8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=W6tREUazL5Yw0BKw2rR8eAODyvNnD1fRtgEQ3JWuOs+6eX6de9kuhBJ2utPqYGrcq
+	 9+WZXUGNOxrjQnbLc58cWGbP+bJOfy0eQ6Ws0yruGt3llWfFnbSHqpf71LL8h4icBP
+	 7ncmGj/mpKO9wFmBtgRn2w1QpUt4O0qKm079tCOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfFXE5a (ORCPT
+        id S1727210AbfFXFBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 00:57:30 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37138 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfFXE53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 00:57:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bh12so6167400plb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 21:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=LzcRJpigxT5MGuTpMW9ctxhMBXABXFzOsOqSmkIMVZs=;
-        b=aBXS7Cm1olXy+laKPXiQxa30hxieGkALh5+gO8nLnUI5lyVhz/oD2UTscaPgIbqFbp
-         Y7Ffvd1JPoITsXzJqRKAFI9deCx9SlqjJH+MgVXINt0u76Dnpkk3bIR4gVcUYRMeqfpw
-         g03GE6AV2zMpAZB+sHIwbfg4fiqUHiOUgjOLrox+NP9N/MiP75LS0ZCpbFopzYWhYRvH
-         MfTajMnZITjGnwnXVe0GYFcym5RV7BZQ30gdEnWlwi+CZDHw7YrnieGZifKQ/QjA4z8v
-         6x4EfX9eX8E9HjA4hWkNEj+hEZxEXuxc8U4m+mx8ObPMA3OcHmiML+w2tLH6csDuTE25
-         qpVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LzcRJpigxT5MGuTpMW9ctxhMBXABXFzOsOqSmkIMVZs=;
-        b=SYc7D0GdFuRwdp09zkNZD7G1SK1hklYIeH8kSVw57tTHcw9WiQS7L9md7KydMMJOxg
-         g8T+KbHk3XbzPqzcuDi4h6n7CN5NMRCRnnOEth4MvVsRYrn47kuzmfx4tyxI4Drl7cdT
-         /7/Xbks2M3a2iUQ/fRT3RbH+j4Ozzsyp9I6Uq++eVcO5AFNWOFBIbMgL1/y534t0cXxK
-         XoCw80rnkZDkHHmf+ln+6CpCnvaWxyK6v1hxoNjznvZw+msqAIg120rU610x5pc0r/e9
-         /4P4EbJckrTp1F2wYFryqfN9vkgOwllV50xRCouH/mRtAVXLBwWYXX+xE5w8JXLVY1vc
-         fe/Q==
-X-Gm-Message-State: APjAAAUFNcFIe+N75KokhhmKd+8ePZImSqqW0q7cuPw3ttednUVjlqV6
-        CiJ1eVPQitYyNTynUShY58AnYA==
-X-Google-Smtp-Source: APXvYqwpkNtle9sTLmOxKKkYez6T2CQpCkhZX9e/+Shu8srXtG6COfcrFldWGtjRJbLpIz5bAo1G8g==
-X-Received: by 2002:a17:902:e287:: with SMTP id cf7mr54710956plb.32.1561352249158;
-        Sun, 23 Jun 2019 21:57:29 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id q4sm10420766pjq.27.2019.06.23.21.57.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 21:57:27 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 10:27:25 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc:     kgene@kernel.org, krzk@kernel.org, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND,v2] cpufreq: s5pv210: Don't flood kernel log after
- cpufreq change
-Message-ID: <20190624045725.mckcpb5kvkug33p6@vireshk-i7>
-References: <20190621101043.10549-1-pawel.mikolaj.chmiel@gmail.com>
+        Mon, 24 Jun 2019 01:01:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbfFXFBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:01:20 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B972089F;
+        Mon, 24 Jun 2019 05:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561352476;
+        bh=ADot+W8I1hkzu8qVB1/J7+nTgi8pMdUde9V3VSUCje8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hUkAOyj2IMGdcVb5VVfV8WJZaQ/2JuGMQdIi4E2yCQmi1hWXUcWDvCW258C3lUfbF
+         +27q24c0D7GWFr8o0ib16r1GdTQwA30oi6oIMYVFFaaFsFnC18dYpSyV9waZ0Vt575
+         KxptNlj5t1/k/9ZhiWwSKkxV0v0uryucXjQonK+0=
+Date:   Sun, 23 Jun 2019 22:01:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Reminder: 30 open syzbot bugs in "net/bpf" subsystem
+Message-ID: <20190624050114.GA30702@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190621101043.10549-1-pawel.mikolaj.chmiel@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-06-19, 12:10, Pawe≈Ç Chmiel wrote:
-> This commit replaces printk with pr_debug, so we don't flood kernel log.
-> 
-> Signed-off-by: Pawe≈Ç Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-> Changes from v1:
->   - Added Acked-by
-> ---
->  drivers/cpufreq/s5pv210-cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better.]
 
-Applied. Thanks.
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 30 of them as possibly being bugs in the "net/bpf" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
--- 
-viresh
+Of these 30 bugs, 14 were seen in mainline in the last week.
+
+Of these 30 bugs, 8 were bisected to commits from the following people:
+
+	John Fastabend <john.fastabend@gmail.com>
+	Daniel Borkmann <daniel@iogearbox.net>
+	Alexei Starovoitov <ast@fb.com>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the "net/bpf" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              WARNING in bpf_jit_free
+Last occurred:      0 days ago
+Reported:           342 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d04f9c2ec11ab2678f7427795ff5170cb9eb2220
+Original thread:    https://lkml.kernel.org/lkml/000000000000e92d1805711f5552@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 5 replies; the last was 12 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 12 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000e92d1805711f5552@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in bpf_prog_kallsyms_add
+Last occurred:      0 days ago
+Reported:           286 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=97f89d84d528e4f5150dcfbdeb97347bc8471e96
+Original thread:    https://lkml.kernel.org/lkml/0000000000009417ef0575802d44@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug received 2 replies; the last was 111 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c827a78260579449ad39@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009417ef0575802d44@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in sk_psock_unlink
+Last occurred:      0 days ago
+Reported:           240 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d691981726208716cc7aec231fb915e27763d662
+Original thread:    https://lkml.kernel.org/lkml/000000000000fd342e05791cc86f@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 1 reply, 31 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+3acd9f67a6a15766686e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000fd342e05791cc86f@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: kernel stack frame pointer has bad value (2)
+Last occurred:      5 days ago
+Reported:           342 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=02a32f98a4e3b5a2ed6929aabdd28dd1618b9c03
+Original thread:    https://lkml.kernel.org/lkml/0000000000000956640571197f98@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 342 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+903cdd6bce9a6eb832a4@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000000956640571197f98@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel panic: corrupted stack end in corrupted
+Last occurred:      0 days ago
+Reported:           3 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=1ee6edc829856a31fccb0c66cab50d2de0863f96
+Original thread:    https://lkml.kernel.org/lkml/00000000000097ca41058bc129cc@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+	Author: John Fastabend <john.fastabend@gmail.com>
+	Date:   Sat Jun 30 13:17:47 2018 +0000
+
+	††bpf: sockhash fix omitted bucket lock in sock_close
+
+The original thread for this bug has received 1 reply, 2 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b764c7ca388222ddfb17@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 2 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/00000000000097ca41058bc129cc@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in bpf_prog_kallsyms_find
+Last occurred:      0 days ago
+Reported:           47 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=40b0c218e639f1d882b86abff2549cfe11c5101e
+Original thread:    https://lkml.kernel.org/lkml/000000000000a8fa360588580820@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+89d1ce6e80218a6192d8@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a8fa360588580820@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in rb_next (3)
+Last occurred:      8 days ago
+Reported:           6 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=18230564bca6dbde79a399755fefaca3a974f0c0
+Original thread:    https://lkml.kernel.org/lkml/0000000000003f07fe058b803013@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+	Author: John Fastabend <john.fastabend@gmail.com>
+	Date:   Sat Jun 30 13:17:47 2018 +0000
+
+	††bpf: sockhash fix omitted bucket lock in sock_close
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ab4c44191771d56c4eda@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000003f07fe058b803013@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in rb_erase (2)
+Last occurred:      18 days ago
+Reported:           171 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=562d6c89d913184d9ed9bef5eec82105d71d2dc5
+Original thread:    https://lkml.kernel.org/lkml/0000000000008ab3c0057e8b747f@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+	Author: John Fastabend <john.fastabend@gmail.com>
+	Date:   Sat Jun 30 13:17:47 2018 +0000
+
+	††bpf: sockhash fix omitted bucket lock in sock_close
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e8c40862180d8949d624@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008ab3c0057e8b747f@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in class_equal
+Last occurred:      0 days ago
+Reported:           29 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d299ab18d8295ac16f481e28f727e3aa0e01a1cf
+Original thread:    https://lkml.kernel.org/lkml/00000000000016cb560589b9c7c4@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 1 reply, 28 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+3d04999521633dceb439@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000016cb560589b9c7c4@google.com
+
+--------------------------------------------------------------------------------
+Title:              memory leak in sock_hash_update_common
+Last occurred:      2 days ago
+Reported:           32 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9992588b3bbe2617f62f41b1162af9fc8ea4829c
+Original thread:    https://lkml.kernel.org/lkml/000000000000fa662405897c0774@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+30c7a1fc662026545124@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000fa662405897c0774@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Write in validate_chain
+Last occurred:      3 days ago
+Reported:           2 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=e73b1b9f0fb147bf4b79e9f6fe7a465abd9256c5
+Original thread:    https://lkml.kernel.org/lkml/0000000000000c4e3e058bd5008d@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+55c548ad445cef6063ab@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000000c4e3e058bd5008d@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in corrupted (2)
+Last occurred:      17 days ago
+Reported:           17 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9360900ac995e4ff25dea7f3ac939652b1f716e1
+Original thread:    https://lkml.kernel.org/lkml/0000000000004945f1058aa80556@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit d40b0116c94bd8fc2b63aae35ce8e66bb53bba42
+	Author: Daniel Borkmann <daniel@iogearbox.net>
+	Date:   Thu Aug 16 19:49:08 2018 +0000
+
+	††bpf, sockmap: fix leakage of smap_psock_map_entry
+
+The original thread for this bug has received 1 reply, 17 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004945f1058aa80556@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in usage_accumulate
+Last occurred:      15 days ago
+Reported:           17 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=53d11b9bbe4e2149cb3cc4cbe56068aa8202f079
+Original thread:    https://lkml.kernel.org/lkml/000000000000454279058aa80535@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+	Author: John Fastabend <john.fastabend@gmail.com>
+	Date:   Sat Jun 30 13:17:47 2018 +0000
+
+	††bpf: sockhash fix omitted bucket lock in sock_close
+
+The original thread for this bug has received 1 reply, 17 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000454279058aa80535@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in cpuacct_account_field
+Last occurred:      3 days ago
+Reported:           2 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=8155f45b63050b3a24f5e9091005488492d48461
+Original thread:    https://lkml.kernel.org/lkml/00000000000008f38a058bd500b9@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 1 reply, 1 day ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a952f743523593b39174@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 1 day ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/00000000000008f38a058bd500b9@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in mm_update_next_owner
+Last occurred:      15 days ago
+Reported:           15 days ago
+Branches:           net
+Dashboard link:     https://syzkaller.appspot.com/bug?id=eaeca1c76639c47820399a4478080ebcf931c489
+Original thread:    https://lkml.kernel.org/lkml/000000000000a802e6058ad4bc53@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+	Author: John Fastabend <john.fastabend@gmail.com>
+	Date:   Sat Jun 30 13:17:47 2018 +0000
+
+	††bpf: sockhash fix omitted bucket lock in sock_close
+
+The original thread for this bug has received 2 replies; the last was 12 days
+ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f625baafb9a1c4bfc3f6@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 12 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000a802e6058ad4bc53@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in is_bpf_text_address
+Last occurred:      0 days ago
+Reported:           2 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=2386340f7a641010bb1e17228d1e9319592c01ba
+Original thread:    https://lkml.kernel.org/lkml/00000000000000ac4f058bd50039@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000000ac4f058bd50039@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Write in validate_chain
+Last occurred:      2 days ago
+Reported:           2 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=af95641bc8a50769fceae59ec58e8e35ea052914
+Original thread:    https://lkml.kernel.org/lkml/000000000000e672c6058bd7ee45@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8893700724999566d6a9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e672c6058bd7ee45@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in __do_softirq
+Last occurred:      5 days ago
+Reported:           4 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a0772f3c173c018b078174c3108eb00078c5818b
+Original thread:    https://lkml.kernel.org/lkml/00000000000017c9e2058baf4825@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 1 reply, 4 days ago.
+
+I believe that syzbot originally sent this report to the wrong people.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+0b224895cb9454584de1@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 4 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/00000000000017c9e2058baf4825@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in hrtimer_interrupt
+Last occurred:      5 days ago
+Reported:           4 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=fe68b600c03d48b14a769e379d1cda8704ffe9cb
+Original thread:    https://lkml.kernel.org/lkml/0000000000001c03bf058baf488a@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 1 reply, 4 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 4 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/0000000000001c03bf058baf488a@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in bpf_prog_kallsyms_del
+Last occurred:      173 days ago
+Reported:           251 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=55d929463ecf8859c0c4836a4f8f004cfec28cf7
+Original thread:    https://lkml.kernel.org/lkml/0000000000001d985405783e8aee@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit f4d7e40a5b7157e1329c3c5b10f60d8289fc2941
+	Author: Alexei Starovoitov <ast@fb.com>
+	Date:   Fri Dec 15 01:55:06 2017 +0000
+
+	††bpf: introduce function calls (verification)
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+10cffda23c81a3ff1088@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001d985405783e8aee@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in bpf_prog_kallsyms_add
+Last occurred:      52 days ago
+Reported:           286 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0d9e7892096514a76e429ff8353aca183dac6e73
+Original thread:    https://lkml.kernel.org/lkml/000000000000ebd44005758029c2@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ac0311cfc9e80cd2e0e8@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ebd44005758029c2@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in sock_hash_ctx_update_elem
+Last occurred:      328 days ago
+Reported:           328 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4387b587226bb5f873bcf7dc8febc50c2dd3c540
+Original thread:    https://lkml.kernel.org/lkml/000000000000cc883b05723824b2@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4207b2e0c72d65cc775d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cc883b05723824b2@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in psock_map_pop
+Last occurred:      243 days ago
+Reported:           286 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=931ba7ed06ce22b5933fbc3992e6377a889d3ceb
+Original thread:    https://lkml.kernel.org/lkml/0000000000008cc5260575802d0d@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5bbe234204453085d43e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008cc5260575802d0d@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in bpf_tcp_close (2)
+Last occurred:      303 days ago
+Reported:           347 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=50e6f582ccc13e995abdad2ecdefed35f91bebad
+Original thread:    https://lkml.kernel.org/lkml/00000000000054fd6b0570be9fa8@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+339037020e772651f1d8@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000054fd6b0570be9fa8@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in smap_list_hash_remove
+Last occurred:      335 days ago
+Reported:           354 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=293f48c6a63935b5872fac5eafff89a15518864e
+Original thread:    https://lkml.kernel.org/lkml/000000000000b0e80905702dcf6f@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b912ba691bb508925d72@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b0e80905702dcf6f@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in bpf_prog_kallsyms_find
+Last occurred:      142 days ago
+Reported:           217 days ago
+Branches:           bpf-next and linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a1c27d97870876dcccbac41a965e46f672fc3855
+Original thread:    https://lkml.kernel.org/lkml/000000000000b99324057af4dabb@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit f4d7e40a5b7157e1329c3c5b10f60d8289fc2941
+	Author: Alexei Starovoitov <ast@fb.com>
+	Date:   Fri Dec 15 01:55:06 2017 +0000
+
+	††bpf: introduce function calls (verification)
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+66d6b1d3055f1d9ee4f3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b99324057af4dabb@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in bpf_prog_kallsyms_add
+Last occurred:      171 days ago
+Reported:           170 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=b658eb696c8279d9951a4ceea79efba8a1d12467
+Original thread:    https://lkml.kernel.org/lkml/000000000000f302fc057ea3b499@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 2 replies; the last was 89 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+987e48d84abddbe2506d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000f302fc057ea3b499@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in trace_call_bpf
+Last occurred:      276 days ago
+Reported:           293 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=b4ec822cd97ffa2800cd27429997e0c8ea82331d
+Original thread:    https://lkml.kernel.org/lkml/00000000000072d3ab0574f40f80@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1c843dc17610ca4c764f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000072d3ab0574f40f80@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in bpf_base_func_proto
+Last occurred:      25 days ago
+Reported:           23 days ago
+Branches:           bpf
+Dashboard link:     https://syzkaller.appspot.com/bug?id=5157126acdd38b1aedd23aeea5a3cfc26e16ce79
+Original thread:    https://lkml.kernel.org/lkml/0000000000002ea227058a2b28a4@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5b595d1c2cd4d7d0f521@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002ea227058a2b28a4@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in sys_bpf
+Last occurred:      56 days ago
+Reported:           88 days ago
+Branches:           bpf and linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=8a99735caa3c5e2b342382d6731db9da1a18aefd
+Original thread:    https://lkml.kernel.org/lkml/00000000000012a28e058517a481@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c70685d9eac9589eaffc@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000012a28e058517a481@google.com
+
