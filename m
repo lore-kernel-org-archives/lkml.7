@@ -2,132 +2,116 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2321BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48047C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0309320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200A620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MgECc+8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731757AbfFXOAZ (ORCPT
+        id S1731767AbfFXOA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:00:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:51272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbfFXOAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:00:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 051CD344;
-        Mon, 24 Jun 2019 07:00:24 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70E373F71E;
-        Mon, 24 Jun 2019 07:00:21 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 15:00:19 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
-Message-ID: <20190624140018.GD29120@arrakis.emea.arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-11-vincenzo.frascino@arm.com>
+        Mon, 24 Jun 2019 10:00:59 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35072 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFXOA7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:00:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P36kn/N1hL6vLQjrYYYTpIoKKbISRgU6Xg2zkTQA/00=; b=MgECc+8MDlEJIvcqAD4aHtS+q
+        E49AMGRpq5ij9b70AL2iMMk78Xs6U9I533k3fy54DzceDFaRUBXqHPWBY0aeGw4nG1kaBS0t62qcx
+        /GT3otQBMYifkFlND816aDaL+FX5YxBDfz2+hdzFAYEQjXQjECS7kpyrfR1f4jM2kwoVe9wwrgkuX
+        gg0ZwOGDiFyjLlRIZidhrB1JlownmlZ+nlFtW+PGMpREenznUisZWiojMEykMQh3DYMAE6d+jNZDi
+        yv8S6OmbWsF1EUcnZZPShye9LLcPyhYeRwEjtsmjKuYP4xxZEqe0QJbmILVeXEhP6WVKHcXtRE1cn
+        9EHtNxEEQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59038)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfPWS-0008Sd-CZ; Mon, 24 Jun 2019 15:00:40 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfPWN-0006LT-9N; Mon, 24 Jun 2019 15:00:35 +0100
+Date:   Mon, 24 Jun 2019 15:00:35 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        alexander.sverdlin@gmail.com, allison@lohutok.net, andrew@lunn.ch,
+        ast@kernel.org, bgolaszewski@baylibre.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
+        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
+        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
+        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
+        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
+        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
+        krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, liviu.dudau@arm.com,
+        lkundrak@v3.sk, lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        nsekhar@ti.com, peterz@infradead.org, robert.jarzmik@free.fr,
+        s.hauer@pengutronix.de, sebastian.hesselbarth@gmail.com,
+        shawnguo@kernel.org, songliubraving@fb.com, sudeep.holla@arm.com,
+        swinslow@gmail.com, tglx@linutronix.de, tony@atomide.com,
+        will@kernel.org, yhs@fb.com
+Subject: Re: [PATCH V2 14/15] ARM: bpf: cleanup cppcheck shifting error
+Message-ID: <20190624140035.36md6cp5ikniluwv@shell.armlinux.org.uk>
+References: <20190623151313.970-1-tranmanphong@gmail.com>
+ <20190624135105.15579-1-tranmanphong@gmail.com>
+ <20190624135105.15579-15-tranmanphong@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190621095252.32307-11-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190624135105.15579-15-tranmanphong@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:52:37AM +0100, Vincenzo Frascino wrote:
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2018 ARM Limited
-> + */
-> +#ifndef __COMPAT_BARRIER_H
-> +#define __COMPAT_BARRIER_H
-> +
-> +#ifndef __ASSEMBLY__
-> +/*
-> + * Warning: This code is meant to be used with
-> + * ENABLE_COMPAT_VDSO only.
-> + */
-> +#ifndef ENABLE_COMPAT_VDSO
-> +#error This header is meant to be used with ENABLE_COMPAT_VDSO only
-> +#endif
-> +
-> +#ifdef dmb
-> +#undef dmb
-> +#endif
-> +
-> +#if __LINUX_ARM_ARCH__ >= 7
-> +#define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
-> +#elif __LINUX_ARM_ARCH__ == 6
-> +#define dmb(x) __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
-> +				    : : "r" (0) : "memory")
-> +#else
-> +#define dmb(x) __asm__ __volatile__ ("" : : : "memory")
-> +#endif
+On Mon, Jun 24, 2019 at 08:51:04PM +0700, Phong Tran wrote:
+> [arch/arm/net/bpf_jit_32.c:618]: (error) Shifting signed 32-bit value by
+> 31 bits is undefined behaviour
+> 
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  arch/arm/net/bpf_jit_32.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+> index adff54c312bf..4e8ad26305ca 100644
+> --- a/arch/arm/net/bpf_jit_32.c
+> +++ b/arch/arm/net/bpf_jit_32.c
+> @@ -612,7 +612,7 @@ static inline void emit_a32_mov_se_i64(const bool is64, const s8 dst[],
+>  				       const u32 val, struct jit_ctx *ctx) {
+>  	u64 val64 = val;
+>  
+> -	if (is64 && (val & (1<<31)))
+> +	if (is64 && (val & (BIT(31))))
 
-We don't need pre-ARMv7 barriers (they've been deprecated and the arm64
-kernel actually traps and emulates them by default). Also your Makefile
-changes never define a __LINUX_ARM_ARCH__ lower than 7. Fix-up below:
+Extra parens are not necessary, please remove.
 
-------8<-----------------------
-From 5655a0313ce7bb731bfed6a19bcfe6b1100b542a Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Mon, 24 Jun 2019 12:16:06 +0100
-Subject: [PATCH] arm64: compat: No need for pre-ARMv7 barriers on an ARMv8
- system
+>  		val64 |= 0xffffffff00000000ULL;
+>  	emit_a32_mov_i64(dst, val64, ctx);
+>  }
+> -- 
+> 2.11.0
+> 
+> 
 
-This patch removes the deprecated (pre-ARMv7) compat barriers as they
-would not be used on an ARMv8 system.
-
-Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/include/asm/vdso/compat_barrier.h | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-index ea24ea856b07..fb60a88b5ed4 100644
---- a/arch/arm64/include/asm/vdso/compat_barrier.h
-+++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-@@ -18,14 +18,7 @@
- #undef dmb
- #endif
- 
--#if __LINUX_ARM_ARCH__ >= 7
- #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
--#elif __LINUX_ARM_ARCH__ == 6
--#define dmb(x) __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
--				    : : "r" (0) : "memory")
--#else
--#define dmb(x) __asm__ __volatile__ ("" : : : "memory")
--#endif
- 
- #if __LINUX_ARM_ARCH__ >= 8
- #define aarch32_smp_mb()	dmb(ish)
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
