@@ -2,276 +2,143 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3AFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444DC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E515B2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C95A2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eIINl8Uo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFwgZ0LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfFXFx4 (ORCPT
+        id S1726781AbfFXFzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:53:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50678 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfFXFxT (ORCPT
+        Mon, 24 Jun 2019 01:55:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40857 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfFXFzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:53:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=//DYfOpEMU7kNFvGSRLB7oTmBaBAqXAsZxH+fPTIU08=; b=eIINl8Uo7JjnHFtmadoV6ttrwW
-        njCXzKXgLqNDi8Bxt79tVKbF0WcE11lKhVVzUev7yTeK8Osf+2a8HbuNgi7HfNs1SAnSF4Dp1YkV0
-        3LIH+AOqgqgEm0hwt0muoEtLSXGE/+nwmbGcY8b/7EhJSYX1+9oqUd/x2vz8VW0AnVQReD5aplVM2
-        TFe6OFH/Pf3kHO8KhTpQ/jFR0l3Alv5ykPras8+0pgt3LNG2DLUv8uMKH8RRQsQUkyaEfENGRjTIQ
-        tYKMQiFIF1lUstfvIdY26EvM1afqtE/xnSeYuECZgBUpXMQBgylkVzV3akYkUaYS88JFA1weBo5TO
-        xz0aGOUw==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHun-000463-87; Mon, 24 Jun 2019 05:53:17 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/12] xfs: don't preallocate a transaction for file size updates
-Date:   Mon, 24 Jun 2019 07:52:48 +0200
-Message-Id: <20190624055253.31183-8-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190624055253.31183-1-hch@lst.de>
-References: <20190624055253.31183-1-hch@lst.de>
+        Mon, 24 Jun 2019 01:55:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id n5so224662ioc.7
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 22:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MB7jsoCN6B+KNrRXEg/uVPgC1Ut8P/kMidprTlNMk78=;
+        b=EFwgZ0LNDntIB9LWehZbyrQruz2I2i5yx0XRhfFyt0IEUziPO1LjP8mBVrYgS/Vu9Z
+         3gjIK3n7h57pkpzdrk/dSCXz/EwObWtY84KungPUtK9bM3yr4VYX7AzzbHshdmr1bBu3
+         crFI7ZCBdRyXZDpjL+o8byiTblqaKFQiPr0OZB3JWH2Gf2DY//slHAWwsnhExYEsq6DV
+         8BMytD3TEDXnBtdmlJ6a7AmCemcYqs2zR6a2/X7WKCBcm+a7kloxAnXeyp3E3m9JxtHT
+         qTAUwN2PtzmkVwoxt9w3HW2FoDhdzjz5muPo79LXyfx2AK8pUkarOV6nXKrr2zNVcF8k
+         otCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MB7jsoCN6B+KNrRXEg/uVPgC1Ut8P/kMidprTlNMk78=;
+        b=FDqa8Jhgi6uQs9sCcwReYGI+GnC+wVOIu8XRrxmestqIZSq1ptFfo6Eo1A9TeaKyIl
+         UpX5Z+5W4D2HMtnNJC8f4TVYECVNIsnqnHPXdeeR2F8DpXhfEWx8FEfwBtZXrb61scRI
+         stI9zMNzdMNkjpcyW0DQZdF1K0Ca2kgAQ1l51EG4jq3F4TckbjqnolUGbbiduxjih6sO
+         3zlDFZNAybOFeZ/OW0BaDviwsRha+nQA56AYWRYx5AoO91dgI+lLCWOAklgfvfc7kMs5
+         RzPjAF+AKFn6fK8Op1TtcFB3loWjDQ1kFt3YM6RM5qrvdK2dTQ6jiY5oJWyuEJ3/rpvu
+         ZgHw==
+X-Gm-Message-State: APjAAAXNxgTNtjySSpW4YlXF+yRHzZ2akEMI9qQrtB+TUw2q+RQtDH1F
+        HKcmUwScfHUPA4bVx8LMvLxKgq0ORbXWcu2Djg==
+X-Google-Smtp-Source: APXvYqz21l53EP4/uEWFM2tah2RK5JkPnEImBUKlK56iy9SewaPdxqyxD6QTuB+hGojVTvragBolmaTARvs5BepDyhI=
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr7518421ioa.12.1561355716706;
+ Sun, 23 Jun 2019 22:55:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1561350068-8966-1-git-send-email-kernelfans@gmail.com> <20190624050341.GB30102@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190624050341.GB30102@iweiny-DESK2.sc.intel.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 24 Jun 2019 13:55:05 +0800
+Message-ID: <CAFgQCTvT4HZn6ZOAxUzUOwqv--R4CLTkOC_V=y22Fy1m1thrRA@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate
+ away smaller huge page
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have historically decided that we want to preallocate the xfs_trans
-structure at writeback time so that we don't have to allocate on in
-the I/O completion handler.  But we treat unwrittent extent and COW
-fork conversions different already, which proves that the transaction
-allocations in the end I/O handler are not a problem.  Removing the
-preallocation gets rid of a lot of corner case code, and also ensures
-we only allocate one and log a transaction when actually required,
-as the ioend merging can reduce the number of actual i_size updates
-significantly.
+On Mon, Jun 24, 2019 at 1:03 PM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Mon, Jun 24, 2019 at 12:21:08PM +0800, Pingfan Liu wrote:
+> > The current pfn_range_valid_gigantic() rejects the pud huge page allocation
+> > if there is a pmd huge page inside the candidate range.
+> >
+> > But pud huge resource is more rare, which should align on 1GB on x86. It is
+> > worth to allow migrating away pmd huge page to make room for a pud huge
+> > page.
+> >
+> > The same logic is applied to pgd and pud huge pages.
+>
+> I'm sorry but I don't quite understand why we should do this.  Is this a bug or
+> an optimization?  It sounds like an optimization.
+Yes, an optimization. It can help us to success to allocate a 1GB
+hugetlb if there is some 2MB hugetlb sit in the candidate range.
+Allocation 1GB hugetlb requires more tough condition, not only a
+continuous 1GB range, but also aligned on GB. While allocating a 2MB
+range is easier.
+>
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/hugetlb.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index ac843d3..02d1978 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -1081,7 +1081,11 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+> >                       unsigned long start_pfn, unsigned long nr_pages)
+> >  {
+> >       unsigned long i, end_pfn = start_pfn + nr_pages;
+> > -     struct page *page;
+> > +     struct page *page = pfn_to_page(start_pfn);
+> > +
+> > +     if (PageHuge(page))
+> > +             if (compound_order(compound_head(page)) >= nr_pages)
+>
+> I don't think you want compound_order() here.
+Yes, your are right.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_aops.c | 110 +++++-----------------------------------------
- fs/xfs/xfs_aops.h |   1 -
- 2 files changed, 12 insertions(+), 99 deletions(-)
-
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 633baaaff7ae..017b87b7765f 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -130,44 +130,23 @@ static inline bool xfs_ioend_is_append(struct xfs_ioend *ioend)
- 		XFS_I(ioend->io_inode)->i_d.di_size;
- }
- 
--STATIC int
--xfs_setfilesize_trans_alloc(
--	struct xfs_ioend	*ioend)
--{
--	struct xfs_mount	*mp = XFS_I(ioend->io_inode)->i_mount;
--	struct xfs_trans	*tp;
--	int			error;
--
--	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
--	if (error)
--		return error;
--
--	ioend->io_append_trans = tp;
--
--	/*
--	 * We may pass freeze protection with a transaction.  So tell lockdep
--	 * we released it.
--	 */
--	__sb_writers_release(ioend->io_inode->i_sb, SB_FREEZE_FS);
--	/*
--	 * We hand off the transaction to the completion thread now, so
--	 * clear the flag here.
--	 */
--	current_restore_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
--	return 0;
--}
--
- /*
-  * Update on-disk file size now that data has been written to disk.
-  */
--STATIC int
--__xfs_setfilesize(
-+int
-+xfs_setfilesize(
- 	struct xfs_inode	*ip,
--	struct xfs_trans	*tp,
- 	xfs_off_t		offset,
- 	size_t			size)
- {
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_trans	*tp;
- 	xfs_fsize_t		isize;
-+	int			error;
-+
-+	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
-+	if (error)
-+		return error;
- 
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	isize = xfs_new_eof(ip, offset + size);
-@@ -186,48 +165,6 @@ __xfs_setfilesize(
- 	return xfs_trans_commit(tp);
- }
- 
--int
--xfs_setfilesize(
--	struct xfs_inode	*ip,
--	xfs_off_t		offset,
--	size_t			size)
--{
--	struct xfs_mount	*mp = ip->i_mount;
--	struct xfs_trans	*tp;
--	int			error;
--
--	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
--	if (error)
--		return error;
--
--	return __xfs_setfilesize(ip, tp, offset, size);
--}
--
--STATIC int
--xfs_setfilesize_ioend(
--	struct xfs_ioend	*ioend,
--	int			error)
--{
--	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
--	struct xfs_trans	*tp = ioend->io_append_trans;
--
--	/*
--	 * The transaction may have been allocated in the I/O submission thread,
--	 * thus we need to mark ourselves as being in a transaction manually.
--	 * Similarly for freeze protection.
--	 */
--	current_set_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
--	__sb_writers_acquired(VFS_I(ip)->i_sb, SB_FREEZE_FS);
--
--	/* we abort the update if there was an IO error */
--	if (error) {
--		xfs_trans_cancel(tp);
--		return error;
--	}
--
--	return __xfs_setfilesize(ip, tp, ioend->io_offset, ioend->io_size);
--}
--
- /*
-  * IO write completion.
-  */
-@@ -267,12 +204,9 @@ xfs_end_ioend(
- 		error = xfs_reflink_end_cow(ip, offset, size);
- 	else if (ioend->io_type == IOMAP_UNWRITTEN)
- 		error = xfs_iomap_write_unwritten(ip, offset, size, false);
--	else
--		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
--
-+	if (!error && xfs_ioend_is_append(ioend))
-+		error = xfs_setfilesize(ip, offset, size);
- done:
--	if (ioend->io_append_trans)
--		error = xfs_setfilesize_ioend(ioend, error);
- 	list_replace_init(&ioend->io_list, &ioend_list);
- 	xfs_destroy_ioend(ioend, error);
- 
-@@ -307,8 +241,6 @@ xfs_ioend_can_merge(
- 		return false;
- 	if (ioend->io_offset + ioend->io_size != next->io_offset)
- 		return false;
--	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
--		return false;
- 	return true;
- }
- 
-@@ -320,7 +252,6 @@ xfs_ioend_try_merge(
- {
- 	struct xfs_ioend	*next_ioend;
- 	int			ioend_error;
--	int			error;
- 
- 	if (list_empty(more_ioends))
- 		return;
-@@ -334,10 +265,6 @@ xfs_ioend_try_merge(
- 			break;
- 		list_move_tail(&next_ioend->io_list, &ioend->io_list);
- 		ioend->io_size += next_ioend->io_size;
--		if (ioend->io_append_trans) {
--			error = xfs_setfilesize_ioend(next_ioend, 1);
--			ASSERT(error == 1);
--		}
- 	}
- }
- 
-@@ -398,7 +325,7 @@ xfs_end_bio(
- 
- 	if (ioend->io_fork == XFS_COW_FORK ||
- 	    ioend->io_type == IOMAP_UNWRITTEN ||
--	    ioend->io_append_trans != NULL) {
-+	    xfs_ioend_is_append(ioend)) {
- 		spin_lock_irqsave(&ip->i_ioend_lock, flags);
- 		if (list_empty(&ip->i_ioend_list))
- 			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
-@@ -660,18 +587,6 @@ xfs_submit_ioend(
- 		memalloc_nofs_restore(nofs_flag);
- 	}
- 
--	/* Reserve log space if we might write beyond the on-disk inode size. */
--	if (!status &&
--	    (ioend->io_fork == XFS_COW_FORK ||
--	     ioend->io_type != IOMAP_UNWRITTEN) &&
--	    xfs_ioend_is_append(ioend) &&
--	    !ioend->io_append_trans) {
--		unsigned nofs_flag = memalloc_nofs_save();
--
--		status = xfs_setfilesize_trans_alloc(ioend);
--		memalloc_nofs_restore(nofs_flag);
--	}
--
- 	ioend->io_bio->bi_private = ioend;
- 	ioend->io_bio->bi_end_io = xfs_end_bio;
- 
-@@ -715,7 +630,6 @@ xfs_alloc_ioend(
- 	ioend->io_inode = inode;
- 	ioend->io_size = 0;
- 	ioend->io_offset = offset;
--	ioend->io_append_trans = NULL;
- 	ioend->io_bio = bio;
- 	return ioend;
- }
-diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-index 72e30d1c3bdf..23c087f0bcbf 100644
---- a/fs/xfs/xfs_aops.h
-+++ b/fs/xfs/xfs_aops.h
-@@ -18,7 +18,6 @@ struct xfs_ioend {
- 	struct inode		*io_inode;	/* file being written to */
- 	size_t			io_size;	/* size of the extent */
- 	xfs_off_t		io_offset;	/* offset in the file */
--	struct xfs_trans	*io_append_trans;/* xact. for size update */
- 	struct bio		*io_bio;	/* bio being built */
- 	struct bio		io_inline_bio;	/* MUST BE LAST! */
- };
--- 
-2.20.1
-
+Thanks,
+  Pingfan
+>
+> Ira
+>
+> > +                     return false;
+> >
+> >       for (i = start_pfn; i < end_pfn; i++) {
+> >               if (!pfn_valid(i))
+> > @@ -1098,8 +1102,6 @@ static bool pfn_range_valid_gigantic(struct zone *z,
+> >               if (page_count(page) > 0)
+> >                       return false;
+> >
+> > -             if (PageHuge(page))
+> > -                     return false;
+> >       }
+> >
+> >       return true;
+> > --
+> > 2.7.5
+> >
