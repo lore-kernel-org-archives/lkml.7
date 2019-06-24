@@ -2,89 +2,90 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19614C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBC1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9435208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r5n6pCeH"
+	by mail.kernel.org (Postfix) with ESMTP id 6ECD92089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfFXFoD (ORCPT
+        id S1727553AbfFXFoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:44:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfFXFoA (ORCPT
+        Mon, 24 Jun 2019 01:44:09 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:45721 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbfFXFoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4ocWky3c08iK0yepv2gQs0SBg5KjT+xunPaTv4oC5uw=; b=r5n6pCeH/gadzSXK5KdI2Tqxv8
-        YODK6eN48ucCegAYBApmU91XF9qDbVsH6tKFA77OewDRe6wqTI7SOkxxGuNy9Sqic+I0WUPShkgI5
-        Q1lzoYmneNbpVbOUPj+V3mJQXEi+aDzQsaS8iujdNcz5g+2YOFVvO09khJr31WiotohZZLvZ1sZxX
-        Au7/D6AWMmPm2BTMHXivfuRi7XYiZI3SmPmvmgQznl97DnHs/ShMX+Jt4xrDoWzclv6O8NDl/VF15
-        MEZtZEouwgD3Ybb8UXfWgU8hWoGgN6ZUV08QMBzBJNpFVg/90QTwtKFUM9bKrgLFEMLNGW7/C5meg
-        uw+VkyYQ==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHln-0006kL-1n; Mon, 24 Jun 2019 05:43:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 13/17] riscv: poison SBI calls for M-mode
-Date:   Mon, 24 Jun 2019 07:43:07 +0200
-Message-Id: <20190624054311.30256-14-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190624054311.30256-1-hch@lst.de>
-References: <20190624054311.30256-1-hch@lst.de>
+        Mon, 24 Jun 2019 01:44:06 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mirb8-1iBLL42bbQ-00ernJ; Mon, 24 Jun 2019 07:44:02 +0200
+Subject: Re: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c
+ drivers
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1560796779-17117-1-git-send-email-info@metux.net>
+ <20190621211744.GC950@kunai>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c669a041-f025-693a-492a-80ce888db737@metux.net>
+Date:   Mon, 24 Jun 2019 07:44:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190621211744.GC950@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:FvDrHSFA8yM3VTo9ZSCraAJ6BwDwCFk9ahYKWgsP4DDZkk6r8ky
+ YFwhJqRRev+bQQvSYnqRJ90sIt6HfVrJ4Bb47ltZXGJ88avFYlgHZ+qCH1NjHAf9+tQC6Vm
+ W11tVZdPEFw5OhhXUqDmP9fBpb9UiaBpeM6oRcWZBL71fQfYGypQ0n49np14OS1JRe37L8A
+ EaU5Wc/r33jgiYVpdodpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:q6wwMcoSqTc=:htisqL60GOqxnfeGPCSIZn
+ UJmJhGBi0BgHHnYj8q1iSAR/lqlgPRdCgELgPdPoh3MUsaQB22sU4hAPzHRcU5bJuinye4Piv
+ DfHiq4aIzeI0TBOGqvMxxvEc6FAOypHr89MZDA3MbMr8lkvjGGProSXW3t21CNxDHceO8vbog
+ AtSbo35dKdRc/QRVXsMY4L0OwM7Zn4zOlbRWDHVFebmfe8xNhG+mE1gX1L3rbOgrhIdH0UrVS
+ iGxLLsRWC4W/sHQ1auGy9qMFzwR0hNSN06UUJVLh34vgP1Q0MAyeS+Eb7nX9YjB5tZyYOQNkT
+ yztCYLQXsYJ4+i3saQaCmv+KGHemO6hQiDqz746Ip2Dq1TkhsgCxJCkWAQE+AyW/igwJZdxtX
+ kvwmljNdd/ybBtg3eC8u4wrLKrHPFS2C33VGPFxf8PyMnKZWvGxQWgtKljWnkVNcZaj7Moml8
+ gH2m5bW6b6ERSN33wc1A2YaVIAKMXDCCWxrq2sAokOHkV7ibq8BnVBgj9HjrhHuj3uEZ66IO7
+ yzTPAV4pxY7pRyO2uXuuVHYsvzGAH/NKUKjFuwD6wCcKfddVAUCkV598vU7AV8BONsbO6l+hm
+ r6/8vQV4eciWiOHbmuhiW0ZstbU/9/D7DIoryOtuQKOmtT8Ve3jgv9ozaKUXupEWD5+TeT4NJ
+ gSUPdHrl6kpMvbtxaLlKYagL3XuJjWK5ZHGIKnO5mxdQT8w/0zDCx3gOdtPLu2vWHxBKo5A6z
+ OTaLIuuvpDca82Nfxbq5IrwleGpB9tTjBcZNhkpjt5yXA9R/Qngu8dnh9kA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no SBI when we run in M-mode, so fail the compile for any code
-trying to use SBI calls.
+On 21.06.19 23:17, Wolfram Sang wrote:
+> On Mon, Jun 17, 2019 at 08:39:37PM +0200, Enrico Weigelt, metux IT consult wrote:
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> Add more helper macros for trivial driver init cases, similar to the
+>> already existing module_i2c_driver()+friends - now for those which
+>> are initialized at other stages (eg. by subsys_initcall()).
+>>
+>> This helps to further reduce driver init boilerplate.
+> 
+> Uh, no! Using subsys_initcall is an old fashioned hack to work around
+> boot time dependencies. Unless there are very strong arguments, I
+> usually do not accept them anymore. So, any simplification of that sends
+> out the wrong message.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/riscv/include/asm/sbi.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Okay, what's the correct initialization method then ?
+Just convert it to already existing module_i2c_driver() ?
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 21134b3ef404..1e17f07eadaf 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/types.h>
- 
-+#ifndef CONFIG_M_MODE
- #define SBI_SET_TIMER 0
- #define SBI_CONSOLE_PUTCHAR 1
- #define SBI_CONSOLE_GETCHAR 2
-@@ -94,4 +95,5 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 	SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
- }
- 
--#endif
-+#endif /* CONFIG_M_MODE */
-+#endif /* _ASM_RISCV_SBI_H */
+
+--mtx
+
 -- 
-2.20.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
