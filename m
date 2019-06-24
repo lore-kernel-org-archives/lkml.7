@@ -2,140 +2,82 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645A6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1521CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446C020820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D8D20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfFXK5k (ORCPT
+        id S1729508AbfFXK6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:57:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:46956 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 06:58:24 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:42687 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbfFXK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:57:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CCEB2B;
-        Mon, 24 Jun 2019 03:57:39 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F3063F718;
-        Mon, 24 Jun 2019 03:57:38 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:57:36 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] kernel/isolation: Asset that a housekeeping CPU comes up
- at boot time
-Message-ID: <20190624105729.3isejrp4455suxaz@e107158-lin.cambridge.arm.com>
-References: <20190601113919.2678-1-npiggin@gmail.com>
+        id S1727730AbfFXK6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:58:24 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x5OAw6vg021376
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 12:58:06 +0200
+Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x5OAw5ja021035;
+        Mon, 24 Jun 2019 12:58:05 +0200
+Subject: Re: PREEMPT_RT_FULL on x86-32 machine
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-rt-users@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>, mwhitehe@redhat.com
+References: <20190622081954.GA10751@amd>
+ <2804bc5b-18c1-2793-171c-045c0725a6a7@siemens.com>
+ <20190624105340.GA21414@amd>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <903a1932-c530-5c45-31ab-a3b4d61d48eb@siemens.com>
+Date:   Mon, 24 Jun 2019 12:58:04 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190601113919.2678-1-npiggin@gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190624105340.GA21414@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/19 21:39, Nicholas Piggin wrote:
-> With the change to allow the boot CPU0 to be isolated, it is possible
-> to specify command line options that result in no housekeeping CPU
-> online at boot.
+On 24.06.19 12:53, Pavel Machek wrote:
+> Hi!
 > 
-> An 8 CPU system booted with "nohz_full=0-6 maxcpus=4", for example.
+>>> Is full preemption supposed to work on x86-32 machines?
+>>>
+>>> Because it does not work for me. It crashes early in boot, no messages
+>>> make it to console. Similar configuration for x86-64 boots ok.
+>>>
+>>
+>> Maybe you can also tell which version(s) you tried, and in which
+>> configuration(s), and how the crash looked like.
 > 
-> It is not easily possible at housekeeping init time to know all the
-> various SMP options that will result in an invalid configuration, so
-> this patch adds a sanity check after SMP init, to ensure that a
-> housekeeping CPU has been onlined.
+> I wanted to know if the configuration is supposed to work at all
+> before starting heavy debugging. From your reply I assume that it
+> should work.
+
+We still have at least one 4.4-based 32-bit-only target on RT. But there is 
+likely more, even though I'm promoting to use at least a 64-bit kernel on 64-bit 
+capable hw for many years, irrespective of RT.
+
+Jan
+
 > 
-> The panic is undesirable, but it's better than the alternative of an
-> obscure non deterministic failure. The panic will reliably happen
-> when advanced parameters are used incorrectly.
+> I tried 4.19.13-rt1-cip1 among others. Crash is early in boot, I can
+> try some early printing...
 > 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->  kernel/sched/isolation.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> Best regards,
+> 									Pavel
 > 
-> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> index 123ea07a3f3b..7b9e1e0d4ec3 100644
-> --- a/kernel/sched/isolation.c
-> +++ b/kernel/sched/isolation.c
-> @@ -63,6 +63,29 @@ void __init housekeeping_init(void)
->  	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
->  }
->  
-> +static int __init housekeeping_verify_smp(void)
-> +{
-> +	int cpu;
-> +
-> +	/*
-> +	 * Early housekeeping setup is done before CPUs come up, and there are
-> +	 * a range of options scattered around that can restrict which CPUs
-> +	 * come up. It is possible to pass in a combination of housekeeping
-> +	 * and SMP arguments that result in housekeeping assigned to an
-> +	 * offline CPU.
-> +	 *
-> +	 * Check that condition here after SMP comes up, and give a useful
-> +	 * error message rather than an obscure non deterministic crash or
-> +	 * hang later.
-> +	 */
-> +	for_each_online_cpu(cpu) {
-> +		if (cpumask_test_cpu(cpu, housekeeping_mask))
-> +			return 0;
-> +	}
-> +	panic("Housekeeping: nohz_full= or isolcpus= resulted in no online CPUs for housekeeping.\n");
 
-I am hitting this panic when I boot my juno board.
-
-
-I have CONFIG_CPU_ISOLATION=y but I don't pass nohuz_full nor isolcpus in the
-commandline. I think what's going on is that housekeeping_setup() doesn't get
-called and hence housekeeping_mask isn't initialized in my case, causing this
-check to fail and trigger the panic.
-
-The below seems to 'fix' it though not sure if it's the right way forward.
-A revert obviously fixes it too but I doubt we want that :-)
-
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 7b9e1e0d4ec3..a9ca8628c1a2 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -67,6 +67,9 @@ static int __init housekeeping_verify_smp(void)
- {
- 	int cpu;
- 
-+	if (!housekeeping_flags)
-+		return 0;
-+
- 	/*
- 	 * Early housekeeping setup is done before CPUs come up, and there are
- 	 * a range of options scattered around that can restrict which CPUs
-
-
-Cheers
-
---
-Qais Yousef
-
-
-> +}
-> +core_initcall(housekeeping_verify_smp);
-> +
->  static int __init housekeeping_setup(char *str, enum hk_flags flags)
->  {
->  	cpumask_var_t non_housekeeping_mask;
-> -- 
-> 2.20.1
-> 
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
