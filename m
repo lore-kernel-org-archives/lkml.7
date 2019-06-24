@@ -2,122 +2,107 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E729C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDB5C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E1620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0FE20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dLg/cSRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfFXXQf (ORCPT
+        id S1728363AbfFXXUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:16:35 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59024 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbfFXXQf (ORCPT
+        Mon, 24 Jun 2019 19:20:32 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33523 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfFXXUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:16:35 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8564B149D6D;
-        Tue, 25 Jun 2019 09:16:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hfYBH-0000af-3Z; Tue, 25 Jun 2019 09:15:23 +1000
-Date:   Tue, 25 Jun 2019 09:15:23 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
- updates
-Message-ID: <20190624231523.GC7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-8-hch@lst.de>
- <20190624161720.GQ5387@magnolia>
+        Mon, 24 Jun 2019 19:20:31 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so8384231pfq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=CLMq9SkPZ0LrpMbu6uM6UrnywucO78/fC+4xJdWuUjU=;
+        b=dLg/cSRkJPUZwFWpsP5zrU6X5hseY4oEeFd0LoCR7LGMnXqC0nzPoFAzqz9Y7u/41c
+         PVqSleEbaPIgcPu0aCXcvA8ErwL0FqzRVDuGb0m2YwMJ9cLF7LbUaVxZP6q/2kesoXRK
+         /jWxwhBmthWot8HMFhTMtiLMF/eWvtwCGW/6JkkiTuKr3iAewjAgK3i9kIFHThWf575k
+         4wEOAr5iRNfUAvL3Xq4eB6rRA+mjQFjipz3E7czZd/g0cvHAaH3Btayr9Z60UV90p37m
+         CkV51ozzeK7L+hUT1HzMKJCGHN2tVbrbHL8lyYsoK6oeRmrOC9eKXS9fiv1ZYUi9XD+Z
+         9m5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=CLMq9SkPZ0LrpMbu6uM6UrnywucO78/fC+4xJdWuUjU=;
+        b=TqLyG04M/wHZNP6rXT9a4JjX31SwRrBV/LaImQGlUs8XDfqDxMFrB2PhjdfXOeFVcv
+         0jhGG6Cgs0oG1CWGTik16sdfGT3J5cjEweXfsWDvWZbxezkv8Ft5gi1WFXCLzpvIazzP
+         qmmMhzjPDv/faq0r0VHeWNYyN8CMp8iZtshNIw0a3Q+A6JXWEclqsc92hK6bfmaASiTV
+         vrCffHsJYwZEVni6KGcGGLdYQgwE4IlLOXsVcOSMV7NxsGA5qUGkpNu7Pp8yRsv9+neK
+         tceSnhAAH4a+l38ldzux1LnYGWshVDmZuaBe0rElGXv02Z2a4urNwU/NRHQDbB9nKC/t
+         HXMA==
+X-Gm-Message-State: APjAAAXknBMWrCBqMMjXh5Zf5fAE3IAWdrm7MUYiwGysKdT8XtpDi/fk
+        2M/LGzFJHoOpuSHCx0nTdAmb33WU7tmM1w==
+X-Google-Smtp-Source: APXvYqw0AZKgg6EjKTiDXtbpUIU8qcxoTXpR5EwI5qJzAJRAtq9DzupQa5ZaWWS4hAxfXE0scVi4uw==
+X-Received: by 2002:a63:c60:: with SMTP id 32mr13363428pgm.42.1561418431055;
+        Mon, 24 Jun 2019 16:20:31 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:559b:6f10:667f:4354])
+        by smtp.googlemail.com with ESMTPSA id m19sm1137712pjn.3.2019.06.24.16.20.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 16:20:30 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     86zhm782g5.fsf@baylibre.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
+Subject: Re: [PATCH 8/9] drm: meson: add macro used to enable HDMI PLL
+In-Reply-To: <86o92n82e1.fsf@baylibre.com>
+References: <86zhm782g5.fsf@baylibre.com> <86o92n82e1.fsf@baylibre.com>
+Date:   Mon, 24 Jun 2019 16:20:29 -0700
+Message-ID: <7hwohawoxu.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624161720.GQ5387@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=oLq8ofgPWqtQ5Z905GkA:9 a=6BQrOku7L8tHAI1q:21
-        a=BwSqpppzWO7tify-:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 09:17:20AM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 24, 2019 at 07:52:48AM +0200, Christoph Hellwig wrote:
-> > We have historically decided that we want to preallocate the xfs_trans
-> > structure at writeback time so that we don't have to allocate on in
-> > the I/O completion handler.  But we treat unwrittent extent and COW
-> > fork conversions different already, which proves that the transaction
-> > allocations in the end I/O handler are not a problem.  Removing the
-> > preallocation gets rid of a lot of corner case code, and also ensures
-> > we only allocate one and log a transaction when actually required,
-> > as the ioend merging can reduce the number of actual i_size updates
-> > significantly.
-> 
-> That's what I thought when I wrote the ioend merging patches, but IIRC
-> Dave objected on the grounds that most file writes are trivial file
-> extending writes and therefore we should leave this alone to avoid
-> slowing down the ioend path even if it came at a cost of cancelling a
-> lot of empty transactions.
+Julien Masson <jmasson@baylibre.com> writes:
 
-The issue is stuff like extracting a tarball, where we might write a
-hundred thousand files and they are all written in a single IO. i.e.
-there is no IO completion merging at all.
+> This patch add new macro HHI_HDMI_PLL_CNTL_EN which is used to enable
+> HDMI PLL.
+>
+> Signed-off-by: Julien Masson <jmasson@baylibre.com>
+> ---
+>  drivers/gpu/drm/meson/meson_vclk.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+> index e7c2b439d0f7..be6e152fc75a 100644
+> --- a/drivers/gpu/drm/meson/meson_vclk.c
+> +++ b/drivers/gpu/drm/meson/meson_vclk.c
+> @@ -96,6 +96,7 @@
+>  #define HHI_VDAC_CNTL1		0x2F8 /* 0xbe offset in data sheet */
+>  
+>  #define HHI_HDMI_PLL_CNTL	0x320 /* 0xc8 offset in data sheet */
+> +#define HHI_HDMI_PLL_CNTL_EN	BIT(30)
+>  #define HHI_HDMI_PLL_CNTL2	0x324 /* 0xc9 offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL3	0x328 /* 0xca offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL4	0x32C /* 0xcb offset in data sheet */
+> @@ -468,7 +469,7 @@ void meson_hdmi_pll_set_params(struct meson_drm *priv, unsigned int m,
+>  
+>  		/* Enable and unreset */
+>  		regmap_update_bits(priv->hhi, HHI_HDMI_PLL_CNTL,
+> -				   0x7 << 28, 0x4 << 28);
+> +				   0x7 << 28, HHI_HDMI_PLL_CNTL_EN);
 
-> I wasn't 100% convinced it mattered but ran out of time in the
-> development window and never got around to researching if it made any
-> difference.
+still using a magic const for the mask.  Can use GENMASK() for this?
 
-Yeah, it's not all that simple :/
-
-In these cases, we always have to allocate a transaction for every
-file being written. If we do it before we submit the IO, then all
-the transactions are allocated from the single writeback context. If
-we don't have log space, data writeback pauses while the tail of the
-AIL is pushed, metadata writeback occurs, and then the transaction
-allocation for data writeback is woken, and data writeback
-submission continues. It's fairly orderly, and we don't end up
-trying to write back data while we are doing bulk metadata flushing
-from the AIL.
-
-If we delay the transaction allocation to the ioend context and we
-are low on log space, we end up blocking a kworker on a transaction
-allocation which then has to wait for metadata writeback. The
-kworker infrastructure will then issue the next ioend work, which
-then blocks on transaction allocation. Delayed allocation can cause
-thousands of small file IOs to be inflight at the same time due to
-intra-file contiguous allocation and IO merging in the block layer,
-hence we can have thousands of individual IO completions that
-require transaction allocation to be completed.
-
-> So, uh, how much of a hit do we take for having to allocate a
-> transaction for a file size extension?  Particularly since we can
-> combine those things now?
-
-Unless we are out of log space, the transaction allocation and free
-should be largely uncontended and so it's just a small amount of CPU
-usage. i.e it's a slab allocation/free and then lockless space
-reservation/free. If we are out of log space, then we sleep waiting
-for space - the issue really comes down to where it is better to
-sleep in that case....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Kevin
