@@ -2,115 +2,132 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF5EC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2321BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8098C20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0309320820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731749AbfFXOAN (ORCPT
+        id S1731757AbfFXOAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:00:13 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41105 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfFXOAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:00:11 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1hfPVs-00064e-Ph; Mon, 24 Jun 2019 16:00:04 +0200
-Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1hfPVq-00043X-LZ; Mon, 24 Jun 2019 16:00:02 +0200
-Date:   Mon, 24 Jun 2019 16:00:02 +0200
-From:   Michael Grzeschik <mgr@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: linux-next: Signed-off-by missing for commit in the imx-mxs tree
-Message-ID: <20190624140002.s3au65gbsx6mtfkf@pengutronix.de>
-References: <20190624222359.62e92a15@canb.auug.org.au>
- <20190624132056.GC16146@dragon>
+        Mon, 24 Jun 2019 10:00:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:51272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbfFXOAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:00:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 051CD344;
+        Mon, 24 Jun 2019 07:00:24 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70E373F71E;
+        Mon, 24 Jun 2019 07:00:21 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 15:00:19 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
+Message-ID: <20190624140018.GD29120@arrakis.emea.arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-11-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y4z6ot536bqzjjir"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624132056.GC16146@dragon>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 15:59:26 up 37 days, 20:17, 97 users,  load average: 0.17, 0.18,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190621095252.32307-11-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 10:52:37AM +0100, Vincenzo Frascino wrote:
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+> @@ -0,0 +1,51 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2018 ARM Limited
+> + */
+> +#ifndef __COMPAT_BARRIER_H
+> +#define __COMPAT_BARRIER_H
+> +
+> +#ifndef __ASSEMBLY__
+> +/*
+> + * Warning: This code is meant to be used with
+> + * ENABLE_COMPAT_VDSO only.
+> + */
+> +#ifndef ENABLE_COMPAT_VDSO
+> +#error This header is meant to be used with ENABLE_COMPAT_VDSO only
+> +#endif
+> +
+> +#ifdef dmb
+> +#undef dmb
+> +#endif
+> +
+> +#if __LINUX_ARM_ARCH__ >= 7
+> +#define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+> +#elif __LINUX_ARM_ARCH__ == 6
+> +#define dmb(x) __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
+> +				    : : "r" (0) : "memory")
+> +#else
+> +#define dmb(x) __asm__ __volatile__ ("" : : : "memory")
+> +#endif
 
---y4z6ot536bqzjjir
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We don't need pre-ARMv7 barriers (they've been deprecated and the arm64
+kernel actually traps and emulates them by default). Also your Makefile
+changes never define a __LINUX_ARM_ARCH__ lower than 7. Fix-up below:
 
-On Mon, Jun 24, 2019 at 09:20:57PM +0800, Shawn Guo wrote:
-> On Mon, Jun 24, 2019 at 10:23:59PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Commit
-> >=20
-> >   9b5800c21b4d ("ARM: dts: imx6qdl-kontron-samx6i: add Kontron SMARC So=
-M Support")
-> >=20
-> > is missing a Signed-off-by from its author.
->=20
-> Thanks for spotting it, Stephen.
->=20
-> @Michael, would you please give your SoB?  Otherwise, I will have to
-> back out the patch.
+------8<-----------------------
+From 5655a0313ce7bb731bfed6a19bcfe6b1100b542a Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Mon, 24 Jun 2019 12:16:06 +0100
+Subject: [PATCH] arm64: compat: No need for pre-ARMv7 barriers on an ARMv8
+ system
 
-Sure!
+This patch removes the deprecated (pre-ARMv7) compat barriers as they
+would not be used on an ARMv8 system.
 
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ arch/arm64/include/asm/vdso/compat_barrier.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---y4z6ot536bqzjjir
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAl0Q11wACgkQC+njFXoe
-LGTO+xAAoPqAWT2BExJub9eYcvbVPICjIkbbOJnzN672YZYWo37PratlGciyqv8r
-kS/qj27eHHtPytBd0gq77urfn9B/PYA/uDTiGUmPIKiYLyuZsASSadRnvrwjD0ke
-exHEOR+MoIkKRarCGr2Ir/mExiq3fb0r/11nJ7B7w2s6ska9ypXk7tL5d+fEa5Qe
-iNF5idfqJNoInqcDlRrzgv9fZ0B6aEEBMYIn3IXNBBuqjbziBJuWYi5qAdjCp/d4
-dHQTS9Jy5hHqW86D/G5mOuzGfLbf24ks3WK/KbKNWtoblQP1PWMRG5IT08pkqSKH
-RaYHjrBtCiae+Q73odZm9BXE/o33lJ+8LdADTKhcWdPG1Ksdm7lw/En64vrFhA8u
-m54CHj/s4wFYhTHyM2UOetf22AUeMyfpOEAV2swEFVg5KULaxLXKl96kma2kbvwI
-Aj4uqj+2Vh5tEqAfTMJvXC+fsUcQAo84DvCa27YfaEnXrgwx1amrab8TFiO73kV+
-5jmU4bhVGlmHBeiUO2Q/FG5M/1yZXO34TKodGbUWY52eJh8YSCudFoh+6i7N9sxC
-SP4vUJx4JbuX8+hfBK3SWtHS0XTDpUlLhZZpDnmOlVh/LxrTByoj7fNUyrKdxdD/
-RKGapGY/Y//1gZtQe3DpPyXrSYOIGPyRCEctsmxnDD8o6tFNcCQ=
-=Lah3
------END PGP SIGNATURE-----
-
---y4z6ot536bqzjjir--
+diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
+index ea24ea856b07..fb60a88b5ed4 100644
+--- a/arch/arm64/include/asm/vdso/compat_barrier.h
++++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+@@ -18,14 +18,7 @@
+ #undef dmb
+ #endif
+ 
+-#if __LINUX_ARM_ARCH__ >= 7
+ #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+-#elif __LINUX_ARM_ARCH__ == 6
+-#define dmb(x) __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
+-				    : : "r" (0) : "memory")
+-#else
+-#define dmb(x) __asm__ __volatile__ ("" : : : "memory")
+-#endif
+ 
+ #if __LINUX_ARM_ARCH__ >= 8
+ #define aarch32_smp_mb()	dmb(ish)
