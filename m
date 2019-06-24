@@ -2,74 +2,87 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46333C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8337C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BFE20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A347520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWzf97iC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFOczVFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfFXS6E (ORCPT
+        id S1729781AbfFXTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:58:04 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44691 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbfFXS6E (ORCPT
+        Mon, 24 Jun 2019 15:00:28 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41216 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfFXTA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:58:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x47so15612111qtk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:58:03 -0700 (PDT)
+        Mon, 24 Jun 2019 15:00:27 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c11so10593082qkk.8;
+        Mon, 24 Jun 2019 12:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/m3xpT0Zzv2GHzFiTiGnJSv3W48e1yVOEcmN0l3E8do=;
-        b=JWzf97iC1A/24INnQwn18VqYi27rNOR3APpLstuCjnGlDEb8IYHgeX269da5haeJdl
-         /2zzJDxlC1m0ywSZwvdd887RplaR5O81Y+sStGWuYT5OxVwzhGg3dyzsSnkqArERwoZR
-         o42C6AdI9SqQOO1Pplup9OUt4dr+taK+MGEq69pUbzbeH02CUlClQEDfWcNBoT/0H0q/
-         8kBSSOygsAku9DZ8gKuN+UoWjIW6g3iJprrPwcon3rkYsd5XR2pie8hQiamc8AKtKsi9
-         C0mLJV4PUWkAEj65Tra0Hjrl4AA/y7NN4H5w6/YYvxBvHEUN4A1PSTDL+PVVFA/Vf9rQ
-         AilQ==
+        bh=jLe9rsWPnlF5E8hqDCO/kSAryjkkZLhq+lQJt0LPNsM=;
+        b=cFOczVForZZ0SZUzzYOzAfpcG3WInUSHcvbb4qSoAWCggO67XYv3JHFiSUina2IauF
+         lxnZUyt3yQCuKxuxpg/mB4fR0I0u+O6SYuGInjQvp6INdWnuyI0y6AlzaVcdUxPcQFxt
+         ulFy3aBZAidsEm39HpWgXluE5Aegt5TOsUi8+PiOeAsjUjeLaGWV75LcscnSPVmbpaK+
+         Fu/D/LEUe34Q/BPRdJS8Ov9WpCpt4BdmlWUpnbZA1sbyqqjovoxLtXby9T/a9CiABEzq
+         Z46qn20dL+LR3GTH5UJHi6VoiwMRPhJU0UbxwZcdKvlBWavlo3Km6rCGB3+gc1ZHBw9L
+         IjVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/m3xpT0Zzv2GHzFiTiGnJSv3W48e1yVOEcmN0l3E8do=;
-        b=PIKbRahgP6MgJ2DKKofidYmQTQ06PeCfvP5G50gp7gXDAe6N1J16DulxzMpETjOzCx
-         e0YH4M1u6QkVKvii/JJOi9sdfKztpghxrlmb3voYTBNRPi6KfIQy9bZiN44mH5XAo6ow
-         6aIXyju3cz7hrf0AF810ZNcNdxZh4EIvAeZaG3LX1tFbfJJdu48+RY6wndoY0RV3SZfT
-         caqqmFwErKcDg0YhHwz7zc2HZLdUHvFW7xOegsavGUXDMpkYnDCWVVUqTaHE2r29wfGh
-         ajerxC+9/yf3c4uYVcVhA1cEjPppre+l2olpt6TGLiXujkjc8crvOSMx3f1sSSDUdYXG
-         Rt3w==
-X-Gm-Message-State: APjAAAX268LsUehZhIHjs6ZlNspk+9oH+RSfAEsfNmml7xXiUCybwoyI
-        O6T9s/G8MNXQf5Rc3vV+vzo=
-X-Google-Smtp-Source: APXvYqwaqvUbdrTOeXT6JlsKg89653rrnDkVgvnVWibNdFlEBWJcuMlxrzQz48xjO2sK1A9iA9pwbw==
-X-Received: by 2002:a0c:f788:: with SMTP id s8mr14664836qvn.35.1561402682962;
-        Mon, 24 Jun 2019 11:58:02 -0700 (PDT)
+        bh=jLe9rsWPnlF5E8hqDCO/kSAryjkkZLhq+lQJt0LPNsM=;
+        b=aYZ6cUX9u7djsljri6cEkt/hucQUOFoDPJ1xgj66baY3CV+5rbDPlr0DKWSFJiXoa0
+         RlBWJvB4QwULsFLtYrY6iXb7bbgzMGZtac09XH7FqqAwKVeUjrXqJnynBWV4IMTuOSUQ
+         K6vLErdSXq+v546dzFZLtc8KypbZp7yeKpRMqTYxjBYKMa4E7/pS/uWU/vCUhbXGIrpL
+         d3nvoET+HK6Wr6k3sh4F3F83b/ZAsml1AXwjRc+8vTmLCk3ylkSSLJ6hJotJXp3ghH5p
+         p8hhszx5KuBbJMSQelCqqCIkg9VOJ5z35Ewh/OKsL2M4/tJVqBtgNwf+bqVrt6EYy1Ub
+         4uqg==
+X-Gm-Message-State: APjAAAV7NEHh9msTDUai476xhLNOsEXzhHBZ+jOdUr6a2pWe6rLG6Vwp
+        Jhn7xOWcTUAjKZ4pZjKG/WY=
+X-Google-Smtp-Source: APXvYqxH1PPatDijts/eOpzI83A95Elb5STnJn33I/c01bWUEAHnudlt9D1Fy2HNQWV0ACtjkgbKiw==
+X-Received: by 2002:a37:a643:: with SMTP id p64mr103665746qke.36.1561402825968;
+        Mon, 24 Jun 2019 12:00:25 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id b23sm7460548qte.19.2019.06.24.11.58.01
+        by smtp.gmail.com with ESMTPSA id d199sm6062744qkg.116.2019.06.24.12.00.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 11:58:02 -0700 (PDT)
+        Mon, 24 Jun 2019 12:00:25 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E48A141153; Mon, 24 Jun 2019 15:57:48 -0300 (-03)
-Date:   Mon, 24 Jun 2019 15:57:48 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] perf intel-pt: CBR improvements
-Message-ID: <20190624185748.GD4181@kernel.org>
-References: <20190622093248.581-1-adrian.hunter@intel.com>
+        id F01D341153; Mon, 24 Jun 2019 16:00:09 -0300 (-03)
+Date:   Mon, 24 Jun 2019 16:00:09 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH] perf cs-etm: Improve completeness for kernel address
+ space
+Message-ID: <20190624190009.GE4181@kernel.org>
+References: <20190617150024.11787-1-leo.yan@linaro.org>
+ <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
+ <20190620005829.GH24549@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190622093248.581-1-adrian.hunter@intel.com>
+In-Reply-To: <20190620005829.GH24549@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,35 +90,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Jun 22, 2019 at 12:32:41PM +0300, Adrian Hunter escreveu:
-> Hi
+Em Thu, Jun 20, 2019 at 08:58:29AM +0800, Leo Yan escreveu:
+> Hi Mathieu,
 > 
-> Here are some improvements for the handling of core-to-bus ratio (CBR),
-> including exporting it.
+> On Wed, Jun 19, 2019 at 11:49:44AM -0600, Mathieu Poirier wrote:
+> 
+> [...]
+> 
+> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > index 51dd00f65709..4776c2c1fb6d 100644
+> > > --- a/tools/perf/Makefile.config
+> > > +++ b/tools/perf/Makefile.config
+> > > @@ -418,6 +418,30 @@ ifdef CORESIGHT
+> > >      endif
+> > >      LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+> > >      EXTLIBS += $(OPENCSDLIBS)
+> > > +    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
+> > > +      # Extract info from lds:
+> > > +      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
+> > > +      # ARM64_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
+> > > +      ARM64_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
+> > > +        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
+> > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > > +        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
+> > > +    else
+> > > +      ARM64_PRE_START_SIZE := 0
+> > > +    endif
+> > > +    CFLAGS += -DARM64_PRE_START_SIZE="$(ARM64_PRE_START_SIZE)"
+> > > +    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
+> > > +      # Extract info from lds:
+> > > +      #   . = ((0xC0000000)) + 0x00208000;
+> > > +      # ARM_PRE_START_SIZE := 0x00208000
+> > > +      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
+> > > +        $(srctree)/arch/arm/kernel/vmlinux.lds | \
+> > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > > +        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
+> > > +    else
+> > > +      ARM_PRE_START_SIZE := 0
+> > > +    endif
+> > > +    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
+> > >      $(call detected,CONFIG_LIBOPENCSD)
+> > >      ifdef CSTRACE_RAW
+> > >        CFLAGS += -DCS_DEBUG_RAW
+> > > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > > index 0c7776b51045..ae831f836c70 100644
+> > > --- a/tools/perf/util/cs-etm.c
+> > > +++ b/tools/perf/util/cs-etm.c
+> > > @@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *session)
+> > >  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+> > >  {
+> > >         struct machine *machine;
+> > > +       u64 fixup_kernel_start = 0;
+> > > +       const char *arch;
+> > >
+> > >         machine = etmq->etm->machine;
+> > > +       arch = perf_env__arch(machine->env);
+> > >
+> > > -       if (address >= etmq->etm->kernel_start) {
+> > > +       /*
+> > > +        * Since arm and arm64 specify some memory regions prior to
+> > > +        * 'kernel_start', kernel addresses can be less than 'kernel_start'.
+> > > +        *
+> > > +        * For arm architecture, the 16MB virtual memory space prior to
+> > > +        * 'kernel_start' is allocated to device modules, a PMD table if
+> > > +        * CONFIG_HIGHMEM is enabled and a PGD table.
+> > > +        *
+> > > +        * For arm64 architecture, the root PGD table, device module memory
+> > > +        * region and BPF jit region are prior to 'kernel_start'.
+> > > +        *
+> > > +        * To reflect the complete kernel address space, compensate these
+> > > +        * pre-defined regions for kernel start address.
+> > > +        */
+> > > +       if (!strcmp(arch, "arm64"))
+> > > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > > +                                    ARM64_PRE_START_SIZE;
+> > > +       else if (!strcmp(arch, "arm"))
+> > > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > > +                                    ARM_PRE_START_SIZE;
+> > 
+> > I will test your work but from a quick look wouldn't it be better to
+> > have a single define name here?  From looking at the modifications you
+> > did to Makefile.config there doesn't seem to be a reason to have two.
+> 
+> Thanks for suggestion.  I changed to use single define
+> ARM_PRE_START_SIZE and sent patch v2 [1].
+> 
+> If possible, please test patch v2.
+> 
+> Thanks,
+> Leo Yan
 
-Thanks, applied.
+So just for the record, I'm waiting for Mathieu on this one, i.e. for
+him to test/ack v3.
+
+- Arnaldo
  
+> [1] https://lore.kernel.org/linux-arm-kernel/20190620005428.20883-1-leo.yan@linaro.org/T/#u
 > 
-> Adrian Hunter (7):
->       perf intel-pt: Decoder to output CBR changes immediately
->       perf intel-pt: Cater for CBR change in PSB+
->       perf intel-pt: Add CBR value to decoder state
->       perf intel-pt: Synthesize CBR events when last seen value changes
->       perf db-export: Export synth events
->       perf scripts python: export-to-sqlite.py: Export Intel PT power and ptwrite events
->       perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events
-> 
->  tools/perf/scripts/python/export-to-postgresql.py  | 251 +++++++++++++++++++++
->  tools/perf/scripts/python/export-to-sqlite.py      | 239 ++++++++++++++++++++
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  24 +-
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |   1 +
->  tools/perf/util/intel-pt.c                         |  65 ++++--
->  .../util/scripting-engines/trace-event-python.c    |  46 +++-
->  6 files changed, 590 insertions(+), 36 deletions(-)a
-> 
-> 
-> Regards
-> Adrian
+> > > +
+> > > +       if (address >= fixup_kernel_start) {
+> > >                 if (machine__is_host(machine))
+> > >                         return PERF_RECORD_MISC_KERNEL;
+> > >                 else
+> > > --
+> > > 2.17.1
+> > >
 
 -- 
 
