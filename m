@@ -2,84 +2,125 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB828C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA94C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850C62083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4BB2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfFXIOU (ORCPT
+        id S1727542AbfFXIPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:14:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35111 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfFXIOU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:14:20 -0400
-Received: from [192.168.178.70] ([109.104.35.135]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MYvoW-1i1RTc0Q4G-00UvOE; Mon, 24 Jun 2019 10:13:52 +0200
-Subject: Re: [PATCH] staging: bcm2835-camera: Avoid apotential sleep while
- holding a spin_lock
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        eric@anholt.net, gregkh@linuxfoundation.org, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tuomas.tynkkynen@iki.fi,
-        inf.braun@fau.de, tobias.buettner@fau.de, hofrat@osadl.org
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-References: <20190624053351.5217-1-christophe.jaillet@wanadoo.fr>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <c8e5abba-7441-b201-1618-c92dfdfc7b1c@i2se.com>
-Date:   Mon, 24 Jun 2019 10:13:48 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190624053351.5217-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: de-DE
-X-Provags-ID: V03:K1:vvqf8FlBVKwdp6cZb6vSQAVE2D3lZnSKipS/eVDH9d3PZ020dMo
- 6h2/VXzfCkh/Uy/E/8fUwSV+PQovkrLoOjpeR2r0WXSiFkznkl+e5kwkp5t5uY2iezT6+sG
- D7gejc2XKkjPlW39HneI77Jx0GRdY8YdR4PHlOiCfTyoujJbgK7Y0nokIBuUL9a8xnyltUx
- WJ4knFYuNX4FHuFqyq9Kg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4Obk7D5rplk=:qRjazcfX39WGiDmelrFWDQ
- /n2XvgMMiyNF7JsOrAePp8mx575muX0KrJ5rnbzuSk/By3VrsUCr8or4+6Ekm6O7DTd1xRe0S
- sNIcUq6mmeQGgvryk53G9xnzwF9KHzKUNrGGp3dD26EyOqo4dajKElbZOiyfQLqTgDH2k8uVe
- 67vCdqzDcDtRRvcrC02XH1Nbi+gbjAyq0Aa4+BJIH8+0eRWzRezKoN4em3LbTi+nY2HTakjT0
- ZBf5sNWTVb2TTxdAnNwBEJ6l046vZqgKKBKrdIUXavqhinVfagdR0uKTKOaM/UitwTPdZTuxZ
- 13JesgH7Fb9iPFbJ1D/PufKAcse1rBl7IBqa+rq5B2B5G3k3WoBuk+hRzQKCtNkeFmS750JND
- tiQA8FQ7gbu67B1JPvj0N/ZTmRLKWv+LVMvoTaZ6v47xuUmo1+TXeqeOw7l5vADp/kmyjdW5r
- ZkUB+ScbhID7cgNb1aPY5DFvPJtTj4C926Adc+JiBv+FsD1Rrb9U3FYVmL2oC7G6Vg+c0bRnY
- 6NFjbUJsqaxboVyFrej91uXI+fOWfsa9lf033vpKiMhUT+RsuE0z4zSXdUUYGANLJY3QN9WkM
- LDEhKsLgwJh57VTy7/6/oDinLY4gmRWKLFDgVkvr+jD3yTvxmAqpz8g2uCR4tuKWbUTbtZm81
- hLg6fXTBkMvVGNAtR6OY0A+D22avSDrJclOfR+7+LzxI0UeG8awFfZXZJfC6iyY7L7nQZYSzq
- p8SYYvr135wQliP+6jYDk0qogj3ObTK6W1/2SV+yPFZ54iPNjNJSctjYfgk=
+        Mon, 24 Jun 2019 04:15:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:43394 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfFXIPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:15:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8393C2B;
+        Mon, 24 Jun 2019 01:15:06 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E19C33F71E;
+        Mon, 24 Jun 2019 01:15:02 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 09:15:01 +0100
+Message-ID: <86d0j3pfga.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V4 13/18] soc/tegra: pmc: allow support for more tegra wake
+In-Reply-To: <1561345379-2429-14-git-send-email-skomatineni@nvidia.com>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+        <1561345379-2429-14-git-send-email-skomatineni@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Mon, 24 Jun 2019 04:02:54 +0100,
+Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+> 
+> This patch allows to create separate irq_set_wake and irq_set_type
+> implementations for different tegra designs PMC that has different
+> wake models which require difference wake registers and different
+> programming sequence.
+> 
+> AOWAKE model support is available for Tegra186 and Tegra194 only
+> and it resides within PMC and supports tiered wake architecture.
+> 
+> Tegra210 and prior tegra designs uses PMC directly to receive wake
+> events and coordinate the wake sequence.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index edd4fe06810f..e87f29a35fcf 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -226,6 +226,8 @@ struct tegra_pmc_soc {
+>  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
+>  				   struct device_node *np,
+>  				   bool invert);
+> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
+> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
+>  
+>  	const char * const *reset_sources;
+>  	unsigned int num_reset_sources;
+> @@ -1919,7 +1921,7 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>  	.alloc = tegra_pmc_irq_alloc,
+>  };
+>  
+> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>  	unsigned int offset, bit;
+> @@ -1951,7 +1953,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  	return 0;
+>  }
+>  
+> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>  	u32 value;
+> @@ -2005,8 +2007,10 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
+>  	pmc->irq.irq_unmask = irq_chip_unmask_parent;
+>  	pmc->irq.irq_eoi = irq_chip_eoi_parent;
+>  	pmc->irq.irq_set_affinity = irq_chip_set_affinity_parent;
+> -	pmc->irq.irq_set_type = tegra_pmc_irq_set_type;
+> -	pmc->irq.irq_set_wake = tegra_pmc_irq_set_wake;
+> +	if (pmc->soc->irq_set_type)
+> +		pmc->irq.irq_set_type = pmc->soc->irq_set_type;
+> +	if (pmc->soc->irq_set_wake)
+> +		pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
 
-Am 24.06.2019 um 07:33 schrieb Christophe JAILLET:
-> Do not allocate memory with GFP_KERNEL when holding a spin_lock, it may
-> sleep. Use GFP_NOWAIT instead.
->
-> Fixes: 950fd867c635 ("staging: bcm2835-camera: Replace open-coded idr with a struct idr.")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+I already commented on how superfluous these 'if ()' where. If you
+disagree, please let me know why.
 
-there has been a fix for this, which isn't upstreamed yet. The preferred 
-solution is to replace the spin_lock with a mutex. Since i'm currently 
-working on this i would take care of this.
+Thanks,
 
-Sorry about this.
+	M.
 
-Stefan
-
+-- 
+Jazz is not dead, it just smells funny.
