@@ -2,107 +2,83 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4729AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06473C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9772089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561357761;
-	bh=2TQRe3QkhnUJy/2JQY1vTTVylzKrx/xWJfWzJ6o3RiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qEzEL4wfAOpsawqM7FQ4SaHKx4pk4Hb11I/NP9dy+NLAVMEwoicfQzn5T+HHhyaNR
-	 kBqLfGNgmuDRQanL80I/SWShSWDEAw/wQl509RSLOdDjXMSugU0RjtKxxypEsLlyRY
-	 N9Yho6QUIs0oqpX4hzfU4s/bR3MPU/46H0XT2LRM=
+	by mail.kernel.org (Postfix) with ESMTP id DD5D0205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFXG3T (ORCPT
+        id S1727031AbfFXGe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfFXG3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:29:19 -0400
-Received: from localhost (unknown [106.201.35.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA1D20679;
-        Mon, 24 Jun 2019 06:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561357758;
-        bh=2TQRe3QkhnUJy/2JQY1vTTVylzKrx/xWJfWzJ6o3RiE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rGBMJXhwNue1MqIZfA88N+ylezEMzckRFHzw/Z9skTub1kEKtlDyEG+sZgNExhJlH
-         2iLgT3nAdnk4c4Tx8Rzztj/3X2uNeZXtc93wuY/0IMPn6xARWj6DrZNcswpQ1r8f3y
-         ALZlKuGj2kms+tMtZJ/fbUijendUriAkh9lZEurI=
-Date:   Mon, 24 Jun 2019 11:56:09 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190624062609.GV2962@vkoul-mobl>
-References: <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Mon, 24 Jun 2019 02:34:29 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:49827 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726472AbfFXGe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 02:34:29 -0400
+X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 02:34:27 EDT
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jun 2019 11:57:44 +0530
+X-IronPort-AV: E=McAfee;i="6000,8403,9297"; a="10448682"
+Received: from dhar-linux.qualcomm.com ([10.204.66.25])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Jun 2019 11:57:20 +0530
+Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
+        id 0BF223649; Mon, 24 Jun 2019 11:57:18 +0530 (IST)
+From:   Shubhashree Dhar <dhar@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org,
+        jshekhar@codeaurora.org
+Subject: drm/msm/dpu: Correct dpu encoder spinlock initialization
+Date:   Mon, 24 Jun 2019 11:57:12 +0530
+Message-Id: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-06-19, 15:59, Sameer Pujar wrote:
+dpu encoder spinlock should be initialized during dpu encoder
+init instead of dpu encoder setup which is part of commit.
+There are chances that vblank control uses the uninitialized
+spinlock if not initialized during encoder init.
 
-> > > > So can you explain me what is the difference here that the peripheral
-> > > > cannot configure and use burst size with passing fifo depth?
-> > > Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as 8
-> > > WORDS.
-> > > ADMAIF does not push data to AHUB(operation [2]) till threshold of 16 WORDS
-> > > is
-> > > reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the
-> > > threshold.
-> > > As mentioned earlier, threshold here is to just indicate when data transfer
-> > > can happen
-> > > to AHUB modules.
-> > So we have ADMA and AHUB and peripheral. You are talking to AHUB and that
-> > is _not_ peripheral and if I have guess right the fifo depth is for AHUB
-> > right?
-> Yes the communication is between ADMA and AHUB. ADMAIF is the interface
-> between
-> ADMA and AHUB. ADMA channel sending data to AHUB pairs with ADMAIF TX
-> channel.
-> Similary ADMA channel receiving data from AHUB pairs with ADMAIF RX channel.
-> FIFO DEPTH we are talking is about each ADMAIF TX/RX channel and it is
-> configurable.
-> DMA transfers happen to/from ADMAIF FIFOs and whenever data(per WORD) is
-> popped/pushed
-> out of ADMAIF to/from AHUB, asseration is made to ADMA. ADMA keeps counters
-> based on
-> these assertions. By knowing FIFO DEPTH and these counters, ADMA knows when
-> to wait or
-> when to transfer data.
+Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
+Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Where does ADMAIF driver reside in kernel, who configures it for normal
-dma txns..?
-
-Also it wold have helped the long discussion if that part was made clear
-rather than talking about peripheral all this time :(
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 5f085b5..22938c7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
+ 	if (ret)
+ 		goto fail;
+ 
+-	spin_lock_init(&dpu_enc->enc_spinlock);
+-
+ 	atomic_set(&dpu_enc->frame_done_timeout, 0);
+ 	timer_setup(&dpu_enc->frame_done_timer,
+ 			dpu_encoder_frame_done_timeout, 0);
+@@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
+ 
+ 	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
+ 
++	spin_lock_init(&dpu_enc->enc_spinlock);
+ 	dpu_enc->enabled = false;
+ 
+ 	return &dpu_enc->base;
 -- 
-~Vinod
+1.9.1
+
