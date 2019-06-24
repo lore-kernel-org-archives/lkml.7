@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A07C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3E2C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F371920679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3F1208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfFXJ4Q (ORCPT
+        id S1728669AbfFXJ4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:56:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:44856 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 05:56:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:44878 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbfFXJ4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:56:13 -0400
+        id S1728638AbfFXJ4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:56:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4960EC0A;
-        Mon, 24 Jun 2019 02:56:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1816EC28;
+        Mon, 24 Jun 2019 02:56:15 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B2753F71E;
-        Mon, 24 Jun 2019 02:56:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9B163F71E;
+        Mon, 24 Jun 2019 02:56:13 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, julien.thierry@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC V3 01/18] objtool: Add abstraction for computation of symbols offsets
-Date:   Mon, 24 Jun 2019 10:55:31 +0100
-Message-Id: <20190624095548.8578-2-raphael.gault@arm.com>
+Subject: [RFC V3 03/18] objtool: Move registers and control flow to arch-dependent code
+Date:   Mon, 24 Jun 2019 10:55:33 +0100
+Message-Id: <20190624095548.8578-4-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190624095548.8578-1-raphael.gault@arm.com>
 References: <20190624095548.8578-1-raphael.gault@arm.com>
@@ -41,117 +41,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The jump destination and relocation offset used previously are only
-reliable on x86_64 architecture. We abstract these computations by calling
-arch-dependent implementations.
+The control flow information and register macro definitions were based on
+the x86_64 architecture but should be abstract so that each architecture
+can define the correct values for the registers, especially the registers
+related to the stack frame (Frame Pointer, Stack Pointer and possibly
+Return Address).
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- tools/objtool/arch.h            |  6 ++++++
- tools/objtool/arch/x86/decode.c | 11 +++++++++++
- tools/objtool/check.c           | 15 ++++++++++-----
- 3 files changed, 27 insertions(+), 5 deletions(-)
+ tools/objtool/arch/x86/include/arch_special.h | 36 +++++++++++++++++++
+ tools/objtool/{ => arch/x86/include}/cfi.h    |  0
+ tools/objtool/check.h                         |  1 +
+ tools/objtool/special.c                       | 19 +---------
+ 4 files changed, 38 insertions(+), 18 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+ rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index 580e344db3dd..2a38a834cf40 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -64,6 +64,8 @@ struct stack_op {
- 	struct op_src src;
- };
- 
-+struct instruction;
+diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
+new file mode 100644
+index 000000000000..424ce47013e3
+--- /dev/null
++++ b/tools/objtool/arch/x86/include/arch_special.h
+@@ -0,0 +1,36 @@
++/*
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++#ifndef _X86_ARCH_SPECIAL_H
++#define _X86_ARCH_SPECIAL_H
 +
- void arch_initial_func_cfi_state(struct cfi_state *state);
- 
- int arch_decode_instruction(struct elf *elf, struct section *sec,
-@@ -73,4 +75,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 
- bool arch_callee_saved_reg(unsigned char reg);
- 
-+unsigned long arch_jump_destination(struct instruction *insn);
++#define EX_ENTRY_SIZE		12
++#define EX_ORIG_OFFSET		0
++#define EX_NEW_OFFSET		4
 +
-+unsigned long arch_dest_rela_offset(int addend);
++#define JUMP_ENTRY_SIZE		16
++#define JUMP_ORIG_OFFSET	0
++#define JUMP_NEW_OFFSET		4
 +
- #endif /* _ARCH_H */
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 584568f27a83..8767ee935c47 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
++#define ALT_ENTRY_SIZE		13
++#define ALT_ORIG_OFFSET		0
++#define ALT_NEW_OFFSET		4
++#define ALT_FEATURE_OFFSET	8
++#define ALT_ORIG_LEN_OFFSET	10
++#define ALT_NEW_LEN_OFFSET	11
++
++#define X86_FEATURE_POPCNT (4 * 32 + 23)
++#define X86_FEATURE_SMAP   (9 * 32 + 20)
++
++#endif /* _X86_ARCH_SPECIAL_H */
+diff --git a/tools/objtool/cfi.h b/tools/objtool/arch/x86/include/cfi.h
+similarity index 100%
+rename from tools/objtool/cfi.h
+rename to tools/objtool/arch/x86/include/cfi.h
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index cb60b9acf5cf..c44f9fe40178 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
 @@ -11,6 +11,7 @@
- #include "lib/inat.c"
- #include "lib/insn.c"
+ #include "cfi.h"
+ #include "arch.h"
+ #include "orc.h"
++#include "arch_special.h"
+ #include <linux/hashtable.h>
  
-+#include "../../check.h"
- #include "../../elf.h"
- #include "../../arch.h"
- #include "../../warn.h"
-@@ -66,6 +67,11 @@ bool arch_callee_saved_reg(unsigned char reg)
- 	}
- }
+ struct insn_state {
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index fdbaa611146d..b8ccee1b5382 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -14,24 +14,7 @@
+ #include "builtin.h"
+ #include "special.h"
+ #include "warn.h"
+-
+-#define EX_ENTRY_SIZE		12
+-#define EX_ORIG_OFFSET		0
+-#define EX_NEW_OFFSET		4
+-
+-#define JUMP_ENTRY_SIZE		16
+-#define JUMP_ORIG_OFFSET	0
+-#define JUMP_NEW_OFFSET		4
+-
+-#define ALT_ENTRY_SIZE		13
+-#define ALT_ORIG_OFFSET		0
+-#define ALT_NEW_OFFSET		4
+-#define ALT_FEATURE_OFFSET	8
+-#define ALT_ORIG_LEN_OFFSET	10
+-#define ALT_NEW_LEN_OFFSET	11
+-
+-#define X86_FEATURE_POPCNT (4*32+23)
+-#define X86_FEATURE_SMAP   (9*32+20)
++#include "arch_special.h"
  
-+unsigned long arch_dest_rela_offset(int addend)
-+{
-+	return addend + 4;
-+}
-+
- int arch_decode_instruction(struct elf *elf, struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, unsigned char *type,
-@@ -497,3 +503,8 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
- 	state->regs[16].base = CFI_CFA;
- 	state->regs[16].offset = -8;
- }
-+
-+unsigned long arch_jump_destination(struct instruction *insn)
-+{
-+	return insn->offset + insn->len + insn->immediate;
-+}
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..b37ca4822f25 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -565,7 +565,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 					       insn->len);
- 		if (!rela) {
- 			dest_sec = insn->sec;
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 		} else if (rela->sym->type == STT_SECTION) {
- 			dest_sec = rela->sym->sec;
- 			dest_off = rela->addend + 4;
-@@ -659,7 +659,7 @@ static int add_call_destinations(struct objtool_file *file)
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
- 					       insn->len);
- 		if (!rela) {
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 			insn->call_dest = find_symbol_by_offset(insn->sec,
- 								dest_off);
- 
-@@ -672,14 +672,19 @@ static int add_call_destinations(struct objtool_file *file)
- 			}
- 
- 		} else if (rela->sym->type == STT_SECTION) {
-+			/*
-+			 * the original x86_64 code adds 4 to the rela->addend
-+			 * which is not needed on arm64 architecture.
-+			 */
-+			dest_off = arch_dest_rela_offset(rela->addend);
- 			insn->call_dest = find_symbol_by_offset(rela->sym->sec,
--								rela->addend+4);
-+								dest_off);
- 			if (!insn->call_dest ||
- 			    insn->call_dest->type != STT_FUNC) {
--				WARN_FUNC("can't find call dest symbol at %s+0x%x",
-+				WARN_FUNC("can't find call dest symbol at %s+0x%lx",
- 					  insn->sec, insn->offset,
- 					  rela->sym->sec->name,
--					  rela->addend + 4);
-+					  dest_off);
- 				return -1;
- 			}
- 		} else
+ struct special_entry {
+ 	const char *sec;
 -- 
 2.17.1
 
