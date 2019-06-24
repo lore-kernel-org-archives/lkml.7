@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC094C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB8EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0D2205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039A3208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370929;
-	bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
+	s=default; t=1561370933;
+	bh=qb+qcaHSrHlJXAR8Vf66Py3T3iA5GpCBCPiviglifFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GmRsv1Zxj6Q77Afpzq+3xudOH1GpXCf+gWaTnIwrc2SDWLFRhn77bvXiUStw7hWWU
-	 wDHaojgt+ISOaWRkmLtQWd5R/yYi2sogtDr21AsZl7AMK+7i8CItda7U/jWNMguDiB
-	 581zFPjAq6qjM36kWHxkK0NI4nNXXHPRWNykvbvw=
+	b=uUqvmJW7sDCj0jD9oEA+1ndZ9HbH0sX0yzwOUvG090TTgSaYq7ngEkHxVa3kRW5Y3
+	 VBkwKv3ZBMUZKiVcpN90BeVOl95f0iWHRdCxlv/0VSkxAyJW2Ae7SPJW9VwBSmJqYi
+	 ncJ2twLjDEm0a/COjn1Yg4KDeXDyqexB3dWyWWLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfFXKIs (ORCPT
+        id S1730550AbfFXKIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42250 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730467AbfFXKIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:34 -0400
+        id S1730117AbfFXKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:39 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D51A205C9;
-        Mon, 24 Jun 2019 10:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CC97205C9;
+        Mon, 24 Jun 2019 10:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370913;
-        bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
+        s=default; t=1561370918;
+        bh=qb+qcaHSrHlJXAR8Vf66Py3T3iA5GpCBCPiviglifFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrKhmAKFW3xKZqUKp1ITmbKk5azM+mBeN88tjl+G/1vNZGY3Gf1/TVr6+zuTc/lzS
-         It2Xj/PJptbJrHoIBjBTgZid0Ur6OJywBAzArgTbnmEqfasVe5KwMJA2Q2Nd/Kf0+G
-         F9GtBYIJxtWgU8/AfZtTX7Csdt4bOS/5VF6BSV9I=
+        b=1+Zy+KBfSJuzL+75ksa+UV9Mk83iMwa1E/Zolejq1eMpzZ3bKkMdK9sz/jtQNr7IN
+         YrxDNV3kCGMP2DdDZatSIY7P5F/My6G1AiMTkKSOOl7wflno877QQxlLEGcsQf1isD
+         eM6Vx7Gs4cq8gCO8i6LfbN/ZYsqbRH/g+crevE/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 048/121] parisc: Fix compiler warnings in float emulation code
-Date:   Mon, 24 Jun 2019 17:56:20 +0800
-Message-Id: <20190624092323.217985926@linuxfoundation.org>
+Subject: [PATCH 5.1 050/121] IB/rdmavt: Fix alloc_qpn() WARN_ON()
+Date:   Mon, 24 Jun 2019 17:56:22 +0800
+Message-Id: <20190624092323.305090738@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,48 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6b98d9134e14f5ef4bcf64b27eedf484ed19a1ec ]
+[ Upstream commit 2abae62a26a265129b364d8c1ef3be55e2c01309 ]
 
-Avoid such compiler warnings:
-arch/parisc/math-emu/cnv_float.h:71:27: warning: ‘<<’ in boolean context, did you mean ‘<’ ? [-Wint-in-bool-context]
-     ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
-arch/parisc/math-emu/fcnvxf.c:257:6: note: in expansion of macro ‘Dint_isinexact_to_sgl’
-  if (Dint_isinexact_to_sgl(srcp1,srcp2)) {
+The qpn allocation logic has a WARN_ON() that intends to detect the use of
+an index that will introduce bits in the lower order bits of the QOS bits
+in the QPN.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Unfortunately, it has the following bugs:
+- it misfires when wrapping QPN allocation for non-QOS
+- it doesn't correctly detect low order QOS bits (despite the comment)
+
+The WARN_ON() should not be applied to non-QOS (qos_shift == 1).
+
+Additionally, it SHOULD test the qpn bits per the table below:
+
+2 data VLs:   [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0,   0, sc0],  qp bit 1 always 0*
+3-4 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0, sc1, sc0], qp bits [21] always 0
+5-8 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0, sc2, sc1, sc0] qp bits [321] always 0
+
+Fix by qualifying the warning for qos_shift > 1 and producing the correct
+mask to insure the above bits are zero without generating a superfluous
+warning.
+
+Fixes: 501edc42446e ("IB/rdmavt: Correct warning during QPN allocation")
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/math-emu/cnv_float.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rdmavt/qp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/parisc/math-emu/cnv_float.h b/arch/parisc/math-emu/cnv_float.h
-index 933423fa5144..b0db61188a61 100644
---- a/arch/parisc/math-emu/cnv_float.h
-+++ b/arch/parisc/math-emu/cnv_float.h
-@@ -60,19 +60,19 @@
-     ((exponent < (SGL_P - 1)) ?				\
-      (Sall(sgl_value) << (SGL_EXP_LENGTH + 1 + exponent)) : FALSE)
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index a34b9a2a32b6..a77436ee5ff7 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -594,7 +594,8 @@ static int alloc_qpn(struct rvt_dev_info *rdi, struct rvt_qpn_table *qpt,
+ 			offset = qpt->incr | ((offset & 1) ^ 1);
+ 		}
+ 		/* there can be no set bits in low-order QoS bits */
+-		WARN_ON(offset & (BIT(rdi->dparms.qos_shift) - 1));
++		WARN_ON(rdi->dparms.qos_shift > 1 &&
++			offset & ((BIT(rdi->dparms.qos_shift - 1) - 1) << 1));
+ 		qpn = mk_qpn(qpt, map, offset);
+ 	}
  
--#define Int_isinexact_to_sgl(int_value)	(int_value << 33 - SGL_EXP_LENGTH)
-+#define Int_isinexact_to_sgl(int_value)	((int_value << 33 - SGL_EXP_LENGTH) != 0)
- 
- #define Sgl_roundnearest_from_int(int_value,sgl_value)			\
-     if (int_value & 1<<(SGL_EXP_LENGTH - 2))   /* round bit */		\
--    	if ((int_value << 34 - SGL_EXP_LENGTH) || Slow(sgl_value))	\
-+	if (((int_value << 34 - SGL_EXP_LENGTH) != 0) || Slow(sgl_value)) \
- 		Sall(sgl_value)++
- 
- #define Dint_isinexact_to_sgl(dint_valueA,dint_valueB)		\
--    ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
-+    (((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) != 0) || Dintp2(dint_valueB))
- 
- #define Sgl_roundnearest_from_dint(dint_valueA,dint_valueB,sgl_value)	\
-     if (Dintp1(dint_valueA) & 1<<(SGL_EXP_LENGTH - 2)) 			\
--    	if ((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) ||		\
-+	if (((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) != 0) ||	\
-     	Dintp2(dint_valueB) || Slow(sgl_value)) Sall(sgl_value)++
- 
- #define Dint_isinexact_to_dbl(dint_value) 	\
 -- 
 2.20.1
 
