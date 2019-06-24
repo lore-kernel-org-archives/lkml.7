@@ -2,195 +2,158 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0261C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935E1C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850D820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6953820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nMVpZ6t6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gYX5m4GJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbfFXPwR (ORCPT
+        id S1731347AbfFXPwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:52:17 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45109 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbfFXPwQ (ORCPT
+        Mon, 24 Jun 2019 11:52:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39805 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbfFXPwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:52:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s22so10084654qkj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:52:15 -0700 (PDT)
+        Mon, 24 Jun 2019 11:52:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id r185so1874200iod.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Px55vsxlWUa+5ZAUavHWxhk2yXQs9ETqoP8b6WxOkms=;
-        b=nMVpZ6t6yvkRI8JTB2fGMerawDsRhL0/iqvwIvHdoVXopMnMqU5PI/pn1syMvLqGms
-         Rw2EcKCOL3MuPgQ97OgUvIP4Ut8lxtGkmBXc55ysvSxoamyi1P4HLcsx39d+QMyY81xQ
-         2PQDgpcf2DGfbHVXO4YLvpkFB0G8WZeBEyQNI=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DkjGLeZUAfuY8DZSj9f0m0KvGyff5YQvvo5e4Golg5M=;
+        b=gYX5m4GJ4yG/mZPswVx6eRxlw7sAVUkNCN3Im8k3dSk2ZoWzwKuaMutdF4FxdpsAMl
+         Zisq3TVygA6ypft7AGBN0IZUIWpMNe4a/ppsQoSLpIDVm8jjP1DM0PWWwRhJvkfe+k25
+         9tWdTjW/puS4CwqKDjHjO5U5J4aCyt1HB2Myw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Px55vsxlWUa+5ZAUavHWxhk2yXQs9ETqoP8b6WxOkms=;
-        b=Bbk/Uh9X2J5VDbMrUPT5/thkaJbcy+MTiZWW3toBIWW5p865RxumNUrbgeLDcn6rmc
-         nIot73xnZk3djpyCQJ5qiMTr1KU3A1p0mPrUr1OSsiF7tmsQ0kqnedKWaIKZ5rHlo5s5
-         vxEhASkKXhGAjqmsbTlcz9ynBN1maulkg/FCvLdtDbQx7qpMMHr2vOGIU257HS9Dl5W1
-         WQes1z9w0FVYshdNkMa20Q/Lxs/XY7AKj1XU+19JlETZJWA5BzfDfpfbcAumIdF9aRxY
-         +YyceX1dxIS6MpUvyeEYv2CX5K6xfh+aCApNjiYfIiiXtP/6WOg5l2FvGn7B5h7fSLyE
-         LI8Q==
-X-Gm-Message-State: APjAAAVhnm1j7gTufiWYNqAgs2CuX2zdaTKfX5SIXh0yBaolT3xA0fRm
-        EQtMEkBLrLXIy2w18jrR87KYig==
-X-Google-Smtp-Source: APXvYqz62x1HJVduMVLToA+9rhh8i9WHHNxECpdrbrsdb/x4cV/E3lswnR5g/BIEwSHX7AR5Oxy1Rg==
-X-Received: by 2002:a37:ac14:: with SMTP id e20mr120205143qkm.243.1561391535368;
-        Mon, 24 Jun 2019 08:52:15 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k58sm7173879qtc.38.2019.06.24.08.52.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 08:52:14 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:52:13 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>, Jessica Yu <jeyu@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, jikos@kernel.org,
-        mbenes@suse.cz, Petr Mladek <pmladek@suse.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robert Richter <rric@kernel.org>,
-        rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        paulmck <paulmck@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        oprofile-list@lists.sf.net, netdev <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 2/3] module: Fix up module_notifier return values.
-Message-ID: <20190624155213.GB261936@google.com>
-References: <20190624091843.859714294@infradead.org>
- <20190624092109.805742823@infradead.org>
- <320564860.243.1561384864186.JavaMail.zimbra@efficios.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DkjGLeZUAfuY8DZSj9f0m0KvGyff5YQvvo5e4Golg5M=;
+        b=MKxOE5HcbdHahhtNlT7SE5VxXGHnZ3AAyJ1QxvYUgNjvEF5TdFpQrU1slXCrYjfNVB
+         8ix5qk43aVxF7onkUY1v4Fe0H/vBX/bten2iqpNjxWFnrAYgy1FDuaRvt57gqwxPFTGH
+         aiel2hJkvlUEXakiJ785q0mikhBHmXcvoA4HE0qfG5D/ps2KOm914/CsvI+nhaXaCW6e
+         UY9dzlbRWSSd7IMcAEVxeb5HgQwA+ARJTgBbv3STNgNFMzYQQtiv7MD9DxpQTuPXBSDr
+         WDYvkww2iJxiCY+KBcfn+92Ov5JpThfD6wQMpiekDbO36ia8DbnEFwiaob07OO78E98k
+         KG/Q==
+X-Gm-Message-State: APjAAAUMNC+6fPiLACuZCuXMxinqZ6fW19Wm/A3Wwwe2E1E1Xsqp3acS
+        FevEwrx6Ig3mf2mG71fXitoTgoV+MLM=
+X-Google-Smtp-Source: APXvYqyApYU+AP1vyw81yh9RAKkuBDH/F1y4MWzsNk6ijJK2Y4JWkJaWoYG2of8+Jque8izQt8mOgg==
+X-Received: by 2002:a6b:7606:: with SMTP id g6mr1343652iom.288.1561391574473;
+        Mon, 24 Jun 2019 08:52:54 -0700 (PDT)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
+        by smtp.gmail.com with ESMTPSA id p25sm13590439iol.48.2019.06.24.08.52.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 08:52:53 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id e3so2715910ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:52:52 -0700 (PDT)
+X-Received: by 2002:a5e:c241:: with SMTP id w1mr39732767iop.58.1561391572659;
+ Mon, 24 Jun 2019 08:52:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <320564860.243.1561384864186.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
+In-Reply-To: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 24 Jun 2019 08:52:40 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XE=rdqUhFD-5ZynhfgkDXN4HNs=JcKgLiqeN3Aapnj9w@mail.gmail.com>
+Message-ID: <CAD=FV=XE=rdqUhFD-5ZynhfgkDXN4HNs=JcKgLiqeN3Aapnj9w@mail.gmail.com>
+Subject: Re: [PATCH v1] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling delay
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Kishon Vijay Abraham <kishon@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:01:04AM -0400, Mathieu Desnoyers wrote:
-> ----- On Jun 24, 2019, at 5:18 AM, Peter Zijlstra peterz@infradead.org wrote:
-> 
-> > While auditing all module notifiers I noticed a whole bunch of fail
-> > wrt the return value. Notifiers have a 'special' return semantics.
-> > 
-> > Cc: Robert Richter <rric@kernel.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > Cc: Martin KaFai Lau <kafai@fb.com>
-> > Cc: Song Liu <songliubraving@fb.com>
-> > Cc: Yonghong Song <yhs@fb.com>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: oprofile-list@lists.sf.net
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Cc: bpf@vger.kernel.org
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Thanks Peter for looking into this, especially considering your
-> endless love for kernel modules! ;)
-> 
-> It's not directly related to your changes, but I notice that
-> kernel/trace/trace_printk.c:hold_module_trace_bprintk_format()
-> appears to leak memory. Am I missing something ?
+Hi,
 
-Could you elaborate? Do you mean there is no MODULE_STATE_GOING notifier
-check? If that's what you mean then I agree, there should be some place
-where the format structures are freed when the module is unloaded no?
+On Thu, Jun 13, 2019 at 8:28 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> readl_poll_timeout() calls usleep_range() to sleep between reads.
+> usleep_range() doesn't work efficiently for tiny values.
+>
+> Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
+> with the delay in qcom_qmp_phy_com_init().
+>
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> Vivek, do you remember why you didn't use the same delay value in
+> qcom_qmp_phy_enable) and qcom_qmp_phy_com_init() ?
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index bb522b915fa9..34ff6434da8f 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1548,7 +1548,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>         status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>         mask = cfg->mask_pcs_ready;
+>
+> -       ret = readl_poll_timeout(status, val, val & mask, 1,
+> +       ret = readl_poll_timeout(status, val, val & mask, 10,
+>                                  PHY_INIT_COMPLETE_TIMEOUT);
 
-> 
-> With respect to your changes:
-> Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+I would agree that the existing code is almost certainly wrong, since,
+as you said, trying to sleep for 1 us is likely pointless.  I quickly
+coded up a test and ran it on sdm845-cheza.  It looked like this:
 
-Looks good to me too.
+--
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+  ktime_t a, b, c;
 
-Could we CC stable so that the fix is propagated to older kernels?
+  a = ktime_get();
+  b = ktime_get();
+  usleep_range(1, 1);
+  c = ktime_get();
 
-thanks,
+  pr_info("DOUG: %d ns, %d ns\n", (int)ktime_to_ns(ktime_sub(b, a)),
+          (int)ktime_to_ns(ktime_sub(c, b)));
 
- - Joel
+--
 
+At bootup I got:
 
-> I have a similar erroneous module notifier return value pattern
-> in lttng-modules as well. I'll go fix it right away. CCing
-> Frank Eigler from SystemTAP which AFAIK use a copy of
-> lttng-tracepoint.c in their project, which should be fixed
-> as well. I'm pasting the lttng-modules fix below.
-> 
-> Thanks!
-> 
-> Mathieu
-> 
-> --
-> 
-> commit 5eac9d146a7d947f0f314c4f7103c92cbccaeaf3
-> Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Date:   Mon Jun 24 09:43:45 2019 -0400
-> 
->     Fix: lttng-tracepoint module notifier should return NOTIFY_OK
->     
->     Module notifiers should return NOTIFY_OK on success rather than the
->     value 0. The return value 0 does not seem to have any ill side-effects
->     in the notifier chain caller, but it is preferable to respect the API
->     requirements in case this changes in the future.
->     
->     Notifiers can encapsulate a negative errno value with
->     notifier_from_errno(), but this is not needed by the LTTng tracepoint
->     notifier.
->     
->     The approach taken in this notifier is to just print a console warning
->     on error, because tracing failure should not prevent loading a module.
->     So we definitely do not want to stop notifier iteration. Returning
->     an error without stopping iteration is not really that useful, because
->     only the return value of the last callback is returned to notifier chain
->     caller.
->     
->     Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> 
-> diff --git a/lttng-tracepoint.c b/lttng-tracepoint.c
-> index bbb2c7a4..8298b397 100644
-> --- a/lttng-tracepoint.c
-> +++ b/lttng-tracepoint.c
-> @@ -256,7 +256,7 @@ int lttng_tracepoint_coming(struct tp_module *tp_mod)
->                 }
->         }
->         mutex_unlock(&lttng_tracepoint_mutex);
-> -       return 0;
-> +       return NOTIFY_OK;
->  }
->  
->  static
-> 
-> 
-> -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+[    4.121247] DOUG: 52 ns, 9479 ns
+[    4.144990] DOUG: 52 ns, 9636 ns
+[    4.328168] DOUG: 0 ns, 11667 ns
+[    4.332659] DOUG: 52 ns, 7136 ns
+[    4.358833] DOUG: 0 ns, 6666 ns
+[    4.362095] DOUG: 52 ns, 8229 ns
+
+So basically the existing code is already waiting 5-10 us between
+polls but it's spending all of that time context switching.  Changing
+the above to:
+
+  usleep_range(5, 10);
+
+Give me instead:
+
+[    4.120781] DOUG: 52 ns, 16927 ns
+[    4.144626] DOUG: 53 ns, 17447 ns
+[    4.327932] DOUG: 52 ns, 11302 ns
+[    4.332501] DOUG: 0 ns, 7395 ns
+[    4.357912] DOUG: 0 ns, 6823 ns
+[    4.361175] DOUG: 52 ns, 9063 ns
+
+...and that seems fine to me.
+
+--
+
+Thus:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
