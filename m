@@ -2,127 +2,154 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49707C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801DEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B30720673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA1920665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbfFXQjy (ORCPT
+        id S1732177AbfFXQlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:39:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56448 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727182AbfFXQjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:39:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7E4A5AE5E;
-        Mon, 24 Jun 2019 16:39:52 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 3FFA11E2F23; Mon, 24 Jun 2019 18:39:52 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 18:39:52 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 1/9] cgroup, blkcg: Prepare some symbols for module and
- !CONFIG_CGROUP usages
-Message-ID: <20190624163952.GM32376@quack2.suse.cz>
-References: <20190615182453.843275-1-tj@kernel.org>
- <20190615182453.843275-2-tj@kernel.org>
+        Mon, 24 Jun 2019 12:41:20 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37530 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfFXQlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:41:19 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d15so10238206qkl.4;
+        Mon, 24 Jun 2019 09:41:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UdA6Y6qkEPNcox/R4AD5p5PdgoW5IX8dJGvSgmjWmkg=;
+        b=JhxxntTYearder/a/p+OquDHNuX8jeZ9N2/zYjAaTHici1QdHNF3fXDeq+Qdy/ZELO
+         L28sxhlC4z73NiXjlOsmiGjIcgJxbK/4MBgu38/p6eIT5eTdF9nzIA6jlWhEF3TifzWE
+         LK70Fmoxgz0yWkXHzS4INQEof6R+A2BE9JX8Y2uvjVqkexfMaMendyllHIMS7k6eYaPp
+         QEp1Qa1KoKtTbyeCKaGp5HLl1TP2iS+haRKQkqIsq453Arb2D/ifMTObojJlN5VzUNSi
+         GJQzL2MnimDz+k/Wkv9t6LoyanZlY3neCtq5cmbLIOUFpPUiiIXyQK0hxYBDw/0YTI43
+         XuQw==
+X-Gm-Message-State: APjAAAWs0IPTFOKO2up/cHi5MamuliTC1GqqtjYWAFnZBg3hOJKTuiKm
+        F2r/jeRQD2cVK3ykHHr8HKL3ZQgvbjepAP95O54=
+X-Google-Smtp-Source: APXvYqx9IXxZ67+F4onDygsWo++RwTBrZyAF3TvR7CC3NoZfdYBTRnVe65OvdwgLfjKt586ottXwhlgpI1RplTtFttg=
+X-Received: by 2002:a05:620a:12db:: with SMTP id e27mr111628534qkl.352.1561394477622;
+ Mon, 24 Jun 2019 09:41:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190615182453.843275-2-tj@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+ <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+ <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+ <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+ <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+ <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+ <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+ <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
+In-Reply-To: <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 24 Jun 2019 18:40:57 +0200
+Message-ID: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Alex Elder <elder@linaro.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 15-06-19 11:24:45, Tejun Heo wrote:
-> btrfs is going to use css_put() and wbc helpers to improve cgroup
-> writeback support.  Add dummy css_get() definition and export wbc
-> helpers to prepare for module and !CONFIG_CGROUP builds.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
+On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
+> On 6/18/19 2:03 PM, Johannes Berg wrote:
+>
+> > Really there are two possible ways (and they intersect to some extent).
+> >
+> > One is the whole multi-function device, where a single WWAN device is
+> > composed of channels offered by actually different drivers, e.g. for a
+> > typical USB device you might have something like cdc_ether and the
+> > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+> > similarly, e.g. by using the underlying USB device "struct device"
+> > pointer to tie it together.
+>
+> I *think* this model makes the most sense.  But at this point
+> it would take very little to convince me otherwise...  (And then
+> I saw Arnd's message advocating the other one, unfortunately...)
+>
+> > The other is something like IPA or the Intel modem driver, where the
+> > device is actually a single (e.g. PCIe) device and just has a single
+> > driver, but that single driver offers different channels.
+>
+> What I don't like about this is that it's more monolithic.  It
+> seems better to have the low-level IPA or Intel modem driver (or
+> any other driver that can support communication between the AP
+> and WWAN device) present communication paths that other function-
+> specific drivers can attach to and use.
 
-Looks good to me. You can add:
+I did not understand Johannes description as two competing models
+for the same code, but rather two kinds of existing hardware that
+a new driver system would have to deal with.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+I was trying to simplify it to just having the second model, by adding
+a hack to support the first, but my view was rather unpopular so
+far, so if everyone agrees on one way to do it, don't worry about me ;-)
 
-								Honza
+> > Now, it's not clear to me where IPA actually falls, because so far we've
+> > been talking about the IPA driver only as providing *netdevs*, not any
+> > control channels, so I'm not actually sure where the control channel is.
+>
+> There is user space code that handles all of this, and as far as I
+> can tell, parts of it will always remain proprietary.
 
-> ---
->  block/blk-cgroup.c     | 1 +
->  fs/fs-writeback.c      | 3 +++
->  include/linux/cgroup.h | 1 +
->  3 files changed, 5 insertions(+)
-> 
-> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> index 617a2b3f7582..07600d3c9520 100644
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -46,6 +46,7 @@ struct blkcg blkcg_root;
->  EXPORT_SYMBOL_GPL(blkcg_root);
->  
->  struct cgroup_subsys_state * const blkcg_root_css = &blkcg_root.css;
-> +EXPORT_SYMBOL_GPL(blkcg_root_css);
->  
->  static struct blkcg_policy *blkcg_policy[BLKCG_MAX_POLS];
->  
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 36855c1f8daf..c29cff345b1f 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -269,6 +269,7 @@ void __inode_attach_wb(struct inode *inode, struct page *page)
->  	if (unlikely(cmpxchg(&inode->i_wb, NULL, wb)))
->  		wb_put(wb);
->  }
-> +EXPORT_SYMBOL_GPL(__inode_attach_wb);
->  
->  /**
->   * locked_inode_to_wb_and_lock_list - determine a locked inode's wb and lock it
-> @@ -580,6 +581,7 @@ void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
->  	if (unlikely(wb_dying(wbc->wb)))
->  		inode_switch_wbs(inode, wbc->wb_id);
->  }
-> +EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
->  
->  /**
->   * wbc_detach_inode - disassociate wbc from inode and perform foreign detection
-> @@ -699,6 +701,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
->  	wb_put(wbc->wb);
->  	wbc->wb = NULL;
->  }
-> +EXPORT_SYMBOL_GPL(wbc_detach_inode);
->  
->  /**
->   * wbc_account_io - account IO issued during writeback
-> diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-> index 81f58b4a5418..4cb5d5646986 100644
-> --- a/include/linux/cgroup.h
-> +++ b/include/linux/cgroup.h
-> @@ -687,6 +687,7 @@ void cgroup_path_from_kernfs_id(const union kernfs_node_id *id,
->  struct cgroup_subsys_state;
->  struct cgroup;
->  
-> +static inline void css_get(struct cgroup_subsys_state *css) {}
->  static inline void css_put(struct cgroup_subsys_state *css) {}
->  static inline int cgroup_attach_task_all(struct task_struct *from,
->  					 struct task_struct *t) { return 0; }
-> -- 
-> 2.17.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Two replies on this:
+
+- to answer Johannes question, my understanding is that the interface
+  between kernel and firmware/hardware for IPA has a single 'struct
+  device' that is used for both the data and the control channels,
+  rather than having a data channel and an independent control device,
+  so this falls into the same category as the Intel one (please correct
+  me on that)
+
+- The user space being proprietary is exactly what we need to avoid
+  with the wwan subsystem. We need to be able to use the same
+  method for setting up Intel, Qualcomm, Samsung, Unisoc or
+  Hisilicon modems or anything else that hooks into the subsystem,
+  and support that in network manager as well as the Android
+  equivalent.
+  If Qualcomm wants to provide their own proprietary user space
+  solution, we can't stop them, but then that should also work on
+  all the others unless they intentionally break it. ;-)
+
+> > and simply require that the channel is attached to the wwan device with
+> > the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
+> > ...).
+>
+> Or maybe have the WWAN device present interfaces with attributes,
+> and have drivers that are appropriate for each interface attach
+> to only the ones they recognize they support.
+
+I think you both mean the same thing here, a structure with callback
+pointers that may or may not be filled by the driver depending on its
+capabilities.
+
+What we should try to avoid though is a way to add driver private
+interfaces that risk having multiple drivers create similar functionality
+in incompatible ways.
+
+        Arnd
