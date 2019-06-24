@@ -2,200 +2,133 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8337C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8686C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A347520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942DA20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFOczVFo"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="D2hxx5AG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfFXTA2 (ORCPT
+        id S1729841AbfFXTAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:00:28 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41216 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfFXTA1 (ORCPT
+        Mon, 24 Jun 2019 15:00:54 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:52242 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727014AbfFXTAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:00:27 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c11so10593082qkk.8;
-        Mon, 24 Jun 2019 12:00:26 -0700 (PDT)
+        Mon, 24 Jun 2019 15:00:54 -0400
+X-Greylist: delayed 13714 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 15:00:52 EDT
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OEwF7E011278;
+        Mon, 24 Jun 2019 11:11:46 -0400
+Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2059.outbound.protection.outlook.com [104.47.41.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2t9e37ecjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 11:11:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jLe9rsWPnlF5E8hqDCO/kSAryjkkZLhq+lQJt0LPNsM=;
-        b=cFOczVForZZ0SZUzzYOzAfpcG3WInUSHcvbb4qSoAWCggO67XYv3JHFiSUina2IauF
-         lxnZUyt3yQCuKxuxpg/mB4fR0I0u+O6SYuGInjQvp6INdWnuyI0y6AlzaVcdUxPcQFxt
-         ulFy3aBZAidsEm39HpWgXluE5Aegt5TOsUi8+PiOeAsjUjeLaGWV75LcscnSPVmbpaK+
-         Fu/D/LEUe34Q/BPRdJS8Ov9WpCpt4BdmlWUpnbZA1sbyqqjovoxLtXby9T/a9CiABEzq
-         Z46qn20dL+LR3GTH5UJHi6VoiwMRPhJU0UbxwZcdKvlBWavlo3Km6rCGB3+gc1ZHBw9L
-         IjVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jLe9rsWPnlF5E8hqDCO/kSAryjkkZLhq+lQJt0LPNsM=;
-        b=aYZ6cUX9u7djsljri6cEkt/hucQUOFoDPJ1xgj66baY3CV+5rbDPlr0DKWSFJiXoa0
-         RlBWJvB4QwULsFLtYrY6iXb7bbgzMGZtac09XH7FqqAwKVeUjrXqJnynBWV4IMTuOSUQ
-         K6vLErdSXq+v546dzFZLtc8KypbZp7yeKpRMqTYxjBYKMa4E7/pS/uWU/vCUhbXGIrpL
-         d3nvoET+HK6Wr6k3sh4F3F83b/ZAsml1AXwjRc+8vTmLCk3ylkSSLJ6hJotJXp3ghH5p
-         p8hhszx5KuBbJMSQelCqqCIkg9VOJ5z35Ewh/OKsL2M4/tJVqBtgNwf+bqVrt6EYy1Ub
-         4uqg==
-X-Gm-Message-State: APjAAAV7NEHh9msTDUai476xhLNOsEXzhHBZ+jOdUr6a2pWe6rLG6Vwp
-        Jhn7xOWcTUAjKZ4pZjKG/WY=
-X-Google-Smtp-Source: APXvYqxH1PPatDijts/eOpzI83A95Elb5STnJn33I/c01bWUEAHnudlt9D1Fy2HNQWV0ACtjkgbKiw==
-X-Received: by 2002:a37:a643:: with SMTP id p64mr103665746qke.36.1561402825968;
-        Mon, 24 Jun 2019 12:00:25 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id d199sm6062744qkg.116.2019.06.24.12.00.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 12:00:25 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F01D341153; Mon, 24 Jun 2019 16:00:09 -0300 (-03)
-Date:   Mon, 24 Jun 2019 16:00:09 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [PATCH] perf cs-etm: Improve completeness for kernel address
- space
-Message-ID: <20190624190009.GE4181@kernel.org>
-References: <20190617150024.11787-1-leo.yan@linaro.org>
- <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
- <20190620005829.GH24549@leoy-ThinkPad-X240s>
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w3/zpiXDFuWHWdfqeOJQsM73tB1qPBmjulD0aDXV9nQ=;
+ b=D2hxx5AGkji8pAPUE7YhVTAyt8MiDtdRi5tfzQzd3ftjElI2r8SOOAdtXjmAdYf+Ae9dOabfJApCs+SZSG26FxDS51fhGBDY3hXbUsow/KCTtWhFkPgUIwn6+mOkQKnmDEFgGBLX3kGmbx0tv6mn8tZEPaK0AsEDwhIy00WuCQM=
+Received: from MWHPR03CA0020.namprd03.prod.outlook.com (2603:10b6:300:117::30)
+ by BLUPR03MB549.namprd03.prod.outlook.com (2a01:111:e400:880::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13; Mon, 24 Jun
+ 2019 15:11:44 +0000
+Received: from SN1NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by MWHPR03CA0020.outlook.office365.com
+ (2603:10b6:300:117::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2008.16 via Frontend
+ Transport; Mon, 24 Jun 2019 15:11:44 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT063.mail.protection.outlook.com (10.152.72.213) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Mon, 24 Jun 2019 15:11:43 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5OFBfs5010081
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 24 Jun 2019 08:11:41 -0700
+Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Mon, 24 Jun 2019
+ 11:11:41 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stefan.popa@analog.com>
+Subject: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for clock-names
+Date:   Mon, 24 Jun 2019 18:11:37 +0300
+Message-ID: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620005829.GH24549@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(136003)(376002)(2980300002)(199004)(189003)(51416003)(4744005)(476003)(426003)(36756003)(2906002)(16586007)(126002)(50466002)(70586007)(2616005)(70206006)(186003)(5660300002)(336012)(106002)(110136005)(54906003)(44832011)(48376002)(486006)(316002)(6666004)(356004)(72206003)(478600001)(7416002)(7696005)(8936002)(4326008)(47776003)(8676002)(50226002)(7636002)(246002)(305945005)(77096007)(26005)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR03MB549;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 026178c4-5672-48af-b8c5-08d6f8b64485
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BLUPR03MB549;
+X-MS-TrafficTypeDiagnostic: BLUPR03MB549:
+X-Microsoft-Antispam-PRVS: <BLUPR03MB549A7F542545801DDB7DE9F9DE00@BLUPR03MB549.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
+X-Forefront-PRVS: 007814487B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: YrE5tGuUGmgHnSlaKpOJuTInXW/2YDLHVyi/hBkzGian0fU1eSJouVTAD2xlUFuLApq5cyIo+IYY3LH5hGcTKVxiOgjQntM9JU+mhDYDYaXyQqxeGPPpRKSe50CxDCg7GTO2dVA88fDBbAGuEvjpoB+xOvZLiTwXDXoKuYZBLpD3R7ooZ0q40qGCeLGKJSDknNjslPFT3C+mIM2hI4R34+vSVYWTQEoQs/PjdBRKlHtluOsPv8E+l3KWS88ZxFwxhpJZjeDwc8cY9MGk72QE6R33Jjpvk6Y+jt6wP4KKr22xR/38qLxDrbUE/rFqmVZybmQyN06uAjW2mIRaQ0mvLVwkzmh8+B/XTckgSg2Qo+Ri+T1vSS4pssZRH7oyxLJmvMKwVTq8UHiz+cdTfNWWK7cNzgj/4ytumMvOWkZ/khE=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 15:11:43.1900
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 026178c4-5672-48af-b8c5-08d6f8b64485
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR03MB549
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 20, 2019 at 08:58:29AM +0800, Leo Yan escreveu:
-> Hi Mathieu,
-> 
-> On Wed, Jun 19, 2019 at 11:49:44AM -0600, Mathieu Poirier wrote:
-> 
-> [...]
-> 
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 51dd00f65709..4776c2c1fb6d 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -418,6 +418,30 @@ ifdef CORESIGHT
-> > >      endif
-> > >      LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-> > >      EXTLIBS += $(OPENCSDLIBS)
-> > > +    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
-> > > +      # Extract info from lds:
-> > > +      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
-> > > +      # ARM64_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
-> > > +      ARM64_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
-> > > +        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
-> > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-> > > +        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
-> > > +    else
-> > > +      ARM64_PRE_START_SIZE := 0
-> > > +    endif
-> > > +    CFLAGS += -DARM64_PRE_START_SIZE="$(ARM64_PRE_START_SIZE)"
-> > > +    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
-> > > +      # Extract info from lds:
-> > > +      #   . = ((0xC0000000)) + 0x00208000;
-> > > +      # ARM_PRE_START_SIZE := 0x00208000
-> > > +      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
-> > > +        $(srctree)/arch/arm/kernel/vmlinux.lds | \
-> > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-> > > +        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
-> > > +    else
-> > > +      ARM_PRE_START_SIZE := 0
-> > > +    endif
-> > > +    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
-> > >      $(call detected,CONFIG_LIBOPENCSD)
-> > >      ifdef CSTRACE_RAW
-> > >        CFLAGS += -DCS_DEBUG_RAW
-> > > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > > index 0c7776b51045..ae831f836c70 100644
-> > > --- a/tools/perf/util/cs-etm.c
-> > > +++ b/tools/perf/util/cs-etm.c
-> > > @@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *session)
-> > >  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
-> > >  {
-> > >         struct machine *machine;
-> > > +       u64 fixup_kernel_start = 0;
-> > > +       const char *arch;
-> > >
-> > >         machine = etmq->etm->machine;
-> > > +       arch = perf_env__arch(machine->env);
-> > >
-> > > -       if (address >= etmq->etm->kernel_start) {
-> > > +       /*
-> > > +        * Since arm and arm64 specify some memory regions prior to
-> > > +        * 'kernel_start', kernel addresses can be less than 'kernel_start'.
-> > > +        *
-> > > +        * For arm architecture, the 16MB virtual memory space prior to
-> > > +        * 'kernel_start' is allocated to device modules, a PMD table if
-> > > +        * CONFIG_HIGHMEM is enabled and a PGD table.
-> > > +        *
-> > > +        * For arm64 architecture, the root PGD table, device module memory
-> > > +        * region and BPF jit region are prior to 'kernel_start'.
-> > > +        *
-> > > +        * To reflect the complete kernel address space, compensate these
-> > > +        * pre-defined regions for kernel start address.
-> > > +        */
-> > > +       if (!strcmp(arch, "arm64"))
-> > > +               fixup_kernel_start = etmq->etm->kernel_start -
-> > > +                                    ARM64_PRE_START_SIZE;
-> > > +       else if (!strcmp(arch, "arm"))
-> > > +               fixup_kernel_start = etmq->etm->kernel_start -
-> > > +                                    ARM_PRE_START_SIZE;
-> > 
-> > I will test your work but from a quick look wouldn't it be better to
-> > have a single define name here?  From looking at the modifications you
-> > did to Makefile.config there doesn't seem to be a reason to have two.
-> 
-> Thanks for suggestion.  I changed to use single define
-> ARM_PRE_START_SIZE and sent patch v2 [1].
-> 
-> If possible, please test patch v2.
-> 
-> Thanks,
-> Leo Yan
+Dt-schema can be used for clock-names property.
 
-So just for the record, I'm waiting for Mathieu on this one, i.e. for
-him to test/ack v3.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-- Arnaldo
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+index d7adf074..8a2a8f6 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -27,9 +27,8 @@ properties:
+     maxItems: 1
  
-> [1] https://lore.kernel.org/linux-arm-kernel/20190620005428.20883-1-leo.yan@linaro.org/T/#u
-> 
-> > > +
-> > > +       if (address >= fixup_kernel_start) {
-> > >                 if (machine__is_host(machine))
-> > >                         return PERF_RECORD_MISC_KERNEL;
-> > >                 else
-> > > --
-> > > 2.17.1
-> > >
-
+   clock-names:
+-    description:
+-      Must be "clkin"
+-    maxItems: 1
++    items:
++      - clkin
+ 
+ required:
+   - compatible
 -- 
+2.7.4
 
-- Arnaldo
