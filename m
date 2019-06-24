@@ -2,52 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1252C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59260C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6C7213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B2B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370341;
-	bh=+9cNrI//vRyQ2Xd/3xmv9YNlkXdJ71VfGcVDlNcS71M=;
+	s=default; t=1561370344;
+	bh=aOrGG1cBOahIihJ05bmyAadfSEbi8NCeOcF5KGQ0zE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ceyvvjMjZOi9wG7C9hhERIoWinunrjj6+auQ06tjrGXxvXeNbeEP5LBeZTWhBTf2y
-	 /q4CbtVkmehFFwXpCz8JhBrQQft9nURR/q6wXIiWO2kr1YobmqlCq8p4SJNNOAuNth
-	 wfQnc0wVXS/go+nTl1oPNfBr4EmNpcN2yUHoyMWw=
+	b=Z5wJ2IX+sLcF4otisupylONagWUguULVvXqMW23mOxnRiqmwh3ft0EydrZDximu+g
+	 nDAtC/4Yjj/NUMWjC+XEvm+gaWUMt3C42pumYHPc0O9FSlf0CQa9Bcx0zQSbwLZRLC
+	 L0u7zI2i9fOQcnx+oY/H4nvzmFnpfFIMRY2aUYCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfFXJ7A (ORCPT
+        id S1729129AbfFXJ7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbfFXJ65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:57 -0400
+        id S1729106AbfFXJ67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:59 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3319205ED;
-        Mon, 24 Jun 2019 09:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1118214C6;
+        Mon, 24 Jun 2019 09:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370336;
-        bh=+9cNrI//vRyQ2Xd/3xmv9YNlkXdJ71VfGcVDlNcS71M=;
+        s=default; t=1561370339;
+        bh=aOrGG1cBOahIihJ05bmyAadfSEbi8NCeOcF5KGQ0zE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEJk9T7hjg1QWEfJHtwLD2TUSS7/rP3S1wOdafGZqHQCHHOtVizFmj33X76+W+HXR
-         oPGZpiAuP+iazS56tstpL52k8g1a/eYt8J9nNRzNKXJzMhjTK1yWfWorm5DhcKajaw
-         19AwPtOvYK5hQcrimE1lrZI79yjPanFbub+cQUg4=
+        b=PeH04u/v0Rz1kfjjIVVx+cepQiMCtPVUgv4TpjUyWc+ypXVL14f+LMexOyuxFfl8E
+         jqnZxZOehH+Xt+BX2SurdRWyUY9K55zRSuE+be9/0zVIAOanjleApsfLLZWkNfL8ly
+         /hnXrJksMWqZi/YTMsNhaZU2LhsYGOfy3NQCZ4mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/51] net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is set
-Date:   Mon, 24 Jun 2019 17:56:52 +0800
-Message-Id: <20190624092310.195683263@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 04/51] net: phy: broadcom: Use strlcpy() for ethtool::get_strings
+Date:   Mon, 24 Jun 2019 17:56:22 +0800
+Message-Id: <20190624092306.418859848@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -60,44 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ceae266bf0ae6564ac16d086bf749a096fa90ded ]
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-There's some NICs, such as hinic, with NETIF_F_IP_CSUM and NETIF_F_TSO
-on but NETIF_F_HW_CSUM off. And ipvlan device features will be
-NETIF_F_TSO on with NETIF_F_IP_CSUM and NETIF_F_IP_CSUM both off as
-IPVLAN_FEATURES only care about NETIF_F_HW_CSUM. So TSO will be
-disabled in netdev_fix_features.
-For example:
-Features for enp129s0f0:
-rx-checksumming: on
-tx-checksumming: on
-        tx-checksum-ipv4: on
-        tx-checksum-ip-generic: off [fixed]
-        tx-checksum-ipv6: on
+commit 8a17eefa235f73b60c0ca7d397d2e4f66f85f413 upstream.
 
-Fixes: a188222b6ed2 ("net: Rename NETIF_F_ALL_CSUM to NETIF_F_CSUM_MASK")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Our statistics strings are allocated at initialization without being
+bound to a specific size, yet, we would copy ETH_GSTRING_LEN bytes using
+memcpy() which would create out of bounds accesses, this was flagged by
+KASAN. Replace this with strlcpy() to make sure we are bound the source
+buffer size and we also always NUL-terminate strings.
+
+Fixes: 820ee17b8d3b ("net: phy: broadcom: Add support code for reading PHY counters")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ipvlan/ipvlan_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/bcm-phy-lib.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-index d629dddb0e89..09f6795cce53 100644
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -188,7 +188,7 @@ static void ipvlan_port_destroy(struct net_device *dev)
- }
+--- a/drivers/net/phy/bcm-phy-lib.c
++++ b/drivers/net/phy/bcm-phy-lib.c
+@@ -341,8 +341,8 @@ void bcm_phy_get_strings(struct phy_devi
+ 	unsigned int i;
  
- #define IPVLAN_FEATURES \
--	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
-+	(NETIF_F_SG | NETIF_F_CSUM_MASK | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
- 	 NETIF_F_GSO | NETIF_F_TSO | NETIF_F_GSO_ROBUST | \
- 	 NETIF_F_TSO_ECN | NETIF_F_TSO6 | NETIF_F_GRO | NETIF_F_RXCSUM | \
- 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
--- 
-2.20.1
-
+ 	for (i = 0; i < ARRAY_SIZE(bcm_phy_hw_stats); i++)
+-		memcpy(data + i * ETH_GSTRING_LEN,
+-		       bcm_phy_hw_stats[i].string, ETH_GSTRING_LEN);
++		strlcpy(data + i * ETH_GSTRING_LEN,
++			bcm_phy_hw_stats[i].string, ETH_GSTRING_LEN);
+ }
+ EXPORT_SYMBOL_GPL(bcm_phy_get_strings);
+ 
 
 
