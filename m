@@ -2,176 +2,157 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1957FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80265C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E012A2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084B52063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCITDwuX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qi4Uh0to"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfFXBv1 (ORCPT
+        id S1726519AbfFXBvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:51:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39180 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFXBv1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:51:27 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v18so10906114ljh.6;
-        Sun, 23 Jun 2019 18:51:25 -0700 (PDT)
+        Sun, 23 Jun 2019 21:51:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44247 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXBvt (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:51:49 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so524109iob.11
+        for <Linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 18:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nYRS9MdYmFFWPAiEhPZWw0w+9h3W9S26RozsmwY92Y0=;
-        b=DCITDwuX98eZYywKaF/pbpnW5bIW/EDVriGnq9GO16ZrW41YmdlOJSlLQgdnbVUjld
-         4eBdf/qjEQiyJZd0xJDSx2mwt4AsJd9zC8rXoXQ1e/R/raissCfOloEeT6T0ocmTuGle
-         ZeekxnpMbt64xoey0x4v2IIlT9ZMRHrIeKKk2dVIT2uk7y/OTrOFVMGfK1er5ANXlmhJ
-         6sHLDaoLEz1bMOg/BrmnDbtQykqZ8ythYr2Wji9UN0WMf5pBgfW69mkudbswaHTgjPRU
-         D1zAkQBpWTEUkokbCv7npcIZgB0g5qB1uMeRYzNHbC/Xed7eelrW9tikjrs1O1Nr10Y0
-         P/bg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b+MLzYEoEduR8Q+ofY+9DSCWoJU/Fb/z+zF7Y0bwVTI=;
+        b=Qi4Uh0togE92l73msdpzeDUQYoLAyZbb6tYJqdSYxXXbCbuKYbIrOFew4kw1bAfb6k
+         2d1A6Hsd9u2fJFbrs5TT5PAgHVkgKCRCKhE+DNc8NO7z5Ri+niBjt845zb3lruTCh9id
+         uXToEifUf1p2SVDBJovQyBWllp+Y8V2ZMXca6QVxXMWTYO3beoTBtFqqHi0NGApE/RHg
+         bshvgR9AJsc+zf1NdfI1cIEL2879R+1CA17sPwjJw6ZS4Zz3AYLcD3UjlKzyt1fcsmH0
+         nMH/bmFil0zmY8bvMreCMOQCD6WM26TKyaSR61R324NacVQS/+A63xWa5rqFJNsmU9R+
+         tqww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nYRS9MdYmFFWPAiEhPZWw0w+9h3W9S26RozsmwY92Y0=;
-        b=O8plqKYa6l3EszuZPaKos7QxYuH12R3fpx/sA0hbL9zylX5z/UCKQEud3NYwTJYt5S
-         jCGF8I9db2xQ9g1l1ey7Gvei3BQz7PQEy7J6W+XDlfy+G/qz0A1KmB5dT69+L6e2gVQC
-         a2QLySgertTXBfB2j2CVnMKXi4TOuM0o0bLqQViM3MvyoBPkr1/d4MvxLmi15yuOHenI
-         a/xq6ZnavD18kA0/ogpdm01fpJMfNjtTYdzqqhlfD0xAQnMdJqbHmdZ0M75K2XJRop1+
-         Lna33DXunrLIhd82Q7cjW4Mz9rmEAcm+wPUOTK5ZCGSe3w6NTobniGc0eKIAdN5KAxBR
-         Dygw==
-X-Gm-Message-State: APjAAAXQ4XRHMYROF/CG3IR5vecugS0wLho7rPntPlEqDgnDYDwi4R3H
-        sQt1iq7JfTEnEfIc6u2eKXewq2fv
-X-Google-Smtp-Source: APXvYqyc6zd1A7+jfFcgBuyYeoPiDicRsI/iIka3Ng3nzxm60bZJocNHEwfvzNCFK6/5dhzUzmW0fQ==
-X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr33315913lja.230.1561326525033;
-        Sun, 23 Jun 2019 14:48:45 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 14:48:44 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 10/11] PM / devfreq: tegra30: Add debug messages
-Date:   Mon, 24 Jun 2019 00:46:57 +0300
-Message-Id: <20190623214658.11680-11-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
-References: <20190623214658.11680-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b+MLzYEoEduR8Q+ofY+9DSCWoJU/Fb/z+zF7Y0bwVTI=;
+        b=OK5XPwUH9hvW4B+r+vAkhQEeXR7ZHUqge/dFvShXPyPHjS4Q1E6JWcKACJylrPWIZ+
+         aP31X71ZnbgwWVzupvDoGs+O9Kul4/qQnPeiKDAr+n/tSLybwMaJz5R76VM1QI4pAzJ5
+         C1/SIFM7w+59EG61VfVTkR0KNMmDONItvDhdeHXIYEav5DHQuknyOAxaXzPB96Fqi/Go
+         dZGrcgpAjAs2SPG+uAVHIlWj3y3eko1FH1HA1GkTRItvzA63QgahSowrStOxOcew+tVE
+         n+6s+PoB12w5ENI5HTe1CifiekrqLsbFHCafQ0BOzJOlRTZm2IR2vJymx5Du4aqOjMyx
+         u7FA==
+X-Gm-Message-State: APjAAAWwFCZn6XjkXY6Scg9xOiLjh/vvcpCFNpzgW6tWZACDEbuHwTBt
+        /kTgtEMGC2guzfTPQMY/C3Z1JP/+T/2zOzq/aMOF
+X-Google-Smtp-Source: APXvYqwlrTd7zZ+8C5LG65dPmV1E9CKsY7yiH4Q4qh+AomfR8v3cv/tfgFHaNCcDqrgpU1DtrOjGGbkR19Vqdm4kFkE=
+X-Received: by 2002:a6b:5106:: with SMTP id f6mr8398579iob.15.1561339279746;
+ Sun, 23 Jun 2019 18:21:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1561112116-23072-1-git-send-email-kernelfans@gmail.com> <20190621181349.GA21680@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190621181349.GA21680@iweiny-DESK2.sc.intel.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 24 Jun 2019 09:21:07 +0800
+Message-ID: <CAFgQCTt2M3NVD5Xmip3YX=eYM_wJn9mWLjZq8z-jXuvT5q-naQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/gup: speed up check_and_migrate_cma_pages() on huge page
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        LKML <Linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debug messages to know about what's happening in hardware and how
-driver reacts.
+On Sat, Jun 22, 2019 at 2:13 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 06:15:16PM +0800, Pingfan Liu wrote:
+> > Both hugetlb and thp locate on the same migration type of pageblock, since
+> > they are allocated from a free_list[]. Based on this fact, it is enough to
+> > check on a single subpage to decide the migration type of the whole huge
+> > page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+> > similar on other archs.
+> >
+> > Furthermore, when executing isolate_huge_page(), it avoid taking global
+> > hugetlb_lock many times, and meanless remove/add to the local link list
+> > cma_page_list.
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> > Cc: Linux-kernel@vger.kernel.org
+> > ---
+> >  mm/gup.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index ddde097..2eecb16 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1342,16 +1342,19 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+> >       LIST_HEAD(cma_page_list);
+> >
+> >  check_again:
+> > -     for (i = 0; i < nr_pages; i++) {
+> > +     for (i = 0; i < nr_pages;) {
+> > +
+> > +             struct page *head = compound_head(pages[i]);
+> > +             long step = 1;
+> > +
+> > +             if (PageCompound(head))
+> > +                     step = compound_order(head) - (pages[i] - head);
+> >               /*
+> >                * If we get a page from the CMA zone, since we are going to
+> >                * be pinning these entries, we might as well move them out
+> >                * of the CMA zone if possible.
+> >                */
+> >               if (is_migrate_cma_page(pages[i])) {
+>
+> I like this but I think for consistency I would change this pages[i] to be
+> head.  Even though it is not required.
+Yes, agree. Thank you for your good suggestion.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 168bfe78e525..452bc10d2d72 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -277,6 +277,8 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- 					 unsigned long *lower,
- 					 unsigned long *upper)
- {
-+	struct device *ddev = tegra->devfreq->dev.parent;
-+	u32 offset = dev->config->offset;
- 	unsigned long target_freq, min;
- 
- 	target_freq = count / ACTMON_SAMPLING_PERIOD * KHZ;
-@@ -312,6 +314,9 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- 	else
- 		*upper = tegra_actmon_upper_freq(tegra, target_freq);
- 
-+	dev_dbg(ddev, "%03x: target_freq %lu lower freq %lu upper freq %lu\n",
-+		offset, target_freq, *lower, *upper);
-+
- 	*lower /= KHZ;
- 	*upper /= KHZ;
- 
-@@ -384,12 +389,32 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 	device_writel(dev, count + delta, ACTMON_DEV_UPPER_WMARK);
- }
- 
-+static void actmon_device_debug(struct tegra_devfreq *tegra,
-+				struct tegra_devfreq_device *dev,
-+				const char *prefix)
-+{
-+	dev_dbg(tegra->devfreq->dev.parent,
-+		"%03x: %s: 0x%08x 0x%08x a %u %u %u c %u %u %u b %lu cpu %u\n",
-+		dev->config->offset, prefix,
-+		device_readl(dev, ACTMON_DEV_INTR_STATUS),
-+		device_readl(dev, ACTMON_DEV_CTRL),
-+		device_readl(dev, ACTMON_DEV_AVG_COUNT),
-+		device_readl(dev, ACTMON_DEV_AVG_LOWER_WMARK),
-+		device_readl(dev, ACTMON_DEV_AVG_UPPER_WMARK),
-+		device_readl(dev, ACTMON_DEV_COUNT),
-+		device_readl(dev, ACTMON_DEV_LOWER_WMARK),
-+		device_readl(dev, ACTMON_DEV_UPPER_WMARK),
-+		dev->boost_freq, cpufreq_get(0));
-+}
-+
- static void actmon_isr_device(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev)
- {
- 	u32 intr_status, dev_ctrl, avg_intr_mask;
- 	bool low_activity = true;
- 
-+	actmon_device_debug(tegra, dev, "isr+");
-+
- 	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
- 	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
- 	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
-@@ -451,6 +476,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
- 
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-+
-+	actmon_device_debug(tegra, dev, "isr-");
- }
- 
- static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
-@@ -737,6 +764,7 @@ static struct devfreq_dev_profile tegra_devfreq_profile = {
- static int tegra_governor_get_target(struct devfreq *devfreq,
- 				     unsigned long *freq)
- {
-+	struct device *ddev = devfreq->dev.parent;
- 	struct devfreq_dev_status *stat;
- 	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
-@@ -759,6 +787,11 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
- 		dev_target_freq = actmon_update_target(tegra, dev);
- 
- 		target_freq = max(target_freq, dev_target_freq);
-+
-+		dev_dbg(ddev, "%03x: upd: dev_target_freq %lu\n",
-+			dev->config->offset, dev_target_freq);
-+
-+		actmon_device_debug(tegra, dev, "upd");
- 	}
- 
- 	*freq = target_freq * KHZ;
--- 
-2.22.0
-
+Regards,
+  Pingfan
+>
+> Ira
+>
+> > -
+> > -                     struct page *head = compound_head(pages[i]);
+> > -
+> >                       if (PageHuge(head)) {
+> >                               isolate_huge_page(head, &cma_page_list);
+> >                       } else {
+> > @@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+> >                               }
+> >                       }
+> >               }
+> > +
+> > +             i += step;
+> >       }
+> >
+> >       if (!list_empty(&cma_page_list)) {
+> > --
+> > 2.7.5
+> >
