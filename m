@@ -2,157 +2,98 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C41C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4257C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807EC2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC48212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfFXOKD (ORCPT
+        id S1731947AbfFXOKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:10:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:64877 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731909AbfFXOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:09:53 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C757818DF6C;
-        Mon, 24 Jun 2019 14:09:52 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 396A619C6A;
-        Mon, 24 Jun 2019 14:09:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 07/25] vfs: Introduce a non-repeating system-unique
- superblock ID [ver #14]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 24 Jun 2019 15:09:50 +0100
-Message-ID: <156138539043.25627.235369193681671359.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Mon, 24 Jun 2019 10:10:05 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:51848 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfFXOKA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:10:00 -0400
+Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 996DF3AB767;
+        Mon, 24 Jun 2019 13:49:07 +0000 (UTC)
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7056A20015;
+        Mon, 24 Jun 2019 13:48:57 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 15:48:56 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] ARM: dts: sun8i: s3: add devicetree for Lichee
+ zero plus w/ S3
+Message-ID: <20190624134856.4cez7m3uc3tzkpuc@flea>
+References: <20190623043801.14040-1-icenowy@aosc.io>
+ <20190623043801.14040-10-icenowy@aosc.io>
+ <20190624124301.chwhfalk5o53fm5x@flea>
+ <1E6AB747-5A4C-4515-A0EB-F0E89F520CF7@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 24 Jun 2019 14:09:52 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zxvkkmn55l32dkjm"
+Content-Disposition: inline
+In-Reply-To: <1E6AB747-5A4C-4515-A0EB-F0E89F520CF7@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a non-repeating system-unique superblock ID that can be used to
-tag superblock notification messages.  The ID is time-based to make it
-harder to use it as a covert communications channel.
 
-Make it so that this ID can be fetched by the fsinfo() system call.
+--zxvkkmn55l32dkjm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+On Mon, Jun 24, 2019 at 09:43:23PM +0800, Icenowy Zheng wrote:
+> >> +&usb_otg {
+> >> +	dr_mode = "otg";
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usbphy {
+> >> +	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> >> +	status = "okay";
+> >> +};
+> >
+> >How can it do OTG if there's no controllable VBUS regulator?
+>
+> All 5V's are connected together, like Orange Pi Zero.
 
- fs/fsinfo.c               |    1 +
- fs/super.c                |   24 ++++++++++++++++++++++++
- include/linux/fs.h        |    3 +++
- samples/vfs/test-fsinfo.c |    1 +
- 4 files changed, 29 insertions(+)
+So it's a "it can't"?
 
-diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-index b3d517654c98..127538193b77 100644
---- a/fs/fsinfo.c
-+++ b/fs/fsinfo.c
-@@ -82,6 +82,7 @@ static int fsinfo_generic_ids(struct path *path, struct fsinfo_ids *p)
- 	p->f_fstype	= sb->s_magic;
- 	p->f_dev_major	= MAJOR(sb->s_dev);
- 	p->f_dev_minor	= MINOR(sb->s_dev);
-+	p->f_sb_id	= sb->s_unique_id;
- 
- 	memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
- 	strlcpy(p->f_fs_name, path->dentry->d_sb->s_type->name,
-diff --git a/fs/super.c b/fs/super.c
-index 27b3e41394c8..61819e8e5469 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -43,6 +43,8 @@ static int thaw_super_locked(struct super_block *sb);
- 
- static LIST_HEAD(super_blocks);
- static DEFINE_SPINLOCK(sb_lock);
-+static u64 sb_last_identifier;
-+static u64 sb_identifier_offset;
- 
- static char *sb_writers_name[SB_FREEZE_LEVELS] = {
- 	"sb_writers",
-@@ -187,6 +189,27 @@ static void destroy_unused_super(struct super_block *s)
- 	destroy_super_work(&s->destroy_work);
- }
- 
-+/*
-+ * Generate a unique identifier for a superblock.
-+ */
-+static void generate_super_id(struct super_block *s)
-+{
-+	u64 id = ktime_to_ns(ktime_get());
-+
-+	spin_lock(&sb_lock);
-+
-+	id += sb_identifier_offset;
-+	if (id <= sb_last_identifier) {
-+		id = sb_last_identifier + 1;
-+		sb_identifier_offset = sb_last_identifier - id;
-+	}
-+
-+	sb_last_identifier = id;
-+	spin_unlock(&sb_lock);
-+
-+	s->s_unique_id = id;
-+}
-+
- /**
-  *	alloc_super	-	create new superblock
-  *	@type:	filesystem type superblock should belong to
-@@ -270,6 +293,7 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
- 		goto fail;
- 	if (list_lru_init_memcg(&s->s_inode_lru, &s->s_shrink))
- 		goto fail;
-+	generate_super_id(s);
- 	return s;
- 
- fail:
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 71ce3b054c42..f1c74596cd77 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1527,6 +1527,9 @@ struct super_block {
- 
- 	spinlock_t		s_inode_wblist_lock;
- 	struct list_head	s_inodes_wb;	/* writeback inodes */
-+
-+	/* Superblock event notifications */
-+	u64			s_unique_id;
- } __randomize_layout;
- 
- /* Helper functions so that in most cases filesystems will
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index f865bc1af16f..fadc5e1384fc 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -178,6 +178,7 @@ static void dump_attr_IDS(union reply *r, int size)
- 	printf("\tdev   : %02x:%02x\n", f->f_dev_major, f->f_dev_minor);
- 	printf("\tfs    : type=%x name=%s\n", f->f_fstype, f->f_fs_name);
- 	printf("\tfsid  : %llx\n", (unsigned long long)f->f_fsid);
-+	printf("\tsbid  : %llx\n", (unsigned long long)f->f_sb_id);
- }
- 
- static void dump_attr_LIMITS(union reply *r, int size)
+And the orange pi zero says that it can only do peripheral.
 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--zxvkkmn55l32dkjm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRDUyAAKCRDj7w1vZxhR
+xf0zAQCi5yMphtVy7Fni1inyxiANdxNrQlQW3OVimG6brkVyVwEAo7h8m+NLImGt
+4bQgRfzj3aMgbAemt9y56Z7FeLYepwg=
+=+IOZ
+-----END PGP SIGNATURE-----
+
+--zxvkkmn55l32dkjm--
