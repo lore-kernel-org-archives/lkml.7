@@ -2,197 +2,123 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4121C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A640820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E2320820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JsLIzWzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbfFXN6V (ORCPT
+        id S1731697AbfFXN61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:58:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:51126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfFXN6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:58:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E44DC0A;
-        Mon, 24 Jun 2019 06:58:17 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77423F7BE;
-        Mon, 24 Jun 2019 06:58:14 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 14:58:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
- implementation
-Message-ID: <20190624135812.GC29120@arrakis.emea.arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-5-vincenzo.frascino@arm.com>
+        Mon, 24 Jun 2019 09:58:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50290 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbfFXN60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:58:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c66so12930393wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=dpx8eoth7x4E7nkBTHqR/s25K085a3E8QHOn27Jqw80=;
+        b=JsLIzWzD6wkDp5TMTAUmAnHpY8eNIOl+XUOCLqavjXH5OVKh1XuMXekmger1K3gZ1K
+         bdOOjrO37X5KPmOpWA0a+a0pEQiUVcmDhWSpd8Cgy19Jy13aJCAyiqxa03PHjtKVF2ks
+         /syMmAmvIZcG4ORqXb5aqmKrOyd8gwYPSu5ITO7kpaR7TN5wflwzSc6IBPfutH9i9L6Y
+         ZT63XBR+09iHJlAG/d+YjfXqtOuhUaIQLuXZKic10ywj/imx4ertPa79XnzJnkYwNxNz
+         MMALXyGbN1cpi9tGPXHLk5+qO1FtUuC2DVL6OZz9QbBa5iVVrCJFMVXX0Y0IjTCTl0Mr
+         eW2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dpx8eoth7x4E7nkBTHqR/s25K085a3E8QHOn27Jqw80=;
+        b=CCf0t8IwsTIRT07SXKKVSdV+HO07MWsBG8iV/eZ+HpWWn4jIfB9F4bHw4ToR8bYAF/
+         fICZSUbMouvzJjBq0uaA+ol/zQWxH0g6nA6dBtA/PLXeZrmhLwtOpbfMgAs1H7O4/8Le
+         +I6iifR9rBumZW5NcrSMPtaDFceYhASB0mxdzJrbS9GNiTaMAzMkGJQtjEhgkPAVVTGY
+         HoIXjhT8Dw0N/Z8wlgJLQsOhS7tqTeM/8rmcdj9V85TvAdTzZtO7hrSsc94xdM8SnslV
+         vT/AFxercKluk/ZNCapivGBn98qWTXqmqF/D4VyeYgbYgn66CfGJnMP2zFfF2u2tCA9a
+         +h3A==
+X-Gm-Message-State: APjAAAWr4ZpKnJd7puFkUFOXZBJjx+uiIH8MplmDBXeNmWqCuGg7J2r/
+        AOU9Vh9jgux71pRXXQRedyjqqA==
+X-Google-Smtp-Source: APXvYqyr1aVwE6ahr5d4wM6jmOAxIcqIWZ1NKs/ulfp1rdW/HdhuqnOJDo8LQ+XMLNkq9CDliY4ukg==
+X-Received: by 2002:a1c:ca14:: with SMTP id a20mr15608501wmg.71.1561384704646;
+        Mon, 24 Jun 2019 06:58:24 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id n14sm24974398wra.75.2019.06.24.06.58.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 06:58:24 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 14:58:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6] mfd: cros_ec_dev: Register cros_ec_accel_legacy
+ driver as a subdevice
+Message-ID: <20190624135822.GH4699@dell>
+References: <20190611071236.171518-1-gwendal@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190621095252.32307-5-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611071236.171518-1-gwendal@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:52:31AM +0100, Vincenzo Frascino wrote:
-> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-> index 947e39896e28..9e4b7ccbab2f 100644
-> --- a/arch/arm64/kernel/asm-offsets.c
-> +++ b/arch/arm64/kernel/asm-offsets.c
-> @@ -25,13 +25,13 @@
->  #include <linux/kvm_host.h>
->  #include <linux/preempt.h>
->  #include <linux/suspend.h>
-> +#include <vdso/datapage.h>
->  #include <asm/cpufeature.h>
->  #include <asm/fixmap.h>
->  #include <asm/thread_info.h>
->  #include <asm/memory.h>
->  #include <asm/smp_plat.h>
->  #include <asm/suspend.h>
-> -#include <asm/vdso_datapage.h>
->  #include <linux/kbuild.h>
->  #include <linux/arm-smccc.h>
->  
-> @@ -100,17 +100,28 @@ int main(void)
->    DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
->    DEFINE(NSEC_PER_SEC,		NSEC_PER_SEC);
->    BLANK();
-> -  DEFINE(VDSO_CS_CYCLE_LAST,	offsetof(struct vdso_data, cs_cycle_last));
-> -  DEFINE(VDSO_RAW_TIME_SEC,	offsetof(struct vdso_data, raw_time_sec));
-> -  DEFINE(VDSO_XTIME_CLK_SEC,	offsetof(struct vdso_data, xtime_clock_sec));
-> -  DEFINE(VDSO_XTIME_CRS_SEC,	offsetof(struct vdso_data, xtime_coarse_sec));
-> -  DEFINE(VDSO_XTIME_CRS_NSEC,	offsetof(struct vdso_data, xtime_coarse_nsec));
-> -  DEFINE(VDSO_WTM_CLK_SEC,	offsetof(struct vdso_data, wtm_clock_sec));
-> -  DEFINE(VDSO_TB_SEQ_COUNT,	offsetof(struct vdso_data, tb_seq_count));
-> -  DEFINE(VDSO_CS_MONO_MULT,	offsetof(struct vdso_data, cs_mono_mult));
-> -  DEFINE(VDSO_CS_SHIFT,		offsetof(struct vdso_data, cs_shift));
-> +  DEFINE(VDSO_SEQ,		offsetof(struct vdso_data, seq));
-> +  DEFINE(VDSO_CLK_MODE,		offsetof(struct vdso_data, clock_mode));
-> +  DEFINE(VDSO_CYCLE_LAST,	offsetof(struct vdso_data, cycle_last));
-> +  DEFINE(VDSO_MASK,		offsetof(struct vdso_data, mask));
-> +  DEFINE(VDSO_MULT,		offsetof(struct vdso_data, mult));
-> +  DEFINE(VDSO_SHIFT,		offsetof(struct vdso_data, shift));
-> +  DEFINE(VDSO_REALTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].sec));
-> +  DEFINE(VDSO_REALTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].nsec));
-> +  DEFINE(VDSO_MONO_SEC,		offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].sec));
-> +  DEFINE(VDSO_MONO_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].nsec));
-> +  DEFINE(VDSO_MONO_RAW_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].sec));
-> +  DEFINE(VDSO_MONO_RAW_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].nsec));
-> +  DEFINE(VDSO_BOOTTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].sec));
-> +  DEFINE(VDSO_BOOTTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].nsec));
-> +  DEFINE(VDSO_TAI_SEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].sec));
-> +  DEFINE(VDSO_TAI_NSEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].nsec));
-> +  DEFINE(VDSO_RT_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].sec));
-> +  DEFINE(VDSO_RT_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].nsec));
-> +  DEFINE(VDSO_MONO_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].sec));
-> +  DEFINE(VDSO_MONO_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].nsec));
->    DEFINE(VDSO_TZ_MINWEST,	offsetof(struct vdso_data, tz_minuteswest));
-> -  DEFINE(VDSO_USE_SYSCALL,	offsetof(struct vdso_data, use_syscall));
-> +  DEFINE(VDSO_TZ_DSTTIME,	offsetof(struct vdso_data, tz_dsttime));
->    BLANK();
->    DEFINE(TVAL_TV_SEC,		offsetof(struct timeval, tv_sec));
->    DEFINE(TSPEC_TV_SEC,		offsetof(struct timespec, tv_sec));
+On Tue, 11 Jun 2019, Gwendal Grignou wrote:
 
-Now that we are moving this to C, do we actually need the asm-offsets?
-If not, here's a clean-up patch:
+> With this patch, the cros_ec_ctl driver will register the legacy
+> accelerometer driver (named cros_ec_accel_legacy) if it fails to
+> register sensors through the usual path cros_ec_sensors_register().
+> This legacy device is present on Chromebook devices with older EC
+> firmware only supporting deprecated EC commands:
+> - Glimmer based devices [Intel SOC using LPC transport]
+> - Veyron minnie devices [ARM SOC using SPI transport]
+> 
+> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> Changes in v6:
+> - Remove .id field in mfd_cell, PLATFORM_DEVID_AUTO is set to auto
+>   assign ids.
+> - Add support for ARM devices with older EC.
+> 
+> Changes in v5:
+> - Remove unnecessary white lines.
+> 
+> Changes in v4:
+> - [5/8] Nit: EC -> ECs (Lee Jones)
+> - [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
+> 
+> Changes in v3:
+> - [5/8] Add the Reviewed-by Andy Shevchenko.
+> 
+> Changes in v2:
+> - [5/8] Add the Reviewed-by Gwendal.
+> 
+>  drivers/mfd/cros_ec_dev.c | 69 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 
----------------8<--------------------------------------
-From 7e818178a8b225b522fe547cf00ba8508d4cdcf0 Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Mon, 24 Jun 2019 14:12:48 +0100
-Subject: [PATCH] arm64: vdso: Remove unnecessary asm-offsets.c definitions
+Applied, thanks.
 
-Since the VDSO code is moving to C from assembly, there is no need to
-define and maintain the corresponding asm offsets.
-
-Fixes: 28b1a824a4f4 ("arm64: vdso: Substitute gettimeofday() with C implementation")
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/kernel/asm-offsets.c | 39 ---------------------------------
- 1 file changed, 39 deletions(-)
-
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index e6f7409a78a4..214685760e1c 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -14,7 +14,6 @@
- #include <linux/kvm_host.h>
- #include <linux/preempt.h>
- #include <linux/suspend.h>
--#include <vdso/datapage.h>
- #include <asm/cpufeature.h>
- #include <asm/fixmap.h>
- #include <asm/thread_info.h>
-@@ -86,44 +85,6 @@ int main(void)
-   BLANK();
-   DEFINE(PREEMPT_DISABLE_OFFSET, PREEMPT_DISABLE_OFFSET);
-   BLANK();
--  DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
--  DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
--  DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
--  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
--  DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
--  DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
--  DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
--  DEFINE(NSEC_PER_SEC,		NSEC_PER_SEC);
--  BLANK();
--  DEFINE(VDSO_SEQ,		offsetof(struct vdso_data, seq));
--  DEFINE(VDSO_CLK_MODE,		offsetof(struct vdso_data, clock_mode));
--  DEFINE(VDSO_CYCLE_LAST,	offsetof(struct vdso_data, cycle_last));
--  DEFINE(VDSO_MASK,		offsetof(struct vdso_data, mask));
--  DEFINE(VDSO_MULT,		offsetof(struct vdso_data, mult));
--  DEFINE(VDSO_SHIFT,		offsetof(struct vdso_data, shift));
--  DEFINE(VDSO_REALTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].sec));
--  DEFINE(VDSO_REALTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].nsec));
--  DEFINE(VDSO_MONO_SEC,		offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].sec));
--  DEFINE(VDSO_MONO_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].nsec));
--  DEFINE(VDSO_MONO_RAW_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].sec));
--  DEFINE(VDSO_MONO_RAW_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].nsec));
--  DEFINE(VDSO_BOOTTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].sec));
--  DEFINE(VDSO_BOOTTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].nsec));
--  DEFINE(VDSO_TAI_SEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].sec));
--  DEFINE(VDSO_TAI_NSEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].nsec));
--  DEFINE(VDSO_RT_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].sec));
--  DEFINE(VDSO_RT_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].nsec));
--  DEFINE(VDSO_MONO_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].sec));
--  DEFINE(VDSO_MONO_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].nsec));
--  DEFINE(VDSO_TZ_MINWEST,	offsetof(struct vdso_data, tz_minuteswest));
--  DEFINE(VDSO_TZ_DSTTIME,	offsetof(struct vdso_data, tz_dsttime));
--  BLANK();
--  DEFINE(TVAL_TV_SEC,		offsetof(struct timeval, tv_sec));
--  DEFINE(TSPEC_TV_SEC,		offsetof(struct timespec, tv_sec));
--  BLANK();
--  DEFINE(TZ_MINWEST,		offsetof(struct timezone, tz_minuteswest));
--  DEFINE(TZ_DSTTIME,		offsetof(struct timezone, tz_dsttime));
--  BLANK();
-   DEFINE(CPU_BOOT_STACK,	offsetof(struct secondary_data, stack));
-   DEFINE(CPU_BOOT_TASK,		offsetof(struct secondary_data, task));
-   BLANK();
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
