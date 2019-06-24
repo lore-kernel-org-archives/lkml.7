@@ -2,26 +2,26 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEA2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033EDC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA5F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBDE208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFXOmm (ORCPT
+        id S1729950AbfFXOmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:42:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50422 "EHLO mx1.suse.de"
+        Mon, 24 Jun 2019 10:42:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50414 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727742AbfFXOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729005AbfFXOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 10:42:04 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5A878AF3F;
+        by mx1.suse.de (Postfix) with ESMTP id 1A55FAF3B;
         Mon, 24 Jun 2019 14:42:03 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
@@ -29,9 +29,9 @@ Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/14] epoll: support polling from userspace for ep_modify()
-Date:   Mon, 24 Jun 2019 16:41:47 +0200
-Message-Id: <20190624144151.22688-11-rpenyaev@suse.de>
+Subject: [PATCH v5 09/14] epoll: support polling from userspace for ep_remove()
+Date:   Mon, 24 Jun 2019 16:41:46 +0200
+Message-Id: <20190624144151.22688-10-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190624144151.22688-1-rpenyaev@suse.de>
 References: <20190624144151.22688-1-rpenyaev@suse.de>
@@ -43,10 +43,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When epfd is polled from userspace and item is being modified:
-
-1. Update user item with new pointer or poll flags.
-2. Add event to user ring if needed.
+On ep_remove() simply mark a user item with EPOLLREMOVE if the item was
+ready (i.e. has some bits set).  That will prevent further user index
+entry creation on item ->bit reuse.
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -55,71 +54,73 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
+ fs/eventpoll.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index df96569d3b5a..f94608ca9f7a 100644
+index d0c057b73ea1..df96569d3b5a 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -2265,6 +2265,7 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- static int ep_modify(struct eventpoll *ep, struct epitem *epi,
- 		     const struct epoll_event *event)
- {
-+	__poll_t revents;
- 	int pwake = 0;
- 	poll_table pt;
+@@ -900,12 +900,30 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	return res;
+ }
  
-@@ -2276,10 +2277,24 @@ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
- 	 * Set the new event interest mask before calling f_op->poll();
- 	 * otherwise we might miss an event that happens between the
- 	 * f_op->poll() call and the new event set registering.
-+	 *
-+	 * Use xchg() here because we can race with ep_clear_public_event_bits()
-+	 * for the case when events are polled from userspace.  Internally
-+	 * ep_clear_public_event_bits() uses cmpxchg(), thus on some archs
-+	 * we can't mix normal writes and cmpxchg().
- 	 */
--	epi->event.events = event->events; /* need barrier below */
-+	(void) xchg(&epi->event.events, event->events);
- 	epi->event.data = event->data; /* protected by mtx */
--	if (epi->event.events & EPOLLWAKEUP) {
+-static void epi_rcu_free(struct rcu_head *head)
++static void epi_rcu_free_cb(struct rcu_head *head)
+ {
+ 	struct epitem *epi = container_of(head, struct epitem, rcu);
+ 	kmem_cache_free(epi_cache, epi);
+ }
+ 
++static void uepi_rcu_free_cb(struct rcu_head *head)
++{
++	struct epitem *epi = container_of(head, struct epitem, rcu);
++	kmem_cache_free(uepi_cache, uep_item_from_epi(epi));
++}
 +
-+	/* Update user item, barrier is below */
++static void epi_rcu_free(struct eventpoll *ep, struct epitem *epi)
++{
++	/*
++	 * Check if `ep` is polled by user here, in this function, not
++	 * in the callback, in order not to control lifetime of the 'ep'.
++	 */
++	if (ep_polled_by_user(ep))
++		call_rcu(&epi->rcu, uepi_rcu_free_cb);
++	else
++		call_rcu(&epi->rcu, epi_rcu_free_cb);
++}
++
+ static inline int ep_get_bit(struct eventpoll *ep)
+ {
+ 	bool was_set;
+@@ -1177,10 +1195,14 @@ static int ep_remove(struct eventpoll *ep, struct epitem *epi)
+ 
+ 	rb_erase_cached(&epi->rbn, &ep->rbr);
+ 
+-	write_lock_irq(&ep->lock);
+-	if (ep_is_linked(epi))
+-		list_del_init(&epi->rdllink);
+-	write_unlock_irq(&ep->lock);
 +	if (ep_polled_by_user(ep)) {
-+		struct uepitem *uepi = uep_item_from_epi(epi);
-+		struct epoll_uitem *uitem;
-+
-+		uitem = &ep->user_header->items[uepi->bit];
-+		WRITE_ONCE(uitem->events, event->events);
-+		WRITE_ONCE(uitem->data, event->data);
-+	} else if (epi->event.events & EPOLLWAKEUP) {
- 		if (!ep_has_wakeup_source(epi))
- 			ep_create_wakeup_source(epi);
- 	} else if (ep_has_wakeup_source(epi)) {
-@@ -2312,12 +2327,19 @@ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
- 	 * If the item is "hot" and it is not registered inside the ready
- 	 * list, push it inside.
++		ep_remove_user_item(epi);
++	} else {
++		write_lock_irq(&ep->lock);
++		if (ep_is_linked(epi))
++			list_del_init(&epi->rdllink);
++		write_unlock_irq(&ep->lock);
++	}
+ 
+ 	wakeup_source_unregister(ep_wakeup_source(epi));
+ 	/*
+@@ -1190,7 +1212,7 @@ static int ep_remove(struct eventpoll *ep, struct epitem *epi)
+ 	 * ep->mtx. The rcu read side, reverse_path_check_proc(), does not make
+ 	 * use of the rbn field.
  	 */
--	if (ep_item_poll(epi, &pt, 1)) {
-+	revents = ep_item_poll(epi, &pt, 1);
-+	if (revents) {
-+		bool added = false;
-+
- 		write_lock_irq(&ep->lock);
--		if (!ep_is_linked(epi)) {
-+		if (ep_polled_by_user(ep))
-+			added = ep_add_event_to_uring(epi, revents);
-+		else if (!ep_is_linked(epi)) {
- 			list_add_tail(&epi->rdllink, &ep->rdllist);
- 			ep_pm_stay_awake(epi);
--
-+			added = true;
-+		}
-+		if (added) {
- 			/* Notify waiting tasks that events are available */
- 			if (waitqueue_active(&ep->wq))
- 				wake_up(&ep->wq);
+-	call_rcu(&epi->rcu, epi_rcu_free);
++	epi_rcu_free(ep, epi);
+ 
+ 	atomic_long_dec(&ep->user->epoll_watches);
+ 
 -- 
 2.21.0
 
