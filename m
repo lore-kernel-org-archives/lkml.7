@@ -2,259 +2,131 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496E3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0E9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C38021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F35208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gBTyaRm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfFXHAI (ORCPT
+        id S1727428AbfFXHA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:00:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53966 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbfFXHAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:00:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 231F7AF99;
-        Mon, 24 Jun 2019 07:00:06 +0000 (UTC)
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for
- hardware raid5/6
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     linux-block@vger.kernel.org, Eric Wheeler <git@linux.ewheeler.net>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BCACHE (BLOCK LAYER CACHE)" <linux-bcache@vger.kernel.org>
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
- <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <1185f3ad-ac4c-7f48-206f-22fdbbfe289e@suse.de>
-Date:   Mon, 24 Jun 2019 14:57:42 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Jun 2019 03:00:26 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:50048 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFXHA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:00:26 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190624070022epoutp0156737211b93880737e305a02423651b4~rEE3ctaYD3223232232epoutp01D
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:00:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190624070022epoutp0156737211b93880737e305a02423651b4~rEE3ctaYD3223232232epoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561359622;
+        bh=gjOb94pyYvpO/imGBEoJBVAesPbCsDcNH0NJiUfAVno=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=gBTyaRm7fkRfIvlXNMvcOdrC5EoUcrG6XFX+qrnIJ2J1cK8E+8FzSjQKzxdWEYoIZ
+         wZWnwHieo4RkEtTaPtsSpRiDsunUY2wx9uePnG9G+GMywE4yRmwZ+WHPJdAdkO/RSj
+         LKLoB/ORsu3BHcpywVXwFHChJdf2wuA5CydbS9CE=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190624070011epcas1p21937d6d1c96c66e4c069cf5d2a85770a~rEEttDfw01292512925epcas1p2l;
+        Mon, 24 Jun 2019 07:00:11 +0000 (GMT)
+X-AuditID: b6c32a36-ce1ff7000000102e-74-5d1074c7993a
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        67.CD.04142.7C4701D5; Mon, 24 Jun 2019 15:59:19 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     "digetx@gmail.com" <digetx@gmail.com>,
+        "janathanh@nvidia.com" <janathanh@nvidia.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+Date:   Mon, 24 Jun 2019 15:59:19 +0900
+X-CMS-MailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdlhTV/d4iUCswbwD8hYvD2laXP/ynNVi
+        9cfHjBYzpv9hsri8aw6bxefeI4wWnV9msTmwe+ycdZfdo7f5HZtH35ZVjB6fN8kFsERl22Sk
+        JqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYAHaCkUJaYUwoU
+        CkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM6YcGcl
+        Y8FTzorTX1ayNDA+Ye9i5OSQEDCROPRrEyuILSSwg1HiwFH1LkYODl4BQYm/O4RBwsICThLN
+        Py6yQZQoSTTc3McMEdeX6HiwjRHEZhPQldi64S4LiC0i0MAosX2mQxcjFwezwE5GiXdb7kPt
+        4pWY0f6UBcKWlti+fCsjhC0qcXP1W3YY+/2x+VBxEYnWe2eZIWxBiQc/dzPC9M6Y8h9qTrXE
+        temL2UGWSQi0MEr0rp4CVaQvcWbuSbCreQV8JaZ2/gFrYBFQlfj47THUMheJ/c/ugtUzC8hL
+        bH87hxnkeWYBTYn1u/QhShQldv6eywhzf8PG3+zobGYBPol3X3tYYeI75j1hgrDVJA7tXgJV
+        LyNxevpCqF88JF6c2Mc6gVFxFiKoZyE5YhbCEQsYmVcxiqUWFOempxYbFhghR+4mRnBa1DLb
+        wbjonM8hRgEORiUeXoEN/LFCrIllxZW5hxglOJiVRHiXJgrECvGmJFZWpRblxxeV5qQWH2I0
+        BYbFRGYp0eR8YMrOK4k3NDUyNja2MDE0MzU0VBLnjee+GSMkkJ5YkpqdmlqQWgTTx8TBKdXA
+        eDxr9sVini0/jlbFZGe9W8Bu9S/HR8j25c2zyudsLH6Kh05Tf/ElovbOFyWryY5aH312Rba1
+        bz0gL/DjpFHH3Vam2H71hMWHj86f6PJrfY4Cx3Szr0ELhcNZStUMvP9yljy+/LlWuspLk5cr
+        9Hr/kny9pIeXLuy+/1CFq4W94M+X0DU7jr0xVmIpzkg01GIuKk4EAIGly8ShAwAA
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
+References: <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/23 7:16 上午, Eric Wheeler wrote:
-> From: Eric Wheeler <git@linux.ewheeler.net>
+> On Thu, May 02, 2019 at 02:38:12AM +0300, Dmitry Osipenko wrote:
+> > The devfreq driver can be used on Tegra30 without any code change and
+> > it works perfectly fine, the default Tegra124 parameters are good enough
+> > for Tegra30.
+> > 
+> > Reviewed-by: Chanwoo Choi 
+> > Signed-off-by: Dmitry Osipenko 
+> > ---
+> >  drivers/devfreq/Kconfig         | 4 ++--
+> >  drivers/devfreq/tegra-devfreq.c | 1 +
+> >  2 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> While some drivers set queue_limits.io_opt (e.g., md raid5), there are
-> currently no SCSI/RAID controller drivers that do.  Previously stripe_size
-> and partial_stripes_expensive were read-only values and could not be
-> tuned by users (eg, for hardware RAID5/6).
+> Acked-by: Thierry Reding 
 > 
-> This patch enables users to save the optimal IO size via sysfs through
-> the backing device attributes stripe_size and partial_stripes_expensive
-> into the bcache superblock.
-> 
-> Superblock changes are backwards-compatable:
-> 
-> *  partial_stripes_expensive: One bit was used in the superblock flags field
-> 
-> *  stripe_size: There are eight 64-bit "pad" fields for future use in
->    the superblock which default to 0; from those, 32-bits are now used
->    to save the stripe_size and load at device registration time.
-> 
-> Signed-off-by: Eric Wheeler <bcache@linux.ewheeler.net>
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 7dd46d4..b291803 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -93,8 +93,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
+>  	  This does not yet operate with optimal voltages.
+>  
+>  config ARM_TEGRA_DEVFREQ
+> -	tristate "Tegra DEVFREQ Driver"
+> -	depends on ARCH_TEGRA_124_SOC
+> +	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+> +	depends on ARCH_TEGRA
+>  	select PM_OPP
+>  	help
+>  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
 
-Hi Eric,
+A question:
 
-In general I am OK with this patch. Since Peter comments lots of SCSI
-RAID devices reports a stripe width, could you please list the hardware
-raid devices which don't list stripe size ? Then we can make decision
-whether it is necessary to have such option enabled.
+Does this driver support Tegra20 as well?
+I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
+according to /drivers/soc/tegra/Kconfig.
 
-Another point is, this patch changes struct cache_sb, it is no problem
-to change on-disk format. I plan to update the super block version soon,
-to store more configuration persistently into super block. stripe_size
-can be added to cache_sb with other on-disk changes.
+Cheers,
+MyungJoo.
 
-Thanks.
-
-Coly Li
-
-
-> ---
->  Documentation/admin-guide/bcache.rst | 21 +++++++++++++++++++++
->  drivers/md/bcache/super.c            | 15 ++++++++++++++-
->  drivers/md/bcache/sysfs.c            | 33 +++++++++++++++++++++++++++++++--
->  include/uapi/linux/bcache.h          |  6 ++++--
->  4 files changed, 70 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/bcache.rst b/Documentation/admin-guide/bcache.rst
-> index c0ce64d..ef82022 100644
-> --- a/Documentation/admin-guide/bcache.rst
-> +++ b/Documentation/admin-guide/bcache.rst
-> @@ -420,6 +420,12 @@ dirty_data
->  label
->    Name of underlying device.
->  
-> +partial_stripes_expensive
-> +  Flag to bcache that partial or unaligned stripe_size'd
-> +  writes to the backing device are expensive (e.g., RAID5/6 incur
-> +  read-copy-write). Writing this sysfs attribute updates the superblock
-> +  and also takes effect immediately.  See also stripe_size, below.
-> +
->  readahead
->    Size of readahead that should be performed.  Defaults to 0.  If set to e.g.
->    1M, it will round cache miss reads up to that size, but without overlapping
-> @@ -458,6 +464,21 @@ stop
->    Write to this file to shut down the bcache device and close the backing
->    device.
->  
-> +stripe_size
-> +  The stripe size in bytes of the backing device for optimial
-> +  write performance (also known as the "stride width"). This is set
-> +  automatically when using a device driver sets blk_limits_io_opt
-> +  (e.g., md, rbd, skd, zram, virtio_blk).  No hardware RAID controller
-> +  sets blk_limits_io_opt as of 2019-06-15, so configure this to suit
-> +  your needs.  Note that you must unregister and re-register the backing
-> +  device after making a change to stripe_size.
-> +
-> +  Where N is the number of data disks,
-> +    RAID5: stripe_size = (N-1)*RAID_CHUNK_SIZE.
-> +    RAID6: stripe_size = (N-2)*RAID_CHUNK_SIZE.
-> +
-> +  See also partial_stripes_expensive, above.
-> +
->  writeback_delay
->    When dirty data is written to the cache and it previously did not contain
->    any, waits some number of seconds before initiating writeback. Defaults to
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index 1b63ac8..d0b9501 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -80,6 +80,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
->  
->  	sb->flags		= le64_to_cpu(s->flags);
->  	sb->seq			= le64_to_cpu(s->seq);
-> +	sb->stripe_size		= le32_to_cpu(s->stripe_size);
->  	sb->last_mount		= le32_to_cpu(s->last_mount);
->  	sb->first_bucket	= le16_to_cpu(s->first_bucket);
->  	sb->keys		= le16_to_cpu(s->keys);
-> @@ -221,6 +222,7 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
->  
->  	out->flags		= cpu_to_le64(sb->flags);
->  	out->seq		= cpu_to_le64(sb->seq);
-> +	out->stripe_size	= cpu_to_le32(sb->stripe_size);
->  
->  	out->last_mount		= cpu_to_le32(sb->last_mount);
->  	out->first_bucket	= cpu_to_le16(sb->first_bucket);
-> @@ -1258,7 +1260,18 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
->  
->  	dc->disk.stripe_size = q->limits.io_opt >> 9;
->  
-> -	if (dc->disk.stripe_size)
-> +	if (dc->sb.stripe_size) {
-> +		if (dc->disk.stripe_size &&
-> +		    dc->disk.stripe_size != dc->sb.stripe_size) {
-> +			pr_warn("superblock stripe_size (%d) overrides bdev stripe_size (%d)\n",
-> +				(int)dc->sb.stripe_size,
-> +				(int)dc->disk.stripe_size);
-> +		}
-> +
-> +		dc->disk.stripe_size = dc->sb.stripe_size;
-> +		dc->partial_stripes_expensive =
-> +			(unsigned int)BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb);
-> +	} else if (dc->disk.stripe_size)
->  		dc->partial_stripes_expensive =
->  			q->limits.raid_partial_stripes_expensive;
->  
-> diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-> index bfb437f..4ebca52 100644
-> --- a/drivers/md/bcache/sysfs.c
-> +++ b/drivers/md/bcache/sysfs.c
-> @@ -111,8 +111,8 @@
->  rw_attribute(writeback_rate_minimum);
->  read_attribute(writeback_rate_debug);
->  
-> -read_attribute(stripe_size);
-> -read_attribute(partial_stripes_expensive);
-> +rw_attribute(stripe_size);
-> +rw_attribute(partial_stripes_expensive);
->  
->  rw_attribute(synchronous);
->  rw_attribute(journal_delay_ms);
-> @@ -343,6 +343,35 @@ static ssize_t bch_snprint_string_list(char *buf,
->  		}
->  	}
->  
-> +	if (attr == &sysfs_stripe_size) {
-> +		int v = strtoul_or_return(buf);
-> +
-> +		if (v & 0x1FF) {
-> +			pr_err("stripe_size must be a muliple of 512-byte sectors");
-> +			return -EINVAL;
-> +		}
-> +
-> +		v >>= 9;
-> +
-> +		if (v != dc->sb.stripe_size) {
-> +			dc->sb.stripe_size = v;
-> +			pr_info("stripe_size=%d, re-register to take effect.",
-> +				v<<9);
-> +			bch_write_bdev_super(dc, NULL);
-> +		} else
-> +			pr_info("stripe_size is already set to %d.", v<<9);
-> +	}
-> +
-> +	if (attr == &sysfs_partial_stripes_expensive) {
-> +		int v = strtoul_or_return(buf);
-> +
-> +		if (v != BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb)) {
-> +			SET_BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb, v);
-> +			dc->partial_stripes_expensive = v;
-> +			bch_write_bdev_super(dc, NULL);
-> +		}
-> +	}
-> +
->  	if (attr == &sysfs_stop_when_cache_set_failed) {
->  		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
->  		if (v < 0)
-> diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
-> index 5d4f58e..ee60914 100644
-> --- a/include/uapi/linux/bcache.h
-> +++ b/include/uapi/linux/bcache.h
-> @@ -172,7 +172,9 @@ struct cache_sb {
->  
->  	__u64			flags;
->  	__u64			seq;
-> -	__u64			pad[8];
-> +	__u32			stripe_size;
-> +	__u32			pad_u32;
-> +	__u64			pad_u64[7];
->  
->  	union {
->  	struct {
-> @@ -230,7 +232,7 @@ static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
->  #define BDEV_STATE_CLEAN		1U
->  #define BDEV_STATE_DIRTY		2U
->  #define BDEV_STATE_STALE		3U
-> -
-> +BITMASK(BDEV_PARTIAL_STRIPES_EXPENSIVE,	struct cache_sb, flags, 60, 1);
->  /*
->   * Magic numbers
->   *
-> 
-
-
--- 
-
-Coly Li
