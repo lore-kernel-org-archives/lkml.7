@@ -2,102 +2,162 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D32DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F95C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F240920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WapHHi8N"
+	by mail.kernel.org (Postfix) with ESMTP id 1270420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbfFXTcL (ORCPT
+        id S1730530AbfFXThW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:32:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34458 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfFXTcL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:32:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so1617373iot.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=46YubdxCxrFPh8KrDchM0Ty2p47WTPPMVanoBQz+N5I=;
-        b=WapHHi8N2f4HLGXe8Azqgnk2rXsYnSSwWeXoyTGoqptEniMQ7RI34LHdkfRxx+PTYJ
-         6q8PlKhv4L+QPsNZCCEMml8wD0fIpbl5OiXhrEU0oePfqE5PupxtN+Plt9pm45DyQEdT
-         xLv0d4d/GDSlQZxVi/VWkz/v0k08TuKOrnfCQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=46YubdxCxrFPh8KrDchM0Ty2p47WTPPMVanoBQz+N5I=;
-        b=RROxUDMfF8kMtUS1qPwyboKYMTmbuOe5DYJTNUXWFMeJncZP4IVSh3T86gGNzEpKF6
-         N1UchgYdg+Ag3TuBuba6gaKUx0CnIdWo4Pcv9592E0a1oPwNT5O2mXCyjUttopr/4zfo
-         P84inPz6LuzVEagW+uT0ful04KGagw2KVfVtNFKmvdSFkX708mz8fdnzJqGWeQla/TPn
-         CWNNOJZUB3GwTFl45ld1QR+Ndse71OS3a81SWuer61702jCc+5fPg5WfHm5ij/fBfkZq
-         OEHRCSsxzg9mWe1+61LiCTLJ3dsYyHOvDGfRDZUzIJhi/VrLmFk+X05WyuAlmUbCwoRD
-         zyRg==
-X-Gm-Message-State: APjAAAXP0PQ2TzP7HQMk6IPPYyl6sefO9AFpYtCk7S70OMC5N/kDUUFu
-        LIpoQ9VOUfsk0UW1aGqNe9uffOPiF98=
-X-Google-Smtp-Source: APXvYqzermPzG/eunflNCAys2OdCAv5ImejvBhMgl35nuT8yTa8yNUxWghkwzgya/sGhRpHhqtaApw==
-X-Received: by 2002:a02:b710:: with SMTP id g16mr34621566jam.88.1561404730355;
-        Mon, 24 Jun 2019 12:32:10 -0700 (PDT)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
-        by smtp.gmail.com with ESMTPSA id h18sm17892953iob.80.2019.06.24.12.32.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 12:32:10 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id i10so74942iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:32:10 -0700 (PDT)
-X-Received: by 2002:a02:aa1d:: with SMTP id r29mr14713662jam.127.1561404342590;
- Mon, 24 Jun 2019 12:25:42 -0700 (PDT)
+        Mon, 24 Jun 2019 15:37:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16954 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729405AbfFXThV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 15:37:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 12:37:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
+   d="scan'208";a="182700779"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2019 12:37:20 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5E417302106; Mon, 24 Jun 2019 12:37:20 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, kan.liang@intel.com,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v1 3/4] perf stat: Fix group lookup for metric group
+Date:   Mon, 24 Jun 2019 12:37:10 -0700
+Message-Id: <20190624193711.35241-4-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190624193711.35241-1-andi@firstfloor.org>
+References: <20190624193711.35241-1-andi@firstfloor.org>
 MIME-Version: 1.0
-References: <20190621211346.1324-1-ezequiel@collabora.com> <20190621211346.1324-2-ezequiel@collabora.com>
-In-Reply-To: <20190621211346.1324-2-ezequiel@collabora.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 24 Jun 2019 12:25:29 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UO8S_MHPKvpu-Uc1pTAv2NN_hf+U6_HCntRU0hzGQtWw@mail.gmail.com>
-Message-ID: <CAD=FV=UO8S_MHPKvpu-Uc1pTAv2NN_hf+U6_HCntRU0hzGQtWw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: rockchip: document VOP gamma
- LUT address
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Andi Kleen <ak@linux.intel.com>
 
-On Fri, Jun 21, 2019 at 2:14 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> Add the register specifier description for an
-> optional gamma LUT address.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> Changes from v1:
-> * Drop reg-names, suggested by Doug.
-> ---
->  .../devicetree/bindings/display/rockchip/rockchip-vop.txt   | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+The metric group code tries to find a group it added earlier
+in the evlist. Fix the lookup to handle groups with partially
+overlaps correctly. When a sub string match fails and we reset
+the match, we have to compare the first element again.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+I also renamed the find_evsel function to find_evsel_group
+to make its purpose clearer.
+
+With the earlier changes this fixes:
+
+Before:
+
+% perf stat -M UPI,IPC sleep 1
+...
+         1,032,922      uops_retired.retire_slots #      1.1 UPI
+         1,896,096      inst_retired.any
+         1,896,096      inst_retired.any
+         1,177,254      cpu_clk_unhalted.thread
+
+After:
+
+% perf stat -M UPI,IPC sleep 1
+...
+        1,013,193      uops_retired.retire_slots #      1.1 UPI
+           932,033      inst_retired.any
+           932,033      inst_retired.any          #      0.9 IPC
+         1,091,245      cpu_clk_unhalted.thread
+
+Fixes: b18f3e365019 ("perf stat: Support JSON metrics ...")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 699e020737d9..fabdb6dde88e 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -85,26 +85,49 @@ struct egroup {
+ 	const char *metric_expr;
+ };
+ 
+-static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
+-				     const char **ids,
+-				     int idnum,
+-				     struct perf_evsel **metric_events)
++static bool record_evsel(int *ind, struct perf_evsel **start,
++			 int idnum,
++			 struct perf_evsel **metric_events,
++			 struct perf_evsel *ev)
++{
++	metric_events[*ind] = ev;
++	if (*ind == 0)
++		*start = ev;
++	if (++*ind == idnum) {
++		metric_events[*ind] = NULL;
++		return true;
++	}
++	return false;
++}
++
++static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
++					   const char **ids,
++					   int idnum,
++					   struct perf_evsel **metric_events)
+ {
+ 	struct perf_evsel *ev, *start = NULL;
+ 	int ind = 0;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (ev->collect_stat)
++			continue;
+ 		if (!strcmp(ev->name, ids[ind])) {
+-			metric_events[ind] = ev;
+-			if (ind == 0)
+-				start = ev;
+-			if (++ind == idnum) {
+-				metric_events[ind] = NULL;
++			if (record_evsel(&ind, &start, idnum,
++					 metric_events, ev))
+ 				return start;
+-			}
+ 		} else {
++			/*
++			 * We saw some other event that is not
++			 * in our list of events. Discard
++			 * the whole match and start again.
++			 */
+ 			ind = 0;
+ 			start = NULL;
++			if (!strcmp(ev->name, ids[ind])) {
++				if (record_evsel(&ind, &start, idnum,
++						 metric_events, ev))
++					return start;
++			}
+ 		}
+ 	}
+ 	/*
+@@ -134,8 +157,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
+-				   metric_events);
++		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
++					 metric_events);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+-- 
+2.20.1
+
