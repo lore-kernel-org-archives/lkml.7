@@ -2,104 +2,171 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0BFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BD8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB6520652
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284F420820
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfFXLhn (ORCPT
+        id S1729096AbfFXLkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:37:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55440 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727608AbfFXLhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:37:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0EF03AE79;
-        Mon, 24 Jun 2019 11:37:40 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id DBCD31E2F23; Mon, 24 Jun 2019 13:37:37 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 13:37:37 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/7] vfs: flush and wait for io when setting the
- immutable flag via SETFLAGS
-Message-ID: <20190624113737.GG32376@quack2.suse.cz>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
- <156116142734.1664939.5074567130774423066.stgit@magnolia>
+        Mon, 24 Jun 2019 07:40:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:47854 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbfFXLkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:40:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E602B;
+        Mon, 24 Jun 2019 04:40:19 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8624A3F718;
+        Mon, 24 Jun 2019 04:40:18 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 12:40:10 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     guoren@kernel.org
+Cc:     julien.grall@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH] arm64: asid: Optimize cache_flush for SMT
+Message-ID: <20190624114010.GA51882@lakrids.cambridge.arm.com>
+References: <1561305869-18872-1-git-send-email-guoren@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156116142734.1664939.5074567130774423066.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1561305869-18872-1-git-send-email-guoren@kernel.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-06-19 16:57:07, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+I'm very confused by this patch. The title says arm64, yet the code is
+under arch/csky/, and the code in question refers to HARTs, which IIUC
+is RISC-V terminology.
+
+On Mon, Jun 24, 2019 at 12:04:29AM +0800, guoren@kernel.org wrote:
+> From: Guo Ren <ren_guo@c-sky.com>
 > 
-> When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
-> need to ensure that userspace can't continue to write the file after the
-> file becomes immutable.  To make that happen, we have to flush all the
-> dirty pagecache pages to disk to ensure that we can fail a page fault on
-> a mmap'd region, wait for pending directio to complete, and hope the
-> caller locked out any new writes by holding the inode lock.
+> The hardware threads of one core could share the same TLB for SMT+SMP
+> system. Assume hardware threads number sequence like this:
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> | 0 1 2 3 | 4 5 6 7 | 8 9 a b | c d e f |
+>    core1     core2     core3     core4
 
-Seeing the way this worked out, is there a reason to have separate
-vfs_ioc_setflags_flush_data() instead of folding the functionality in
-vfs_ioc_setflags_check() (possibly renaming it to
-vfs_ioc_setflags_prepare() to indicate it does already some changes)? I
-don't see any place that would need these two separated...
+Given this is the Linux logical CPU ID rather than a physical CPU ID,
+this assumption is not valid. For example, CPUs may be renumbered across
+kexec.
 
-> +/*
-> + * Flush all pending IO and dirty mappings before setting S_IMMUTABLE on an
-> + * inode via FS_IOC_SETFLAGS.  If the flush fails we'll clear the flag before
-> + * returning error.
-> + *
-> + * Note: the caller should be holding i_mutex, or else be sure that
-> + * they have exclusive access to the inode structure.
-> + */
-> +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
-> +{
-> +	int ret;
-> +
-> +	if (!vfs_ioc_setflags_need_flush(inode, flags))
-> +		return 0;
-> +
-> +	inode_set_flags(inode, S_IMMUTABLE, S_IMMUTABLE);
-> +	ret = inode_flush_data(inode);
-> +	if (ret)
-> +		inode_set_flags(inode, 0, S_IMMUTABLE);
-> +	return ret;
-> +}
+Even if this were a physical CPU ID, this doesn't hold on arm64 (e.g.
+due to big.LITTLE).
 
-Also this sets S_IMMUTABLE whenever vfs_ioc_setflags_need_flush() returns
-true. That is currently the right thing but seems like a landmine waiting
-to trip? So I'd just drop the vfs_ioc_setflags_need_flush() abstraction to
-make it clear what's going on.
+> Current algorithm seems is correct for SMT+SMP, but it'll give some
+> duplicate local_tlb_flush. Because one hardware threads local_tlb_flush
+> will also flush other hardware threads' TLB entry in one core TLB.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Does any architecture specification mandate that behaviour?
+
+That isn't true for arm64, I have no idea whether RISC-V mandates that,
+and as below it seems this is irrelevant on C-SKY.
+
+> So we can use bitmap to reduce local_tlb_flush for SMT.
+> 
+> C-SKY cores don't support SMT and the patch is no benefit for C-SKY.
+
+As above, this patch is very confusing -- if this doesn't benefit C-SKY,
+why modify the C-SKY code?
+
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Julien Grall <julien.grall@arm.com>
+> ---
+>  arch/csky/include/asm/asid.h |  4 ++++
+>  arch/csky/mm/asid.c          | 11 ++++++++++-
+>  arch/csky/mm/context.c       |  2 +-
+>  3 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/csky/include/asm/asid.h b/arch/csky/include/asm/asid.h
+> index ac08b0f..f654492 100644
+> --- a/arch/csky/include/asm/asid.h
+> +++ b/arch/csky/include/asm/asid.h
+> @@ -23,6 +23,9 @@ struct asid_info
+>  	unsigned int		ctxt_shift;
+>  	/* Callback to locally flush the context. */
+>  	void			(*flush_cpu_ctxt_cb)(void);
+> +	/* To reduce duplicate tlb_flush for SMT */
+> +	unsigned int		harts_per_core;
+> +	unsigned int		harts_per_core_mask;
+>  };
+>  
+>  #define NUM_ASIDS(info)			(1UL << ((info)->bits))
+> @@ -73,6 +76,7 @@ static inline void asid_check_context(struct asid_info *info,
+>  
+>  int asid_allocator_init(struct asid_info *info,
+>  			u32 bits, unsigned int asid_per_ctxt,
+> +			unsigned int harts_per_core,
+>  			void (*flush_cpu_ctxt_cb)(void));
+>  
+>  #endif
+> diff --git a/arch/csky/mm/asid.c b/arch/csky/mm/asid.c
+> index b2e9147..50a983e 100644
+> --- a/arch/csky/mm/asid.c
+> +++ b/arch/csky/mm/asid.c
+> @@ -148,8 +148,13 @@ void asid_new_context(struct asid_info *info, atomic64_t *pasid,
+>  		atomic64_set(pasid, asid);
+>  	}
+>  
+> -	if (cpumask_test_and_clear_cpu(cpu, &info->flush_pending))
+> +	if (cpumask_test_cpu(cpu, &info->flush_pending)) {
+> +		unsigned int i;
+> +		unsigned int harts_base = cpu & info->harts_per_core_mask;
+>  		info->flush_cpu_ctxt_cb();
+> +		for (i = 0; i < info->harts_per_core; i++)
+> +			cpumask_clear_cpu(harts_base + i, &info->flush_pending);
+> +	}
+>  
+>  	atomic64_set(&active_asid(info, cpu), asid);
+>  	cpumask_set_cpu(cpu, mm_cpumask(mm));
+> @@ -162,15 +167,19 @@ void asid_new_context(struct asid_info *info, atomic64_t *pasid,
+>   * @info: Pointer to the asid allocator structure
+>   * @bits: Number of ASIDs available
+>   * @asid_per_ctxt: Number of ASIDs to allocate per-context. ASIDs are
+> + * @harts_per_core: Number hardware threads per core, must be 1, 2, 4, 8, 16 ...
+>   * allocated contiguously for a given context. This value should be a power of
+>   * 2.
+>   */
+>  int asid_allocator_init(struct asid_info *info,
+>  			u32 bits, unsigned int asid_per_ctxt,
+> +			unsigned int harts_per_core,
+>  			void (*flush_cpu_ctxt_cb)(void))
+>  {
+>  	info->bits = bits;
+>  	info->ctxt_shift = ilog2(asid_per_ctxt);
+> +	info->harts_per_core = harts_per_core;
+> +	info->harts_per_core_mask = ~((1 << ilog2(harts_per_core)) - 1);
+>  	info->flush_cpu_ctxt_cb = flush_cpu_ctxt_cb;
+>  	/*
+>  	 * Expect allocation after rollover to fail if we don't have at least
+> diff --git a/arch/csky/mm/context.c b/arch/csky/mm/context.c
+> index 0d95bdd..b58523b 100644
+> --- a/arch/csky/mm/context.c
+> +++ b/arch/csky/mm/context.c
+> @@ -30,7 +30,7 @@ static int asids_init(void)
+>  {
+>  	BUG_ON(((1 << CONFIG_CPU_ASID_BITS) - 1) <= num_possible_cpus());
+>  
+> -	if (asid_allocator_init(&asid_info, CONFIG_CPU_ASID_BITS, 1,
+> +	if (asid_allocator_init(&asid_info, CONFIG_CPU_ASID_BITS, 1, 1,
+>  				asid_flush_cpu_ctxt))
+>  		panic("Unable to initialize ASID allocator for %lu ASIDs\n",
+>  		      NUM_ASIDS(&asid_info));
+> -- 
+> 2.7.4
+> 
