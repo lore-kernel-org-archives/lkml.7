@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE908C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B855C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9183720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E813204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbfFXH1P (ORCPT
+        id S1727711AbfFXH1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:27:15 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35415 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfFXH1J (ORCPT
+        Mon, 24 Jun 2019 03:27:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52513 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfFXH1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 03:27:09 -0400
-Received: by mail-io1-f71.google.com with SMTP id w17so20926002iom.2
+Received: by mail-io1-f70.google.com with SMTP id p12so20867873iog.19
         for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:27:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Q+jSIt1RbaUKJIAwoqkZbIlk6NUJrHcjgQhUeOx3Q34=;
-        b=cI5OkzwV7NxHKMd2HdXQ3zlNdb9TYg3O3uCqmTPR+h+tuWca6VDtRa8MuBqJaJbY66
-         KSuNF1AY68f2iNrhCI7TWc8XLBcTAJiSynvgauCp3EdHTui6w688dzc7Z+sVA24UjjUj
-         BvgzceD34haqPRupvPgpkR17QmJFvdrQYKGOzAJq3d6ACMGLHjptgOXOT4FcR5bOVC2u
-         5lj5d5rvdSvCS71cHvo2aOjk8mrnOn3Qus7Wadmd+h+D9DeyVqkQT+wK0lXNPLOgxgR/
-         6XDlqU9oYhi6SnWbjRNeoJxir1uGnS8+0ic6hWqha87GTIam82MKV0KZH6cRguVtLJoB
-         v60w==
-X-Gm-Message-State: APjAAAUJKDSqZztgyw7OCfU8UhJGhtitMelTFZWl74dHY2UdgwubMZtC
-        xFs9U/0Fw8Xt7llwvjBsa7gJ84CqFDR5QNp9KCj6nscjQV9y
-X-Google-Smtp-Source: APXvYqy/O0/vqy+34ZnqXymFhrK27i4TCuMIDpV9S7wFv/rDi3jRPMJdVVlIpNnM5iGIXFOdrtxkM8xTE8ILETQuWcr5InsS6kHw
+        bh=Iupi8DOKHDcSSlu87q2pfPMCXoPDN4x3nXpdzN2NyMQ=;
+        b=KZJyVfLEh3mkLEcgMDRvAfm7oiOzE3PNXkItNDtw6Se+COt/64sOALRc+tOcjRw02M
+         57SgLoPc5BO517/PYiyWgdY1nlxUFNjrxxc841Ps801bO5YxThrNqIY0yluyGkuzQwKV
+         lEXrjH6W3mBKxpL1jc11xO64tn+E/MXlB4ZtsSgwEERMRabhHdn6uT7xd3xKZ7Mt8qiS
+         0Lxv2I0j07GUWJ41KSdBYALd8rpIxP8TQq6RNvNvemy5rQMdqipygno2A4tENKtz6C3f
+         DcczFOBVMdl9SVinsYEY+X3jXXREfV0Y68pZrvOAFoZmjYyBrzidLrwvB2gAEGbix/hY
+         B+aw==
+X-Gm-Message-State: APjAAAWrTksQlGJ3A/1euP8VVT7AievRTg+awvjLndGqR4gkDXp4PNty
+        pq0Xp6/WDwgtXeoOX9gViLz7HdNUIW5ICmbTlpZHYDWdQ85I
+X-Google-Smtp-Source: APXvYqxeGV620buUz0aPb2+Oqval4tymsKZZilxKrwLaNYS/Nod4djMLtWlaFmOVev18aExDa9BRLfJkWKbYX/1+mnSH+50izSU3
 MIME-Version: 1.0
-X-Received: by 2002:a02:1948:: with SMTP id b69mr23721911jab.55.1561361228126;
+X-Received: by 2002:a05:6602:218b:: with SMTP id b11mr39471009iob.264.1561361228329;
  Mon, 24 Jun 2019 00:27:08 -0700 (PDT)
 Date:   Mon, 24 Jun 2019 00:27:08 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005e6124058c0cbdbe@google.com>
-Subject: memory leak in fdb_create
-From:   syzbot <syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com>
-To:     bridge@lists.linux-foundation.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+Message-ID: <000000000000617b4a058c0cbd60@google.com>
+Subject: memory leak in mpihelp_mul_karatsuba_case
+From:   syzbot <syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,85 +60,86 @@ syzbot found the following crash on:
 
 HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12970eb2a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a8bfeaa00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
-dashboard link: https://syzkaller.appspot.com/bug?extid=88533dc8b582309bf3ee
+dashboard link: https://syzkaller.appspot.com/bug?extid=f7baccc38dcc1e094e77
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16de5c06a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10546026a00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171aa7e6a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153306cea00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com
+Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
 
-ffffffffda RBX: 0000000000000000 RCX: 0000000000441519
+ffffffffda RBX: 0000000000000000 RCX: 0000000000441ac9
 BUG: memory leak
-unreferenced object 0xffff888123886800 (size 128):
-   comm "softirq", pid 0, jiffies 4294945699 (age 13.160s)
+unreferenced object 0xffff88811f4da200 (size 512):
+   comm "syz-executor301", pid 7045, jiffies 4294955450 (age 7.850s)
    hex dump (first 32 bytes):
-     81 89 f8 20 81 88 ff ff 00 00 00 00 00 00 00 00  ... ............
-     32 f9 fc b7 11 e2 01 00 00 00 00 00 00 00 00 00  2...............
+     ad dc f4 43 66 b0 1a 88 8f 0c 17 d5 86 34 3a 85  ...Cf........4:.
+     e3 63 c8 bf 2e 3b f5 0d 1c ab 63 30 15 fe a1 e9  .c...;....c0....
    backtrace:
-     [<00000000ca2421fa>] kmemleak_alloc_recursive  
+     [<00000000d5589961>] kmemleak_alloc_recursive  
 include/linux/kmemleak.h:43 [inline]
-     [<00000000ca2421fa>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000ca2421fa>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000ca2421fa>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
-     [<000000007faade68>] fdb_create+0x49/0x5a0 net/bridge/br_fdb.c:492
-     [<00000000772dfc36>] fdb_insert+0xb7/0x100 net/bridge/br_fdb.c:536
-     [<00000000ded35dd0>] br_fdb_insert+0x3b/0x60 net/bridge/br_fdb.c:552
-     [<00000000758ae277>] __vlan_add+0x617/0xdf0 net/bridge/br_vlan.c:284
-     [<0000000054c3b165>] br_vlan_add+0x26f/0x480 net/bridge/br_vlan.c:678
-     [<00000000ed895462>] br_vlan_init+0xe9/0x130 net/bridge/br_vlan.c:1061
-     [<00000000f916c753>] br_dev_init+0xa6/0x170 net/bridge/br_device.c:137
-     [<00000000a4e1a1ea>] register_netdevice+0xbf/0x600 net/core/dev.c:8663
-     [<00000000bdcf4ebd>] register_netdev+0x24/0x40 net/core/dev.c:8851
-     [<0000000042e6c0c4>] br_add_bridge+0x5e/0xa0 net/bridge/br_if.c:456
-     [<0000000036402409>] br_ioctl_deviceless_stub+0x30c/0x350  
-net/bridge/br_ioctl.c:374
-     [<00000000e57c9a76>] sock_ioctl+0x287/0x480 net/socket.c:1141
-     [<00000000109b8329>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000109b8329>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000109b8329>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000d8eb5a5e>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000cd162915>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000cd162915>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000cd162915>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-
-BUG: memory leak
-unreferenced object 0xffff88811ced2de0 (size 32):
-   comm "syz-executor140", pid 6998, jiffies 4294945699 (age 13.160s)
-   hex dump (first 32 bytes):
-     d3 d2 f1 a7 6c 83 5b 30 30 15 a1 6f 77 3f 00 00  ....l.[00..ow?..
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d53fdc1e>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d53fdc1e>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000d53fdc1e>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000d53fdc1e>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000d53fdc1e>] __kmalloc_track_caller+0x15d/0x2c0 mm/slab.c:3675
-     [<00000000c742d29c>] kstrdup+0x3a/0x70 mm/util.c:52
-     [<00000000d3df5d2b>] kstrdup_const+0x48/0x60 mm/util.c:74
-     [<00000000d75a8fa8>] kvasprintf_const+0x7e/0xe0 lib/kasprintf.c:48
-     [<00000000ebee37a0>] kobject_set_name_vargs+0x40/0xe0 lib/kobject.c:289
-     [<00000000c23c056a>] dev_set_name+0x63/0x90 drivers/base/core.c:1915
-     [<000000004c47b6d3>] netdev_register_kobject+0x5a/0x1b0  
-net/core/net-sysfs.c:1727
-     [<000000005fb074af>] register_netdevice+0x397/0x600 net/core/dev.c:8733
-     [<00000000bdcf4ebd>] register_netdev+0x24/0x40 net/core/dev.c:8851
-     [<0000000042e6c0c4>] br_add_bridge+0x5e/0xa0 net/bridge/br_if.c:456
-     [<0000000036402409>] br_ioctl_deviceless_stub+0x30c/0x350  
-net/bridge/br_ioctl.c:374
-     [<00000000e57c9a76>] sock_ioctl+0x287/0x480 net/socket.c:1141
-     [<00000000109b8329>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000109b8329>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000109b8329>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000d8eb5a5e>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000cd162915>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000cd162915>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000cd162915>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000069b4ac36>] do_syscall_64+0x76/0x1a0  
+     [<00000000d5589961>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000d5589961>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000d5589961>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000d5589961>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<00000000022eaa00>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000022eaa00>] mpi_alloc_limb_space+0x29/0x50 lib/mpi/mpiutil.c:64
+     [<00000000d637c699>] mpihelp_mul_karatsuba_case+0x67/0x460  
+lib/mpi/mpih-mul.c:331
+     [<00000000401dc6f9>] mpi_powm+0x7b0/0xdd0 lib/mpi/mpi-pow.c:225
+     [<00000000be8dcb84>] _compute_val crypto/dh.c:39 [inline]
+     [<00000000be8dcb84>] dh_compute_value+0x160/0x220 crypto/dh.c:178
+     [<00000000471846ad>] crypto_kpp_generate_public_key  
+include/crypto/kpp.h:315 [inline]
+     [<00000000471846ad>] __keyctl_dh_compute+0x447/0x970  
+security/keys/dh.c:367
+     [<000000002f6d650d>] keyctl_dh_compute+0x67/0xa6 security/keys/dh.c:422
+     [<00000000b798bc7f>] __do_sys_keyctl security/keys/keyctl.c:1737  
+[inline]
+     [<00000000b798bc7f>] __se_sys_keyctl security/keys/keyctl.c:1633  
+[inline]
+     [<00000000b798bc7f>] __x64_sys_keyctl+0xa5/0x330  
+security/keys/keyctl.c:1633
+     [<000000007a6f9515>] do_syscall_64+0x76/0x1a0  
 arch/x86/entry/common.c:301
+     [<00000000057f2768>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811f4dac00 (size 512):
+   comm "syz-executor301", pid 7045, jiffies 4294955450 (age 7.850s)
+   hex dump (first 32 bytes):
+     62 72 c4 ae ac af a3 ba e5 24 da a5 30 5e cb c4  br.......$..0^..
+     a6 46 44 39 76 2e 42 f6 85 6a 5b ad ae 97 4e 83  .FD9v.B..j[...N.
+   backtrace:
+     [<00000000d5589961>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000d5589961>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000d5589961>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000d5589961>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000d5589961>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<00000000022eaa00>] kmalloc include/linux/slab.h:552 [inline]
+     [<00000000022eaa00>] mpi_alloc_limb_space+0x29/0x50 lib/mpi/mpiutil.c:64
+     [<0000000025804541>] mpihelp_mul_karatsuba_case+0x394/0x460  
+lib/mpi/mpih-mul.c:346
+     [<00000000401dc6f9>] mpi_powm+0x7b0/0xdd0 lib/mpi/mpi-pow.c:225
+     [<00000000be8dcb84>] _compute_val crypto/dh.c:39 [inline]
+     [<00000000be8dcb84>] dh_compute_value+0x160/0x220 crypto/dh.c:178
+     [<00000000471846ad>] crypto_kpp_generate_public_key  
+include/crypto/kpp.h:315 [inline]
+     [<00000000471846ad>] __keyctl_dh_compute+0x447/0x970  
+security/keys/dh.c:367
+     [<000000002f6d650d>] keyctl_dh_compute+0x67/0xa6 security/keys/dh.c:422
+     [<00000000b798bc7f>] __do_sys_keyctl security/keys/keyctl.c:1737  
+[inline]
+     [<00000000b798bc7f>] __se_sys_keyctl security/keys/keyctl.c:1633  
+[inline]
+     [<00000000b798bc7f>] __x64_sys_keyctl+0xa5/0x330  
+security/keys/keyctl.c:1633
+     [<000000007a6f9515>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000057f2768>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
 
