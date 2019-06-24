@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397A8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC93C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AC4205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46726208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370305;
-	bh=Ht+lqwGuGuk7NGpFlDLJDAPmiq8Fc7in8W3V2IbgdSQ=;
+	s=default; t=1561370306;
+	bh=Zg15pztu//YRoIkB29z76JytlOishIF08DkqrF/PHKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFcSOfvf1aDAH14Q4FAJnnXJq1ajWd1aDXi7LZjf6ZC13X89zNTNeotOZM1FUPtCa
-	 b9Sv9Kjy49Y4UdHorOfFU8Vs9zyNsTP17X6+uI5xqz1/61NgsnB+Uk9+JakQ+/R52S
-	 iycBQyikYrDltdghYTZzlrv0Js9LajK4A0T+JdFE=
+	b=GAVJsQ+tas0mLoNldzN4o8VpPHBavtFFEBboV60Mxjb7nRSD5LhqocnuKROm0ujOm
+	 R236O0pXMBR1G0zBbnXBw+xENOrskLo3ChxeunUh5Pc5KScydWLJItnAT8nQHCsYuh
+	 iu4KYztYMtwXMcFcdPK48xSsqmTrHqiDRYI1zYas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfFXJ6Y (ORCPT
+        id S1728983AbfFXJ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727529AbfFXJ6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:58:21 -0400
+        id S1728958AbfFXJ6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:58:19 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170A821537;
-        Mon, 24 Jun 2019 09:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70643214C6;
+        Mon, 24 Jun 2019 09:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370301;
-        bh=Ht+lqwGuGuk7NGpFlDLJDAPmiq8Fc7in8W3V2IbgdSQ=;
+        s=default; t=1561370298;
+        bh=Zg15pztu//YRoIkB29z76JytlOishIF08DkqrF/PHKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDPYU7hOtIy0PGy6ZAU69BVOKDOetGq8vUvkva/VEHoEfzMgBCp7Ijespqxp8xuId
-         6kc8hLRqyxqyHkuMbFWcinbsZ1mltAgICdZSJxy3FIwzr1iJvDsDfmA+ZOPYnkzm9Y
-         e5cMkmIErDCZsE2dVeZmNx0FY3OVjQKNZrHkroY8=
+        b=K/8KxwFLH8aDnXKbuaUaK7wx1t3CZWaEmkdiwz73M+ZBzBS/GBMWMGObFvPSmSXAA
+         yo6k4oCLm7oFXkmGIdFWNpn3TVAg8er8fSjoV58wljh9cEgs6AvJGufq8AhYLO7cjR
+         Ep7WnvvUglE8JEZcBdj3uGVkrk5jWM/Kd60VTsA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/51] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Mon, 24 Jun 2019 17:56:40 +0800
-Message-Id: <20190624092308.879060954@linuxfoundation.org>
+Subject: [PATCH 4.14 21/51] MIPS: uprobes: remove set but not used variable epc
+Date:   Mon, 24 Jun 2019 17:56:39 +0800
+Message-Id: <20190624092308.703469152@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -60,48 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
+[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
+arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
+arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
 
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
+It's never used since introduction in
+commit 40e084a506eb ("MIPS: Add uprobes support.")
 
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: <linux-mips@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/kernel/uprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 08175df7a69e..66eefe1919a4 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
- 
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
- {
- 	return memblock_reserve(start, end - start);
- }
+diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
+index f7a0645ccb82..6305e91ffc44 100644
+--- a/arch/mips/kernel/uprobes.c
++++ b/arch/mips/kernel/uprobes.c
+@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
+ 	 */
+ 	aup->resume_epc = regs->cp0_epc + 4;
+ 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
+-		unsigned long epc;
+-
+-		epc = regs->cp0_epc;
+ 		__compute_return_epc_for_insn(regs,
+ 			(union mips_instruction) aup->insn[0]);
+ 		aup->resume_epc = regs->cp0_epc;
 -- 
 2.20.1
 
