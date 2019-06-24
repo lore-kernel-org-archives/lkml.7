@@ -2,166 +2,85 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B10FC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC81C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0182089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C4A2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfFXIuz (ORCPT
+        id S1728116AbfFXIv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:50:55 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48951 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXIuz (ORCPT
+        Mon, 24 Jun 2019 04:51:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42137 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfFXIv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:50:55 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 853A11C0007;
-        Mon, 24 Jun 2019 08:50:50 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 10:50:50 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, mchehab+samsung@kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 10/11] dt-bindings: thermal: add binding document for
- h3 thermal controller
-Message-ID: <20190624085050.horyiz4wp24kzjui@flea>
-References: <20190623164206.7467-1-tiny.windzz@gmail.com>
- <20190623164206.7467-11-tiny.windzz@gmail.com>
+        Mon, 24 Jun 2019 04:51:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so6464314plb.9;
+        Mon, 24 Jun 2019 01:51:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EONwuevFixr8Kq27JTPWM25beefbW1BHfJwJ19KPbZ0=;
+        b=VoDeWW1Ux0XHHnE5tjW1Ew3NZP2ILoWbFvB8O4dysnakAg/LMy2rD0ZaUg9Y+nIVuq
+         3ZP9JRJPTKFc1c8LlqClsFQR7vO9Qudd19dsSqbriD7C/fAl7GbHf1R83VPhdnejF5b6
+         6UK/C0ncYHCV9zYHs8epyoTom1uyLYdhCTtUdJp5yzldDha0VoN/GorYPTA/u2LSbfIs
+         I4+mO8mAVx+nvQLql3JRwfKquBFuBQAS3KlAjQNAk5MbVOYVtlVoWnXPAUJao0/stkrG
+         Uv0YshGimN70n3sL147FMU/4rqplWdob5y5LYSL59KPRn4sFjRe/7BrGQy8grg3HV3S5
+         moxA==
+X-Gm-Message-State: APjAAAVp1oLwHT4BzRLcjph7zdwZodwhhgxV/apiPpAUw1XxRSHphtqb
+        g/9K9L/O5T1hay6x/nyF2Vs=
+X-Google-Smtp-Source: APXvYqz0GotPOPJXVNKI9Abz1knbO1BSWVLmPw5q+x/BqD/KlbvF9ZAkXpdBtlpnF3K9wADXZB139g==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr44099452plp.160.1561366317508;
+        Mon, 24 Jun 2019 01:51:57 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id t13sm9828121pjo.13.2019.06.24.01.51.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 01:51:56 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
+Cc:     Denis Efremov <efremov@linux.com>, Helge Deller <deller@gmx.de>,
+        "Rolf Eike Beer" <eike-kernel@sf-tec.de>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] parisc: asm: psw.h: missing header guard
+Date:   Mon, 24 Jun 2019 11:51:27 +0300
+Message-Id: <20190624085127.5310-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190623150920.26422-1-efremov@linux.com>
+References: <20190623150920.26422-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ytcr75eegmcwn5yh"
-Content-Disposition: inline
-In-Reply-To: <20190623164206.7467-11-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The psw.h header file contains #ifndef directive of the guard,
+but the complimentary #define directive is missing. The patch
+adds the appropriate #define to fix the header guard.
 
---ytcr75eegmcwn5yh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ arch/parisc/include/asm/psw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sun, Jun 23, 2019 at 12:42:05PM -0400, Yangtao Li wrote:
-> This patch adds binding document for allwinner h3 thermal controller.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/thermal/sun8i-thermal.yaml       | 29 +++++++++++++++++--
->  1 file changed, 26 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> index 2c5acc61ed03..1eaf68b5dd5a 100644
-> --- a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> @@ -16,6 +16,7 @@ description: |-
->  properties:
->    compatible:
->      enum:
-> +      - allwinner,sun8i-h3-ths
->        - allwinner,sun50i-h6-ths
->
->    reg:
-> @@ -29,13 +30,22 @@ properties:
->
->    clocks:
->      minItems: 1
-> -    maxItems: 1
-> +    maxItems: 2
->
->    clock-names:
-> -    const: bus
-> +    items:
-> +      - const: bus
-> +      - const: ahb
+diff --git a/arch/parisc/include/asm/psw.h b/arch/parisc/include/asm/psw.h
+index 76c301146c31..46921ffcc407 100644
+--- a/arch/parisc/include/asm/psw.h
++++ b/arch/parisc/include/asm/psw.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _PARISC_PSW_H
+-
++#define _PARISC_PSW_H
+ 
+ #define	PSW_I	0x00000001
+ #define	PSW_D	0x00000002
+-- 
+2.21.0
 
-You need a min/maxItems here as well. Otherwise, on the H6, you will
-have a warning since you asked for an array of two items, bus and ahb,
-while you only have a single one.
-
->    '#thermal-sensor-cells':
-> -    const: 1
-> +    enum: [ 0, 1 ]
-> +    description: |
-> +      Definition depends on soc version:
-> +
-> +      For "allwinner,sun8i-h3-ths",
-> +      value must be 0.
-> +      For "allwinner,sun50i-h6-ths",
-> +      value must be 1.
-
-This must be checked using a conditional.
-
-Something like:
-
-if:
-  properties:
-    compatible:
-      const: allwinner,sun8i-h3-ths
-
-then:
-  properties:
-    "#thermal-sensor-cells":
-      const: 0
-
-else:
-  properties:
-    "#thermal-sensor-cells":
-      const: 1
-
->    nvmem-cells:
->      items:
-> @@ -55,6 +65,19 @@ required:
->    - '#thermal-sensor-cells'
->
->  examples:
-> +  - |
-> +    ths: ths@1c25000 {
-> +         compatible = "allwinner,sun8i-h3-ths";
-> +         reg = <0x01c25000 0x400>;
-> +         clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-> +         clock-names = "bus", "ahb";
-> +         resets = <&ccu RST_BUS_THS>;
-> +         interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +         nvmem-cells = <&tsen_calib>;
-> +         nvmem-cell-names = "calib";
-> +         #thermal-sensor-cells = <0>;
-> +    };
-
-Same remark here, it won't compile
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ytcr75eegmcwn5yh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRCO6gAKCRDj7w1vZxhR
-xT5JAP9EnWnCbO23gVZGh5xK3A73eXeJMaPcwVSRyTcxDaC75wEA5lbrfaOfqwX9
-AZ4QA27PC8pe3lFJDh+4y7Q+DPT+7wI=
-=s6LE
------END PGP SIGNATURE-----
-
---ytcr75eegmcwn5yh--
