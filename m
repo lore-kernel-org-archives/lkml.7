@@ -2,111 +2,109 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD9DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC9020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mnrc7AJR"
+	by mail.kernel.org (Postfix) with ESMTP id 41FE620644
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfFXOtW (ORCPT
+        id S1730317AbfFXOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:49:22 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39811 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbfFXOtV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:49:21 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z23so13687074wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:references:reply-to:message-id:mime-version;
-        bh=qICt3tvrDEjsshgOgeqB9NCEtKIKhDes2GEOtGUCIpo=;
-        b=mnrc7AJREizTtyko4LB8qv6Cg5B7WxC4INlkHs9Ks4iSd2+apictmURS40KuI0t5Tn
-         IB2Vnf/t+LVnP+tv1JvqK0FMsszntab9bsBVDhaq6iH/5dr9u7y6ngMLni2/8v8/KD3I
-         1RNcMErB5MGZrpdrKROpddh54ZDHRNg8rOMycQTJexvvjS09bSP+7duvAXFZuxYnmwGn
-         Wpgf31NfM9CwuosNa95m1z+0d2TNHFTO5beH//s/fat/KCaC+gG8C9eFd8v7zvt8OC3u
-         asoDvcItzT1/rBmW1y+Ab6G7mIjNAxdR7PXNNpiCVmsN1jFfPqU98sGJajv6Icl+rVEt
-         2jCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:references:reply-to
-         :message-id:mime-version;
-        bh=qICt3tvrDEjsshgOgeqB9NCEtKIKhDes2GEOtGUCIpo=;
-        b=Amc7AcsmxA3mzmO5dajHi+jKsxKF4byzAFNh53eb8XRtzh04v90Ofkek0cYZ+fk8a/
-         g0fXhaa7z+3bw6A+mC3yXX6Ouvr1q5ZEuwx0g6fRXHwYIpEE9rA0uay3l9BUdndBFJnM
-         XkC5ewBaze8sEdr5mXyAvp0K/M1eyXCwrS3AqJTRMIaIGP74LypDcjVoQM1deGuCdcYg
-         zbDBfjVYdN2tiHeyxhyg8vllQPgUNKZnxGSUdXzRayuBdX46nAoeRNR9YM7tPXvteFYB
-         FlX8Sa6GURleKaAxi4f6T8n4MNQs1JuASYrTKFUwPx7meuBIztR05smzb1g7LskryliY
-         ZfYg==
-X-Gm-Message-State: APjAAAUyaCzN2/6NRs4tBK3vJwhVObys5xCPo2Ae2Ju8rJ1U2vsC+fRl
-        VazJLvjUdT36+ahf5O3SjWmz61b0ruY=
-X-Google-Smtp-Source: APXvYqyo+n4FXVEBememSCgVf3nyfXvEm0+s6OodWbZ0mTPQMuiNLuOddy70bQx8iLDOUizpxuJGKg==
-X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr15799778wmb.119.1561387759831;
-        Mon, 24 Jun 2019 07:49:19 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t63sm11204083wmt.6.2019.06.24.07.49.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 07:49:19 -0700 (PDT)
-From:   Julien Masson <jmasson@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
-Subject: [PATCH 9/9] drm: meson: venc: set the correct macrovision max
- amplitude value
-Date:   Mon, 24 Jun 2019 16:49:12 +0200
-References: <86zhm782g5.fsf@baylibre.com>
-Reply-To: <86zhm782g5.fsf@baylibre.com>
-Message-ID: <86mui782dt.fsf@baylibre.com>
+        Mon, 24 Jun 2019 10:49:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40950 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728127AbfFXOt2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:49:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 07:49:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
+   d="scan'208";a="163342375"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.94]) ([10.254.211.94])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Jun 2019 07:49:25 -0700
+Subject: Re: [PATCH v4 4/7] perf diff: Use hists to manage basic blocks per
+ symbol
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1561041402-29444-1-git-send-email-yao.jin@linux.intel.com>
+ <1561041402-29444-5-git-send-email-yao.jin@linux.intel.com>
+ <20190624075718.GE5471@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <cdc87d42-8a5c-5b12-c746-896e3324cb35@linux.intel.com>
+Date:   Mon, 24 Jun 2019 22:49:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190624075718.GE5471@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the register description of ENCI_MACV_MAX_AMP, the
-macrovision max amplitude value should be:
-- hdmi 480i => 0xb
-- hdmi 576i => 0x7
 
-The max value is 0x7ff (10 bits).
 
-Signed-off-by: Julien Masson <jmasson@baylibre.com>
----
- drivers/gpu/drm/meson/meson_venc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 6/24/2019 3:57 PM, Jiri Olsa wrote:
+> On Thu, Jun 20, 2019 at 10:36:39PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> +
+>> +static void *block_entry_zalloc(size_t size)
+>> +{
+>> +	return zalloc(size + sizeof(struct hist_entry));
+>> +}
+>> +
+>> +static void block_entry_free(void *he)
+>> +{
+>> +	struct block_info *bi = ((struct hist_entry *)he)->block_info;
+>> +
+>> +	block_info__put(bi);
+>> +	free(he);
+>> +}
+>> +
+>> +struct hist_entry_ops block_entry_ops = {
+>> +	.new    = block_entry_zalloc,
+>> +	.free   = block_entry_free,
+>> +};
+> 
+> hum, so there's already block_hist_ops moving that stuff into 'struct block_hist',
+> which is great, but why don't we have 'struct block_entry' in here? that would
+> keep the 'struct block_info'
+> 
+> thanks,
+> jirka
+> 
 
-diff --git a/drivers/gpu/drm/meson/meson_venc.c b/drivers/gpu/drm/meson/meson_venc.c
-index 2835133ab676..acad16ff7371 100644
---- a/drivers/gpu/drm/meson/meson_venc.c
-+++ b/drivers/gpu/drm/meson/meson_venc.c
-@@ -192,7 +192,7 @@ union meson_hdmi_venc_mode meson_hdmi_enci_mode_480i = {
- 		.hso_end = 129,
- 		.vso_even = 3,
- 		.vso_odd = 260,
--		.macv_max_amp = 0x810b,
-+		.macv_max_amp = 0xb,
- 		.video_prog_mode = 0xf0,
- 		.video_mode = 0x8,
- 		.sch_adjust = 0x20,
-@@ -212,7 +212,7 @@ union meson_hdmi_venc_mode meson_hdmi_enci_mode_576i = {
- 		.hso_end = 129,
- 		.vso_even = 3,
- 		.vso_odd = 260,
--		.macv_max_amp = 8107,
-+		.macv_max_amp = 0x7,
- 		.video_prog_mode = 0xff,
- 		.video_mode = 0x13,
- 		.sch_adjust = 0x28,
--- 
-2.17.1
+Hi Jiri,
 
+If I define 'struct block_entry' as following and cast 'he' to 'struct 
+block_entry' in some places, such as in block_cmp(), we can get the 
+'struct block_entry'.
+
+struct block_entry {
+	struct block_info bi;
+	struct hist_entry he;
+};
+
+But I don't know when I can set the 'bi' of 'struct block_entry'. Before 
+or after calling hists__add_entry_xxx()? Before calling 
+hists__add_entry_xxx(), we don't know the hist_entry. After calling 
+hists__add_entry_xxx(), actually the hist_entry__cmp doesn't work (no bi ).
+
+That's why I create block_info in hist_entry. Maybe I misunderstand what 
+your suggested, correct me if I'm wrong.
+
+Thanks
+Jin Yao
