@@ -2,84 +2,129 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150DBC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56473C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54FD208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561346247;
-	bh=uXZHOHUtLcEMnM5mBVcj3Apcs/iHOElmyoO1V8O2rCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w/WYWbNh5aFap+CPKD9SlPPDYDXfMPG3CsyjfvAib6/ANjbEt/g2weOKX3jgZsN4L
-	 l/qJVJyCSAo0Djp8mkoUiqOIITSO+Z6zG+WqvNGePYoC3GOEE/NNiXKV0E5ISNuljO
-	 H7AnkSMKLBla6ZRvZ0Blm+vPp6z1h0KlxGBdQ+R4=
+	by mail.kernel.org (Postfix) with ESMTP id 22C89208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfFXDR0 (ORCPT
+        id S1727550AbfFXDTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:17:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46608 "EHLO mail.kernel.org"
+        Sun, 23 Jun 2019 23:19:41 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:41682 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfFXDR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:17:26 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7579120663;
-        Mon, 24 Jun 2019 03:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561346245;
-        bh=uXZHOHUtLcEMnM5mBVcj3Apcs/iHOElmyoO1V8O2rCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O0w6mnKDtsQiP5FItZQgTYOishkH95cwlStBEtx5KZOA4/uDidjWfkJMW1945J2Nt
-         1ox1/OCeZEt6EsF+QVIvzNvR1my6libK0c4uYDqBEGiG83TNzluBT1+EQdPerwVZDT
-         KbBqIvGO8bBw2uct1DGJiBLB8yqO9+3KgHmuHCkg=
-Date:   Mon, 24 Jun 2019 11:16:52 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
-        songliubraving@fb.com, andrew@lunn.ch, peterz@infradead.org,
-        nsekhar@ti.com, ast@kernel.org, jolsa@redhat.com,
-        netdev@vger.kernel.org, gerg@uclinux.org,
-        lorenzo.pieralisi@arm.com, will@kernel.org,
-        linux-samsung-soc@vger.kernel.org, daniel@iogearbox.net,
-        festevam@gmail.com, gregory.clement@bootlin.com,
-        allison@lohutok.net, linux@armlinux.org.uk, krzk@kernel.org,
-        haojian.zhuang@gmail.com, bgolaszewski@baylibre.com,
-        tony@atomide.com, mingo@redhat.com, linux-imx@nxp.com, yhs@fb.com,
-        sebastian.hesselbarth@gmail.com, illusionist.neo@gmail.com,
-        jason@lakedaemon.net, liviu.dudau@arm.com, s.hauer@pengutronix.de,
-        acme@kernel.org, lkundrak@v3.sk, robert.jarzmik@free.fr,
-        dmg@turingmachine.org, swinslow@gmail.com, namhyung@kernel.org,
-        tglx@linutronix.de, linux-omap@vger.kernel.org,
-        alexander.sverdlin@gmail.com, linux-arm-kernel@lists.infradead.org,
-        info@metux.net, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        hsweeten@visionengravers.com, kgene@kernel.org,
-        kernel@pengutronix.de, sudeep.holla@arm.com, bpf@vger.kernel.org,
-        kafai@fb.com, daniel@zonque.org
-Subject: Re: [PATCH 06/15] ARM: imx: cleanup cppcheck shifting errors
-Message-ID: <20190624031651.GA16146@dragon>
-References: <20190623151313.970-1-tranmanphong@gmail.com>
- <20190623151313.970-7-tranmanphong@gmail.com>
+        id S1726307AbfFXDTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:19:41 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x5O3HmLU005347
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sun, 23 Jun 2019 20:18:03 -0700
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 23 Jun 2019 20:17:41 -0700
+From:   <zhe.he@windriver.com>
+To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
+        <davem@davemloft.net>, <netfilter-devel@vger.kernel.org>,
+        <coreteam@netfilter.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
+Subject: [PATCH] netfilter: Fix remainder of pseudo-header protocol 0
+Date:   Mon, 24 Jun 2019 11:17:38 +0800
+Message-ID: <1561346258-272481-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623151313.970-7-tranmanphong@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 10:13:04PM +0700, Phong Tran wrote:
-> [arch/arm/mach-imx/iomux-mx3.h:93]: (error) Shifting signed 32-bit value
-> by 31 bits is undefined behaviour
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+From: He Zhe <zhe.he@windriver.com>
 
-Applied, thanks.
+Since v5.1-rc1, some types of packets do not get unreachable reply with the
+following iptables setting. Fox example,
+
+$ iptables -A INPUT -p icmp --icmp-type 8 -j REJECT
+$ ping 127.0.0.1 -c 1
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+— 127.0.0.1 ping statistics —
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+We should have got the following reply from command line, but we did not.
+From 127.0.0.1 icmp_seq=1 Destination Port Unreachable
+
+Yi Zhao reported it and narrowed it down to:
+7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it"),
+
+This is because nf_ip_checksum still expects pseudo-header protocol type 0 for
+packets that are of neither TCP or UDP, and thus ICMP packets are mistakenly
+treated as TCP/UDP.
+
+This patch corrects the conditions in nf_ip_checksum and all other places that
+still call it with protocol 0.
+
+Fixes: 7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it")
+Reported-by: Yi Zhao <yi.zhao@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+ net/netfilter/nf_conntrack_proto_icmp.c | 2 +-
+ net/netfilter/nf_nat_proto.c            | 2 +-
+ net/netfilter/utils.c                   | 5 +++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/net/netfilter/nf_conntrack_proto_icmp.c b/net/netfilter/nf_conntrack_proto_icmp.c
+index a824367..dd53e2b 100644
+--- a/net/netfilter/nf_conntrack_proto_icmp.c
++++ b/net/netfilter/nf_conntrack_proto_icmp.c
+@@ -218,7 +218,7 @@ int nf_conntrack_icmpv4_error(struct nf_conn *tmpl,
+ 	/* See ip_conntrack_proto_tcp.c */
+ 	if (state->net->ct.sysctl_checksum &&
+ 	    state->hook == NF_INET_PRE_ROUTING &&
+-	    nf_ip_checksum(skb, state->hook, dataoff, 0)) {
++	    nf_ip_checksum(skb, state->hook, dataoff, IPPROTO_ICMP)) {
+ 		icmp_error_log(skb, state, "bad hw icmp checksum");
+ 		return -NF_ACCEPT;
+ 	}
+diff --git a/net/netfilter/nf_nat_proto.c b/net/netfilter/nf_nat_proto.c
+index 07da077..83a24cc 100644
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -564,7 +564,7 @@ int nf_nat_icmp_reply_translation(struct sk_buff *skb,
+ 
+ 	if (!skb_make_writable(skb, hdrlen + sizeof(*inside)))
+ 		return 0;
+-	if (nf_ip_checksum(skb, hooknum, hdrlen, 0))
++	if (nf_ip_checksum(skb, hooknum, hdrlen, IPPROTO_ICMP))
+ 		return 0;
+ 
+ 	inside = (void *)skb->data + hdrlen;
+diff --git a/net/netfilter/utils.c b/net/netfilter/utils.c
+index 06dc555..51b454d 100644
+--- a/net/netfilter/utils.c
++++ b/net/netfilter/utils.c
+@@ -17,7 +17,8 @@ __sum16 nf_ip_checksum(struct sk_buff *skb, unsigned int hook,
+ 	case CHECKSUM_COMPLETE:
+ 		if (hook != NF_INET_PRE_ROUTING && hook != NF_INET_LOCAL_IN)
+ 			break;
+-		if ((protocol == 0 && !csum_fold(skb->csum)) ||
++		if ((protocol != IPPROTO_TCP && protocol != IPPROTO_UDP &&
++		    !csum_fold(skb->csum)) ||
+ 		    !csum_tcpudp_magic(iph->saddr, iph->daddr,
+ 				       skb->len - dataoff, protocol,
+ 				       skb->csum)) {
+@@ -26,7 +27,7 @@ __sum16 nf_ip_checksum(struct sk_buff *skb, unsigned int hook,
+ 		}
+ 		/* fall through */
+ 	case CHECKSUM_NONE:
+-		if (protocol == 0)
++		if (protocol != IPPROTO_TCP && protocol != IPPROTO_UDP)
+ 			skb->csum = 0;
+ 		else
+ 			skb->csum = csum_tcpudp_nofold(iph->saddr, iph->daddr,
+-- 
+2.7.4
+
