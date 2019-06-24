@@ -2,130 +2,94 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD7AC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58EAC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53595205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdYoeXBB"
+	by mail.kernel.org (Postfix) with ESMTP id C547D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfFXKmZ (ORCPT
+        id S1729389AbfFXKmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:42:25 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44976 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbfFXKmZ (ORCPT
+        Mon, 24 Jun 2019 06:42:45 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:57125 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbfFXKmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:42:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so9624298lfm.11;
-        Mon, 24 Jun 2019 03:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZKQur/4feM7yNS7/yjihV2CmCsKO6qLzrXuCht+A5oM=;
-        b=LdYoeXBBpqQ2fwvRbztpeh8hFO3N+98fqdFUyS35G7dvgm+WGNyRVubCCIaJn7OIA0
-         GFzYPD5Vi3po9+AHIhddgYC/VtRWJz7Hi1ZNqE33iok9f2XAejNUNPQF4anxX+uoSHeY
-         /KZw2U0wefzixeDhKMQUuimTVY8KuyCL6+JCxNuIN0+tSW1PDunvD7KVvXqM/MxiF7wC
-         niJovSyHpviJIj4r5XkXsZ8H0BgRYu+DJmzutdNTxB1wNPekKh36l5zbw/yJBWTgQz4l
-         loGDD3hoVJsh/5wdD0lvFgUofVOKm55tSpMxq7i0Z05jam3cfKrva/0NDwj4XNPi335k
-         GKsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZKQur/4feM7yNS7/yjihV2CmCsKO6qLzrXuCht+A5oM=;
-        b=KyKx3qFQzCwLVFSVB8yhfJTuNFgC14f82ckBHGWnNlbVIw+rwtWZt8J5ETai9J+fUo
-         JqF/VRJnVN2H7B7HKc2MZI/xjojgXTH/p5cePNILjK5gYOPJqS2LQm6kArE1NtBgc3LB
-         yDQ7EUCNOPFhCLvwS9f+WlB89LcFfC/p6H9m6TVBINf4I14KPnP3JCNXxZYwCRJyKUFd
-         vVWQG7bUJXOJ83rep005kKUqwf7JBjFVraX0GWPrXrsJAoI6xoLIJNF9oKXOD+s6LRVs
-         ENWRaxu0vSFHeHMovlilIeMri4y1W0d4feAlCHYqov8AmxfWdUz3YT2fucfy5zCdar43
-         JsLQ==
-X-Gm-Message-State: APjAAAX/CNq4Z3/23gFaQnYT+Mp7GKK+BIKSLkvVbeVM0WcnCCI0QuXL
-        gHWHogSlZtEPwEDylQ3ph3Y=
-X-Google-Smtp-Source: APXvYqwYusjRTqAjFQIBBX2wQHYSRL2eiIcDsSuX5Yg2cauKLG99VWoJGr6qEkokrtmME+zPpnwEfQ==
-X-Received: by 2002:ac2:596c:: with SMTP id h12mr13962464lfp.101.1561372942517;
-        Mon, 24 Jun 2019 03:42:22 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id w1sm1914739ljm.81.2019.06.24.03.42.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 03:42:21 -0700 (PDT)
-Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-To:     myungjoo.ham@samsung.com
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-References: <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
- <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p8>
- <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
-Date:   Mon, 24 Jun 2019 13:42:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 24 Jun 2019 06:42:45 -0400
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BE47B100005;
+        Mon, 24 Jun 2019 10:42:38 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 12:42:34 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Vincent Donnefort <vdonnefort@gmail.com>,
+        linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] rtc: pcf8563: Fix unhandled interrupt storm
+Message-ID: <20190624104234.GG3133@piout.net>
+References: <20190604042337.26129-1-wens@kernel.org>
+ <20190620162220.GA23549@piout.net>
+ <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.06.2019 10:34, MyungJoo Ham пишет:
->>
->> A question:
->>
->> Does this driver support Tegra20 as well?
->> I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
->> according to /drivers/soc/tegra/Kconfig.
->>
+On 24/06/2019 18:34:29+0800, Chen-Yu Tsai wrote:
+> On Fri, Jun 21, 2019 at 12:22 AM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> >
+> > On 04/06/2019 12:23:34+0800, Chen-Yu Tsai wrote:
+> > > From: Chen-Yu Tsai <wens@csie.org>
+> > >
+> > > Hi everyone,
+> > >
+> > > While bringing up my Pine H64, I encountered an interrupt storm from the
+> > > pcf8563 RTC. The RTC chip's interrupt line is shared with the PMIC, and
+> > > was not properly added to the device tree. Also, the driver was using an
+> > > trigger method incompatible with the PMIC, preventing the interrupt line
+> > > from being shared. Last, the driver only clears and masks the alarm
+> > > interrupt, while leaving the timer interrupt untouched. This is a
+> > > problem if previous systems left the timer interrupt enabled, and there
+> > > was an interrupt pending.
+> > >
+> > > This patch set fixes all three issues, one per patch.
+> > >
+> > > Please have a look.
+> > >
+> >
+> > I don't have that particular RTC so I can't test but the interrupt
+> > handling in pcf8563_irq seems problematic too. I guess the RTC will only
+> > trigger once per second because the call to pcf8563_set_alarm_mode will
+> > explicitely leave the alarm enabled. The core doesn't really care but it
+> > doesn't really expect the alarm to stay enabled. i.e. It will ensure the
+> > alarm is enabled again after setting it when necessary. I think it would
+> > be safer to simply clear both AIE and AF here. Could you test?
 > 
-> For this matter, how about updating your 13/16 patch as follows?
+> Yeah, that bit looked weird to me as well. And actually the alarm doesn't
+> go down to the second, only the minute.
 > 
-> ---
->  drivers/devfreq/Kconfig         | 4 ++--
->  drivers/devfreq/tegra-devfreq.c | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 7dd46d44579d..78c4b436aad8 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -93,8 +93,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
->  	  This does not yet operate with optimal voltages.
->  
->  config ARM_TEGRA_DEVFREQ
-> -	tristate "Tegra DEVFREQ Driver"
-> -	depends on ARCH_TEGRA_124_SOC
-> +	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
-> +	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || ARCH_TEGRA_124_SOC || ARCH_TEGRA_210_SOC
->  	select PM_OPP
->  	help
->  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-> index 5cddf2199c4e..a6ba75f4106d 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -726,6 +726,7 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id tegra_devfreq_of_match[] = {
-> +	{ .compatible = "nvidia,tegra30-actmon" },
->  	{ .compatible = "nvidia,tegra124-actmon" },
->  	{ },
->  };
+> Is there a test program I can use to test the alarms?
 > 
 
-Good call! I'll update this patch following yours suggestion, thanks.
+Sure, tools/testing/selftests/rtc/rtctest.c if you use a recent enough
+version, it will test minute boundaries.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
