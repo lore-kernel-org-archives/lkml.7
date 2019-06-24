@@ -2,94 +2,114 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C6BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E17C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABDD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5148A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="39ByeK7q"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hMAayp2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbfFXNNR (ORCPT
+        id S1730767AbfFXNOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:13:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53004 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbfFXNNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:13:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=w71H7qbKzheuPjLTSksNNI0MO2TJKsefOHajDzNwZgs=; b=39ByeK7qX2ak7a7iM7z8+DWROE
-        KFDEQzjJaWASnQiIZ2oZU7hW5oKBH3vw5ic18SbPnO8IpKNSZ8JhOGkJAXtSIoJxj+hqb9Z+2XP6t
-        ZSwePeCn44vuBv9RYayRq4GJ5odIldzQZZiA9G4KqoN7/QaexM0h6H9yh0XchlMfXkME=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hfOmR-0004ll-Ta; Mon, 24 Jun 2019 15:13:07 +0200
-Date:   Mon, 24 Jun 2019 15:13:07 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v4 4/5] net: macb: add support for high speed interface
-Message-ID: <20190624131307.GA17872@lunn.ch>
-References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
- <1561281806-13991-1-git-send-email-pthombar@cadence.com>
- <20190623150902.GB28942@lunn.ch>
- <CO2PR07MB2469FDA06C3F8848290013B8C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+        Mon, 24 Jun 2019 09:14:04 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:45643 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfFXNOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:14:03 -0400
+Received: by mail-wr1-f52.google.com with SMTP id f9so13834375wre.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 06:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B+oomzOAjO98XLvoEbiqoPvmm7twt6bFPtAYlt6Hi1o=;
+        b=hMAayp2UQdANcARpsGk4OKb2NvkK80e/RLWe4sGNTFGNjnzPHOr66W9tTCseB6kK91
+         +z78X02QLPBbWk7jpBwfH4cXuZJ3pRRAYHBZFKWrf7iB24nWOqdNlJONx2egfuhXh8v2
+         7Nij2e31zxzsRHKCM2BdZJlKWhi8C8luIKv4ofb2RSiceC899WPS1w+c0tmCEogWHt3c
+         VsGAahOSSVwNLne26KOpLaFmR9vwRM0J7wPlgHwZ9hN6fAR/ulFf3YRif5rGR42Nm+uD
+         o9Gp85pqhlaj4wKDo6cvwHxvbGK31HpQb2+Vvl3Js09MWh8cc48hU4TM1XKtoFiJp851
+         W5ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B+oomzOAjO98XLvoEbiqoPvmm7twt6bFPtAYlt6Hi1o=;
+        b=qs9Ic8fLCqadb70CptNpZtgijeTK2mRAUSnEngLN5MQrWbDkor0mvQdIfo4s/nKi/Y
+         nvbphsUNMveqQrkH7+fpdwbaVrFt2RfaPDYCP6f1nYfiuZo86zderCWr5zkfDedjr8fa
+         9N02sY3c4a0W6s5ymC4hPUj730wSDojJdeHTPagb78R8Ou4MZxkeTOohGE9Cq6eYm9M/
+         Jse5S+/LTW88Rrpey63b+j3qHWUEYe7bO9oMjuCIhzu1eUH+WzZo8HmnNVuJWmV4M8sK
+         eEHKlZ3mCnk+rh05BTrjfQrUuY8FVLyQXzr17vbjjLhaFubwd2qf2S2iVcDd42bS18uD
+         5+WQ==
+X-Gm-Message-State: APjAAAWUFc5rLQtDAdCuCZoADJyBAbW7rGEuJSAELd001g0ZV44Z+oAO
+        MTBwXoZw/8J//586cnCssdYkuQ==
+X-Google-Smtp-Source: APXvYqxl4eykzFe6CYTPiNlEmYQ0qHeH12pFnrSjRcCW0j/dYnT5i9nw/Ayhvc4HKR/lSsuV5WcmFw==
+X-Received: by 2002:adf:edcd:: with SMTP id v13mr31650518wro.210.1561382041611;
+        Mon, 24 Jun 2019 06:14:01 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id y2sm9535526wrl.4.2019.06.24.06.14.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 06:14:01 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>,
+        Kevin Hilman <khilman@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 00/10] ARM: davinci: use the new clocksource driver
+Date:   Mon, 24 Jun 2019 15:13:41 +0200
+Message-Id: <20190624131351.3732-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO2PR07MB2469FDA06C3F8848290013B8C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 06:52:51AM +0000, Parshuram Raju Thombare wrote:
-> Hi Andrew,
-> 
-> >> +enum {
-> >> +	MACB_SERDES_RATE_5_PT_15625Gbps = 5,
-> >> +	MACB_SERDES_RATE_10_PT_3125Gbps = 10,
-> >> +};
-> >What do the units mean here? Why would you clock the SERDES at 15Tbps,
-> >or 3Tbps? 3.125Mbps would give you 2.5Gbps when using 8b/10b encoding.
-> >
-> MACB_SERDES_RATE_5_PT_15625Gbps is for 5.15625Gbps, I think this should be just
-> MACB_SERDES_RATE_5_Gbps and MACB_SERDES_RATE_10_Gbps. I will do it in next patch set.
- 
-OK.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> >Xilinx documentation:
-> >https://urldefense.proofpoint.com/v2/url?u=https-
-> >3A__www.xilinx.com_support_documentation_ip-5Fdocumentation_usxgmii_v1-
-> >5F1_pg251-
-> >2Dusxgmii.pdf&d=DwIBAg&c=aUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-
-> >_haXqY&r=GTefrem3hiBCnsjCOqAuapQHRN8-rKC1FRbk0it-
-> >LDs&m=6V8fNIg49czRjfvVtDJ5BbR28p9UPlLLyB7fah7ypcw&s=LsDphgLBe1VDpM
-> >_K9pkuyal873WeKqHDv64NDRUWy1Q&e=
-> >seems to suggest USXGMII uses a fixed rate of 10.3125Gb/s. So why do
-> >you need to change the rate?
-> For USXGMII, Cadence MAC need to be correctly programmed for external serdes rate.
+Hi Sekhar,
 
-What i'm saying is that the USXGMII rate is fixed. So why do you need
-a device tree property for the SERDES rate?
+once the clocksource driver is in some upstream branch, you can pick this
+series up - it contains the platform code necessary to use the new module.
 
-     Andrew
+Tested on da850-evm/lcdk, da830-evm and dm365-evm.
+
+Bartosz Golaszewski (10):
+  ARM: davinci: enable the clocksource driver for DT mode
+  ARM: davinci: WARN_ON() if clk_get() fails
+  ARM: davinci: da850: switch to using the clocksource driver
+  ARM: davinci: da830: switch to using the clocksource driver
+  ARM: davinci: move timer definitions to davinci.h
+  ARM: davinci: dm355: switch to using the clocksource driver
+  ARM: davinci: dm365: switch to using the clocksource driver
+  ARM: davinci: dm644x: switch to using the clocksource driver
+  ARM: davinci: dm646x: switch to using the clocksource driver
+  ARM: davinci: remove legacy timer support
+
+ arch/arm/Kconfig                            |   1 +
+ arch/arm/mach-davinci/Makefile              |   3 +-
+ arch/arm/mach-davinci/da830.c               |  45 +--
+ arch/arm/mach-davinci/da850.c               |  50 +--
+ arch/arm/mach-davinci/davinci.h             |   3 +
+ arch/arm/mach-davinci/devices-da8xx.c       |   1 -
+ arch/arm/mach-davinci/devices.c             |  19 -
+ arch/arm/mach-davinci/dm355.c               |  28 +-
+ arch/arm/mach-davinci/dm365.c               |  26 +-
+ arch/arm/mach-davinci/dm644x.c              |  28 +-
+ arch/arm/mach-davinci/dm646x.c              |  28 +-
+ arch/arm/mach-davinci/include/mach/common.h |  17 -
+ arch/arm/mach-davinci/include/mach/time.h   |  35 --
+ arch/arm/mach-davinci/time.c                | 414 --------------------
+ 14 files changed, 110 insertions(+), 588 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/time.h
+ delete mode 100644 arch/arm/mach-davinci/time.c
+
+-- 
+2.21.0
+
