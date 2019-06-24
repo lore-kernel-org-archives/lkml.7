@@ -2,146 +2,116 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3E4C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14DEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843722089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF88221530
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 06:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="SYnMEoOx";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="VdYSDDmR"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="ZjvM1TUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFXGU0 (ORCPT
+        id S1727640AbfFXGYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 02:20:26 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:20896 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726351AbfFXGUZ (ORCPT
+        Mon, 24 Jun 2019 02:24:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46295 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfFXGYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 02:20:25 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5O6IebC019638;
-        Sun, 23 Jun 2019 23:20:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=z3ILgSACcvAXJI3EvRsZLbRSZTtFOdIrxCAjErwZB7g=;
- b=SYnMEoOxSHBMbtAufTM/oeKKRR0wcI0Kyq64uLlW+uY4vi6cte4MRVgJochmhfIWEVGQ
- XWnpKLt72myxc2h8vMWkAMAVXdCRhRj/62GyQeqfLZXFyd2lziVkLTlfNMrOjuchq+zf
- OV7tOYNiwqCHm8JhsLHBq27Wii2+YIUZGmCZ34Acp4XRq0Q0p5M54KV6DQMO+EA/e2Pu
- y3P1PpOtA9ePjMDYPP7RRhj1al3J1yg3DBMONWj+MkSQK8vGRPIZ5BIa3rahXiOCMiG5
- jLCsvzsHMa9DsuL14bz73BOSccRVShSqsitth/ZjCX1sMwOfBk3fQWS5CmjmrlkNdG0o Dg== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2057.outbound.protection.outlook.com [104.47.36.57])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t9fwtpe39-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Sun, 23 Jun 2019 23:20:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3ILgSACcvAXJI3EvRsZLbRSZTtFOdIrxCAjErwZB7g=;
- b=VdYSDDmRePHniwnh5n9/Xaio5JdclZWNbIgCeWaTqJ21dMMoim44skh/VINrZlDtz5n/08IlfJpPB8RANDN6P3u+TKnFtmdeJcRmAJxQ27qM3erBJ59iUS4XYouGGJ06sWeVAyE5VJiU96vd5jzYnGCNUTb/IT2q2yFLLyRyjkg=
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
- CO2PR07MB2712.namprd07.prod.outlook.com (10.166.214.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Mon, 24 Jun 2019 06:20:08 +0000
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1987.014; Mon, 24 Jun 2019
- 06:20:08 +0000
-From:   Parshuram Raju Thombare <pthombar@cadence.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: RE: [PATCH v4 1/5] net: macb: add phylink support
-Thread-Topic: [PATCH v4 1/5] net: macb: add phylink support
-Thread-Index: AQHVKaSN3qrqEsWli063GBHHwWl8xKapA+YAgAFSgZA=
-Date:   Mon, 24 Jun 2019 06:20:08 +0000
-Message-ID: <CO2PR07MB246976240B2635F4E9C027A5C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
-References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
- <1561281457-6886-1-git-send-email-pthombar@cadence.com>
- <20190623100824.3xlmkofiqebdf4sa@shell.armlinux.org.uk>
-In-Reply-To: <20190623100824.3xlmkofiqebdf4sa@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0xYTExZTM5OS05NjQ4LTExZTktODRmOC0wNGQzYjAyNzc0NGFcYW1lLXRlc3RcMWExMWUzOWItOTY0OC0xMWU5LTg0ZjgtMDRkM2IwMjc3NDRhYm9keS50eHQiIHN6PSIxMDEyIiB0PSIxMzIwNTgzMDgwNDEwMTE2NTMiIGg9ImZkUVhoT1lKR2JyRGdDMDJrbGxiSTBvZGpwWT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90edc05b-e7bc-4465-dd89-08d6f86c0165
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2712;
-x-ms-traffictypediagnostic: CO2PR07MB2712:
-x-microsoft-antispam-prvs: <CO2PR07MB27128A8FB15B45B9ECBA7F9AC1E00@CO2PR07MB2712.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(346002)(376002)(36092001)(199004)(189003)(316002)(55016002)(73956011)(81166006)(7736002)(68736007)(3846002)(476003)(8676002)(11346002)(186003)(86362001)(76176011)(66066001)(14444005)(102836004)(9686003)(76116006)(54906003)(71200400001)(478600001)(55236004)(71190400001)(6506007)(229853002)(6436002)(99286004)(2906002)(5660300002)(26005)(53936002)(6246003)(81156014)(64756008)(446003)(7696005)(8936002)(4326008)(33656002)(14454004)(66556008)(78486014)(74316002)(305945005)(107886003)(52536014)(66946007)(256004)(6116002)(66476007)(6916009)(25786009)(486006)(66446008)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2712;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qONOKQpcRIq8m7Y+GLM1GJ1eiKXouR8gy5gdgg/gECVAoK+YjnQOnk2t7T1RmeRDsAYVn6yORtDXeaYcrIB8YNGyz+pMVAhN1qL0Ju3QOMbX11Ax9ukIqt4mOY/6d+/w786skQn3pRSIvk+xRYhvNx67EAB6QeqCT3oep90T0qe0vpSCd64iCJFWhuaBtTeY1MQlynYZZZrHoI9J9oEAeqVSEGlvJGNAwXiBbJvYQZ5rIBUIsiKbTIg5KBzm5bHBBGG3TECfhaUOZdicebnndkFL7uGb1UQBHaEVlk8a6P7dpW+4oW11XKRfsKkylt7SOQMfftR/l4UvxKGWUcA0OIGZHSRUT1DyhCEtD0DdGQtPAxgoEbJ77SVyS4RTl0X/sbwfim3auPgQjvxTIsW49Opy2vAq8FP7xhy00LumHVg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Jun 2019 02:24:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v9so6511758pgr.13
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 23:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pbnnd8izcGZKojl0PAuQtOXrWbhGmDWvjwa6KZ4Vaic=;
+        b=ZjvM1TUi/T4fCBeNXp+wj0GMAZG9W7FexedmAEwr1vitPQqPi7joKlwvTdV04cadzX
+         N8VEemayP0VA1MPMhMCF+AFWWGCgBvqWd/PhyqPUsPbPdAe47lgAhW0+QDNOyTePWMlo
+         nExvIHIOD02U8k6fMCrK/z+G3oQhZfHuCyNYNEKuotXFJsNzNiupZ3YKSBU2YzBjGiIi
+         rThnJz85t8oA7Jucp6u3j+j/kq6we+WgzdHh/cQI2A2eSMZiTQBP2JYXnlMJjzo28g8S
+         aXaIdl0wlQ4BeHDzYvEyFsrY1i9lpNXbbUB7Rv5UY8x8Msj1+FGGvfIYmpPNb4Fntk60
+         WhQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pbnnd8izcGZKojl0PAuQtOXrWbhGmDWvjwa6KZ4Vaic=;
+        b=s4AB/CwkBhRyHDeQtAhEUgP3fT0ddPd1KeN5sktYKR4BAUSF8K1Yq7H+o42oNzRsEa
+         scse91N8gD+9Eg+90oIIftumwBGw88YXT81IvaD2EOvh/BN+YwqEKw6XJkNi+X3fKl3O
+         Pr0j3w2IUGeJpE+RirpUTHdtdosJEpq4PZA53g1XXonCyWr/wBHP/SLpEnmXmUIr52dE
+         KWhRWmIsGV88HYJXVhdBYAx+oqkXEANoMzU2pfEKY6oAjVSB7KpzmGIDVPtG3xLRCA80
+         /fI2knmPggRuMYOPFqUSXyebY83QWY+siLs9BOZ0+yp8RzY+FUaEquj3VeY3QEn3XOJl
+         hhbA==
+X-Gm-Message-State: APjAAAWVaQ8bMCKfELzkKX1cvK3rfnHbzq3QSNQz/4RysttVJyaVpB6r
+        x6TO2nz9VEOfMSZ+vjT6MWFyN5M7BEtGrw==
+X-Google-Smtp-Source: APXvYqzQQmPP8obThfTh2+jCJaqjHof51Bt4ABhyWSpN/apoVyHKuqn4uUHUbCTA38hKsdrNsLNzww==
+X-Received: by 2002:a17:90a:2385:: with SMTP id g5mr23432400pje.12.1561357474818;
+        Sun, 23 Jun 2019 23:24:34 -0700 (PDT)
+Received: from starnight.endlessm-sf.com (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id r15sm14517333pfc.162.2019.06.23.23.24.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 23 Jun 2019 23:24:34 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Daniel Drake <drake@endlessm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH v2] Bluetooth: btrtl: HCI reset on close for Realtek BT chip
+Date:   Mon, 24 Jun 2019 14:21:16 +0800
+Message-Id: <20190624062114.20303-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <CAD8Lp44RP+ugBcDYkap3tUL1NSq+knGJbO9A6UAmCtcjPgxTQQ@mail.gmail.com>
+References: <CAD8Lp44RP+ugBcDYkap3tUL1NSq+knGJbO9A6UAmCtcjPgxTQQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90edc05b-e7bc-4465-dd89-08d6f86c0165
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 06:20:08.1141
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2712
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=822 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240053
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
->On Sun, Jun 23, 2019 at 10:17:37AM +0100, Parshuram Thombare wrote:
->> +	switch (state->interface) {
->> +	case PHY_INTERFACE_MODE_GMII:
->> +	case PHY_INTERFACE_MODE_RGMII:
->> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
->> +			phylink_set(mask, 1000baseT_Full);
->> +			phylink_set(mask, 1000baseX_Full);
->> +			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
->> +				phylink_set(mask, 1000baseT_Half);
->> +				phylink_set(mask, 1000baseT_Half);
->I think this can be cleaned up.
-Ok, I will remove duplicate 1000baseT_Half
+Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
+after on-off several times. Bluetooth daemon sets BT mode failed when
+this issue happens.
 
->> -	spin_lock_irqsave(&bp->lock, flags);
->> +	linkmode_and(supported, supported, mask);
->> +	linkmode_and(state->advertising, state->advertising, mask);
->You remove this blank line in the next patch, so given that this is a
->new function, you might as well clean that up in this patch.
-Ok
-Regards,
-Parshuram Thombare
+bluetoothd[1576]: Failed to set mode: Failed (0x03)
+
+If BT is tunred off, then turned on again, it works correctly again.
+
+According to the vendor driver, the HCI_QUIRK_RESET_ON_CLOSE flag is set
+during probing. So, this patch makes Realtek's BT reset on close to fix
+this issue.
+
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+v2:
+ - According to the vendor driver, it makes "all" Realtek's BT reset on
+   close. So, this version makes it the same.
+ - Change to the new subject for all Realtek BT chips.
+
+ drivers/bluetooth/btrtl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 208feef63de4..be6d5f7e1e44 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -630,6 +630,10 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+ 		return PTR_ERR(btrtl_dev);
+ 
+ 	ret = btrtl_download_firmware(hdev, btrtl_dev);
++	/* According to the vendor driver, BT must be reset on close to avoid
++	 * firmware crash since kernel v3.7.1.
++	 */
++	set_bit(HCI_QUIRK_RESET_ON_CLOSE, &hdev->quirks);
+ 
+ 	btrtl_free(btrtl_dev);
+ 
+-- 
+2.22.0
+
