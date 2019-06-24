@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF9DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C535CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449A821670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4CF208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371723;
-	bh=frhO+TbRuAu+T3t1CklAnZNS8Zq3HC8vnugaw+gMgaE=;
+	s=default; t=1561371725;
+	bh=7xLo/8ltZ3m/6HmFyEdmADw8EBYFNc6hwS8LWzSxUoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSc+ryS8+29Osg3zd4Ic4+qvDyzeWxTEBwmZ87zsyq7duQr6+vAXMj8fKhWKwsOhl
-	 9xMbU+N6eSWJhxFPotarRsEJvVlrhATUucIwcQpML0aWdZqjhi0tsxsLAN3c2v+N0L
-	 tutRCQ1QJY7xjHmLyUcZq7kAbXayNs+QciH6gkfI=
+	b=rPoGZqaZsOph9r12W3uQZmcVlaO3QJmgRBsFGrTouiopUU3An5DKi/2St1iUHNSoi
+	 LiH00YbvoeWTzTvry7Q/xn+TLGyeDFkiAgGn9UnNNpCP9WCdOz+jKcOf0F/XgEeYZI
+	 PiKPxQGKneEgCxSHPT91Q6k0Yw2G2K+tIKyMKZUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfFXKWB (ORCPT
+        id S1731038AbfFXKWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfFXKV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:21:59 -0400
+        id S1730962AbfFXKWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:22:01 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD0620645;
-        Mon, 24 Jun 2019 10:21:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48A402133F;
+        Mon, 24 Jun 2019 10:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371718;
-        bh=frhO+TbRuAu+T3t1CklAnZNS8Zq3HC8vnugaw+gMgaE=;
+        s=default; t=1561371720;
+        bh=7xLo/8ltZ3m/6HmFyEdmADw8EBYFNc6hwS8LWzSxUoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MzUDWJ6/WkFGWxOMPQMT+U73rslePKscP2JHPdqodQUb+DrU2KTFOMMEQY4JOB93X
-         hpZwifb/DV3SIknJh1nc7FJVKgcl8rQN5qFgCovZ7nUoXyA7VTyLiAzqexXaJ7/qvk
-         hQqbiOWUkOuQ7rkltRtygRmIJY/qyhHevNd3I2hY=
+        b=wKksxoCHKqS3quE57fHz+/3tc0XdtBjeKjK12a9hWSOKYGh10SA7wgWGgfHvjM4Ef
+         dagLJ5YAXSFRESeBKx1amFCKIR9vDAtzS34v0P9h0hP3/PhcBbvzXqRVotXbDaWnio
+         Q/uQVHZ/bunSvRJri2A3045GsjnoTEFIRuQa088I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Avin <hpa@zytor.com>
-Subject: [PATCH 5.1 121/121] x86/resctrl: Dont stop walking closids when a locksetup group is found
-Date:   Mon, 24 Jun 2019 17:57:33 +0800
-Message-Id: <20190624092326.791973238@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.1 109/121] staging: erofs: add requirements field in superblock
+Date:   Mon, 24 Jun 2019 17:57:21 +0800
+Message-Id: <20190624092326.255534512@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -62,50 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 87d3aa28f345bea77c396855fa5d5fec4c24461f upstream.
+commit 5efe5137f05bbb4688890620934538c005e7d1d6 upstream.
 
-When a new control group is created __init_one_rdt_domain() walks all
-the other closids to calculate the sets of used and unused bits.
+There are some backward incompatible features pending
+for months, mainly due to on-disk format expensions.
 
-If it discovers a pseudo_locksetup group, it breaks out of the loop.  This
-means any later closid doesn't get its used bits added to used_b.  These
-bits will then get set in unused_b, and added to the new control group's
-configuration, even if they were marked as exclusive for a later closid.
+However, we should ensure that it cannot be mounted with
+old kernels. Otherwise, it will causes unexpected behaviors.
 
-When encountering a pseudo_locksetup group, we should continue. This is
-because "a resource group enters 'pseudo-locked' mode after the schemata is
-written while the resource group is in 'pseudo-locksetup' mode." When we
-find a pseudo_locksetup group, its configuration is expected to be
-overwritten, we can skip it.
-
-Fixes: dfe9674b04ff6 ("x86/intel_rdt: Enable entering of pseudo-locksetup mode")
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H Peter Avin <hpa@zytor.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190603172531.178830-1-james.morse@arm.com
-[Dropped comment due to lack of space]
-Signed-off-by: James Morse <james.morse@arm.com>
+Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2556,7 +2556,7 @@ static int rdtgroup_init_alloc(struct rd
- 				if (closid_allocated(i) && i != closid) {
- 					mode = rdtgroup_mode_by_closid(i);
- 					if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
--						break;
-+						continue;
- 					/*
- 					 * If CDP is active include peer
- 					 * domain's usage to ensure there
+---
+ drivers/staging/erofs/erofs_fs.h |   13 ++++++++++---
+ drivers/staging/erofs/internal.h |    2 ++
+ drivers/staging/erofs/super.c    |   19 +++++++++++++++++++
+ 3 files changed, 31 insertions(+), 3 deletions(-)
+
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/drivers/staging/erofs/erofs_fs.h
+@@ -17,10 +17,16 @@
+ #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+ #define EROFS_SUPER_OFFSET      1024
+ 
++/*
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
++ */
++#define EROFS_ALL_REQUIREMENTS  0
++
+ struct erofs_super_block {
+ /*  0 */__le32 magic;           /* in the little endian */
+ /*  4 */__le32 checksum;        /* crc32c(super_block) */
+-/*  8 */__le32 features;
++/*  8 */__le32 features;        /* (aka. feature_compat) */
+ /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+ /* 13 */__u8 reserved;
+ 
+@@ -34,9 +40,10 @@ struct erofs_super_block {
+ /* 44 */__le32 xattr_blkaddr;
+ /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+ /* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
+ 
+-/* 80 */__u8 reserved2[48];     /* 128 bytes */
+-} __packed;
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
+ 
+ /*
+  * erofs inode data mapping:
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -114,6 +114,8 @@ struct erofs_sb_info {
+ 
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
++	u32 requirements;
++
+ 	char *dev_name;
+ 
+ 	unsigned int mount_opt;
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -76,6 +76,22 @@ static void destroy_inode(struct inode *
+ 	call_rcu(&inode->i_rcu, i_callback);
+ }
+ 
++static bool check_layout_compatibility(struct super_block *sb,
++				       struct erofs_super_block *layout)
++{
++	const unsigned int requirements = le32_to_cpu(layout->requirements);
++
++	EROFS_SB(sb)->requirements = requirements;
++
++	/* check if current kernel meets all mandatory requirements */
++	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
++		errln("unidentified requirements %x, please upgrade kernel version",
++		      requirements & ~EROFS_ALL_REQUIREMENTS);
++		return false;
++	}
++	return true;
++}
++
+ static int superblock_read(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+@@ -109,6 +125,9 @@ static int superblock_read(struct super_
+ 		goto out;
+ 	}
+ 
++	if (!check_layout_compatibility(sb, layout))
++		goto out;
++
+ 	sbi->blocks = le32_to_cpu(layout->blocks);
+ 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+ #ifdef CONFIG_EROFS_FS_XATTR
 
 
