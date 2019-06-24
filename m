@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE509C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A625C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841BB2146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FEF21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370804;
-	bh=0UShVwJkVQmYqGoIXL46mVMoloO+EmCe9/+uzLfXZDQ=;
+	s=default; t=1561370807;
+	bh=SVo2cDBHNSPxRRWoOWenBYh5CpjtewbwIcvBbQUS6gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7bBNmDWLvKDZiyOXvSN4otOUPb5w2862JHHhkH7E4Fic/L/l18UZxzRyo1GU6bAo
-	 ZP77EwUFLpgjXtYSkj0hrj4iv4OqP9wKhYLL8wTg8mhiRUvOWaRbyyuIYr4cTtXjCA
-	 Kp9+NWWlt7RfPrFuLB5xSYlLdB2fnRYQkHFbHuN0=
+	b=OfVwLQtbfdio1TnMRUHFZ7gTFnA7s6EuzmBN2098cNI2P7twZQjujHRtMhwoDuHDQ
+	 iqualG9qV9CnCdd//0ermq4jez0mkHBgqEKnVoysHU3STz7S7ybSSQUOYPbsAsEFAU
+	 W0JQQ0+Ku+qDBVd7iXS+weTt71VPpyaMRVcKB1V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbfFXKGn (ORCPT
+        id S1730181AbfFXKGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38944 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730147AbfFXKGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:39 -0400
+        id S1730156AbfFXKGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:41 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C586D2146F;
-        Mon, 24 Jun 2019 10:06:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8372A208E3;
+        Mon, 24 Jun 2019 10:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370798;
-        bh=0UShVwJkVQmYqGoIXL46mVMoloO+EmCe9/+uzLfXZDQ=;
+        s=default; t=1561370801;
+        bh=SVo2cDBHNSPxRRWoOWenBYh5CpjtewbwIcvBbQUS6gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+pFKUVUhjalcZf9uOgEnfvuel87nqipVCmoLCabxcRss6wjG3OfiDs1IGR7Z0T3Y
-         61iF1r+OWwjq8GirpVw9x6pPvCWE2yMqLOtdNWnD1tgnAHCQRCtzcAabv5I/ovFEzk
-         hja69o+o+PWloIZtgAK4dFOlWUvzK43Rhkr7aj0w=
+        b=kVgq8SLLj9ZJGK0YJAxC868Esh5e/agVjFYga1JMqrAfreZ1o5tf5uXvEvk1K5qFV
+         h2YIgLbmFJa1CVoo4eAVVI/tnRBXikdwsTvr2wTCu9NCWsrGCVj/3HiEpYCZ83TDt9
+         23fRVKd5GX0HWOZN9MUyu7L6E2Ay5qhB/zWK2SuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Strohman <andy@uplevelsystems.com>,
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 88/90] nl80211: fix station_info pertid memory leak
-Date:   Mon, 24 Jun 2019 17:57:18 +0800
-Message-Id: <20190624092319.649008473@linuxfoundation.org>
+Subject: [PATCH 4.19 89/90] mac80211: Do not use stack memory with scatterlist for GMAC
+Date:   Mon, 24 Jun 2019 17:57:19 +0800
+Message-Id: <20190624092319.705373660@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -59,39 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Strohman <andrew@andrewstrohman.com>
+From: Jouni Malinen <j@w1.fi>
 
-commit f77bf4863dc2218362f4227d56af4a5f3f08830c upstream.
+commit a71fd9dac23613d96ba3c05619a8ef4fd6cdf9b9 upstream.
 
-When dumping stations, memory allocated for station_info's
-pertid member will leak if the nl80211 header cannot be added to
-the sk_buff due to insufficient tail room.
+ieee80211_aes_gmac() uses the mic argument directly in sg_set_buf() and
+that does not allow use of stack memory (e.g., BUG_ON() is hit in
+sg_set_buf() with CONFIG_DEBUG_SG). BIP GMAC TX side is fine for this
+since it can use the skb data buffer, but the RX side was using a stack
+variable for deriving the local MIC value to compare against the
+received one.
 
-I noticed this leak in the kmalloc-2048 cache.
+Fix this by allocating heap memory for the mic buffer.
+
+This was found with hwsim test case ap_cipher_bip_gmac_128 hitting that
+BUG_ON() and kernel panic.
 
 Cc: stable@vger.kernel.org
-Fixes: 8689c051a201 ("cfg80211: dynamically allocate per-tid stats for station info")
-Signed-off-by: Andy Strohman <andy@uplevelsystems.com>
+Signed-off-by: Jouni Malinen <j@w1.fi>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/mac80211/wpa.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -4611,8 +4611,10 @@ static int nl80211_send_station(struct s
- 	struct nlattr *sinfoattr, *bss_param;
+--- a/net/mac80211/wpa.c
++++ b/net/mac80211/wpa.c
+@@ -1175,7 +1175,7 @@ ieee80211_crypto_aes_gmac_decrypt(struct
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 	struct ieee80211_key *key = rx->key;
+ 	struct ieee80211_mmie_16 *mmie;
+-	u8 aad[GMAC_AAD_LEN], mic[GMAC_MIC_LEN], ipn[6], nonce[GMAC_NONCE_LEN];
++	u8 aad[GMAC_AAD_LEN], *mic, ipn[6], nonce[GMAC_NONCE_LEN];
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
  
- 	hdr = nl80211hdr_put(msg, portid, seq, flags, cmd);
--	if (!hdr)
-+	if (!hdr) {
-+		cfg80211_sinfo_release_content(sinfo);
- 		return -1;
-+	}
+ 	if (!ieee80211_is_mgmt(hdr->frame_control))
+@@ -1206,13 +1206,18 @@ ieee80211_crypto_aes_gmac_decrypt(struct
+ 		memcpy(nonce, hdr->addr2, ETH_ALEN);
+ 		memcpy(nonce + ETH_ALEN, ipn, 6);
  
- 	if (nla_put_u32(msg, NL80211_ATTR_IFINDEX, dev->ifindex) ||
- 	    nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN, mac_addr) ||
++		mic = kmalloc(GMAC_MIC_LEN, GFP_ATOMIC);
++		if (!mic)
++			return RX_DROP_UNUSABLE;
+ 		if (ieee80211_aes_gmac(key->u.aes_gmac.tfm, aad, nonce,
+ 				       skb->data + 24, skb->len - 24,
+ 				       mic) < 0 ||
+ 		    crypto_memneq(mic, mmie->mic, sizeof(mmie->mic))) {
+ 			key->u.aes_gmac.icverrors++;
++			kfree(mic);
+ 			return RX_DROP_UNUSABLE;
+ 		}
++		kfree(mic);
+ 	}
+ 
+ 	memcpy(key->u.aes_gmac.rx_pn, ipn, 6);
 
 
