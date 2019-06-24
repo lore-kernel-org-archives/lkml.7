@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DFCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82365C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EE5208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B17C2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370792;
-	bh=AZ4hQFbDbc3e4yABmB6vYKoy2RI/A6f6SK1Pel/zyrM=;
+	s=default; t=1561370796;
+	bh=lboz67gfjqTkNmYwfDdk7GOXes25CUDfRX6XNlkjwkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAHFC4a8+s/h2gHrLfU3etmSsfBK0z1GWkKD34zgMO4rwJmAQSXM7nhuVim6u/oo8
-	 Ss6I34KzFaey1IdONg5gCQTvYk+/984tU6Ag0CqqsD+7sVVuvJfJ+O9QmAGgOekV4s
-	 RdX4coBEMyMr62BDS7PGXB5w79HBVbP2U4eX8J9s=
+	b=RtfJEZiGrfEtCHQKwXYBv4nB+SuOhjy94M29dQO8UKuNgOuQbXMOd8UMX/M56viWL
+	 iWayVSf3PNs+dMbLVSM+j0H/CLVlPRybXezTjgZ/ycr1TEBIwYslL7g84Td+D8D6kZ
+	 72bQrdPEvypSaLcg1edfeocZI4g2Lr4l0CQ+6sUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbfFXKGa (ORCPT
+        id S1730134AbfFXKGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbfFXKG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:28 -0400
+        id S1730123AbfFXKGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:31 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1898208E3;
-        Mon, 24 Jun 2019 10:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC1272145D;
+        Mon, 24 Jun 2019 10:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370787;
-        bh=AZ4hQFbDbc3e4yABmB6vYKoy2RI/A6f6SK1Pel/zyrM=;
+        s=default; t=1561370790;
+        bh=lboz67gfjqTkNmYwfDdk7GOXes25CUDfRX6XNlkjwkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BySj56OqvfJ9jLCLOgsXWAD9L+zQfhNk0fKFlEo+t6S/hApgZPu+FVJwhDTm25YHi
-         kpBl8bxaXbxAdgr6PmIZ1VKxiKLkMejbMuh69JYDJdTr+u3Pkrsq6sLc6CLoHfsYHX
-         pIg74Bd/w/RnCdFo28Z3HqMg9wN2KtaTr/g5BuZ8=
+        b=uV7KPdoshHoLch/dz0qPJFSQtKgQM95kk18TUWnjOJXJfvrlk7kLLpYoYXG0J0H30
+         0CjkHADufIzFsbcnvBrQ1ZUvG//ksXnYoUVipCbSa51hNxiPr6EeXnv+XorgXoYsb4
+         b6WPeSnUIBHKgJbkztoihuXqsrVWCAYOD+AYmrL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7fddca22578bc67c3fe4@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 84/90] cfg80211: fix memory leak of wiphy device name
-Date:   Mon, 24 Jun 2019 17:57:14 +0800
-Message-Id: <20190624092319.410368076@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 85/90] mac80211: drop robust management frames from unknown TA
+Date:   Mon, 24 Jun 2019 17:57:15 +0800
+Message-Id: <20190624092319.468650239@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,35 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 4f488fbca2a86cc7714a128952eead92cac279ab upstream.
+commit 588f7d39b3592a36fb7702ae3b8bdd9be4621e2f upstream.
 
-In wiphy_new_nm(), if an error occurs after dev_set_name() and
-device_initialize() have already been called, it's necessary to call
-put_device() (via wiphy_free()) to avoid a memory leak.
+When receiving a robust management frame, drop it if we don't have
+rx->sta since then we don't have a security association and thus
+couldn't possibly validate the frame.
 
-Reported-by: syzbot+7fddca22578bc67c3fe4@syzkaller.appspotmail.com
-Fixes: 1f87f7d3a3b4 ("cfg80211: add rfkill support")
 Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/rx.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -498,7 +498,7 @@ use_default_name:
- 				   &rdev->rfkill_ops, rdev);
- 
- 	if (!rdev->rfkill) {
--		kfree(rdev);
-+		wiphy_free(&rdev->wiphy);
- 		return NULL;
- 	}
- 
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3752,6 +3752,8 @@ static bool ieee80211_accept_frame(struc
+ 	case NL80211_IFTYPE_STATION:
+ 		if (!bssid && !sdata->u.mgd.use_4addr)
+ 			return false;
++		if (ieee80211_is_robust_mgmt_frame(skb) && !rx->sta)
++			return false;
+ 		if (multicast)
+ 			return true;
+ 		return ether_addr_equal(sdata->vif.addr, hdr->addr1);
 
 
