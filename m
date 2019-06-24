@@ -2,92 +2,122 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DA0C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D09CEC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3674E20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22C020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqK76VCJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QiDX+xtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732364AbfFXRRC (ORCPT
+        id S1732369AbfFXRUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:17:02 -0400
-Received: from mail-io1-f44.google.com ([209.85.166.44]:39980 "EHLO
-        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfFXRRC (ORCPT
+        Mon, 24 Jun 2019 13:20:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36198 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfFXRUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:17:02 -0400
-Received: by mail-io1-f44.google.com with SMTP id n5so3816908ioc.7;
-        Mon, 24 Jun 2019 10:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HKVZVeTIp0VzP4z4Uro5y3TTUO1hlLUucOTNEWyo+tU=;
-        b=kqK76VCJ2Tc+wIyI2JOQ/ZV6Fh/BExUX9pt0s72wbQbVVyV1s3YFexA2Gu8SlQXp/I
-         EtwsZB2BoZlFJ983KZ+zCm7b6Hx46/GF4b2NSjWh7Cibsg0DXEe892VrJteOTB1cH4oX
-         qtNqLS6uspEqD/Kv7ScBHkdRbALxcS/Lx/QzuVUazygm6YFZt1yG7WFkhytp0HSKX72H
-         x0m2BId2noXj/eTO969WTKThIe7izvrU6zXhLBJ0b6nid0VrT2YnaAJLuR5+rju5cVwW
-         mRvhGzNcNLwu+FZcbkOT1TVBV0gHEjmj9EuSB+Dy2PBTIzgnpRd31SbVOnGG3LWWElb2
-         D5Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HKVZVeTIp0VzP4z4Uro5y3TTUO1hlLUucOTNEWyo+tU=;
-        b=sgl0e1leW2n3EZ7cZRckUajBpqBZtKtfiSewpfrsVKrZwt3Q9RqpL4/brTGPwTqZCk
-         LMo3boGzDRIY2/kYnkK3SWCj4nWK83Kda4VEEKBD8/mQpSSS+Br7uJgNSUtzcZ8GWhpr
-         gZ8SmyGCMYzlAhu8BLknD8I3jaQK9/1LDrYai9/kPb7EKNFVzp4tqg+ltiisRM222IGM
-         ie7qhZV4T4xG+9IhjULrnsHDu72TjlVk6kcLFmm9gSuFbSyLHimquirODQsBZB0aRH8K
-         E+PW3xAmkXrwHnHE+FB8hmfrZgI84arOHuEwV4Vp/N/RA9Yx0LTZpKD0Gz8ksM2NAGH+
-         hrKw==
-X-Gm-Message-State: APjAAAWwq5EVPbVz4LCiAcYQI9auYU3ies39Ocy23jJeBvG4fO5IeKWb
-        r89Ek00fUj3cKyEKikz2VEZ/N2+7SHwt5bViAyw=
-X-Google-Smtp-Source: APXvYqys+HijZUTbiXSyiQ6GHQWE2ih7NaysqfQN4H4DvhAB8KcMe+qfcJYvq6imH+Gw3Fh/B+mOTRB6JLhN8F9jSlk=
-X-Received: by 2002:a5e:8f42:: with SMTP id x2mr15878117iop.35.1561396621141;
- Mon, 24 Jun 2019 10:17:01 -0700 (PDT)
+        Mon, 24 Jun 2019 13:20:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5OHKgp4080283;
+        Mon, 24 Jun 2019 12:20:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561396842;
+        bh=YNkUtWajZtiM9sopHCT/5Y0mKT4JD06PwkeqZVYX7vE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QiDX+xtTz/NfG1c9k7nwjSzLGfmo/HLfMbG50FhY0Pa4OjMqPKm7lSZPfBfe0PnqV
+         2Y+UJiGFDIgl+k3rVFf+KXzk40WMdlV7/W5bsTT/4Z6jSLlIxCMqSFEa8zizTXnGdY
+         qw030qDerqiN6ih2akJoWA9g9S03IxaQ/zKMDR2w=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5OHKgvX033882
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Jun 2019 12:20:42 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 24
+ Jun 2019 12:20:41 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 24 Jun 2019 12:20:42 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5OHKfTT026570;
+        Mon, 24 Jun 2019 12:20:41 -0500
+Subject: Re: [PATCH v6 0/5] LM36274 Introduction
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190605125634.7042-1-dmurphy@ti.com>
+ <20190624144217.GJ4699@dell>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3d2aa88c-c21c-b3a9-c8d9-fdb3a8fc3858@ti.com>
+Date:   Mon, 24 Jun 2019 12:20:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <0000000000008f19f7058c10a633@google.com> <871rzj6sww.fsf@miraculix.mork.no>
- <87tvcf54qc.fsf@miraculix.mork.no>
-In-Reply-To: <87tvcf54qc.fsf@miraculix.mork.no>
-From:   Kristian Evensen <kristian.evensen@gmail.com>
-Date:   Mon, 24 Jun 2019 19:16:50 +0200
-Message-ID: <CAKfDRXjnUZx2rAVV1-9em9YyNvJbFG+vciZHihsKiu66Uz2Dgw@mail.gmail.com>
-Subject: Re: KASAN: global-out-of-bounds Read in qmi_wwan_probe
-To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, David Miller <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190624144217.GJ4699@dell>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Lee
 
-On Mon, Jun 24, 2019 at 6:26 PM Bj=C3=B8rn Mork <bjorn@mork.no> wrote:
-> Doh! Right you are.  Thanks to both you and Andrey for quick and good
-> help.
+On 6/24/19 9:42 AM, Lee Jones wrote:
+> On Wed, 05 Jun 2019, Dan Murphy wrote:
 >
-> We obviously have some bad code patterns here, since this apparently
-> worked for Kristian by pure luck.
+>> Hello
+>>
+>> The v5 patchset missed adding in the new validation code.
+>> Patch 1 of the v5 series was squashed into patch 4 of the v5 series.
+>> So this will reduce the patchset by 1.
+>>
+>> Sorry for the extra noise on the patchsets.  The change was lost when I converted
+>> the patches from the mainline branch to the LED branch.
+>>
+>> This change was made on top of the branch
+>>
+>> repo: https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+>> branch: ti-lmu-led-drivers
+>>
+>>
+>> Dan Murphy (5):
+>>    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+>>    mfd: ti-lmu: Add LM36274 support to the ti-lmu
+>>    regulator: lm363x: Add support for LM36274
+>>    dt-bindings: leds: Add LED bindings for the LM36274
+>>    leds: lm36274: Introduce the TI LM36274 LED driver
+>>
+>>   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+>>   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+>>   drivers/leds/Kconfig                          |   8 +
+>>   drivers/leds/Makefile                         |   1 +
+>>   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+>>   drivers/mfd/Kconfig                           |   5 +-
+>>   drivers/mfd/ti-lmu.c                          |  14 ++
+>>   drivers/regulator/Kconfig                     |   2 +-
+>>   drivers/regulator/lm363x-regulator.c          |  78 +++++++-
+>>   include/linux/mfd/ti-lmu-register.h           |  23 +++
+>>   include/linux/mfd/ti-lmu.h                    |   4 +
+>>   11 files changed, 437 insertions(+), 8 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+>>   create mode 100644 drivers/leds/leds-lm36274.c
+> Can you finish of satisfying everyone's comments and re-send with all
+> the Acks you've collected so far?  If you turn this around quickly,
+> you might still get into v5.3.
+>
 
-Thanks a lot to everyone for spotting and fixing my mistake, and sorry
-for not replying earlier. The patch from Bj=C3=B8rn is probably a candidate
-for stable as well. I don't remember exactly when the quirk was
-accepted in the kernel, but I recently submitted and got the quirk
-accepted into 4.14.
+The changes were made by Jacek and I reviewed and tested them
 
-BR,
-Kristian
+https://lkml.org/lkml/2019/6/11/455
+
