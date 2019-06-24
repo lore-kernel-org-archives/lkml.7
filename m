@@ -2,120 +2,143 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A563AC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C66C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D903208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLKEEFV7"
+	by mail.kernel.org (Postfix) with ESMTP id C012820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfFXDJo (ORCPT
+        id S1727311AbfFXDKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:09:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33550 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfFXDJo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:09:44 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h10so11079593ljg.0;
-        Sun, 23 Jun 2019 20:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y381zs7JqUeO4ZbV4kzg6cbvTaILm3gppCIZ9QaFOsw=;
-        b=KLKEEFV7vyQEtxZ0uYEFUUY5ay9LG072nBkWBGisDQoh237JAJ6TnNhz4qsxgAGK22
-         YNFSxBL5c+kfsqSm+FEwy4tdVxBIPEC5Dz/4fbi4gx0NTUoGuGOnHdKG6AvZ8gAuLLBT
-         FthFg8LiYixseIyfokMbAhKy0/fG2R5y40iC7A9pvKuE2dCAzxOGEoADpz1/gnKHdmgA
-         Mlexq03Pe5YwnT9xH0yosgCWaP2TDN3CAM1SCK9kHzDCYkBmtiKgYbUgjyurURDmPqDe
-         To/wh7jkGuUiJIIAU3QuGjUiiyRenvhT9dc+Jh0yg89XDyTXt3HIsMBxhcneBn3SzVk6
-         dBww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y381zs7JqUeO4ZbV4kzg6cbvTaILm3gppCIZ9QaFOsw=;
-        b=llfoXSjqqAZsiV5PQLMguB7WTLH4i1UbRg+pH3Iasghf9h0JHGIHoXtb9OjzUGpBIW
-         AU5tp5W7/xe0y6Dk+WH2fLntCaKksry2ehN+jhdnKaI9M9hA/BvUjvl7uwWciLFY0f+o
-         G92Eg1kHWdhrkvTPreHDKxFdMTt4K0GcPk951mBPqV0VCHL/XEsQGm5hTdIZLJVKwBfP
-         0UVrhjqXtPh0Foc9RjwrGD22dUHvhX087pqvl7UT9rplOpA60+nrS91p6ahrcBQC75zU
-         IORlUHJgP6d46cmyxoXelohEYuMpjnJ+dyk4RrUb2hucT+4yFS0UFgC/HHxdiTUlFrpf
-         qn2w==
-X-Gm-Message-State: APjAAAWvf2V95Z44T0VZCrVa0BILC3HZDDKd3lU22gz1PF+VQwI0cvoC
-        TUSQkphZ6bhdyxYY/djZ3GL21IwX
-X-Google-Smtp-Source: APXvYqwMtcEyUBqTG0OrMlZmNbYr3qFE2ieb5bqL32t92m479TGx4QU6qZIPGEn0PHf+rKxTEBwdpA==
-X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr14060925lja.228.1561326523122;
-        Sun, 23 Jun 2019 14:48:43 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id m17sm1460029lfb.9.2019.06.23.14.48.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Jun 2019 14:48:42 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 08/11] PM / devfreq: tegra30: Stop de-boosting once it's finished
-Date:   Mon, 24 Jun 2019 00:46:55 +0300
-Message-Id: <20190623214658.11680-9-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190623214658.11680-1-digetx@gmail.com>
-References: <20190623214658.11680-1-digetx@gmail.com>
+        Sun, 23 Jun 2019 23:10:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47896 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfFXDKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:10:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2019 20:10:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,410,1557212400"; 
+   d="scan'208";a="312566017"
+Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.129.47]) ([10.238.129.47])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2019 20:10:04 -0700
+Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
+From:   Jing Liu <jing2.liu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
+References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
+ <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
+ <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
+ <384bc07d-6105-d380-cd44-4518870c15f1@linux.intel.com>
+Message-ID: <fb749626-1d9e-138f-c673-14b52fe7170c@linux.intel.com>
+Date:   Mon, 24 Jun 2019 11:10:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <384bc07d-6105-d380-cd44-4518870c15f1@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once boosting value is 0, then further consecutive-down events won't do
-anything useful since the only purpose of those consecutive events to
-boost the freq and de-boosting is over in the case of 0. Note that upper
-watermark is infinitely high in a case of frequency max out and thus the
-upper events are stopping by themselves. In a result of this change all
-parasite interrupts are fixed now and interrupts activity is nearly
-non-existent now!
+Hi Paolo,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+After thinking more, I found way to satisfy all cases in a easy way.
+How about things like this?
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 6fb3ca125438..81449cc1392b 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -424,6 +424,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 					     dev->config->boost_up_coeff);
- 		dev->boost_freq += ACTMON_BOOST_FREQ_STEP;
- 
-+		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+@@ -507,12 +510,26 @@ static inline int __do_cpuid_ent(struct 
+kvm_cpuid_entry2 *entry, u32 fu
+                          * if the host doesn't support it.
+                          */
+                         entry->edx |= F(ARCH_CAPABILITIES);
++               } else if (index == 1) {
++                       entry->eax &= kvm_cpuid_7_1_eax_x86_features;
++                       entry->ebx = 0;
++                       entry->ecx = 0;
++                       entry->edx = 0;
+                 } else {
++                       entry->eax = 0;
+                         entry->ebx = 0;
+                         entry->ecx = 0;
+                         entry->edx = 0;
+                 }
+-               entry->eax = 0;
 +
- 		if (dev->boost_freq >= tegra->max_freq && !low_activity)
- 			dev->boost_freq = tegra->max_freq;
- 
-@@ -442,6 +444,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 		tegra_devfreq_update_wmark(tegra, dev);
- 	}
- 
-+	/* no boosting => no need for consecutive-down interrupt */
-+	if (dev->boost_freq == 0)
-+		dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-+
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
- 
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
--- 
-2.22.0
++               if (index == 0 && entry->eax >= 1) {
++                       entry[1].eax &= kvm_cpuid_7_1_eax_x86_features;
++                       entry[1].ebx = 0;
++                       entry[1].ecx = 0;
++                       entry[1].edx = 0;
++                       entry[1].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
++                       ++*nent;
++               }
+                 break;
+         }
 
+
+Or you prefer that I update this into another version later?
+
+Thanks!
+Jing
+
+On 6/20/2019 11:09 PM, Liu, Jing2 wrote:
+> Hi Paolo,
+> 
+> On 6/20/2019 8:16 PM, Paolo Bonzini wrote:
+>> On 20/06/19 13:21, Jing Liu wrote:
+>>> +        for (i = 1; i <= times; i++) {
+>>> +            if (*nent >= maxnent)
+>>> +                goto out;
+>>> +            do_cpuid_1_ent(&entry[i], function, i);
+>>> +            entry[i].eax &= F(AVX512_BF16);
+>>> +            entry[i].ebx = 0;
+>>> +            entry[i].ecx = 0;
+>>> +            entry[i].edx = 0;
+>>> +            entry[i].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+>>> +            ++*nent;
+>>
+>> This woud be wrong for i > 1, so instead make this
+>>
+>>     if (entry->eax >= 1)
+>>
+> 
+> I am confused about the @index parameter. @index seems not used for
+> every case except 0x07. Since the caller function only has @index=0, so
+> all other cases except 0x07 put cpuid info from subleaf=0 to max subleaf.
+> 
+> What do you think about @index in current function? Does it mean, we
+> need put cpuid from index to max subleaf to @entry[i]? If so, the logic
+> seems as follows,
+> 
+> if (index == 0) {
+>      // Put subleaf 0 into @entry
+>      // Put subleaf 1 into @entry[1]
+> } else if (index < entry->eax) {
+>      // Put subleaf 1 into @entry
+> } else {
+>      // Put all zero into @entry
+> }
+> 
+> But this seems not identical with other cases, for current caller
+> function. Or we can simply ignore @index in 0x07 and just put all possible
+> subleaf info back?
+> 
+>> and define F(AVX512_BF16) as a new constant kvm_cpuid_7_1_eax_features.
+>>
+> Got it.
+> 
+> 
+> Thanks,
+> Jing
+> 
+>> Paolo
+>>
