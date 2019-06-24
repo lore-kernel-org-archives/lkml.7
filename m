@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEB0C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B70C4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B2D208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8420D20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370618;
-	bh=hJ4L5RuYPxc94/K1BgdZzHGyztCi/po+0Lvxp83P6pw=;
+	s=default; t=1561370621;
+	bh=Xob4prRYpzGNCy0BfQoNaMaioIygswDmCuiakzquiK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4d5vad3IQCMCBzrDG3FF7N07Lmxnj3ph4g6MjWRjy4hViD3m8Atku9fytvCGssq6
-	 bh6vYn46S8odQPrr35QD4I7xP5pLMdtfrmhlYqUwrfuAkFM9FsQ9tqxaqAY7elE+Vk
-	 zAtEQTISouMp3/jjCp8esrHKrBdobARBE0FIXVKM=
+	b=LvQYqzUUJ9ckyMumyfecHCcRmUtmQMOZazuQjqTkwl8++WpP/qwdrzotqJSWp2+1X
+	 LOQ4Po38zgox02pobx48oZOYv5S6SS4JcNq0iVNt5yb26tbxOZDekvPI+wLfl3P6Hb
+	 cim14u9qfgKWCKjAbcHCoxHfy1Adeh1AicwqIvv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfFXKDh (ORCPT
+        id S1729459AbfFXKCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729202AbfFXKCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:02:52 -0400
+        id S1729412AbfFXKCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:02:42 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78FD0205ED;
-        Mon, 24 Jun 2019 10:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960BD2145D;
+        Mon, 24 Jun 2019 10:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370571;
-        bh=hJ4L5RuYPxc94/K1BgdZzHGyztCi/po+0Lvxp83P6pw=;
+        s=default; t=1561370561;
+        bh=Xob4prRYpzGNCy0BfQoNaMaioIygswDmCuiakzquiK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1GN3lm+XBjDiZUgUvZ2NZ8nE2tZroRvu1FWYtXqBz18vPjt2lEVSOTMsQbcpk/6k
-         yBkH2T034X6Lqxop/7S0NzA1d4nsJr8mBcGppg1a3+qQk5axt+2GEXzuTp97dIk6On
-         UO9QDRfafUexvd+66FPFtqlSK1rhcFds3rihqSaA=
+        b=aqfBVj7ZRiyYuGHkzxXHgRQ9BLbFOK+q8WEiHPZgLZtlNDi4w+ohJ5HKUOdUbeLSK
+         JT7YgDyPjfVWRQTFU2OcUGiUnyhE/B6ON0m6RJLfVwGoyvhMAtegjtWcHLtH0TFreW
+         i9IJSAU+V8A8yPo7KhCzgZ8dVbf+lGvNCEn4GISE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 24/90] Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
-Date:   Mon, 24 Jun 2019 17:56:14 +0800
-Message-Id: <20190624092315.708000564@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 20/90] IB/hfi1: Validate fault injection opcode user input
+Date:   Mon, 24 Jun 2019 17:56:10 +0800
+Message-Id: <20190624092315.353216630@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -61,61 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 7c7da40da1640ce6814dab1e8031b44e19e5a3f6 upstream.
+commit 5f90677ed31963abb184ee08ebee4a4a68225dd8 upstream.
 
-In the case of compat syscall ioctl numbers for UI_BEGIN_FF_UPLOAD and
-UI_END_FF_UPLOAD need to be adjusted before being passed on
-uinput_ioctl_handler() since code built with -m32 will be passing
-slightly different values. Extend the code already covering
-UI_SET_PHYS to cover UI_BEGIN_FF_UPLOAD and UI_END_FF_UPLOAD as well.
+The opcode range for fault injection from user should be validated before
+it is applied to the fault->opcodes[] bitmap to avoid out-of-bound
+error.
 
-Reported-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: <stable@vger.kernel.org>
+Fixes: a74d5307caba ("IB/hfi1: Rework fault injection machinery")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/misc/uinput.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/fault.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -1051,13 +1051,31 @@ static long uinput_ioctl(struct file *fi
+--- a/drivers/infiniband/hw/hfi1/fault.c
++++ b/drivers/infiniband/hw/hfi1/fault.c
+@@ -153,6 +153,7 @@ static ssize_t fault_opcodes_write(struc
+ 		char *dash;
+ 		unsigned long range_start, range_end, i;
+ 		bool remove = false;
++		unsigned long bound = 1U << BITS_PER_BYTE;
  
- #ifdef CONFIG_COMPAT
- 
--#define UI_SET_PHYS_COMPAT	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+/*
-+ * These IOCTLs change their size and thus their numbers between
-+ * 32 and 64 bits.
-+ */
-+#define UI_SET_PHYS_COMPAT		\
-+	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+#define UI_BEGIN_FF_UPLOAD_COMPAT	\
-+	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload_compat)
-+#define UI_END_FF_UPLOAD_COMPAT		\
-+	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload_compat)
- 
- static long uinput_compat_ioctl(struct file *file,
- 				unsigned int cmd, unsigned long arg)
- {
--	if (cmd == UI_SET_PHYS_COMPAT)
-+	switch (cmd) {
-+	case UI_SET_PHYS_COMPAT:
- 		cmd = UI_SET_PHYS;
-+		break;
-+	case UI_BEGIN_FF_UPLOAD_COMPAT:
-+		cmd = UI_BEGIN_FF_UPLOAD;
-+		break;
-+	case UI_END_FF_UPLOAD_COMPAT:
-+		cmd = UI_END_FF_UPLOAD;
-+		break;
-+	}
- 
- 	return uinput_ioctl_handler(file, cmd, arg, compat_ptr(arg));
- }
+ 		end = strchr(ptr, ',');
+ 		if (end)
+@@ -178,6 +179,10 @@ static ssize_t fault_opcodes_write(struc
+ 				    BITS_PER_BYTE);
+ 			break;
+ 		}
++		/* Check the inputs */
++		if (range_start >= bound || range_end >= bound)
++			break;
++
+ 		for (i = range_start; i <= range_end; i++) {
+ 			if (remove)
+ 				clear_bit(i, fault->opcodes);
 
 
