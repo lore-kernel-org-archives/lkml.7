@@ -2,328 +2,168 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D078FC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99252C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9889920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FF720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 17:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732444AbfFXR1z (ORCPT
+        id S1732456AbfFXR3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 13:27:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39636 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfFXR1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 13:27:55 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfSkS-0002LX-Cg; Mon, 24 Jun 2019 19:27:20 +0200
-Date:   Mon, 24 Jun 2019 19:27:18 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Vyukov <dvyukov@google.com>
-cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        amritha.nambiar@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tyhicks@canonical.com, wanghai26@huawei.com, yuehaibing@huawei.com
-Subject: Re: WARNING: ODEBUG bug in netdev_freemem (2)
-In-Reply-To: <alpine.DEB.2.21.1906241433020.32342@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1906241920540.32342@nanos.tec.linutronix.de>
-References: <000000000000d6a8ba058c0df076@google.com> <alpine.DEB.2.21.1906241130100.32342@nanos.tec.linutronix.de> <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com> <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
- <CACT4Y+bk1h+CFVdbbKau490Wjis8zt_ia8gVctGZ+bs=7qPk=Q@mail.gmail.com> <alpine.DEB.2.21.1906241433020.32342@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 24 Jun 2019 13:29:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:55422 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbfFXR3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 13:29:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71F36360;
+        Mon, 24 Jun 2019 10:29:10 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37EB03F718;
+        Mon, 24 Jun 2019 10:29:08 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 18:29:06 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v10 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190624172906.3d3w6352ji4izjgo@e110439-lin>
+References: <20190621084217.8167-1-patrick.bellasi@arm.com>
+ <20190621084217.8167-13-patrick.bellasi@arm.com>
+ <20190622150332.GM657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190622150332.GM657710@devbig004.ftw2.facebook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Thomas Gleixner wrote:
-> On Mon, 24 Jun 2019, Dmitry Vyukov wrote:
-> > On Mon, Jun 24, 2019 at 2:08 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > >>> ------------[ cut here ]------------
-> > > >>> ODEBUG: free active (active state 0) object type: timer_list hint:
-> > > >>> delayed_work_timer_fn+0x0/0x90 arch/x86/include/asm/paravirt.h:767
-> > > >>
-> > > >> One of the cleaned up devices has left an active timer which belongs to a
-> > > >> delayed work. That's all I can decode out of that splat. :(
-> > > >
-> > > > Hi Thomas,
-> > > >
-> > > > If ODEBUG would memorize full stack traces for object allocation
-> > > > (using lib/stackdepot.c), it would make this splat actionable, right?
-> > > > I've fixed https://bugzilla.kernel.org/show_bug.cgi?id=203969 for this.
-> > > >
-> > >
-> > > Not sure this would help in this case as some netdev are allocated through a generic helper.
-> > >
-> > > The driver specific portion might not show up in the stack trace.
-> > >
-> > > It would be nice here to get the work queue function pointer,
-> > > so that it gives us a clue which driver needs a fix.
+On 22-Jun 08:03, Tejun Heo wrote:
+> Hello,
+
+Hi,
+
+> Generally looks good to me.  Some nitpicks.
 > 
-> Hrm. Let me think about a way to achieve that after I handled that
-> regression which is on my desk.
+> On Fri, Jun 21, 2019 at 09:42:13AM +0100, Patrick Bellasi wrote:
+> > @@ -951,6 +951,12 @@ controller implements weight and absolute bandwidth limit models for
+> >  normal scheduling policy and absolute bandwidth allocation model for
+> >  realtime scheduling policy.
+> > 
+> > +Cycles distribution is based, by default, on a temporal base and it
+> > +does not account for the frequency at which tasks are executed.
+> > +The (optional) utilization clamping support allows to enforce a minimum
+> > +bandwidth, which should always be provided by a CPU, and a maximum bandwidth,
+> > +which should never be exceeded by a CPU.
+> 
+> I kinda wonder whether the term bandwidth is a bit confusing because
+> it's also used for cpu.max/min.  Would just calling it frequency be
+> clearer?
 
-Here is a quick and dirty hack which solves the issue at least for all run
-time initialized delayed work objects. Here is the output of a test I
-whipped up for this:
+Maybe I should find a better way to express the concept above.
 
- OBJ: Init delayed work, arm timer
- OBJ: Leak timer
- ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x20 chint: foo_fun+0x0/0x17
+I agree that bandwidth is already used by cpu.{max,min}, what I want
+to call out is that clamps allows to enrich that concept.
 
-chint is the debug object hint of the compound object, i.e. the work
-function 'foo_fun'.
+By hinting the scheduler on min/max required utilization we can better
+defined the amount of actual CPU cycles required/allowed.
+That's a bit more precise bandwidth control compared to just rely on
+temporal runnable/period limits.
 
-Yes, naming sucks and there is still the option to use the existing
-debug_obj::astate mechanics, but I was not able to wrap my head around all
-the nasty corner cases which the workqueue code provides quickly. Needs
-more thought.
+> > +static ssize_t cpu_uclamp_min_write(struct kernfs_open_file *of,
+> > +				    char *buf, size_t nbytes,
+> > +				    loff_t off)
+> > +{
+> > +	struct task_group *tg;
+> > +	u64 min_value;
+> > +	int ret;
+> > +
+> > +	ret = uclamp_scale_from_percent(buf, &min_value);
+> > +	if (ret)
+> > +		return ret;
+> > +	if (min_value > SCHED_CAPACITY_SCALE)
+> > +		return -ERANGE;
+> > +
+> > +	rcu_read_lock();
+> > +
+> > +	tg = css_tg(of_css(of));
+> > +	if (tg == &root_task_group) {
+> > +		ret = -EINVAL;
+> > +		goto out;
+> > +	}
+> 
+> I don't think you need the above check.
 
-Anyway, this should definitely help to diagnose the issue at hand.
+Don't we want to forbid attributes tuning from the root group?
 
-Thanks,
+> > +	if (tg->uclamp_req[UCLAMP_MIN].value == min_value)
+> > +		goto out;
+> > +	if (tg->uclamp_req[UCLAMP_MAX].value < min_value) {
+> > +		ret = -EINVAL;
+> 
+> So, uclamp.max limits the maximum freq% can get and uclamp.min limits
+> hte maximum freq% protection can get in the subtree.  Let's say
+> uclamp.max is 50% and uclamp.min is 100%.
 
-	tglx
+That's not possible, in the current implementation we always enforce
+the limit (uclamp.max) to be _not smaller_ then the protection
+(uclamp.min).
 
-8<--------------------
- include/linux/debugobjects.h |   10 ++++++++++
- include/linux/workqueue.h    |   26 ++++++++++++++++----------
- kernel/workqueue.c           |    9 ++++++++-
- lib/debugobjects.c           |   43 +++++++++++++++++++++++++++++++++++++++++--
- 4 files changed, 75 insertions(+), 13 deletions(-)
+Indeed, in principle, it does not make sense to ask for a minimum
+utilization (i.e. frequency boosting) which is higher then the
+maximum allowed utilization (i.e. frequency capping).
 
---- a/include/linux/debugobjects.h
-+++ b/include/linux/debugobjects.h
-@@ -24,6 +24,9 @@ struct debug_obj_descr;
-  * @astate:	current active state
-  * @object:	pointer to the real object
-  * @descr:	pointer to an object type specific debug description structure
-+ * @comp_addr:	pointer to a compound object which is glued with @object
-+ * @comp_descr:	pointer to a compound object type specific debug description
-+ *		structure
-  */
- struct debug_obj {
- 	struct hlist_node	node;
-@@ -31,6 +34,8 @@ struct debug_obj {
- 	unsigned int		astate;
- 	void			*object;
- 	struct debug_obj_descr	*descr;
-+	void			*comp_addr;
-+	struct debug_obj_descr	*comp_descr;
- };
- 
- /**
-@@ -82,6 +87,9 @@ extern void
- debug_object_active_state(void *addr, struct debug_obj_descr *descr,
- 			  unsigned int expect, unsigned int next);
- 
-+extern void debug_object_set_compound(void *addr, void *comp_addr,
-+				      struct debug_obj_descr *comp_descr);
-+
- extern void debug_objects_early_init(void);
- extern void debug_objects_mem_init(void);
- #else
-@@ -99,6 +107,8 @@ static inline void
- debug_object_free      (void *addr, struct debug_obj_descr *descr) { }
- static inline void
- debug_object_assert_init(void *addr, struct debug_obj_descr *descr) { }
-+static inline void
-+debug_object_set_compound(void *addr, void *ca, struct debug_obj_descr *cd) { }
- 
- static inline void debug_objects_early_init(void) { }
- static inline void debug_objects_mem_init(void) { }
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -204,7 +204,7 @@ struct execute_work {
- 	struct delayed_work n = __DELAYED_WORK_INITIALIZER(n, f, TIMER_DEFERRABLE)
- 
- #ifdef CONFIG_DEBUG_OBJECTS_WORK
--extern void __init_work(struct work_struct *work, int onstack);
-+extern void __init_work(struct work_struct *work, int onstack, bool delayed);
- extern void destroy_work_on_stack(struct work_struct *work);
- extern void destroy_delayed_work_on_stack(struct delayed_work *work);
- static inline unsigned int work_static(struct work_struct *work)
-@@ -212,7 +212,7 @@ static inline unsigned int work_static(s
- 	return *work_data_bits(work) & WORK_STRUCT_STATIC;
- }
- #else
--static inline void __init_work(struct work_struct *work, int onstack) { }
-+static inline void __init_work(struct work_struct *work, int onstack, bool delayed) { }
- static inline void destroy_work_on_stack(struct work_struct *work) { }
- static inline void destroy_delayed_work_on_stack(struct delayed_work *work) { }
- static inline unsigned int work_static(struct work_struct *work) { return 0; }
-@@ -226,20 +226,20 @@ static inline unsigned int work_static(s
-  * to generate better code.
-  */
- #ifdef CONFIG_LOCKDEP
--#define __INIT_WORK(_work, _func, _onstack)				\
-+#define __INIT_WORK(_work, _func, _onstack, _delayed)			\
- 	do {								\
- 		static struct lock_class_key __key;			\
- 									\
--		__init_work((_work), _onstack);				\
-+		__init_work((_work), _onstack, _delayed);		\
- 		(_work)->data = (atomic_long_t) WORK_DATA_INIT();	\
- 		lockdep_init_map(&(_work)->lockdep_map, "(work_completion)"#_work, &__key, 0); \
- 		INIT_LIST_HEAD(&(_work)->entry);			\
- 		(_work)->func = (_func);				\
- 	} while (0)
- #else
--#define __INIT_WORK(_work, _func, _onstack)				\
-+#define __INIT_WORK(_work, _func, _onstack, _delayed)			\
- 	do {								\
--		__init_work((_work), _onstack);				\
-+		__init_work((_work), _onstack, _delayed);		\
- 		(_work)->data = (atomic_long_t) WORK_DATA_INIT();	\
- 		INIT_LIST_HEAD(&(_work)->entry);			\
- 		(_work)->func = (_func);				\
-@@ -247,25 +247,31 @@ static inline unsigned int work_static(s
- #endif
- 
- #define INIT_WORK(_work, _func)						\
--	__INIT_WORK((_work), (_func), 0)
-+	__INIT_WORK((_work), (_func), 0, 0)
- 
- #define INIT_WORK_ONSTACK(_work, _func)					\
--	__INIT_WORK((_work), (_func), 1)
-+	__INIT_WORK((_work), (_func), 1, 0)
-+
-+#define __INIT_DWORK(_work, _func)					\
-+	__INIT_WORK((_work), (_func), 0, 1)
-+
-+#define __INIT_DWORK_ONSTACK(_work, _func)				\
-+	__INIT_WORK((_work), (_func), 1, 1)
- 
- #define __INIT_DELAYED_WORK(_work, _func, _tflags)			\
- 	do {								\
--		INIT_WORK(&(_work)->work, (_func));			\
- 		__init_timer(&(_work)->timer,				\
- 			     delayed_work_timer_fn,			\
- 			     (_tflags) | TIMER_IRQSAFE);		\
-+		__INIT_DWORK(&(_work)->work, (_func));			\
- 	} while (0)
- 
- #define __INIT_DELAYED_WORK_ONSTACK(_work, _func, _tflags)		\
- 	do {								\
--		INIT_WORK_ONSTACK(&(_work)->work, (_func));		\
- 		__init_timer_on_stack(&(_work)->timer,			\
- 				      delayed_work_timer_fn,		\
- 				      (_tflags) | TIMER_IRQSAFE);	\
-+		__INIT_DWORK_ONSTACK(&(_work)->work, (_func));		\
- 	} while (0)
- 
- #define INIT_DELAYED_WORK(_work, _func)					\
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -499,12 +499,19 @@ static inline void debug_work_deactivate
- 	debug_object_deactivate(work, &work_debug_descr);
- }
- 
--void __init_work(struct work_struct *work, int onstack)
-+void __init_work(struct work_struct *work, int onstack, bool delayed)
- {
- 	if (onstack)
- 		debug_object_init_on_stack(work, &work_debug_descr);
- 	else
- 		debug_object_init(work, &work_debug_descr);
-+
-+	if (delayed) {
-+		struct delayed_work *dwork = to_delayed_work(work);
-+
-+		debug_object_set_compound(&dwork->timer, work,
-+					  &work_debug_descr);
-+	}
- }
- EXPORT_SYMBOL_GPL(__init_work);
- 
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -179,6 +179,8 @@ alloc_object(void *addr, struct debug_bu
- 		obj->descr  = descr;
- 		obj->state  = ODEBUG_STATE_NONE;
- 		obj->astate = 0;
-+		obj->comp_addr = NULL;
-+		obj->comp_descr = NULL;
- 		hlist_del(&obj->node);
- 
- 		hlist_add_head(&obj->node, &b->list);
-@@ -321,11 +323,17 @@ static void debug_print_object(struct de
- 	if (limit < 5 && descr != descr_test) {
- 		void *hint = descr->debug_hint ?
- 			descr->debug_hint(obj->object) : NULL;
-+		void *chint = NULL;
-+
-+		/* Get a hint about a compound object */
-+		if (obj->comp_descr && obj->comp_descr->debug_hint)
-+			chint = obj->comp_descr->debug_hint(obj->comp_addr);
-+
- 		limit++;
- 		WARN(1, KERN_ERR "ODEBUG: %s %s (active state %u) "
--				 "object type: %s hint: %pS\n",
-+				 "object type: %s hint: %pS chint: %pS\n",
- 			msg, obj_states[obj->state], obj->astate,
--			descr->name, hint);
-+		     descr->name, hint, chint);
- 	}
- 	debug_objects_warnings++;
- }
-@@ -448,6 +456,37 @@ void debug_object_init_on_stack(void *ad
- EXPORT_SYMBOL_GPL(debug_object_init_on_stack);
- 
- /**
-+ * debug_object_set_compound - Set a pointer to a compund object
-+ * @addr:	address of the object
-+ * @comp_addr:	pointer to the compound object related to @addr
-+ * @comp_descr:	pointer to an object specific debug description structure for
-+ *		@comp_addr
-+ *
-+ * Useful for delayed work and similar constructs where the
-+ * debug_obj::astate tracking would be complex to achieve.
-+ */
-+void debug_object_set_compound(void *addr, void *comp_addr,
-+			       struct debug_obj_descr *comp_descr)
-+{
-+	struct debug_bucket *db;
-+	struct debug_obj *obj;
-+	unsigned long flags;
-+
-+	if (!debug_objects_enabled)
-+		return;
-+
-+	db = get_bucket((unsigned long) addr);
-+
-+	raw_spin_lock_irqsave(&db->lock, flags);
-+	obj = lookup_object(addr, db);
-+	if (obj) {
-+		obj->comp_addr = comp_addr;
-+		obj->comp_descr = comp_descr;
-+	}
-+	raw_spin_unlock_irqrestore(&db->lock, flags);
-+}
-+
-+/**
-  * debug_object_activate - debug checks when an object is activated
-  * @addr:	address of the object
-  * @descr:	pointer to an object specific debug description structure
+
+> It means that protection is not limited but the actual freq% is
+> limited upto 50%, which isn't necessarily invalid.
+> For a simple example, a user might be saying
+> that they want to get whatever protection they can get from its parent
+> but wanna limit eventual freq at 50% and it isn't too difficult to
+> imagine cases where the two knobs are configured separately especially
+> configuration is being managed hierarchically / automatically.
+
+That's not my understanding, in v10 by default when we create a
+subgroup we assign it uclamp.min=0%, meaning that we don't boost
+frequencies.
+
+It seems instead that you are asking to set uclamp.min=100% by
+default, so that the effective value will give us whatever the father
+allow. Is that correct?
+
+> tl;dr is that we don't need the above restriction and shouldn't
+> generally be restricting configurations when they don't need to.
+> 
+> Thanks.
+> 
+> -- 
+> tejun
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
