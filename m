@@ -2,202 +2,128 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E881C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FF9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7B220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6250020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731709AbfFXQSR (ORCPT
+        id S1729422AbfFXQTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:18:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728776AbfFXQSR (ORCPT
+        Mon, 24 Jun 2019 12:19:19 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.142]:43992 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726909AbfFXQTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:18:17 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OGGYMt011421
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:18:15 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb16rthyh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:18:15 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 24 Jun 2019 17:18:14 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Jun 2019 17:18:09 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OGI8O650725204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:18:08 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C41FB205F;
-        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E9B9B2065;
-        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 38C8C16C120D; Mon, 24 Jun 2019 09:18:11 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 09:18:11 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
-Reply-To: paulmck@linux.ibm.com
-References: <20190624152126.GA828@linux.ibm.com>
- <Pine.LNX.4.44L0.1906241137380.1609-100000@iolanthe.rowland.org>
+        Mon, 24 Jun 2019 12:19:18 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id D60F5CA4DB
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:19:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id fRgbhJppdiQerfRgbhpXz7; Mon, 24 Jun 2019 11:19:17 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:60914 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hfRga-000t0J-4e; Mon, 24 Jun 2019 11:19:16 -0500
+Date:   Mon, 24 Jun 2019 11:19:13 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190624161913.GA32270@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906241137380.1609-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062416-0072-0000-0000-0000044008AC
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011321; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01222667; UDB=6.00643367; IPR=6.01003828;
- MB=3.00027447; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 16:18:12
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062416-0073-0000-0000-00004CB02640
-Message-Id: <20190624161811.GE26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240129
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.213
+X-Source-L: No
+X-Exim-ID: 1hfRga-000t0J-4e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net (embeddedor) [187.160.61.213]:60914
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:39:23AM -0400, Alan Stern wrote:
-> On Mon, 24 Jun 2019, Paul E. McKenney wrote:
-> 
-> > On Sun, Jun 23, 2019 at 09:34:55PM -0700, Paul E. McKenney wrote:
-> > > On Sun, Jun 23, 2019 at 11:15:06AM -0400, Alan Stern wrote:
-> > > > On Sun, 23 Jun 2019, Akira Yokosawa wrote:
-> > > > 
-> > > > > Hi Paul and Alan,
-> > > > > 
-> > > > > On 2019/06/22 8:54, Paul E. McKenney wrote:
-> > > > > > On Fri, Jun 21, 2019 at 10:25:23AM -0400, Alan Stern wrote:
-> > > > > >> On Fri, 21 Jun 2019, Andrea Parri wrote:
-> > > > > >>
-> > > > > >>> On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
-> > > > > >>>> Herbert Xu recently reported a problem concerning RCU and compiler
-> > > > > >>>> barriers.  In the course of discussing the problem, he put forth a
-> > > > > >>>> litmus test which illustrated a serious defect in the Linux Kernel
-> > > > > >>>> Memory Model's data-race-detection code.
-> > > > > 
-> > > > > I was not involved in the mail thread and wondering what the litmus test
-> > > > > looked like. Some searching of the archive has suggested that Alan presented
-> > > > > a properly formatted test based on Herbert's idea in [1].
-> > > > > 
-> > > > > [1]: https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
-> > > > 
-> > > > Yes, that's it.  The test is also available at:
-> > > > 
-> > > > https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
-> > > > 
-> > > > Alan
-> > > > 
-> > > > > If this is the case, adding the link (or message id) in the change
-> > > > > log would help people see the circumstances, I suppose.
-> > > > > Paul, can you amend the change log?
-> > > > > 
-> > > > > I ran herd7 on said litmus test at both "lkmm" and "dev" of -rcu and
-> > > > > confirmed that this patch fixes the result.
-> > > > > 
-> > > > > So,
-> > > > > 
-> > > > > Tested-by: Akira Yokosawa <akiyks@gmail.com>
-> > > 
-> > > Thank you both!  I will apply these changes tomorrow morning, Pacific Time.
-> > 
-> > And done.  Please see below for the updated commit.
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 46a020e9464aff884df56e5fd483134c8801e39f
-> > Author: Alan Stern <stern@rowland.harvard.edu>
-> > Date:   Thu Jun 20 11:55:58 2019 -0400
-> > 
-> >     tools/memory-model: Improve data-race detection
-> >     
-> >     Herbert Xu recently reported a problem concerning RCU and compiler
-> >     barriers.  In the course of discussing the problem, he put forth a
-> >     litmus test which illustrated a serious defect in the Linux Kernel
-> >     Memory Model's data-race-detection code [1].
-> >     
-> >     The defect was that the LKMM assumed visibility and executes-before
-> >     ordering of plain accesses had to be mediated by marked accesses.  In
-> >     Herbert's litmus test this wasn't so, and the LKMM claimed the litmus
-> >     test was allowed and contained a data race although neither is true.
-> >     
-> >     In fact, plain accesses can be ordered by fences even in the absence
-> >     of marked accesses.  In most cases this doesn't matter, because most
-> >     fences only order accesses within a single thread.  But the rcu-fence
-> >     relation is different; it can order (and induce visibility between)
-> >     accesses in different threads -- events which otherwise might be
-> >     concurrent.  This makes it relevant to data-race detection.
-> >     
-> >     This patch makes two changes to the memory model to incorporate the
-> >     new insight:
-> >     
-> >             If a store is separated by a fence from another access,
-> >             the store is necessarily visible to the other access (as
-> >             reflected in the ww-vis and wr-vis relations).  Similarly,
-> >             if a load is separated by a fence from another access then
-> >             the load necessarily executes before the other access (as
-> >             reflected in the rw-xbstar relation).
-> >     
-> >             If a store is separated by a strong fence from a marked access
-> >             then it is necessarily visible to any access that executes
-> >             after the marked access (as reflected in the ww-vis and wr-vis
-> >             relations).
-> >     
-> >     With these changes, the LKMM gives the desired result for Herbert's
-> >     litmus test and other related ones [2].
-> >     
-> >     [1]     https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
-> >     
-> >     [2]     https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-1.litmus
-> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
-> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-3.litmus
-> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-4.litmus
-> 
-> Please add:
-> 
-> https://github.com/paulmckrcu/litmus/blob/master/manual/plain/strong-vis.litmus
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Done, and calling this version final.  Thank you all again!
+This patch fixes the following warnings:
 
-							Thanx, Paul
+arch/x86/events/intel/core.c: In function ‘intel_pmu_init’:
+arch/x86/events/intel/core.c:4959:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   pmem = true;
+   ~~~~~^~~~~~
+arch/x86/events/intel/core.c:4960:2: note: here
+  case INTEL_FAM6_SKYLAKE_MOBILE:
+  ^~~~
+arch/x86/events/intel/core.c:5008:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   pmem = true;
+   ~~~~~^~~~~~
+arch/x86/events/intel/core.c:5009:2: note: here
+  case INTEL_FAM6_ICELAKE_MOBILE:
+  ^~~~
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/x86/events/intel/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bda450ff51ee..6154f052aa5f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4957,6 +4957,7 @@ __init int intel_pmu_init(void)
+ 
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 		pmem = true;
++		/* fall through */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+ 	case INTEL_FAM6_SKYLAKE_DESKTOP:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+@@ -5006,6 +5007,7 @@ __init int intel_pmu_init(void)
+ 	case INTEL_FAM6_ICELAKE_X:
+ 	case INTEL_FAM6_ICELAKE_XEON_D:
+ 		pmem = true;
++		/* fall through */
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+ 	case INTEL_FAM6_ICELAKE_DESKTOP:
+ 		x86_pmu.late_ack = true;
+-- 
+2.21.0
 
