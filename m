@@ -2,149 +2,106 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490F4C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD4C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC3420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE28820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cP01GdQj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j5vZb98f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfFXDfO (ORCPT
+        id S1727704AbfFXDgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:35:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40906 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFXDfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:35:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 23 Jun 2019 23:36:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48350 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfFXDgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:36:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 087E360909; Mon, 24 Jun 2019 03:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561347381;
+        bh=6Z7HBpMm0ZfrkIlORZl8tv7HCGEf+5YDT93YXDXDWe8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cP01GdQjvkgaC430GrHohAUDJx/rmhglz7zW6jGad7vRD1rGS+aKfRJ5DLs2Bzl/g
+         1yTkK/jagqG/q+vrYrFxxvh2PIFLcDlq99S/4kfB9REBDipv8mmUsqcJYgsyc0ciKn
+         J+hRzWgJGfxoYpm2l3oWxWnvLkvUiDeV9TFbh4LE=
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A6FD85546;
-        Mon, 24 Jun 2019 03:35:04 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 953A719C65;
-        Mon, 24 Jun 2019 03:34:45 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 11:34:40 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH -mm] mm, swap: Fix THP swap out
-Message-ID: <20190624033438.GB6563@ming.t460p>
-References: <20190624022336.12465-1-ying.huang@intel.com>
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C3B36038E;
+        Mon, 24 Jun 2019 03:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561347380;
+        bh=6Z7HBpMm0ZfrkIlORZl8tv7HCGEf+5YDT93YXDXDWe8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j5vZb98fYQoV+I9IQpReSI0jjBZghWaIOs8sSsVV2F3MvnEPI+NODC6DYq9Uy/gGA
+         Lw0EopLXQ3MAK1kp6GgpikF1/uUspKmMr073l7fYpt0jWWVx1pxasCh1jBOr1GmooI
+         d0MBjpc+x2DCEoDI2Pxgw4nP7PimK9hJMbvEmGRs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C3B36038E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/1] coresight: Do not default to CPU0 for missing CPU phandle
+Date:   Mon, 24 Jun 2019 09:06:08 +0530
+Message-Id: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624022336.12465-1-ying.huang@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 24 Jun 2019 03:35:14 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Huang Ying,
+In case of missing CPU phandle, the affinity is set default to
+CPU0 which is not a correct assumption. Fix this in coresight
+platform to set affinity to invalid and abort the probe in drivers.
+Also update the dt-bindings accordingly.
 
-On Mon, Jun 24, 2019 at 10:23:36AM +0800, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
-> 
-> 0-Day test system reported some OOM regressions for several
-> THP (Transparent Huge Page) swap test cases.  These regressions are
-> bisected to 6861428921b5 ("block: always define BIO_MAX_PAGES as
-> 256").  In the commit, BIO_MAX_PAGES is set to 256 even when THP swap
-> is enabled.  So the bio_alloc(gfp_flags, 512) in get_swap_bio() may
-> fail when swapping out THP.  That causes the OOM.
-> 
-> As in the patch description of 6861428921b5 ("block: always define
-> BIO_MAX_PAGES as 256"), THP swap should use multi-page bvec to write
-> THP to swap space.  So the issue is fixed via doing that in
-> get_swap_bio().
-> 
-> BTW: I remember I have checked the THP swap code when
-> 6861428921b5 ("block: always define BIO_MAX_PAGES as 256") was merged,
-> and thought the THP swap code needn't to be changed.  But apparently,
-> I was wrong.  I should have done this at that time.
-> 
-> Fixes: 6861428921b5 ("block: always define BIO_MAX_PAGES as 256")
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Rik van Riel <riel@redhat.com>
-> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-> ---
->  mm/page_io.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/page_io.c b/mm/page_io.c
-> index 2e8019d0e048..4ab997f84061 100644
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -29,10 +29,9 @@
->  static struct bio *get_swap_bio(gfp_t gfp_flags,
->  				struct page *page, bio_end_io_t end_io)
->  {
-> -	int i, nr = hpage_nr_pages(page);
->  	struct bio *bio;
->  
-> -	bio = bio_alloc(gfp_flags, nr);
-> +	bio = bio_alloc(gfp_flags, 1);
->  	if (bio) {
->  		struct block_device *bdev;
->  
-> @@ -41,9 +40,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
->  		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
->  		bio->bi_end_io = end_io;
->  
-> -		for (i = 0; i < nr; i++)
-> -			bio_add_page(bio, page + i, PAGE_SIZE, 0);
+v3:
+ * Addressed review comments from Suzuki and updated
+   acpi_coresight_get_cpu.
+ * Removed patch 2 which had invalid check for online
+   cpus.
 
-bio_add_page() supposes to work, just wondering why it doesn't recently.
+v2:
+ * Addressed review comments from Suzuki and Mathieu.
+ * Allows the probe of etm and cpu-debug to abort earlier
+   in case of unavailability of respective cpus.
 
-Could you share me one test case for reproducing it?
+Sai Prakash Ranjan (1):
+  coresight: Do not default to CPU0 for missing CPU phandle
 
-> -		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
-> +		__bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
->  	}
->  	return bio;
+ .../bindings/arm/coresight-cpu-debug.txt         |  4 ++--
+ .../devicetree/bindings/arm/coresight.txt        |  8 +++++---
+ .../hwtracing/coresight/coresight-cpu-debug.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-platform.c | 16 ++++++++--------
+ 6 files changed, 24 insertions(+), 13 deletions(-)
 
-Actually the above code can be simplified as:
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 2e8019d0e048..c20b4189d0a1 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -29,7 +29,7 @@
- static struct bio *get_swap_bio(gfp_t gfp_flags,
- 				struct page *page, bio_end_io_t end_io)
- {
--	int i, nr = hpage_nr_pages(page);
-+	int nr = hpage_nr_pages(page);
- 	struct bio *bio;
- 
- 	bio = bio_alloc(gfp_flags, nr);
-@@ -41,8 +41,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
- 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
- 		bio->bi_end_io = end_io;
- 
--		for (i = 0; i < nr; i++)
--			bio_add_page(bio, page + i, PAGE_SIZE, 0);
-+		bio_add_page(bio, page, PAGE_SIZE * nr, 0);
- 		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
- 	}
- 	return bio;
-
-
-Thanks,
-Ming
