@@ -2,95 +2,78 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFC8C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2802F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1067205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:27:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="dKDvQAwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732101AbfFXQZy (ORCPT
+        id S1732070AbfFXQ1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:25:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53858 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726393AbfFXQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:25:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0AF07ADDA;
-        Mon, 24 Jun 2019 16:25:53 +0000 (UTC)
+        Mon, 24 Jun 2019 12:27:07 -0400
+Received: from canardo.mork.no ([148.122.252.1]:56291 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfFXQ1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:27:07 -0400
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x5OGQpI1008347
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 24 Jun 2019 18:26:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1561393612; bh=fLGEnw2Njzn9xoqzS5V4EDKFzf98/cQHM5dM1LpBLzA=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=dKDvQAwpJjFXmlAogZehs5GN9Y0cWRugc8cEv6J7slbl2Gp91bIw92D6f8xqQPH1C
+         2D1A6sM+SFV7PUESbRMLRQ8XCn1KbzQrGpeCn7dKGZ1MWCkmcPx5tg1DETysp/3GEE
+         pWXw8Nq+31CbbTfMV6RbuTVO7HvammQT1NNOkUL0=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
+        (envelope-from <bjorn@mork.no>)
+        id 1hfRnv-0008IY-E4; Mon, 24 Jun 2019 18:26:51 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
+        syzbot <syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: global-out-of-bounds Read in qmi_wwan_probe
+Organization: m
+References: <0000000000008f19f7058c10a633@google.com>
+        <871rzj6sww.fsf@miraculix.mork.no>
+Date:   Mon, 24 Jun 2019 18:26:51 +0200
+In-Reply-To: <871rzj6sww.fsf@miraculix.mork.no> (Hillf Danton's message of
+        "Mon, 24 Jun 2019 23:38:36 +0800")
+Message-ID: <87tvcf54qc.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Jun 2019 18:25:52 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 13/14] epoll: implement epoll_create2() syscall
-In-Reply-To: <CAK8P3a3YgKZbF=nx4nsbj5mvgcSk8OfjU1HNvSjC19RPsyVMsQ@mail.gmail.com>
-References: <20190624144151.22688-1-rpenyaev@suse.de>
- <20190624144151.22688-14-rpenyaev@suse.de>
- <CAK8P3a3YgKZbF=nx4nsbj5mvgcSk8OfjU1HNvSjC19RPsyVMsQ@mail.gmail.com>
-Message-ID: <d1603e27672acbc72c20bd2b03b80f9c@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.100.3 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-24 18:14, Arnd Bergmann wrote:
-> On Mon, Jun 24, 2019 at 4:42 PM Roman Penyaev <rpenyaev@suse.de> wrote:
->> 
->> epoll_create2() is needed to accept EPOLL_USERPOLL flags
->> and size, i.e. this patch wires up polling from userspace.
-> 
-> Can you explain in the patch description more what it's needed for?
+Hillf Danton <hdanton@sina.com> writes:
 
-Sure. Will update on next iteration.
+> and wonder if the following works.
+>
+> -	info =3D (void *)&id->driver_info;
+> +	info =3D (void *)id->driver_info;
 
-> 
-> The man page only states that "Since Linux 2.6.8, the size argument
-> is ignored", so your description above does not explain why you need
-> to add the size argument back.
-> 
->> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl 
->> b/arch/alpha/kernel/syscalls/syscall.tbl
->> index 1db9bbcfb84e..a1d7b695063d 100644
->> --- a/arch/alpha/kernel/syscalls/syscall.tbl
->> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
->> @@ -474,3 +474,5 @@
->>  542    common  fsmount                         sys_fsmount
->>  543    common  fspick                          sys_fspick
->>  544    common  pidfd_open                      sys_pidfd_open
->> +# 546  common  clone3                  sys_clone3
->> +547    common  epoll_create2                   sys_epoll_create2
->> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
->> index ff45d8807cb8..1497f3c87d54 100644
->> --- a/arch/arm/tools/syscall.tbl
->> +++ b/arch/arm/tools/syscall.tbl
->> @@ -449,3 +449,4 @@
->>  433    common  fspick                          sys_fspick
->>  434    common  pidfd_open                      sys_pidfd_open
->>  436    common  clone3                          sys_clone3
->> +437    common  epoll_create2                   sys_epoll_create2
-> 
-> The table changes all look correct and complete, provided we
-> don't get another patch picking the same number.
 
-Good.  I had doubts, because on some archs there is a gap,
-(sys_clone3 was missing).  So I left a placeholder, so
-can be uncommented when sys_clone3 is implemented.
+Doh! Right you are.  Thanks to both you and Andrey for quick and good
+help.
 
---
-Roman
+We obviously have some bad code patterns here, since this apparently
+worked for Kristian by pure luck.
 
+
+Bj=C3=B8rn
