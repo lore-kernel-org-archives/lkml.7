@@ -2,188 +2,103 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65402C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014B3C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B8020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FB420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fNoiNIAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfFXXOR (ORCPT
+        id S1728279AbfFXXPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:14:17 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51293 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfFXXOQ (ORCPT
+        Mon, 24 Jun 2019 19:15:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32780 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfFXXPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:14:16 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 8612bd51ee35b0e6; Tue, 25 Jun 2019 01:14:13 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Robert R. Howell" <RHowell@uwyo.edu>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate on BYT/CHT
-Date:   Tue, 25 Jun 2019 01:14:13 +0200
-Message-ID: <1935381.LvnFHGipmV@kreacher>
-In-Reply-To: <b02ef915-faf5-635d-bf2f-92dd10d274b1@redhat.com>
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com> <2830645.pXxymQ5XCC@kreacher> <b02ef915-faf5-635d-bf2f-92dd10d274b1@redhat.com>
+        Mon, 24 Jun 2019 19:15:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so7732836plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=2IMAKyHpnPJ1yDvedXi3maHRvnqNVDYJ2coEjzpqvcg=;
+        b=fNoiNIAlRLn2QPb90BjGH37+vFNKA/mLAyGEzncUaIUNKlz7FLzTUan3SXPxa1rNq8
+         7saw0x1+SkHrlvHHaLtCzAuR7AUl5tVeWeM7dauo2/iU1K+AVzbwctFJ5zSEeVx94FuT
+         7MMlmAJrW3AOOmVZ7ElmnT16ufcPs1Zow5dWLjMaqdWX+cWwAom1Wk+c0lBAehDJdbr2
+         unMFbvikaH6zQO3eS25IrkX5zlnygUySo3Ybd8VG/p9wqDGJZ0CibWSLbx/Bn46+GRrn
+         C9SbdikcTznE1mRjY+HDMes2guFt2BWypwoXZuPoBwsmUusAWHuddfXUtfS0d8dJlRFd
+         Hhqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=2IMAKyHpnPJ1yDvedXi3maHRvnqNVDYJ2coEjzpqvcg=;
+        b=TO/VHDfNgZuosCbLE/rc3Fwf9Rwj4fMAR9RoLA5uH5wun4zCPsdLVj96BMBuClCk5b
+         t0KVvENrXJMk4gOlTZSBiMvy6RCAXFQaOuKq8Neus7tVh1U3IlNl2YZXMIEMAr4yhmtW
+         mgkBgBovj3NPyWW9cmj1i4RsP8N9F+kXHYlneLahtT0pq1TEvOC9aYT8quIQQUZxzLK8
+         M188uG0gnDJ7BjMsClOgzeTP/ExVFAZ6toD57zPvXh0upCkDwy5hm9QaxPyAkAn9b8KO
+         M4ZaLV+ETI3g2GHS/QCHG9gbHafoVwpIypwcT/fVEB9uS0ThEux+aXFrAYXdKpeAlDrx
+         dvdQ==
+X-Gm-Message-State: APjAAAWszvGRNRbCm8OBsmagyPlFXnEybSuGCK93N7aCggsnX6MGJAkF
+        MmwrmWOc7IlGCzTCgYTUpLF5OA==
+X-Google-Smtp-Source: APXvYqwROTeApbbRvj7XZr2xOey7lePNY05i1p2vtda9bu6wK0pvM2dbxuFwX8hcBJqIgVsFRVqElQ==
+X-Received: by 2002:a17:902:42d:: with SMTP id 42mr144122426ple.228.1561418132182;
+        Mon, 24 Jun 2019 16:15:32 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:559b:6f10:667f:4354])
+        by smtp.googlemail.com with ESMTPSA id v9sm16566583pgj.69.2019.06.24.16.15.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 16:15:31 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     86zhm782g5.fsf@baylibre.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
+Subject: Re: [PATCH 4/9] drm: meson: vpp: use proper macros instead of magic constants
+In-Reply-To: <86tvcf82eu.fsf@baylibre.com>
+References: <86zhm782g5.fsf@baylibre.com> <86tvcf82eu.fsf@baylibre.com>
+Date:   Mon, 24 Jun 2019 16:15:28 -0700
+Message-ID: <7h36jyy3qn.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 24, 2019 12:51:33 PM CEST Hans de Goede wrote:
-> Hi Rafael,
-> 
-> <snip>
-> 
-> > Sorry for the long delay.
-> > 
-> > I haven't dropped this issue on the floor, I hope that you are still able to follow up here.
-> > 
-> > Can you please test the appended patch instead of the previous one?
-> > 
-> > I have found some inconsistencies in the handling of hibernation in the ACPI PM domain
-> > and the LPSS driver that should be covered by this patch.
-> 
-> I know this is just a testing patch for now, but still I've given it
-> a quick look, some comments inline.
-> 
-> > ---
-> >   drivers/acpi/acpi_lpss.c |   63 +++++++++++++++++++++++++++++++++++------------
-> >   drivers/acpi/device_pm.c |   30 ++++++++++++++++++++--
-> >   include/linux/acpi.h     |    4 ++
-> >   3 files changed, 79 insertions(+), 18 deletions(-)
-> > 
-> > Index: linux-pm/drivers/acpi/device_pm.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/device_pm.c
-> > +++ linux-pm/drivers/acpi/device_pm.c
-> > @@ -1171,6 +1171,32 @@ int acpi_subsys_thaw_noirq(struct device
-> >   	return pm_generic_thaw_noirq(dev);
-> >   }
-> >   EXPORT_SYMBOL_GPL(acpi_subsys_thaw_noirq);
-> > +
-> > +/**
-> > + * acpi_subsys_restore_noirq - Run the device driver's "noirq" restore callback.
-> > + * @dev: Device to handle.
-> > + */
-> > +int acpi_subsys_restore_noirq(struct device *dev)
-> > +{
-> > +	/* This is analogous to what acpi_subsys_resune_noirq() does. */
-> > +	if (dev_pm_smart_suspend_and_suspended(dev))
-> > +		pm_runtime_set_active(dev);
-> > +
-> > +	return pm_generic_restore_noirq(dev);
-> > +}
-> > +EXPORT_SYMBOL_GPL(acpi_subsys_restore_noirq);
-> > +
-> > +/**
-> > + * acpi_subsys_restore_early - Restore device using ACPI.
-> > + * @dev: Device to restore.
-> > + */
-> > +int acpi_subsys_restore_early(struct device *dev)
-> > +{
-> > +	int ret = acpi_dev_resume(dev);
-> > +	return ret ? ret : pm_generic_restore_early(dev);
-> > +}
-> > +EXPORT_SYMBOL_GPL(acpi_subsys_restore_early);
-> > +
-> >   #endif /* CONFIG_PM_SLEEP */
-> >   
-> >   static struct dev_pm_domain acpi_general_pm_domain = {
-> > @@ -1192,8 +1218,8 @@ static struct dev_pm_domain acpi_general
-> >   		.poweroff = acpi_subsys_suspend,
-> >   		.poweroff_late = acpi_subsys_suspend_late,
-> >   		.poweroff_noirq = acpi_subsys_suspend_noirq,
-> > -		.restore_noirq = acpi_subsys_resume_noirq,
-> > -		.restore_early = acpi_subsys_resume_early,
-> > +		.restore_noirq = acpi_subsys_restore_noirq,
-> > +		.restore_early = acpi_subsys_restore_early,
-> >   #endif
-> >   	},
-> >   };
-> > Index: linux-pm/drivers/acpi/acpi_lpss.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/acpi_lpss.c
-> > +++ linux-pm/drivers/acpi/acpi_lpss.c
-> > @@ -1069,36 +1069,67 @@ static int acpi_lpss_suspend_noirq(struc
-> >   	return acpi_subsys_suspend_noirq(dev);
-> >   }
-> >   
-> > -static int acpi_lpss_do_resume_early(struct device *dev)
-> > +static int acpi_lpss_resume_noirq(struct device *dev)
-> >   {
-> > -	int ret = acpi_lpss_resume(dev);
-> > +	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-> > +
-> > +	/* Follow acpi_subsys_resune_noirq(). */
-> > +	if (dev_pm_may_skip_resume(dev))
-> > +		return 0;
-> > +
-> > +	if (dev_pm_smart_suspend_and_suspended(dev))
-> > +		pm_runtime_set_active(dev);
-> >   
-> > -	return ret ? ret : pm_generic_resume_early(dev);
-> > +	if (pdata->dev_desc->resume_from_noirq) {
-> > +		int ret = acpi_lpss_resume(dev);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return pm_generic_resume_noirq(dev);
-> >   }
-> 
-> Hmm, normally acpi_lpss_resume runs at resume_early time, AFAIK
-> the order of resume callbacks calling is: resume_noirq, resume_early, resume
-> 
-> So normally our call order is:
-> 
-> ---noirq-phase---
-> pm_generic_resume_noirq()
-> ---early-phase---
-> acpi_lpss_resume()
-> pm_generic_resume_early()
-> 
-> My patch adding the resume_from_noirq flag, move the calling of
-> acpi_lpss_resume() to the resume_noirq phase (if the flag is
-> set) but kept the generic order, so the call order with the
-> flag set currently is:
-> 
-> ---noirq-phase---
-> pm_generic_resume_noirq()
-> acpi_lpss_resume()
-> ---early-phase---
-> pm_generic_resume_early()
-> 
-> So the order of the 3 calls relative to each other did not change.
-> 
-> You are changing this to:
-> 
-> ---noirq-phase---
-> acpi_lpss_resume()
-> pm_generic_resume_noirq()
-> ---early-phase---
-> pm_generic_resume_early()
-> 
-> So now when the flag is set acpi_lpss_resume() runs before
-> pm_generic_resume_noirq(). Is this intentional ?
+Julien Masson <jmasson@baylibre.com> writes:
 
-Kind of yes, but this is two patches in one. :-)
+> This patch add new macros which are used to set the following
+> registers:
+> - VPP_OSD_SCALE_COEF_IDX
+> - VPP_DOLBY_CTRL
+> - VPP_OFIFO_SIZE
+> - VPP_HOLD_LINES
+> - VPP_SC_MISC
+> - VPP_VADJ_CTRL
+>
+> Signed-off-by: Julien Masson <jmasson@baylibre.com>
 
-The ordering change should really be a separate patch IMO.
+[...]
 
+> @@ -97,20 +97,22 @@ void meson_vpp_init(struct meson_drm *priv)
+>  	else if (meson_vpu_is_compatible(priv, "amlogic,meson-gxm-vpu")) {
+>  		writel_bits_relaxed(0xff << 16, 0xff << 16,
+>  				    priv->io_base + _REG(VIU_MISC_CTRL1));
+> -		writel_relaxed(0x20000, priv->io_base + _REG(VPP_DOLBY_CTRL));
+> -		writel_relaxed(0x1020080,
+> +		writel_relaxed(VPP_PPS_DUMMY_DATA_MODE,
+> +			       priv->io_base + _REG(VPP_DOLBY_CTRL));
+> +		writel_relaxed(0x108080,
 
+nit: still a magic constant here, and it's not obvious why it's
+different from the current one.
 
+Kevin
