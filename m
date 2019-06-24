@@ -2,64 +2,82 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578DEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BBFC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F50208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE87205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfFXJaU (ORCPT
+        id S1728150AbfFXJcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:30:20 -0400
-Received: from thoth.sbs.de ([192.35.17.2]:51847 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbfFXJaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:30:19 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x5O9TxZj023904
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 11:29:59 +0200
-Received: from [167.87.13.35] ([167.87.13.35])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x5O9Tvbl015092;
-        Mon, 24 Jun 2019 11:29:57 +0200
-Subject: Re: PREEMPT_RT_FULL on x86-32 machine
-To:     Pavel Machek <pavel@ucw.cz>, linux-rt-users@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Cc:     mwhitehe@redhat.com
-References: <20190622081954.GA10751@amd>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <2804bc5b-18c1-2793-171c-045c0725a6a7@siemens.com>
-Date:   Mon, 24 Jun 2019 11:29:56 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Mon, 24 Jun 2019 05:32:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56130 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726632AbfFXJcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:32:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 10828AF47;
+        Mon, 24 Jun 2019 09:32:20 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 2/5] livepatch: Basic API to track system state changes
+References: <20190611135627.15556-1-pmladek@suse.com>
+        <20190611135627.15556-3-pmladek@suse.com>
+Date:   Mon, 24 Jun 2019 11:32:19 +0200
+In-Reply-To: <20190611135627.15556-3-pmladek@suse.com> (Petr Mladek's message
+        of "Tue, 11 Jun 2019 15:56:24 +0200")
+Message-ID: <87k1db49cs.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190622081954.GA10751@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.06.19 10:19, Pavel Machek wrote:
-> Hi!
-> 
-> Is full preemption supposed to work on x86-32 machines?
-> 
-> Because it does not work for me. It crashes early in boot, no messages
-> make it to console. Similar configuration for x86-64 boots ok.
-> 
+Petr Mladek <pmladek@suse.com> writes:
 
-Maybe you can also tell which version(s) you tried, and in which 
-configuration(s), and how the crash looked like.
+> ---
+>  include/linux/livepatch.h | 15 +++++++++
+>  kernel/livepatch/Makefile |  2 +-
+>  kernel/livepatch/state.c  | 83 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 99 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/livepatch/state.c
+>
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index eeba421cc671..591abdee30d7 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -132,10 +132,21 @@ struct klp_object {
+>  	bool patched;
+>  };
+>  
+> +/**
+> + * struct klp_state - state of the system modified by the livepatch
+> + * @id:		system state identifier (non zero)
+> + * @data:	custom data
+> + */
+> +struct klp_state {
+> +	int id;
 
-Jan
+Can we make this an unsigned long please? It would be consistent with
+shadow variable ids and would give more room for encoding bugzilla or
+CVE numbers or so.
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Nicolai
+
+> +	void *data;
+> +};
+> +
