@@ -2,119 +2,186 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E74C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C266AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A955520645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001B20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ISIKS+Ql"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsJf5K+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfFXSZA (ORCPT
+        id S1732843AbfFXS0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:25:00 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34987 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfFXSZA (ORCPT
+        Mon, 24 Jun 2019 14:26:13 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36716 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfFXS0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:25:00 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a127so10509913oii.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:24:59 -0700 (PDT)
+        Mon, 24 Jun 2019 14:26:12 -0400
+Received: by mail-qt1-f195.google.com with SMTP id p15so15553823qtl.3;
+        Mon, 24 Jun 2019 11:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NsFsqmCeB4cJxbUvEFO6xcZSO/kARHjBGNTe6zm2OGk=;
-        b=ISIKS+QlpEyn1hNfgdDi5hMHKw8iit0945EcE3yN7j+0wsgacWlTs5VS/2eHyNPn4P
-         zFzHaSyW66Yiy2RhkTwuJ3InCkBlGpTPkGdBxkYOWHXgUlVbX7KrnXrnxhmbl79B80YX
-         fCQYLMQ6T4q3GxjWwuuuag5EPhpGhA+skRXUiofVA4jxcOoybEtzKs47HHrVewo4aeOH
-         xEgr2mAYq4kDK9twlyulxuXtH8x20UgS6h2b36rjnfm3Zpe3kyRxJhg0wXN2sl5N3Gx9
-         a1ANzgYTbnIct0aX4IAsj7uocTALXH4slbfh3ZtWL5Y9qp3yWn0Ovu6E52I1ME72busN
-         XZfQ==
+        bh=x9uoR+KIuE1II8mD60iebYIvLAFwPjD50xd1uMdBmX4=;
+        b=HsJf5K+XiynaUtH0EQHleY1DehgR5I73UNWc4B8ezA8f+JAS0PbGbiGzZgdWd6cQXy
+         wJmtHrGPeWD5KCUPKvtBWJfDuB93b+afyICO/Ix3bGKGbot2piuwd8nQckRFs3sVhv3F
+         4tr0dtv1KkJh9Efc5VGIWljCb4AHVAgdVcMcUwD5RSs6K70Hf539f0eJv7F8Mfe4Eux8
+         02kBt8M2tlsDqBN6o1CyI40spDnYU3pblJZF6PT2ITHApVLJR0wK5v8pERXKPTnFkTRb
+         jKzs9+7+ZRVHdZd047MqXUVhAaDM1vPpVYqXoHFdywewLzg1Jk6lDrdn/dlX178HBHBn
+         wsAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NsFsqmCeB4cJxbUvEFO6xcZSO/kARHjBGNTe6zm2OGk=;
-        b=eiKKpBPoiYDvLeDwSAMvQ2ql07xeht0ddUgwwQi9xR6IrWhYVZ0k60kr1xHOwkTD9s
-         D0zH166y9DSS/UFmt5Ehgbc87K4B/DcyRlcl2guZsQV/F5U/u/yIQoWcoOlpUt4htlGA
-         W4zigFfqoIQPPO/BAxMVh7TzdufSAGcowcG7MzjSt7XZRGgNETHngoV8le07/VH+PiaE
-         ftRM/AGIzxllIKBfXgDdx3BLWl/p9sYmRO1TV2yjONshjHaq6DmG62msUw6upEy4/pBy
-         j3Jf5H3gEnUvewHW6pOIFLIyRQufjfK72AmBSo2nrDrPUWjY1WWwBgPkLFtHvg32dNrD
-         aPXg==
-X-Gm-Message-State: APjAAAU+0xM1XHdkdxUeioMj8AUX9hgRX9F01N+WNtbuq681sSK01Hqw
-        WgUBYVlrkPL1J06hqJHWCGAfu0MGmuYHLtKVPKXDtA==
-X-Google-Smtp-Source: APXvYqxMfIu+2D2MtYcv2E7EXzI2zB57kKNYjO9p4H9g9zR42W2XzhT13YcbI1eS8VOBT1jN50QqXbLB+mAAmyIYdBg=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr11696883oii.0.1561400699583;
- Mon, 24 Jun 2019 11:24:59 -0700 (PDT)
+        bh=x9uoR+KIuE1II8mD60iebYIvLAFwPjD50xd1uMdBmX4=;
+        b=gilwWx9zS/qqUYYps17sgGvt/qPODa5UDc/+bafy6GEAtwZ6ofChpgE6Tlmz3F2Uxj
+         wboMAbjk4ijiYbTXcbAxBShonKEHNqa4AU0nfkAMuC6OswvSy1srVSvH7p4e19Ag48ka
+         Nd5FlvrhND6mbRNJbSXvZjb0fzIqjAZH29OXEXjieOMQbI7JatvJjHg/mham3b0dOmyc
+         aQ8cgVLKnCZbqw+fA1keFWj3yYlW31pv1TjHNF82iV7pKtVYgkpbaNm2CkvDtAKg6Gz1
+         kPQb9svCdIwWa7MJGzi5e/whrswDHUOFVXznuS9+WidOYsO/XVgaqJo4xXfHq+iLDMPa
+         2RQg==
+X-Gm-Message-State: APjAAAXr7DOJI8JyCBazS753vVKKagvw1w7p6X5VAgHTxyqQ9B8WDlah
+        K16UGvw6VYegYNSJ2zb2YSHUsIuRTU0H3uAZ9Eo=
+X-Google-Smtp-Source: APXvYqyX7Yqi62/9W21qqWsZBV0Zu1HZmK4IeRtasql6wmRV4UqjV0hD5sevr26Ix9vyKLwGEVpUKaKxqEg/Q5I8zVU=
+X-Received: by 2002:a0c:ae50:: with SMTP id z16mr57345303qvc.60.1561400771509;
+ Mon, 24 Jun 2019 11:26:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
-In-Reply-To: <20190620191733.GH12083@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 24 Jun 2019 11:24:48 -0700
-Message-ID: <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190621084040.GU7221@shao2-debian> <20190621161039.GF1383@mini-arch>
+ <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
+ <20190621222745.GH1383@mini-arch> <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
+In-Reply-To: <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 24 Jun 2019 11:26:00 -0700
+Message-ID: <CAEf4BzaNBboGeU8xOxyW-aDzEPUQq-LidRzj8V08O=_TynkQOQ@mail.gmail.com>
+Subject: Re: [selftests/bpf] 69d96519db: kernel_selftests.bpf.test_socket_cookie.fail
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     Stanislav Fomichev <sdf@fomichev.me>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        bpf <bpf@vger.kernel.org>, lkp@01.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:17 PM Michal Hocko <mhocko@kernel.org> wrote:
+On Sun, Jun 23, 2019 at 5:59 PM Rong Chen <rong.a.chen@intel.com> wrote:
 >
-> On Thu 13-06-19 11:43:08, Christoph Hellwig wrote:
-> > noveau is currently using this through an odd hmm wrapper, and I plan
-> > to switch it to the real thing later in this series.
+> On 6/22/19 6:27 AM, Stanislav Fomichev wrote:
+> > On 06/21, Andrii Nakryiko wrote:
+> >> )
+> >>
+> >> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> >>> On 06/21, kernel test robot wrote:
+> >>>> FYI, we noticed the following commit (built with gcc-7):
+> >>>>
+> >>>> commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
+> >>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> >>>>
+> >>>> in testcase: kernel_selftests
+> >>>> with following parameters:
+> >>>>
+> >>>>        group: kselftests-00
+> >>>>
+> >>>> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> >>>> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> >>>>
+> >>>>
+> >>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
+> >>>>
+> >>>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> >>>>
+> >>>>
+> >>>> If you fix the issue, kindly add following tag
+> >>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >>>>
+> >>>> # selftests: bpf: test_socket_cookie
+> >>>> # libbpf: failed to create map (name: 'socket_cookies'): Invalid
+> >>>> # argument
+> >>> Another case of old clang trying to create a map that depends on BTF?
+> >>> Should we maybe switch those BTF checks in the kernel to return
+> >>> EOPNOTSUPP to make it easy to diagnose?
+> >> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
+> >>
+> >> libbpf: DATASEC '.maps' not found.
+> >>
+> >> So this must be something else. I just confirmed with clang version
+> >> 7.0.20180201 that for ./test_socket_cookie that's the first line
+> >> that's emitted on failure.
+> > Thanks for checking, I also took a look at the attached kernel_selftests.xz,
+> > here is what it has:
+> > 2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
+> > 2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
+> > ...
+> > # BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
+> > # BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
+> > ...
+> > # Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
+> > # failed to load test BTF: -2
+> > # Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
+> > # failed to load test BTF: -2
+> > ...
 > >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  mm/mempolicy.c | 1 +
-> >  1 file changed, 1 insertion(+)
+> > And so on. So there is clearly an old clang that doesn't emit any
+> > BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
+> > linux-next, that's why it doesn't complain about missing/corrupt BTF.
+
+Ah, ok, that would explain it. But in any case, clang 6&7 is too old.
+Clang 8 or better yet clang 9 (for global data, datasec/var-dependent
+stuff) would be great.
+
 > >
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 01600d80ae01..f9023b5fba37 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -2098,6 +2098,7 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
-> >  out:
-> >       return page;
-> >  }
-> > +EXPORT_SYMBOL_GPL(alloc_pages_vma);
+> > We need to convince lkp people to upgrade clang, otherwise, I suppose,
+> > we'll get more of these reportings after your recent df0b77925982 :-(
 >
-> All allocator exported symbols are EXPORT_SYMBOL, what is a reason to
-> have this one special?
+> Thanks for the clarification, we'll upgrade clang asap.
 
-I asked for this simply because it was not exported historically. In
-general I want to establish explicit export-type criteria so the
-community can spend less time debating when to use EXPORT_SYMBOL_GPL
-[1].
+Thanks Rong!
 
-The thought in this instance is that it is not historically exported
-to modules and it is safer from a maintenance perspective to start
-with GPL-only for new symbols in case we don't want to maintain that
-interface long-term for out-of-tree modules.
-
-Yes, we always reserve the right to remove / change interfaces
-regardless of the export type, but history has shown that external
-pressure to keep an interface stable (contrary to
-Documentation/process/stable-api-nonsense.rst) tends to be less for
-GPL-only exports.
-
-[1]: https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2018-September/005688.html
+>
+> Best Regards,
+> Rong Chen
+>
+>
+> >
+> >>>> # libbpf: failed to load object './socket_cookie_prog.o'
+> >>>> # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
+> >>>> # ./socket_cookie_prog.o
+> >>>> # FAILED
+> >>>> not ok 15 selftests: bpf: test_socket_cookie
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>> To reproduce:
+> >>>>
+> >>>>          # build kernel
+> >>>>        cd linux
+> >>>>        cp config-5.2.0-rc2-00598-g69d9651 .config
+> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
+> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
+> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
+> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
+> >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
+> >>>>
+> >>>>
+> >>>>          git clone https://github.com/intel/lkp-tests.git
+> >>>>          cd lkp-tests
+> >>>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> >>>>
+> >>>>
+> >>>>
+> >>>> Thanks,
+> >>>> Rong Chen
+> >>>>
+> >> <mega snip>
