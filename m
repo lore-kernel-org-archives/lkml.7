@@ -2,184 +2,143 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2B9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA6BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E33212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BFF212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2Fo6XRA"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="qimuzTLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfFXOHi (ORCPT
+        id S1729941AbfFXOIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:07:38 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41677 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfFXOHh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:07:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so1782245ioc.8;
-        Mon, 24 Jun 2019 07:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
-        b=I2Fo6XRAMMVOjvK9E4plBFmE6GbrgJNAzyqNah9iq40Vff1Sw1lpbcprdLQnGMx0eX
-         xlzZChXLaTQXOyI22/oiBXxsGauWHWJoqH9029TFw6qyRQcnIRC/gDVZYqeTZVO/9/ny
-         x/vHEcTt1jha1w58oRB6H9f2iJX0p/tSvZo5TIOk5x4NFIjQAn+nA1vNlrqf1DP3asNE
-         lAnhxpsOMxb1xsuRRPUjobmfukOlvQ1DETmQUIXj8Sq8l4vGUCHzAtmp75+gaGegyo1X
-         84V+T86qp0e3GuFTf6Z+v8yV8zgTzDwqZoLeNq0BOmMlLyJjTw/MySnlGVfPhXpYa1qj
-         YLXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
-        b=KQeZB8J3ZZZcd5DjoJ+rByBfgZLJVlVVIpzPl5JP1/vbkTYPOwYH4dAJnkJXEYy+Ne
-         I7Y5LgzmFXYu+HuIJ0yq6UY/eNWQLCm9ur3b31hyx49dlyZykp6YMCf6AEUh/SFkms75
-         29p4uHf4xknaYRtnYZSo7o+7qny/Vu3EMaC60mFCFvgzCSE0jy4rW4Dgk6fk1ZJhKyTs
-         gOIJISSQCSbsCwP3//wuEtE/0nruX0vJ2k37w89+55PVhQQN/92YZttejohSO+cY8nuO
-         EiJuNXzsRvri6G9V5EIj3eOKmq2TZUdh88fBI8qryu/328GB8k1k277MeGNXzxH2G5kp
-         UwUg==
-X-Gm-Message-State: APjAAAVY09PJkSwMbJdJFoWoR+9rGZ4cubPwBFQFB6VVZuwbrz1AHWCC
-        mTQzqA87lB9AMeLHupYfEuS+Q3i3
-X-Google-Smtp-Source: APXvYqyyScY1CjudlFtny0U4SJFuFhECkaYbbnN7rZimu7Yub+mmjUoXj+OQyw0DAdw//wlggWdGLA==
-X-Received: by 2002:a5d:9703:: with SMTP id h3mr21151624iol.152.1561385256497;
-        Mon, 24 Jun 2019 07:07:36 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id d17sm13210813iom.28.2019.06.24.07.07.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 07:07:35 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Mon, 24 Jun 2019 10:07:31 -0400
-Message-Id: <20190624140731.24080-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Jun 2019 10:08:35 -0400
+Received: from mail-eopbgr10126.outbound.protection.outlook.com ([40.107.1.126]:59703
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbfFXOIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:08:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=roLeey6sLYOWB452lKz7QVsZlbn5CO1EhRed5UBnmtk=;
+ b=qimuzTLhE5UKkckIFsgxZvvO0Bu/NxMMjxcDKun+VZ+BMOogJwhoNy7gWj7vMJrnCh1veU2OaaeKu6C2iqllRowyLo1pFwNSGhY5zumG7t72ik2dWbhhuG9PtugPi0r+ErPzC04o31oMT6VxIkJqY2tHTV8ZrChY6qgnH2Uugvo=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3401.eurprd02.prod.outlook.com (52.134.73.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 14:07:50 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153%3]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 14:07:50 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "atull@kernel.org" <atull@kernel.org>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jslaby@suse.com" <jslaby@suse.com>
+Subject: Re: [PATCH v2 13/28] drivers: Introduce
+ class_find_device_by_of_node() helper
+Thread-Topic: [PATCH v2 13/28] drivers: Introduce
+ class_find_device_by_of_node() helper
+Thread-Index: AQHVItpTYJEjQBlMB0GJ7sFY1WhfUKanUbUAgAM37ACAAF0PAA==
+Date:   Mon, 24 Jun 2019 14:07:50 +0000
+Message-ID: <528dcb2e-3611-00a7-abb2-cc18001f4f8f@axentia.se>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-14-git-send-email-suzuki.poulose@arm.com>
+ <325e46fd-a480-78ed-81fd-55e993fbc06f@axentia.se>
+ <5cf1a8e2-bb1e-b6bc-32fe-93db0a6b5efd@arm.com>
+In-Reply-To: <5cf1a8e2-bb1e-b6bc-32fe-93db0a6b5efd@arm.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR07CA0024.eurprd07.prod.outlook.com
+ (2603:10a6:7:67::34) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f90e74f5-d6ca-4396-c533-08d6f8ad57c7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3401;
+x-ms-traffictypediagnostic: DB3PR0202MB3401:
+x-microsoft-antispam-prvs: <DB3PR0202MB34011A231A599ACFF2460F7CBCE00@DB3PR0202MB3401.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(376002)(366004)(346002)(136003)(189003)(199004)(81156014)(7416002)(6246003)(68736007)(229853002)(26005)(81166006)(316002)(54906003)(110136005)(8676002)(25786009)(58126008)(2906002)(99286004)(86362001)(3846002)(31696002)(102836004)(386003)(256004)(53546011)(6506007)(53936002)(486006)(4326008)(446003)(65806001)(65956001)(2616005)(476003)(14454004)(74482002)(11346002)(31686004)(66066001)(6486002)(36756003)(6116002)(6436002)(73956011)(66946007)(66476007)(66556008)(64756008)(66446008)(5660300002)(7736002)(305945005)(76176011)(71190400001)(71200400001)(64126003)(186003)(65826007)(2501003)(52116002)(8936002)(508600001)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3401;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xQAsXOTqbwmbZKVfxVpNEZcHaRw6yV5hwMgr4lj3pGuqU61W9fKi6OgfJA9N5ykHtgtWdzGzAazF4bl1mRhlGO/qmRJDZyb+NI4+9y8orvr8N6vTczR6uLa1dgUh6sZzhxK6E+IidWqTlz80eBd75ZWHIdbj8pUQ5Ymbs5fKEDQlfBvdM8TbQYsE4/CjAjeuW8LHOZsoswbQrwcOnPejWdJQ2Jov6d7lS9EOEhTdP9qp+LD7ETzyz4ESRDkcivTtD4R3U7tAG/ey8CoeHGIhMA5OjFobTdRewKQpocMmsrIn/uLDkXntxdPBKRfm0o9vy2gvNwKtIZwsU7xhZWxQyzut4MVpIu4y/j+WFjy28F1t+u6y190KEzTDZ64zFug9DVJW8l0/GduTl4A972aatEFgNDfBFEGZzflFpn2Wh+c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <72F156B1EDA57447A18381C603F9D997@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90e74f5-d6ca-4396-c533-08d6f8ad57c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:07:50.7383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3401
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If probe() fails anywhere beyond the point where
-sdma_get_firmware() is called, then a kernel oops may occur.
-
-Problematic sequence of events:
-1. probe() calls sdma_get_firmware(), which schedules the
-   firmware callback to run when firmware becomes available,
-   using the sdma instance structure as the context
-2. probe() encounters an error, which deallocates the
-   sdma instance structure
-3. firmware becomes available, firmware callback is
-   called with deallocated sdma instance structure
-4. use after free - kernel oops !
-
-Solution: only attempt to load firmware when we're certain
-that probe() will succeed. This guarantees that the firmware
-callback's context will remain valid.
-
-Note that the remove() path is unaffected by this issue: the
-firmware loader will increment the driver module's use count,
-ensuring that the module cannot be unloaded while the
-firmware callback is pending or running.
-
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f431ae2c..3f0f41d16e1c 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
- 
--	if (pdata) {
--		ret = sdma_get_firmware(sdma, pdata->fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
--	} else {
--		/*
--		 * Because that device tree does not encode ROM script address,
--		 * the RAM script in firmware is mandatory for device tree
--		 * probe, otherwise it fails.
--		 */
--		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
--					      &fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware name\n");
--		else {
--			ret = sdma_get_firmware(sdma, fw_name);
--			if (ret)
--				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
--		}
--	}
--
- 	sdma->dma_device.dev = &pdev->dev;
- 
- 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
- 		of_node_put(spba_bus);
- 	}
- 
-+	/*
-+	 * Kick off firmware loading as the very last step:
-+	 * attempt to load firmware only if we're not on the error path, because
-+	 * the firmware callback requires a fully functional and allocated sdma
-+	 * instance.
-+	 */
-+	if (pdata) {
-+		ret = sdma_get_firmware(sdma, pdata->fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware name\n");
-+		else {
-+			ret = sdma_get_firmware(sdma, fw_name);
-+			if (ret)
-+				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-+		}
-+	}
-+
- 	return 0;
- 
- err_register:
--- 
-2.17.1
-
+T24gMjAxOS0wNi0yNCAxMDozNCwgU3V6dWtpIEsgUG91bG9zZSB3cm90ZToNCj4gSGkgUGV0ZXIs
+DQo+IA0KPiBPbiAyMi8wNi8yMDE5IDA2OjI1LCBQZXRlciBSb3NpbiB3cm90ZToNCj4+IE9uIDIw
+MTktMDYtMTQgMTk6NTQsIFN1enVraSBLIFBvdWxvc2Ugd3JvdGU6DQo+Pj4gQWRkIGEgd3JhcHBl
+ciB0byBjbGFzc19maW5kX2RldmljZSgpIHRvIHNlYXJjaCBmb3IgYSBkZXZpY2UNCj4+PiBieSB0
+aGUgb2Zfbm9kZSBwb2ludGVyLCByZXVzaW5nIHRoZSBnZW5lcmljIG1hdGNoIGZ1bmN0aW9uLg0K
+Pj4+IEFsc28gY29udmVydCB0aGUgZXhpc3RpbmcgdXNlcnMgdG8gbWFrZSB1c2Ugb2YgdGhlIG5l
+dyBoZWxwZXIuDQo+Pj4NCj4+PiBDYzogQWxhbiBUdWxsIDxhdHVsbEBrZXJuZWwub3JnPg0KPj4+
+IENjOiBNb3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+DQo+Pj4gQ2M6IGxpbnV4LWZwZ2FA
+dmdlci5rZXJuZWwub3JnDQo+Pj4gQ2M6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQo+
+Pj4gQ2M6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCj4+PiBDYzogRmxvcmlhbiBG
+YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+Pj4gQ2M6IEhlaW5lciBLYWxsd2VpdCA8
+aGthbGx3ZWl0MUBnbWFpbC5jb20+DQo+Pj4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxkYXZlbUBk
+YXZlbWxvZnQubmV0Pg0KPj4+IENjOiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQo+Pj4g
+Q2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+DQo+Pj4gQ2M6IEdyZWcgS3Jv
+YWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+Pj4gQ2M6ICJSYWZhZWwg
+Si4gV3lzb2NraSIgPHJhZmFlbEBrZXJuZWwub3JnPg0KPj4+IENjOiBKaXJpIFNsYWJ5IDxqc2xh
+YnlAc3VzZS5jb20+DQo+Pj4gQWNrZWQtYnk6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9y
+Zz4NCj4+PiBSZXZpZXdlZC1ieTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPj4+IFJl
+dmlld2VkLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPg0KPj4NCj4+IFdob29vYSEg
+SSByZXZpZXdlZCBvbmx5IHRoZSBkcml2ZXJzL211eC9jb3JlLmMgY2hhbmdlcyB3aGVuIHRoaXMg
+d2FzIGRvbmUNCj4+IGluIGEgc2VyaWVzIG9mIG11Y2ggc21hbGxlciBwYXRjaGVzLiBUaGlzIHRh
+ZyBtYWtlcyBpdCBzZWVtIGFzIGlmIEkgaGF2ZQ0KPj4gcmV2aWV3ZWQgdGhlIHdob2xlIHRoaW5n
+LCB3aGljaCBJIGhhZCBub3QgZG9uZSB3aGVuIHlvdSBhZGRlZCB0aGlzIHRhZyBvdXQNCj4+IG9m
+IHRoZSBibHVlLg0KPiANCj4gQXBvbG9naWVzIGZvciB0aGUgc3VycHJpc2UuIFRoZSBwYXRjaCB3
+YXMgc2ltcGx5IHNxdWFzaGVkIHdpdGggdGhlIGNoYW5nZSB0aGF0DQo+IGludHJvZHVjZWQgdGhl
+ICJoZWxwZXIiIHRvIGJldHRlciBhaWQgdGhlIHJldmlld2VycywgYmFzZWQgb24gc3VnZ2VzdGlv
+bnMgb24gdGhlDQo+IGxpc3QuIEkga2VwdCB5b3VyIHRhZ3MsIG9ubHkgYmVjYXVzZSB0aGVyZSB3
+ZXJlIG5vIGNoYW5nZXMsIGJ1dCBzb21lIGFkZGl0aW9uYWwNCj4gY29udGV4dCBvbiB0aGUgY29y
+ZSBkcml2ZXIuDQoNCllvdSBjb3VsZCBlLmcuIGhhdmUgd3JpdHRlbjoNCg0KCS4uLg0KCVtGb3Ig
+dGhlIGRyaXZlcnMvbXV4L2NvcmUuYyBwYXJ0XQ0KCVJldmlld2VkLWJ5OiBQZXRlciBSb3NpbiA8
+cGVkYUBheGVudGlhLnNlPg0KCS4uLg0KDQo+Pg0KPj4gTm93LCB0aGlzIHN0dWZmIGlzIHRyaXZp
+YWwgYW5kIGJ5IG5vdyBJIGhhdmUgbG9va2VkIGF0IHRoZSBvdGhlciBmaWxlcw0KPj4gYW5kIGl0
+IGFsbCBzZWVtcyBzaW1wbGUgZW5vdWdoLiBTbywgeW91IGNhbiBrZWVwIHRoZSB0YWcsIGJ1dCBp
+dCBpcyBOT1QNCj4+IG9rIHRvIGhhbmRsZSB0YWdzIGxpa2UgeW91IGhhdmUgZG9uZSBoZXJlLg0K
+PiANCj4gU3VyZSwgSSB3aWxsIGtlZXAgdGhhdCBpbiBtaW5kLg0KDQpHcmVhdCENCg0KQ2hlZXJz
+LA0KUGV0ZXINCg==
