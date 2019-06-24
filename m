@@ -2,59 +2,89 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF3DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB496C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E7920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="CokspySg"
+	by mail.kernel.org (Postfix) with ESMTP id B1BF420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731582AbfFXQGS (ORCPT
+        id S1731604AbfFXQG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:06:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36426 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfFXQGS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:06:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561392374; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5MzBEvnVeaj/Jo8SGi3r3KmrrKH3BJWvGTw8dpWQZ7I=;
-        b=CokspySgvH/Rs9efc9znexgsx2vE4giXXTNqSeRtIMIAgdrl7mBlEpPLVzOGbYVc2F8SeQ
-        P+5ZDlxeYykmlwJYrVn2cEsqPsgUedQI0hOGoKBwUZSICBSHwK79+DNOqcluFikLLhQ5zI
-        GIuSQc7E0wU/dW2WgJUwAAoVvCOGy50=
-Date:   Mon, 24 Jun 2019 18:06:07 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Mon, 24 Jun 2019 12:06:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47560 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727082AbfFXQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:06:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 85038AE21;
+        Mon, 24 Jun 2019 16:06:24 +0000 (UTC)
+Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
+To:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <1561392367.20436.2@crapouillou.net>
-In-Reply-To: <20190624154628.rq7ykltms7ovhawx@holly.lan>
-References: <20190522163428.7078-1-paul@crapouillou.net>
-        <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
-        <20190621135608.GB11839@ulmo> <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
-        <1561386717.20436.0@crapouillou.net>
-        <20190624154628.rq7ykltms7ovhawx@holly.lan>
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-10-hch@lst.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
+Date:   Mon, 24 Jun 2019 19:06:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190624055253.31183-10-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,179 +92,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le lun. 24 juin 2019 =E0 17:46, Daniel Thompson=20
-<daniel.thompson@linaro.org> a =E9crit :
-> On Mon, Jun 24, 2019 at 04:31:57PM +0200, Paul Cercueil wrote:
->>=20
->>=20
->>  Le lun. 24 juin 2019 =E0 13:28, Daniel Thompson=20
->> <daniel.thompson@linaro.org> a
->>  =E9crit :
->>  > On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
->>  > >  On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson=20
->> wrote:
->>  > >  > On 22/05/2019 17:34, Paul Cercueil wrote:
->>  > >  > > When the driver probes, the PWM pin is automatically=20
->> configured
->>  > > to its
->>  > >  > > default state, which should be the "pwm" function.
->>  > >  >
->>  > >  > At which point in the probe... and by who?
->>  > >
->>  > >  The driver core will select the "default" state of a device=20
->> right
->>  > > before
->>  > >  calling the driver's probe, see:
->>  > >
->>  > >  	drivers/base/pinctrl.c: pinctrl_bind_pins()
->>  > >
->>  > >  which is called from:
->>  > >
->>  > >  	drivers/base/dd.c: really_probe()
->>  > >
->>  >
->>  > Thanks. I assumed it would be something like that... although=20
->> given
->>  > pwm-backlight is essentially a wrapper driver round a PWM I=20
->> wondered why
->>  > the pinctrl was on the backlight node (rather than the PWM node).
->>  >
->>  > Looking at the DTs in the upstream kernel it looks like ~20% of=20
->> the
->>  > backlight drivers have pinctrl on the backlight node. Others=20
->> presumable
->>  > have none or have it on the PWM node (and it looks like support=20
->> for
->>  > sleeping the pins is *very* rare amoung the PWM drivers).
->>=20
->>  If your PWM driver has more than one channel and has the pinctrl=20
->> node, you
->>  cannot fine-tune the state of individual pins. They all share the=20
->> same
->>  state.
->=20
-> Good point. Thanks.
->=20
->=20
->>  > >  > > However, at this
->>  > >  > > point we don't know the actual level of the pin, which may=20
->> be
->>  > > active or
->>  > >  > > inactive. As a result, if the driver probes without=20
->> enabling the
->>  > >  > > backlight, the PWM pin might be active, and the backlight=20
->> would
->>  > > be
->>  > >  > > lit way before being officially enabled.
->>  > >  > >
->>  > >  > > To work around this, if the probe function doesn't enable=20
->> the
->>  > > backlight,
->>  > >  > > the pin is set to its sleep state instead of the default=20
->> one,
->>  > > until the
->>  > >  > > backlight is enabled. Whenk the backlight is disabled, the=20
->> pin
->>  > > is reset
->>  > >  > > to its sleep state.
->>  > >  > Doesn't this workaround result in a backlight flash between
->>  > > whatever enables
->>  > >  > it and the new code turning it off again?
->>  > >
->>  > >  Yeah, I think it would. I guess if you're very careful on how=20
->> you
->>  > > set up
->>  > >  the device tree you might be able to work around it. Besides=20
->> the
->>  > > default
->>  > >  and idle standard pinctrl states, there's also the "init"=20
->> state. The
->>  > >  core will select that instead of the default state if=20
->> available.
->>  > > However
->>  > >  there's also pinctrl_init_done() which will try again to=20
->> switch to
->>  > > the
->>  > >  default state after probe has finished and the driver didn't=20
->> switch
->>  > > away
->>  > >  from the init state.
->>  > >
->>  > >  So you could presumably set up the device tree such that you=20
->> have
->>  > > three
->>  > >  states defined: "default" would be the one where the PWM pin is
->>  > > active,
->>  > >  "idle" would be used when backlight is off (PWM pin inactive)=20
->> and
->>  > > then
->>  > >  another "init" state that would be the same as "idle" to be=20
->> used
->>  > > during
->>  > >  probe. During probe the driver could then switch to the "idle"
->>  > > state so
->>  > >  that the pin shouldn't glitch.
->>  > >
->>  > >  I'm not sure this would actually work because I think the way=20
->> that
->>  > >  pinctrl handles states both "init" and "idle" would be the same
->>  > > pointer
->>  > >  values and therefore pinctrl_init_done() would think the driver
->>  > > didn't
->>  > >  change away from the "init" state because it is the same=20
->> pointer
->>  > > value
->>  > >  as the "idle" state that the driver selected. One way to work=20
->> around
->>  > >  that would be to duplicate the "idle" state definition and
->>  > > associate one
->>  > >  instance of it with the "idle" state and the other with the=20
->> "init"
->>  > >  state. At that point both states should be different (different
->>  > > pointer
->>  > >  values) and we'd get the init state selected automatically=20
->> before
->>  > > probe,
->>  > >  select "idle" during probe and then the core will leave it=20
->> alone.
->>  > > That's
->>  > >  of course ugly because we duplicate the pinctrl state in DT,=20
->> but
->>  > > perhaps
->>  > >  it's the least ugly solution.
->>  > >  Adding Linus for visibility. Perhaps he can share some insight.
->>  >
->>  > To be honest I'm happy to summarize in my head as "if it flashes=20
->> then
->>  > it's not
->>  > a pwm_bl.c's problem" ;-).
->>=20
->>  It does not flash. But the backlight lits way too early, so we have=20
->> a 1-2
->>  seconds
->>  of "white screen" before the panel driver starts.
->=20
-> That's the current behaviour.
->=20
-> What I original asked about is whether a panel that was dark before=20
-> the
-> driver probes could end up flashing after the patch because it is
-> activated pre-probe and only goes to sleep afterwards.
->=20
-> Anyhow I got an answer; if it flashes after the patch then the problem
-> does not originate in pwm_bl.c and is likely a problem with the=20
-> handling
-> of the pinctrl idel state (i.e. probably DT misconfiguration)
->=20
-> So I think that just leaves my comment about the spurious sleep in the
-> probe function.
+On 24.06.19 г. 8:52 ч., Christoph Hellwig wrote:
+> Introduce two nicely abstracted helper, which can be moved to the
+> iomap code later.  Also use list_pop and list_first_entry_or_null
+> to simplify the code a bit.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_aops.c | 66 ++++++++++++++++++++++++++---------------------
+>  1 file changed, 36 insertions(+), 30 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index acbd73976067..5d302ebe2a33 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -121,6 +121,19 @@ xfs_destroy_ioend(
+>  	}
+>  }
+>  
+> +static void
+> +xfs_destroy_ioends(
+> +	struct xfs_ioend	*ioend,
+> +	int			error)
+> +{
+> +	struct list_head	tmp;
+> +
+> +	list_replace_init(&ioend->io_list, &tmp);
+> +	xfs_destroy_ioend(ioend, error);
+> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
+> +		xfs_destroy_ioend(ioend, error);
 
-The probe function calls backlight_update_status(), which then calls
-pwm_backlight_power_off(), which returns early as pb->enabled is false.
-So the pins are still in "default" (or "init") state after the call
-to backlight_update_status().
+nit: I'd prefer if the list_pop patch is right before this one since
+this is the first user of it. Additionally, I don't think list_pop is
+really a net-negative win in comparison to list_for_each_entry_safe
+here. In fact this "delete the list" would seems more idiomatic if
+implemented via list_for_each_entry_safe
 
--Paul
+> +}
+> +
+>  /*
+>   * Fast and loose check if this write could update the on-disk inode size.
+>   */
+> @@ -173,7 +186,6 @@ xfs_end_ioend(
+>  	struct xfs_ioend	*ioend)
+>  {
+>  	unsigned int		nofs_flag = memalloc_nofs_save();
+> -	struct list_head	ioend_list;
+>  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
+>  	xfs_off_t		offset = ioend->io_offset;
+>  	size_t			size = ioend->io_size;
+> @@ -207,16 +219,7 @@ xfs_end_ioend(
+>  	if (!error && xfs_ioend_is_append(ioend))
+>  		error = xfs_setfilesize(ip, offset, size);
+>  done:
+> -	list_replace_init(&ioend->io_list, &ioend_list);
+> -	xfs_destroy_ioend(ioend, error);
+> -
+> -	while (!list_empty(&ioend_list)) {
+> -		ioend = list_first_entry(&ioend_list, struct xfs_ioend,
+> -				io_list);
+> -		list_del_init(&ioend->io_list);
+> -		xfs_destroy_ioend(ioend, error);
+> -	}
+> -
+> +	xfs_destroy_ioends(ioend, error);
+>  	memalloc_nofs_restore(nofs_flag);
+>  }
+>  
+> @@ -246,15 +249,16 @@ xfs_ioend_try_merge(
+>  	struct xfs_ioend	*ioend,
+>  	struct list_head	*more_ioends)
+>  {
+> -	struct xfs_ioend	*next_ioend;
+> +	struct xfs_ioend	*next;
+>  
+> -	while (!list_empty(more_ioends)) {
+> -		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
+> -				io_list);
+> -		if (!xfs_ioend_can_merge(ioend, next_ioend))
+> +	INIT_LIST_HEAD(&ioend->io_list);
+> +
+> +	while ((next = list_first_entry_or_null(more_ioends, struct xfs_ioend,
+> +			io_list))) {
+> +		if (!xfs_ioend_can_merge(ioend, next))
+>  			break;
+> -		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+> -		ioend->io_size += next_ioend->io_size;
+> +		list_move_tail(&next->io_list, &ioend->io_list);
+> +		ioend->io_size += next->io_size;
+>  	}
+>  }
+>  
+> @@ -277,29 +281,31 @@ xfs_ioend_compare(
+>  	return 0;
+>  }
+>  
+> +static void
+> +xfs_sort_ioends(
+> +	struct list_head	*ioend_list)
+> +{
+> +	list_sort(NULL, ioend_list, xfs_ioend_compare);
+> +}
+> +
+>  /* Finish all pending io completions. */
+>  void
+>  xfs_end_io(
+>  	struct work_struct	*work)
+>  {
+> -	struct xfs_inode	*ip;
+> +	struct xfs_inode	*ip =
+> +		container_of(work, struct xfs_inode, i_ioend_work);
+>  	struct xfs_ioend	*ioend;
+> -	struct list_head	completion_list;
+> +	struct list_head	tmp;
+>  	unsigned long		flags;
+>  
+> -	ip = container_of(work, struct xfs_inode, i_ioend_work);
+> -
+>  	spin_lock_irqsave(&ip->i_ioend_lock, flags);
+> -	list_replace_init(&ip->i_ioend_list, &completion_list);
+> +	list_replace_init(&ip->i_ioend_list, &tmp);
+>  	spin_unlock_irqrestore(&ip->i_ioend_lock, flags);
+>  
+> -	list_sort(NULL, &completion_list, xfs_ioend_compare);
+> -
+> -	while (!list_empty(&completion_list)) {
+> -		ioend = list_first_entry(&completion_list, struct xfs_ioend,
+> -				io_list);
+> -		list_del_init(&ioend->io_list);
+> -		xfs_ioend_try_merge(ioend, &completion_list);
+> +	xfs_sort_ioends(&tmp);
+> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list))) {
+> +		xfs_ioend_try_merge(ioend, &tmp);
+>  		xfs_end_ioend(ioend);
 
-=
+Here again, tmp is a local copy that is immutable so using while()
+instead of list_for_each_entry_safe doesn't seem to be providing much.
 
+>  	}
+>  }
+> 
