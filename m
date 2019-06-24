@@ -2,109 +2,149 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67792C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490F4C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE9320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:32:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TxOpWlKI"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC3420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfFXDcR (ORCPT
+        id S1727686AbfFXDfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:32:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35815 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbfFXDcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:32:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O3Spk8089796;
-        Mon, 24 Jun 2019 03:31:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=A3YM+cC+Wq0vJZp4sQYiwht/JgO/4EqsOgjUe2E6whU=;
- b=TxOpWlKIsnVIPPJ5kkbrvBXIpgqsCreVVDXDNp4OmOfQMc37slpjNz1uOtLiLlDzWuqu
- +ohtQCwjzqAjnnnH7U6ytnTh0ZcepCtB9v21i60i9eeNfvCk7xkZoNgvpRJ9j21km0L0
- pDkQWMKTpu23rsuKD7OlIbtv/nL89oyNgqAvPaoQg9p6jLWHGAPSPL/YcAYGS7Is5XAw
- y0Yi+65kNHmKp3qQ6Dhp62zWQwfqe4vytQ4oArtVx7cDYx+ASkBClX4ycWqogwu6JCS3
- IM1kcg39neXmA0B+UMRNlLHibqDHOh+SNqoRNII583OBiCoBsDJccWxOTdT1U4mRIspw Cw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brsuudb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 03:31:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O3TnFJ082269;
-        Mon, 24 Jun 2019 03:31:44 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t99f3201a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 03:31:44 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5O3Vb8g019004;
-        Mon, 24 Jun 2019 03:31:39 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Jun 2019 20:31:37 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, jgross@suse.com, ndesaulniers@google.com,
-        gregkh@linuxfoundation.org,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH] x86/speculation/mds: Avoid clearing CPU buffers in native machine with old microcode
-Date:   Sun, 23 Jun 2019 11:35:03 +0800
-Message-Id: <1561260904-29669-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=838
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=893 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240027
+        Sun, 23 Jun 2019 23:35:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40906 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfFXDfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:35:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A6FD85546;
+        Mon, 24 Jun 2019 03:35:04 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 953A719C65;
+        Mon, 24 Jun 2019 03:34:45 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 11:34:40 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH -mm] mm, swap: Fix THP swap out
+Message-ID: <20190624033438.GB6563@ming.t460p>
+References: <20190624022336.12465-1-ying.huang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624022336.12465-1-ying.huang@intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 24 Jun 2019 03:35:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 22dd8365088b ("x86/speculation/mds: Add mitigation mode VMWERV") add
-an internal mitigation mode VWWERV which enables the invocation of the CPU
-buffer clearing even if X86_FEATURE_MD_CLEAR is not set.
+Hi Huang Ying,
 
-This wastes a few CPU cycles for native machine with an old microcode
-unnecessorily. Avoid it by checking if it's running in native machine.
+On Mon, Jun 24, 2019 at 10:23:36AM +0800, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> 0-Day test system reported some OOM regressions for several
+> THP (Transparent Huge Page) swap test cases.  These regressions are
+> bisected to 6861428921b5 ("block: always define BIO_MAX_PAGES as
+> 256").  In the commit, BIO_MAX_PAGES is set to 256 even when THP swap
+> is enabled.  So the bio_alloc(gfp_flags, 512) in get_swap_bio() may
+> fail when swapping out THP.  That causes the OOM.
+> 
+> As in the patch description of 6861428921b5 ("block: always define
+> BIO_MAX_PAGES as 256"), THP swap should use multi-page bvec to write
+> THP to swap space.  So the issue is fixed via doing that in
+> get_swap_bio().
+> 
+> BTW: I remember I have checked the THP swap code when
+> 6861428921b5 ("block: always define BIO_MAX_PAGES as 256") was merged,
+> and thought the THP swap code needn't to be changed.  But apparently,
+> I was wrong.  I should have done this at that time.
+> 
+> Fixes: 6861428921b5 ("block: always define BIO_MAX_PAGES as 256")
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Rik van Riel <riel@redhat.com>
+> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+> ---
+>  mm/page_io.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 2e8019d0e048..4ab997f84061 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -29,10 +29,9 @@
+>  static struct bio *get_swap_bio(gfp_t gfp_flags,
+>  				struct page *page, bio_end_io_t end_io)
+>  {
+> -	int i, nr = hpage_nr_pages(page);
+>  	struct bio *bio;
+>  
+> -	bio = bio_alloc(gfp_flags, nr);
+> +	bio = bio_alloc(gfp_flags, 1);
+>  	if (bio) {
+>  		struct block_device *bdev;
+>  
+> @@ -41,9 +40,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+>  		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+>  		bio->bi_end_io = end_io;
+>  
+> -		for (i = 0; i < nr; i++)
+> -			bio_add_page(bio, page + i, PAGE_SIZE, 0);
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
----
- arch/x86/kernel/cpu/bugs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+bio_add_page() supposes to work, just wondering why it doesn't recently.
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 03b4cc0..03f5a77 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -233,7 +233,9 @@ static void x86_amd_ssb_disable(void)
- 
- static void __init mds_select_mitigation(void)
+Could you share me one test case for reproducing it?
+
+> -		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
+> +		__bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+>  	}
+>  	return bio;
+
+Actually the above code can be simplified as:
+
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 2e8019d0e048..c20b4189d0a1 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -29,7 +29,7 @@
+ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 				struct page *page, bio_end_io_t end_io)
  {
--	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
-+	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off() ||
-+	    (hypervisor_is_type(X86_HYPER_NATIVE) &&
-+	    !boot_cpu_has(X86_FEATURE_MD_CLEAR))) {
- 		mds_mitigation = MDS_MITIGATION_OFF;
- 		return;
+-	int i, nr = hpage_nr_pages(page);
++	int nr = hpage_nr_pages(page);
+ 	struct bio *bio;
+ 
+ 	bio = bio_alloc(gfp_flags, nr);
+@@ -41,8 +41,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+ 		bio->bi_end_io = end_io;
+ 
+-		for (i = 0; i < nr; i++)
+-			bio_add_page(bio, page + i, PAGE_SIZE, 0);
++		bio_add_page(bio, page, PAGE_SIZE * nr, 0);
+ 		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
  	}
--- 
-1.8.3.1
+ 	return bio;
 
+
+Thanks,
+Ming
