@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AD3C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCC4C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD3720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A12220645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371483;
-	bh=iij1meYte0WHz2U2A83FqefBIDwkigj8yIeBCh4EbG4=;
+	s=default; t=1561371485;
+	bh=CnQAIDsK/qngiQI4aLOMQNGqTdbXr98z9kcIyjCyOKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rr+6c8seadFk5kEqJWWmtwEOlASnd+0M4NO6VY0cS/zbtUb2FSnrJqBpr9Hckg0pW
-	 ROqOnOQjDQ/FDvX525dulW0vHM0dHlt0yUhaWYCOSItY2e+sBHdVm28lCax9pmMAv0
-	 EHJnfN6DlqxLQTiQltH5UUi9xqz455/7ghZ5kwHQ=
+	b=s8KTA0LKZfIa0+7eAGO/pNf/NBGdnE9ME/cC2RKjr967XS3x9roFhSBveRLDDxe4C
+	 LTacaSyTyzOEa55JxoZr4RqKMR1jdwA4JJus4SsEb19o3jzM0wHy+gxeJuGo66S//K
+	 BtuSBLlDN3TZegCFY0ty9bynokeTPGrd58iwFUdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbfFXKQ4 (ORCPT
+        id S1730832AbfFXKQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54418 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730812AbfFXKQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:52 -0400
+        id S1730801AbfFXKQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:49 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57E32089F;
-        Mon, 24 Jun 2019 10:16:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA8C2146F;
+        Mon, 24 Jun 2019 10:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371411;
-        bh=iij1meYte0WHz2U2A83FqefBIDwkigj8yIeBCh4EbG4=;
+        s=default; t=1561371408;
+        bh=CnQAIDsK/qngiQI4aLOMQNGqTdbXr98z9kcIyjCyOKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myf/f+xEf8NEvlgMMN4e32DZghZXBrlf8t2JThhKZ+yUaYeHuFe+rDAQ6UWJRpFrA
-         ifpHno0KCcxt5lKsS+Kc+l5DLKkj2Sj1MBMnDOKV//lNSeFKlT99QwWTAU1smg9as6
-         0jnpairRKLErnNapvPho5Mu+O3QDrpjq6YFZKZuo=
+        b=cvHFW7xNZEgj4+IodIexrw4Mrpg7+wuq14FsPksI263psoaW5eEOVgd3S9A6mPU17
+         iIlSi94jEIpDHTrjK9RBBT6Kg8731EC0A62rfF065XCcjY4wpnkx4KUGeecF71riOy
+         GhvRAgVWrV8YpXRlS1uSTMz4txJPntx4JKQDrLWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-        Anssi Hannula <anssi.hannula@bitwise.fi>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.1 093/121] can: xilinx_can: use correct bittiming_const for CAN FD core
-Date:   Mon, 24 Jun 2019 17:57:05 +0800
-Message-Id: <20190624092325.534361171@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 092/121] btrfs: start readahead also in seed devices
+Date:   Mon, 24 Jun 2019 17:57:04 +0800
+Message-Id: <20190624092325.492365383@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -62,42 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
+From: Naohiro Aota <naohiro.aota@wdc.com>
 
-commit 904044dd8fff43e289c11a2f90fa532e946a1d8b upstream.
+commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
 
-Commit 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD
-core") added a new can_bittiming_const structure for CAN FD cores that
-support larger values for tseg1, tseg2, and sjw than previous Xilinx CAN
-cores, but the commit did not actually take that into use.
+Currently, btrfs does not consult seed devices to start readahead. As a
+result, if readahead zone is added to the seed devices, btrfs_reada_wait()
+indefinitely wait for the reada_ctl to finish.
 
-Fix that.
+You can reproduce the hung by modifying btrfs/163 to have larger initial
+file size (e.g. xfs_io pwrite 4M instead of current 256K).
 
-Tested with CAN FD core on a ZynqMP board.
-
-Fixes: 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD core")
-Reported-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
+Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
+Cc: stable@vger.kernel.org # 3.2+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/xilinx_can.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/reada.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -1443,7 +1443,7 @@ static const struct xcan_devtype_data xc
- 		 XCAN_FLAG_RXMNF |
- 		 XCAN_FLAG_TX_MAILBOXES |
- 		 XCAN_FLAG_RX_FIFO_MULTI,
--	.bittiming_const = &xcan_bittiming_const,
-+	.bittiming_const = &xcan_bittiming_const_canfd,
- 	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT_CANFD,
- 	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT_CANFD,
- 	.bus_clk_name = "s_axi_aclk",
+--- a/fs/btrfs/reada.c
++++ b/fs/btrfs/reada.c
+@@ -747,6 +747,7 @@ static void __reada_start_machine(struct
+ 	u64 total = 0;
+ 	int i;
+ 
++again:
+ 	do {
+ 		enqueued = 0;
+ 		mutex_lock(&fs_devices->device_list_mutex);
+@@ -758,6 +759,10 @@ static void __reada_start_machine(struct
+ 		mutex_unlock(&fs_devices->device_list_mutex);
+ 		total += enqueued;
+ 	} while (enqueued && total < 10000);
++	if (fs_devices->seed) {
++		fs_devices = fs_devices->seed;
++		goto again;
++	}
+ 
+ 	if (enqueued == 0)
+ 		return;
 
 
