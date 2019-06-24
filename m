@@ -2,107 +2,96 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF65C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67058C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03E32063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8272063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eNChcKNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfFXOsE (ORCPT
+        id S1729058AbfFXOsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:48:04 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:43484 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfFXOsE (ORCPT
+        Mon, 24 Jun 2019 10:48:14 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53940 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbfFXOsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:48:04 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 7D8DA67A90A;
-        Mon, 24 Jun 2019 16:47:51 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 24 Jun
- 2019 16:47:50 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Mon, 24 Jun 2019 16:47:50 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>,
-        "Chuanhong Guo" <gch981213@gmail.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
- page has bitflips
-Thread-Topic: [RESEND PATCH v2] mtd: spinand: read return badly if the last
- page has bitflips
-Thread-Index: AQHVKoaYbYsysfnJPUKsxvje/QcCeKaqwQIA
-Date:   Mon, 24 Jun 2019 14:47:50 +0000
-Message-ID: <f86e6750-6b4f-daf7-3f0c-1c5e63b5b95d@kontron.de>
-References: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
-In-Reply-To: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9FE31BB9AAE8204BAD101611478CAFA2@snt-world.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 10:48:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so13074108wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:references:reply-to:message-id:mime-version;
+        bh=xaKJDnae1EFjh86fZ1Qltct9/8V3S9KXOq3PYZYvyHI=;
+        b=eNChcKNO7dQANYLf2uCgCftyZNvelvdSK9R+1wtb/lP9OqVCiyaG3OIdIrJvfY5CIT
+         UY6txHTM80Vo8+OFktdSz6aeq0tQrXNrcH9S8vrofzKfN4JIMdEv0cjGK/tg1Xnf5J9r
+         LGTDyFDGYPkJYSN3BL2uLc7MFCMZj8qFjO4wv/q1Z4WP5PJZaNPa1Quw7jUcK5mZwsCw
+         bxOKPjYmtLYt6DMV9GRNb1VFVsyCrJseC+dwSBZLumuyrzMfUcaYhy/ugT8CsDxtM99h
+         kr+/TsVx7bAyAIowCC2Iuo0mz79kTiaBTIQgYSf7LmCriUKVmfYEcTchX22VzgZR06tj
+         3XcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:references:reply-to
+         :message-id:mime-version;
+        bh=xaKJDnae1EFjh86fZ1Qltct9/8V3S9KXOq3PYZYvyHI=;
+        b=leQ7wX8GUV2S58yjERvxHnpr7MrM6us+VKqyj01MPG6L5se9oMUUun77JqOVhDj11H
+         0QoTydV4hG8tAO2FUdErKyGD9c9TcGvES0EW+2qkDwTrd9KTteMf1FtqgAD5PJGrbMh1
+         6OHdtl8OzYfqGKYZCoTRcz8nUw70N4x/tT5nrsLORKP8rEiYPc4Bv4Lye/o4RiJJcPJ/
+         ogCOap7n4yMhv16I+rh56awPIX5iSIRGt7PI1P4FaI5nMZ7D4S/AqQhPF+WRsCRTlNHb
+         4R8SI9vOmwCFjK0D5n7yxCIl5N6AbhG3WP/tfu8aBNzRR7fQHJj0RqtRFQM7lzQ+d6Kj
+         sV/A==
+X-Gm-Message-State: APjAAAW2fgow6R5vDAmh19aUgWTtz0UN1J37fl5OWnS4aU29Uss+hWRH
+        dteLbBpT/Tm4RgOhJYZMClXggw==
+X-Google-Smtp-Source: APXvYqxMhHyWV9UpqhUB/TjiFBls09nQ4ITZssbVwFmGLt+2Qeug/pb+O9Tv3bAeSgwK1fKA3bQl0g==
+X-Received: by 2002:a1c:21c6:: with SMTP id h189mr10837205wmh.79.1561387692414;
+        Mon, 24 Jun 2019 07:48:12 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v65sm18451669wme.31.2019.06.24.07.48.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 07:48:12 -0700 (PDT)
+From:   Julien Masson <jmasson@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
+Subject: [PATCH 1/9] drm: meson: mask value when writing bits relaxed
+Date:   Mon, 24 Jun 2019 16:47:56 +0200
+References: <86zhm782g5.fsf@baylibre.com>
+Reply-To: <86zhm782g5.fsf@baylibre.com>
+Message-ID: <86y31r82fo.fsf@baylibre.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 7D8DA67A90A.A00F2
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@exceet.de, gch981213@gmail.com,
-        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, peterpandong@micron.com, richard@nod.at,
-        stable@vger.kernel.org, vigneshr@ti.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjQuMDYuMTkgMTQ6MTUsIGxpYW93ZWl4aW9uZyB3cm90ZToNCj4gSW4gY2FzZSBvZiB0aGUg
-bGFzdCBwYWdlIGNvbnRhaW5pbmcgYml0ZmxpcHMgKHJldCA+IDApLA0KPiBzcGluYW5kX210ZF9y
-ZWFkKCkgd2lsbCByZXR1cm4gdGhhdCBudW1iZXIgb2YgYml0ZmxpcHMgZm9yIHRoZSBsYXN0DQo+
-IHBhZ2UuIEJ1dCB0byBtZSBpdCBsb29rcyBsaWtlIGl0IHNob3VsZCBpbnN0ZWFkIHJldHVybiBt
-YXhfYml0ZmxpcHMgbGlrZQ0KPiBpdCBkb2VzIHdoZW4gdGhlIGxhc3QgcGFnZSByZWFkIHJldHVy
-bnMgd2l0aCAwLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogbGlhb3dlaXhpb25nIDxsaWFvd2VpeGlv
-bmdAYWxsd2lubmVydGVjaC5jb20+DQo+IEFja2VkLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
-LmJyZXppbGxvbkBjb2xsYWJvcmEuY29tPg0KPiBBY2tlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8
-ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQpXaHkgZGlkIHlvdSBjaGFuZ2Ugb3VyIFJl
-dmlld2VkLWJ5IHRhZ3MgdG8gQWNrZWQtYnkgdGFncz8NCg0KPiBGaXhlczogNzUyOWRmNDY1MjQ4
-ICgibXRkOiBuYW5kOiBBZGQgY29yZSBpbmZyYXN0cnVjdHVyZSB0byBzdXBwb3J0IFNQSSBOQU5E
-cyIpDQo+IC0tLQ0KPiAgIGRyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyB8IDIgKy0NCj4gICAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMgYi9kcml2ZXJzL210ZC9uYW5kL3Nw
-aS9jb3JlLmMNCj4gaW5kZXggNTU2YmZkYi4uNmI5Mzg4ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUu
-Yw0KPiBAQCAtNTExLDEyICs1MTEsMTIgQEAgc3RhdGljIGludCBzcGluYW5kX210ZF9yZWFkKHN0
-cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2ZmX3QgZnJvbSwNCj4gICAJCWlmIChyZXQgPT0gLUVCQURN
-U0cpIHsNCj4gICAJCQllY2NfZmFpbGVkID0gdHJ1ZTsNCj4gICAJCQltdGQtPmVjY19zdGF0cy5m
-YWlsZWQrKzsNCj4gLQkJCXJldCA9IDA7DQo+ICAgCQl9IGVsc2Ugew0KPiAgIAkJCW10ZC0+ZWNj
-X3N0YXRzLmNvcnJlY3RlZCArPSByZXQ7DQo+ICAgCQkJbWF4X2JpdGZsaXBzID0gbWF4X3QodW5z
-aWduZWQgaW50LCBtYXhfYml0ZmxpcHMsIHJldCk7DQo+ICAgCQl9DQo+ICAgDQo+ICsJCXJldCA9
-IDA7DQo+ICAgCQlvcHMtPnJldGxlbiArPSBpdGVyLnJlcS5kYXRhbGVuOw0KPiAgIAkJb3BzLT5v
-b2JyZXRsZW4gKz0gaXRlci5yZXEub29ibGVuOw0KPiAgIAl9DQo+IA==
+The value used in the macro writel_bits_relaxed has to be masked since
+we don't want change the bits outside the mask.
+
+Signed-off-by: Julien Masson <jmasson@baylibre.com>
+---
+ drivers/gpu/drm/meson/meson_registers.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/meson/meson_registers.h b/drivers/gpu/drm/meson/meson_registers.h
+index cfaf90501bb1..c7dfbd7454e5 100644
+--- a/drivers/gpu/drm/meson/meson_registers.h
++++ b/drivers/gpu/drm/meson/meson_registers.h
+@@ -20,7 +20,7 @@
+ #define _REG(reg)	((reg) << 2)
+ 
+ #define writel_bits_relaxed(mask, val, addr) \
+-	writel_relaxed((readl_relaxed(addr) & ~(mask)) | (val), addr)
++	writel_relaxed((readl_relaxed(addr) & ~(mask)) | ((val) & (mask)), addr)
+ 
+ /* vpp2 */
+ #define VPP2_DUMMY_DATA 0x1900
+-- 
+2.17.1
+
