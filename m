@@ -2,119 +2,105 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9FCC48BD4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9EEC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6666120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561414840;
-	bh=X2mdj71OojvPofZElDA3A0qbxcCan0Gcd6RJ7oQb2rg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mlUW+XAAaLp3cJZBSqUExBjV0/rgYBB/9ZmvA8DPq+AaDOeEAoK8jW68JQe1XwRap
-	 0B4q1LJYBg3xL70oSSUSFs2CWqi6UCj5TmwNxLypgj8sMmrvBA0jyATUJrR7vT+KzN
-	 wQuyipYNxgHvKg/R9REVnYRN6WvPEYQrK4sVjckY=
+	by mail.kernel.org (Postfix) with ESMTP id 202A120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNRvk4ji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfFXWUj (ORCPT
+        id S1727243AbfFXWVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:20:39 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33134 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFXWUi (ORCPT
+        Mon, 24 Jun 2019 18:21:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38197 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfFXWVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:20:38 -0400
-Received: by mail-oi1-f195.google.com with SMTP id f80so11024202oib.0;
-        Mon, 24 Jun 2019 15:20:38 -0700 (PDT)
+        Mon, 24 Jun 2019 18:21:18 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so4513367ioa.5;
+        Mon, 24 Jun 2019 15:21:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C1hxUVhPxMAJ8iC1Jpoywv+GpiOlXAEZ3JQKKj0idbA=;
+        b=cNRvk4jikf3M94qtfs0doJvC56m6xUDf8lVQVIQlsKY3ojvMPoTaz2vmfm5Xog3xtb
+         8/2WGqdKWy+uu/7o2fNnZh7Avi25axp9SYpY6QO7WP/u4PtJ2Fbir9QXJJzz8A5JE4tv
+         8Fr+GgfuBewCi1Lw6lbVsBxcZVA9krmg5KyY4vORS77bDUpUa7k96gVk2VDT0jeWJ+sk
+         utABP5mcN9hMnaL4LzWvmxY4kCyjVlMdjQXQ4n2Zo5sOni8u1mQVOLN2iIJeN6BBXb4b
+         j8Reqdh+Z6FsJM+ePoQJE5IqK7U9BS44g70B3RGfTnli1jwkQqUTgt+rdCu/Rt46IJG4
+         i5GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X2mdj71OojvPofZElDA3A0qbxcCan0Gcd6RJ7oQb2rg=;
-        b=LgDpIeDj2w9bJ1yoOEsam4nLZOGjutw/qb6JzKt+Artj50DG+px7jEyjkLj7BOX5Ua
-         NHPrDdr4HAQqdX+d1ufA2N0I0kRxKfsWI1ULlUXzYkzgmYmmEX8dheNgo+uodJK/zlQ9
-         DShe0xXP2O68QhF1oL2sLYYDTsDQEcPCnCu7dFeiiYAOcjJBvjfG3sVz7uyST6LgRMrg
-         u1IX2fngxb4Zsic/8ep5Wzp/hBqL3tUGOLnJGlIRIN2n+rsFGCEKBD/bXuguQJweQJjh
-         GyqUUc+9fyubnFukEoZri5HykTSWA2gZrK2quECdK94KMjGbErQR7eGWHuSF9uEuHfMJ
-         YAFg==
-X-Gm-Message-State: APjAAAWgMRMAuQbuZLoDCwUDJ+LmWJpT1zuUVndQJFfG80CIkuM0yQJZ
-        8hIrlhvHek1R5nWGRdO0dEnm+t0ekW/prPTDHNKNEVog
-X-Google-Smtp-Source: APXvYqxnYN3S5xvkVR/2yGjsDmezNKCQ49nSrTtq5aqk54tjvTYd48k6PRBqiDqHPJTyJ2mrqkZT9zdO/Q1vaEKLqqQ=
-X-Received: by 2002:aca:edc8:: with SMTP id l191mr12597021oih.103.1561414837894;
- Mon, 24 Jun 2019 15:20:37 -0700 (PDT)
+        bh=C1hxUVhPxMAJ8iC1Jpoywv+GpiOlXAEZ3JQKKj0idbA=;
+        b=mq73THV5ie6oBYjiYY0KkvLvxoZ6WWlUW7Vdww6EJEUUvhZiRWIlyIDIIKcUyb6UOP
+         tlTVXasC0JO2AG8nqZ1HcPXD3GG8s1nkHj2Xy27r7HuauZSVUSXoZ7bXv6MY7/K/8Xl6
+         Is1VfEl8jrbwU7s2iFRLSrudFeiVOYKNPrHsOa6ac4T1dpRNg9lfl9BNpzhyXdUABZ83
+         ClOIGQlcYEZlWV7vFZz4KXOPP2ObWImB7uyPeNeRg2Pqg+ThVfWKTowILdPeV3y7p+S1
+         SmKLM7EAP+tpLsL3quAMntYvtLNs+wY2dJop9A5BZj4OPrX97wtFzWslJU6044JbGmz1
+         Ltew==
+X-Gm-Message-State: APjAAAWncYlS0dC9Z1LvzoS+gUbw80S2hQeddjHLrF/ch+Rs+Rmtfam7
+        SNAwiaSK/euIh+q2cPFZH0aQ5kFGrYkwnAd8NW4=
+X-Google-Smtp-Source: APXvYqyFWsOl+fg45q4H1f0m++1DSGjcTD7K0R/xRLC2C+yf1/Hj6drnDfWHx1wFtrD6k+/4rGRwk4rOL83I4swr8f0=
+X-Received: by 2002:a5d:8c81:: with SMTP id g1mr4054068ion.239.1561414877512;
+ Mon, 24 Jun 2019 15:21:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <1668247.RaJIPSxJUN@kreacher> <9906d02b-8c77-f2c8-7168-93ea444b950e@nvidia.com>
- <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Jun 2019 00:20:26 +0200
-Message-ID: <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190604170146.12205-1-s-anna@ti.com> <47b8f278-85ff-18be-d5a0-fde9de6e17f2@ti.com>
+In-Reply-To: <47b8f278-85ff-18be-d5a0-fde9de6e17f2@ti.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 24 Jun 2019 17:21:06 -0500
+Message-ID: <CABb+yY0xOd_oJLg_BffKXuRtnpHeR-jg1EtKE4KVovy2u3MBuA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Add Mailbox support for TI K3 SoCs
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Mon, Jun 24, 2019 at 3:39 PM Suman Anna <s-anna@ti.com> wrote:
 >
-> On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > On 13/06/2019 22:59, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > attempted to avoid a problem with devices whose drivers want them to
-> > > stay in D0 over suspend-to-idle and resume, but it did not go as far
-> > > as it should with that.
-> > >
-> > > Namely, first of all, the power state of a PCI bridge with a
-> > > downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
-> > > sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
-> > > transactions on its secondary bus), but that is not actively enforced
-> > > during system-wide PM transitions, so use the skip_bus_pm flag
-> > > introduced by commit d491f2b75237 for that.
-> > >
-> > > Second, the configuration of devices left in D0 (whatever the reason)
-> > > during suspend-to-idle need not be changed and attempting to put them
-> > > into D0 again by force is pointless, so explicitly avoid doing that.
-> > >
-> > > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >
-> > I have noticed a regression in both the mainline and -next branches on
-> > one of our boards when testing suspend. The bisect is point to this
-> > commit and reverting on top of mainline does fix the problem. So far I
-> > have not looked at this in close detail but kernel log is showing ...
+> Hi Jassi,
 >
-> Can you please collect a log like that, but with dynamic debug in
-> pci-driver.c enabled?
+> On 6/4/19 12:01 PM, Suman Anna wrote:
+> > Hi Jassi,
+> >
+> > The following series adds the support for the Mailbox IP present
+> > within the Main NavSS module on the newer TI K3 AM65x and J721E SoCs.
+> >
+> > The Mailbox IP is similar to the previous generation IP on OMAP SoCs
+> > with a few differences:
+> >  - Multiple IP instances from previous DRA7/AM57 family each form a
+> >    cluster and are part of the same IP. The driver support will continue
+> >    to be based on a cluster.
+> >  - The IP is present within a Main NaVSS, and interrupts have to go
+> >    through an Interrupt Router within Main NavSS before they reach the
+> >    respective processor sub-system's interrupt controllers.
+> >  - The register layout is mostly same, with difference in two registers
+> >
+> > Support is added by enhancing the existing OMAP Mailbox driver to
+> > support the K3 IP using a new compatible. The driver also has to be
+> > adjusted to deal with the 32-bit mailbox payloads vs the 64-bit
+> > pointers used by the Mailbox API on these Arm v8 platforms.
+> >
+> > DT nodes will be posted separately once the binding is acked.
 >
-> Note that reverting this commit is rather out of the question, so we
-> need to get to the bottom of the failure.
-
-I suspect that there is a problem with the pm_suspend_via_firmware()
-check which returns 'false' on the affected board, but the platform
-actually removes power from devices left in D0 during suspend.
-
-I guess it would be more appropriate to check something like
-pm_suspend_no_platform() which would return 'true' in the
-suspend-to-idle patch w/ ACPI.
+> Can you please pick this series up for 5.3 merge window if you do not
+> have any comments.
+>
+I will. Usually I leave the code to cook in the open for as long as
+possible, more so when no acks are coming.
+Cheers!
