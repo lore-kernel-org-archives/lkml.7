@@ -2,101 +2,83 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640A7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AA1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4259A2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73489204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfFXHQm (ORCPT
+        id S1727141AbfFXHRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:16:42 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35295 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfFXHQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:16:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so9015117oii.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 00:16:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+VaP9DcJntoExkzdbDVYZcYt6yhIrCESVYXgeB0JPho=;
-        b=mkVU6K6GujCuFZFuSsSki4fqyj/8ggY6Eg5fV3Gg1EmhAzGziyAxP87+ekl9FAGHo+
-         uy2c2/gXzNru+u/rFTdHVPPWw/h4WzAKcwAWOmfvEfhK5NEQBUNwQ2LUf24uIlJDsJZL
-         9Voaf5M6/kUPq7udngRdw3hXsIcfGFpHfcDodBy88xOAjDWQcoZkzAe+2TpTR72j9bCx
-         P62Jf/trFvIOrsqVK+H8GHnx/PabA/SmZREf/w4Bg+MYy21UdhGGTj3wYG3CqrsTr8i9
-         2+eKrZ2ue8zj0ZQ5z0IiHX32t1CTxZ1ZjPynYNu8IbmpiPp+E5+Ul74cbqB52vSKuHP8
-         HVjw==
-X-Gm-Message-State: APjAAAWrtbtAfLZyP5+DQo7+rv66hhAA96DT8Kn1dji6zVOWo83mHLUH
-        xqJ0ICiFPSuup1S+glgTq2O0vFKTByEkLlbfXTr40F9A
-X-Google-Smtp-Source: APXvYqwjNpJZS5JGDSd4vFCHzeEA5Jvi4zbkSDl1ADx6436Ln2bc4donTa2LIBvyHioB/b/v4b+ZniLu5PjJQ3MIyuw=
-X-Received: by 2002:aca:c4d5:: with SMTP id u204mr9868425oif.131.1561360601551;
- Mon, 24 Jun 2019 00:16:41 -0700 (PDT)
+        Mon, 24 Jun 2019 03:17:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55668 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbfFXHRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:17:46 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C6C7308FEC6;
+        Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B00115D739;
+        Mon, 24 Jun 2019 07:17:42 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 09:17:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+Message-ID: <20190624091740.1d9c6c1d.cohuck@redhat.com>
+In-Reply-To: <alpine.LFD.2.21.1906211817010.2388@schleppi>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+        <alpine.LFD.2.21.1906211817010.2388@schleppi>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190614102126.8402-1-hch@lst.de>
-In-Reply-To: <20190614102126.8402-1-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Jun 2019 09:16:30 +0200
-Message-ID: <CAMuHMdUbuTc+MWqDFw=RnYxtiNQPQkzJ91KDuAQbhMq533tBCQ@mail.gmail.com>
-Subject: Re: [RFC] switch m68k to use the generic remapping DMA allocator
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
+Sebastian Ott <sebott@linux.ibm.com> wrote:
 
-On Fri, Jun 14, 2019 at 12:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> can you take a look at the (untested) patches below?  They convert m68k
-> to use the generic remapping DMA allocator, which is also used by
-> arm64 and csky.
+> On Thu, 13 Jun 2019, Cornelia Huck wrote:
+> > Sometimes, we want to control which of the matching drivers
+> > binds to a subchannel device (e.g. for subchannels we want to
+> > handle via vfio-ccw).
+> > 
+> > For pci devices, a mechanism to do so has been introduced in
+> > 782a985d7af2 ("PCI: Introduce new device binding path using
+> > pci_dev.driver_override"). It makes sense to introduce the
+> > driver_override attribute for subchannel devices as well, so
+> > that we can easily extend the 'driverctl' tool (which makes
+> > use of the driver_override attribute for pci).
+> > 
+> > Note that unlike pci we still require a driver override to
+> > match the subchannel type; matching more than one subchannel
+> > type is probably not useful anyway.
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
+> 
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> 
+> Should I take that via our git tree or do you have other patches depending 
+> on this one?
+> 
 
-When building for Sun-3:
-
-kernel/dma/remap.o: In function `arch_dma_alloc':
-remap.c:(.text+0x316): undefined reference to `__dma_direct_alloc_pages'
-remap.c:(.text+0x32a): undefined reference to `arch_dma_prep_coherent'
-remap.c:(.text+0x34e): undefined reference to `arch_dma_mmap_pgprot'
-remap.c:(.text+0x378): undefined reference to `__dma_direct_free_pages'
-remap.c:(.text+0x3f4): undefined reference to `arch_dma_prep_coherent'
-remap.c:(.text+0x40a): undefined reference to `__dma_direct_alloc_pages'
-kernel/dma/remap.o: In function `arch_dma_free':
-remap.c:(.text+0x446): undefined reference to `__dma_direct_free_pages'
-remap.c:(.text+0x4a8): undefined reference to `__dma_direct_free_pages'
-kernel/dma/remap.o: In function `dma_atomic_pool_init':
-remap.c:(.init.text+0x66): undefined reference to `arch_dma_prep_coherent'
-
-Doing
-
--       select DMA_DIRECT_REMAP if MMU && !COLDFIRE
-+       select DMA_DIRECT_REMAP if MMU && !COLDFIRE && !SUN3
-
-in arch/m68k/Kconfig fixes the build.
-
-Alternatively, you could use:
-
--       select DMA_DIRECT_REMAP if MMU && !COLDFIRE
-+       select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+No, this patch is stand-alone; everything else is happening in user
+space, so taking it via your tree would be great. Thanks!
