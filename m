@@ -2,162 +2,114 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6359C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4135C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D062089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98922089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="gzoyrUbC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fZujrtc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfFXIrt (ORCPT
+        id S1727882AbfFXIuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:47:49 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:55339 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfFXIrt (ORCPT
+        Mon, 24 Jun 2019 04:50:21 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:37083 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725916AbfFXIuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:47:49 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id CC5071C0002;
-        Mon, 24 Jun 2019 08:47:37 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 10:47:37 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, mchehab+samsung@kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] dt-bindings: thermal: add binding document for
- h6 thermal controller
-Message-ID: <20190624084737.k5stgmqi2kx2p52o@flea>
-References: <20190623164206.7467-1-tiny.windzz@gmail.com>
- <20190623164206.7467-3-tiny.windzz@gmail.com>
+        Mon, 24 Jun 2019 04:50:20 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 64729451;
+        Mon, 24 Jun 2019 04:50:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 24 Jun 2019 04:50:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=EU0+mxXojtdj4zHaqAU8jA2ho/O
+        yu47FKR2tInc3jcQ=; b=gzoyrUbC1SvqfuIKJiA6NPwpWrx6QQAzTrlfu5JDSQv
+        nV9LNtFNibzWoJh/Z3HXSRpuZM365UB9sZjX9KHhGkpCz50/vB7/t6OtnvEIK4mV
+        s2fZxtti0WZwJ8XuE5b+zEtMsOcjGeeD6bboAzKo+IeYbwYJ4LbFazu+jOMnhcDe
+        utvdMywWZKO7/sb6aQhoIEFP3vUPpo3aE4hanT7eirKskQNwL7co9N13KerCHJnQ
+        paohrvzgOzc+YsaxQlUOdvLgeyfCEZSMkrXMOaBGKzqc5QC5gQi9oELgAedHK8F2
+        vwX4aLc6Z5Ol6AJ4lgjRaYvfBLjM5QvQEQHA3UdLuhg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=EU0+mx
+        Xojtdj4zHaqAU8jA2ho/Oyu47FKR2tInc3jcQ=; b=fZujrtc4Wv/3VD7HaLb9ed
+        GQaZqMikjJlS4eLd4y0dOECG9yntA0qvmvmh24MB2ATC6WyFNu4xDt12AASSxbzQ
+        J3SAHo0eolXPwp+JnWDcNONpZ99t82cKhcQpcRUMEL5TU1br6lH2B7Pu2AYEP0lq
+        4s3Dg/XwvgnaFvXeqsoKByj+928jWAVAXB3BR5hrIKiYhhOsDrspP+Av87eWRiEL
+        9I50fuVfdFFMXu5h0YzZAT5wX/4mldcM9VsmgsGFnyc4cX5yGYd9PNIwUycwAQUL
+        of8hqdwXPlYm5xOae7NmJ/tlfQihoVw3LMBPFRZmcUJaQwwmNeud+zO9bXTBDAaA
+        ==
+X-ME-Sender: <xms:yo4QXeilSKt0JtGM2o2DbM6-jq3g1ciNBzLaxM8SNV3jQyMjvBUsXw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepudduledrkedurddugeefrd
+    dvgeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:yo4QXXNmpSNHHTTn-bQJiqfz2WhhxU3zS78GEqO8SVnWQVxZStVLhw>
+    <xmx:yo4QXdYCxfL3BZS6nJrEAVf5JVqrJK_W4lrbxhMhyT9Z7g_-p189EA>
+    <xmx:yo4QXU-fp98q4pyyJgXZAaJ8NlAB5K_xebGhvrjGyEF7hS46X74y0w>
+    <xmx:y44QXYEJH_aGQygz3iKiPvQ2Lfi6El13S2bCYLmevMCzi-GwM9byMA>
+Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9E54D80066;
+        Mon, 24 Jun 2019 04:50:17 -0400 (EDT)
+Date:   Mon, 24 Jun 2019 16:46:44 +0800
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: linux-next: build failure after merge of the staging tree
+Message-ID: <20190624084644.GB2481@kroah.com>
+References: <20190624173855.3c188955@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ivprrpimudesnwlt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190623164206.7467-3-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190624173855.3c188955@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 24, 2019 at 05:38:55PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the staging tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> lib/Kconfig:132:error: recursive dependency detected!
+> lib/Kconfig:132:        symbol CRC32 is selected by XZ_DEC
+> lib/xz/Kconfig:2:       symbol XZ_DEC is selected by FW_LOADER_COMPRESS
+> drivers/base/firmware_loader/Kconfig:158:       symbol FW_LOADER_COMPRESS depends on FW_LOADER
+> drivers/base/firmware_loader/Kconfig:4: symbol FW_LOADER is selected by KS7010
+> drivers/staging/ks7010/Kconfig:2:       symbol KS7010 depends on CRYPTO_HASH
+> crypto/Kconfig:65:      symbol CRYPTO_HASH is selected by CRYPTO_CRC32_ARM_CE
+> arch/arm/crypto/Kconfig:123:    symbol CRYPTO_CRC32_ARM_CE depends on CRC32
+> For a resolution refer to Documentation/kbuild/kconfig-language.rst
+> subsection "Kconfig recursive dependency limitations"
+> 
+> This is just while doing the "make multi_v7_defconfig".
+> 
+> Caused by commit
+> 
+>   3e5bc68fa596 ("staging: ks7010: Fix build error")
+> 
+> I have reverted that commit for today.
 
---ivprrpimudesnwlt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Odd.  I'll go revert this now too.
 
-Hi,
+thanks,
 
-On Sun, Jun 23, 2019 at 12:41:57PM -0400, Yangtao Li wrote:
-> This patch adds binding document for allwinner h6 thermal controller.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> new file mode 100644
-> index 000000000000..2c5acc61ed03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +description: |-
-> +  This describes the device tree binding for the Allwinner thermal
-> +  controller which measures the on-SoC temperatures.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 1
-
-You can drop the minItems there
-
-> +  nvmem-cells:
-> +    items:
-> +      - description: ths calibrate data
-> +
-> +  nvmem-cell-names:
-> +    items:
-> +      - const: calib
-
-And for these two, you don't need the items either, it can be directly
-const: calib (and the description for the first one).
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - '#thermal-sensor-cells'
-> +
-> +examples:
-> +  - |
-> +    ths: ths@5070400 {
-> +         compatible = "allwinner,sun50i-h6-ths";
-> +         reg = <0x05070400 0x100>;
-> +         clocks = <&ccu CLK_BUS_THS>;
-> +         clock-names = "bus";
-> +         resets = <&ccu RST_BUS_THS>;
-> +         interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-
-Did you try to run make dtbs_check? That one will probably not
-compile.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ivprrpimudesnwlt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRCOKQAKCRDj7w1vZxhR
-xdBPAQDsYR1iG7lP4B3btdotbt4B3Mnzh74qRV6goFe8yPrtVQEAqTZEFyHblHwJ
-MP/jYXkzBszWwvzwTaG37gmvGqItzQg=
-=EY/h
------END PGP SIGNATURE-----
-
---ivprrpimudesnwlt--
+greg k-h
