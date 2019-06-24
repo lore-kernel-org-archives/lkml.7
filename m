@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CACC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91205C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3953F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3A5208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370669;
-	bh=zMp2ePy9UZCidN9RvyRX77OJYaD0oKbjuTufdWjNZuU=;
+	s=default; t=1561370671;
+	bh=3rtSL/c/4C9S8Ce/tdeE9tMTBn05hu6OGsoopWkk47w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z4Grm2qi+hLyUaRcs/234rtiMBYjmfXOQVeZRQ4hY3JC8463Zn5ds95U+m5bdVW+3
-	 pFxBEhrMEXMjanf2xefpu+NCTkLLbQwpT/UAqHigM6z9Q76gXBu+I2NdPk7pDEb0E+
-	 g3jCEyEReSu9mDDFdB8atMQF+74lZI6VyYIimrkY=
+	b=KdoclTM7biQcJomUr98Nz+kZ07fXCciYhPcuWff7vFYtLj+Ud4z4cGpUF8ZeC0Qng
+	 ikt4I1FYQ0cnFVpTqwWalDon1H0w3GaLWjmUQ5J7rx6eljsU0RUjHH5wRH0K0uD8ik
+	 H50dZHQea/CGGKyTIWwGTPpXd+n4943K7K56JeDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfFXKE2 (ORCPT
+        id S1729714AbfFXKEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:04:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbfFXKEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:04:24 -0400
+        id S1729697AbfFXKE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:04:26 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8DF820848;
-        Mon, 24 Jun 2019 10:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78EC3208E4;
+        Mon, 24 Jun 2019 10:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370663;
-        bh=zMp2ePy9UZCidN9RvyRX77OJYaD0oKbjuTufdWjNZuU=;
+        s=default; t=1561370665;
+        bh=3rtSL/c/4C9S8Ce/tdeE9tMTBn05hu6OGsoopWkk47w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHBWmbYT50cuT/uPZilEKF4UZC6JEy6klPnZfDYn5SwXvIvc3FM2sl1TB5Jl6wxtF
-         T7yNSaIBN2/ONY5BK0Y3zjsNioB2bUEVyMGiQ2gPjw+CPygr4UW72cKGVdWcOttKOb
-         moIUex/h0Mc8Y2lgT4+U9KGi1iK6sURBo/LuGwC8=
+        b=Qswu1nKdr82fPzSEceN9Z4Ab5TkvbD44/LlEC4QmnmlGP1/1qQPnGf5KH6oCyMxTA
+         p+yhzlDK2488sw0yEGC7MKIeh2DP4+cKLD/DDcagIe4I0FCW9v6sXwKCwMA9wMr1cN
+         qNFqz9M70I6GCmNhK1HP8cmbHwUtwoTUW1ggTBy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 44/90] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Mon, 24 Jun 2019 17:56:34 +0800
-Message-Id: <20190624092317.162158686@linuxfoundation.org>
+Subject: [PATCH 4.19 11/90] s390/ap: rework assembler functions to use unions for in/out register variables
+Date:   Mon, 24 Jun 2019 17:56:01 +0800
+Message-Id: <20190624092314.738302736@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,48 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
+[ Upstream commit 159491f3b509bd8101199944dc7b0673b881c734 ]
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+The inline assembler functions ap_aqic() and ap_qact() used two
+variables declared on the very same register. One variable was for
+input only, the other for output. Looks like newer versions of the gcc
+don't like this. Anyway it is a better coding to use one variable
+(which may have a union data type) on one register for input and
+output. So this patch introduces unions and uses only one variable now
+for input and output for GR1 for the PQAP(QACT) and PQAP(QIC)
+invocation.
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
-
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
-
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/ap.h | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 351283b60df6..a285fbd0fd9b 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
- 
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
+diff --git a/arch/s390/include/asm/ap.h b/arch/s390/include/asm/ap.h
+index 8c00fd509c45..1a6a7092d942 100644
+--- a/arch/s390/include/asm/ap.h
++++ b/arch/s390/include/asm/ap.h
+@@ -221,16 +221,22 @@ static inline struct ap_queue_status ap_aqic(ap_qid_t qid,
+ 					     void *ind)
  {
- 	return memblock_reserve(start, end - start);
+ 	register unsigned long reg0 asm ("0") = qid | (3UL << 24);
+-	register struct ap_qirq_ctrl reg1_in asm ("1") = qirqctrl;
+-	register struct ap_queue_status reg1_out asm ("1");
++	register union {
++		unsigned long value;
++		struct ap_qirq_ctrl qirqctrl;
++		struct ap_queue_status status;
++	} reg1 asm ("1");
+ 	register void *reg2 asm ("2") = ind;
+ 
++	reg1.qirqctrl = qirqctrl;
++
+ 	asm volatile(
+ 		".long 0xb2af0000"		/* PQAP(AQIC) */
+-		: "=d" (reg1_out)
+-		: "d" (reg0), "d" (reg1_in), "d" (reg2)
++		: "+d" (reg1)
++		: "d" (reg0), "d" (reg2)
+ 		: "cc");
+-	return reg1_out;
++
++	return reg1.status;
  }
+ 
+ /*
+@@ -264,17 +270,21 @@ static inline struct ap_queue_status ap_qact(ap_qid_t qid, int ifbit,
+ {
+ 	register unsigned long reg0 asm ("0") = qid | (5UL << 24)
+ 		| ((ifbit & 0x01) << 22);
+-	register unsigned long reg1_in asm ("1") = apinfo->val;
+-	register struct ap_queue_status reg1_out asm ("1");
++	register union {
++		unsigned long value;
++		struct ap_queue_status status;
++	} reg1 asm ("1");
+ 	register unsigned long reg2 asm ("2");
+ 
++	reg1.value = apinfo->val;
++
+ 	asm volatile(
+ 		".long 0xb2af0000"		/* PQAP(QACT) */
+-		: "+d" (reg1_in), "=d" (reg1_out), "=d" (reg2)
++		: "+d" (reg1), "=d" (reg2)
+ 		: "d" (reg0)
+ 		: "cc");
+ 	apinfo->val = reg2;
+-	return reg1_out;
++	return reg1.status;
+ }
+ 
+ /**
 -- 
 2.20.1
 
