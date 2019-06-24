@@ -2,97 +2,61 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54C7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A619C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C97204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15798204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y9x1+Nca";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U6n0smKx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rsFPGs5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbfFXNWh (ORCPT
+        id S1730959AbfFXNWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:22:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39162 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728736AbfFXNWh (ORCPT
+        Mon, 24 Jun 2019 09:22:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55908 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbfFXNWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:22:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0736E60F3A; Mon, 24 Jun 2019 13:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561382556;
-        bh=/MhzFPrOnJsUwbR+A+aF2D34pmO0qEliUUfT/mjNyNs=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Y9x1+NcaLtpIN7gPioOPg/8z8wwHa2FSqJtAgONCDtRTeyGCQZ+o9HPn4XkND86hE
-         raV9/MPJ8zG4zkt2IK+lkHMTE3Ja+9vBME185EMC03/xg+yT9Ll7ZpZbmdl34sYY4C
-         patxw1w+WtWHvmIhxnCmxqxzj2YzZLr+AUReCzGA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D6B7615AD;
-        Mon, 24 Jun 2019 13:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561382554;
-        bh=/MhzFPrOnJsUwbR+A+aF2D34pmO0qEliUUfT/mjNyNs=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=U6n0smKxOy260RvyjFc69NoBQy+7qpriFKg9Nwkc5Kx9v4vPaoSVIeKW7gRhbeofr
-         n1kShrSS+zkt0YsbIeA4sbwHG+O7mIiTRVdSo9vHVgriFsCGcaQ5BZBwJafPRJOlPA
-         /oVPB1KWtQnXL0wA33EoYCLN+WX3ZV9uT0nZGpCo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D6B7615AD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 24 Jun 2019 09:22:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BUnOoXsQ8vI3qS3szXEDs2fAZTjGRFJUpiAXARiLAvk=; b=rsFPGs5h0yaaPiZwsWI3YkZL0
+        S+eeHilaw5DqP3wRRFWwZczhNJkLGwjW8cK+fSi6bLTk71+OpS9LOMT/IcLNuwNwKOHIlsH0AZXRV
+        zp8B1CHL4OFFAvvEx1YSTotSJV4sn0b5E80ZQzE2PJ7mgIjh8Lhxl3aKjU1eL49qXQhkM5CBhsRUN
+        uofWzESi8sDOrxFtRGGZ6INRqnHpRq7ZFcPTdRRBZxMQME15tZkfDt21uOE0+ngd3NrQyfEbYuo/W
+        psMsI2feNWLlcfsPV8TlxeSlvX9EjWhfJRQlNsR0rIrylFsw7qRwqR4jjkbIfwCapQLe/a9Uob4IR
+        HP0/KGPIQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfOvl-00074F-FX; Mon, 24 Jun 2019 13:22:45 +0000
+Date:   Mon, 24 Jun 2019 06:22:45 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Jaegeuk Kim <jaegeuk@google.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add wsync_mode for sysfs entry
+Message-ID: <20190624132245.GA12316@infradead.org>
+References: <20190621180124.82842-1-jaegeuk@kernel.org>
+ <622f5e04-3781-d49a-d65d-a7c244389cb3@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190614171713.89262-1-nhuck@google.com>
-References: <20190614171713.89262-1-nhuck@google.com>
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190624132236.0736E60F3A@smtp.codeaurora.org>
-Date:   Mon, 24 Jun 2019 13:22:35 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <622f5e04-3781-d49a-d65d-a7c244389cb3@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Huckleberry <nhuck@google.com> wrote:
-
-> Clang produces the following warning
-> 
-> drivers/net/wireless/ti/wl18xx/main.c:1850:43: warning: unused variable
-> 'wl18xx_iface_ap_cl_limits' [-Wunused-const-variable] static const struct
-> ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = { ^
-> drivers/net/wireless/ti/wl18xx/main.c:1869:43: warning: unused variable
-> 'wl18xx_iface_ap_go_limits' [-Wunused-const-variable] static const struct
-> ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = { ^
-> 
-> The commit that added these variables never used them. Removing them.
-> 
-> Cc: clang-built-linux@googlegroups.com
-> Link: https://github.com/ClangBuiltLinux/linux/issues/530
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Patch applied to wireless-drivers.git, thanks.
-
-608fd7214323 wl18xx: Fix Wunused-const-variable
-
--- 
-https://patchwork.kernel.org/patch/10996073/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Moreover if it makes sense it should be a generic setting.  Please
+Cc Jens who added REQ_BACKGROUND and linux-mm to the cc list so that
+we can have a good discussion.
