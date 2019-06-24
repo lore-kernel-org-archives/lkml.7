@@ -2,33 +2,33 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8B7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F670C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E934208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEF62133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfFXHYk (ORCPT
+        id S1727935AbfFXHYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:24:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:65524 "EHLO
+        Mon, 24 Jun 2019 03:24:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17835 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726548AbfFXHYi (ORCPT
+        with ESMTP id S1726795AbfFXHYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 03:24:38 -0400
-X-UUID: 6038677deac746839ca01a7844137d8d-20190624
-X-UUID: 6038677deac746839ca01a7844137d8d-20190624
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+X-UUID: 0704b223eb5949cbbda10de7e55c1fb2-20190624
+X-UUID: 0704b223eb5949cbbda10de7e55c1fb2-20190624
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <neal.liu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 653087093; Mon, 24 Jun 2019 15:24:30 +0800
+        with ESMTP id 1259754356; Mon, 24 Jun 2019 15:24:29 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Mon, 24 Jun 2019 15:24:28 +0800
 Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -46,9 +46,9 @@ CC:     Neal Liu <neal.liu@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v4 1/3] soc: mediatek: add SMC fid table for SIP interface
-Date:   Mon, 24 Jun 2019 15:24:10 +0800
-Message-ID: <1561361052-13072-2-git-send-email-neal.liu@mediatek.com>
+Subject: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
+Date:   Mon, 24 Jun 2019 15:24:11 +0800
+Message-ID: <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
 References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
@@ -60,54 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Add a header file to provide SIP interface to ATF
-2. Add hwrng SMC fid
+Document the binding used by the MediaTek ARMv8 SoCs random
+number generator with TrustZone enabled.
 
 Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 ---
- include/linux/soc/mediatek/mtk_sip_svc.h |   33 ++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+ .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
 
-diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
+diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
 new file mode 100644
-index 0000000..8cc8b5c
+index 0000000..c04ce15
 --- /dev/null
-+++ b/include/linux/soc/mediatek/mtk_sip_svc.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
++++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+@@ -0,0 +1,10 @@
++MediaTek random number generator with TrustZone enabled
 +
-+#ifndef _MTK_SECURE_API_H_
-+#define _MTK_SECURE_API_H_
++Required properties:
++- compatible : Should be "mediatek,mtk-sec-rng"
 +
-+#include <linux/kernel.h>
++Example:
 +
-+/* Error Code */
-+#define SIP_SVC_E_SUCCESS		0
-+#define SIP_SVC_E_NOT_SUPPORTED		-1
-+#define SIP_SVC_E_INVALID_PARAMS	-2
-+#define SIP_SVC_E_INVALID_RANGE		-3
-+#define SIP_SVC_E_PERMISSION_DENY	-4
-+
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT		BIT(30)
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT		0
-+#endif
-+
-+/*******************************************************************************
-+ * Defines for Mediatek runtime services func ids
-+ ******************************************************************************/
-+
-+/* Security related SMC call */
-+/* HWRNG */
-+#define MTK_SIP_KERNEL_GET_RND \
-+	(0x8200026A | MTK_SIP_SMC_AARCH_BIT)
-+
-+#endif /* _MTK_SECURE_API_H_ */
++hwrng: hwrng {
++	compatible = "mediatek,mtk-sec-rng";
++}
 -- 
 1.7.9.5
 
