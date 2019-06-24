@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C2EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEA5C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF6B20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA99320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371346;
-	bh=Qp5rodsvKjiXWqJYgjTqfZKFaoCWh2/UkvopTy/m54k=;
+	s=default; t=1561371348;
+	bh=6OdPh8UvNgFw9kAu6ULVURDzR2ajJLVxWU0NRDBdpe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQmiCl6eV2EFwiE23N4wxsDjIC+mYwgME2PMT9nR5+RbHfInc9m/Px/Fgi6tiOgOX
-	 qbnqJJrzinOhYQYhINka76v3tpXJMt29S2FCWsWCnznVveyGv6nREk5z93tseJiVyD
-	 DeSEkFfkMWFgYHbtAm0bVJ5kBnJcLDboXS3HBe5o=
+	b=acj3b0jC2tPAHc0B7+QYj1JYlsz8qkFCdBhtXqrIsRRnrYnlNiXCQVuthuSt+iGZ0
+	 A139SpqOO+jr+ZAf8gOu+pkElDHe+dmj9dDkn7HfK1fslmBFcXDuIsfUfQvxVACypc
+	 J35xlWZ3JxsDtlASPy9AMrplxdU0aM0VQOiQWoE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfFXKPp (ORCPT
+        id S1730251AbfFXKPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52968 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729747AbfFXKPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:15:39 -0400
+        id S1729706AbfFXKPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:15:42 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79DF205ED;
-        Mon, 24 Jun 2019 10:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6456A2089F;
+        Mon, 24 Jun 2019 10:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371339;
-        bh=Qp5rodsvKjiXWqJYgjTqfZKFaoCWh2/UkvopTy/m54k=;
+        s=default; t=1561371341;
+        bh=6OdPh8UvNgFw9kAu6ULVURDzR2ajJLVxWU0NRDBdpe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hcR/rxSQUjWK9HmVBRFGEd95kawziO4fVY1wWCc1vmbfjTYsjlSD0y7KrSDtjFA7j
-         r9iKlHTp1BEPcl7yjqDc1OKVXwlOopa9uxkCoqtx3hSKf4VoXqg99+oVyQOHv6Qfi+
-         khrnQ/opivMVRc0pxh/XIY1HaUAk1lJRHjk5+H80=
+        b=K/QllV4T15nfPeq9EY5tYSi16iLAylaiJY1d6mSaDTaD+9wIYSQUEddMbVVqEdkGY
+         zRabsYg1U52ipTsaCbZazBtfQHYCdOtsabNh2V+Ljj7GjW0XvkW+Fu/tTG4YvSpKp8
+         PyfVTBSkKbYFAuP/wXTHk8oVgkU4HyTzHHPsovXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 035/121] dmaengine: mediatek-cqdma: sleeping in atomic context
-Date:   Mon, 24 Jun 2019 17:56:07 +0800
-Message-Id: <20190624092322.613626713@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 066/121] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+Date:   Mon, 24 Jun 2019 17:56:38 +0800
+Message-Id: <20190624092324.192490402@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 069b3c4214f27b130d0642f32438560db30f452e ]
+[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
 
-The mtk_cqdma_poll_engine_done() function takes a true/false parameter
-where true means it's called from atomic context.  There are a couple
-places where it was set to false but it's actually in atomic context
-so it should be true.
+The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
+sample period of a running perf_event. Consequently, when calculating
+the next event period, the new period will only be considered after the
+previous one has overflowed.
 
-All the callers for mtk_cqdma_hard_reset() are holding a spin_lock and
-in mtk_cqdma_free_chan_resources() we take a spin_lock before calling
-the mtk_cqdma_poll_engine_done() function.
+This patch changes the calculation of the remaining event ticks so that
+they are offset if the period has changed.
 
-Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
+response to PERF_EVENT_IOC_PERIOD") for details.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mediatek/mtk-cqdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sparc/kernel/perf_event.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 814853842e29..723b11c190b3 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -225,7 +225,7 @@ static int mtk_cqdma_hard_reset(struct mtk_cqdma_pchan *pc)
- 	mtk_dma_set(pc, MTK_CQDMA_RESET, MTK_CQDMA_HARD_RST_BIT);
- 	mtk_dma_clr(pc, MTK_CQDMA_RESET, MTK_CQDMA_HARD_RST_BIT);
+diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
+index 6de7c684c29f..a58ae9c42803 100644
+--- a/arch/sparc/kernel/perf_event.c
++++ b/arch/sparc/kernel/perf_event.c
+@@ -891,6 +891,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
+ 	s64 period = hwc->sample_period;
+ 	int ret = 0;
  
--	return mtk_cqdma_poll_engine_done(pc, false);
-+	return mtk_cqdma_poll_engine_done(pc, true);
- }
- 
- static void mtk_cqdma_start(struct mtk_cqdma_pchan *pc,
-@@ -671,7 +671,7 @@ static void mtk_cqdma_free_chan_resources(struct dma_chan *c)
- 		mtk_dma_set(cvc->pc, MTK_CQDMA_FLUSH, MTK_CQDMA_FLUSH_BIT);
- 
- 		/* wait for the completion of flush operation */
--		if (mtk_cqdma_poll_engine_done(cvc->pc, false) < 0)
-+		if (mtk_cqdma_poll_engine_done(cvc->pc, true) < 0)
- 			dev_err(cqdma2dev(to_cqdma_dev(c)), "cqdma flush timeout\n");
- 
- 		/* clear the flush bit and interrupt flag */
++	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
++	if (unlikely(period != hwc->last_period))
++		left = period - (hwc->last_period - left);
++
+ 	if (unlikely(left <= -period)) {
+ 		left = period;
+ 		local64_set(&hwc->period_left, left);
 -- 
 2.20.1
 
