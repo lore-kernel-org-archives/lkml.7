@@ -2,313 +2,148 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1D8C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F785C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3765D2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC05C2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561370998;
+	bh=2bCaQpKfQhYXu+UNFytJt21KrwSS7cGYWdbooSHkFCQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h4jUagFVGQMPVV+odYlCxSAZofbyeF8qpnV+nMkEGlo7HLDys7Tr2bwaMc3UUiy6E
+	 GS78tfpXbHtOib2Au0OsNai0T9mWjdPdiPf/du2HGrFYrmjSvD77WpeyvZN5P09JmA
+	 XiUg0c8YVyqz/+8FWwWqUyCbm/j4FW6qLfB8rkW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfFXKJt (ORCPT
+        id S1730453AbfFXKI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:09:49 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40281 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730471AbfFXKIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:37 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E81F860008;
-        Mon, 24 Jun 2019 10:08:29 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 12:08:28 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wpan@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: Re: [PATCH v2 12/28] drivers: Introduce class_find_device_by_name()
- helper
-Message-ID: <20190624100828.GD3133@piout.net>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-13-git-send-email-suzuki.poulose@arm.com>
+        Mon, 24 Jun 2019 06:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730352AbfFXKIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:08:04 -0400
+Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FF2F20645;
+        Mon, 24 Jun 2019 10:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561370884;
+        bh=2bCaQpKfQhYXu+UNFytJt21KrwSS7cGYWdbooSHkFCQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Sl5RZk8a7XojLLaqMYvXQ3x/bfkDBiWWOAI+Ex3oeaafTt9VcM7Odyi9mjpzW2/fj
+         00j2LBm7JXZXAG5N8vwxHXuLwvZORBHW2nuaCsCJhMSeY6pCsvilwutgtsxSp/XD0C
+         MSz5qNAgeUCVqfSxqETkXEPwQqfvSMwrKCrCkjpc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 007/121] mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+Date:   Mon, 24 Jun 2019 17:55:39 +0800
+Message-Id: <20190624092321.017259033@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
+References: <20190624092320.652599624@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560534863-15115-13-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 18:54:07+0100, Suzuki K Poulose wrote:
-> Add a new wrapper for class_find_device() to search for devices
-> by name and convert the existing users to use the new helper.
-> 
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexander Aring <alex.aring@gmail.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-wpan@vger.kernel.org
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Stefan Schmidt <stefan@datenfreihafen.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-> ---
->  drivers/hwtracing/stm/core.c     |  9 +--------
->  drivers/leds/led-class.c         |  9 +--------
->  drivers/rtc/interface.c          | 11 +----------
->  drivers/s390/crypto/zcrypt_api.c | 11 +----------
->  drivers/usb/roles/class.c        |  8 +-------
->  drivers/usb/typec/class.c        |  8 +-------
->  include/linux/device.h           | 12 ++++++++++++
->  net/ieee802154/core.c            |  7 +------
->  8 files changed, 19 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-> index e55b902..2b6bd42 100644
-> --- a/drivers/hwtracing/stm/core.c
-> +++ b/drivers/hwtracing/stm/core.c
-> @@ -89,13 +89,6 @@ static struct class stm_class = {
->  	.dev_groups	= stm_groups,
->  };
->  
-> -static int stm_dev_match(struct device *dev, const void *data)
-> -{
-> -	const char *name = data;
-> -
-> -	return sysfs_streq(name, dev_name(dev));
-> -}
-> -
->  /**
->   * stm_find_device() - find stm device by name
->   * @buf:	character buffer containing the name
-> @@ -116,7 +109,7 @@ struct stm_device *stm_find_device(const char *buf)
->  	if (!stm_core_up)
->  		return NULL;
->  
-> -	dev = class_find_device(&stm_class, NULL, buf, stm_dev_match);
-> +	dev = class_find_device_by_name(&stm_class, buf);
->  	if (!dev)
->  		return NULL;
->  
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 85848c5..317a619 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -216,13 +216,6 @@ static int led_resume(struct device *dev)
->  
->  static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
->  
-> -static int match_name(struct device *dev, const void *data)
-> -{
-> -	if (!dev_name(dev))
-> -		return 0;
-> -	return !strcmp(dev_name(dev), (char *)data);
-> -}
-> -
->  static int led_classdev_next_name(const char *init_name, char *name,
->  				  size_t len)
->  {
-> @@ -233,7 +226,7 @@ static int led_classdev_next_name(const char *init_name, char *name,
->  	strlcpy(name, init_name, len);
->  
->  	while ((ret < len) &&
-> -	       (dev = class_find_device(leds_class, NULL, name, match_name))) {
-> +	       (dev = class_find_device_by_name(leds_class, name))) {
->  		put_device(dev);
->  		ret = snprintf(name, len, "%s_%u", init_name, ++i);
->  	}
-> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-> index 4124f4d..1bee39c 100644
-> --- a/drivers/rtc/interface.c
-> +++ b/drivers/rtc/interface.c
-> @@ -663,21 +663,12 @@ void rtc_update_irq(struct rtc_device *rtc,
->  }
->  EXPORT_SYMBOL_GPL(rtc_update_irq);
->  
-> -static int __rtc_match(struct device *dev, const void *data)
-> -{
-> -	const char *name = data;
-> -
-> -	if (strcmp(dev_name(dev), name) == 0)
-> -		return 1;
-> -	return 0;
-> -}
-> -
->  struct rtc_device *rtc_class_open(const char *name)
->  {
->  	struct device *dev;
->  	struct rtc_device *rtc = NULL;
->  
-> -	dev = class_find_device(rtc_class, NULL, name, __rtc_match);
-> +	dev = class_find_device_by_name(rtc_class, name);
->  	if (dev)
->  		rtc = to_rtc_device(dev);
->  
-> diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-> index 1058b4b..38a5a47 100644
-> --- a/drivers/s390/crypto/zcrypt_api.c
-> +++ b/drivers/s390/crypto/zcrypt_api.c
-> @@ -133,12 +133,6 @@ struct zcdn_device {
->  static int zcdn_create(const char *name);
->  static int zcdn_destroy(const char *name);
->  
-> -/* helper function, matches the name for find_zcdndev_by_name() */
-> -static int __match_zcdn_name(struct device *dev, const void *data)
-> -{
-> -	return strcmp(dev_name(dev), (const char *)data) == 0;
-> -}
-> -
->  /* helper function, matches the devt value for find_zcdndev_by_devt() */
->  static int __match_zcdn_devt(struct device *dev, const void *data)
->  {
-> @@ -152,10 +146,7 @@ static int __match_zcdn_devt(struct device *dev, const void *data)
->   */
->  static inline struct zcdn_device *find_zcdndev_by_name(const char *name)
->  {
-> -	struct device *dev =
-> -		class_find_device(zcrypt_class, NULL,
-> -				  (void *) name,
-> -				  __match_zcdn_name);
-> +	struct device *dev = class_find_device_by_name(zcrypt_class, name);
->  
->  	return dev ? to_zcdn_dev(dev) : NULL;
->  }
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index f45d8df..07aaa96 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -90,11 +90,6 @@ static int switch_fwnode_match(struct device *dev, const void *fwnode)
->  	return dev_fwnode(dev) == fwnode;
->  }
->  
-> -static int switch_name_match(struct device *dev, const void *name)
-> -{
-> -	return !strcmp((const char *)name, dev_name(dev));
-> -}
-> -
->  static void *usb_role_switch_match(struct device_connection *con, int ep,
->  				   void *data)
->  {
-> @@ -107,8 +102,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
->  		dev = class_find_device(role_class, NULL, con->fwnode,
->  					switch_fwnode_match);
->  	} else {
-> -		dev = class_find_device(role_class, NULL, con->endpoint[ep],
-> -					switch_name_match);
-> +		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
->  	}
->  
->  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 2eb6238..18a0687 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -210,11 +210,6 @@ static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
->  	return dev_fwnode(dev) == fwnode;
->  }
->  
-> -static int typec_port_name_match(struct device *dev, const void *name)
-> -{
-> -	return !strcmp((const char *)name, dev_name(dev));
-> -}
-> -
->  static void *typec_port_match(struct device_connection *con, int ep, void *data)
->  {
->  	struct device *dev;
-> @@ -227,8 +222,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
->  		return class_find_device(typec_class, NULL, con->fwnode,
->  					 typec_port_fwnode_match);
->  
-> -	dev = class_find_device(typec_class, NULL, con->endpoint[ep],
-> -				typec_port_name_match);
-> +	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
->  
->  	return dev ? dev : ERR_PTR(-EPROBE_DEFER);
->  }
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index a449d09..bb14c7f 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -485,6 +485,18 @@ extern struct device *class_find_device(struct class *class,
->  					struct device *start, const void *data,
->  					int (*match)(struct device *, const void *));
->  
-> +/**
-> + * class_find_device_by_name - device iterator for locating a particular device
-> + * of a specific name.
-> + * @class: class type
-> + * @name: name of the device to match
-> + */
-> +static inline struct device *class_find_device_by_name(struct class *class,
-> +						       const char *name)
-> +{
-> +	return class_find_device(class, NULL, name, device_match_name);
-> +}
-> +
->  struct class_attribute {
->  	struct attribute attr;
->  	ssize_t (*show)(struct class *class, struct class_attribute *attr,
-> diff --git a/net/ieee802154/core.c b/net/ieee802154/core.c
-> index 60b7ac5..de259b5 100644
-> --- a/net/ieee802154/core.c
-> +++ b/net/ieee802154/core.c
-> @@ -23,11 +23,6 @@
->  LIST_HEAD(cfg802154_rdev_list);
->  int cfg802154_rdev_list_generation;
->  
-> -static int wpan_phy_match(struct device *dev, const void *data)
-> -{
-> -	return !strcmp(dev_name(dev), (const char *)data);
-> -}
-> -
->  struct wpan_phy *wpan_phy_find(const char *str)
->  {
->  	struct device *dev;
-> @@ -35,7 +30,7 @@ struct wpan_phy *wpan_phy_find(const char *str)
->  	if (WARN_ON(!str))
->  		return NULL;
->  
-> -	dev = class_find_device(&wpan_phy_class, NULL, str, wpan_phy_match);
-> +	dev = class_find_device_by_name(&wpan_phy_class, str);
->  	if (!dev)
->  		return NULL;
->  
-> -- 
-> 2.7.4
-> 
+commit b4c9f938d542d5f88c501744d2d12fad4fd2915f upstream.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+We want SDIO drivers to be able to temporarily stop retuning when the
+driver knows that the SDIO card is not in a state where retuning will
+work (maybe because the card is asleep).  We'll move the relevant
+functions to a place where drivers can call them.
+
+Cc: stable@vger.kernel.org #v4.18+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/core/sdio_io.c    |   40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/mmc/sdio_func.h |    3 +++
+ 2 files changed, 43 insertions(+)
+
+--- a/drivers/mmc/core/sdio_io.c
++++ b/drivers/mmc/core/sdio_io.c
+@@ -19,6 +19,7 @@
+ #include "sdio_ops.h"
+ #include "core.h"
+ #include "card.h"
++#include "host.h"
+ 
+ /**
+  *	sdio_claim_host - exclusively claim a bus for a certain SDIO function
+@@ -775,3 +776,42 @@ void sdio_retune_crc_enable(struct sdio_
+ 	func->card->host->retune_crc_disable = false;
+ }
+ EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
++
++/**
++ *	sdio_retune_hold_now - start deferring retuning requests till release
++ *	@func: SDIO function attached to host
++ *
++ *	This function can be called if it's currently a bad time to do
++ *	a retune of the SDIO card.  Retune requests made during this time
++ *	will be held and we'll actually do the retune sometime after the
++ *	release.
++ *
++ *	This function could be useful if an SDIO card is in a power state
++ *	where it can respond to a small subset of commands that doesn't
++ *	include the retuning command.  Care should be taken when using
++ *	this function since (presumably) the retuning request we might be
++ *	deferring was made for a good reason.
++ *
++ *	This function should be called while the host is claimed.
++ */
++void sdio_retune_hold_now(struct sdio_func *func)
++{
++	mmc_retune_hold_now(func->card->host);
++}
++EXPORT_SYMBOL_GPL(sdio_retune_hold_now);
++
++/**
++ *	sdio_retune_release - signal that it's OK to retune now
++ *	@func: SDIO function attached to host
++ *
++ *	This is the complement to sdio_retune_hold_now().  Calling this
++ *	function won't make a retune happen right away but will allow
++ *	them to be scheduled normally.
++ *
++ *	This function should be called while the host is claimed.
++ */
++void sdio_retune_release(struct sdio_func *func)
++{
++	mmc_retune_release(func->card->host);
++}
++EXPORT_SYMBOL_GPL(sdio_retune_release);
+--- a/include/linux/mmc/sdio_func.h
++++ b/include/linux/mmc/sdio_func.h
+@@ -162,4 +162,7 @@ extern int sdio_set_host_pm_flags(struct
+ extern void sdio_retune_crc_disable(struct sdio_func *func);
+ extern void sdio_retune_crc_enable(struct sdio_func *func);
+ 
++extern void sdio_retune_hold_now(struct sdio_func *func);
++extern void sdio_retune_release(struct sdio_func *func);
++
+ #endif /* LINUX_MMC_SDIO_FUNC_H */
+
+
