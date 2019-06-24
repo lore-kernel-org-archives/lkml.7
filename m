@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF9C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386EBC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EDD205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106D62063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371071;
-	bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
+	s=default; t=1561371074;
+	bh=36Uks9N0n+g+dl+fWGwq7q+BLR2zuL27kYpLylCMGSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lawsrPF3EJvOh52NLjYYc48RCik6B4ohBDpV7HOg2fVcxRDa7KcyQCeuh+mC3V3Wg
-	 mO5cbQ75+tAchh+Tgy7ZUe9NOJGww0GCRcaLKNFwOQyo31sfZyWEzs0MmJFlSrBRHo
-	 VRstv5T6HPD+3WYmi4sLOXu+dt1FkN+iKtqPibT4=
+	b=K9dZiVJ2Up0OzyRz8yJZJIhn4XqSNCLn+o5Dvf2mV1GugHKfTBaLw0Z6QbV9b/g5D
+	 BiSpoHEvqzcuiPYxYI0eyxndV8LRee3jLvAQUqJznDW0g63unw1Ku2RtJopdDVMN46
+	 qQ1Uw60z/zvDjOBRSqt8Tvf+mUg2et70HprNWpm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfFXKGv (ORCPT
+        id S1730461AbfFXKLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39162 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbfFXKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:06:47 -0400
+        id S1730183AbfFXKGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:06:52 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04702146F;
-        Mon, 24 Jun 2019 10:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF20214DA;
+        Mon, 24 Jun 2019 10:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370806;
-        bh=xyJEaPk2HfCS8hpn/PaP8yA5GZREaLpcCzt+2lcENIs=;
+        s=default; t=1561370811;
+        bh=36Uks9N0n+g+dl+fWGwq7q+BLR2zuL27kYpLylCMGSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WkJy+Ui7A9DSCLlaa4c+id1r3GhoqR51y5KOeK8pQC2dax0X7dqy/x8IIi2E5h1nT
-         /y8ojuIOIIaKrY34K4OlSPR7IuQWraW4769+GgRY+gAFBUjQvgdsqhB1VFKZ3LIN7K
-         Q3SXtfAwPcZaF5v42IoLuI5oBEbiFPstKSyJilCk=
+        b=QCI46K0wPPGpq9K12T9WkPSsF5CMcFE8vPpmw3zW5r6xsv1gS21A5DRafEeUmDw0z
+         VvX5yYzAnpcqDgBqbQi12KGEbNtA65mml6c9Aaeqe9YkwQjS1nOy2boQzbq8MhEtx+
+         XDSPrgVvkhxW4d5/AroXaqLS7IaNaZMZnuvBDOjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.19 83/90] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
-Date:   Mon, 24 Jun 2019 17:57:13 +0800
-Message-Id: <20190624092319.358356765@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.1 010/121] usb: chipidea: udc: workaround for endpoint conflict issue
+Date:   Mon, 24 Jun 2019 17:55:42 +0800
+Message-Id: <20190624092321.172344958@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
-References: <20190624092313.788773607@linuxfoundation.org>
+In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
+References: <20190624092320.652599624@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
+commit c19dffc0a9511a7d7493ec21019aefd97e9a111b upstream.
 
-Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
-as the number of simultaneous SMB3 requests grows (even though the client
-has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
-so that we can retry writes which fail with this status code.
+An endpoint conflict occurs when the USB is working in device mode
+during an isochronous communication. When the endpointA IN direction
+is an isochronous IN endpoint, and the host sends an IN token to
+endpointA on another device, then the OUT transaction may be missed
+regardless the OUT endpoint number. Generally, this occurs when the
+device is connected to the host through a hub and other devices are
+connected to the same hub.
 
-This (for example) fixes large file copies to Windows 10 on fast networks.
+The affected OUT endpoint can be either control, bulk, isochronous, or
+an interrupt endpoint. After the OUT endpoint is primed, if an IN token
+to the same endpoint number on another device is received, then the OUT
+endpoint may be unprimed (cannot be detected by software), which causes
+this endpoint to no longer respond to the host OUT token, and thus, no
+corresponding interrupt occurs.
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+There is no good workaround for this issue, the only thing the software
+could do is numbering isochronous IN from the highest endpoint since we
+have observed most of device number endpoint from the lowest.
+
+Cc: <stable@vger.kernel.org> #v3.14+
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2maperror.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/chipidea/udc.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -457,7 +457,7 @@ static const struct status_to_posix_erro
- 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
- 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
- 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
--	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
-+	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
- 				"STATUS_INSUFFICIENT_RESOURCES"},
- 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
- 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1622,6 +1622,25 @@ static int ci_udc_pullup(struct usb_gadg
+ static int ci_udc_start(struct usb_gadget *gadget,
+ 			 struct usb_gadget_driver *driver);
+ static int ci_udc_stop(struct usb_gadget *gadget);
++
++/* Match ISOC IN from the highest endpoint */
++static struct usb_ep *ci_udc_match_ep(struct usb_gadget *gadget,
++			      struct usb_endpoint_descriptor *desc,
++			      struct usb_ss_ep_comp_descriptor *comp_desc)
++{
++	struct ci_hdrc *ci = container_of(gadget, struct ci_hdrc, gadget);
++	struct usb_ep *ep;
++
++	if (usb_endpoint_xfer_isoc(desc) && usb_endpoint_dir_in(desc)) {
++		list_for_each_entry_reverse(ep, &ci->gadget.ep_list, ep_list) {
++			if (ep->caps.dir_in && !ep->claimed)
++				return ep;
++		}
++	}
++
++	return NULL;
++}
++
+ /**
+  * Device operations part of the API to the USB controller hardware,
+  * which don't involve endpoints (or i/o)
+@@ -1635,6 +1654,7 @@ static const struct usb_gadget_ops usb_g
+ 	.vbus_draw	= ci_udc_vbus_draw,
+ 	.udc_start	= ci_udc_start,
+ 	.udc_stop	= ci_udc_stop,
++	.match_ep 	= ci_udc_match_ep,
+ };
+ 
+ static int init_eps(struct ci_hdrc *ci)
 
 
