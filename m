@@ -2,140 +2,136 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D821C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309AEC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB54F2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FBD208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vC2302H4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaVWc9JS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfFXIkW (ORCPT
+        id S1727485AbfFXImc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 04:40:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56934 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfFXIkW (ORCPT
+        Mon, 24 Jun 2019 04:42:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44758 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfFXImc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:40:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O8dY5K123395;
-        Mon, 24 Jun 2019 08:40:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=6ck8MBwXxLWycwZKvrYVSaIGF3TxSfLus7KSpoOIBjU=;
- b=vC2302H4F6dWabhAgytQ6Jo351FpiF16D8mZXPZBMgRXsl529QkM4ygIo8XSTSyqlh7J
- mhZSMu4lWjxzMYVpM/G/ndyL/7V4XXSLdDwvKZTTpYi3eEzdqOpIB1iENGdw2JpDxneE
- N3pp0EEjDYIgtXUegZ6CZzty9V3gtAZBx6XrBRB6SsK2sHR+7SrZeFWB+JLtaADrFw1Q
- T9kGUQc2e/3DS2GOKorK5ZRYCC+ji8BuggTWLQxnn3dsU2q0e27g6ADrcX0JrDZ7Bf/w
- B45/EUB/DMrWYzNhAJoQMftCLKuChGHHVeo9vbfcH4eyfXpzOx3/n1GTr2cPO8GPW0Yg pw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brsw0gm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 08:40:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5O8dRBm050198;
-        Mon, 24 Jun 2019 08:40:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t9acbctw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 08:40:09 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5O8e1gL028104;
-        Mon, 24 Jun 2019 08:40:02 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 01:40:01 -0700
-Date:   Mon, 24 Jun 2019 11:39:52 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, alexander.deucher@amd.com,
-        christian.koenig@amd.com, David1.Zhou@amd.com,
-        julia.lawall@lip6.fr, kernel-janitors@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        jonathan.kim@amd.com
-Subject: Re: [PATCH -next v3] drm/amdgpu: return 'ret' immediately if failed
- in amdgpu_pmu_init
-Message-ID: <20190624083952.GO18776@kadam>
-References: <alpine.DEB.2.21.1906230809400.4961@hadrien>
- <20190624034532.135201-1-maowenan@huawei.com>
+        Mon, 24 Jun 2019 04:42:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so314057iob.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 01:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hZDK98pFVpxt3chkW1SOjanxcVKTD0vgdvliCnO9TDw=;
+        b=GaVWc9JSf9wAxISpuhTVscTFLYvILW3vniklJFaI1vv/NHx9x1mRLzYj/z0McDaIeh
+         UC2vVaMO7FpWZQP3TW5wdKIxA4UlAI7b2N1VaOCcNCctRhbMbyy6RECYU1QiHsVyOriM
+         siiSyvwCDXUyOxOwnDOqdCHjuJsKeAyey2cmjwd9hzF4qJz3x2gW3YxggyHWn3FlToV+
+         9rjw8ZCnxaWx2gEpS/hmCi3nAWjd3FobYDlVWMJU+SoqDOTwK6pmo3qlmxzEHHXCx8tF
+         vRPGIzZQxBbIJIdesoB/MbQ9xrDVXG0U8pXE/jhRah3fpzWlpC2c5Dzrn2NaYHF7FxKJ
+         TYJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hZDK98pFVpxt3chkW1SOjanxcVKTD0vgdvliCnO9TDw=;
+        b=f0F17R4MRpNMgaAP+vmi4MPYtKwiCS3bTHVOO2flf09GCvGRnPtHjrlOopFfxiHLS0
+         PbsbnNO8dTHUp0vvkIJxj9o6zznY/1hQJsemym1ULQ5SDxXHoZYbbRi5rUahRJtkEsXK
+         EgqrxeyR0Bek/2kMHn7p0SYXDhTpWtVS2uIXxvEHPjMHC4EcjEEMDB4/VDE3y44RdKV9
+         i0lwCVHOy1yqfheKw8iEO4HeAAmPBSZ/xJbu8rR3R10CncFRgobvTYHohH5IGkpOtL55
+         XemLYDmS4JQDZjKxTJ5E67BajSLl6/iqImSePamTSmpUa+08r04/EEBmLLtlfc17xgN0
+         GsBQ==
+X-Gm-Message-State: APjAAAWc5hKnP/KXqNEZGe6pYRFl1DaIFlkfLRo+3a60Eexr2+UnQJRs
+        PPTb6jDRMmGyZuH5p2a5MLOjXZ+dL1bFTju3bg==
+X-Google-Smtp-Source: APXvYqxx7glCCsFqx7G/HkqXPaiYIfpS79svZoUBDKDV/wgnir+RKuzvj8Mui4giQxIVCXR+W8I7qXj9HjI3nRGl4Eo=
+X-Received: by 2002:a05:6638:40c:: with SMTP id q12mr22707922jap.17.1561365751552;
+ Mon, 24 Jun 2019 01:42:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190624034532.135201-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240072
+References: <20190512054829.11899-1-cai@lca.pw> <20190513124112.GH24036@dhcp22.suse.cz>
+ <1561123078.5154.41.camel@lca.pw> <20190621135507.GE3429@dhcp22.suse.cz>
+In-Reply-To: <20190621135507.GE3429@dhcp22.suse.cz>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 24 Jun 2019 16:42:20 +0800
+Message-ID: <CAFgQCTvSJjzFGGyt_VOvyB46yy6452wach7UmmuY5ZJZ3YZzcg@mail.gmail.com>
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA boot
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Barret Rhoden <brho@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@elte.hu>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:45:32AM +0800, Mao Wenan wrote:
-> There is one warning:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->   int ret = 0;
->       ^
-> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
-> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
-> amdgpu_device_init()
-> 	r = amdgpu_pmu_init(adev);
-> 
-> This patch is also to update the indenting on the arguments so they line up with the '('.
-> 
-> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
->  amdgpu_pmu_init().
->  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
-> 
->  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> index 0e6dba9..b702322 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-> @@ -252,8 +252,11 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
->  	case CHIP_VEGA20:
->  		/* init df */
->  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
-> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
-> -				       DF_V3_6_MAX_COUNTERS);
-> +							   "DF", "amdgpu_df",
-> +							   PERF_TYPE_AMDGPU_DF,
-> +							   DF_V3_6_MAX_COUNTERS);
-> +		if (ret)
-> +			return ret;
+Hi Michal,
 
-No no.  Sorry, the original indenting was correct and lined up with the
-'(' character in 'init_pmu_by_type(', that's the way it should be.  If
-we were to remove the "ret = " then we'd have to pull the arguments back
-as well.  I think this fix that Julia suggested is really the right so
-leave the indenting alone.
+What about dropping the change of the online definition of your patch,
+just do the following?
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad60..9c087c3 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -749,13 +749,12 @@ static void __init init_memory_less_node(int nid)
+  */
+ void __init init_cpu_to_node(void)
+ {
+-       int cpu;
++       int cpu, node;
+        u16 *cpu_to_apicid = early_per_cpu_ptr(x86_cpu_to_apicid);
 
-It looks like you've right aligned the arguments.  That's not the right
-way, the original was correct.
+        BUG_ON(cpu_to_apicid == NULL);
 
-regards,
-dan carpenter
+-       for_each_possible_cpu(cpu) {
+-               int node = numa_cpu_node(cpu);
++       for_each_node_mask(node, numa_nodes_parsed) {
 
+                if (node == NUMA_NO_NODE)
+                        continue;
+@@ -765,6 +764,10 @@ void __init init_cpu_to_node(void)
+
+                numa_set_node(cpu, node);
+        }
++       for_each_possible_cpu(cpu) {
++               int node = numa_cpu_node(cpu);
++               numa_set_node(cpu, node);
++       }
+ }
+
+Thanks,
+  Pingfan
+
+On Fri, Jun 21, 2019 at 9:55 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 21-06-19 09:17:58, Qian Cai wrote:
+> > Sigh...
+> >
+> > I don't see any benefit to keep the broken commit,
+> >
+> > "x86, numa: always initialize all possible nodes"
+> >
+> > for so long in linux-next that just prevent x86 NUMA machines with any memory-
+> > less node from booting.
+> >
+> > Andrew, maybe it is time to drop this patch until Michal found some time to fix
+> > it properly.
+>
+> Yes, please drop the patch for now, Andrew. I thought I could get to
+> this but time is just scarce.
+> --
+> Michal Hocko
+> SUSE Labs
