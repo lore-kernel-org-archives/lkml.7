@@ -2,144 +2,116 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23477C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65526C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B2E2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBD3Z/tN"
+	by mail.kernel.org (Postfix) with ESMTP id 4142F208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfFXJ2c (ORCPT
+        id S1727966AbfFXJ3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:28:32 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46242 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727301AbfFXJ2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:28:32 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so753735iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6DpP4P5H8yV1mb1kZ3rW1l+srfewAeWKH+iTqFQUwmM=;
-        b=hBD3Z/tNYbZkAQC3D22H7riQ4gMrxvDvdzYGBgfkdV70wwCAzi+YAD95zVKUb6mU3k
-         fHr140oU8mIwIzVHrADEjl5OSCIWd+jjJKJs/qMeAXAb28W7zA1MBBM438gLgzV+g599
-         qNlrVVvAVGcc5RFWcwKZ7UbSr7XC3oO5dI6pZlDBZ3n2qvClh8yc2CO7Ffb4SAwWI/Dt
-         CsZllwYZBVAcv3ixjGKcW2zO35DwefnBL9JtPgHSnvu3WWkj9nTLpfb/s4kzl/u2Ejs2
-         c9e9kpg+85urAheXm+AWQE5xhQ3aS4iRS22IenNrefhSXlZ6jB7GW58/AWDEyiBLF/Gc
-         JjcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6DpP4P5H8yV1mb1kZ3rW1l+srfewAeWKH+iTqFQUwmM=;
-        b=Z3z2PnwvLxqGI67PcOwda+7dWBHFH8m0pdpGRbZYTs700nrPf5dt/A9twhxfLc6XPh
-         B7knvZBS/pjD/UaKLRkAczgZAjJnHhyotXuyM39Lr2rePLqI08pQx+IBa+ypSFrdk3OV
-         rhrKugdhciv2OdKhEPizMzhlxowjyfkT/o3gqk6Ud552YlXxmV7MYQQkyvarzA9dOdar
-         1aO+zcIm4NFVVnJBnUjBa/pDMPY9RY0vqpsTrLX0/C+cHc3X3twwegNiFOXkvtkAB9yW
-         WKMGrV8xKSUjGf32iX+5XTuUGOfwuq7LnC+89cRejvArV8lSeSqNm5zaWhOVBfKk2N0U
-         2W0Q==
-X-Gm-Message-State: APjAAAVSBcel6l3dQNvIA4AvRhc4YXbEhNmJ6hWocdMtIVeGY92heGnb
-        TOnMtMoA72WyHA+c25bKp4NN4UixwCpxZPNKC+ItVA==
-X-Google-Smtp-Source: APXvYqzs/C+I2k5zMhYuS21PxyB//gPteWn4ghlZ9GUtazBEuBQQgRg27KAq+8zBBz+1X/mmrTeyh15XbD0fJhhRPPE=
-X-Received: by 2002:a6b:fb0f:: with SMTP id h15mr36700690iog.266.1561368511114;
- Mon, 24 Jun 2019 02:28:31 -0700 (PDT)
+        Mon, 24 Jun 2019 05:29:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726632AbfFXJ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:29:50 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0BEF76D46187D21E210D;
+        Mon, 24 Jun 2019 17:29:48 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
+ 17:29:46 +0800
+Subject: Re: [PATCH -next v3] drm/amdgpu: return 'ret' immediately if failed
+ in amdgpu_pmu_init
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+References: <alpine.DEB.2.21.1906230809400.4961@hadrien>
+ <20190624034532.135201-1-maowenan@huawei.com> <20190624083952.GO18776@kadam>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <julia.lawall@lip6.fr>, <kernel-janitors@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <jonathan.kim@amd.com>, Joe Perches <joe@perches.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <4795ba5c-8e41-e1e0-c96a-47fdda3995e3@huawei.com>
+Date:   Mon, 24 Jun 2019 17:29:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <000000000000bb362d058b96d54d@google.com> <20190618140239.GA17978@ZenIV.linux.org.uk>
-In-Reply-To: <20190618140239.GA17978@ZenIV.linux.org.uk>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 24 Jun 2019 11:28:18 +0200
-Message-ID: <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com>
-Subject: Re: general protection fault in do_move_mount (2)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzbot <syzbot+6004acbaa1893ad013f0@syzkaller.appspotmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190624083952.GO18776@kadam>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 4:03 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Tue, Jun 18, 2019 at 03:47:10AM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    9e0babf2 Linux 5.2-rc5
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=138b310aa00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d16883d6c7f0d717
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6004acbaa1893ad013f0
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e8c2aa00000
->
-> IDGI...
->
-> mkdir(&(0x7f0000632000)='./file0\x00', 0x0)
-> mount(0x0, 0x0, 0x0, 0x0, 0x0)
-> syz_open_procfs(0x0, 0x0)
-> r0 = open(&(0x7f0000032ff8)='./file0\x00', 0x0, 0x0)
-> r1 = memfd_create(&(0x7f00000001c0)='\xb3', 0x0)
-> write$FUSE_DIRENT(r1, &(0x7f0000000080)=ANY=[], 0x29)
-> move_mount(r0, &(0x7f0000000040)='./file0\x00', 0xffffffffffffff9c, &(0x7f0000000100)='./file0\x00', 0x66)
->
-> reads as if we'd done mkdir ./file0, opened it and then tried
-> to feed move_mount(2) "./file0" relative to that descriptor.
-> How the hell has that avoided an instant -ENOENT?  On the first
-> pair, that is - the second one (AT_FDCWD, "./file0") is fine...
->
-> Confused...  Incidentally, what the hell is
->         mount(0x0, 0x0, 0x0, 0x0, 0x0)
-> about?  *IF* that really refers to mount(2) with
-> such arguments, all you'll get is -EFAULT.  Way before
-> it gets to actually doing anything - it won't get past
->         /* ... and get the mountpoint */
->         retval = user_path(dir_name, &path);
->         if (retval)
->                 return retval;
-> in do_mount(2)...
 
-Yes, mount(0x0, 0x0, 0x0, 0x0, 0x0) is mount with 0 arguments. Most
-likely it returns EFAULT.
-Since the reproducer have "threaded":true,"collide":true and no C
-repro, most likely this is a subtle race. So it attempted to remove
-mount(0x0, 0x0, 0x0, 0x0, 0x0) but it did not crash, so the conclusion
-was that it's somehow needed. You can actually see that other
-reproducers for this bug do not have this mount, but are otherwise
-similar.
 
-With "threaded":true,"collide":true the execution mode is not just
-"execute each syscall once one after another".
-The syscalls are executed in separate threads and actually twice. You
-can see the approximate execution mode in this C program:
-https://gist.githubusercontent.com/dvyukov/c3a52f012e7cff9bdebf3935d35245cf/raw/b5587824111a1d982c985b00137ae8609572335b/gistfile1.txt
-Yet using the C program did not trigger the crash somehow (maybe just
-slightly different timings).
+On 2019/6/24 16:39, Dan Carpenter wrote:
+> On Mon, Jun 24, 2019 at 11:45:32AM +0800, Mao Wenan wrote:
+>> There is one warning:
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>>   int ret = 0;
+>>       ^
+>> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
+>> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
+>> amdgpu_device_init()
+>> 	r = amdgpu_pmu_init(adev);
+>>
+>> This patch is also to update the indenting on the arguments so they line up with the '('.
+>>
+>> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
+>>  amdgpu_pmu_init().
+>>  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type(). 
+>>
+>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> index 0e6dba9..b702322 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> @@ -252,8 +252,11 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+>>  	case CHIP_VEGA20:
+>>  		/* init df */
+>>  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
+>> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+>> -				       DF_V3_6_MAX_COUNTERS);
+>> +							   "DF", "amdgpu_df",
+>> +							   PERF_TYPE_AMDGPU_DF,
+>> +							   DF_V3_6_MAX_COUNTERS);
+>> +		if (ret)
+>> +			return ret;
+> 
+> No no.  Sorry, the original indenting was correct and lined up with the
+> '(' character in 'init_pmu_by_type(', that's the way it should be.  If
+> we were to remove the "ret = " then we'd have to pull the arguments back
+> as well.  I think this fix that Julia suggested is really the right so
+> leave the indenting alone.
+> 
 
-Since syzkaller was able to reproduce it multiple times, it looks like
-a real bug rather than an induced memory corruption or something.
+> It looks like you've right aligned the arguments.  That's not the right
+> way, the original was correct.
+> 
+After using 8 character for tab(thanks to Joe), the aligned here is wrong, yes, the original was correct.
+
+so my v4 is only to change ret, don't change the indenting?
+
+> regards,
+> dan carpenter
+> 
+> 
+> .
+> 
+
