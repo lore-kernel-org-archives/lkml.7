@@ -2,321 +2,202 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261BFC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E881C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A5B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JZfLHyYu"
+	by mail.kernel.org (Postfix) with ESMTP id 2F7B220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731868AbfFXQSC (ORCPT
+        id S1731709AbfFXQSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:18:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:32770 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbfFXQSC (ORCPT
+        Mon, 24 Jun 2019 12:18:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16270 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728776AbfFXQSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:18:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OG9RhG120007;
-        Mon, 24 Jun 2019 16:17:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=QSdJIcYPhRP8AVUdSZIleoEcVMe8cjEDcuPBEeUeRA4=;
- b=JZfLHyYuVFOmsE2ExpcijqRHL+HP3uqAFjiq6K43XLGL+BmZOLhUrUI5aIXhOy4s+dSt
- kpMQ1SeaUclXVHn9uLfTngAS8tVq/SZ8jAT0BxqIRxYFxigzUfv0K0iJWEW5GfJsnkCl
- 3++dcyyyoCSflz0rqVPDBa6f1CqJ1IkZdL3a+pzCx0pLozd+XUAtmZLlPgCcn9t9WYcO
- JU+b0XKFrygRuJID6YpM5Kh83dEf3iVfryUBiU4xDiWGc4fH6nsywyNdzWKNkI5fFPUU
- YWijSlkATWRRRfnQOykRJLeuQFT8BKoSGp5u+rVSbYZC6BQ1XWO4eW+jSO2PG/rKdbX8 JQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t9cyq7b37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:17:28 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OGHRc0190628;
-        Mon, 24 Jun 2019 16:17:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t9acbkhgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:17:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OGHL5G011382;
-        Mon, 24 Jun 2019 16:17:21 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 09:17:21 -0700
-Date:   Mon, 24 Jun 2019 09:17:20 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
- updates
-Message-ID: <20190624161720.GQ5387@magnolia>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-8-hch@lst.de>
+        Mon, 24 Jun 2019 12:18:17 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OGGYMt011421
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:18:15 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb16rthyh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 12:18:15 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 24 Jun 2019 17:18:14 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Jun 2019 17:18:09 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5OGI8O650725204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 16:18:08 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C41FB205F;
+        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E9B9B2065;
+        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Jun 2019 16:18:08 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 38C8C16C120D; Mon, 24 Jun 2019 09:18:11 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 09:18:11 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tools: memory-model: Improve data-race detection
+Reply-To: paulmck@linux.ibm.com
+References: <20190624152126.GA828@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906241137380.1609-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-8-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240129
+In-Reply-To: <Pine.LNX.4.44L0.1906241137380.1609-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062416-0072-0000-0000-0000044008AC
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011321; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01222667; UDB=6.00643367; IPR=6.01003828;
+ MB=3.00027447; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-24 16:18:12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062416-0073-0000-0000-00004CB02640
+Message-Id: <20190624161811.GE26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:48AM +0200, Christoph Hellwig wrote:
-> We have historically decided that we want to preallocate the xfs_trans
-> structure at writeback time so that we don't have to allocate on in
-> the I/O completion handler.  But we treat unwrittent extent and COW
-> fork conversions different already, which proves that the transaction
-> allocations in the end I/O handler are not a problem.  Removing the
-> preallocation gets rid of a lot of corner case code, and also ensures
-> we only allocate one and log a transaction when actually required,
-> as the ioend merging can reduce the number of actual i_size updates
-> significantly.
-
-That's what I thought when I wrote the ioend merging patches, but IIRC
-Dave objected on the grounds that most file writes are trivial file
-extending writes and therefore we should leave this alone to avoid
-slowing down the ioend path even if it came at a cost of cancelling a
-lot of empty transactions.
-
-I wasn't 100% convinced it mattered but ran out of time in the
-development window and never got around to researching if it made any
-difference.
-
-So, uh, how much of a hit do we take for having to allocate a
-transaction for a file size extension?  Particularly since we can
-combine those things now?
-
---D
-
+On Mon, Jun 24, 2019 at 11:39:23AM -0400, Alan Stern wrote:
+> On Mon, 24 Jun 2019, Paul E. McKenney wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_aops.c | 110 +++++-----------------------------------------
->  fs/xfs/xfs_aops.h |   1 -
->  2 files changed, 12 insertions(+), 99 deletions(-)
+> > On Sun, Jun 23, 2019 at 09:34:55PM -0700, Paul E. McKenney wrote:
+> > > On Sun, Jun 23, 2019 at 11:15:06AM -0400, Alan Stern wrote:
+> > > > On Sun, 23 Jun 2019, Akira Yokosawa wrote:
+> > > > 
+> > > > > Hi Paul and Alan,
+> > > > > 
+> > > > > On 2019/06/22 8:54, Paul E. McKenney wrote:
+> > > > > > On Fri, Jun 21, 2019 at 10:25:23AM -0400, Alan Stern wrote:
+> > > > > >> On Fri, 21 Jun 2019, Andrea Parri wrote:
+> > > > > >>
+> > > > > >>> On Thu, Jun 20, 2019 at 11:55:58AM -0400, Alan Stern wrote:
+> > > > > >>>> Herbert Xu recently reported a problem concerning RCU and compiler
+> > > > > >>>> barriers.  In the course of discussing the problem, he put forth a
+> > > > > >>>> litmus test which illustrated a serious defect in the Linux Kernel
+> > > > > >>>> Memory Model's data-race-detection code.
+> > > > > 
+> > > > > I was not involved in the mail thread and wondering what the litmus test
+> > > > > looked like. Some searching of the archive has suggested that Alan presented
+> > > > > a properly formatted test based on Herbert's idea in [1].
+> > > > > 
+> > > > > [1]: https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
+> > > > 
+> > > > Yes, that's it.  The test is also available at:
+> > > > 
+> > > > https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
+> > > > 
+> > > > Alan
+> > > > 
+> > > > > If this is the case, adding the link (or message id) in the change
+> > > > > log would help people see the circumstances, I suppose.
+> > > > > Paul, can you amend the change log?
+> > > > > 
+> > > > > I ran herd7 on said litmus test at both "lkmm" and "dev" of -rcu and
+> > > > > confirmed that this patch fixes the result.
+> > > > > 
+> > > > > So,
+> > > > > 
+> > > > > Tested-by: Akira Yokosawa <akiyks@gmail.com>
+> > > 
+> > > Thank you both!  I will apply these changes tomorrow morning, Pacific Time.
+> > 
+> > And done.  Please see below for the updated commit.
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit 46a020e9464aff884df56e5fd483134c8801e39f
+> > Author: Alan Stern <stern@rowland.harvard.edu>
+> > Date:   Thu Jun 20 11:55:58 2019 -0400
+> > 
+> >     tools/memory-model: Improve data-race detection
+> >     
+> >     Herbert Xu recently reported a problem concerning RCU and compiler
+> >     barriers.  In the course of discussing the problem, he put forth a
+> >     litmus test which illustrated a serious defect in the Linux Kernel
+> >     Memory Model's data-race-detection code [1].
+> >     
+> >     The defect was that the LKMM assumed visibility and executes-before
+> >     ordering of plain accesses had to be mediated by marked accesses.  In
+> >     Herbert's litmus test this wasn't so, and the LKMM claimed the litmus
+> >     test was allowed and contained a data race although neither is true.
+> >     
+> >     In fact, plain accesses can be ordered by fences even in the absence
+> >     of marked accesses.  In most cases this doesn't matter, because most
+> >     fences only order accesses within a single thread.  But the rcu-fence
+> >     relation is different; it can order (and induce visibility between)
+> >     accesses in different threads -- events which otherwise might be
+> >     concurrent.  This makes it relevant to data-race detection.
+> >     
+> >     This patch makes two changes to the memory model to incorporate the
+> >     new insight:
+> >     
+> >             If a store is separated by a fence from another access,
+> >             the store is necessarily visible to the other access (as
+> >             reflected in the ww-vis and wr-vis relations).  Similarly,
+> >             if a load is separated by a fence from another access then
+> >             the load necessarily executes before the other access (as
+> >             reflected in the rw-xbstar relation).
+> >     
+> >             If a store is separated by a strong fence from a marked access
+> >             then it is necessarily visible to any access that executes
+> >             after the marked access (as reflected in the ww-vis and wr-vis
+> >             relations).
+> >     
+> >     With these changes, the LKMM gives the desired result for Herbert's
+> >     litmus test and other related ones [2].
+> >     
+> >     [1]     https://lore.kernel.org/lkml/Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org/
+> >     
+> >     [2]     https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-1.litmus
+> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-2.litmus
+> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-3.litmus
+> >             https://github.com/paulmckrcu/litmus/blob/master/manual/plain/C-S-rcunoderef-4.litmus
 > 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 633baaaff7ae..017b87b7765f 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -130,44 +130,23 @@ static inline bool xfs_ioend_is_append(struct xfs_ioend *ioend)
->  		XFS_I(ioend->io_inode)->i_d.di_size;
->  }
->  
-> -STATIC int
-> -xfs_setfilesize_trans_alloc(
-> -	struct xfs_ioend	*ioend)
-> -{
-> -	struct xfs_mount	*mp = XFS_I(ioend->io_inode)->i_mount;
-> -	struct xfs_trans	*tp;
-> -	int			error;
-> -
-> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
-> -	if (error)
-> -		return error;
-> -
-> -	ioend->io_append_trans = tp;
-> -
-> -	/*
-> -	 * We may pass freeze protection with a transaction.  So tell lockdep
-> -	 * we released it.
-> -	 */
-> -	__sb_writers_release(ioend->io_inode->i_sb, SB_FREEZE_FS);
-> -	/*
-> -	 * We hand off the transaction to the completion thread now, so
-> -	 * clear the flag here.
-> -	 */
-> -	current_restore_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
-> -	return 0;
-> -}
-> -
->  /*
->   * Update on-disk file size now that data has been written to disk.
->   */
-> -STATIC int
-> -__xfs_setfilesize(
-> +int
-> +xfs_setfilesize(
->  	struct xfs_inode	*ip,
-> -	struct xfs_trans	*tp,
->  	xfs_off_t		offset,
->  	size_t			size)
->  {
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	struct xfs_trans	*tp;
->  	xfs_fsize_t		isize;
-> +	int			error;
-> +
-> +	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
-> +	if (error)
-> +		return error;
->  
->  	xfs_ilock(ip, XFS_ILOCK_EXCL);
->  	isize = xfs_new_eof(ip, offset + size);
-> @@ -186,48 +165,6 @@ __xfs_setfilesize(
->  	return xfs_trans_commit(tp);
->  }
->  
-> -int
-> -xfs_setfilesize(
-> -	struct xfs_inode	*ip,
-> -	xfs_off_t		offset,
-> -	size_t			size)
-> -{
-> -	struct xfs_mount	*mp = ip->i_mount;
-> -	struct xfs_trans	*tp;
-> -	int			error;
-> -
-> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
-> -	if (error)
-> -		return error;
-> -
-> -	return __xfs_setfilesize(ip, tp, offset, size);
-> -}
-> -
-> -STATIC int
-> -xfs_setfilesize_ioend(
-> -	struct xfs_ioend	*ioend,
-> -	int			error)
-> -{
-> -	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
-> -	struct xfs_trans	*tp = ioend->io_append_trans;
-> -
-> -	/*
-> -	 * The transaction may have been allocated in the I/O submission thread,
-> -	 * thus we need to mark ourselves as being in a transaction manually.
-> -	 * Similarly for freeze protection.
-> -	 */
-> -	current_set_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
-> -	__sb_writers_acquired(VFS_I(ip)->i_sb, SB_FREEZE_FS);
-> -
-> -	/* we abort the update if there was an IO error */
-> -	if (error) {
-> -		xfs_trans_cancel(tp);
-> -		return error;
-> -	}
-> -
-> -	return __xfs_setfilesize(ip, tp, ioend->io_offset, ioend->io_size);
-> -}
-> -
->  /*
->   * IO write completion.
->   */
-> @@ -267,12 +204,9 @@ xfs_end_ioend(
->  		error = xfs_reflink_end_cow(ip, offset, size);
->  	else if (ioend->io_type == IOMAP_UNWRITTEN)
->  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
-> -	else
-> -		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
-> -
-> +	if (!error && xfs_ioend_is_append(ioend))
-> +		error = xfs_setfilesize(ip, offset, size);
->  done:
-> -	if (ioend->io_append_trans)
-> -		error = xfs_setfilesize_ioend(ioend, error);
->  	list_replace_init(&ioend->io_list, &ioend_list);
->  	xfs_destroy_ioend(ioend, error);
->  
-> @@ -307,8 +241,6 @@ xfs_ioend_can_merge(
->  		return false;
->  	if (ioend->io_offset + ioend->io_size != next->io_offset)
->  		return false;
-> -	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
-> -		return false;
->  	return true;
->  }
->  
-> @@ -320,7 +252,6 @@ xfs_ioend_try_merge(
->  {
->  	struct xfs_ioend	*next_ioend;
->  	int			ioend_error;
-> -	int			error;
->  
->  	if (list_empty(more_ioends))
->  		return;
-> @@ -334,10 +265,6 @@ xfs_ioend_try_merge(
->  			break;
->  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
->  		ioend->io_size += next_ioend->io_size;
-> -		if (ioend->io_append_trans) {
-> -			error = xfs_setfilesize_ioend(next_ioend, 1);
-> -			ASSERT(error == 1);
-> -		}
->  	}
->  }
->  
-> @@ -398,7 +325,7 @@ xfs_end_bio(
->  
->  	if (ioend->io_fork == XFS_COW_FORK ||
->  	    ioend->io_type == IOMAP_UNWRITTEN ||
-> -	    ioend->io_append_trans != NULL) {
-> +	    xfs_ioend_is_append(ioend)) {
->  		spin_lock_irqsave(&ip->i_ioend_lock, flags);
->  		if (list_empty(&ip->i_ioend_list))
->  			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
-> @@ -660,18 +587,6 @@ xfs_submit_ioend(
->  		memalloc_nofs_restore(nofs_flag);
->  	}
->  
-> -	/* Reserve log space if we might write beyond the on-disk inode size. */
-> -	if (!status &&
-> -	    (ioend->io_fork == XFS_COW_FORK ||
-> -	     ioend->io_type != IOMAP_UNWRITTEN) &&
-> -	    xfs_ioend_is_append(ioend) &&
-> -	    !ioend->io_append_trans) {
-> -		unsigned nofs_flag = memalloc_nofs_save();
-> -
-> -		status = xfs_setfilesize_trans_alloc(ioend);
-> -		memalloc_nofs_restore(nofs_flag);
-> -	}
-> -
->  	ioend->io_bio->bi_private = ioend;
->  	ioend->io_bio->bi_end_io = xfs_end_bio;
->  
-> @@ -715,7 +630,6 @@ xfs_alloc_ioend(
->  	ioend->io_inode = inode;
->  	ioend->io_size = 0;
->  	ioend->io_offset = offset;
-> -	ioend->io_append_trans = NULL;
->  	ioend->io_bio = bio;
->  	return ioend;
->  }
-> diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-> index 72e30d1c3bdf..23c087f0bcbf 100644
-> --- a/fs/xfs/xfs_aops.h
-> +++ b/fs/xfs/xfs_aops.h
-> @@ -18,7 +18,6 @@ struct xfs_ioend {
->  	struct inode		*io_inode;	/* file being written to */
->  	size_t			io_size;	/* size of the extent */
->  	xfs_off_t		io_offset;	/* offset in the file */
-> -	struct xfs_trans	*io_append_trans;/* xact. for size update */
->  	struct bio		*io_bio;	/* bio being built */
->  	struct bio		io_inline_bio;	/* MUST BE LAST! */
->  };
-> -- 
-> 2.20.1
+> Please add:
 > 
+> https://github.com/paulmckrcu/litmus/blob/master/manual/plain/strong-vis.litmus
+
+Done, and calling this version final.  Thank you all again!
+
+							Thanx, Paul
+
