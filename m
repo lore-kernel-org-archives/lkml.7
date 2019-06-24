@@ -2,90 +2,99 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA70C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7979EC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD220645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459A120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561407714;
+	bh=/rV1TlvYuXOK2sFci2/p6W21rW/APz4/kUsj3EobUV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gdmR3eG+sdRTqCZ59/bUs2+L2lXgGj12/AZTKUFyn6GvVfL+wpaIEVVGIzHPiLbUH
+	 nx15DGIMthy8rseLWjqGlMXkxPbh7EsoTId7mh/WDyi332q9WSrn2/QlJZy+OenqA/
+	 2L72e95pemqUAsWDQ5Acq44TzEqtrnEb3Dwm6KrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfFXUQI (ORCPT
+        id S1731662AbfFXUVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:16:08 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:60293 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727595AbfFXUQI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:16:08 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hfVNk-000XTK-Vd; Mon, 24 Jun 2019 16:16:05 -0400
-Subject: Re: [PATCH BUGFIX IMPROVEMENT 0/7] boost throughput with synced I/O,
- reduce latency and fix a bandwidth bug
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        bottura.nicola95@gmail.com
-References: <20190624194042.38747-1-paolo.valente@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <f3e2d759-911b-f593-9ec5-b6b7a94df71c@csail.mit.edu>
-Date:   Mon, 24 Jun 2019 13:15:31 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Mon, 24 Jun 2019 16:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfFXUVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 16:21:52 -0400
+Received: from localhost (unknown [167.220.24.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6755E20645;
+        Mon, 24 Jun 2019 20:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561407711;
+        bh=/rV1TlvYuXOK2sFci2/p6W21rW/APz4/kUsj3EobUV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2VPaEOiYLx/B1U7xl+3URPJW/PCnea+Hoo4lmR8kq/6n244//CX5FcosNOr1Dj3oq
+         kZ/WOwKR+mt0aTbDmzXkGDY61uNn7Pw8n0E1ZmPY1FmKSwRlrgS69rOqWLgsC9nNQT
+         I7qwRnBg2lc/TFX9Q7IzCpvfO5IQUktLdI8ucdSE=
+Date:   Mon, 24 Jun 2019 16:21:50 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     aarcange@redhat.com, jannh@google.com, oleg@redhat.com,
+        peterx@redhat.com, rppt@linux.ibm.com, jgg@mellanox.com,
+        mhocko@suse.com, jglisse@redhat.com, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, viro@zeniv.linux.org.uk,
+        riandrews@android.com, arve@android.com, yishaih@mellanox.com,
+        dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, matanb@mellanox.com, leonro@mellanox.com,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        devel@driverdev.osuosl.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, amakhalov@vmware.com
+Subject: Re: [PATCH v4 0/3] [v4.9.y] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Message-ID: <20190624202150.GC3881@sasha-vm>
+References: <1561410186-3919-1-git-send-email-akaher@vmware.com>
+ <1561410186-3919-4-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <20190624194042.38747-1-paolo.valente@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1561410186-3919-4-git-send-email-akaher@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 12:40 PM, Paolo Valente wrote:
-> Hi Jens,
-> this series, based against for-5.3/block, contains:
-> 1) The improvements to recover the throughput loss reported by
->    Srivatsa [1] (first five patches)
-> 2) A preemption improvement to reduce I/O latency
-> 3) A fix of a subtle bug causing loss of control over I/O bandwidths
-> 
+On Tue, Jun 25, 2019 at 02:33:06AM +0530, Ajay Kaher wrote:
+>coredump: fix race condition between mmget_not_zero()/get_task_mm()
+>and core dumping
+>
+>[PATCH v4 1/3]:
+>Backporting of commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
+>
+>[PATCH v4 2/3]:
+>Extension of commit 04f5866e41fb to fix the race condition between
+>get_task_mm() and core dumping for IB->mlx4 and IB->mlx5 drivers.
+>
+>[PATCH v4 3/3]
+>Backporting of commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+>
+>[diff from v3]:
+>- added [PATCH v4 3/3]
 
-Thanks a lot for these patches, Paolo!
+Why do all the patches have the same subject line?
 
-Would you mind adding:
+I guess it's correct for the first one, but can you explain what's up
+with #2 and #3?
 
-Reported-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Tested-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+If the second one isn't upstream, please explain in detail why not and
+how 4.9 differs from upstream so that it requires a custom backport.
 
-to the first 5 patches, as appropriate?
+The third one just looks like a different patch altogether with a wrong
+subject line?
 
-Thank you!
-
-> 
-> [1] https://lkml.org/lkml/2019/5/17/755
-> 
-> Paolo Valente (7):
->   block, bfq: reset inject limit when think-time state changes
->   block, bfq: fix rq_in_driver check in bfq_update_inject_limit
->   block, bfq: update base request service times when possible
->   block, bfq: bring forward seek&think time update
->   block, bfq: detect wakers and unconditionally inject their I/O
->   block, bfq: preempt lower-weight or lower-priority queues
->   block, bfq: re-schedule empty queues if they deserve I/O plugging
-> 
->  block/bfq-iosched.c | 952 ++++++++++++++++++++++++++++++--------------
->  block/bfq-iosched.h |  25 +-
->  2 files changed, 686 insertions(+), 291 deletions(-)
-> 
-
-Regards,
-Srivatsa
-VMware Photon OS
+--
+Thanks,
+Sasha
