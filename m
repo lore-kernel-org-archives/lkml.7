@@ -2,116 +2,106 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C46C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2837F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5352089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hCbo4+qQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfFXHrc (ORCPT
+        id S1728063AbfFXHrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:47:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55575 "EHLO mga03.intel.com"
+        Mon, 24 Jun 2019 03:47:35 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40221 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfFXHrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:47:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 00:46:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
-   d="scan'208";a="312629841"
-Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
-  by orsmga004.jf.intel.com with ESMTP; 24 Jun 2019 00:46:33 -0700
-Date:   Mon, 24 Jun 2019 09:50:36 +0200
-From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops
- to NULL on remove
-Message-ID: <20190624095036.034ab575@xxx>
-In-Reply-To: <26946ff4-1c91-a7e0-4354-132cbd06235a@linux.intel.com>
-References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
-        <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
-        <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
-        <20190618130015.0fc388b4@xxx>
-        <bd8855a7ab7a9958113631b76706120fd4427631.camel@linux.intel.com>
-        <20190619103859.15bf51c5@xxx>
-        <0c939329d17c50c353acacf164583ba259a775c0.camel@linux.intel.com>
-        <26946ff4-1c91-a7e0-4354-132cbd06235a@linux.intel.com>
+        id S1727010AbfFXHre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:47:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XLwz1Ysqz9s3l;
+        Mon, 24 Jun 2019 17:47:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561362451;
+        bh=Q4ISCzQVs7t3mt7+gvWch2GIu0OdDl3uEWJoPdf9mGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hCbo4+qQ+mRLKyyb7hekaoEwBmOMUM7rW9H6yOI2BU1QUPMNNkV55fKryjCYzZJA+
+         okTbqRJN2urhsTCXDUg0wRAxI580L7ybD9Zoi6kobUqCnHgtPQdFEmAFGQFzOKN5Up
+         P7FQuzoqF1TUYyxa4h7tR2HonJoByOj/ZoaIfJp86pmGMV3iWwskvAMaZGAnr2QCOt
+         rWJdPR49go/oRCB2WmHghcx2kiF4fdP0E61YEs4SwKDe6/xPalDxdFYKJ8u7r/1D9k
+         8wo/5hbUZ9yT/w3YIQbEskNnsM9/tzadb4ar2COcNTZpP19EHynWV+rFy4YCHfhBJW
+         5+Xnt93bdczyA==
+Date:   Mon, 24 Jun 2019 17:47:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: linux-next: manual merge of the usb tree with the pci tree
+Message-ID: <20190624174729.327f2edf@canb.auug.org.au>
+In-Reply-To: <20190624073443.GA13830@kroah.com>
+References: <20190624171229.6415ca4f@canb.auug.org.au>
+        <20190624073443.GA13830@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/qrQUjtNwL=N=cvqZV=EIBV+"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 08:17:33 +0200
-Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
+--Sig_/qrQUjtNwL=N=cvqZV=EIBV+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> >>>>> Could you please give a bit more context on what error you see
-> >>>>> when this happens?  
-> >>>>
-> >>>> Hi,
-> >>>>
-> >>>> I get Oops. This is what happens with all other patches in this
-> >>>> series and only this one reverted:
-> >>>>
-> >>>> root@APL:~# rmmod snd_soc_sst_bxt_rt298
-> >>>> root@APL:~# rmmod snd_soc_hdac_hdmi
-> >>>> root@APL:~# rmmod snd_soc_skl  
-> >>>
-> >>> Thanks, Amadeusz. I think the order in which the drivers are
-> >>> removed
-> >>> is what's causing the oops in your case. With SOF, the order we
-> >>> remove is
-> >>>
-> >>> 1. rmmod sof_pci_dev
-> >>> 2. rmmod snd_soc_sst_bxt_rt298
-> >>> 3. rmmod snd_soc_hdac_hdmi
-> >>>  
-> >>
-> >> Well, there is nothing enforcing the order in which modules can be
-> >> unloaded (and I see no reason to force it), as you can see from
-> >> following excerpt, you can either start unloading from
-> >> snd_soc_sst_bxt_rt298 or snd_soc_skl, and yes if you start from
-> >> snd_soc_skl, there is no problem.  
-> 
-> there is a fundamental dependency that you are ignoring: the module 
-> snd_soc_sst_bxt_rt298 is a machine driver which will be probed when 
-> snd_soc_skl creates a platform_device.
-> Sure you can remove modules in a different order, but that's a bit of
-> an artificial/academic exercise isn't it?
-> 
-> >>  
-> > I am good with this patch. I just wanted to understand why we werent
-> > seeing this error with SOF. Sure, there's nothing enforcing the
-> > order in which modules are unloaded  but there must be a logical
-> > order for testing purposes.
-> > 
-> > Pierre, can you please comment on it. I vaguely remember discussing
-> > this with you last year.  
-> 
-> Our tests remove the modules by taking care of dependencies and it's 
-> already unveiled dozens of issues.
-> We could add a sequence similar to Amadeusz and unbind the modules
-> which are loaded with the creation of a platform_device (machine
-> driver, dmic), I am just not sure how of useful this would be.
+Hi Greg,
 
-You work under the assumption that users will remove modules in
-"correct" order. Because it is not enforced by modules dependencies you
-can expect users to do everything possible at some point in time. In
-this case unloading modules in not expected order will lead to kernel
-Oops, which is not what should happen.
+On Mon, 24 Jun 2019 15:34:43 +0800 Greg KH <greg@kroah.com> wrote:
+>
+> No patch "below", but I'm sure the fixup is fine :)
+
+Sorry about that (not sure what happened).  See below (t is trivial).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/index.rst
+index 239100accbf6,91055adde327..000000000000
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@@ -101,7 -101,7 +101,8 @@@ needed)
+     filesystems/index
+     vm/index
+     bpf/index
+ +   PCI/index
++    usb/index
+     misc-devices/index
+ =20
+  Architecture-specific documentation
+
+--Sig_/qrQUjtNwL=N=cvqZV=EIBV+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QgBEACgkQAVBC80lX
+0Gzv3Af/TVBkW/Tw3vaFfeF1u90GjPYU96oIBznrtksEYHu6pWgditckMVEtR5ZR
+FompAZc9lff/a925QIY7UU29ly2KBJ6l0YG1engRUzsUGsTpdT9A1aHnqMiWBocf
+D1ZDRAvtjfUFSlqEHpuNI8gvL78kuivX+Nj1b2N14ZwOk59QTskCvgN/tujLAj3n
+6IUa2w4EKyj+SVnUhFW10yHttiSWQQL/bjUDDpY3Fb+MXlHRUb2XZX5Ad0Yt0Gpt
+otw+9ITbnt8LBaUhaNXGUh3pfTHUFkFchMMwb7x1PoxgPxKOEXER/8jPBJRUo2ki
+i7Q9vrTuAKZArOorCfu8RfHU0I8h8A==
+=nckV
+-----END PGP SIGNATURE-----
+
+--Sig_/qrQUjtNwL=N=cvqZV=EIBV+--
