@@ -2,99 +2,151 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B72BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9274CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50ADF208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:52:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="DCoHB6xY"
+	by mail.kernel.org (Postfix) with ESMTP id 67B1020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfFXJwy (ORCPT
+        id S1728584AbfFXJ4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:52:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39755 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbfFXJwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:52:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so12676360wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:52:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RrWOGQLSuFaCXRqkCQw1GpNc+s0Q4CseKG3Kvw44Shw=;
-        b=DCoHB6xY3eLz3XYEk/MV+TWa102/ZzqKZrFVovG3pkCyujl3srGzZ+ARKgTQxPanYW
-         HUeKGkI+ZfsdglHWhyFQmJzSvGb/cTYqqGpCEgogSY8hUZ7drOQjiVcEyyOEPCTCP8I2
-         vVWUJ096GVTPHP/VDpYYWRZt2bSNoeYfhPpr+KhJksGY8bzzDoZ7S++oEzmTOw3sxaHQ
-         lE8K5a0tYztxEOGlLq29IZMaydA2om2Rx5gMp8UV7vLy2gLYop8k4+Kvdjh9CAYoMnXe
-         xpV1h6T2RLstvmX3T7OLjfbvzsP5cwmVJH2fQzCEkxvxs1HvLST6xJQWUMJyu6Du+axD
-         SIxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RrWOGQLSuFaCXRqkCQw1GpNc+s0Q4CseKG3Kvw44Shw=;
-        b=ML2t42XAfY1S9jJR0+abL5GBZl5qsyw0RUo6QCcm80EDXBPgEhobOHNhd9nJrMR+0V
-         ALGLhsQ2kwaxq/BpjCYuIZ2VLNljsJoCrFa29ZhkqtloX6EXvs1rFHIcG/GVWrZ8f+VY
-         e2OYwJKe7tBOEpA1LPcFJhyhlz4N+w7E2oiCmh7ATjTesg0OhhhKjjkhleFqYq6MOAU1
-         viqgmgaPcJ/Cq8SVjOeBWYQOe0IZURTGxj1+ZimGhuFoeKZAy//U1iRQWWz9spJOKDqC
-         tzwt8jxTASvuFfqGxtovGHnH1iSXrmAHvb6KLJAacaQgn68G33iwE0uQkwIcaUA6B7ue
-         xvWg==
-X-Gm-Message-State: APjAAAX9ruM2X/qyCqUeI4WIRtC+Ngi42Lq5yC4Lc+qEBnbVjBmhQMOf
-        2zpgIQ2QecpCojcJ7ytdQAni/w==
-X-Google-Smtp-Source: APXvYqzcRi9VW5MY/fgFY0K0taW/zNqBWT1EAliuMcqcFZSQEgOrbCOiqiM0C/jd07OKXwZTfhMmNQ==
-X-Received: by 2002:a7b:c751:: with SMTP id w17mr15904467wmk.127.1561369971469;
-        Mon, 24 Jun 2019 02:52:51 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id w7sm5866229wmc.46.2019.06.24.02.52.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 02:52:51 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:52:50 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: make pidfd-metadata fail gracefully on older
- kernels
-Message-ID: <20190624095250.wtl5t5cewo7scyby@brauner.io>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
- <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
- <20190621170613.GA26182@altlinux.org>
- <20190621221339.6yj4vg4zexv4y2j7@brauner.io>
- <20190623113230.GC20697@altlinux.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190623113230.GC20697@altlinux.org>
-User-Agent: NeoMutt/20180716
+        Mon, 24 Jun 2019 05:56:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:44846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbfFXJ4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:56:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED7202B;
+        Mon, 24 Jun 2019 02:56:10 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDF733F71E;
+        Mon, 24 Jun 2019 02:56:09 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, julien.thierry@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [RFC V3 00/18] objtool: Add support for arm64
+Date:   Mon, 24 Jun 2019 10:55:30 +0100
+Message-Id: <20190624095548.8578-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 02:32:30PM +0300, Dmitry V. Levin wrote:
-> On Sat, Jun 22, 2019 at 12:13:39AM +0200, Christian Brauner wrote:
-> [...]
-> > Out of curiosity: what makes the new flag different than say
-> > CLONE_NEWCGROUP or any new clone flag that got introduced?
-> > CLONE_NEWCGROUP too would not be detectable apart from the method I gave
-> > you above; same for other clone flags. Why are you so keen on being able
-> > to detect this flag when other flags didn't seem to matter that much.
-> 
-> I wasn't following uapi changes closely enough those days. ;)
+As of now, objtool only supports the x86_64 architecture but the
+groundwork has already been done in order to add support for other
+architectures without too much effort.
 
-(Seriously, you had one job. :) I'm joking of course.)
+This series of patches adds support for the arm64 architecture
+based on the Armv8.5 Architecture Reference Manual.
 
-What you want makes sense to me overall. This way userspace can decide
-easier whether to manage a process through a pidfd or needs to fallback
-to a pid.
+Objtool will be a valuable tool to progress and provide more guarentees
+on live patching which is a work in progress for arm64.
 
-Christian
+Once we have the base of objtool working the next steps will be to
+port Peter Z's uaccess validation for arm64.
+
+Changes since previous version:
+* Rebased on tip/master: Note that I had to re-expose the
+`struct alternative` using check.h because it is now used outside of
+check.c.
+* Reorder commits for a more coherent progression
+* Introduce GCC plugin to help detect switch-tables for arm64
+This plugins could be improve: It plugs in after the RTL control flow
+graph passes but only extract information about the switch tables. I
+originally intended for it to introduce new code_label/note within the
+RTL representation in order to reference them and thus get the address
+of the branch instruction. However I did not manage to do it properly
+using gen_rtx_CODE_LABEL/emit_label_before/after. If anyone has some
+experience with RTL plugins I am all ears for advices.
+
+Raphael Gault (18):
+  objtool: Add abstraction for computation of symbols offsets
+  objtool: orc: Refactor ORC API for other architectures to implement.
+  objtool: Move registers and control flow to arch-dependent code
+  objtool: arm64: Add required implementation for supporting the aarch64
+    architecture in objtool.
+  objtool: special: Adapt special section handling
+  objtool: arm64: Adapt the stack frame checks for arm architecture
+  objtool: Introduce INSN_UNKNOWN type
+  objtool: Refactor switch-tables code to support other architectures
+  gcc-plugins: objtool: Add plugin to detect switch table on arm64
+  objtool: arm64: Implement functions to add switch tables alternatives
+  arm64: alternative: Mark .altinstr_replacement as containing
+    executable instructions
+  arm64: assembler: Add macro to annotate asm function having non
+    standard stack-frame.
+  arm64: sleep: Prevent stack frame warnings from objtool
+  arm64: kvm: Annotate non-standard stack frame functions
+  arm64: kernel: Add exception on kuser32 to prevent stack analysis
+  arm64: crypto: Add exceptions for crypto object to prevent stack
+    analysis
+  arm64: kernel: Annotate non-standard stack frame functions
+  objtool: arm64: Enable stack validation for arm64
+
+ arch/arm64/Kconfig                            |    1 +
+ arch/arm64/crypto/Makefile                    |    3 +
+ arch/arm64/include/asm/alternative.h          |    2 +-
+ arch/arm64/include/asm/assembler.h            |   13 +
+ arch/arm64/kernel/Makefile                    |    3 +
+ arch/arm64/kernel/hyp-stub.S                  |    2 +
+ arch/arm64/kernel/sleep.S                     |    4 +
+ arch/arm64/kvm/hyp-init.S                     |    2 +
+ arch/arm64/kvm/hyp/entry.S                    |    2 +
+ scripts/Makefile.gcc-plugins                  |    2 +
+ scripts/gcc-plugins/Kconfig                   |    9 +
+ .../arm64_switch_table_detection_plugin.c     |   58 +
+ tools/objtool/Build                           |    2 -
+ tools/objtool/arch.h                          |   21 +-
+ tools/objtool/arch/arm64/Build                |    8 +
+ tools/objtool/arch/arm64/arch_special.c       |  173 +
+ tools/objtool/arch/arm64/bit_operations.c     |   67 +
+ tools/objtool/arch/arm64/decode.c             | 2809 +++++++++++++++++
+ .../objtool/arch/arm64/include/arch_special.h |   52 +
+ .../arch/arm64/include/asm/orc_types.h        |   96 +
+ .../arch/arm64/include/bit_operations.h       |   24 +
+ tools/objtool/arch/arm64/include/cfi.h        |   74 +
+ .../objtool/arch/arm64/include/insn_decode.h  |  210 ++
+ tools/objtool/arch/arm64/orc_dump.c           |   26 +
+ tools/objtool/arch/arm64/orc_gen.c            |   40 +
+ tools/objtool/arch/x86/Build                  |    3 +
+ tools/objtool/arch/x86/arch_special.c         |  101 +
+ tools/objtool/arch/x86/decode.c               |   16 +
+ tools/objtool/arch/x86/include/arch_special.h |   45 +
+ tools/objtool/{ => arch/x86/include}/cfi.h    |    0
+ tools/objtool/{ => arch/x86}/orc_dump.c       |    4 +-
+ tools/objtool/{ => arch/x86}/orc_gen.c        |  104 +-
+ tools/objtool/check.c                         |  309 +-
+ tools/objtool/check.h                         |   10 +
+ tools/objtool/elf.c                           |    3 +-
+ tools/objtool/orc.h                           |    4 +-
+ tools/objtool/special.c                       |   28 +-
+ tools/objtool/special.h                       |   13 +-
+ 38 files changed, 4119 insertions(+), 224 deletions(-)
+ create mode 100644 scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
+ create mode 100644 tools/objtool/arch/arm64/Build
+ create mode 100644 tools/objtool/arch/arm64/arch_special.c
+ create mode 100644 tools/objtool/arch/arm64/bit_operations.c
+ create mode 100644 tools/objtool/arch/arm64/decode.c
+ create mode 100644 tools/objtool/arch/arm64/include/arch_special.h
+ create mode 100644 tools/objtool/arch/arm64/include/asm/orc_types.h
+ create mode 100644 tools/objtool/arch/arm64/include/bit_operations.h
+ create mode 100644 tools/objtool/arch/arm64/include/cfi.h
+ create mode 100644 tools/objtool/arch/arm64/include/insn_decode.h
+ create mode 100644 tools/objtool/arch/arm64/orc_dump.c
+ create mode 100644 tools/objtool/arch/arm64/orc_gen.c
+ create mode 100644 tools/objtool/arch/x86/arch_special.c
+ create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+ rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
+ rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
+ rename tools/objtool/{ => arch/x86}/orc_gen.c (66%)
+
+-- 
+2.17.1
+
