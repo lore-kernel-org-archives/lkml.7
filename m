@@ -2,135 +2,108 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2810DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644C9C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFED92083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dkbiwb35"
+	by mail.kernel.org (Postfix) with ESMTP id 430592083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfFXFcq (ORCPT
+        id S1726713AbfFXFds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:32:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42873 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfFXFcq (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:32:46 -0400
-Received: by mail-io1-f65.google.com with SMTP id u19so273698ior.9
-        for <Linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 22:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/l5qUlzkkXSn8Rj4gRqkwVlRMYz6YfXqXzcoaQu0DB4=;
-        b=Dkbiwb35Z4XCd7jAlpAZCQu5U6vQ2IJMnfRSCFrBUb+0AD++dGclfZL2qAFUVugf9q
-         cUnF8CJHMh2e1Y2kwP/3P+4vHjICpw5lRXFrR75FNpAOxz4UyV/NWmUBlx5OX663D6b3
-         FpjNyvXxm2+UK741ClSkR+a6xyMg/8mHcFOpRl4CDHUJnY0Pxz5Ywn7fT3+Hf6Nx991+
-         WCTtn8lQkJbVEqqQKZXc5VljE/9+bsxN4bJtL5w6NXn54UH/1XSi7bsSKrP9f3QBwPys
-         SWb6/JhlZvRJd9GHNzdgugfJ782MbwIJulfvwNr471wDzJpW/sBRYyeAm07BCOosFi9P
-         roJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/l5qUlzkkXSn8Rj4gRqkwVlRMYz6YfXqXzcoaQu0DB4=;
-        b=OsTS4Zy8mIAbe99OGRrfZfJMgxao9NObbadVMg2xAUevr/TXTIXXUWgPDkDyRKgnlq
-         iy+1XGDuPLqhvrQNdQuCdnmrQsDFjxjp8sLKc+XpOcaJ4f6OFUSV9SeCrWMgIomcTdjo
-         YMLv9CEeCHOIeK/wH+fux2CbuT4fSW247/VTeHgb3gsVQ5DZWFAD/TED3Lt7lakqbFm3
-         bFJ3vjv2P4GqbgvZqMuycuaqNoZmgxXqq/3V0f+E/p0OMQqY1B8/itJjukssoND+P2nq
-         aCGgsAL5v/eXhomABARgA11WRz2A7MF2bynXvoLjFKPQfahk4RWJut+ZEREA8J9mB8b/
-         2ymw==
-X-Gm-Message-State: APjAAAVt54113m2FxGh7uJcaJF74YTZmFXHaKUE/sDHPMwVge6JJWNwh
-        zzU2rn2sc3RI6scq8fpIHeyEumo/+iHiyLaVjg==
-X-Google-Smtp-Source: APXvYqzlHl65VPmh6Fpk+kxQ+1lgOSdmQFpOTpFQfFvOCSSDU3U1pIGJZHw/K1MdWEGG1h+GA1/Q71eEsPHo6r3vczg=
-X-Received: by 2002:a6b:6f06:: with SMTP id k6mr52432551ioc.32.1561354365683;
- Sun, 23 Jun 2019 22:32:45 -0700 (PDT)
+        Mon, 24 Jun 2019 01:33:48 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:38219 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXFdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:33:47 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MvaO8-1iXnw932v8-00sfNC; Mon, 24 Jun 2019 07:33:43 +0200
+Subject: Re: [PATCH v2 1/2] include: linux: siox: more for declaring siox
+ drivers
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org, t.scherer@eckelmann.de
+References: <1560854427-27537-1-git-send-email-info@metux.net>
+ <1560854427-27537-2-git-send-email-info@metux.net>
+ <20190618161747.65y52fqr6toavdtb@pengutronix.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <33a51598-bf79-90a4-5cd8-906498d264e1@metux.net>
+Date:   Mon, 24 Jun 2019 07:33:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <1561349561-8302-1-git-send-email-kernelfans@gmail.com> <20190624044305.GA30102@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20190624044305.GA30102@iweiny-DESK2.sc.intel.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 24 Jun 2019 13:32:34 +0800
-Message-ID: <CAFgQCTuMVdrjkiQ5H3xUuME16g-xNUFXtvU1p+=P4-pujXcSAA@mail.gmail.com>
-Subject: Re: [PATCHv2] mm/gup: speed up check_and_migrate_cma_pages() on huge page
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        LKML <Linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190618161747.65y52fqr6toavdtb@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ttQ0DNsB4PXv7hh8eeoe97pj/lSopBnCBLsYfA74MXIW6ErCJyD
+ be3WUs6JEULh4bu1BjiMcMCb1ZrOPqB5fxLcNBgWghYHoWMo2+XWf3WTTnPKHsbVxh4zF7n
+ 2SdzegIBGENUgh0T7d2BZqDGScPTQ+4h26W+MDzdKgOXEyhmrQvU83sOZ1RmqH9iJfnr7iQ
+ 2xvFcCcvFIcSBzkaqj1HA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:98874X0gkJ4=:U/fimL8PjsZ2FDYpggj2EJ
+ 4E2prPaYrvO92XhO1z0lqOgBnubhuv6qxyzuMsRFOTpAp5mjKD/JcnJey+L3VHGsZi/wl1mbg
+ 8cAQDBzKJwd7uv0RRx14o2greVqMiFtvPhrzjZuflb3qKxhJu579dMzwnr40/0ASIjVYlVQs7
+ i5Q+jBiuGaI01qB82zL0gc5x/TZnB1t2yjAF2gRvSNcS1Y4R8nSw8WCVmJq+53TYqvSBuYQb4
+ 065K/Nj27gTcysX6ksK9HdMPpTFKqHCda1SACAxyxEs9LT0LF8bi+lhgalWOe8rVCpJZi2wpl
+ KRRHnhRjTZubOjt+ELjA0D6ob2ZN1Id4TxrRpjULdnXrHjH7Ckph35SUr7wjZIlcF930fLB6m
+ uN9UT3pCo7Qg+CzkPtUXxpKhFRnjXPGuGIYu2RwQZ/TtGr79SfNR7crpBYmeIoy+KgmAH41WM
+ sVb47+aMKb9S75d8y/46ncdvlSpUfZW69RiYJ5x5QenBPm3KVVHCRtexVX3mgu7KfDDU1wbem
+ Q3shF8G8rNn7EPrZ5qh90XTiZ4onsRYMQbX77xF9NbA0wfcKT+m8tK9YTbkoJJjTKPgTjRY1z
+ nCFzNm9ZAdJxXSTTvKnfgkgr07WvJ4Ur6f/flbeEsQB8423h5dSefiKFWFDy/L5MrxPZfevdp
+ v+mjiTnJr2UNgDlgMei4oyNSf1c4qdiLh/XyxxCMNrwd9vyOTfuIbsTv0J2PeCj8R4SkLamfm
+ ZONhp1sDOnCJ4SYjyHww7PeEGhx+lnxuuV8aWWUhorCEoz5kPtBauBuVTc8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 12:43 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Mon, Jun 24, 2019 at 12:12:41PM +0800, Pingfan Liu wrote:
-> > Both hugetlb and thp locate on the same migration type of pageblock, since
-> > they are allocated from a free_list[]. Based on this fact, it is enough to
-> > check on a single subpage to decide the migration type of the whole huge
-> > page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-> > similar on other archs.
-> >
-> > Furthermore, when executing isolate_huge_page(), it avoid taking global
-> > hugetlb_lock many times, and meanless remove/add to the local link list
-> > cma_page_list.
-> >
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> > Cc: Linux-kernel@vger.kernel.org
-> > ---
-> >  mm/gup.c | 19 ++++++++++++-------
-> >  1 file changed, 12 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index ddde097..544f5de 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1342,19 +1342,22 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
-> >       LIST_HEAD(cma_page_list);
-> >
-> >  check_again:
-> > -     for (i = 0; i < nr_pages; i++) {
-> > +     for (i = 0; i < nr_pages;) {
-> > +
-> > +             struct page *head = compound_head(pages[i]);
-> > +             long step = 1;
-> > +
-> > +             if (PageCompound(head))
-> > +                     step = compound_order(head) - (pages[i] - head);
->
-> Sorry if I missed this last time.  compound_order() is not correct here.
-For thp, prep_transhuge_page()->prep_compound_page()->set_compound_order().
-For smaller hugetlb,
-prep_new_huge_page()->prep_compound_page()->set_compound_order().
-For gigantic page, prep_compound_gigantic_page()->set_compound_order().
+On 18.06.19 18:17, Uwe Kleine-König wrote:
 
-Do I miss anything?
+Hi,
 
-Thanks,
-  Pingfan
-[...]
+> I like the change. Just noticed that the Subject line is a bit strange> though. if "more for" is proper English then it's news to me. I'd
+write:> > 	siox: add helper macro to simplify driver registration
+Good point, seems I've must have been totally under-coffeined, and
+some words on nasty phone interrupts :o
+
+I'll fix that.
+
+<snip>
+
+>> diff --git a/include/linux/siox.h b/include/linux/siox.h>> index d79624e..d53b2b2 100644>> --- a/include/linux/siox.h>> +++
+b/include/linux/siox.h>> @@ -75,3 +75,12 @@ static inline void
+siox_driver_unregister(struct siox_driver *sdriver)>>  {>>  	return
+driver_unregister(&sdriver->driver);>>  }>> +>> +/* module_siox_driver()
+- Helper macro for drivers that don't do> > I'd prefer /* on a separate
+line as documented in> Documentation/process/coding-style.rst (for
+non-net code).
+Done.
+
+Do we have a tool to check for that ? checkpatch doesn't seem to care
+about it.
+
+>> + * anything special in module init/exit.  This eliminates a lot of>> + * boilerplate.  Each module may only use this macro once, and>> + *
+calling it replaces module_init() and module_exit()>> + */>> +#define
+module_siox_driver(__siox_driver) \>> +	module_driver(__siox_driver,
+siox_driver_register, \>> +			siox_driver_unregister)>> -- > > Sorry I
+didn't notice these two things in the first round already.
+No problem, that's why we have multiple rounds :)
+
+
+I'll send v3 in a few minutes ...
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
