@@ -2,41 +2,41 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E97DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E97C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C1B208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA9E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:23:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfFXHXB (ORCPT
+        id S1726818AbfFXHXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:23:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34992 "EHLO
+        Mon, 24 Jun 2019 03:23:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35008 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFXHXB (ORCPT
+        with ESMTP id S1726077AbfFXHXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:23:01 -0400
+        Mon, 24 Jun 2019 03:23:18 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hfJJI-0000ag-5o; Mon, 24 Jun 2019 09:22:40 +0200
-Date:   Mon, 24 Jun 2019 09:22:39 +0200 (CEST)
+        id 1hfJJf-0000cI-KY; Mon, 24 Jun 2019 09:23:03 +0200
+Date:   Mon, 24 Jun 2019 09:23:02 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Christoph Hellwig <hch@lst.de>
 cc:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
         x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 4/5] x86: don't use asm-generic/ptrace.h
-In-Reply-To: <20190624054728.30966-5-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.1906240922270.32342@nanos.tec.linutronix.de>
-References: <20190624054728.30966-1-hch@lst.de> <20190624054728.30966-5-hch@lst.de>
+        linux-kernel@vger.kernel.org
+Subject: Re: remove asm-generic/ptrace.h v3
+In-Reply-To: <20190624054728.30966-1-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.1906240922420.32342@nanos.tec.linutronix.de>
+References: <20190624054728.30966-1-hch@lst.de>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,14 +49,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 24 Jun 2019, Christoph Hellwig wrote:
-
-> Doing the indirection through macros for the regs accessors just
-> makes them harder to read, so implement the helpers directly.
 > 
-> Note that only the helpers actually used are implemented now.
+> asm-generic/ptrace.h is a little weird in that it doesn't actually
+> implement any functionality, but it provided multiple layers of macros
+> that just implement trivial inline functions.  We implement those
+> directly in the few architectures and be off with a much simpler
+> design.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Ingo Molnar <mingo@kernel.org>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> I'm not sure which tree is the right place, but may this can go through
+> the asm-generic tree since it removes an asm-generic header?
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Makes sense.
+
+Thanks,
+
+	tglx
