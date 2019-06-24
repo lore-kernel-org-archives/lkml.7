@@ -2,90 +2,106 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501DDC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED96FC48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22938205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEEF2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="baaTIpEN"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cgOQG0u2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfFXHLz (ORCPT
+        id S1727679AbfFXHMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:11:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfFXHLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:11:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RQ35CdI7OgSCvNIJDvf1p+BfUv8hYylGCi0q85yv+Yw=; b=baaTIpENIFYajuYTAHyVtoJWM
-        a1DUikSr096fgOD3KX66qiitLLwEMKxstZe8F41v2bSIUYioz/6i/Vb3pW05jvnSnC5RPE6dMcTgk
-        FedZTCJIKdzczm2PnKEbJfSoyTfz35zM5fMJsM0iTkOxlNBkJIIR1i0sUUDu1qFJyoqUqf5O1fwMa
-        l74AR53sr2mYYr4dztHj0eXb6WjQaYg+uj0apZv4X+6qDpy7TCzvXnv803NPjM0irg441yMX68Br0
-        7M3ZzB6dbVUOAGX2i68AXvhyavS/LvKi+Yk7Gl2BqJiPyfGlLda1wsZU/Dj3y2X8MalupSjMainTx
-        eExFIV/+A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfJ8O-0002ZO-91; Mon, 24 Jun 2019 07:11:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D17A920A021ED; Mon, 24 Jun 2019 09:11:21 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 09:11:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     mark.rutland@arm.com, kstewart@linuxfoundation.org,
-        songliubraving@fb.com, andrew@lunn.ch, nsekhar@ti.com,
-        ast@kernel.org, jolsa@redhat.com, netdev@vger.kernel.org,
-        gerg@uclinux.org, lorenzo.pieralisi@arm.com, will@kernel.org,
-        linux-samsung-soc@vger.kernel.org, daniel@iogearbox.net,
-        festevam@gmail.com, gregory.clement@bootlin.com,
-        allison@lohutok.net, linux@armlinux.org.uk, krzk@kernel.org,
-        haojian.zhuang@gmail.com, bgolaszewski@baylibre.com,
-        tony@atomide.com, mingo@redhat.com, linux-imx@nxp.com, yhs@fb.com,
-        sebastian.hesselbarth@gmail.com, illusionist.neo@gmail.com,
-        jason@lakedaemon.net, liviu.dudau@arm.com, s.hauer@pengutronix.de,
-        acme@kernel.org, lkundrak@v3.sk, robert.jarzmik@free.fr,
-        dmg@turingmachine.org, swinslow@gmail.com, namhyung@kernel.org,
-        tglx@linutronix.de, linux-omap@vger.kernel.org,
-        alexander.sverdlin@gmail.com, linux-arm-kernel@lists.infradead.org,
-        info@metux.net, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        hsweeten@visionengravers.com, kgene@kernel.org,
-        kernel@pengutronix.de, sudeep.holla@arm.com, bpf@vger.kernel.org,
-        shawnguo@kernel.org, kafai@fb.com, daniel@zonque.org
-Subject: Re: [PATCH 01/15] arm: perf: cleanup cppcheck shifting error
-Message-ID: <20190624071121.GN3436@hirez.programming.kicks-ass.net>
-References: <20190623151313.970-1-tranmanphong@gmail.com>
- <20190623151313.970-2-tranmanphong@gmail.com>
+        Mon, 24 Jun 2019 03:12:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46147 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbfFXHMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:12:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XL8k6cZ1z9s5c;
+        Mon, 24 Jun 2019 17:12:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561360359;
+        bh=i12NKFmhdL+rltUaVDXyIXkIQigSP6RZ9AXJcZsdP7A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cgOQG0u26bYdJCfzABk78C2oDBIKDop3CizYb/NmkzIRDh+5Kz1kGEBAuO8QIFeQ3
+         g0tiI6v63NhsuZfwS11DCnanUoxqjtWfxbBCwG/jAn7DaqDr8Bbfre/PLoZeAKlLlK
+         d1wvOhqojXEKR9px05twa3LuibyKPPLBLJxG1ePOQXcc9v7cj3FwLILV7C3J9855zJ
+         PxZA9265skZtrZ50osxCnVBm0ldS6oodxnY4lLf6/H3QI+TYTkUTadTQbRqeAzrIx4
+         fOoSgUdENbb8hDm7iNTG0LZqE3Xq1NQO/rX1e6iHfCfNLlS3izE35JoV2LhADhOH3g
+         tErl2ZKakfccw==
+Date:   Mon, 24 Jun 2019 17:12:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: linux-next: manual merge of the usb tree with the pci tree
+Message-ID: <20190624171229.6415ca4f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623151313.970-2-tranmanphong@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/P5iblX_jEpcqCmZ4YPKcOh8"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 10:12:59PM +0700, Phong Tran wrote:
-> fix "Shifting signed 32-bit value by 31 bits is undefined behaviour
-> errors"
-> 
-> [arch/arm/kernel/perf_event_v7.c:1080]: (error) Shifting signed 32-bit
-> value by 31 bits is undefined behaviour
-> [arch/arm/kernel/perf_event_v7.c:1436]: (error) Shifting signed 32-bit
-> value by 31 bits is undefined behaviour
-> [arch/arm/kernel/perf_event_v7.c:1783]: (error) Shifting signed 32-bit
-> value by 31 bits is undefined behaviour
+--Sig_/P5iblX_jEpcqCmZ4YPKcOh8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't think that is true; the kernel uses -fno-strict-overflow (which
-implies -fwrapv) and that takes away all the signed UB.
+Hi all,
+
+Today's linux-next merge of the usb tree got a conflict in:
+
+  Documentation/index.rst
+
+between commit:
+
+  c42eaffa1656 ("Documentation: add Linux PCI to Sphinx TOC tree")
+
+from the pci tree and commit:
+
+  ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-ap=
+i")
+
+from the usb tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/P5iblX_jEpcqCmZ4YPKcOh8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Qd90ACgkQAVBC80lX
+0GyNzAf/fVw/v2vFj7LNgNdaaxB4yikXKCCCipHc7M3zAgZvH9U4sV1nJEvEQOgG
+ns6k1sfcyLW0YuG8g6tF4pIWPfKc4sOZlg3coZibvmaQogSd5gHz7Pu36OnTY0Vv
+c3+6yqt8hYWw6Ua8bMM72KtFeO+AsOJMdU6hHIx2+0f3I+kKscH6wni0PWW8TnFv
+Zl9Ymv8ufHQDqdVzIhL04BqSLwd5zB0bFiiDTHBSgBWDHMIuDD6GBuNiOlcrXpMo
+XrnbFr3yLRvPY37eLeG9CgopdMgxDRg5qFqAQEoG43YZG86yBqVUQ8HufeQFEY0h
+XbzKLI7S7+fKRwtSTwN39BybGQUdPA==
+=/b3H
+-----END PGP SIGNATURE-----
+
+--Sig_/P5iblX_jEpcqCmZ4YPKcOh8--
