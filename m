@@ -2,206 +2,164 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F431C48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021BFC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CFC20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="C3stD53T"
+	by mail.kernel.org (Postfix) with ESMTP id CE83F20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561394950;
+	bh=/NHJfqWeCqb+Lp1/50yhyIeXAOct+MNKza0IWDRx7mQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GvgP0IR8iMlJzcfBXXkq9ruLpmqU8zBNP41RR1jj1fq0MsCsp7DugloyzzWb7puaG
+	 ErFiyVCM4cLpGzpr36XZETVjZf7aUx3IdCS4bIwWhQZ6IUCvSKiJyB/tHSg2Dk6wZ6
+	 /nMJIdTG+sN3kfj+6Vceq32uqt1oP09P1fr7m5N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbfFXQq1 (ORCPT
+        id S1730112AbfFXQtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:46:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41255 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730074AbfFXQq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:46:27 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d17so15149334qtj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Dhsef0DXwMLnTfzul4MNZNnoCP5EAjbkYqwXluj+GIs=;
-        b=C3stD53TQJChuMgybngQrezdMqSavx69brZV0iGEaYmGzEDp4tC2VDTxOod8X2pDAi
-         9JLxxIA/Jnd0Jq9XV+qPRfj4vJblxI8LxUCDxp9AD3/+izgDUqiwRSXr0leO0bC70axA
-         Ep46hqYl2bjIMh8F0ayhG2Sf3mcCIy/OT6lIY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dhsef0DXwMLnTfzul4MNZNnoCP5EAjbkYqwXluj+GIs=;
-        b=F8yB7lqUaC2an1o007XETOHKJuE2RJ6/R2yDf2jYHUbvhBetNQ2t9OJL5zjPQBMiRX
-         vyl+PeQjp1KbUrPsB9YOlojLMz8aoSfFV6rOc7dMyCZm5GR8Bw7s96Tubb8BfYVzXhBS
-         MgDEGheqC+dpN+L/IGI12/z5qd4tjSM4c8I8NcHYMNldUVuObPbD4Z6PHFaIg1r051iI
-         tZcMuj0eJMybaobpI2O16um0j9Td1GbmhWuaqqttn6qKXAgUI7eFdMaVvGsEi7ZLo6SN
-         QsjBm0MBC6VeRXybRhCq0QKzZagqZkCBkSkmP8OPhK0bB86xhRbTkIzIx6f/HjtCQVEN
-         gUOA==
-X-Gm-Message-State: APjAAAV932E1Sk5kiGPbf/biVhysNkEZGBtoul7P0RK98IvnOLKI2+Lb
-        BdMtr5RUUu46TXDh8WslD+yjfQ==
-X-Google-Smtp-Source: APXvYqxELT3NubfmxXxsRfroMDj0dtbDZl3qf27hvVM29BNgP6+od8/hlgL/ki675ch+A2CFFjfyyQ==
-X-Received: by 2002:ac8:41d1:: with SMTP id o17mr55923901qtm.17.1561394785988;
-        Mon, 24 Jun 2019 09:46:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x10sm7905346qtc.34.2019.06.24.09.46.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 09:46:25 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 12:46:24 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Byungchul Park <byungchul.park@lge.com>
-Cc:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com
-Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-Message-ID: <20190624164624.GA41314@google.com>
-References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
+        Mon, 24 Jun 2019 12:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfFXQtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:49:09 -0400
+Received: from localhost (unknown [106.201.35.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8D1204EC;
+        Mon, 24 Jun 2019 16:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561394947;
+        bh=/NHJfqWeCqb+Lp1/50yhyIeXAOct+MNKza0IWDRx7mQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rnTD54Rb4s3lVxiO5SzU0ZulEwZcIBpuL1tTEC9wRmVu13q+75fb2w+vR4dIo/U5s
+         V0MZwRq0JJrXn2EQr0NG+C7+dEIAQSA67UxQBP2GdwiIEQRLCbrISQsgGu3tbJOniy
+         ql3Oen9IgZxiIULiGacGWLru4UV9HKaSrt+1zurI=
+Date:   Mon, 24 Jun 2019 22:15:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [V4 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
+ controller driver for Layerscape SoCs
+Message-ID: <20190624164556.GD2962@vkoul-mobl>
+References: <20190613101341.21169-1-peng.ma@nxp.com>
+ <20190613101341.21169-2-peng.ma@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613101341.21169-2-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
-> Hello rcu folks,
-> 
-> I thought it'd better to announce it if those spawnings fail because of
-> !rcu_scheduler_fully_active.
-> 
-> Of course, with the current code, it never happens though.
-> 
-> Thoughts?
+On 13-06-19, 10:13, Peng Ma wrote:
+> DPPA2(Data Path Acceleration Architecture 2) qDMA
+> supports channel virtualization by allowing DMA
 
-It seems in the right spirit, but with your patch a warning always fires.
-rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
-from hotplug paths.
+typo virtualization
 
-Warning splat stack looks like:
+> jobs to be enqueued into different frame queues.
+> Core can initiate a DMA transaction by preparing a frame
+> descriptor(FD) for each DMA job and enqueuing this job to
+> a frame queue. through a hardware portal. The qDMA
+              ^^^
+why this full stop?
 
-[    0.398767] Call Trace:                                                                                                        
-[    0.398775]  rcu_init+0x6aa/0x724                                             
-[    0.398779]  start_kernel+0x220/0x4a2                                    
-[    0.398780]  ? copy_bootdata+0x12/0xac                                                                                                                                   
-[    0.398782]  secondary_startup_64+0xa4/0xb0    
-
-
-> 
-> Thanks,
-> Byungchul
-> 
-> ---8<---
-> From 58a33a85c70f82c406319b4752af95cf6ceb73a3 Mon Sep 17 00:00:00 2001
-> From: Byungchul Park <byungchul.park@lge.com>
-> Date: Mon, 24 Jun 2019 17:08:26 +0900
-> Subject: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-> 
-> In case that rcu ktheads cannot be spawned due to
-> !rcu_scheduler_fully_active, it'd be better to anounce it.
-> 
-> While at it, because the return value of rcu_spawn_one_boost_kthread()
-> is not used any longer, changed the return type from int to void.
-> 
-> Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> ---
->  kernel/rcu/tree_plugin.h | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 1102765..7d74193 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
->   * already exist.  We only create this kthread for preemptible RCU.
->   * Returns zero if all is well, a negated errno otherwise.
->   */
-> -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
->  {
->  	int rnp_index = rnp - rcu_get_root();
->  	unsigned long flags;
-> @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
->  	struct task_struct *t;
->  
->  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> -		return 0;
-> +		return;
->  
-> -	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> -		return 0;
-> +	if (rcu_rnp_online_cpus(rnp) == 0)
-> +		return;
->  
->  	rcu_state.boost = 1;
->  	if (rnp->boost_kthread_task != NULL)
-> -		return 0;
-> +		return;
->  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
->  			   "rcub/%d", rnp_index);
->  	if (IS_ERR(t))
-> -		return PTR_ERR(t);
-> +		return;
->  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
->  	rnp->boost_kthread_task = t;
->  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  	sp.sched_priority = kthread_prio;
->  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
->  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> -	return 0;
->  }
->  
->  static void rcu_cpu_kthread_setup(unsigned int cpu)
-> @@ -1264,8 +1263,12 @@ static void __init rcu_spawn_boost_kthreads(void)
->  		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
->  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
->  		return;
+> +static struct dpaa2_qdma_comp *
+> +dpaa2_qdma_request_desc(struct dpaa2_qdma_chan *dpaa2_chan)
+> +{
+> +	struct dpaa2_qdma_comp *comp_temp = NULL;
+> +	unsigned long flags;
 > +
-> +	if (WARN_ON(!rcu_scheduler_fully_active))
-> +		return;
+> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
+> +	if (list_empty(&dpaa2_chan->comp_free)) {
+> +		spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_NOWAIT);
+> +		if (!comp_temp)
+> +			goto err;
+> +		comp_temp->fd_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->fd_pool, GFP_NOWAIT,
+> +				       &comp_temp->fd_bus_addr);
+> +		if (!comp_temp->fd_virt_addr)
+> +			goto err_comp;
 > +
->  	rcu_for_each_leaf_node(rnp)
-> -		(void)rcu_spawn_one_boost_kthread(rnp);
-> +		rcu_spawn_one_boost_kthread(rnp);
->  }
->  
->  static void rcu_prepare_kthreads(int cpu)
-> @@ -1273,9 +1276,11 @@ static void rcu_prepare_kthreads(int cpu)
->  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
->  	struct rcu_node *rnp = rdp->mynode;
->  
-> +	if (WARN_ON(!rcu_scheduler_fully_active))
-> +		return;
+> +		comp_temp->fl_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->fl_pool, GFP_NOWAIT,
+> +				       &comp_temp->fl_bus_addr);
+> +		if (!comp_temp->fl_virt_addr)
+> +			goto err_fd_virt;
 > +
->  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
-> -	if (rcu_scheduler_fully_active)
-> -		(void)rcu_spawn_one_boost_kthread(rnp);
-> +	rcu_spawn_one_boost_kthread(rnp);
->  }
->  
->  #else /* #ifdef CONFIG_RCU_BOOST */
-> @@ -2198,8 +2203,10 @@ static void rcu_spawn_one_nocb_kthread(int cpu)
->   */
->  static void rcu_spawn_cpu_nocb_kthread(int cpu)
->  {
-> -	if (rcu_scheduler_fully_active)
-> -		rcu_spawn_one_nocb_kthread(cpu);
-> +	if (WARN_ON(!rcu_scheduler_fully_active))
-> +		return;
+> +		comp_temp->desc_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->sdd_pool, GFP_NOWAIT,
+> +				       &comp_temp->desc_bus_addr);
+> +		if (!comp_temp->desc_virt_addr)
+> +			goto err_fl_virt;
 > +
-> +	rcu_spawn_one_nocb_kthread(cpu);
->  }
->  
->  /*
-> -- 
-> 1.9.1
-> 
+> +		comp_temp->qchan = dpaa2_chan;
+> +		return comp_temp;
+> +	}
+> +
+> +	comp_temp = list_first_entry(&dpaa2_chan->comp_free,
+> +				     struct dpaa2_qdma_comp, list);
+> +	list_del(&comp_temp->list);
+> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +
+> +	comp_temp->qchan = dpaa2_chan;
+> +
+> +	return comp_temp;
+> +
+> +err_fl_virt:
+
+no err logs? how will you know what went wrong?
+
+> +static enum
+> +dma_status dpaa2_qdma_tx_status(struct dma_chan *chan,
+> +				dma_cookie_t cookie,
+> +				struct dma_tx_state *txstate)
+> +{
+> +	return dma_cookie_status(chan, cookie, txstate);
+
+why not set dma_cookie_status as this callback?
+
+> +static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
+> +{
+> +	struct dpaa2_qdma_priv_per_prio *ppriv;
+> +	struct device *dev = &ls_dev->dev;
+> +	struct dpaa2_qdma_priv *priv;
+> +	u8 prio_def = DPDMAI_PRIO_NUM;
+> +	int err = -EINVAL;
+> +	int i;
+> +
+> +	priv = dev_get_drvdata(dev);
+> +
+> +	priv->dev = dev;
+> +	priv->dpqdma_id = ls_dev->obj_desc.id;
+> +
+> +	/* Get the handle for the DPDMAI this interface is associate with */
+> +	err = dpdmai_open(priv->mc_io, 0, priv->dpqdma_id, &ls_dev->mc_handle);
+> +	if (err) {
+> +		dev_err(dev, "dpdmai_open() failed\n");
+> +		return err;
+> +	}
+> +	dev_info(dev, "Opened dpdmai object successfully\n");
+
+this is noise in kernel, consider debug level
+
+> +static int __cold dpaa2_dpdmai_bind(struct dpaa2_qdma_priv *priv)
+> +{
+> +	int err;
+> +	int i, num;
+> +	struct device *dev = priv->dev;
+> +	struct dpaa2_qdma_priv_per_prio *ppriv;
+> +	struct dpdmai_rx_queue_cfg rx_queue_cfg;
+> +	struct fsl_mc_device *ls_dev = to_fsl_mc_device(dev);
+
+the order is reverse than used in other fn, please stick to one style!
+-- 
+~Vinod
