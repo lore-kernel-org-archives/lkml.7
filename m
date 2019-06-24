@@ -2,167 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB3DC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06550C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B29320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MyRc+DEf"
+	by mail.kernel.org (Postfix) with ESMTP id D7D6C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfFXDMv (ORCPT
+        id S1727399AbfFXDQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:12:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:36283 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbfFXDMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:12:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XDqy4v4qz9s6w;
-        Mon, 24 Jun 2019 13:12:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561345966;
-        bh=vbo3C0mpaPp/faqogNOplgIER0UdA+wI6HpKf1tNKfQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MyRc+DEfsB2tt04AREDBb3EaQnR03G1DjHEwRFBEW0uIaVviF5RCvFs1/KJiefkCa
-         ZIWqpvYorMliEYB32oUo+mfeWyvBBTFyJw0PNYObq7yLLN5F6neGc6VGaiI87nzUGm
-         AhSlc10HFgcrtHykiogAN9DibjfGk3LaFCrojHbLJMcMzIPn1/KYTPlwBM86Qpf4bO
-         qkZvga+3V+OTSjsYo9qFfZNUl6z8wOU4GgwpUP1xj7ioF+6E2WSrmwBC5cNh/u1bXn
-         qckIH9M6017h6kIObXNYJ49YbKW0e4nLmkdZqv3PkzVqdtBr2c+1Ga8RqmUVNehiCf
-         67ZOC7jXA0Q9w==
-Date:   Mon, 24 Jun 2019 13:12:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yash Shah <yash.shah@sifive.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190624131245.359e59a4@canb.auug.org.au>
-In-Reply-To: <20190620191348.335b011d@canb.auug.org.au>
-References: <20190620191348.335b011d@canb.auug.org.au>
+        Sun, 23 Jun 2019 23:16:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19062 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726307AbfFXDQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 23:16:50 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9FB2A91CF8408B57CC70;
+        Mon, 24 Jun 2019 11:16:47 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
+ 11:16:45 +0800
+Subject: Re: [PATCH -next v2] drm/amdgpu: return 'ret' in amdgpu_pmu_init
+To:     Julia Lawall <julia.lawall@lip6.fr>
+References: <20190622104318.GT28859@kadam>
+ <20190622130527.182022-1-maowenan@huawei.com>
+ <alpine.DEB.2.21.1906221504110.3253@hadrien>
+ <063c9726-8f16-f9b7-2d16-bc87a99085bb@huawei.com>
+ <alpine.DEB.2.21.1906221559060.3253@hadrien>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <dan.carpenter@oracle.com>, <kernel-janitors@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <fced7783-1216-ff3f-039f-d7c3a70b4916@huawei.com>
+Date:   Mon, 24 Jun 2019 11:16:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/nn.enAFUOl5qss4rZJlmVN."; protocol="application/pgp-signature"
+In-Reply-To: <alpine.DEB.2.21.1906221559060.3253@hadrien>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nn.enAFUOl5qss4rZJlmVN.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Thu, 20 Jun 2019 19:13:48 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the net-next tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
-> drivers/net/ethernet/cadence/macb_main.c:48:16: error: field 'hw' has inc=
-omplete type
->   struct clk_hw hw;
->                 ^~
-> drivers/net/ethernet/cadence/macb_main.c:4003:21: error: variable 'fu540_=
-c000_ops' has initializer but incomplete type
->  static const struct clk_ops fu540_c000_ops =3D {
->                      ^~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4004:3: error: 'const struct clk=
-_ops' has no member named 'recalc_rate'
->   .recalc_rate =3D fu540_macb_tx_recalc_rate,
->    ^~~~~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4004:17: warning: excess element=
-s in struct initializer
->   .recalc_rate =3D fu540_macb_tx_recalc_rate,
->                  ^~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4004:17: note: (near initializat=
-ion for 'fu540_c000_ops')
-> drivers/net/ethernet/cadence/macb_main.c:4005:3: error: 'const struct clk=
-_ops' has no member named 'round_rate'
->   .round_rate =3D fu540_macb_tx_round_rate,
->    ^~~~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4005:16: warning: excess element=
-s in struct initializer
->   .round_rate =3D fu540_macb_tx_round_rate,
->                 ^~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4005:16: note: (near initializat=
-ion for 'fu540_c000_ops')
-> drivers/net/ethernet/cadence/macb_main.c:4006:3: error: 'const struct clk=
-_ops' has no member named 'set_rate'
->   .set_rate =3D fu540_macb_tx_set_rate,
->    ^~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4006:14: warning: excess element=
-s in struct initializer
->   .set_rate =3D fu540_macb_tx_set_rate,
->               ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/cadence/macb_main.c:4006:14: note: (near initializat=
-ion for 'fu540_c000_ops')
-> drivers/net/ethernet/cadence/macb_main.c: In function 'fu540_c000_clk_ini=
-t':
-> drivers/net/ethernet/cadence/macb_main.c:4013:23: error: storage size of =
-'init' isn't known
->   struct clk_init_data init;
->                        ^~~~
-> drivers/net/ethernet/cadence/macb_main.c:4032:12: error: implicit declara=
-tion of function 'clk_register'; did you mean 'sock_register'? [-Werror=3Di=
-mplicit-function-declaration]
->   *tx_clk =3D clk_register(NULL, &mgmt->hw);
->             ^~~~~~~~~~~~
->             sock_register
-> drivers/net/ethernet/cadence/macb_main.c:4013:23: warning: unused variabl=
-e 'init' [-Wunused-variable]
->   struct clk_init_data init;
->                        ^~~~
-> drivers/net/ethernet/cadence/macb_main.c: In function 'macb_probe':
-> drivers/net/ethernet/cadence/macb_main.c:4366:2: error: implicit declarat=
-ion of function 'clk_unregister'; did you mean 'sock_unregister'? [-Werror=
-=3Dimplicit-function-declaration]
->   clk_unregister(tx_clk);
->   ^~~~~~~~~~~~~~
->   sock_unregister
-> drivers/net/ethernet/cadence/macb_main.c: At top level:
-> drivers/net/ethernet/cadence/macb_main.c:4003:29: error: storage size of =
-'fu540_c000_ops' isn't known
->  static const struct clk_ops fu540_c000_ops =3D {
->                              ^~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   c218ad559020 ("macb: Add support for SiFive FU540-C000")
->=20
-> CONFIG_COMMON_CLK is not set for this build.
->=20
-> I have reverted that commit for today.
+On 2019/6/22 22:00, Julia Lawall wrote:
+> 
+> 
+> On Sat, 22 Jun 2019, maowenan wrote:
+> 
+>>
+>>
+>> On 2019/6/22 21:06, Julia Lawall wrote:
+>>>
+>>>
+>>> On Sat, 22 Jun 2019, Mao Wenan wrote:
+>>>
+>>>> There is one warning:
+>>>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
+>>>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>>>>   int ret = 0;
+>>>>       ^
+>>>> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
+>>>> which will use the return value. So it returns 'ret' for caller.
+>>>> amdgpu_device_init()
+>>>> 	r = amdgpu_pmu_init(adev);
+>>>>
+>>>> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+>>>>
+>>>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>>>> ---
+>>>>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in
+>>>>  amdgpu_pmu_init().
+>>>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 6 +++---
+>>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>>>> index 0e6dba9..145e720 100644
+>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>>>> @@ -252,8 +252,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+>>>>  	case CHIP_VEGA20:
+>>>>  		/* init df */
+>>>>  		ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
+>>>> -				       "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+>>>> -				       DF_V3_6_MAX_COUNTERS);
+>>>> +							   "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+>>>> +							   DF_V3_6_MAX_COUNTERS);
+>>>>
+>>>>  		/* other pmu types go here*/
+>>>
+>>> I don't know what is the impact of the other pmu types that are planned
+>>> for the future.  Perhaps it would be better to abort the function
+>>> immediately in the case of a failure.
+>>
 
-I am still reverting that commit.  Has this problem been fixed in some
-subtle way?
---=20
-Cheers,
-Stephen Rothwell
+OK, v3 will be sent.
 
---Sig_/nn.enAFUOl5qss4rZJlmVN.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>> I guess it would be better to use new function or new switch case clause to process different PMU types
+>> in future.
+> 
+> I don't know.  But normally when an error may occur it is checked for
+> immediately, rather than just letting it go until the end of the function.
+> But maybe the developer know what is planned for the future for this
+> function.
+> 
+> julia
+> 
+>>
+>>>
+>>> julia
+>>>
+>>>>  		break;
+>>>> @@ -261,7 +261,7 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+>>>>  		return 0;
+>>>>  	}
+>>>>
+>>>> -	return 0;
+>>>> +	return ret;
+>>>>  }
+>>>>
+>>>>
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>>
+>>>
+>>
+>>
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0QP60ACgkQAVBC80lX
-0Gxyxwf+OymQ1NHOgBTVJFL0Dl2ywmZ8pm1YeJ+ElTWzEUk3Ck6CHVFEaD7vXTxg
-48ZKssjI3KTrQ1c3A1+tgz1ktjLjtZ/IX8oNRB/ixN2w+fuIyfa8inoe7QbVOeCP
-cDzm6dJc+heg7hdqJ/Czi6UotHbTWVcM4RXeAfhdvYsjlrILlM3ieom8OjvfMMkH
-CJjRpdkfZqJBvuIkz8uyvyqjpTtKaynIWlD1CnKzK8toyA+bAxT6SvgJ/4TuxRyK
-vSpjKs6E3QcFGhkG2kod0f5SRgpK5iVr1dlTMVzMuIR+s65P8OZcOUGoZQJGkZKh
-IBWRgzFGhZYPo2RYjVSmKK7mbFUdpQ==
-=MOgz
------END PGP SIGNATURE-----
-
---Sig_/nn.enAFUOl5qss4rZJlmVN.--
