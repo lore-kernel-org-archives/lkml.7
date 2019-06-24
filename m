@@ -2,54 +2,51 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5567CC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060D0C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE9820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0072205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370594;
-	bh=9/5h1e+gmgiTzTUkmMFI0omFz26ZyuJlOy3B/+hi3l8=;
+	s=default; t=1561370598;
+	bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSccQB4+UffC/p7b3jL45hC6JGBsHfzsDmv6ci9YPkonicsLcYELrLH1fiTOqkdKY
-	 rNjT2NA0fHmF2N8YMzJ/tP4j4Me44e4XqrV/GDGDz6kxNEsZ/9as/9ZMF6trBjjujL
-	 zAxgNXQ0ZRS8dI0kWHmgYmP+1sW4T5t1ACsqXWKk=
+	b=LefqH/Mv2FtofjDr1buchiv+IGufor0KrEKfgc95D0VvAM0dpvIc6U1jAY24C7ia1
+	 0lCm26gNV2JCiU9Po/ePknrSBuFSLkct95A55iSS1qlCr5kxflPwjvmlyY/wG+mEHK
+	 6IrC00RU2GzdqYVQqr55IJN+BNQtLO6trZcYuezQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfFXKDM (ORCPT
+        id S1729254AbfFXKDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:03:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbfFXKDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:03:08 -0400
+        id S1729164AbfFXKDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:03:11 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FBD205ED;
-        Mon, 24 Jun 2019 10:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F8BE205ED;
+        Mon, 24 Jun 2019 10:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370588;
-        bh=9/5h1e+gmgiTzTUkmMFI0omFz26ZyuJlOy3B/+hi3l8=;
+        s=default; t=1561370590;
+        bh=aPO68/KiexhH73GsYWwDWHSuOWmov594Nfp7HgCCThg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IKOScsI8qu+xdPFGckjG7+0AyK1i2k8bNdMymLK7oB5l90J1pucJRfy1rrBNQssRu
-         GM/Z8aEeG/oyzJ5nh4p6/YuOqNlHZbZ+HHDDxTj+DcyUUXhwHxzRTpBfCin9F4htQT
-         sgY/uZBPHNcHuhgVyUV2TqvQ6ifv83V09weKYZEs=
+        b=amV5OC7KydpsyvPZYWxXTUYVjLQ5wM0zE0oGBu58OXYP48OrQox1MmurYCVXQK9sg
+         +sW8T4M1Nzmtu2L3SUeShQUs981JjPj0lvLMAU6FelB6Lwy7vdnWWtVdc1ggBR8jMd
+         0nYHSfNmfFJ7LYywBqgVOP71w2Xu7XRG1NJyDY2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 29/90] brcmfmac: sdio: Dont tune while the card is off
-Date:   Mon, 24 Jun 2019 17:56:19 +0800
-Message-Id: <20190624092316.147286844@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 30/90] ARC: fix build warnings
+Date:   Mon, 24 Jun 2019 17:56:20 +0800
+Message-Id: <20190624092316.242626964@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,81 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
 
-commit 65dade6044079a5c206fd1803642ff420061417a upstream.
+| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
+| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
 
-When Broadcom SDIO cards are idled they go to sleep and a whole
-separate subsystem takes over their SDIO communication.  This is the
-Always-On-Subsystem (AOS) and it can't handle tuning requests.
-
-Specifically, as tested on rk3288-veyron-minnie (which reports having
-BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
-when "on = 1" (aka we're transition from sleep to wake) by whacking:
-  bus->sdiodev->func1->card->host->need_retune = 1
-...then I can often see tuning fail.  In this case dw_mmc reports "All
-phases bad!").  Note that I don't get 100% failure, presumably because
-sometimes the card itself has already transitioned away from the AOS
-itself by the time we try to wake it up.  If I force retuning when "on
-= 0" (AKA force retuning right before sending the command to go to
-sleep) then retuning is always OK.
-
-NOTE: we need _both_ this patch and the patch to avoid triggering
-tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
-sdio: Disable auto-tuning around commands expected to fail").  Though
-both patches handle issues with Broadcom's AOS, the problems are
-distinct:
-1. We want to defer (but not ignore) asynchronous (like
-   timer-requested) tuning requests till the card is awake.  However,
-   we want to ignore CRC errors during the transition, we don't want
-   to queue deferred tuning request.
-2. You could imagine that the AOS could implement retuning but we
-   could still get errors while transitioning in and out of the AOS.
-   Similarly you could imagine a seamless transition into and out of
-   the AOS (with no CRC errors) even if the AOS couldn't handle
-   tuning.
-
-ALSO NOTE: presumably there is never a desperate need to retune in
-order to wake up the card, since doing so is impossible.  Luckily the
-only way the card can get into sleep state is if we had a good enough
-tuning to send it the command to put it into sleep, so presumably that
-"good enough" tuning is enough to wake us up, at least with a few
-retries.
-
-Cc: stable@vger.kernel.org #v4.18+
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
+ arch/arc/mm/tlb.c              | 13 ++++++++-----
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -669,6 +669,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio
+diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+index d819de1c5d10..3ea4112c8302 100644
+--- a/arch/arc/include/asm/cmpxchg.h
++++ b/arch/arc/include/asm/cmpxchg.h
+@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
  
- 	sdio_retune_crc_disable(bus->sdiodev->func1);
+ #endif /* CONFIG_ARC_HAS_LLSC */
  
-+	/* Cannot re-tune if device is asleep; defer till we're awake */
-+	if (on)
-+		sdio_retune_hold_now(bus->sdiodev->func1);
+-#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
+-				(unsigned long)(o), (unsigned long)(n)))
++#define cmpxchg(ptr, o, n) ({				\
++	(typeof(*(ptr)))__cmpxchg((ptr),		\
++				  (unsigned long)(o),	\
++				  (unsigned long)(n));	\
++})
+ 
+ /*
+  * atomic_cmpxchg is same as cmpxchg
+@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
+ 	return __xchg_bad_pointer();
+ }
+ 
+-#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
+-						 sizeof(*(ptr))))
++#define xchg(ptr, with) ({				\
++	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
++			       (ptr),			\
++			       sizeof(*(ptr)));		\
++})
+ 
+ #endif /* CONFIG_ARC_PLAT_EZNPS */
+ 
+diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
+index 4097764fea23..fa18c00b0cfd 100644
+--- a/arch/arc/mm/tlb.c
++++ b/arch/arc/mm/tlb.c
+@@ -911,9 +911,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			  struct pt_regs *regs)
+ {
+ 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
+-	unsigned int pd0[mmu->ways];
+ 	unsigned long flags;
+-	int set;
++	int set, n_ways = mmu->ways;
 +
- 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
- 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
- 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-@@ -721,6 +725,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio
- 	if (try_cnt > MAX_KSO_ATTEMPTS)
- 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
++	n_ways = min(n_ways, 4);
++	BUG_ON(mmu->ways > 4);
  
-+	if (on)
-+		sdio_retune_release(bus->sdiodev->func1);
-+
- 	sdio_retune_crc_enable(bus->sdiodev->func1);
+ 	local_irq_save(flags);
  
- 	return err;
+@@ -921,9 +923,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 	for (set = 0; set < mmu->sets; set++) {
+ 
+ 		int is_valid, way;
++		unsigned int pd0[4];
+ 
+ 		/* read out all the ways of current set */
+-		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
++		for (way = 0, is_valid = 0; way < n_ways; way++) {
+ 			write_aux_reg(ARC_REG_TLBINDEX,
+ 					  SET_WAY_TO_IDX(mmu, set, way));
+ 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
+@@ -937,14 +940,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			continue;
+ 
+ 		/* Scan the set for duplicate ways: needs a nested loop */
+-		for (way = 0; way < mmu->ways - 1; way++) {
++		for (way = 0; way < n_ways - 1; way++) {
+ 
+ 			int n;
+ 
+ 			if (!pd0[way])
+ 				continue;
+ 
+-			for (n = way + 1; n < mmu->ways; n++) {
++			for (n = way + 1; n < n_ways; n++) {
+ 				if (pd0[way] != pd0[n])
+ 					continue;
+ 
+-- 
+2.20.1
+
 
 
