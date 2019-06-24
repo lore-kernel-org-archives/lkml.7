@@ -2,173 +2,200 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23405C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D55C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25F220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YbT/S+4j";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YkUAdX/C"
+	by mail.kernel.org (Postfix) with ESMTP id 693ED20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbfFXOoB (ORCPT
+        id S1729453AbfFXOot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:44:01 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37606 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728037AbfFXOoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:44:01 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5OEccID028211;
-        Mon, 24 Jun 2019 07:42:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=biTD7+gjv13LBHVp56WKg5wlOTLn7gVlvfXmHII4/ok=;
- b=YbT/S+4jHhwcBUnVmSpfg/CTv+qiHSa2j6QjIcDl18JMdRk2nD2uHIJn0YWv6JALpzJP
- zbKM8BWJoyqfL1UP4IfzjGvN3HFG8NaqMiWeipfrkyBgXjfur8uH8SzQ46voPT89jB5k
- oBswVWrhd05YwMe+wt7ccxbPEm0ffPSHj+k= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0089730.ppops.net with ESMTP id 2tavm1rt2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jun 2019 07:42:16 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 24 Jun 2019 07:42:14 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 24 Jun 2019 07:42:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=biTD7+gjv13LBHVp56WKg5wlOTLn7gVlvfXmHII4/ok=;
- b=YkUAdX/CR/SfdHVD2JNUQSU0NdeTpCi0XH2ngMXk3QgAFuyId43CFQgdiD3JMPNU8Me9i1wasfDlGvSxp4wND/MJUTfmwE8lFwqyP/0j0ydaC2WuIBw3K9gqiG9DSGFn7kkJUw7a0GaD1Talvx9ix+l4HTZVMBcRRlVHi2s5P5w=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1807.namprd15.prod.outlook.com (10.174.255.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 14:42:13 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 14:42:13 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hdanton@sina.com" <hdanton@sina.com>
-Subject: Re: [PATCH v7 5/6] mm,thp: add read-only THP support for (non-shmem)
- FS
-Thread-Topic: [PATCH v7 5/6] mm,thp: add read-only THP support for (non-shmem)
- FS
-Thread-Index: AQHVKYdGAmz09KUZ80Kts9GVGsmXGaaqwvwAgAAUeoCAAAd4gIAABAcA
-Date:   Mon, 24 Jun 2019 14:42:13 +0000
-Message-ID: <C3161C66-5044-44E6-92F4-BBAD42EDF4E2@fb.com>
-References: <20190623054749.4016638-1-songliubraving@fb.com>
- <20190623054749.4016638-6-songliubraving@fb.com>
- <20190624124746.7evd2hmbn3qg3tfs@box>
- <52BDA50B-7CBF-4333-9D15-0C17FD04F6ED@fb.com>
- <20190624142747.chy5s3nendxktm3l@box>
-In-Reply-To: <20190624142747.chy5s3nendxktm3l@box>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::1:d642]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45d81ac6-ac3e-48e2-beae-08d6f8b2257b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1807;
-x-ms-traffictypediagnostic: MWHPR15MB1807:
-x-microsoft-antispam-prvs: <MWHPR15MB180742845552E60E19A13010B3E00@MWHPR15MB1807.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(346002)(376002)(39860400002)(189003)(199004)(6506007)(76176011)(81166006)(4326008)(14454004)(229853002)(8936002)(33656002)(478600001)(81156014)(316002)(305945005)(446003)(11346002)(486006)(476003)(2906002)(68736007)(54906003)(71190400001)(2616005)(7736002)(46003)(6916009)(5660300002)(99286004)(86362001)(102836004)(53546011)(186003)(6116002)(50226002)(71200400001)(14444005)(256004)(53936002)(6486002)(6246003)(6436002)(8676002)(57306001)(66946007)(36756003)(6512007)(66446008)(25786009)(64756008)(66556008)(66476007)(73956011)(76116006)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1807;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Lk/CUEMV78I14ydrlsW5qgP88OvuK0x0jsbMzojChZI4NXsxs7L5JIxUdB54ovFl1olcDjTDROkr4Bxf3UCCcY9zKBFkQfnr9nubd1XPluSCROzP5cicyHWygeW7Dz9wtOGA6diNLFhvJ3YyYBl2Of5B3kpBr1lm8yb3eZznP6vPttZz8I2dc9HoEuIdPl/L3SvjRKw3XeYoH5i3JFSRjdDlFdp9+mmiCkX44tOgfqQWizoSz5Xb21BnIUwfeOvOebo+jvrnGsBU8sFkm9IYLJ00a0t+fRwgmGSpoCC95AxAF6hoZ1ujDhN1Fko5AYpBQfmVYXr2cKltW9YnoZG/n7Iw8hXP+2bT0OWGVrO3a/nyZlzul1gupwRB09UVlxxGZuZXW2ieBDJxVuQ1LBRiV/gTVYbg24l55bwIFHQ7qIw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2A04ABA06972B54D9DEF657049A91AAE@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Jun 2019 10:44:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56317 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729109AbfFXOot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:44:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XXBP2K0pz9s6w;
+        Tue, 25 Jun 2019 00:44:44 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     oss-security@lists.openwall.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linuxppc-users@lists.ozlabs.org
+Subject: CVE-2019-12817: Linux kernel: powerpc: Unrelated processes may be able to read/write to each other's virtual memory
+Date:   Tue, 25 Jun 2019 00:44:31 +1000
+Message-ID: <87lfxr82ls.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45d81ac6-ac3e-48e2-beae-08d6f8b2257b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 14:42:13.4296
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1807
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906240119
-X-FB-Internal: deliver
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+
+The Linux kernel for powerpc since 4.17 has a bug where unrelated processes may
+be able to read/write to each other's virtual memory under certain conditions.
+
+This bug only affects machines using 64-bit CPUs with the hash page table MMU,
+see below for more detail on affected CPUs.
+
+To trigger the bug a process must allocate memory above 512TB. That only happens
+if userspace explicitly requests it with mmap(). That process must then fork(),
+at this point the child incorrectly inherits the "context id" of the parent
+associated with the mapping above 512TB. It may then be possible for the
+parent/child to write to each other's mappings above 512TB, which should not be
+possible, and constitutes memory corruption.
+
+If instead the child process exits, all its context ids are freed, including the
+context id that is still in use by the parent for the mapping above 512TB. That
+id can then be reallocated to a third process, that process can then read/write
+to the parent's mapping above 512TB. Additionally if the freed id is used for
+the third process's primary context id, then the parent is able to read/write to
+the third process's mappings *below* 512TB.
+
+If the parent and child both exit before another process is allocated the freed
+context id, the kernel will notice the double free of the id and print a warning
+such as:
+
+  ida_free called for id=103 which is not allocated.
+  WARNING: CPU: 8 PID: 7293 at lib/idr.c:520 ida_free_rc+0x1b4/0x1d0
+
+The bug was introduced in commit:
+  f384796c40dc ("powerpc/mm: Add support for handling > 512TB address in SLB miss")
+
+Which was originally merged in v4.17.
+
+Only machines using the hash page table (HPT) MMU are affected, eg. PowerPC 970
+(G5), PA6T, Power5/6/7/8/9. By default Power9 bare metal machines (powernv) use
+the Radix MMU and are not affected, unless the machine has been explicitly
+booted in HPT mode (using disable_radix on the kernel command line). KVM guests
+on Power9 may be affected if the host or guest is configured to use the HPT MMU.
+LPARs under PowerVM on Power9 are affected as they always use the HPT MMU.
+Kernels built with PAGE_SIZE=4K are not affected.
+
+The upstream fix is here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca72d88378b2f2444d3ec145dd442d449d3fefbc
+
+There's also a kernel selftest to verify the fix:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=16391bfc862342f285195013b73c1394fab28b97
+
+Or a similar standalone version is included below.
+
+cheers
 
 
-> On Jun 24, 2019, at 7:27 AM, Kirill A. Shutemov <kirill@shutemov.name> wr=
-ote:
->=20
-> On Mon, Jun 24, 2019 at 02:01:05PM +0000, Song Liu wrote:
->>>> @@ -1392,6 +1403,23 @@ static void collapse_file(struct mm_struct *mm,
->>>> 				result =3D SCAN_FAIL;
->>>> 				goto xa_unlocked;
->>>> 			}
->>>> +		} else if (!page || xa_is_value(page)) {
->>>> +			xas_unlock_irq(&xas);
->>>> +			page_cache_sync_readahead(mapping, &file->f_ra, file,
->>>> +						  index, PAGE_SIZE);
->>>> +			lru_add_drain();
->>>=20
->>> Why?
->>=20
->> isolate_lru_page() is likely to fail if we don't drain the pagevecs.=20
->=20
-> Please add a comment.
+cat > test.c <<EOF
+#undef NDEBUG
 
-Will do.=20
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
->=20
->>>> +			page =3D find_lock_page(mapping, index);
->>>> +			if (unlikely(page =3D=3D NULL)) {
->>>> +				result =3D SCAN_FAIL;
->>>> +				goto xa_unlocked;
->>>> +			}
->>>> +		} else if (!PageUptodate(page)) {
->>>=20
->>> Maybe we should try wait_on_page_locked() here before give up?
->>=20
->> Are you referring to the "if (!PageUptodate(page))" case?=20
->=20
-> Yes.
+#ifndef MAP_FIXED_NOREPLACE
+#define MAP_FIXED_NOREPLACE	MAP_FIXED	// "Should be safe" above 512TB
+#endif
 
-I think this case happens when another thread is reading the page in.=20
-I could not think of a way to trigger this condition for testing.=20
+int main(void)
+{
+	int p2c[2], c2p[2], rc, status, c, *p;
+	unsigned long page_size;
+	pid_t pid;
 
-On the other hand, with current logic, we will retry the page on the=20
-next scan, so I guess this is OK.=20
+	page_size = sysconf(_SC_PAGESIZE);
+	if (page_size != 65536) {
+		printf("Unsupported page size - not affected\n");
+		return 1;
+	}
 
-Thanks,
-Song=
+	// Create a mapping at 512TB to allocate an extended_id
+	p = mmap((void *)(512ul << 40), page_size, PROT_READ | PROT_WRITE,
+		MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
+	if (p == MAP_FAILED) {
+		perror("mmap");
+		printf("Error: couldn't mmap(), confirm kernel has 4TB support\n");
+		return 1;
+	}
+
+	printf("parent writing %p = 1\n", p);
+	*p = 1;
+
+	assert(pipe(p2c) != -1 && pipe(c2p) != -1);
+
+	pid = fork();
+	if (pid == 0) {
+		close(p2c[1]);
+		close(c2p[0]);
+		assert(read(p2c[0], &c, 1) == 1);
+
+		pid = getpid();
+		printf("child writing  %p = %d\n", p, pid);
+		*p = pid;
+
+		assert(write(c2p[1], &c, 1) == 1);
+		assert(read(p2c[0], &c, 1) == 1);
+		exit(0);
+	}
+	close(p2c[0]);
+	close(c2p[1]);
+
+	c = 0;
+	assert(write(p2c[1], &c, 1) == 1);
+	assert(read(c2p[0], &c, 1) == 1);
+
+	// Prevent compiler optimisation
+	asm volatile("" : : : "memory");
+
+	rc = 0;
+	printf("parent reading %p = %d\n", p, *p);
+	if (*p != 1) {
+		printf("Error: BUG! parent saw child's write! *p = %d\n", *p);
+		rc = 1;
+	}
+
+	assert(write(p2c[1], &c, 1) == 1);
+	assert(waitpid(pid, &status, 0) != -1);
+	assert(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+
+	if (rc == 0)
+		printf("success: test completed OK\n");
+
+	return rc;
+}
+EOF
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl0Q4c8ACgkQUevqPMjh
+pYBBARAAqM95nzwHVCnSIMUqAqRSuLV3UOx4KxNylmdSu3ig42AgS75KeCYyBKuT
+q8bXq4sSKS5mZAp42/YgaIQpBtv8nOGutMSivZEJmMNnL3riEd7bT63BOw8EnA20
+ryhXsqf504anqzPXYv7P5xKeoQjEbK7MhuaN9d86erot/6cWh7tCcIF0SdiPGX3W
+PLlPrptRMnPCm0QhKCZxlKPxd3qd+HPNr2RVP2bIbv+8x0fldVTR+N2+gD+a5i5p
+rLsxERpaAsPvDbQNeXN/9Wck19wx+ZQMlCxStSY+VECM2jwsXty2f93hZmQ5Nm5E
+HV+nE57IF7tI/7lrlQfQ3Xml5bhVnFXwxQhbdeZfxg5vKm8YDSB0Vu0FaA59TqK7
+ANS2VLgGZV+F0VqCkWx3mVgmJsAAKfOrTjqsQAV0zH42siyYV9AvKZDdYYOxbbkf
+ZZjol8VGh684uKxZRlHeGMBL0kztUE32FiNqrhioJfpCkNhBKPcTljfVgHdPYfzz
+ULAd4QoIUcKa4RgNN5KQgMpxajXgaLxqk8K8R566dRz1KyZnpIn41v3Mq88ApBTv
+0UQarN0AYEyWyO+YI7Q0ngFWxrrcVhA9nFMRXdIdfI581hBqtWPbvItEMFVy30fZ
+3FXzj07zCVIqm7oy21QabFaLUPAEopARj7ByxutyPJT8efdhkRc=
+=21oU
+-----END PGP SIGNATURE-----
+--=-=-=--
