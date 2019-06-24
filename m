@@ -2,236 +2,231 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143CC48BE9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F7C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBA220673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831E520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="t+ZDVWCA"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ZfVQbXfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732784AbfFXSUa (ORCPT
+        id S1732794AbfFXSVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:20:30 -0400
-Received: from mail.efficios.com ([167.114.142.138]:37680 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfFXSUa (ORCPT
+        Mon, 24 Jun 2019 14:21:01 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:34984 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726934AbfFXSVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:20:30 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 7D86A25BCB5;
-        Mon, 24 Jun 2019 14:20:27 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id LxOYVrVyTkdC; Mon, 24 Jun 2019 14:20:26 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D409425BCAC;
-        Mon, 24 Jun 2019 14:20:26 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D409425BCAC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1561400426;
-        bh=rbi9zyQvL7CuwR0oM9yMZGb42TU7oXvaSJgJpIyGIzY=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=t+ZDVWCAIPTZVMj7diZ5pMD47aiybG+i4UZ0vTOquU6Fd33e7W4jv1HpNfQrnATaT
-         VX7PnGQZzCWywDkWRUNvdXFhMup6MIfkSza/U9jfvOURJoucT/0TXHsQQ69r+Dy5uT
-         YOx4YVdS3a8qm4rfJulT2xkZCyr+UgX2d99Bj80D9XrFpsY6pyBnv1/+wjydN93HIJ
-         apC64MecgzQ/ysFltJOYX7DHarUuwQBsxyjK0mfOCzAWAmz/srOKpN5GgDHW3kalhL
-         thonMCWNzAiEsFqn46YoBjawanZigYXVD3pQ/ipjhMicWADECDEWqxcCszn0xSK9zJ
-         inCw9O5LqpHAw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id lZJq1kOXPwpc; Mon, 24 Jun 2019 14:20:26 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id B12FF25BCA5;
-        Mon, 24 Jun 2019 14:20:26 -0400 (EDT)
-Date:   Mon, 24 Jun 2019 14:20:26 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     shuah <shuah@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joelaf@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
-Message-ID: <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190624172429.GA11133@fuggles.cambridge.arm.com>
-References: <20190617152304.23371-1-mathieu.desnoyers@efficios.com> <20190624172429.GA11133@fuggles.cambridge.arm.com>
-Subject: Re: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf
- instruction for RSEQ_SIG"
+        Mon, 24 Jun 2019 14:21:01 -0400
+X-Greylist: delayed 11321 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Jun 2019 14:20:59 EDT
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OEwF7S011278;
+        Mon, 24 Jun 2019 11:12:18 -0400
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2t9e37ecnr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 11:12:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zqps4Mjpvk7USh+X6xxZbZcJ0Zair5LEZipihcqs1Bs=;
+ b=ZfVQbXfGZe3OAknF2rWIMCiqxQC+1B77xt9AjUJtljVF1JDtitNaR+q9H3dDXxzDxE53UgDtseVU3r32ieJ/e2QSJ5n1F4HxuGL9P4pVCF4VMwFNOdnQnzEEq1te4mKcSvRAoZbB/USnlwFFVvzmrQRv9XR1zD0Fj4eH8pBr7wQ=
+Received: from CY4PR03CA0100.namprd03.prod.outlook.com (2603:10b6:910:4d::41)
+ by DM5PR03MB3129.namprd03.prod.outlook.com (2603:10b6:4:3c::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16; Mon, 24 Jun
+ 2019 15:12:16 +0000
+Received: from BL2NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by CY4PR03CA0100.outlook.office365.com
+ (2603:10b6:910:4d::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13 via Frontend
+ Transport; Mon, 24 Jun 2019 15:12:16 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT038.mail.protection.outlook.com (10.152.77.25) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Mon, 24 Jun 2019 15:12:16 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5OFCFmH010372
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 24 Jun 2019 08:12:15 -0700
+Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Mon, 24 Jun 2019
+ 11:12:15 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <stefan.popa@analog.com>
+Subject: [PATCH 2/4] iio: frequency: adf4371: Add support for ADF4372 PLL
+Date:   Mon, 24 Jun 2019 18:12:12 +0300
+Message-ID: <1561389132-26182-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Revert "rseq/selftests: arm: use udf instruction for RSEQ_SIG"
-Thread-Index: /h6jdFbwANn2L9jg7/QPYpOO/noN9A==
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(2980300002)(199004)(189003)(2351001)(70586007)(7636002)(305945005)(5660300002)(70206006)(47776003)(8936002)(6916009)(7696005)(478600001)(51416003)(50226002)(6306002)(6666004)(356004)(186003)(48376002)(966005)(72206003)(2906002)(50466002)(14444005)(316002)(26005)(106002)(54906003)(8676002)(336012)(77096007)(16586007)(126002)(476003)(2616005)(44832011)(246002)(36756003)(426003)(486006)(4326008)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB3129;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4305754e-c133-40a7-fdf3-08d6f8b6581e
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR03MB3129;
+X-MS-TrafficTypeDiagnostic: DM5PR03MB3129:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <DM5PR03MB312956149E539DD3265D69BA9DE00@DM5PR03MB3129.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 007814487B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 2lmfN9AcqrP5v22mZbWyYGfJuQ5ta091Ak+lGrEV13pk9Nu55Vt0/fKAHfFb4czqXOI42/E4Drjb9vS2XSGycYFt/5HRALOR1gkBJhdiu/k9BortkSHpOipMfdwdItrEyCH5asnKxviHkgHGKWFJEzKaTOcOcXQAmJQHUi47v6vugl7fm8SVovTPVtssDOuzCJZf6XFlOicJ320ErTa1sIVAKOo9y9d5zCIUTaG8s9QhxvS39AtoAvPiIFAhdopk2RTTKQKezCzEhn35fTT4NV3VKuD9XK6qyUVcUUF+yZ0pHlSb4pVVFmhuCAZVb4GlLvifwI7H/1/AN/z5iF9GkKlFpDFg9aVobzZiwxqsAXWtxyrKI7bOJPIswz0lLtvrAXOTGBz/OpLM1JZjHlmoCk6uV1WdX0SpNn8q+Df+VLk=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 15:12:16.4415
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4305754e-c133-40a7-fdf3-08d6f8b6581e
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3129
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 24, 2019, at 1:24 PM, Will Deacon will.deacon@arm.com wrote:
+The ADF4372 is part of the same family with ADF4371, the main difference
+is that it has only 3 channels instead of 4, as the frequency quadrupler
+is missing. As a result, the ADF4372 allows frequencies from 62.5 MHz to
+16 GHz to be generated.
 
-> On Mon, Jun 17, 2019 at 05:23:04PM +0200, Mathieu Desnoyers wrote:
->> This reverts commit 2b845d4b4acd9422bbb668989db8dc36dfc8f438.
->> 
->> That commit introduces build issues for programs compiled in Thumb mode.
->> Rather than try to be clever and emit a valid trap instruction on arm32,
->> which requires special care about big/little endian handling on that
->> architecture, just emit plain data. Data in the instruction stream is
->> technically expected on arm32: this is how literal pools are
->> implemented. Reverting to the prior behavior does exactly that.
->> 
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> CC: Peter Zijlstra <peterz@infradead.org>
->> CC: Thomas Gleixner <tglx@linutronix.de>
->> CC: Joel Fernandes <joelaf@google.com>
->> CC: Catalin Marinas <catalin.marinas@arm.com>
->> CC: Dave Watson <davejwatson@fb.com>
->> CC: Will Deacon <will.deacon@arm.com>
->> CC: Shuah Khan <shuah@kernel.org>
->> CC: Andi Kleen <andi@firstfloor.org>
->> CC: linux-kselftest@vger.kernel.org
->> CC: "H . Peter Anvin" <hpa@zytor.com>
->> CC: Chris Lameter <cl@linux.com>
->> CC: Russell King <linux@arm.linux.org.uk>
->> CC: Michael Kerrisk <mtk.manpages@gmail.com>
->> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
->> CC: Paul Turner <pjt@google.com>
->> CC: Boqun Feng <boqun.feng@gmail.com>
->> CC: Josh Triplett <josh@joshtriplett.org>
->> CC: Steven Rostedt <rostedt@goodmis.org>
->> CC: Ben Maurer <bmaurer@fb.com>
->> CC: linux-api@vger.kernel.org
->> CC: Andy Lutomirski <luto@amacapital.net>
->> CC: Andrew Morton <akpm@linux-foundation.org>
->> CC: Linus Torvalds <torvalds@linux-foundation.org>
->> CC: Carlos O'Donell <carlos@redhat.com>
->> CC: Florian Weimer <fweimer@redhat.com>
->> ---
->>  tools/testing/selftests/rseq/rseq-arm.h | 52 ++-------------------------------
->>  1 file changed, 2 insertions(+), 50 deletions(-)
->> 
->> diff --git a/tools/testing/selftests/rseq/rseq-arm.h
->> b/tools/testing/selftests/rseq/rseq-arm.h
->> index 84f28f147fb6..5f262c54364f 100644
->> --- a/tools/testing/selftests/rseq/rseq-arm.h
->> +++ b/tools/testing/selftests/rseq/rseq-arm.h
->> @@ -5,54 +5,7 @@
->>   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->>   */
->>  
->> -/*
->> - * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
->> - * value 0x5de3. This traps if user-space reaches this instruction by mistake,
->> - * and the uncommon operand ensures the kernel does not move the instruction
->> - * pointer to attacker-controlled code on rseq abort.
->> - *
->> - * The instruction pattern in the A32 instruction set is:
->> - *
->> - * e7f5def3    udf    #24035    ; 0x5de3
->> - *
->> - * This translates to the following instruction pattern in the T16 instruction
->> - * set:
->> - *
->> - * little endian:
->> - * def3        udf    #243      ; 0xf3
->> - * e7f5        b.n    <7f5>
->> - *
->> - * pre-ARMv6 big endian code:
->> - * e7f5        b.n    <7f5>
->> - * def3        udf    #243      ; 0xf3
->> - *
->> - * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
->> - * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
->> - * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
->> - * (which match), so there is no need to reverse the endianness of the data
->> - * representation of the signature. However, the choice between BE32 and BE8
->> - * is done by the linker, so we cannot know whether code and data endianness
->> - * will be mixed before the linker is invoked.
->> - */
->> -
->> -#define RSEQ_SIG_CODE	0xe7f5def3
->> -
->> -#ifndef __ASSEMBLER__
->> -
->> -#define RSEQ_SIG_DATA							\
->> -	({								\
->> -		int sig;						\
->> -		asm volatile ("b 2f\n\t"				\
->> -			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
->> -			      "2:\n\t"					\
->> -			      "ldr %[sig], 1b\n\t"			\
->> -			      : [sig] "=r" (sig));			\
->> -		sig;							\
->> -	})
->> -
->> -#define RSEQ_SIG	RSEQ_SIG_DATA
->> -
->> -#endif
->> +#define RSEQ_SIG	0x53053053
-> 
-> I don't get why you're reverting back to this old signature value, when the
-> one we came up with will work well when interpreted as an instruction in the
-> *vast* majority of scenarios that people care about (A32/T32 little-endian).
-> I think you might be under-estimating just how dead things like BE32 really
-> are.
+Datasheet:
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adf4372.pdf
 
-My issue is that the current .instr approach is broken for programs or functions
-built in Thumb mode, and I received no feedback on the solutions I proposed for
-those issues, which led me to propose a patch reverting to a simple .word.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ drivers/iio/frequency/Kconfig   |  6 +++---
+ drivers/iio/frequency/adf4371.c | 31 ++++++++++++++++++++++++++++---
+ 2 files changed, 31 insertions(+), 6 deletions(-)
 
-> 
-> That said, when you ran into .inst.n/.inst.w issues, did you try something
-> along the lines of the WASM() macro we use in arch/arm/, which adds the ".w"
-> suffix when targetting Thumb?
-
-AFAIU, the WASM macros depend on CONFIG_THUMB2_KERNEL, which may be fine within
-the kernel, but for user-space things are a bit more complex.
-
-A compile-unit can be compiled as thumb, which will set a compiler define
-which we could use to detect thumb mode. However, unfortunately, a single
-function can also be compiled with an attribute selecting thumb mode, which
-AFAIU does not influence the preprocessor defines.
-
-If we had the equivalent of pushsection and popsection for "arm" mode vs "thumb"
-mode in asm, it would solve all our issues, but the only way I found to do
-something equivalent was to use the size of a no-op in a asm conditional
-to restore the previous state.
-
-Any other ideas on how to handle this ?
-
-Thanks,
-
-Mathieu
-
-
-> 
-> Will
-
+diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
+index e4a921f..353914b 100644
+--- a/drivers/iio/frequency/Kconfig
++++ b/drivers/iio/frequency/Kconfig
+@@ -39,12 +39,12 @@ config ADF4350
+ 	  module will be called adf4350.
+ 
+ config ADF4371
+-	tristate "Analog Devices ADF4371 Wideband Synthesizer"
++	tristate "Analog Devices ADF4371/ADF4372 Wideband Synthesizers"
+ 	depends on SPI
+ 	select REGMAP_SPI
+ 	help
+-	  Say yes here to build support for Analog Devices  ADF4371
+-	  Wideband Synthesizer. The driver provides direct access via sysfs.
++	  Say yes here to build support for Analog Devices ADF4371 and ADF4372
++	  Wideband Synthesizers. The driver provides direct access via sysfs.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called adf4371.
+diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
+index d8c414b..f874219 100644
+--- a/drivers/iio/frequency/adf4371.c
++++ b/drivers/iio/frequency/adf4371.c
+@@ -87,6 +87,11 @@ enum {
+ 	ADF4371_CH_RF32
+ };
+ 
++enum adf4371_variant {
++	ADF4371,
++	ADF4372
++};
++
+ struct adf4371_pwrdown {
+ 	unsigned int reg;
+ 	unsigned int bit;
+@@ -140,6 +145,11 @@ static const struct regmap_config adf4371_regmap_config = {
+ 	.read_flag_mask = BIT(7),
+ };
+ 
++struct adf4371_chip_info {
++	unsigned int num_channels;
++	const struct iio_chan_spec *channels;
++};
++
+ struct adf4371_state {
+ 	struct spi_device *spi;
+ 	struct regmap *regmap;
+@@ -152,6 +162,7 @@ struct adf4371_state {
+ 	 * writes.
+ 	 */
+ 	struct mutex lock;
++	const struct adf4371_chip_info *chip_info;
+ 	unsigned long clkin_freq;
+ 	unsigned long fpfd;
+ 	unsigned int integer;
+@@ -429,6 +440,17 @@ static const struct iio_chan_spec adf4371_chan[] = {
+ 	ADF4371_CHANNEL(ADF4371_CH_RF32),
+ };
+ 
++static const struct adf4371_chip_info adf4371_chip_info[] = {
++	[ADF4371] = {
++		.channels = adf4371_chan,
++		.num_channels = 4,
++	},
++	[ADF4372] = {
++		.channels = adf4371_chan,
++		.num_channels = 3,
++	}
++};
++
+ static int adf4371_reg_access(struct iio_dev *indio_dev,
+ 			      unsigned int reg,
+ 			      unsigned int writeval,
+@@ -537,12 +559,13 @@ static int adf4371_probe(struct spi_device *spi)
+ 	st->regmap = regmap;
+ 	mutex_init(&st->lock);
+ 
++	st->chip_info = &adf4371_chip_info[id->driver_data];
+ 	indio_dev->dev.parent = &spi->dev;
+ 	indio_dev->name = id->name;
+ 	indio_dev->info = &adf4371_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+-	indio_dev->channels = adf4371_chan;
+-	indio_dev->num_channels = ARRAY_SIZE(adf4371_chan);
++	indio_dev->channels = st->chip_info->channels;
++	indio_dev->num_channels = st->chip_info->num_channels;
+ 
+ 	st->clkin = devm_clk_get(&spi->dev, "clkin");
+ 	if (IS_ERR(st->clkin))
+@@ -568,13 +591,15 @@ static int adf4371_probe(struct spi_device *spi)
+ }
+ 
+ static const struct spi_device_id adf4371_id_table[] = {
+-	{ "adf4371", 0 },
++	{ "adf4371", ADF4371 },
++	{ "adf4372", ADF4372 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(spi, adf4371_id_table);
+ 
+ static const struct of_device_id adf4371_of_match[] = {
+ 	{ .compatible = "adi,adf4371" },
++	{ .compatible = "adi,adf4372" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, adf4371_of_match);
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.7.4
+
