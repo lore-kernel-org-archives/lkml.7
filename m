@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3E4C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0CC208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37B3208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 03:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FFrpYwGf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NJDNIdtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfFXDDx (ORCPT
+        id S1727635AbfFXDD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 23:03:53 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13255 "EHLO
+        Sun, 23 Jun 2019 23:03:58 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13267 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbfFXDDv (ORCPT
+        with ESMTP id S1727617AbfFXDD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 23:03:51 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d103d950000>; Sun, 23 Jun 2019 20:03:49 -0700
+        Sun, 23 Jun 2019 23:03:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d103d9b0001>; Sun, 23 Jun 2019 20:03:55 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 20:03:49 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 23 Jun 2019 20:03:55 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 23 Jun 2019 20:03:49 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 03:03:49 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 03:03:49 +0000
+        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:55 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 03:03:55 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Jun 2019 03:03:55 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.126]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d103d930000>; Sun, 23 Jun 2019 20:03:49 -0700
+        id <B5d103d980002>; Sun, 23 Jun 2019 20:03:55 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -50,9 +50,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V4 16/18] soc/tegra: pmc: configure core power request polarity
-Date:   Sun, 23 Jun 2019 20:02:57 -0700
-Message-ID: <1561345379-2429-17-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V4 18/18] arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+Date:   Sun, 23 Jun 2019 20:02:59 -0700
+Message-ID: <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
 References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
@@ -60,56 +60,47 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561345429; bh=ZIM1lgKmGOLI8vjBUZA7Djdy5mObSNe1HI0kza+VS88=;
+        t=1561345435; bh=3ikE8x0cNN1fPtdTTddMKObVTKhfyEJPwIrj8ksa4Wg=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=FFrpYwGf9dF5STigOtKoPoynIHZvhi0QAKR/vt8NZAklLimm/K7dbFsYJp0qs4X/8
-         dIYqZhqEvOiimDRHlU6DXLodyFTVft+B6TJsIKvbJGRTqGsPl/AwoeIwakTBUXrr8n
-         /73S5CU9bxLy3WIuJII/Nu392T9UFkRw0TYH+bHEVTV1aGhiWA4J5eK9AKffsts8PM
-         jEdQV8m3oE5g8hk41QcK8b1+BcYnZuFbn9kF2+Cj1stwD+59nHTAtQUZy8d5fm0gMY
-         4v2HMv40/QlwDLv/Hh1+ZO3v2ZxZKeJ8AlyqR0kP7NoxoSBnwCDRBQJVu295+56Le1
-         A9/uEkeLOVdkw==
+        b=NJDNIdtgFCnSUNvZiIZyyoYq1MWL9GEcD/rJdXw/+TFyNHK0D8uab/04bae25LrUk
+         hu0quJxkUQhU6l9Zc6HE448Vdi+Ze21BYW3dJQ22g95Xp/wRccKQ/UWuHnnU0xabj9
+         I4TG90+yg0sPZnCo4TZ17nUr/oLJExjB6SE0ETOtZKaXY38weSTY2Yw8Hn2Q8zNP4v
+         vRGRS7XsMCWFIsVRE+c7bHU400IxlGM4hnaEN+S+h7y2ku+LDHVPrF+FYhwxcmVIqB
+         SI1nqT2QU46yMOK8Oj50NrTQtBQ5N+vHxQxR2UYuvceFQrsAK4nHh94nwaUqnPWBEr
+         z5tKKIND8eUAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch configures polarity of the core power request signal
-in PMC control register based on the device tree property.
-
-PMC asserts and de-asserts power request signal based on it polarity
-when it need to power-up and power-down the core rail during SC7.
+This patch has Jetson TX1 platform specific SC7 timing configuration
+in device tree.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/soc/tegra/pmc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 603fc3bd73f5..c9eea5ef008a 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -56,6 +56,7 @@
- #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
- #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
- #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
-+#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
- #define  PMC_CNTRL_MAIN_RST		BIT(4)
- #define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 27723829d033..cb58f79deb48 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -279,6 +279,13 @@
  
-@@ -2304,6 +2305,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
- 	else
- 		value |= PMC_CNTRL_SYSCLK_POLARITY;
+ 	pmc@7000e400 {
+ 		nvidia,invert-interrupt;
++		nvidia,suspend-mode = <0>;
++		nvidia,cpu-pwr-good-time = <0>;
++		nvidia,cpu-pwr-off-time = <0>;
++		nvidia,core-pwr-good-time = <4587 3876>;
++		nvidia,core-pwr-off-time = <39065>;
++		nvidia,core-power-req-active-high;
++		nvidia,sys-clock-req-active-high;
+ 	};
  
-+	if (pmc->corereq_high)
-+		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
-+	else
-+		value |= PMC_CNTRL_PWRREQ_POLARITY;
-+
- 	/* configure the output polarity while the request is tristated */
- 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
- 
+ 	/* eMMC */
 -- 
 2.7.4
 
