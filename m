@@ -2,31 +2,30 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F670C48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACBFC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEF62133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E513A208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfFXHYm (ORCPT
+        id S1727946AbfFXHYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:24:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:17835 "EHLO
+        Mon, 24 Jun 2019 03:24:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46671 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726795AbfFXHYi (ORCPT
+        with ESMTP id S1726719AbfFXHYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:24:38 -0400
-X-UUID: 0704b223eb5949cbbda10de7e55c1fb2-20190624
-X-UUID: 0704b223eb5949cbbda10de7e55c1fb2-20190624
+        Mon, 24 Jun 2019 03:24:41 -0400
+X-UUID: a763fee8f60547f9a7d74f0d789bde4e-20190624
+X-UUID: a763fee8f60547f9a7d74f0d789bde4e-20190624
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <neal.liu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1259754356; Mon, 24 Jun 2019 15:24:29 +0800
+        with ESMTP id 2119492074; Mon, 24 Jun 2019 15:24:29 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Mon, 24 Jun 2019 15:24:28 +0800
@@ -46,12 +45,10 @@ CC:     Neal Liu <neal.liu@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
-Date:   Mon, 24 Jun 2019 15:24:11 +0800
-Message-ID: <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+Subject: [PATCH v4 0/3] MediaTek Security random number generator support
+Date:   Mon, 24 Jun 2019 15:24:09 +0800
+Message-ID: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -60,31 +57,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the binding used by the MediaTek ARMv8 SoCs random
-number generator with TrustZone enabled.
+These patch series introduce a generic rng driver for Trustzone
+based kernel driver which would like to communicate with ATF
+SIP services.
 
-Signed-off-by: Neal Liu <neal.liu@mediatek.com>
----
- .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Patch #1 initials SMC fid table for Mediatek SIP interfaces and
+adds HWRNG related SMC call.
+
+Patch #2..3 adds mtk-sec-rng kernel driver for Trustzone based SoCs.
+For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+entropy sources is not accessible from normal world (linux) and
+rather accessible from secure world (ATF/TEE) only. This driver aims
+to provide a generic interface to ATF rng service.
+
+
+changes since v1:
+- rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs
+can reuse this driver.
+- refine coding style and unnecessary check.
+
+changes since v2:
+- remove unused comments.
+- remove redundant variable.
+
+changes since v3:
+- add dt-bindings for MediaTek rng with TrustZone enabled
+- revise HWRNG SMC call fid
+
+
+Neal Liu (3):
+  soc: mediatek: add SMC fid table for SIP interface
+  dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
+  hwrng: add mtk-sec-rng driver
+
+ .../devicetree/bindings/rng/mtk-sec-rng.txt   | 10 ++
+ drivers/char/hw_random/Kconfig                | 16 +++
+ drivers/char/hw_random/Makefile               |  1 +
+ drivers/char/hw_random/mtk-sec-rng.c          | 97 +++++++++++++++++++
+ include/linux/soc/mediatek/mtk_sip_svc.h      | 33 +++++++
+ 5 files changed, 157 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+ create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
+ create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
 
-diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-new file mode 100644
-index 0000000..c04ce15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-@@ -0,0 +1,10 @@
-+MediaTek random number generator with TrustZone enabled
-+
-+Required properties:
-+- compatible : Should be "mediatek,mtk-sec-rng"
-+
-+Example:
-+
-+hwrng: hwrng {
-+	compatible = "mediatek,mtk-sec-rng";
-+}
 -- 
-1.7.9.5
+2.18.0
 
