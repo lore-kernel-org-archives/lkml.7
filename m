@@ -2,304 +2,112 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9C3C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB11C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D08420665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DB92146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RXNhWr/L"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="TU7RUfJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfFXJQ3 (ORCPT
+        id S1728484AbfFXJQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 24 Jun 2019 05:16:32 -0400
+Received: from mail-eopbgr40137.outbound.protection.outlook.com ([40.107.4.137]:21998
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726988AbfFXJQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 05:16:29 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11803 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfFXJQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:16:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1094e90000>; Mon, 24 Jun 2019 02:16:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Jun 2019 02:16:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Jun 2019 02:16:25 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 09:16:24 +0000
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 09:16:25 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 09:16:25 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1094e40000>; Mon, 24 Jun 2019 02:16:24 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V11 09/12] dt-bindings: PCI: tegra: Add device tree support for Tegra194
-Date:   Mon, 24 Jun 2019 14:45:02 +0530
-Message-ID: <20190624091505.1711-10-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624091505.1711-1-vidyas@nvidia.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ONBoS4+/cYKEhGNhFcvb0kYLefbOJMoYDe0cypw29T4=;
+ b=TU7RUfJpx2ccG/EAegbStrpa5C7M2PLBH4skgqZQn1eV/QdDJIMLgCOuCLalVQdGAJOqEgj4JeFxpwsJmk48o7xs0jLZtl3rQsBdnL3QREoA/XiU3DCgQhG/jXOm6tFwRURBMCtUYjxNrQXKSiXFxYLtmhu0iHZhr5GjlA0/+wY=
+Received: from VI1PR07MB5744.eurprd07.prod.outlook.com (20.177.202.24) by
+ VI1PR07MB4320.eurprd07.prod.outlook.com (20.176.7.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.8; Mon, 24 Jun 2019 09:16:26 +0000
+Received: from VI1PR07MB5744.eurprd07.prod.outlook.com
+ ([fe80::fcde:79c2:8330:b9db]) by VI1PR07MB5744.eurprd07.prod.outlook.com
+ ([fe80::fcde:79c2:8330:b9db%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 09:16:26 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jason Vas Dias <jason.vas.dias@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/vdso: Move mult and shift into struct vgtod_ts
+Thread-Topic: [PATCH v3 1/2] x86/vdso: Move mult and shift into struct
+ vgtod_ts
+Thread-Index: AQHVG6zLWVr+SmJGqUG78zQ8oYIU56apIqMAgAGA/gA=
+Date:   Mon, 24 Jun 2019 09:16:26 +0000
+Message-ID: <df6b6311-ac67-857f-5a81-aee4eabd9f47@nokia.com>
+References: <20190605144116.28553-1-alexander.sverdlin@nokia.com>
+ <20190605144116.28553-2-alexander.sverdlin@nokia.com>
+ <alpine.DEB.2.21.1906231008170.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906231008170.32342@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.167]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-clientproxiedby: HE1PR05CA0269.eurprd05.prod.outlook.com
+ (2603:10a6:3:fc::21) To VI1PR07MB5744.eurprd07.prod.outlook.com
+ (2603:10a6:803:98::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2930869f-d999-47a0-b0f4-08d6f884a241
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR07MB4320;
+x-ms-traffictypediagnostic: VI1PR07MB4320:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR07MB4320EB7BD5BD8740600A852A88E00@VI1PR07MB4320.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(53936002)(8936002)(6436002)(2906002)(14454004)(476003)(486006)(6116002)(3846002)(478600001)(7736002)(11346002)(446003)(99286004)(305945005)(2616005)(81156014)(81166006)(966005)(6486002)(8676002)(65826007)(36756003)(31696002)(6512007)(65806001)(6306002)(66066001)(65956001)(4326008)(6916009)(71200400001)(71190400001)(4744005)(256004)(26005)(31686004)(64126003)(386003)(25786009)(68736007)(316002)(229853002)(76176011)(102836004)(52116002)(86362001)(54906003)(73956011)(66946007)(5660300002)(6246003)(66446008)(64756008)(66556008)(66476007)(58126008)(186003)(6506007)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4320;H:VI1PR07MB5744.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RnTmfW7XCmTMGlN/m9IFOHJkhx2i2RPHOAXocwwS4QWutVxCiVQn6QqY22xakLSWI/GPZmLPbMIDD5NsFapM9v164dq/C6FGoAExd+8gERuba5VUhwpnorcglvj+8tHeTeGBF3ERG1Osv11gxpNqIabtgXUJ1lUa+pWsTbracoIr8RWUqdu6riZYMLlBE7N4Zcc9JF6NW48gmNbGStLbUlC2lZs1MKV8C588ppMqabcIJ3KSEYyW6s3Iox/6hea9QjzMr5WzwaJn5grVQWv8Aew171tarYdIluFPDCHWHcRY2Umbfe/RetUQpOfIZD3ciUSfOd+IGyQrPLnFh1yTKsDqrUtYj9Hf2Pe0YUx8sU9G+NAFFdMAgn8OmJl8cG+amDXF17q6m8PNcVLu8dXCDkRaOeJLuapqAlMWvnkM2ng=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <057FFE676D915D44BE810FBE1FA5F154@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561367785; bh=NB7JTVzcCtkV8ERU7Z48/06HGrW551iaabhmDsI3Y50=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=RXNhWr/L8SfR0mDJnZ8Nr7JNZ0LeXXMHJJhXT0fwBdCmbBdeXxxPACV1MOP1OMnpL
-         haaDIIvbf6IyeF6mhOZdGzn1EPfACoqP5aVm4ZvpLIdrfdrSjQVdCCQSN3EyDnJ/WE
-         kY/iwOgV0fNDnJGlxPhUKzPmH44lnqLE9Wx97E58h23gDe4XjRXHY7/CGN1kApg4nV
-         z6XG48hBcHg0+d05WqitN5tTJcg+CL/Z9LdV6+MfTuu48+k62Nx9dtlQPZgWczq9kf
-         GkZQezPn5RnEEI9kiAchCwge5smVeMIe5B4sWtxdEUsCAbEaJTN725tFXTscNn1uoJ
-         bLVUnqhIhHvAw==
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2930869f-d999-47a0-b0f4-08d6f884a241
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 09:16:26.3598
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: alexander.sverdlin@nokia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tegra194 PCIe controllers. These controllers are based
-on Synopsys DesignWare core IP.
-
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-Changes since [v10]:
-* None
-
-Changes since [v9]:
-* None
-
-Changes since [v8]:
-* Added Acked-by from Thierry
-
-Changes since [v7]:
-* Addressed review comments from Thierry
-* Modified DT example to reflect new changes
-
-Changes since [v6]:
-* Changed description of the property "nvidia,bpmp".
-* Removed property "nvidia,disable-aspm-states".
-
-Changes since [v5]:
-* Removed 'max-link-speed' as it is going to be a common sub-system property
-* Removed 'nvidia,init-link-speed' as there isn't much value addition
-* Removed 'nvidia,wake-gpios' for now
-* Addressed review comments from Thierry and Rob in general
-
-Changes since [v4]:
-* None
-
-Changes since [v3]:
-* None
-
-Changes since [v2]:
-* Using only 'Cx' (x-being controller number) format to represent a controller
-* Changed to 'value: description' format where applicable
-* Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
-* Provided more documentation for 'nvidia,init-link-speed' property
-* Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
-
-Changes since [v1]:
-* Added documentation for 'power-domains' property
-* Removed 'window1' and 'window2' properties
-* Removed '_clk' and '_rst' from clock and reset names
-* Dropped 'pcie' from phy-names
-* Added entry for BPMP-FW handle
-* Removed offsets for some of the registers and added them in code and would be pickedup based on
-  controller ID
-* Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
-* Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
-* Added more documentation for 'nvidia,update-fc-fixup' property
-* Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
-* Added '-us' to all properties that represent time in microseconds
-* Moved P2U documentation to a separate file
-
- .../bindings/pci/nvidia,tegra194-pcie.txt     | 155 ++++++++++++++++++
- 1 file changed, 155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-new file mode 100644
-index 000000000000..674e5adb2895
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-@@ -0,0 +1,155 @@
-+NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
-+
-+This PCIe host controller is based on the Synopsis Designware PCIe IP
-+and thus inherits all the common properties defined in designware-pcie.txt.
-+
-+Required properties:
-+- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
-+- device_type: Must be "pci"
-+- power-domains: A phandle to the node that controls power to the respective
-+  PCIe controller and a specifier name for the PCIe controller. Following are
-+  the specifiers for the different PCIe controllers
-+    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
-+    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
-+    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
-+    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
-+    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
-+    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
-+  these specifiers are defined in
-+  "include/dt-bindings/power/tegra194-powergate.h" file.
-+- reg: A list of physical base address and length pairs for each set of
-+  controller registers. Must contain an entry for each entry in the reg-names
-+  property.
-+- reg-names: Must include the following entries:
-+  "appl": Controller's application logic registers
-+  "config": As per the definition in designware-pcie.txt
-+  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
-+             Translation Unit) registers of the PCIe core are made available
-+             for SW access.
-+  "dbi": The aperture where root port's own configuration registers are
-+         available
-+- interrupts: A list of interrupt outputs of the controller. Must contain an
-+  entry for each entry in the interrupt-names property.
-+- interrupt-names: Must include the following entries:
-+  "intr": The Tegra interrupt that is asserted for controller interrupts
-+  "msi": The Tegra interrupt that is asserted when an MSI is received
-+- bus-range: Range of bus numbers associated with this controller
-+- #address-cells: Address representation for root ports (must be 3)
-+  - cell 0 specifies the bus and device numbers of the root port:
-+    [23:16]: bus number
-+    [15:11]: device number
-+  - cell 1 denotes the upper 32 address bits and should be 0
-+  - cell 2 contains the lower 32 address bits and is used to translate to the
-+    CPU address space
-+- #size-cells: Size representation for root ports (must be 2)
-+- ranges: Describes the translation of addresses for root ports and standard
-+  PCI regions. The entries must be 7 cells each, where the first three cells
-+  correspond to the address as described for the #address-cells property
-+  above, the fourth and fifth cells are for the physical CPU address to
-+  translate to and the sixth and seventh cells are as described for the
-+  #size-cells property above.
-+  - Entries setup the mapping for the standard I/O, memory and
-+    prefetchable PCI regions. The first cell determines the type of region
-+    that is setup:
-+    - 0x81000000: I/O memory region
-+    - 0x82000000: non-prefetchable memory region
-+    - 0xc2000000: prefetchable memory region
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- #interrupt-cells: Size representation for interrupts (must be 1)
-+- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - core
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+  - apb
-+  - core
-+- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
-+- phy-names: Must include an entry for each active lane.
-+  "p2u-N": where N ranges from 0 to one less than the total number of lanes
-+- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node followed
-+  by controller-id. Following are the controller ids for each controller.
-+    0: C0
-+    1: C1
-+    2: C2
-+    3: C3
-+    4: C4
-+    5: C5
-+- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
-+
-+Optional properties:
-+- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
-+- nvidia,update-fc-fixup: This is a boolean property and needs to be present to
-+    improve performance when a platform is designed in such a way that it
-+    satisfies at least one of the following conditions thereby enabling root
-+    port to exchange optimum number of FC (Flow Control) credits with
-+    downstream devices
-+    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
-+    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
-+       a) speed is Gen-2 and MPS is 256B
-+       b) speed is >= Gen-3 with any MPS
-+- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operation of ASPM
-+   to be specified in microseconds
-+- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of ASPM to be
-+   specified in microseconds
-+- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
-+   specified in microseconds
-+
-+Examples:
-+=========
-+
-+Tegra194:
-+--------
-+
-+	pcie@14180000 {
-+		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
-+		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
-+		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-+		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
-+		reg-names = "appl", "config", "atu_dma";
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		num-lanes = <8>;
-+		linux,pci-domain = <0>;
-+
-+		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
-+		clock-names = "core";
-+
-+		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
-+			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
-+		reset-names = "apb", "core";
-+
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
-+			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-+		interrupt-names = "intr", "msi";
-+
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		nvidia,bpmp = <&bpmp 0>;
-+
-+		supports-clkreq;
-+		nvidia,aspm-cmrt-us = <60>;
-+		nvidia,aspm-pwr-on-t-us = <20>;
-+		nvidia,aspm-l0s-entrance-latency-us = <3>;
-+
-+		bus-range = <0x0 0xff>;
-+		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000    /* downstream I/O (1MB) */
-+			  0x82000000 0x0  0x38200000 0x0  0x38200000 0x0 0x01E00000    /* non-prefetchable memory (30MB) */
-+			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
-+
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-+
-+		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-+		       <&p2u_hsio_5>;
-+		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
-+	};
--- 
-2.17.1
-
+SGkgVGhvbWFzLA0KDQpPbiAyMy8wNi8yMDE5IDEyOjE4LCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
+DQo+IFRoZSBhbHRlcm5hdGl2ZSBzb2x1dGlvbiBmb3IgdGhpcyBpcyB3aGF0IFZpbmNlbnpvIGhh
+cyBpbiBoaXMgdW5pZmllZCBWRFNPDQo+IHBhdGNoIHNlcmllczoNCj4gDQo+ICAgaHR0cHM6Ly9s
+a21sLmtlcm5lbC5vcmcvci8yMDE5MDYyMTA5NTI1Mi4zMjMwNy0xLXZpbmNlbnpvLmZyYXNjaW5v
+QGFybS5jb20NCj4gDQo+IEl0IGxlYXZlcyB0aGUgZGF0YSBzdHJ1Y3QgdW5tb2RpZmllZCBhbmQg
+aGFzIGEgc2VwYXJhdGUgYXJyYXkgZm9yIHRoZSByYXcNCj4gY2xvY2suIFRoYXQgZG9lcyBub3Qg
+aGF2ZSB0aGUgc2lkZSBlZmZlY3RzIGF0IGFsbC4NCj4gDQo+IEknbSBpbiB0aGUgcHJvY2VzcyBv
+ZiBtZXJnaW5nIHRoYXQgc2VyaWVzIGFuZCBJIGFjdHVhbGx5IGFkYXB0ZWQgeW91cg0KPiBzY2hl
+bWUgdG8gdGhlIG5ldyB1bmlmaWVkIGluZnJhc3RydWN0dXJlIHdoZXJlIGl0IGhhcyBleGFjdGx5
+IHRoZSBzYW1lDQo+IGVmZmVjdHMgYXMgd2l0aCB5b3VyIG9yaWdpbmFsIHBhdGNoZXMgYWdhaW5z
+dCB0aGUgeDg2IHZlcnNpb24uDQoNCnBsZWFzZSBsZXQgbWUga25vdyBpZiBJIG5lZWQgdG8gcmV3
+b3JrIFsyLzJdIGJhc2VkIG9uIHNvbWUgbm90LXlldC1wdWJsaXNoZWQNCmJyYW5jaCBvZiB5b3Vy
+cy4NCg0KLS0gDQpCZXN0IHJlZ2FyZHMsDQpBbGV4YW5kZXIgU3ZlcmRsaW4uDQo=
