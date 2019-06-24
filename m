@@ -2,143 +2,155 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444DC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B0AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C95A2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFwgZ0LN"
+	by mail.kernel.org (Postfix) with ESMTP id 7F0122083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561355901;
+	bh=AvXQB0CV4vJHJQNcor1z9L7HYmP2PloOeDMNIxwYSTw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=aELCwLjjxriOEd6MGUtibmBV5nQwWWI/Xjv9R1GS44/EebupmilfQ+55yRNKbqBt+
+	 BuLLd5AzDtklLqo3w3jJ1FfXCwzvJpqFhmSTUnsvF7XZX+cg3VgkeLq3TWfyXepWHb
+	 NrLvXzmTALxFcqErt0p4XHZz92RxDVOp6szvadhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfFXFzR (ORCPT
+        id S1726543AbfFXF6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:55:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40857 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfFXFzR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:55:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so224662ioc.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2019 22:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MB7jsoCN6B+KNrRXEg/uVPgC1Ut8P/kMidprTlNMk78=;
-        b=EFwgZ0LNDntIB9LWehZbyrQruz2I2i5yx0XRhfFyt0IEUziPO1LjP8mBVrYgS/Vu9Z
-         3gjIK3n7h57pkpzdrk/dSCXz/EwObWtY84KungPUtK9bM3yr4VYX7AzzbHshdmr1bBu3
-         crFI7ZCBdRyXZDpjL+o8byiTblqaKFQiPr0OZB3JWH2Gf2DY//slHAWwsnhExYEsq6DV
-         8BMytD3TEDXnBtdmlJ6a7AmCemcYqs2zR6a2/X7WKCBcm+a7kloxAnXeyp3E3m9JxtHT
-         qTAUwN2PtzmkVwoxt9w3HW2FoDhdzjz5muPo79LXyfx2AK8pUkarOV6nXKrr2zNVcF8k
-         otCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MB7jsoCN6B+KNrRXEg/uVPgC1Ut8P/kMidprTlNMk78=;
-        b=FDqa8Jhgi6uQs9sCcwReYGI+GnC+wVOIu8XRrxmestqIZSq1ptFfo6Eo1A9TeaKyIl
-         UpX5Z+5W4D2HMtnNJC8f4TVYECVNIsnqnHPXdeeR2F8DpXhfEWx8FEfwBtZXrb61scRI
-         stI9zMNzdMNkjpcyW0DQZdF1K0Ca2kgAQ1l51EG4jq3F4TckbjqnolUGbbiduxjih6sO
-         3zlDFZNAybOFeZ/OW0BaDviwsRha+nQA56AYWRYx5AoO91dgI+lLCWOAklgfvfc7kMs5
-         RzPjAF+AKFn6fK8Op1TtcFB3loWjDQ1kFt3YM6RM5qrvdK2dTQ6jiY5oJWyuEJ3/rpvu
-         ZgHw==
-X-Gm-Message-State: APjAAAXNxgTNtjySSpW4YlXF+yRHzZ2akEMI9qQrtB+TUw2q+RQtDH1F
-        HKcmUwScfHUPA4bVx8LMvLxKgq0ORbXWcu2Djg==
-X-Google-Smtp-Source: APXvYqz21l53EP4/uEWFM2tah2RK5JkPnEImBUKlK56iy9SewaPdxqyxD6QTuB+hGojVTvragBolmaTARvs5BepDyhI=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr7518421ioa.12.1561355716706;
- Sun, 23 Jun 2019 22:55:16 -0700 (PDT)
+        Mon, 24 Jun 2019 01:58:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:34567 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFXF6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:58:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2019 22:58:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,411,1557212400"; 
+   d="scan'208";a="161523545"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jun 2019 22:58:17 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Ran Wang <ran.wang_1@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list\:DESIGNWARE USB3 DRD IP DRIVER" 
+        <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+In-Reply-To: <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com> <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87o92wgyqj.fsf@linux.intel.com> <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+Date:   Mon, 24 Jun 2019 08:58:16 +0300
+Message-ID: <87v9wvsex3.fsf@linux.intel.com>
 MIME-Version: 1.0
-References: <1561350068-8966-1-git-send-email-kernelfans@gmail.com> <20190624050341.GB30102@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20190624050341.GB30102@iweiny-DESK2.sc.intel.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 24 Jun 2019 13:55:05 +0800
-Message-ID: <CAFgQCTvT4HZn6ZOAxUzUOwqv--R4CLTkOC_V=y22Fy1m1thrRA@mail.gmail.com>
-Subject: Re: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate
- away smaller huge page
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 1:03 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Mon, Jun 24, 2019 at 12:21:08PM +0800, Pingfan Liu wrote:
-> > The current pfn_range_valid_gigantic() rejects the pud huge page allocation
-> > if there is a pmd huge page inside the candidate range.
-> >
-> > But pud huge resource is more rare, which should align on 1GB on x86. It is
-> > worth to allow migrating away pmd huge page to make room for a pud huge
-> > page.
-> >
-> > The same logic is applied to pgd and pud huge pages.
->
-> I'm sorry but I don't quite understand why we should do this.  Is this a bug or
-> an optimization?  It sounds like an optimization.
-Yes, an optimization. It can help us to success to allocate a 1GB
-hugetlb if there is some 2MB hugetlb sit in the candidate range.
-Allocation 1GB hugetlb requires more tough condition, not only a
-continuous 1GB range, but also aligned on GB. While allocating a 2MB
-range is easier.
->
-> >
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> > Cc: Oscar Salvador <osalvador@suse.de>
-> > Cc: David Hildenbrand <david@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  mm/hugetlb.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index ac843d3..02d1978 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -1081,7 +1081,11 @@ static bool pfn_range_valid_gigantic(struct zone *z,
-> >                       unsigned long start_pfn, unsigned long nr_pages)
-> >  {
-> >       unsigned long i, end_pfn = start_pfn + nr_pages;
-> > -     struct page *page;
-> > +     struct page *page = pfn_to_page(start_pfn);
-> > +
-> > +     if (PageHuge(page))
-> > +             if (compound_order(compound_head(page)) >= nr_pages)
->
-> I don't think you want compound_order() here.
-Yes, your are right.
 
-Thanks,
-  Pingfan
+Hi,
+
+Ran Wang <ran.wang_1@nxp.com> writes:
+>> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+>> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+>> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+>> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+>> >> > >> >> >   * 	3	- Reserved
+>> >> > >> >> >   * @imod_interval: set the interrupt moderation interval in 250ns
+>> >> > >> >> >   *                 increments or 0 to disable.
+>> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+>> >> > >> >>
+>> >> > >> >> you're not enabling dma coherency, you're enabling cache snooping.
+>> >> > >> >> And this property should describe that. Also, keep in mind
+>> >> > >> >> that different devices may want different cache types for
+>> >> > >> >> each of those fields, so your property would have to be a lot
+>> >> > >> >> more complex. Something
+>> >> > like:
+>> >> > >> >>
+>> >> > >> >> 	snps,cache-type = <foobar "cacheable">, <baz "cacheable">, ...
+>> >> > >> >>
+>> >> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
+>> >> > >
+>> >> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
+>> >> > > Databook (v2.60a), it has described Type Bit Assignments for all
+>> >> > > supported
+>> >> > master bus type:
+>> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
+>> >> > > different among
+>> >> > them.
+>> >> > > So, for the example you gave above, feel a little bit confused.
+>> >> > > Did you mean:
+>> >> > >     snps,cache-type = <DATA_RD  "write allocate">, <DESC_RD
+>> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
+>> >> >
+>> >> > yeah, something like that.
+>> >>
+>> >> I think DATA_RD  should be a macro, right? So, where I can put its define?
+>> >> Create a dwc3.h in include/dt-bindings/usb/ ?
+>> >
+>> > Could you please give me some advice here? I'd like to prepare next
+>> > version patch after getting this settled.
+>> >
+>> >> Another question about this remain open is: DWC3 data book's Table
+>> >> 6-5 Cache Type Bit Assignments show that bits definition will differ
+>> >> per MBUS_TYPEs as
+>> >> below:
+>> >> ----------------------------------------------------------------
+>> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+>> >>  ----------------------------------------------------------------
+>> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+>> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+>> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+>> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+>> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+>> >>  ----------------------------------------------------------------
+>> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+>> >> certain  signals, which have the same meaning:
+>> >>    Bufferable = Posted
+>> >>    Cacheable = Modifiable = Snoop (negation of No Snoop)
+>> >>
+>> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
+>> >> snps,cache-type = <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
+>> >> (you can notice that AHB and AXI3's cacheable are on different bit)
+>> >> Or I just need to handle AXI3 case?
+>> >
+>> > Also on this open. Thank you in advance.
+>> 
+>> You could pass two strings and let the driver process them. Something
+>> like:
+>> 
+>> 	snps,cache_type = <"data_wr" "write allocate">, <"desc_rd"
+>> "cacheable">...
+>> 
+>> And so on. The only thing missing is for the mbus_type to be known by the driver.
+>> Is that something we can figure out on any of the HWPARAMS registers or does
+>> it have to be told explicitly?
 >
-> Ira
+> I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't contain mbus_type
+> Info, and I didn't know where have declared it explicitly.
 >
-> > +                     return false;
-> >
-> >       for (i = start_pfn; i < end_pfn; i++) {
-> >               if (!pfn_valid(i))
-> > @@ -1098,8 +1102,6 @@ static bool pfn_range_valid_gigantic(struct zone *z,
-> >               if (page_count(page) > 0)
-> >                       return false;
-> >
-> > -             if (PageHuge(page))
-> > -                     return false;
-> >       }
-> >
-> >       return true;
-> > --
-> > 2.7.5
-> >
+>> Another option would be to pass a string followed by one hex digit for the bits:
+>> 
+>> 	snps,cache_type = <"data_wr" 0x8>, <"desc_rd" 0x2>...;
+>> 
+>> Then we don't need to describe mbus_type since the bits are what matters.
+>
+> Yes, it's also what we prefer to use, it will be more flexible, I can add above Table
+> 6-5 Cache Type Bit Assignments in binding to help user decide which value they
+> would use.
+>
+> I would submit another version of patch for further review, thank you very much.
+
+cool, thanks
+
+-- 
+balbi
