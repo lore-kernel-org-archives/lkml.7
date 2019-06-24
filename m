@@ -2,193 +2,208 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50DCC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89016C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FA3208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BC6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pW3cVJiy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMLNna0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfFXJfr (ORCPT
+        id S1727650AbfFXJhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:35:47 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59532 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfFXJfr (ORCPT
+        Mon, 24 Jun 2019 05:37:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55353 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfFXJhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:35:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fpSnBqoHS/t62dCCVv8D8GC3CBsy2WoT0KVySSUKubY=; b=pW3cVJiySxMHsU+7BMFaWEHQK
-        HbqwMFG3+ym2ihWOPMMX41uyGqKy8lLpy0noNuGBUnfS1ALlxJPM4qOCxxZ55K1rq9KAGONS83wj3
-        odrcIXuZoMmCcqeom2R4aObpSClDaCwd9265RzW5f0i+rDleWU8vWMH862RVXW6hV/Ex0K83tlE7W
-        hDrFwXXN7g82bE/h/hkU+xviPB2n4hFrxjpIvt7I78bMjEBsS9/QKUlrZCxQx2uWRUtomiz8i4g7P
-        +wg6VN4XRS5wABDcvnwgntDJBLaDnvsHTaTYmVL++WubZPw8evJMAROTVQeHvzYC3Zr/ZE8IMRSEo
-        7N/tBJvcQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59020)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hfLNx-000764-QF; Mon, 24 Jun 2019 10:35:37 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hfLNt-0005x0-9S; Mon, 24 Jun 2019 10:35:33 +0100
-Date:   Mon, 24 Jun 2019 10:35:33 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v4 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190624093533.4vhvjmqqrucq2ixf@shell.armlinux.org.uk>
-References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
- <1561281781-13479-1-git-send-email-pthombar@cadence.com>
- <20190623101224.nzwodgfo6vvv65cx@shell.armlinux.org.uk>
- <CO2PR07MB246931C79F736F39D0523D3BC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+        Mon, 24 Jun 2019 05:37:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so12075221wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8gATWp32x5hJl7A19PsnOH4OavF0tByU78pOeDUgPLA=;
+        b=nMLNna0oCnS2h13MgPm2HNa+973i1qCbAekBgzwTjqU7qio6Igf9bWj+xifv5NProo
+         Ef9bsbfEYoaVB5IVqiQ/kCkd4rv65QDCsjpIKllYBxtWLoX23/pcMN74J8U2s9Yv+goV
+         DkDev1vlNamInzT9uqOGCxrPMgBM0h9sEueyfm2whq+E/jeEvuShKhxqTel3FiMjUD9G
+         chgHXEuz27zC5UV4akWy+RDph25lN5A/rGlqQKbUsuzP0wAxZxcyawGSQXEIlXLWRu3J
+         +Y9TwF7fbz7uR0CW1ACIzqmPCOLR+jsMuefCECtGFu/XzETNe0f7ZVrYNlkudrJLMGD3
+         CUew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8gATWp32x5hJl7A19PsnOH4OavF0tByU78pOeDUgPLA=;
+        b=pZV7Eu8X1K6N/+Y7FU17DpsuS29vRL6lc1z8R4TsIW/h2vYgwa/tGAKTlf5eeWh5We
+         TddqvlBTNXgVueb6IpCGHQZznyaSYFoBmc4aKFxSpuXWk8pZ9rB65fWFe0ResbDOMm73
+         Nh10BR4x39RWKVHczUSIQ/zd0mZ0kEy6NGFAUim0+ivGm1E1wzxUn22P4Do/R19p6GPB
+         qDF09FGNI6cwiMmSrPCv/QWOYf7rCndN7X2LliWa1WLz7XqrB6F1noA3onO5dUaA+zpc
+         gg+hRn3A7JHkFFgD7lkYo172m4reF9Deq3mQ2W9TI6bQ+kCabIjs7JKID0eUHuOsRrED
+         b71A==
+X-Gm-Message-State: APjAAAVvxdMR554fVvmCjtvRftldz77W/z/wghL0lWL78DPM3ilVUjv6
+        KO5mDAgZ0tHDqxjR2B32Ny8RPg==
+X-Google-Smtp-Source: APXvYqz3AJMSqvDqVdDun29/esTrUyMNhVMrUDQtHxOD89obBulYhAzxIpGQnXaCodHxttIlz21jFA==
+X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr16149287wmc.154.1561369038711;
+        Mon, 24 Jun 2019 02:37:18 -0700 (PDT)
+Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
+        by smtp.googlemail.com with ESMTPSA id l1sm31460844wrf.46.2019.06.24.02.37.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 02:37:18 -0700 (PDT)
+Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of
+ IS_ENABLED macro
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
+ <CAJZ5v0j0q+Z+FRpVuj39ML_c5ijo-veMMMSANdoDz1ZxAK3RgQ@mail.gmail.com>
+ <b817a599-6564-b3d0-9c91-59c3fd5b5eb1@linaro.org>
+ <2097869.93pjHihJNk@kreacher>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <225a3a6e-94d8-f801-6388-5ec90ca19e11@linaro.org>
+Date:   Mon, 24 Jun 2019 11:37:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO2PR07MB246931C79F736F39D0523D3BC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <2097869.93pjHihJNk@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 06:35:44AM +0000, Parshuram Raju Thombare wrote:
+On 24/06/2019 11:30, Rafael J. Wysocki wrote:
+> On Monday, June 24, 2019 11:22:19 AM CEST Daniel Lezcano wrote:
+>> On 22/06/2019 11:12, Rafael J. Wysocki wrote:
+>>> On Fri, Jun 21, 2019 at 3:23 PM Daniel Lezcano
+>>> <daniel.lezcano@linaro.org> wrote:
+>>>>
+>>>> The functions stub already exist for the condition the IS_ENABLED
+>>>> is trying to avoid.
+>>>>
+>>>> Remove the IS_ENABLED macros as they are pointless.
+>>>
+>>> AFAICS, the IS_ENABLED checks are an optimization to avoid generating
+>>> pointless code (including a branch) in case CONFIG_CPU_THERMAL is not
+>>> set.
+>>>
+>>> Why do you think that it is not useful?
+>>
+>> I agree but I'm not a big fan of IS_ENABLED macros in the code when it
+>> is possible to avoid them.
+>>
+>> What about adding a stub for that like:
 > 
-> >> +	if (change_interface) {
-> >> +		if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII) {
-> >> +			gem_writel(bp, NCFGR, ~GEM_BIT(SGMIIEN) &
-> >> +				   ~GEM_BIT(PCSSEL) &
-> >> +				   gem_readl(bp, NCFGR));
-> >> +			gem_writel(bp, NCR, ~GEM_BIT(TWO_PT_FIVE_GIG) &
-> >> +				   gem_readl(bp, NCR));
-> >> +			gem_writel(bp, PCS_CTRL, gem_readl(bp, PCS_CTRL) |
-> >> +				   GEM_BIT(PCS_CTRL_RST));
-> >> +		}
-> >I still don't think this makes much sense, splitting the interface
-> >configuration between here and below.
-> Do you mean splitting mac_config in two *_configure functions ?
-> This was done as per Andrew's suggestion to make code mode readable
-> and easy to manage by splitting MAC configuration for different interfaces.
-
-No, I mean here you disable SGMII if we're switching away from SGMII
-mode.... (note, this means there is more to come for this sentence)
-
+> Well,
 > 
-> >> +		bp->phy_interface = state->interface;
-> >> +	}
-> >> +
-> >>  	if (!phylink_autoneg_inband(mode) &&
-> >>  	    (bp->speed != state->speed ||
-> >> -	     bp->duplex != state->duplex)) {
-> >> +	     bp->duplex != state->duplex ||
-> >> +	     change_interface)) {
-> >>  		u32 reg;
-> >>
-> >>  		reg = macb_readl(bp, NCFGR);
-> >>  		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
-> >>  		if (macb_is_gem(bp))
-> >>  			reg &= ~GEM_BIT(GBE);
-> >> +		macb_or_gem_writel(bp, NCFGR, reg);
-> >> +
-> >> +		if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII)
-> >> +			gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
-> >> +				   GEM_BIT(PCSSEL) |
-> >> +				   gem_readl(bp, NCFGR));
-> >This will only be executed when we are not using inband mode, which
-> >basically means it's not possible to switch to SGMII in-band mode.
-> SGMII is used in default PHY mode. And above code is to program MAC to 
-> select PCS and SGMII interface.
-
-... and here you enable it for SGMII mode, but only for non-inband
-modes.
-
-For inband modes, you do not have any code that enables SGMII mode.
-Since the only inband mode you support is SGMII, this is not very
-good behaviour.
-
-Why not:
-
-	if (change_interface) {
-		u32 ncfgr;
-
-		bp->phy_interface = state->interface;
-
-		// We don't support 2.5G modes
-		gem_writel(bp, NCR, ~GEM_BIT(TWO_PT_FIVE_GIG) &
-			   gem_readl(bp, NCR));
-
-		ncfgr = gem_readl(bp, NCFGR);
-		if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-			// Enable SGMII mode and PCS
-			gem_writel(bp, NCFGR, ncfgr | GEM_BIT(SGMIIEN) |
-				   GEM_BIT(PCSSEL));
-		} else {
-			// Disable SGMII mode and PCS
-			gem_writel(bp, NCFGR, ncfgr & ~(GEM_BIT(SGMIIEN) |
-				   GEM_BIT(PCSSEL)));
-
-			// Reset PCS
-			gem_writel(bp, PCS_CTRL, gem_readl(bp, PCS_CTRL) |
-				   GEM_BIT(PCS_CTRL_RST));
-		}
-	}
-
-	if (!phylink_autoneg_inband(mode) &&
-	    (bp->speed != state->speed || bp->duplex != state->duplex)) {
-
-?
-
+>> #ifdef CPU_THERMAL
+>> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+>> {
+>> 	return drv->flags & CPUFREQ_IS_COOLING_DEV;
+>> }
+>> #else
+>> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+>> {
+>> 	return 0;
+>> }
+>> #endif
 > 
-> >> +
-> >> +		if (!interface_supported) {
-> >> +			netdev_err(dev, "Phy mode %s not supported",
-> >> +				   phy_modes(phy_mode));
-> >> +			goto err_out_free_netdev;
-> >> +		}
-> >> +
-> >>  		bp->phy_interface = phy_mode;
-> >> +	} else {
-> >> +		bp->phy_interface = phy_mode;
-> >> +	}
-> >If bp->phy_interface is PHY_INTERFACE_MODE_SGMII here, and mac_config()
-> >is called with state->interface = PHY_INTERFACE_MODE_SGMII, then
-> >mac_config() won't configure the MAC for the interface type - is that
-> >intentional?
+> This may as well be defined as
 > 
-> In mac_config configure MAC for non in-band mode, there is also check for speed, duplex
-> changes. bp->speed and bp->duplex are initialized to SPEED_UNKNOWN and DUPLEX_UNKNOWN
-> values so it is expected that for non in band mode state contains valid speed and duplex mode
-> which are different from *_UNKNOWN values.
+> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+> {
+> 	return IS_ENABLED(CPU_THERMAL) && drv->flags & CPUFREQ_IS_COOLING_DEV;
+> }
+> 
+> which is fewer lines of code.
 
-Sorry, this reply doesn't answer my question.  I'm not asking about
-bp->speed and bp->duplex.  I'm asking:
+Ah yes, even better.
 
-1) why you are initialising bp->phy_interface here
-2) you to consider the impact that has on the mac_config() implementation
-   you are proposing
+> And I would call it something like cpufreq_thermal_control_enabled().
 
-because I think it's buggy.
+Ok, thanks!
+
+
+
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
