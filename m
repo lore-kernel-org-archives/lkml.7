@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A07EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45BAC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24905208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA001208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ox0Bj2s2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YNs3gx+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfFXFoj (ORCPT
+        id S1727374AbfFXFno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:44:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37040 "EHLO
+        Mon, 24 Jun 2019 01:43:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35904 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFXFnv (ORCPT
+        with ESMTP id S1726223AbfFXFni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:43:51 -0400
+        Mon, 24 Jun 2019 01:43:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=43pRHKdJKqNssrr4/Vc0cDK/nlhOlcebDC3ttvLu+nk=; b=Ox0Bj2s2AYtMiNqOyzVUJu1aca
-        4Zw5sJu947Gj5rs0jUIlbbOtlbwYiuHZ0nJ1wtQi79umOkWFdlOji03dK+QH22LmwJp2C8vJ56/Fw
-        VBYObyjWlQcJ9h5SQj6t76j0JD5TudW+arpOJd2w7RxIDG8pwuO4dR1jb3JpSDfRzc7ZczKYWm7vh
-        QI2c2xxg9ZuRIDvDgzexiDXDbZSYqdKgNNN3aPwHwGLG857aQEXAdzB2Nf4gvK+YbgR5Imuqbwebr
-        zBivLC6z+ob0BD9JpbwnxUy0vPPLYKipdDiBzZ5jLr7Jy5pym/AnznE86d12FYY1jmZQrC/xeH+IC
-        s5lNwFPQ==;
+        bh=5WJArPRhLKawZExF1a/OJKFWf27gCJZIRATflv1f+LA=; b=YNs3gx+cZZv1ocI36RZcvQyY9T
+        QTQAtNYVUae846VvayO26Eo+iWXkBfk4QXQM6mmZ5W6Zx0yJsWF18x+cP04E4Yy/Qu+9KKD8R4nRm
+        HUfGGHLa7joE4G/VLRECg18AwszpPm3Dm/vU5chIb9rtFkH8A/EDQCh6t/mX19oO6tHcN1wx9YlGf
+        J9IRgkwvTb8sJ4unejzwORv8IR/ev5ze7WeDv/2sC7ro8hXmHsJjeh4WUn9fJNDBEKBqyzxGctyDo
+        nOQDQkr2twVVOQPP4YTh47PUmzt9r88vq5a82lkOHFOHV54/hbA3uXyXBxpCBr+tJrhKc77DWOAZG
+        ZY9VAwnA==;
 Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfHld-0006Xj-5S; Mon, 24 Jun 2019 05:43:49 +0000
+        id 1hfHlP-0006JM-V8; Mon, 24 Jun 2019 05:43:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Subject: [PATCH 10/17] riscv: read the hart ID from mhartid on boot
-Date:   Mon, 24 Jun 2019 07:43:04 +0200
-Message-Id: <20190624054311.30256-11-hch@lst.de>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/17] riscv: refactor the IPI code
+Date:   Mon, 24 Jun 2019 07:43:00 +0200
+Message-Id: <20190624054311.30256-7-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190624054311.30256-1-hch@lst.de>
 References: <20190624054311.30256-1-hch@lst.de>
@@ -59,36 +58,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <Damien.LeMoal@wdc.com>
+This prepare for adding native non-SBI IPI code.
 
-When in M-Mode, we can use the mhartid CSR to get the ID of the running
-HART. Doing so, direct M-Mode boot without firmware is possible.
-
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/kernel/head.S | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/riscv/kernel/smp.c | 55 +++++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 24 deletions(-)
 
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index e5fa5481aa99..a4c170e41a34 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -18,6 +18,14 @@ ENTRY(_start)
- 	csrw CSR_XIE, zero
- 	csrw CSR_XIP, zero
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index 5a9834503a2f..8cd730239613 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -78,13 +78,38 @@ static void ipi_stop(void)
+ 		wait_for_interrupt();
+ }
  
-+#ifdef CONFIG_M_MODE
-+	/*
-+	 * The hartid in a0 is expected later on, and we have no firmware
-+	 * to hand it to us.
-+	 */
-+	csrr a0, mhartid
-+#endif
++static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
++{
++	int cpuid, hartid;
++	struct cpumask hartid_mask;
 +
- 	/* Load the global pointer */
- .option push
- .option norelax
++	cpumask_clear(&hartid_mask);
++	mb();
++	for_each_cpu(cpuid, mask) {
++		set_bit(op, &ipi_data[cpuid].bits);
++		hartid = cpuid_to_hartid_map(cpuid);
++		cpumask_set_cpu(hartid, &hartid_mask);
++	}
++	mb();
++	sbi_send_ipi(cpumask_bits(&hartid_mask));
++}
++
++static void send_ipi_single(int cpu, enum ipi_message_type op)
++{
++	send_ipi_mask(cpumask_of(cpu), op);
++}
++
++static inline void clear_ipi(void)
++{
++	csr_clear(CSR_SIP, SIE_SSIE);
++}
++
+ void riscv_software_interrupt(void)
+ {
+ 	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
+ 	unsigned long *stats = ipi_data[smp_processor_id()].stats;
+ 
+-	/* Clear pending IPI */
+-	csr_clear(CSR_SIP, SIE_SSIE);
++	clear_ipi();
+ 
+ 	while (true) {
+ 		unsigned long ops;
+@@ -118,23 +143,6 @@ void riscv_software_interrupt(void)
+ 	}
+ }
+ 
+-static void
+-send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
+-{
+-	int cpuid, hartid;
+-	struct cpumask hartid_mask;
+-
+-	cpumask_clear(&hartid_mask);
+-	mb();
+-	for_each_cpu(cpuid, to_whom) {
+-		set_bit(operation, &ipi_data[cpuid].bits);
+-		hartid = cpuid_to_hartid_map(cpuid);
+-		cpumask_set_cpu(hartid, &hartid_mask);
+-	}
+-	mb();
+-	sbi_send_ipi(cpumask_bits(&hartid_mask));
+-}
+-
+ static const char * const ipi_names[] = {
+ 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
+ 	[IPI_CALL_FUNC]		= "Function call interrupts",
+@@ -156,12 +164,12 @@ void show_ipi_stats(struct seq_file *p, int prec)
+ 
+ void arch_send_call_function_ipi_mask(struct cpumask *mask)
+ {
+-	send_ipi_message(mask, IPI_CALL_FUNC);
++	send_ipi_mask(mask, IPI_CALL_FUNC);
+ }
+ 
+ void arch_send_call_function_single_ipi(int cpu)
+ {
+-	send_ipi_message(cpumask_of(cpu), IPI_CALL_FUNC);
++	send_ipi_single(cpu, IPI_CALL_FUNC);
+ }
+ 
+ void smp_send_stop(void)
+@@ -176,7 +184,7 @@ void smp_send_stop(void)
+ 
+ 		if (system_state <= SYSTEM_RUNNING)
+ 			pr_crit("SMP: stopping secondary CPUs\n");
+-		send_ipi_message(&mask, IPI_CPU_STOP);
++		send_ipi_mask(&mask, IPI_CPU_STOP);
+ 	}
+ 
+ 	/* Wait up to one second for other CPUs to stop */
+@@ -191,6 +199,5 @@ void smp_send_stop(void)
+ 
+ void smp_send_reschedule(int cpu)
+ {
+-	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
++	send_ipi_single(cpu, IPI_RESCHEDULE);
+ }
+-
 -- 
 2.20.1
 
