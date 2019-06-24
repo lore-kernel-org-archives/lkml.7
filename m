@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ABFC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7BCC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC58213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AF4208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370349;
-	bh=JLVeObjHjzNKx1lln9DG18Z8xT0aOW4ZUEfxrfdGs3Q=;
+	s=default; t=1561370352;
+	bh=qXek9NlD9YpYj23LAjZenJPNQcKpQX0cgv2PSGiZ628=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Khu9mD4vE3yifhj83aDUJ4IfM8VyFekCOQaBw6y2HTXJLHeG5rd4r5UbBSiYeoGyd
-	 sD+Zt/weQBa21cOHUDpIERWryVIa3rjpy9fv+FBCEo1SfZtasANNWH6rlpb8UraB/0
-	 3pWwEG4qn5c9hoaPLhzbfuMdVykdT9Edhic/35to=
+	b=yKSb5fvuh9MDminLCN9tGcYJ4om2qxlKlCFDigjK34GbcdtCyjA7rFJtbYpHC1wCx
+	 vnPMDASTIVDJGWPQgYHE2pRXfvp+FlerhbbJV5UhoGJIhueKWcWnqz4DEzytVZJCdt
+	 Bs2e5HRr+puZL6/QPrSxMUD5w7D2teAWvzxJS8go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfFXJ7I (ORCPT
+        id S1729159AbfFXJ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbfFXJ7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:02 -0400
+        id S1729142AbfFXJ7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:08 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7AB205ED;
-        Mon, 24 Jun 2019 09:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3C7C205ED;
+        Mon, 24 Jun 2019 09:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370342;
-        bh=JLVeObjHjzNKx1lln9DG18Z8xT0aOW4ZUEfxrfdGs3Q=;
+        s=default; t=1561370347;
+        bh=qXek9NlD9YpYj23LAjZenJPNQcKpQX0cgv2PSGiZ628=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjrDDwEdYBiiUqJcGF3XMFRjIo3rJn8kIRyNSpp6Y5CSWTruAbdK6EbY8Y11I45d0
-         jrDItPkNsDK07iSoXrbtzKJn3noim3xxd2ZxrZx4/3mNiB7zIbbIxLzzXEmbofenf+
-         T3cOuRDe7cvHSiWP+0Dg1MSIlQDAJYMYjjgn64o4=
+        b=bmAQxdg2H0LGTY1Cl1K6gFWrW7C5yErHJWYSHXMW6yz11NGZpWmQqeFAnTLfBKzS4
+         bxg9WXZKEfV+OJQDdnURuf+NcjbrHerhqtt5Dar4yNTeOWjVs1T2NL7AzVkXPdg2MJ
+         UOFgo0RyVQ2var2NxAJd9+3TFXNCyCL6/26AmxXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 05/51] mmc: core: Prevent processing SDIO IRQs when the card is suspended
-Date:   Mon, 24 Jun 2019 17:56:23 +0800
-Message-Id: <20190624092306.562108995@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.14 07/51] usb: chipidea: udc: workaround for endpoint conflict issue
+Date:   Mon, 24 Jun 2019 17:56:25 +0800
+Message-Id: <20190624092307.055776437@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -59,77 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 83293386bc95cf5e9f0c0175794455835bd1cb4a upstream.
+commit c19dffc0a9511a7d7493ec21019aefd97e9a111b upstream.
 
-Processing of SDIO IRQs must obviously be prevented while the card is
-system suspended, otherwise we may end up trying to communicate with an
-uninitialized SDIO card.
+An endpoint conflict occurs when the USB is working in device mode
+during an isochronous communication. When the endpointA IN direction
+is an isochronous IN endpoint, and the host sends an IN token to
+endpointA on another device, then the OUT transaction may be missed
+regardless the OUT endpoint number. Generally, this occurs when the
+device is connected to the host through a hub and other devices are
+connected to the same hub.
 
-Reports throughout the years shows that this is not only a theoretical
-problem, but a real issue. So, let's finally fix this problem, by keeping
-track of the state for the card and bail out before processing the SDIO
-IRQ, in case the card is suspended.
+The affected OUT endpoint can be either control, bulk, isochronous, or
+an interrupt endpoint. After the OUT endpoint is primed, if an IN token
+to the same endpoint number on another device is received, then the OUT
+endpoint may be unprimed (cannot be detected by software), which causes
+this endpoint to no longer respond to the host OUT token, and thus, no
+corresponding interrupt occurs.
 
-Cc: stable@vger.kernel.org
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+There is no good workaround for this issue, the only thing the software
+could do is numbering isochronous IN from the highest endpoint since we
+have observed most of device number endpoint from the lowest.
+
+Cc: <stable@vger.kernel.org> #v3.14+
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/sdio.c     |   13 ++++++++++++-
- drivers/mmc/core/sdio_irq.c |    4 ++++
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/usb/chipidea/udc.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -907,6 +907,10 @@ static int mmc_sdio_pre_suspend(struct m
-  */
- static int mmc_sdio_suspend(struct mmc_host *host)
- {
-+	/* Prevent processing of SDIO IRQs in suspended state. */
-+	mmc_card_set_suspended(host->card);
-+	cancel_delayed_work_sync(&host->sdio_irq_work);
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1620,6 +1620,25 @@ static int ci_udc_pullup(struct usb_gadg
+ static int ci_udc_start(struct usb_gadget *gadget,
+ 			 struct usb_gadget_driver *driver);
+ static int ci_udc_stop(struct usb_gadget *gadget);
 +
- 	mmc_claim_host(host);
- 
- 	if (mmc_card_keep_power(host) && mmc_card_wake_sdio_irq(host))
-@@ -962,13 +966,20 @@ static int mmc_sdio_resume(struct mmc_ho
- 		err = sdio_enable_4bit_bus(host->card);
- 	}
- 
--	if (!err && host->sdio_irqs) {
-+	if (err)
-+		goto out;
++/* Match ISOC IN from the highest endpoint */
++static struct usb_ep *ci_udc_match_ep(struct usb_gadget *gadget,
++			      struct usb_endpoint_descriptor *desc,
++			      struct usb_ss_ep_comp_descriptor *comp_desc)
++{
++	struct ci_hdrc *ci = container_of(gadget, struct ci_hdrc, gadget);
++	struct usb_ep *ep;
 +
-+	/* Allow SDIO IRQs to be processed again. */
-+	mmc_card_clr_suspended(host->card);
++	if (usb_endpoint_xfer_isoc(desc) && usb_endpoint_dir_in(desc)) {
++		list_for_each_entry_reverse(ep, &ci->gadget.ep_list, ep_list) {
++			if (ep->caps.dir_in && !ep->claimed)
++				return ep;
++		}
++	}
 +
-+	if (host->sdio_irqs) {
- 		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
- 			wake_up_process(host->sdio_irq_thread);
- 		else if (host->caps & MMC_CAP_SDIO_IRQ)
- 			host->ops->enable_sdio_irq(host, 1);
- 	}
- 
-+out:
- 	mmc_release_host(host);
- 
- 	host->pm_flags &= ~MMC_PM_KEEP_POWER;
---- a/drivers/mmc/core/sdio_irq.c
-+++ b/drivers/mmc/core/sdio_irq.c
-@@ -38,6 +38,10 @@ static int process_sdio_pending_irqs(str
- 	unsigned char pending;
- 	struct sdio_func *func;
- 
-+	/* Don't process SDIO IRQs if the card is suspended. */
-+	if (mmc_card_suspended(card))
-+		return 0;
++	return NULL;
++}
 +
- 	/*
- 	 * Optimization, if there is only 1 function interrupt registered
- 	 * and we know an IRQ was signaled then call irq handler directly.
+ /**
+  * Device operations part of the API to the USB controller hardware,
+  * which don't involve endpoints (or i/o)
+@@ -1633,6 +1652,7 @@ static const struct usb_gadget_ops usb_g
+ 	.vbus_draw	= ci_udc_vbus_draw,
+ 	.udc_start	= ci_udc_start,
+ 	.udc_stop	= ci_udc_stop,
++	.match_ep 	= ci_udc_match_ep,
+ };
+ 
+ static int init_eps(struct ci_hdrc *ci)
 
 
