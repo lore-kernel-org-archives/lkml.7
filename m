@@ -2,96 +2,166 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A55C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7BAC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9716208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561384218;
-	bh=D93F75MCf5Ifim/NA5/BmsC0u/Z/+dlTBc51xNbANYI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TP4JbrOWbtqgcCgDmRI3Ll3iy5ozCIPwH3y+qZ+bzG9jkzT+mCdWkubV8Xcf6+V0k
-	 spQqUOcsJMduyjfTz7UYSoWYiwebApI4Qb3GjzvE1Gaof7TvY8xq+W+gTBwxlLumQh
-	 XVz0Eh/A+eiznboX/HH3J9+6vA4Nr55qfpo4epJQ=
+	by mail.kernel.org (Postfix) with ESMTP id E39412133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:50:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QmgF69El"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbfFXNuR (ORCPT
+        id S1731361AbfFXNuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:50:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbfFXNuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:50:16 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D46F9208E4;
-        Mon, 24 Jun 2019 13:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561384215;
-        bh=D93F75MCf5Ifim/NA5/BmsC0u/Z/+dlTBc51xNbANYI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tOw8nminDrolY2+lEBkH6FywwYeWdFm1P0aTmxYzLEuHPQf+Iz4ixe+YgBTgOegQZ
-         Xaxn/0FWe+yH0ngMVpwBZL3YcZuX+gssnI/aLIuMXxgh5yXVfI9lVatXQFdtjdT6jc
-         B1dvbrkZSf/xkwTKnE8hRV2HDq80Y95FkK0sljWo=
-Received: by mail-qt1-f169.google.com with SMTP id i34so14490976qta.6;
-        Mon, 24 Jun 2019 06:50:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAW29cuIjlao/kfmCs4ThAC9r+Xo4s5jZS+CKSg6/bRvmYVueGUQ
-        gSHCO3lhg7QzRgGRv6Ec2oX6Qzoo206ASppuyw==
-X-Google-Smtp-Source: APXvYqxmW7JPHc33YPuhk21FAE42NxsvsYvCz8xmz3rfBr2a2RuJ6mDF+EKi4YjQQN8aB0Jrk5c2f42QB2J0AaagZKE=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr47415116qtc.143.1561384214126;
- Mon, 24 Jun 2019 06:50:14 -0700 (PDT)
+        Mon, 24 Jun 2019 09:50:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33670 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfFXNuz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:50:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnCJ2183615;
+        Mon, 24 Jun 2019 13:50:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=SW6Szazq/wB2nNLnJHycEJb7byHwJ55tmOD9zZh4JmM=;
+ b=QmgF69El//eOOAYwiDMFA/pB2Cg6Ir69CC2fmdEAI9knXHbuIo2t5IhWYLRQ2NB4UrZa
+ eQKByBNHGzfTyeIofHM6kf3PTPNqTpiR74BZYP1X5Lno4YoCOWdWuLiW3DGCqaXPUz0+
+ E4bUyY1cC1m4dI7CVDedv26N7Rt+nx+B/R+TY80Z9tBX4JlpiNHHe3zLPOyjCAvUCbMc
+ fxmxYblZMxYmroQkBAYl8yGzBTRh1sh8Esv22I7tWF+8u6vVHH7c3KZe31p5Cej5Md7y
+ pDqlTYpZHPj5HvbMTs9IcRZPugKoEkTmf20FTU6kldV79+FckoRnWcW8L4LzkLYNeGwl hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brsxjhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:50:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnNxj113546;
+        Mon, 24 Jun 2019 13:50:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7bn7mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:50:38 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ODoaqJ029412;
+        Mon, 24 Jun 2019 13:50:37 GMT
+Received: from [192.168.0.8] (/1.180.238.73)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 06:50:36 -0700
+Subject: Re: [PATCH 3/6] x86: Add nopv parameter to disable PV extensions
+To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <1561294903-6166-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1561294903-6166-3-git-send-email-zhenzhong.duan@oracle.com>
+ <9e60cea2-a15f-b816-9049-f22be14c04b2@suse.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <cf315d9a-7027-aa8c-1cac-9be9b734811c@oracle.com>
+Date:   Mon, 24 Jun 2019 21:50:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190624080845.18537-1-mircea.caprioru@analog.com> <20190624080845.18537-4-mircea.caprioru@analog.com>
-In-Reply-To: <20190624080845.18537-4-mircea.caprioru@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 24 Jun 2019 07:50:02 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
-Message-ID: <CAL_JsqJY_bO7EQa=Sfqs8Prwj483Q8Xs0+eX+HZyGsyr-4p-oQ@mail.gmail.com>
-Subject: Re: [PATCH V3 4/5] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9e60cea2-a15f-b816-9049-f22be14c04b2@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:09 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
->
-> Convert AD7124 bindings documentation to YAML format.
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
->
-> Changelog v2:
-> - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> - added regex for a range from 0 to 15
-> - added minimum and maximum constraints for reg property
-> - set type and range of values for adi,reference-select property
-> - used items for diff-channels property
-> - set bipolar, adi,buffered-positive and negative to type: boolean
->
-> Changelog v3:
-> - moved adi,buffered-positive and negative properties to own commit
->
->  .../bindings/iio/adc/adi,ad7124.yaml          | 144 ++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
 
-The subject says 'Convert', but where's the removal of the old binding?
+On 2019/6/24 21:18, Juergen Gross wrote:
+> On 23.06.19 15:01, Zhenzhong Duan wrote:
+>> In virtualization environment, PV extensions (drivers, interrupts,
+>> timers, etc) are enabled in the majority of use cases which is the
+>> best option.
+>>
+>> However, in some cases (kexec not fully working, benchmarking)
+>> we want to disable PV extensions. As such introduce the
+>> 'nopv' parameter that will do it.
+>>
+>> There is already 'xen_nopv' parameter for XEN platform but not for
+>> others. 'xen_nopv' can then be removed with this change.
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Cc: xen-devel@lists.xenproject.org
+>> ---
+>>   Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+>>   arch/x86/kernel/cpu/hypervisor.c                | 11 +++++++++++
+>>   2 files changed, 15 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt 
+>> b/Documentation/admin-guide/kernel-parameters.txt
+>> index 138f666..b352f36 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -5268,6 +5268,10 @@
+>>               improve timer resolution at the expense of processing
+>>               more timer interrupts.
+>>   +    nopv=        [X86]
+>> +            Disables the PV optimizations forcing the guest to run
+>> +            as generic guest with no PV drivers.
+>> +
+>>       xirc2ps_cs=    [NET,PCMCIA]
+>>               Format:
+>> <irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+>> diff --git a/arch/x86/kernel/cpu/hypervisor.c 
+>> b/arch/x86/kernel/cpu/hypervisor.c
+>> index 479ca47..4f2c875 100644
+>> --- a/arch/x86/kernel/cpu/hypervisor.c
+>> +++ b/arch/x86/kernel/cpu/hypervisor.c
+>> @@ -85,10 +85,21 @@ static void __init copy_array(const void *src, 
+>> void *target, unsigned int size)
+>>               to[i] = from[i];
+>>   }
+>>   +static bool nopv;
+>> +static __init int xen_parse_nopv(char *arg)
+>> +{
+>> +    nopv = true;
+>> +    return 0;
+>> +}
+>> +early_param("nopv", xen_parse_nopv);
+>> +
+>>   void __init init_hypervisor_platform(void)
+>>   {
+>>       const struct hypervisor_x86 *h;
+>>   +    if (nopv)
+>> +        return;
+>> +
+>
+> Oh, this is no good idea.
+>
+> There are guest types which just won't work without pv interfaces, like
+> Xen PV and Xen PVH. Letting them fail due to just a wrong command line
+> parameter is not nice, especially as the failure might be very hard to
+> track down to the issue for the user.
+Yes, thanks for catching.
+>
+> I guess you could add a "ignore_nopv" member to struct hypervisor_x86
+> set to true for the mentioned guest types and call the detect functions
+> only if nopv is false or ignore_nopv is true.
 
-Rob
+I think your suggestion is good, I'll rework it based on your suggestion.
+
+Thanks
+
+Zhenzhong
+
