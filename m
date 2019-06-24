@@ -2,90 +2,90 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBACC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA70C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5BD20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NJGAPTmU"
+	by mail.kernel.org (Postfix) with ESMTP id 27DD220645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbfFXUP6 (ORCPT
+        id S1731661AbfFXUQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:15:58 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38663 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731569AbfFXUP5 (ORCPT
+        Mon, 24 Jun 2019 16:16:08 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:60293 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727595AbfFXUQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:15:57 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so3828874ioa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NlNgzMMFJ+7QwGx9xG98XqTbQWSzsaaFAnhIGC2h2XQ=;
-        b=NJGAPTmUam9+dMN0mbGC1vA6isBRugH0cJzAQU6FeessvYEf6yigBykoLNvckboO3/
-         RxDkBfqV+yw42M+bQIm97RifrnkhMUPvAAhuDM72zLT4jB3DygRAWDY59fcJKHsJPX2+
-         3+d2DIKgFvXJaFL9EUuz/R7kelADr+QazYAQ02FtZ4tYF2V/ieg29/jq+Lvo9zI/MXda
-         IdSWU6kcTBgiUoXi9HmdgUEQdKeV09YSt0GzBD61kq1idQba5fMW/q+ThWkqOYpA32AK
-         92iFCn9RLi7EPpKuHTMTDKtB7kwTJcG4gFeNJwNP/zH/FEuLdiZkDxl404taFXuSNC2Q
-         E50Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NlNgzMMFJ+7QwGx9xG98XqTbQWSzsaaFAnhIGC2h2XQ=;
-        b=VLtREp286b9VUZui4a4zwoTKV5C/iLTAHwk3cElK/tJslbW/KxkntsAX/PSOl4SmQp
-         vXZoONmw3WRE2JuRyuXoy5GnOngSrkNVd8nyFjDUWXGeNOoogDYiaUirgceIVDBi4Qrb
-         tVAF7LX/SY22GBQJ7LX5J82H+EA+2Uw9DbiiduBurLp5Os9vtxyNnDhLZKacZN9OvjL1
-         3WEGh527AlPUZV6YjT9fZBJJDYkk/Axh2srUUiAiijXp6nv+GRd+lGqlrwsFqh58NEjK
-         1Ar1EcxJY/1EQ4E2WL6ujgR1DtONKQcMpr79sduc2Ptb4jX2k01JqKmA1RdTwTRxxbPg
-         riHg==
-X-Gm-Message-State: APjAAAVJanRw+OkZ2WPSnwX5EA6dLZ56e5HoUhufs1VrSBJK2iOJ9Ks1
-        s40HTF6vOTtMZgG3G2Ax7W0/tADaY7HqqjNy7R0zsw==
-X-Google-Smtp-Source: APXvYqyqE/v1ofHO2nNCjIkljvgKCheFXksKQ8Ljlo0aFkiv1nRWwX6SmmK6XsZCfnY2ySNNRxkFfbK1mnYl9RNm7VA=
-X-Received: by 2002:a5d:9d97:: with SMTP id 23mr2139870ion.204.1561407356312;
- Mon, 24 Jun 2019 13:15:56 -0700 (PDT)
+        Mon, 24 Jun 2019 16:16:08 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hfVNk-000XTK-Vd; Mon, 24 Jun 2019 16:16:05 -0400
+Subject: Re: [PATCH BUGFIX IMPROVEMENT 0/7] boost throughput with synced I/O,
+ reduce latency and fix a bandwidth bug
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        bottura.nicola95@gmail.com
+References: <20190624194042.38747-1-paolo.valente@linaro.org>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <f3e2d759-911b-f593-9ec5-b6b7a94df71c@csail.mit.edu>
+Date:   Mon, 24 Jun 2019 13:15:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190622000358.19895-1-matthewgarrett@google.com>
- <20190622000358.19895-24-matthewgarrett@google.com> <739e21b5-9559-d588-3542-bf0bc81de1b2@iogearbox.net>
- <CACdnJuvR2bn3y3fYzg06GWXXgAGjgED2Dfa5g0oAwJ28qCCqBg@mail.gmail.com> <CALCETrWmZX3R1L88Gz9vLY68gcK8zSXL4cA4GqAzQoyqSR7rRQ@mail.gmail.com>
-In-Reply-To: <CALCETrWmZX3R1L88Gz9vLY68gcK8zSXL4cA4GqAzQoyqSR7rRQ@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Mon, 24 Jun 2019 13:15:44 -0700
-Message-ID: <CACdnJuu20Rsb-9XAcTR5Q9RJ5wY7ATazS7dLgDODH+YSZU50Tg@mail.gmail.com>
-Subject: Re: [PATCH V34 23/29] bpf: Restrict bpf when kernel lockdown is in
- confidentiality mode
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Chun-Yi Lee <jlee@suse.com>, Jann Horn <jannh@google.com>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190624194042.38747-1-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 1:09 PM Andy Lutomirski <luto@kernel.org> wrote:
+On 6/24/19 12:40 PM, Paolo Valente wrote:
+> Hi Jens,
+> this series, based against for-5.3/block, contains:
+> 1) The improvements to recover the throughput loss reported by
+>    Srivatsa [1] (first five patches)
+> 2) A preemption improvement to reduce I/O latency
+> 3) A fix of a subtle bug causing loss of control over I/O bandwidths
+> 
 
-> I'm confused.  I understand why we're restricting bpf_probe_read().
-> Why are we restricting bpf_probe_write_user() and bpf_trace_printk(),
-> though?
+Thanks a lot for these patches, Paolo!
 
-Hmm. I think the thinking here was around exfiltration mechanisms, but
-if the read is blocked then that seems less likely. This seems to
-trace back to http://kernsec.org/pipermail/linux-security-module-archive/2017-October/003545.html
-- Joey, do you know the reasoning here?
+Would you mind adding:
+
+Reported-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Tested-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+
+to the first 5 patches, as appropriate?
+
+Thank you!
+
+> 
+> [1] https://lkml.org/lkml/2019/5/17/755
+> 
+> Paolo Valente (7):
+>   block, bfq: reset inject limit when think-time state changes
+>   block, bfq: fix rq_in_driver check in bfq_update_inject_limit
+>   block, bfq: update base request service times when possible
+>   block, bfq: bring forward seek&think time update
+>   block, bfq: detect wakers and unconditionally inject their I/O
+>   block, bfq: preempt lower-weight or lower-priority queues
+>   block, bfq: re-schedule empty queues if they deserve I/O plugging
+> 
+>  block/bfq-iosched.c | 952 ++++++++++++++++++++++++++++++--------------
+>  block/bfq-iosched.h |  25 +-
+>  2 files changed, 686 insertions(+), 291 deletions(-)
+> 
+
+Regards,
+Srivatsa
+VMware Photon OS
