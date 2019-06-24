@@ -2,208 +2,148 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89016C48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367E9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BC6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6222054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMLNna0o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VCyHBpwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfFXJhW (ORCPT
+        id S1728255AbfFXJjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:37:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55353 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfFXJhV (ORCPT
+        Mon, 24 Jun 2019 05:39:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46818 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfFXJjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:37:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so12075221wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:37:19 -0700 (PDT)
+        Mon, 24 Jun 2019 05:39:40 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so6551166pls.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8gATWp32x5hJl7A19PsnOH4OavF0tByU78pOeDUgPLA=;
-        b=nMLNna0oCnS2h13MgPm2HNa+973i1qCbAekBgzwTjqU7qio6Igf9bWj+xifv5NProo
-         Ef9bsbfEYoaVB5IVqiQ/kCkd4rv65QDCsjpIKllYBxtWLoX23/pcMN74J8U2s9Yv+goV
-         DkDev1vlNamInzT9uqOGCxrPMgBM0h9sEueyfm2whq+E/jeEvuShKhxqTel3FiMjUD9G
-         chgHXEuz27zC5UV4akWy+RDph25lN5A/rGlqQKbUsuzP0wAxZxcyawGSQXEIlXLWRu3J
-         +Y9TwF7fbz7uR0CW1ACIzqmPCOLR+jsMuefCECtGFu/XzETNe0f7ZVrYNlkudrJLMGD3
-         CUew==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0xq4Hf3p8ZFDHvrAu4X/XVuAS4nlGCqTsPVT41F3h+A=;
+        b=VCyHBpwOAxYJLGT3NUX1EldqHeUq4P8q3nWC/ggkGk83WZP0Bdz4M70ji4gMknvKuG
+         lSXTS4CenwFe2vme1ep79JzwnKdJxMFE9YMXFU1dsSEdjuokcf1MVi5syKRTLeYr5raR
+         j95F+KOseTPvwsmEqD1WwduScRG6Zd/zZEYJvCuMxMdFIUACQoPdR9pTO8xyDTGhe2kI
+         cLnIvMl/lhW3iVY+8+SL6wlvssIsO14aONeLkxL7WB9fzf3HyEH0qTmE6WNqEvbGy+d5
+         aShUU5ZwdHp3f/7NXDZPw07J6OciSPGUsjNgrboTyZdeaMq40mHR41rQiyH/7fWHRG+U
+         qGVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8gATWp32x5hJl7A19PsnOH4OavF0tByU78pOeDUgPLA=;
-        b=pZV7Eu8X1K6N/+Y7FU17DpsuS29vRL6lc1z8R4TsIW/h2vYgwa/tGAKTlf5eeWh5We
-         TddqvlBTNXgVueb6IpCGHQZznyaSYFoBmc4aKFxSpuXWk8pZ9rB65fWFe0ResbDOMm73
-         Nh10BR4x39RWKVHczUSIQ/zd0mZ0kEy6NGFAUim0+ivGm1E1wzxUn22P4Do/R19p6GPB
-         qDF09FGNI6cwiMmSrPCv/QWOYf7rCndN7X2LliWa1WLz7XqrB6F1noA3onO5dUaA+zpc
-         gg+hRn3A7JHkFFgD7lkYo172m4reF9Deq3mQ2W9TI6bQ+kCabIjs7JKID0eUHuOsRrED
-         b71A==
-X-Gm-Message-State: APjAAAVvxdMR554fVvmCjtvRftldz77W/z/wghL0lWL78DPM3ilVUjv6
-        KO5mDAgZ0tHDqxjR2B32Ny8RPg==
-X-Google-Smtp-Source: APXvYqz3AJMSqvDqVdDun29/esTrUyMNhVMrUDQtHxOD89obBulYhAzxIpGQnXaCodHxttIlz21jFA==
-X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr16149287wmc.154.1561369038711;
-        Mon, 24 Jun 2019 02:37:18 -0700 (PDT)
-Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
-        by smtp.googlemail.com with ESMTPSA id l1sm31460844wrf.46.2019.06.24.02.37.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0xq4Hf3p8ZFDHvrAu4X/XVuAS4nlGCqTsPVT41F3h+A=;
+        b=E+RM+tp2JpruHpdhHmGFwkUdOOUi+YF0sdYrDIbIpxDntA3TYtCR+SiQx+7i8ATLT6
+         WdjpqfIMN15fs08vWDtwlgvkfZPGM3Dide70kxid6j0OE3J3etB4v4HjbfblnRhtczsz
+         2sxA0QejVsdIrOh3yBH+kW33LHw6HeCDnnugAH/4j5JuVOR406n5zrfW+gi1svRHXOTE
+         yH5U9+Fy92pkufoP2YhT0BMOpza8QDTvJfRjOieMMWyvTO4UTH1KY3PNKOdo4SZp1ts5
+         AtrI8kQ7qTOLJpFnVx3JryFHgEQa8vbZ4p9RQWRSMsmJng8PYmORX2/IqIZD32HCEQW4
+         9Bzg==
+X-Gm-Message-State: APjAAAUOFzcg5qc0eZzJKAJFPNUKgyblBpeT8idqQ/jMxHyckSKFZCHs
+        DxMtoGgpFM9ri0gq+bgqqmQY/Q==
+X-Google-Smtp-Source: APXvYqx0+2hKXME82DJG31VBC8K3kY/7y2gRKipDpmCiTehdcrm7FLF0wonH5OMqNa4QeSarJjGr7w==
+X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr111526412pld.16.1561369179880;
+        Mon, 24 Jun 2019 02:39:39 -0700 (PDT)
+Received: from localhost ([122.172.211.128])
+        by smtp.gmail.com with ESMTPSA id 12sm10459621pfi.60.2019.06.24.02.39.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 02:37:18 -0700 (PDT)
-Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of
- IS_ENABLED macro
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
-        <linux-pm@vger.kernel.org>
+        Mon, 24 Jun 2019 02:39:39 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 15:09:37 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, linux-kernel@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:TI BANDGAP AND THERMAL DRIVER" 
+        <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH 2/6] thermal/drivers/cpu_cooling: Unregister with the
+ policy
+Message-ID: <20190624093937.hmfzfm2s46hfhvhm@vireshk-i7>
 References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
- <CAJZ5v0j0q+Z+FRpVuj39ML_c5ijo-veMMMSANdoDz1ZxAK3RgQ@mail.gmail.com>
- <b817a599-6564-b3d0-9c91-59c3fd5b5eb1@linaro.org>
- <2097869.93pjHihJNk@kreacher>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
- CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
- zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
- ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
- 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
- YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
- Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
- Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
- heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
- A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
- fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
- mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
- Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
- QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
- uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
- KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
- VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
- Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
- c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
- WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
- xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
- RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
- Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
- F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
- 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
- 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
- /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
- zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
- BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
- EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
- cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
- IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
- 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
- BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
- LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
- a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
- tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
- qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
- iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
- adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
- CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
- 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
-Message-ID: <225a3a6e-94d8-f801-6388-5ec90ca19e11@linaro.org>
-Date:   Mon, 24 Jun 2019 11:37:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ <20190621132302.30414-2-daniel.lezcano@linaro.org>
+ <20190624060334.kak2mjuou4napi4x@vireshk-i7>
+ <3f324189-aa1e-ae78-1d69-61e00c5d033a@linaro.org>
+ <20190624073747.hf7jd6ulkmebbxtm@vireshk-i7>
+ <d31f65c8-53df-ae59-5f6f-211c0ddcff3f@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <2097869.93pjHihJNk@kreacher>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d31f65c8-53df-ae59-5f6f-211c0ddcff3f@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2019 11:30, Rafael J. Wysocki wrote:
-> On Monday, June 24, 2019 11:22:19 AM CEST Daniel Lezcano wrote:
->> On 22/06/2019 11:12, Rafael J. Wysocki wrote:
->>> On Fri, Jun 21, 2019 at 3:23 PM Daniel Lezcano
->>> <daniel.lezcano@linaro.org> wrote:
->>>>
->>>> The functions stub already exist for the condition the IS_ENABLED
->>>> is trying to avoid.
->>>>
->>>> Remove the IS_ENABLED macros as they are pointless.
->>>
->>> AFAICS, the IS_ENABLED checks are an optimization to avoid generating
->>> pointless code (including a branch) in case CONFIG_CPU_THERMAL is not
->>> set.
->>>
->>> Why do you think that it is not useful?
->>
->> I agree but I'm not a big fan of IS_ENABLED macros in the code when it
->> is possible to avoid them.
->>
->> What about adding a stub for that like:
+On 24-06-19, 09:45, Daniel Lezcano wrote:
+> Actually I'm asking your opinion :)
 > 
-> Well,
+> The structure in drivers/thermal/imx_thermal.c
 > 
->> #ifdef CPU_THERMAL
->> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
->> {
->> 	return drv->flags & CPUFREQ_IS_COOLING_DEV;
->> }
->> #else
->> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
->> {
->> 	return 0;
->> }
->> #endif
+> struct imx_thermal_data {
+>         struct cpufreq_policy *policy; <<<< in the thermal data ?!
+> 	[ ... ]
+> };
 > 
-> This may as well be defined as
+> And then:
 > 
-> static inline int cpufreq_is_cooling_dev(struct cpufreq_driver *drv)
+> #ifdef CONFIG_CPU_FREQ
+> /*
+>  * Create cooling device in case no #cooling-cells property is available in
+>  * CPU node
+>  */
+> static int imx_thermal_register_legacy_cooling(struct imx_thermal_data
+> *data)
 > {
-> 	return IS_ENABLED(CPU_THERMAL) && drv->flags & CPUFREQ_IS_COOLING_DEV;
+>         struct device_node *np;
+>         int ret;
+> 
+>         data->policy = cpufreq_cpu_get(0);
+>         if (!data->policy) {
+>                 pr_debug("%s: CPUFreq policy not found\n", __func__);
+>                 return -EPROBE_DEFER;
+>         }
+> 
+>         np = of_get_cpu_node(data->policy->cpu, NULL);
+> 
+>         if (!np || !of_find_property(np, "#cooling-cells", NULL)) {
+>                 data->cdev = cpufreq_cooling_register(data->policy);
+>                 if (IS_ERR(data->cdev)) {
+>                         ret = PTR_ERR(data->cdev);
+>                         cpufreq_cpu_put(data->policy);
+>                         return ret;
+>                 }
+>         }
+> 
+>         return 0;
 > }
 > 
-> which is fewer lines of code.
+> [ ... ]
+> 
+> Shouldn't this be move in the drivers/cpufreq/<whatever driver> ?
 
-Ah yes, even better.
-
-> And I would call it something like cpufreq_thermal_control_enabled().
-
-Ok, thanks!
-
-
-
+Sure, we have platform specific drivers where this can be moved :)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+viresh
