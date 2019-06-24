@@ -2,153 +2,95 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96281C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD62C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754A420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D6520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbfFXTyv (ORCPT
+        id S1729569AbfFXT5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:54:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59406 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbfFXTyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:54:51 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A453D3078AB7;
-        Mon, 24 Jun 2019 19:54:38 +0000 (UTC)
-Received: from ovpn-112-53.rdu2.redhat.com (ovpn-112-53.rdu2.redhat.com [10.10.112.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFA0D5D70D;
-        Mon, 24 Jun 2019 19:54:31 +0000 (UTC)
-Message-ID: <f0fcee096d779837abc46e7badae9105ee8aaecf.camel@redhat.com>
-Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
-From:   Dan Williams <dcbw@redhat.com>
-To:     Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de,
-        bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
-Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        cpratapa@codeaurora.org, syadagir@codeaurora.org,
-        subashab@codeaurora.org, abhishek.esse@gmail.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Date:   Mon, 24 Jun 2019 14:54:30 -0500
-In-Reply-To: <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 24 Jun 2019 15:57:02 -0400
+Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:58495 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727282AbfFXT5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 15:57:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1FD7F100E86C5;
+        Mon, 24 Jun 2019 19:57:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fold16_1fd688a2af52b
+X-Filterd-Recvd-Size: 2354
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 24 Jun 2019 19:56:58 +0000 (UTC)
+Message-ID: <c40261d18ff593767a026d0392d44f322b4a3b33.camel@perches.com>
+Subject: Re: [PATCH v6 1/1] EDAC, mellanox: Add ECC support for BlueField
+ DDR4
+From:   Joe Perches <joe@perches.com>
+To:     Shravan Kumar Ramani <sramani@mellanox.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>
+Cc:     Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Jun 2019 12:56:57 -0700
+In-Reply-To: <176e13c80688f9a37161091e31ade487db6d4c2e.1561400421.git.sramani@mellanox.com>
+References: <cover.1561400421.git.sramani@mellanox.com>
+         <176e13c80688f9a37161091e31ade487db6d4c2e.1561400421.git.sramani@mellanox.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 24 Jun 2019 19:54:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 11:30 -0500, Alex Elder wrote:
-> OK I want to try to organize a little more concisely some of the
-> discussion on this, because there is a very large amount of volume
-> to date and I think we need to try to narrow the focus back down
-> again.
-> 
-> I'm going to use a few terms here.  Some of these I really don't
-> like, but I want to be unambiguous *and* (at least for now) I want
-> to avoid the very overloaded term "device".
-> 
-> I have lots more to say, but let's start with a top-level picture,
-> to make sure we're all on the same page.
-> 
->          WWAN Communication
->          Channel (Physical)
->                  |     ------------------------
-> ------------     v     |           :+ Control |  \
-> >          |-----------|           :+ Data    |  |
-> >    AP    |           | WWAN unit :+ Voice   |   > Functions
-> >          |===========|           :+ GPS     |  |
-> ------------     ^     |           :+ ...     |  /
->                  |     -------------------------
->           Multiplexed WWAN
->            Communication
->          Channel (Physical)
-> 
-> - The *AP* is the main CPU complex that's running Linux on one or
->   more CPU cores.
-> - A *WWAN unit* is an entity that shares one or more physical
->   *WWAN communication channels* with the AP.
+On Mon, 2019-06-24 at 14:42 -0400, Shravan Kumar Ramani wrote:
+> Add ECC support for Mellanox BlueField SoC DDR controller.
+> This requires SMC to the running Arm Trusted Firmware to report
+> what is the current memory configuration.
+[]
+> diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
+[]
+> @@ -0,0 +1,381 @@
+[]
+> +#define MLXBF_ECC_CNT__SERR_CNT_SHIFT 0
+> +#define MLXBF_ECC_CNT__SERR_CNT_MASK 0xffff
+> +#define MLXBF_ECC_CNT__DERR_CNT_SHIFT 16
+> +#define MLXBF_ECC_CNT__DERR_CNT_MASK 0xffff
 
-You could just say "WWAN modem" here.
+[multiple variants of #defines like the above]
 
-> - A *WWAN communication channel* is a bidirectional means of
->   carrying data between the AP and WWAN unit.
-> - A WWAN communication channel carries data using a *WWAN protocol*.
-> - A WWAN unit implements one or more *WWAN functions*, such as
->   5G data, LTE voice, GPS, and so on.
+[]
 
-Go more generic here. Not just 5G data but any WWAN IP-based data
-(GPRS, EDGE, CDMA, UMTS, EVDO, LTE, 5G, etc). And not just LTE voice
-but any voice data; plenty of devices don't support LTE but still have
-"WWAN logical communication channels"
+> +	serr = (dram_syndrom >> MLXBF_SYNDROM__SERR_SHIFT) &
+> +		MLXBF_SYNDROM__SERR_MASK;
+> +	derr = (dram_syndrom >> MLXBF_SYNDROM__DERR_SHIFT) &
+> +		MLXBF_SYNDROM__DERR_MASK;
+> +	syndrom = (dram_syndrom >> MLXBF_SYNDROM__SYN_SHIFT) &
+> +		MLXBF_SYNDROM__SYN_MASK;
 
-> - A WWAN unit shall implement a *WWAN control function*, used to
->   manage the use of other WWAN functions, as well as the WWAN unit
->   itself.
-> - The AP communicates with a WWAN function using a WWAN protocol.
-> - A WWAN physical channel can be *multiplexed*, in which case it
->   carries the data for one or more *WWAN logical channels*.
+To improve readability and reduce possible copy/paste errors,
+these would all benefit from a macro like
 
-It's unclear to me what "physical" means here. USB Interface or
-Endpoint or PCI Function or SMD channel? Or kernel TTY device?
+#define MLXBF_SM(val, type) 	\
+	(((val) >> (MLXBF_ ## type ## _SHIFT)) & (MLXBF_ ## type ## _MASK)))
 
-For example on Qualcomm-based USB dongles a given USB Interface's
-Endpoint represents a QMAP "IP data" channel which itself could be
-multiplexed into separate "IP data" channels.  Or that USB Endpoint(s)
-could be exposed as a TTY which itself can be MUX-ed dynamically using
-GSM 07.10.
+So these uses could become:
 
-To me "physical" usually means the bus type (PCI, USB, SMD, whatever).
-A Linux hardware driver (IPA, qmi_wwan, option, sierra, etc) binds to
-that physical entity using hardware IDs (USB or PCI VID/PID, devicetree
-properties) and exposes some "WWAN logical communication channels".
-Those logical channels might be multiplexed and another driver (rmnet)
-could handle exposing the de-muxed logical channels that the muxed
-logical channel carries.
+	serr = MLXBF_SM(dram_syndrom, SYNDROM__SERR);
+	derr = MLXBF_SM(dram_syndrom, SYNDROM__DERR);
+	syndrom =
+MLXBF_SM(dram_syndrom, SYN);
 
-> - A multiplexed WWAN communication channel uses a *WWAN wultiplexing
->   protocol*, which is used to separate independent data streams
->   carrying other WWAN protocols.
-> - A WWAN logical channel carries a bidirectional stream of WWAN
->   protocol data between an entity on the AP and a WWAN function.
+etc...
 
-It *usually* is bidirectional. For example some GPS logical
-communication channels just start spitting out NMEA when you give the
-control function a command. The NMEA ports themselves don't accept any
-input.
-
-> Does that adequately represent a very high-level picture of what
-> we're trying to manage?
-
-Yes, pretty well. Thanks for trying to specify it all.
-
-> And if I understand it right, the purpose of the generic framework
-> being discussed is to define a common mechanism for managing (i.e.,
-> discovering, creating, destroying, querying, configuring, enabling,
-> disabling, etc.) WWAN units and the functions they implement, along
-> with the communication and logical channels used to communicate with
-> them.
-
-Yes.
-
-Dan
-
-> Comments?
-> 
-> 					-Alex
 
