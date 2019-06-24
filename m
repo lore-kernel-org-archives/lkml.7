@@ -2,138 +2,126 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F7C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74105C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2646420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A912089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 12:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e6iLsIKq"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MxFZrkzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfFXMWO (ORCPT
+        id S1729674AbfFXMXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 08:22:14 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34379 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728446AbfFXMWN (ORCPT
+        Mon, 24 Jun 2019 08:23:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33650 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfFXMXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 08:22:13 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so1070457iot.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 05:22:13 -0700 (PDT)
+        Mon, 24 Jun 2019 08:23:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i11so21558974edq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 05:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vr9+zBFJhANC96gECBOzHRo21YufsdtA1x+CuBd2xUI=;
-        b=e6iLsIKq0kv4g1TfnQzLjijGX/HstIF513bDLSLdKvpHJa5t+8dbGNSnwYLFvb7bDs
-         0PfyXtxYlPID4s2bL9i+uDqIck43CKVU6NOU2XrDF0FP0pxF2D8fv0c7iW5FtXiwiPrQ
-         qBzhhlLCiLrEVDN+rPoS8bg1hnp8YeaUTNCc6HxHn8MXA8lfk2UONd60S5QPkfCRBhtJ
-         GI8L+OQvy41nXdIcdJ1xEw6bPrrjhkno2jwrZyl4XeJ8ZnI+4gI11YvdrIHMqXDN6T12
-         UJULZCL0PN2lvt/On2YZ42UDtw2U5kEnQPsGm2RJ97seAwxYhMiqqL/Nr5xQeZLGywy3
-         1CXw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8AaMfVCp7F7IloL7HzyXQBZxIJdiFcnDT3qmwYWpOTo=;
+        b=MxFZrkzMcC5bsaTujISAfm22SI+Ocm0+uIft25pHlg3msnC45niGTKb9Rmc8s3edTJ
+         djI3ccLcikaPVjOXFG5eW+9fxsc4eODPtEEJAYqsEhy73Tgz9JBGo7OO/x34FrELbG1m
+         6cWqWPGPTJ7bJn/qMbgomivvrpMUSD6BFpUAPRZIwb2jxIs96RalbbetPhHbPJikY54Q
+         9CHhstXClCUC3jyDP4669ynurrGQrTbx4pXFZXHZx4GR/e4CGbr4vOLB2+1X+LDDWI5b
+         rTtU5RWoT65BtoRv/P+tT4UhGggYyKQw0CBar4KWFw67y95Vk6EoSv6FugklVyvJXJc8
+         Qwig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vr9+zBFJhANC96gECBOzHRo21YufsdtA1x+CuBd2xUI=;
-        b=OrcQBDjIg4r0K+94/3lvyHaKNaHj9Xf3EyAqjJFn/C3uA+xLeN7L4jeMtvuL6HcBCy
-         UoBKFi+DCaqUovb0kBmZU/DUQekw5egd54Pd6PnTio+tQH/UTXm+yYz1i4/h4Og9ZmPS
-         Gv7rwXwA7i8vvLjvClqo3WbQfOJoAhqUye+et6cvWiH98YQnlqsCxOjH2cn+mcm8fGM0
-         8nMpLCejLh+7PeoyUrlCjKCJGLvGXCpNksIPrsOTtvdZH1eewQmXBW6F7vxq6FiN2Qkh
-         LsEq859X8/EEggCNpFQEqAgTfGoKJjX+g7Th5idiyYv/hbdYqGgsHzfM2vAz5FSoCmZV
-         wBLQ==
-X-Gm-Message-State: APjAAAV+4uP1dvbN3is9WOf38prlCv4gkUphpYlFahmIxYPvK0z0Yw8j
-        61JFLoloFvc88/E+MhmQnALvHlviDs4E33jxwCFFoLJvMYc=
-X-Google-Smtp-Source: APXvYqwu8tLfKRuo+e/fMDdCCwORFzVr8xWtQkFhdlSfUXuBhjGaNA2gKeHAvtc1b9Js8KzD3i+zLOW5Sp9cfy1iTxY=
-X-Received: by 2002:a02:a07:: with SMTP id 7mr31931243jaw.65.1561378932524;
- Mon, 24 Jun 2019 05:22:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000d6a8ba058c0df076@google.com> <alpine.DEB.2.21.1906241130100.32342@nanos.tec.linutronix.de>
- <CACT4Y+Y_TadXGE_CVFa4fKqrbpAD4i5WGem9StgoyP_YAVraXw@mail.gmail.com> <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
-In-Reply-To: <da83da44-0088-3056-6bba-d028b6cbb218@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 24 Jun 2019 14:22:01 +0200
-Message-ID: <CACT4Y+bk1h+CFVdbbKau490Wjis8zt_ia8gVctGZ+bs=7qPk=Q@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in netdev_freemem (2)
-To:     Eric Dumazet <eric.dumazet@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8AaMfVCp7F7IloL7HzyXQBZxIJdiFcnDT3qmwYWpOTo=;
+        b=jedeS1/KK6Z3Xx/VXNrbDQF0++RjLLkFhaG597nOeRdAeeBwLKKAEi5JzRxgF92T6N
+         2G8stcQhum9ILQeoILKa0pWI4UQUpDsRMlqkrUSs1hk81Zx2NwwnSb6wULSkJuPJjW1K
+         50NxU9K+CIGJ5cRY9GZXgvIQfmPJltvcTg+PNMjAqztBCz9E/BqC9QOzbXi3oQ4FYeBG
+         Venf/oSBjwcuLk18bebzQFKU01fFJHhqunV6Re3+RtgEt3VacN/+4HgxaqItyVeMEmVV
+         sPE5iH3w1+trYk8nwTZ3MbgAxEmoT/251d0EUuoHF5m5rUZhtek7xf811AA8YFVpy57E
+         9+bg==
+X-Gm-Message-State: APjAAAWfFqAyJbwzTjOUmTD3RZVmtxb825j9ex3yfv5aN6/B2Yv+tdP1
+        oBuqkA+hrBOquDOK2idbvbsMcg==
+X-Google-Smtp-Source: APXvYqwGPURsoXPJ7Oeu6ijCTvFknOcTT+XJfwDXBBA2AhxYDVUNlZhbLdkP6CVf6nGb00jW7eEIUA==
+X-Received: by 2002:a17:906:30c7:: with SMTP id b7mr1309762ejb.68.1561379030851;
+        Mon, 24 Jun 2019 05:23:50 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id p18sm1872940ejr.61.2019.06.24.05.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 05:23:50 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 0EE0510439E; Mon, 24 Jun 2019 15:23:55 +0300 (+03)
+Date:   Mon, 24 Jun 2019 15:23:55 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Baoquan He <bhe@redhat.com>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        amritha.nambiar@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tyhicks@canonical.com, wanghai26@huawei.com, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kyle Pelton <kyle.d.pelton@intel.com>
+Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
+ phys_p4d_init()
+Message-ID: <20190624122355.762cadxds37enfdo@box>
+References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
+ <20190621090249.GL24419@MiWiFi-R3L-srv>
+ <20190621105449.fp7h7tsmpitvplyr@box>
+ <20190624100742.GM24419@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624100742.GM24419@MiWiFi-R3L-srv>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:08 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> On 6/24/19 3:54 AM, Dmitry Vyukov wrote:
-> > On Mon, Jun 24, 2019 at 11:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> On Mon, 24 Jun 2019, syzbot wrote:
-> >>
-> >>> Hello,
-> >>>
-> >>> syzbot found the following crash on:
-> >>>
-> >>> HEAD commit:    fd6b99fa Merge branch 'akpm' (patches from Andrew)
-> >>> git tree:       upstream
-> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=144de256a00000
-> >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
-> >>> dashboard link: https://syzkaller.appspot.com/bug?extid=c4521ac872a4ccc3afec
-> >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >>>
-> >>> Unfortunately, I don't have any reproducer for this crash yet.
-> >>>
-> >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >>> Reported-by: syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com
-> >>>
-> >>> device hsr_slave_0 left promiscuous mode
-> >>> team0 (unregistering): Port device team_slave_1 removed
-> >>> team0 (unregistering): Port device team_slave_0 removed
-> >>> bond0 (unregistering): Releasing backup interface bond_slave_1
-> >>> bond0 (unregistering): Releasing backup interface bond_slave_0
-> >>> bond0 (unregistering): Released>
->
-> all slaves
-> >>> ------------[ cut here ]------------
-> >>> ODEBUG: free active (active state 0) object type: timer_list hint:
-> >>> delayed_work_timer_fn+0x0/0x90 arch/x86/include/asm/paravirt.h:767
-> >>
-> >> One of the cleaned up devices has left an active timer which belongs to a
-> >> delayed work. That's all I can decode out of that splat. :(
-> >
-> > Hi Thomas,
-> >
-> > If ODEBUG would memorize full stack traces for object allocation
-> > (using lib/stackdepot.c), it would make this splat actionable, right?
-> > I've fixed https://bugzilla.kernel.org/show_bug.cgi?id=203969 for this.
-> >
->
-> Not sure this would help in this case as some netdev are allocated through a generic helper.
->
-> The driver specific portion might not show up in the stack trace.
->
-> It would be nice here to get the work queue function pointer,
-> so that it gives us a clue which driver needs a fix.
+On Mon, Jun 24, 2019 at 06:07:42PM +0800, Baoquan He wrote:
+> On 06/21/19 at 01:54pm, Kirill A. Shutemov wrote:
+> > > The code block as below is to zero p4d entries which are not coverred by
+> > > the current memory range, and if haven't been mapped already. It's
+> > > clearred away in this patch, could you also mention it in log, and tell
+> > > why it doesn't matter now?
+> > > 
+> > > If it doesn't matter, should we clear away the simillar code in
+> > > phys_pud_init/phys_pmd_init/phys_pte_init? Maybe a prep patch to do the
+> > > clean up?
+> > 
+> > It only matters for the levels that contains page table entries that can
+> > point to pages, not page tables. There's no p4d or pgd huge pages on x86.
+> > Otherwise we only leak page tables without any benefit.
+> 
+> Ah, I checked git history, didn't find why it's added. I just Have a
+> superficial knowledge of the clearing, but in a low-efficiency way.
+> 
+> > 
+> > We might have this on all leveles under p?d_large() condition and don't
+> > touch page tables at all.
+> 
+> I see.
+> 
+> > 
+> > BTW, it all becomes rather risky for this late in the release cycle. Maybe
+> > we should revert the original patch and try again later with more
+> > comprehansive solution?
+> 
+> It's not added in one time. I am fine with your current change, would be
+> much better if mention it in log, and also add code comment above the
+> clearing code. Surely reverting and trying later with more comprehensive
+> solution is also good to me, this need a little more effort.
 
-I see. But isn't the workqueue callback is cleanup_net in this case
-and is in the stack?
+I've decided to keep the block for now. We can remove it later, once the fixis in.
+I'll post it soon
 
-  cleanup_net+0x3fb/0x960 net/core/net_namespace.c:553
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+-- 
+ Kirill A. Shutemov
