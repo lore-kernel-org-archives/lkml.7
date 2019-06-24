@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83773C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31280C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6EF208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06485215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuaO5811"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lXHRsLKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfFXOdp (ORCPT
+        id S1729846AbfFXOdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:33:45 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:55563 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbfFXOdm (ORCPT
+        Mon, 24 Jun 2019 10:33:52 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:40581 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729744AbfFXOds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:33:42 -0400
-Received: by mail-vk1-f202.google.com with SMTP id b85so6431502vke.22
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:33:41 -0700 (PDT)
+        Mon, 24 Jun 2019 10:33:48 -0400
+Received: by mail-vs1-f74.google.com with SMTP id v9so3938106vsq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+QjTccShtmk/DNvEu2Adujr4/24uQqkMA4u/Npu2BdA=;
-        b=BuaO5811jnUX9zfd4G8ToBhrbhMJy0LzFmcX+sgB7AQM8NJvSv01OIt+sAqC0IYDFj
-         O+VE+bcKl7xzCDnEKiecjcqkjUhFXSFgcq02fOM7s9XnYH4kbv5oATeSWl+tEWpHxjax
-         uddXNBc9L6bsecbckcats1vGIj+FRm1AXB1jETFkmq7osCy5XjHt0r7A/MylVaoS7sEi
-         BEqqQGEpCtD+G1DLTSJRrPX1jP7q6JLRto0o7pT68gHSfXhTroGbTpoKZNwyLPn4gBNV
-         8ODVys95W2+g/mSu4Rja/qhLF+ras1jurnSxRwwt4QC/Gcz8iYCVwlkq+O0Dgaz38Z6X
-         Qigg==
+        bh=cqAi+OvlHabK4r0DKR/uDYr47zBS8kkFmriW/t8FK6c=;
+        b=lXHRsLKGuntJdIfx4IktI470fGbyq/kS83cL/1CQ6KcaqQfI5cgbGIOLx+on2O/XRl
+         TyhQq0vCGRVG2NDDFcvggYJ0wxa3AKn2CR+yK/03NNoH4bycNdBR8ox3sdPwTeSrQLuo
+         rHeW6O5U9Mg0jIkwq44zjpbQCUdfc3U4ayQ8Dr3awwdf8ADrTM4zsPAD1J2Hva/3oEGx
+         iuAfMdkeDB0VVqrLEmMomvjY9gvAQgEF5ueMNKjNbD3E+c53zhezKvbXOoKR1nLLue5p
+         C6JfI9UG0Qq2Dtp4qvSg2UI+NSz05kgH40lBS5dNGwoMFiWCdzLiE4V8NQ/k/pPRpCug
+         2y1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+QjTccShtmk/DNvEu2Adujr4/24uQqkMA4u/Npu2BdA=;
-        b=TWochnekJoaPffLWhq2brGHx3IQDSTVZdctts4bptAo1O3Zq/r0tqK/ZmDnwhcmk+C
-         pS0B6e79YeFv5rWBDDkejVKehtArAsBvM5deyizK7p8qi8ra0FKuJG5s0rTKf8SAnCUy
-         Ub+YzFE3WVEzbTE7QPmIwA+QAuue7+vXLFNBLD+2mKpZ/G2zF/bmm4WQFdU9kwkp+Oyg
-         DRl3b1T6eWXd8mljByXlMlYZfrdKiLdwt+Pycuk23D0sdPYJ9h2jWN1B9KiOyr7iWB0R
-         K5QZ3LmGeOgzO/pTnn7Xvuz/A+WNnm+yZUgRP2hF62G5igLUgl9vFUz6mR7jaxieusHe
-         jlTQ==
-X-Gm-Message-State: APjAAAX+JUnBmPNY2MeI27G3Mi4EJLPwxvZsD50VKK4J5rTkCY3mKMEO
-        dDRDtksWFEJtEiV6N+jx1Cf4wGTYirn9D6RE
-X-Google-Smtp-Source: APXvYqyUWW8huBSfbOwzfvyZrK53WvzmxiQ9by61ETLtrVtF59paHvOBrjS1vPlQyT8G9KXO3foj9yEr/dGEqynR
-X-Received: by 2002:a1f:a887:: with SMTP id r129mr2036386vke.75.1561386821206;
- Mon, 24 Jun 2019 07:33:41 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:32:56 +0200
+        bh=cqAi+OvlHabK4r0DKR/uDYr47zBS8kkFmriW/t8FK6c=;
+        b=X07OgcA5VNDw5Txja/rMgOBvJylob9BL7UmMbFbGGzbTUoIe7Ib9UM1czoBu+Jq6ty
+         da3t1U8TVkY7ylqQFY9b1sXWzJxImKSvKE4OoR2BA6BSJ7VHXgu6h/Oz9Y8q6NOFCMwa
+         pGhsjpSzIvO8JjXX/vwfxvptFwUvkJoJIV4LSWpthVUqJwCm3LIHn+9Cc1DGI+AnZDIg
+         R+CftY6PNEsWg1aaIRXxacwyozubTyQJPsctixR6eE/tXdSdKhoITLg7D8cSxSyZGiKp
+         nsEJbZ6NixvgktCAVMll48KThKZiUUUBI+9+kOoXVi7V16+egpubS9/7Z/I2ewhcS2Y5
+         8Hdg==
+X-Gm-Message-State: APjAAAWTdaWh5tzklB2AgZueKxzd14EzV6d+OFhJgVoEeOLuaQTs0wdu
+        w5I5/e9U6WcBLdEIADWNDrq0MjSepB3F4RJk
+X-Google-Smtp-Source: APXvYqzY+u8RznlTrOWrBgn25HhvDfTMe7SZyf9e34JUgJZBNd08PatZvu4lGf3zfqdvX7DoXuI91wYnbBpoYfQ0
+X-Received: by 2002:ab0:7848:: with SMTP id y8mr60797129uaq.58.1561386827462;
+ Mon, 24 Jun 2019 07:33:47 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 16:32:58 +0200
 In-Reply-To: <cover.1561386715.git.andreyknvl@google.com>
-Message-Id: <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
+Message-Id: <280ca5496fe82873caac306ca76fb40d702979ff.1561386715.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1561386715.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v18 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
+Subject: [PATCH v18 13/15] tee/shm: untag user pointers in tee_shm_register
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -106,41 +107,31 @@ This patch is a part of a series that extends kernel ABI to allow to pass
 tagged user pointers (with the top byte set to something else other than
 0x00) as syscall arguments.
 
-mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-only by done with untagged pointers.
+tee_shm_register()->optee_shm_unregister()->check_mem_type() uses provided
+user pointers for vma lookups (via __check_mem_type()), which can only by
+done with untagged pointers.
 
 Untag user pointers in this function.
 
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/tee/tee_shm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
-index 355205a28544..13d9f917f249 100644
---- a/drivers/infiniband/hw/mlx4/mr.c
-+++ b/drivers/infiniband/hw/mlx4/mr.c
-@@ -378,6 +378,7 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
- 	 * again
- 	 */
- 	if (!ib_access_writable(access_flags)) {
-+		unsigned long untagged_start = untagged_addr(start);
- 		struct vm_area_struct *vma;
- 
- 		down_read(&current->mm->mmap_sem);
-@@ -386,9 +387,9 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
- 		 * cover the memory, but for now it requires a single vma to
- 		 * entirely cover the MR to support RO mappings.
- 		 */
--		vma = find_vma(current->mm, start);
--		if (vma && vma->vm_end >= start + length &&
--		    vma->vm_start <= start) {
-+		vma = find_vma(current->mm, untagged_start);
-+		if (vma && vma->vm_end >= untagged_start + length &&
-+		    vma->vm_start <= untagged_start) {
- 			if (vma->vm_flags & VM_WRITE)
- 				access_flags |= IB_ACCESS_LOCAL_WRITE;
- 		} else {
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index 2da026fd12c9..09ddcd06c715 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -254,6 +254,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
+ 	shm->teedev = teedev;
+ 	shm->ctx = ctx;
+ 	shm->id = -1;
++	addr = untagged_addr(addr);
+ 	start = rounddown(addr, PAGE_SIZE);
+ 	shm->offset = addr - start;
+ 	shm->size = length;
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
