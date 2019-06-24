@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62465C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A16C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369BE208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FE52168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370731;
-	bh=eBOPclAZ8mS+XH4bfLm+2ME/n8GaAMKlpxOiRgILpy0=;
+	s=default; t=1561370735;
+	bh=BnKe2Vzp/DnR05sQo+fFICmAFN43Hbabh+9cFbkNPF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QN8l4iQg55YM+zmtogslDns0YzYKRAAbMke770bWT6RZ/eEUPMN901bGEQplg69/t
-	 bhQ/RXaqsagREuSzCYhdMIXsxfVSBQJWtpG6GP9X7KxM2gO0EZOnoPx7QhenV9b9T3
-	 IkJa5r2gJVy5IItqM0ShWlTzZ73pU5uJrpEJwMSU=
+	b=vIHk4cqC1XnA2XzeL3vJRVt4aFSYHDkPfuvfKj0Uymt9KDBgrRGT5h6VhT1G39U9z
+	 xpBNSr4ccrie7ofGRFo1P3Gw1Yg5Q8G8S9uAKmjKeZzQTolV3YVy1MXI2w60o5aQb/
+	 Q0bC4mxLHvl6gq0UHV/5VYEt5KZvIlUOF7c5Iz0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfFXKFa (ORCPT
+        id S1729949AbfFXKFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729921AbfFXKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:26 -0400
+        id S1729799AbfFXKFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:32 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E33208E3;
-        Mon, 24 Jun 2019 10:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED8421473;
+        Mon, 24 Jun 2019 10:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370725;
-        bh=eBOPclAZ8mS+XH4bfLm+2ME/n8GaAMKlpxOiRgILpy0=;
+        s=default; t=1561370731;
+        bh=BnKe2Vzp/DnR05sQo+fFICmAFN43Hbabh+9cFbkNPF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Li9Nx4Bn+Tw79sHggwGJLa9o0LPGubM7xBsRqDU4PaQAkif48trye/VP9/pMiXwIn
-         jPLQAM9Uo2EmB9xEJQN2eATz3IaNGF613nHpy1reunzzF78j/hxtNzNVA4NmVndME8
-         sssDkBSH06TDqDC+PIicB5266zraJKhZL+pAOWHk=
+        b=r0yZl9iHpJiiYCplwxm3ygYPAIm3ybFYbKYG164OHCAKnEa+Dma5+focvmVpp3iwG
+         I77FNqkyr3a8h3SINUyRhQOxs3tzDMNNLgjfnLTlScd2isSlukJsbvtOaTHB3+TrSI
+         keOa/kkPrfccvMBKzgw46te4kdhZx+38VRbf5R8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 68/90] btrfs: start readahead also in seed devices
-Date:   Mon, 24 Jun 2019 17:56:58 +0800
-Message-Id: <20190624092318.500006081@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 70/90] can: flexcan: fix timeout when set small bitrate
+Date:   Mon, 24 Jun 2019 17:57:00 +0800
+Message-Id: <20190624092318.619100282@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,49 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
+commit 247e5356a709eb49a0d95ff2a7f07dac05c8252c upstream.
 
-Currently, btrfs does not consult seed devices to start readahead. As a
-result, if readahead zone is added to the seed devices, btrfs_reada_wait()
-indefinitely wait for the reada_ctl to finish.
+Current we can meet timeout issue when setting a small bitrate like
+10000 as follows on i.MX6UL EVK board (ipg clock = 66MHZ, per clock =
+30MHZ):
 
-You can reproduce the hung by modifying btrfs/163 to have larger initial
-file size (e.g. xfs_io pwrite 4M instead of current 256K).
+| root@imx6ul7d:~# ip link set can0 up type can bitrate 10000
 
-Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
-Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
-Cc: stable@vger.kernel.org # 3.2+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+A link change request failed with some changes committed already.
+Interface can0 may have been left with an inconsistent configuration,
+please check.
+
+| RTNETLINK answers: Connection timed out
+
+It is caused by calling of flexcan_chip_unfreeze() timeout.
+
+Originally the code is using usleep_range(10, 20) for unfreeze
+operation, but the patch (8badd65 can: flexcan: avoid calling
+usleep_range from interrupt context) changed it into udelay(10) which is
+only a half delay of before, there're also some other delay changes.
+
+After double to FLEXCAN_TIMEOUT_US to 100 can fix the issue.
+
+Meanwhile, Rasmus Villemoes reported that even with a timeout of 100,
+flexcan_probe() fails on the MPC8309, which requires a value of at least
+140 to work reliably. 250 works for everyone.
+
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/reada.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/can/flexcan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -745,6 +745,7 @@ static void __reada_start_machine(struct
- 	u64 total = 0;
- 	int i;
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -165,7 +165,7 @@
+ #define FLEXCAN_MB_CNT_LENGTH(x)	(((x) & 0xf) << 16)
+ #define FLEXCAN_MB_CNT_TIMESTAMP(x)	((x) & 0xffff)
  
-+again:
- 	do {
- 		enqueued = 0;
- 		mutex_lock(&fs_devices->device_list_mutex);
-@@ -756,6 +757,10 @@ static void __reada_start_machine(struct
- 		mutex_unlock(&fs_devices->device_list_mutex);
- 		total += enqueued;
- 	} while (enqueued && total < 10000);
-+	if (fs_devices->seed) {
-+		fs_devices = fs_devices->seed;
-+		goto again;
-+	}
+-#define FLEXCAN_TIMEOUT_US		(50)
++#define FLEXCAN_TIMEOUT_US		(250)
  
- 	if (enqueued == 0)
- 		return;
+ /* FLEXCAN hardware feature flags
+  *
 
 
