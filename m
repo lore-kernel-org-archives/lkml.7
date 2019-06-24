@@ -2,52 +2,52 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E283C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30958C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20E6213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0851621530
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370388;
-	bh=rmZhShVbSyi1ZR/CTwHwPw4v+qk5JBg4Vmc46R0vNs4=;
+	s=default; t=1561370384;
+	bh=sehTHTNS7DM5sY0apoY8R4ulgNuUsVCxPhR1vEBgBcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRuXFtsje9p/IXuAO32AaAyrf+iR6MLrCt5qcxNtmm7j67VMqNWGTaT9dOoBjXGXV
-	 Qm7x7jVpbs/QcLhjIy5wrk1sXDfGMroCoCBLhXVMxa/Cbqjcp+cWeq2x+O98BkiA8l
-	 Lfz0u8rPCfAdONIo6A3t9Hk8b9L3kS1cB3/LO66c=
+	b=m26Id+tAj2oolDn559nyZa99OdIC4CajmfxE6fxLwCdyZ+pFU+jXtsXSoo57nhG6A
+	 LUCJ0Wp110LcR0sFWq3g/db73K0Kdwm2Mk3kBUrAM4bZfyQQtH9wO2yw6BZaF9cSc4
+	 RWqRruZ9RWd9QLRGr/9Q7WMQybDgbOJEav/GiglM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfFXJ7r (ORCPT
+        id S1729260AbfFXJ7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 05:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfFXJ7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:45 -0400
+        id S1728513AbfFXJ7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 05:59:40 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F23205ED;
-        Mon, 24 Jun 2019 09:59:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B7D208CA;
+        Mon, 24 Jun 2019 09:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370385;
-        bh=rmZhShVbSyi1ZR/CTwHwPw4v+qk5JBg4Vmc46R0vNs4=;
+        s=default; t=1561370379;
+        bh=sehTHTNS7DM5sY0apoY8R4ulgNuUsVCxPhR1vEBgBcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MnkSmBhWKegeE6V7d7A6VAxmucQCkVqeg72on9jbQYDoR6F+XFdlL0TKqCWLp3r2O
-         xVUPeo2EW1iwPO+1PZ7U/Cne6JMvEJu+ZLiWRsZDuqQzLPCA3O68b4fncpVcdcxJKF
-         gBW/it+9MFZfRfbjPoxgcAiqT5Fuhd9aIKKCF9oQ=
+        b=Val+++lYx1/ymKl02HF2QvagFShW5U9mKCp1WKqB78Tk6G3ft9tS0HaB/QV/y4PoR
+         KQjgcEpuGBaqSFsLQKBYvwdfemYsy0EWbbblXzfn29ujsFbNKopRf6aMUT8egQnQZS
+         jiLdcXAEUCe1TTmi0ldB9kBTnSdhdGX/JPVMCO2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 39/51] btrfs: start readahead also in seed devices
-Date:   Mon, 24 Jun 2019 17:56:57 +0800
-Message-Id: <20190624092310.601848981@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 37/51] hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
+Date:   Mon, 24 Jun 2019 17:56:55 +0800
+Message-Id: <20190624092310.445377453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
 References: <20190624092305.919204959@linuxfoundation.org>
@@ -60,49 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
+[ Upstream commit 4a60570dce658e3f8885bbcf852430b99f65aca5 ]
 
-commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
+Some chips have attributes which exist on more than one page but the
+attribute is not presently marked as paged. This causes the attributes
+to be generated with the same label, which makes it impossible for
+userspace to tell them apart.
 
-Currently, btrfs does not consult seed devices to start readahead. As a
-result, if readahead zone is added to the seed devices, btrfs_reada_wait()
-indefinitely wait for the reada_ctl to finish.
+Marking all such attributes as paged would result in the page suffix
+being added regardless of whether they were present on more than one
+page or not, which might break existing setups. Therefore, we add a
+second check which treats the attribute as paged, even if not marked as
+such, if it is present on multiple pages.
 
-You can reproduce the hung by modifying btrfs/163 to have larger initial
-file size (e.g. xfs_io pwrite 4M instead of current 256K).
-
-Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
-Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
-Cc: stable@vger.kernel.org # 3.2+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b4ce237b7f7d ("hwmon: (pmbus) Introduce infrastructure to detect sensors and limit registers")
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/reada.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/hwmon/pmbus/pmbus_core.c | 34 ++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -759,6 +759,7 @@ static void __reada_start_machine(struct
- 	u64 total = 0;
- 	int i;
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 924f3ca41c65..cb9064ac4977 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -1055,7 +1055,8 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 				      const struct pmbus_driver_info *info,
+ 				      const char *name,
+ 				      int index, int page,
+-				      const struct pmbus_sensor_attr *attr)
++				      const struct pmbus_sensor_attr *attr,
++				      bool paged)
+ {
+ 	struct pmbus_sensor *base;
+ 	bool upper = !!(attr->gbit & 0xff00);	/* need to check STATUS_WORD */
+@@ -1063,7 +1064,7 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
  
-+again:
- 	do {
- 		enqueued = 0;
- 		mutex_lock(&fs_devices->device_list_mutex);
-@@ -770,6 +771,10 @@ static void __reada_start_machine(struct
- 		mutex_unlock(&fs_devices->device_list_mutex);
- 		total += enqueued;
- 	} while (enqueued && total < 10000);
-+	if (fs_devices->seed) {
-+		fs_devices = fs_devices->seed;
-+		goto again;
+ 	if (attr->label) {
+ 		ret = pmbus_add_label(data, name, index, attr->label,
+-				      attr->paged ? page + 1 : 0);
++				      paged ? page + 1 : 0);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1096,6 +1097,30 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 	return 0;
+ }
+ 
++static bool pmbus_sensor_is_paged(const struct pmbus_driver_info *info,
++				  const struct pmbus_sensor_attr *attr)
++{
++	int p;
++
++	if (attr->paged)
++		return true;
++
++	/*
++	 * Some attributes may be present on more than one page despite
++	 * not being marked with the paged attribute. If that is the case,
++	 * then treat the sensor as being paged and add the page suffix to the
++	 * attribute name.
++	 * We don't just add the paged attribute to all such attributes, in
++	 * order to maintain the un-suffixed labels in the case where the
++	 * attribute is only on page 0.
++	 */
++	for (p = 1; p < info->pages; p++) {
++		if (info->func[p] & attr->func)
++			return true;
 +	}
++	return false;
++}
++
+ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 				  struct pmbus_data *data,
+ 				  const char *name,
+@@ -1109,14 +1134,15 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 	index = 1;
+ 	for (i = 0; i < nattrs; i++) {
+ 		int page, pages;
++		bool paged = pmbus_sensor_is_paged(info, attrs);
  
- 	if (enqueued == 0)
- 		return;
+-		pages = attrs->paged ? info->pages : 1;
++		pages = paged ? info->pages : 1;
+ 		for (page = 0; page < pages; page++) {
+ 			if (!(info->func[page] & attrs->func))
+ 				continue;
+ 			ret = pmbus_add_sensor_attrs_one(client, data, info,
+ 							 name, index, page,
+-							 attrs);
++							 attrs, paged);
+ 			if (ret)
+ 				return ret;
+ 			index++;
+-- 
+2.20.1
+
 
 
