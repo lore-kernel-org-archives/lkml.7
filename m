@@ -2,179 +2,316 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF75C48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E104B213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02157213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="arVbRxRa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c/f5f/Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfFXLpn (ORCPT
+        id S1729660AbfFXLqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:45:43 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:46723
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727722AbfFXLpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:45:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uiBvnSVc9iVgRblkUv8oNtcSdjLdouP7sgHwUqCFq7o=;
- b=arVbRxRa6ubZBOyzBdCqvO02hD6jW7u37f6Y47AvFOzDWCtTQlZZ/IOzCvp9OESrYt/Vg93zdH/e2bnTXCuwKgO/9wm0Qcm1iYkaN6ekaBPBYCbTvyoYOxKDNhTaN6wSlBUCOMU/7PPacgzk45e2dpGn4C09FbCp4LUDKyNy/uQ=
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
- VI1PR04MB5309.eurprd04.prod.outlook.com (20.177.52.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 11:45:37 +0000
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::cdda:87e3:ea91:f78b]) by VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::cdda:87e3:ea91:f78b%7]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 11:45:37 +0000
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Thread-Topic: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Thread-Index: AQHVKEeAhac7DL/j0Uy9JhFYnIZAmKamUhMAgARcasA=
-Date:   Mon, 24 Jun 2019 11:45:37 +0000
-Message-ID: <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
-In-Reply-To: <20190621164940.GL31306@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=claudiu.manoil@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4c951484-610a-4101-b379-08d6f89979a2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5309;
-x-ms-traffictypediagnostic: VI1PR04MB5309:
-x-microsoft-antispam-prvs: <VI1PR04MB530911634F859E9A9C58FF4A96E00@VI1PR04MB5309.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(396003)(346002)(376002)(13464003)(199004)(189003)(51914003)(11346002)(54906003)(44832011)(33656002)(305945005)(6116002)(3846002)(6916009)(66066001)(26005)(52536014)(74316002)(4326008)(2906002)(478600001)(68736007)(7736002)(229853002)(446003)(316002)(486006)(7696005)(186003)(102836004)(5660300002)(14454004)(6246003)(71200400001)(53936002)(66946007)(71190400001)(8676002)(256004)(81156014)(73956011)(55016002)(76176011)(7416002)(81166006)(9686003)(76116006)(99286004)(6506007)(25786009)(8936002)(66476007)(66446008)(6436002)(64756008)(476003)(86362001)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5309;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mu4KR8QYccwr0U/FAI5cMaBeiV0dE9dONoHkq1xji6xGt8JCRT7n1u7/yyNhi+DoWuwsYtr+VJj9jCNEOlIYP/8V4raHyjZZ10M4GupxrPhIiC9LqInKf/4i/t9AhXokExaXASdvkuflKzoSR8OdzW+grJ+H4VKVNKT7Bw+j6SyTYIRQ79tcMWWcwmcdnokMp+qs5JLGbGIccPHZw9psA4NsGt4PW+NWF3EXh3uCrP09YX31kk/qiZ8ITT6l8ELc8FngVHTgGoKZ6rrGHu05m7kJ6m5gifV1aBXByWMelUjB+1ARHIYpbagds9aqtTTtSp+NasjCyBQFzqHPXGy0Q0GqDMWnBuzMqTbbcRVVxcdcWWpBXG3H8YzIqViIuFYukq5D9AEJ5NAVRtMDtX8wtxmV85c7TA6Fzdq4dgGo/M8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Jun 2019 07:46:07 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43819 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfFXLqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:46:07 -0400
+Received: by mail-io1-f68.google.com with SMTP id k20so808768ios.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 04:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xjyC1woOCk6QoSm3J7dmvFYHQ65jTUd0WwHup6buLdA=;
+        b=c/f5f/Ezq3qoosgf0iqgNPPcbIYUobo1qpnTyfBhKYcJlD4mJXs5nY2Fk/i59Ypocr
+         oQFMXxWneqxFDJ3UlvFYhCbMzeaD0RwSQIePTpoE5ZabZmOc1ubkk2xy9XaV16k1mWpG
+         uhW5uB/qv024uac34FQoadj7MRiYeO6H4o0MhAbsqH09bTa0F0KQpiaQXFET3z1MtT/d
+         Oju2FzIw+5E6M8TP+z8WD0t/uffACrjPTXLSo1MYDaEtdGk+3Hm/PaRXl5EZWsdpLsO8
+         3k6Ap14uTP2sPWcBeX+6gjzk8vGBecUobCh1G6MaumuEeR7EXuz9p88d7wEt2SPezw97
+         FmjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xjyC1woOCk6QoSm3J7dmvFYHQ65jTUd0WwHup6buLdA=;
+        b=nx8xKt/Z/0zs4S5vR7na6qB1B0GY0jTnlslc9Uh3cI6DgPAw+RQlioZUxCOjm2kitr
+         GLIukitlsyfiWoK84YKFnTnUI5+AUlhCOOjJg4XVKIAtovUz4J1hYvyjDqhmbte0rC02
+         AsL3ZQYt1e1RHtxT3dGgD17XeBkZPxNii2cw6l1XgmYhAfaH4vRspfDozCHESYUFRRPT
+         V3gmeOsWHfBiC/jNNxkYDEc/0vJghi+MxwnK/OxIufArvETi22tzRJz5GTus3W2omf8Z
+         Y4FNI+YEIqLnu0pvGwvLSn6keZo/IUR2kwng3mvZzHcx6qCU/UayVj8gpTNW5crGzzwq
+         ltSg==
+X-Gm-Message-State: APjAAAVGn7QibZLfa+sJgtAe8w1nccnaBb4r76O2aAdCYtKi9IDBPuzM
+        /QEul7oSSg2Yid9PnL7K4jOXIS2XG6wlGNAlhgUFsA==
+X-Google-Smtp-Source: APXvYqx6HEUoIqfS52gzn8y0KrQsf7q1x4CiJ/9P8zJ9QW7nroLu9eqcvYa+03rEne+EbXrDQjNrpkGRT2bTR5Pv1mU=
+X-Received: by 2002:a6b:4101:: with SMTP id n1mr14151102ioa.138.1561376765960;
+ Mon, 24 Jun 2019 04:46:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c951484-610a-4101-b379-08d6f89979a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 11:45:37.2295
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5309
+References: <20190624110532.41065-1-elver@google.com>
+In-Reply-To: <20190624110532.41065-1-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 24 Jun 2019 13:45:53 +0200
+Message-ID: <CACT4Y+ZP4gkLh5zbwSLzV+ZwJCq_zSrsaQE+1Y94iU0JJzJNqw@mail.gmail.com>
+Subject: Re: [PATCH] mm/kasan: Add shadow memory validation in ksize()
+To:     Marco Elver <elver@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Mon, Jun 24, 2019 at 1:05 PM Marco Elver <elver@google.com> wrote:
+>
+> ksize() has been unconditionally unpoisoning the whole shadow memory region
+> associated with an allocation. This can lead to various undetected bugs,
+> for example, double-kzfree().
+>
+> kzfree() uses ksize() to determine the actual allocation size, and
+> subsequently zeroes the memory. Since ksize() used to just unpoison the
+> whole shadow memory region, no invalid free was detected.
+>
+> This patch addresses this as follows:
+>
+> 1. For each SLAB and SLUB allocators: add a check in ksize() that the
+>    pointed to object's shadow memory is valid, and only then unpoison
+>    the memory region.
+>
+> 2. Update kasan_unpoison_slab() to explicitly unpoison the shadow memory
+>    region using the size obtained from ksize(); it is possible that
+>    double-unpoison can occur if the shadow was already valid, however,
+>    this should not be the general case.
+>
+> Tested:
+> 1. With SLAB allocator: a) normal boot without warnings; b) verified the
+>    added double-kzfree() is detected.
+> 2. With SLUB allocator: a) normal boot without warnings; b) verified the
+>    added double-kzfree() is detected.
+>
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199359
+> Signed-off-by: Marco Elver <elver@google.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: kasan-dev@googlegroups.com
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/kasan.h | 20 +++++++++++++++++++-
+>  lib/test_kasan.c      | 17 +++++++++++++++++
+>  mm/kasan/common.c     | 15 ++++++++++++---
+>  mm/slab.c             | 12 ++++++++----
+>  mm/slub.c             | 11 +++++++----
+>  5 files changed, 63 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index b40ea104dd36..9778a68fb5cf 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -63,6 +63,14 @@ void * __must_check kasan_krealloc(const void *object, size_t new_size,
+>
+>  void * __must_check kasan_slab_alloc(struct kmem_cache *s, void *object,
+>                                         gfp_t flags);
+> +
+> +/**
+> + * kasan_shadow_invalid - Check if shadow memory of object is invalid.
+> + * @object: The pointed to object; the object pointer may be tagged.
+> + * @return: true if shadow is invalid, false if valid.
+> + */
+> +bool kasan_shadow_invalid(const void *object);
+> +
+>  bool kasan_slab_free(struct kmem_cache *s, void *object, unsigned long ip);
+>
+>  struct kasan_cache {
+> @@ -77,7 +85,11 @@ int kasan_add_zero_shadow(void *start, unsigned long size);
+>  void kasan_remove_zero_shadow(void *start, unsigned long size);
+>
+>  size_t ksize(const void *);
+> -static inline void kasan_unpoison_slab(const void *ptr) { ksize(ptr); }
+> +static inline void kasan_unpoison_slab(const void *ptr)
+> +{
+> +       /* Force unpoison: ksize() only unpoisons if shadow of ptr is valid. */
+> +       kasan_unpoison_shadow(ptr, ksize(ptr));
+> +}
+>  size_t kasan_metadata_size(struct kmem_cache *cache);
+>
+>  bool kasan_save_enable_multi_shot(void);
+> @@ -133,6 +145,12 @@ static inline void *kasan_slab_alloc(struct kmem_cache *s, void *object,
+>  {
+>         return object;
+>  }
+> +
+> +static inline bool kasan_shadow_invalid(const void *object)
+> +{
+> +       return false;
+> +}
+> +
+>  static inline bool kasan_slab_free(struct kmem_cache *s, void *object,
+>                                    unsigned long ip)
+>  {
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index 7de2702621dc..9b710bfa84da 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -623,6 +623,22 @@ static noinline void __init kasan_strings(void)
+>         strnlen(ptr, 1);
+>  }
+>
+> +static noinline void __init kmalloc_pagealloc_double_kzfree(void)
+> +{
+> +       char *ptr;
+> +       size_t size = 16;
+> +
+> +       pr_info("kmalloc pagealloc allocation: double-free (kzfree)\n");
 
->-----Original Message-----
->From: Andrew Lunn <andrew@lunn.ch>
->Sent: Friday, June 21, 2019 7:50 PM
->To: Claudiu Manoil <claudiu.manoil@nxp.com>
->Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
->Alexandre Belloni <alexandre.belloni@bootlin.com>; netdev@vger.kernel.org;
->Alexandru Marginean <alexandru.marginean@nxp.com>; linux-
->kernel@vger.kernel.org; UNGLinuxDriver@microchip.com; Allan Nielsen
-><Allan.Nielsen@microsemi.com>; Rob Herring <robh+dt@kernel.org>; linux-
->arm-kernel@lists.infradead.org
->Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix swit=
-ch port
->DT node
->
->On Fri, Jun 21, 2019 at 06:38:50PM +0300, Claudiu Manoil wrote:
->> The switch device features 6 ports, 4 with external links
->> and 2 internally facing to the ls1028a SoC and connected via
->> fixed links to 2 internal enetc ethernet controller ports.
->
->Hi Claudiu
->
->> +			switch@0,5 {
->> +				compatible =3D "mscc,felix-switch";
->> +				reg =3D <0x000500 0 0 0 0>;
->> +
->> +				ethernet-ports {
->> +					#address-cells =3D <1>;
->> +					#size-cells =3D <0>;
->> +
->> +					/* external ports */
->> +					switch_port0: port@0 {
->> +						reg =3D <0>;
->> +					};
->> +					switch_port1: port@1 {
->> +						reg =3D <1>;
->> +					};
->> +					switch_port2: port@2 {
->> +						reg =3D <2>;
->> +					};
->> +					switch_port3: port@3 {
->> +						reg =3D <3>;
->> +					};
->> +					/* internal to-cpu ports */
->> +					port@4 {
->> +						reg =3D <4>;
->> +						fixed-link {
->> +							speed =3D <1000>;
->> +							full-duplex;
->> +						};
->> +					};
->> +					port@5 {
->> +						reg =3D <5>;
->> +						fixed-link {
->> +							speed =3D <1000>;
->> +							full-duplex;
->> +						};
->> +					};
->> +				};
->> +			};
->
->This sounds like a DSA setup, where you have SoC ports connected to
->the switch. With DSA, the CPU ports of the switch are special. We
->don't create netdev's for them, the binding explicitly list which SoC
->interface they are bound to, etc.
->
->What model are you using here? I'm just trying to understand the setup
->to ensure it is consistent with the swichdev model.
->
+This does not have anything to do with pagealloc, right?
+If so, remove pagealloc here and in the function name. kzfree also
+implies kmalloc, so this could be just double_kzfree().
 
-Yeah, there are 2 ethernet controller ports (managed by the enetc driver)=20
-connected inside the SoC via SGMII links to 2 of the switch ports, one of
-these switch ports can be configured as CPU port (with follow-up patches).
+> +       ptr = kmalloc(size, GFP_KERNEL);
+> +       if (!ptr) {
+> +               pr_err("Allocation failed\n");
+> +               return;
+> +       }
+> +
+> +       kzfree(ptr);
+> +       kzfree(ptr);
+> +}
+> +
+>  static int __init kmalloc_tests_init(void)
+>  {
+>         /*
+> @@ -664,6 +680,7 @@ static int __init kmalloc_tests_init(void)
+>         kasan_memchr();
+>         kasan_memcmp();
+>         kasan_strings();
+> +       kmalloc_pagealloc_double_kzfree();
+>
+>         kasan_restore_multi_shot(multishot);
+>
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 242fdc01aaa9..357e02e73163 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -413,10 +413,20 @@ static inline bool shadow_invalid(u8 tag, s8 shadow_byte)
+>                 return tag != (u8)shadow_byte;
+>  }
+>
+> +bool kasan_shadow_invalid(const void *object)
+> +{
+> +       u8 tag = get_tag(object);
+> +       s8 shadow_byte;
+> +
+> +       object = reset_tag(object);
+> +
+> +       shadow_byte = READ_ONCE(*(s8 *)kasan_mem_to_shadow(object));
+> +       return shadow_invalid(tag, shadow_byte);
+> +}
+> +
+>  static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+>                               unsigned long ip, bool quarantine)
+>  {
+> -       s8 shadow_byte;
+>         u8 tag;
+>         void *tagged_object;
+>         unsigned long rounded_up_size;
+> @@ -435,8 +445,7 @@ static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+>         if (unlikely(cache->flags & SLAB_TYPESAFE_BY_RCU))
+>                 return false;
+>
+> -       shadow_byte = READ_ONCE(*(s8 *)kasan_mem_to_shadow(object));
+> -       if (shadow_invalid(tag, shadow_byte)) {
+> +       if (kasan_shadow_invalid(tagged_object)) {
+>                 kasan_report_invalid_free(tagged_object, ip);
+>                 return true;
+>         }
+> diff --git a/mm/slab.c b/mm/slab.c
+> index f7117ad9b3a3..3595348c401b 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -4226,10 +4226,14 @@ size_t ksize(const void *objp)
+>                 return 0;
+>
+>         size = virt_to_cache(objp)->object_size;
+> -       /* We assume that ksize callers could use the whole allocated area,
+> -        * so we need to unpoison this area.
+> -        */
+> -       kasan_unpoison_shadow(objp, size);
+> +
+> +       if (!kasan_shadow_invalid(objp)) {
+> +               /*
+> +                * We assume that ksize callers could use the whole allocated
+> +                * area, so we need to unpoison this area.
+> +                */
+> +               kasan_unpoison_shadow(objp, size);
+> +       }
+>
+>         return size;
+>  }
+> diff --git a/mm/slub.c b/mm/slub.c
+> index cd04dbd2b5d0..28231d30358e 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -3921,10 +3921,13 @@ static size_t __ksize(const void *object)
+>  size_t ksize(const void *object)
+>  {
+>         size_t size = __ksize(object);
+> -       /* We assume that ksize callers could use whole allocated area,
+> -        * so we need to unpoison this area.
+> -        */
+> -       kasan_unpoison_shadow(object, size);
+> +       if (!kasan_shadow_invalid(object)) {
 
-This configuration may look prettier on DSA, but the main restriction here
-is that the entire functionality is provided by the ocelot driver which is =
-a
-switchdev driver.  I don't think it would be a good idea to copy-paste code
-from ocelot to a separate dsa driver.
 
-Thanks for the review.
-Claudiu
+I am thinking if we should call kasan_check_read(object, 1) here...
+This would not produce a double-free error (use-after-free read
+instead), but conceptually why we would allow calling ksize on freed
+objects? But more importantly, we just skip unpoisoning shadow, but we
+still smash the object contents on the second kzfree, right? This
+means that the heap is corrupted after running the tests. As far as I
+remember we avoided corrupting heap in tests and in particular a
+normal double-free does not. As of now we've smashed the quarantine
+link, but if we move the free metadata back into the object (e.g. to
+resolve https://bugzilla.kernel.org/show_bug.cgi?id=198437) we also
+smash free metadata before we print the double free report (at the
+very least we will fail to print free stack, and crash at worst).
+
+Doing kasan_check_read() in ksize() will cause a report _before_ we
+smashed the object at the cost of an imprecise report title.
+And fixing all of the issues will require changing kzfree I think.
+
+
+> +               /*
+> +                * We assume that ksize callers could use whole allocated area,
+> +                * so we need to unpoison this area.
+> +                */
+> +               kasan_unpoison_shadow(object, size);
+> +       }
+>         return size;
+>  }
+>  EXPORT_SYMBOL(ksize);
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
