@@ -2,268 +2,76 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D70BC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48487C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB8C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="eBk2MYpP"
+	by mail.kernel.org (Postfix) with ESMTP id 27E67213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfFXOZO (ORCPT
+        id S1728614AbfFXO0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:25:14 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:55786 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728610AbfFXOZM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:25:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1561386311; x=1592922311;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=yaQAXworocGm7R2TINDI0hGKhCHD7XX0PtX7y1HukTE=;
-  b=eBk2MYpPoKE1KhMDxpIVZaGlc8oIryuZCvb3kqg9sG/IaAAc3bI4hBCn
-   CZR+nFvGRtR81hlrNeY6FkcXPEKdOTl5pa2nYRLqTJg3vHVyhM7JXazG7
-   iBgt/kioMa1xyPjVKvOxOMN/qlWCvsvP73fegR2gdknJd5DVehdZvPLgj
-   E=;
-X-IronPort-AV: E=Sophos;i="5.62,412,1554768000"; 
-   d="scan'208";a="771743168"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Jun 2019 14:25:11 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 17D01A2719;
-        Mon, 24 Jun 2019 14:25:06 +0000 (UTC)
-Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 24 Jun 2019 14:24:50 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 24 Jun 2019 14:24:48 +0000
-Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Mon, 24 Jun 2019 14:24:43 +0000
-From:   Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [PATCH v3 5/5] Development scripts for crash triage and deploy
-Date:   Mon, 24 Jun 2019 16:24:14 +0200
-Message-ID: <20190624142414.22096-6-samcacc@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624142414.22096-1-samcacc@amazon.de>
-References: <20190624142414.22096-1-samcacc@amazon.de>
+        Mon, 24 Jun 2019 10:26:00 -0400
+Received: from ms.lwn.net ([45.79.88.28]:43870 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbfFXO0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:26:00 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id A686D35A;
+        Mon, 24 Jun 2019 14:25:59 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 08:25:58 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Docs: An initial automarkup extension for sphinx
+Message-ID: <20190624082558.62e6c0d2@lwn.net>
+In-Reply-To: <87k1dbrziw.fsf@intel.com>
+References: <20190621235159.6992-1-corbet@lwn.net>
+        <20190621235159.6992-2-corbet@lwn.net>
+        <87k1dbrziw.fsf@intel.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not meant for upstream consumption.
+On Mon, 24 Jun 2019 14:30:47 +0300
+Jani Nikula <jani.nikula@linux.intel.com> wrote:
 
----
+> > +def auto_markup(app, doctree, name):
+> > +    for para in doctree.traverse(nodes.paragraph):
+> > +        for node in para.traverse(nodes.Text):
+> > +            if not isinstance(node.parent, nodes.literal):
+> > +                node.parent.replace(node, markup_funcs(name, app, node))  
+> 
+> I think overall this is a better approach than preprocessing. Thanks for
+> doing this!
+> 
+> I toyed with something like this before, and the key difference here
+> seems to be ignoring literal blocks. The problem seemed to be that
+> replacing blocks with syntax highlighting also removed the syntax
+> highlighting, with no way that I could find to bring it back.
 
-v2 -> v3:
- - Introduced this patch as a place for non-essential dev scripts
+That test could use a comment, really.  What it is actually doing is
+skipping text chunks in ``inline literal`` sections, and what that is
+*actually* doing is avoiding marking up functions that have an
+explicit :c:func: markup on them already.
 
-Signed-off-by: Sam Caccavale <samcacc@amazon.de>
----
- tools/fuzz/x86ie/scripts/bin.sh               | 49 +++++++++++++++++++
- tools/fuzz/x86ie/scripts/coalesce.sh          |  5 ++
- tools/fuzz/x86ie/scripts/deploy.sh            |  9 ++++
- tools/fuzz/x86ie/scripts/deploy_remote.sh     |  9 ++++
- tools/fuzz/x86ie/scripts/gen_output.sh        | 11 +++++
- .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |  5 ++
- tools/fuzz/x86ie/scripts/rebuild.sh           |  6 +++
- tools/fuzz/x86ie/scripts/summarize.sh         |  9 ++++
- 8 files changed, 103 insertions(+)
- create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
- create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
- create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
- create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
- create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
- create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
- create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
+Someday I don't doubt that this loop will be replaced by a proper tree
+walk that knows where to prune things and how to replace various other
+types of nodes, but this is easy and does the right thing pretty much
+everywhere as far as I can tell.
 
-diff --git a/tools/fuzz/x86ie/scripts/bin.sh b/tools/fuzz/x86ie/scripts/bin.sh
-new file mode 100755
-index 000000000000..6383a883ff33
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/bin.sh
-@@ -0,0 +1,49 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 3 ]; then
-+  echo "Usage: './bin path/to/afl-harness path/to/afl_crash [path/to/linux/src/root]'"
-+  exit
-+fi
-+
-+export AFL_HARNESS="$1"
-+export LINUX_SRC="$3"
-+
-+diagnose_segfault() {
-+  SOURCE=$(gdb -batch -ex r -ex 'bt 2' --args $@ 2>&1 | grep -Po '#1.* \K([^ ]+:[0-9]+)');
-+  IFS=: read FILE LINE <<< "$SOURCE"
-+
-+  OP="$(sed -n "${LINE}p" "$LINUX_SRC/$FILE" 2>/dev/null)"
-+  if [ $? -ne 0 ]; then
-+    OP="$(sed -n "${LINE}p" "$LINUX_SRC/tools/fuzz/x86_instruction_emulation/$FILE" 2>/dev/null)"
-+  fi
-+
-+  OP="$(echo $OP | grep -Po 'ops->\K([^(]+)')"
-+  if [ -z "$OP" ]; then
-+    echo "SEGV: unknown, in $FILE:$LINE"
-+  else
-+    echo "Expected: segfaulting on emulator->$OP"
-+  fi
-+}
-+export -f diagnose_segfault
-+
-+bin() {
-+  OUTPUT=$(bash -c "timeout 1s $AFL_HARNESS $1 2>&1" 2>&1)
-+  RETVAL=$?
-+
-+  echo "$OUTPUT"
-+  if [ $RETVAL -eq 0 ]; then
-+    echo "Terminated successfully"
-+  elif [ $RETVAL -eq 124 ]; then
-+    echo "Unknown: killed due to timeout.  Loop likely."
-+  elif echo "$OUTPUT" | grep -q "SEGV"; then
-+    echo "$(diagnose_segfault $AFL_HARNESS $1)"
-+  elif echo "$OUTPUT" | grep -q "FPE"; then
-+    echo "Expected: floating point exception."
-+  else
-+    echo "Unknown cause of crash."
-+  fi
-+}
-+export -f bin
-+
-+echo "$(bin $2 2>&1)"
-diff --git a/tools/fuzz/x86ie/scripts/coalesce.sh b/tools/fuzz/x86ie/scripts/coalesce.sh
-new file mode 100755
-index 000000000000..b15d583c2c32
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/coalesce.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+
-+mkdir -p all
-+rm -rf all/*
-+find . -type f -wholename '*crashes/id*' | parallel 'cp {} ./all/$(basename $(dirname {//})):{/}'
-diff --git a/tools/fuzz/x86ie/scripts/deploy.sh b/tools/fuzz/x86ie/scripts/deploy.sh
-new file mode 100644
-index 000000000000..f95c3aa2b5b5
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/deploy.sh
-@@ -0,0 +1,9 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+REMOTE=$1
-+DSTDIR=/dev/shm
-+
-+rsync -av $(pwd) $REMOTE:$DSTDIR
-+
-+ssh $REMOTE "cd $DSTDIR/$(basename $(pwd)); bash -s tools/fuzz/x86_instruction_emulation/scripts/deploy_remote.sh"
-diff --git a/tools/fuzz/x86ie/scripts/deploy_remote.sh b/tools/fuzz/x86ie/scripts/deploy_remote.sh
-new file mode 100755
-index 000000000000..1279ad6eadb2
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/deploy_remote.sh
-@@ -0,0 +1,9 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+SCRIPTDIR=$(pwd)/tools/fuzz/x86ie/scripts
-+
-+$SCRIPTDIR/install_deps_ubuntu.sh
-+source $SCRIPTDIR/install_afl.sh
-+CC=$AFLPATH/afl-gcc $SCRIPTDIR/build.sh
-+FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}" $SCRIPTDIR/run.sh
-diff --git a/tools/fuzz/x86ie/scripts/gen_output.sh b/tools/fuzz/x86ie/scripts/gen_output.sh
-new file mode 100755
-index 000000000000..6c0707eb6d08
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/gen_output.sh
-@@ -0,0 +1,11 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 3 ]; then
-+  echo "Usage: '$0 path/to/afl-harness path/to/afl_crash_dir path/to/linux/src/root'"
-+  exit
-+fi
-+
-+mkdir -p output
-+rm -rf output/*
-+find $2 -type f | parallel ./bin.sh $1 {} $3 '>' ./output/{/}.out
-diff --git a/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
-new file mode 100755
-index 000000000000..5525bc8b659c
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+sudo apt update
-+sudo apt install -y make gcc wget screen build-essential libssh-dev flex bison libelf-dev bc
-diff --git a/tools/fuzz/x86ie/scripts/rebuild.sh b/tools/fuzz/x86ie/scripts/rebuild.sh
-new file mode 100755
-index 000000000000..809a4551cb0c
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/rebuild.sh
-@@ -0,0 +1,6 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+make clean
-+make tools/fuzz_clean
-+FUZZDIR="./fuzz" ./tools/fuzz/x86ie/scripts/build.sh
-diff --git a/tools/fuzz/x86ie/scripts/summarize.sh b/tools/fuzz/x86ie/scripts/summarize.sh
-new file mode 100755
-index 000000000000..27761f283ee3
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/summarize.sh
-@@ -0,0 +1,9 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 1 ]; then
-+  echo "Usage: '$0 path/to/output/dir'"
-+  exit
-+fi
-+
-+time bash -c "find $1 -type f -exec tail -n 1 {} \; | sort | uniq -c | sort -rn"
--- 
-2.17.1
+Thanks,
 
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+jon
