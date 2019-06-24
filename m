@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A8EC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209B6C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCBE205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE792089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371352;
-	bh=OV+leDYPYsoAFltb+eKy+j49AqrEWx8bF/5aw0VA0Xk=;
+	s=default; t=1561371356;
+	bh=c5tfn4MH4/BMFzGVpBIQr2Pi7Q9VQ4m2MhLwf7RD09Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCR6QrRFJgOhkSzc8/rFVzlQ01MOwtMVpYqS/5Tt15cHUNYjLUBUXDh2NtaaEKY4y
-	 yzKP3tyfKv0vLekymUBe37o84lyL296dkSQXX8eUfRqJfQnDlV8VwML8Be8RYgNJqJ
-	 hctOc89Q9c+Js5k/Bl46iz9+Vw3tZQYN8oFUNbRs=
+	b=qS7YyoMSNYM9VQpFhK+Rf8+PcPJwcO1XwSGbUqTZSLSkUIrfhU9YMXJ7cRG0AZhm8
+	 Ffnh2Lmw8Bqrzew9GzMM8dH/QkSpEVXHfGSsugrM2KalaDurB956w3GlupgwCkzHFu
+	 6e1uC4BhFzrTEFaMnIpzk32/kwsP63ZTcIEEPiy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfFXKPu (ORCPT
+        id S1729621AbfFXKPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfFXKPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:15:48 -0400
+        id S1730290AbfFXKPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:15:50 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71662089F;
-        Mon, 24 Jun 2019 10:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5525A205ED;
+        Mon, 24 Jun 2019 10:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371347;
-        bh=OV+leDYPYsoAFltb+eKy+j49AqrEWx8bF/5aw0VA0Xk=;
+        s=default; t=1561371349;
+        bh=c5tfn4MH4/BMFzGVpBIQr2Pi7Q9VQ4m2MhLwf7RD09Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZdAZHrwjg5mL1JHiG2VO4vAYjAhiON877F5CnhFAHAupOOgiBLjZVDyv8pZHcmNJb
-         /XMHwjGbYj/L+rc0qAIcMYOwnH93Dc+NlVlc8CSzv/ePK02N7aWbI8P3u15AbO3YPN
-         nVbtph72srzJMoVjs1hvtAbFGJPONbP7/q1L7bJg=
+        b=2Zv6qOVSjRQpg2idxql2RmxYN5iJ8xkyA0ZQZJEZdNc6h41jedGbCo7n8vEb7da2o
+         NHIyvRQ2iyATi1d0e5NCgsnXiQ4N6bxInqQT1/q9MurYJ35Dgjp1FgPsSAoK2lQWzr
+         a+KMVWEnxsYKYaNGD5vcU7aWbxqpaBAC3r8bafSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 068/121] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
-Date:   Mon, 24 Jun 2019 17:56:40 +0800
-Message-Id: <20190624092324.327735639@linuxfoundation.org>
+Subject: [PATCH 5.1 069/121] selftests: set sysctl bc_forwarding properly in router_broadcast.sh
+Date:   Mon, 24 Jun 2019 17:56:41 +0800
+Message-Id: <20190624092324.407243019@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -61,39 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
+[ Upstream commit 67c0aaa1eaec60e9dab301012bdebe6726ae04bd ]
 
-Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
-equals to 2.
+sysctl setting bc_forwarding for $rp2 is needed when ping_test_from h2,
+otherwise the bc packets from $rp2 won't be forwarded. This patch is to
+add this setting for $rp2.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Also, as ping_test_from does grep "$from" only, which could match some
+unexpected output, some test case doesn't really work, like:
+
+  # ping_test_from $h2 198.51.200.255 198.51.200.2
+    PING 198.51.200.255 from 198.51.100.2 veth3: 56(84) bytes of data.
+    64 bytes from 198.51.100.1: icmp_seq=1 ttl=64 time=0.336 ms
+
+When doing grep $form (198.51.200.2), the output could still match.
+So change to grep "bytes from $from" instead.
+
+Fixes: 40f98b9af943 ("selftests: add a selftest for directed broadcast forwarding")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/forwarding/router_broadcast.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 59601cb5aeee..f3f7551162a9 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1777,6 +1777,7 @@ static void mtk_poll_controller(struct net_device *dev)
- 
- static int mtk_start_dma(struct mtk_eth *eth)
+diff --git a/tools/testing/selftests/net/forwarding/router_broadcast.sh b/tools/testing/selftests/net/forwarding/router_broadcast.sh
+index 9a678ece32b4..4eac0a06f451 100755
+--- a/tools/testing/selftests/net/forwarding/router_broadcast.sh
++++ b/tools/testing/selftests/net/forwarding/router_broadcast.sh
+@@ -145,16 +145,19 @@ bc_forwarding_disable()
  {
-+	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
- 	int err;
+ 	sysctl_set net.ipv4.conf.all.bc_forwarding 0
+ 	sysctl_set net.ipv4.conf.$rp1.bc_forwarding 0
++	sysctl_set net.ipv4.conf.$rp2.bc_forwarding 0
+ }
  
- 	err = mtk_dma_init(eth);
-@@ -1793,7 +1794,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 		MTK_QDMA_GLO_CFG);
+ bc_forwarding_enable()
+ {
+ 	sysctl_set net.ipv4.conf.all.bc_forwarding 1
+ 	sysctl_set net.ipv4.conf.$rp1.bc_forwarding 1
++	sysctl_set net.ipv4.conf.$rp2.bc_forwarding 1
+ }
  
- 	mtk_w32(eth,
--		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
-+		MTK_RX_DMA_EN | rx_2b_offset |
- 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
- 		MTK_PDMA_GLO_CFG);
+ bc_forwarding_restore()
+ {
++	sysctl_restore net.ipv4.conf.$rp2.bc_forwarding
+ 	sysctl_restore net.ipv4.conf.$rp1.bc_forwarding
+ 	sysctl_restore net.ipv4.conf.all.bc_forwarding
+ }
+@@ -171,7 +174,7 @@ ping_test_from()
+ 	log_info "ping $dip, expected reply from $from"
+ 	ip vrf exec $(master_name_get $oif) \
+ 		$PING -I $oif $dip -c 10 -i 0.1 -w $PING_TIMEOUT -b 2>&1 \
+-		| grep $from &> /dev/null
++		| grep "bytes from $from" > /dev/null
+ 	check_err_fail $fail $?
+ }
  
 -- 
 2.20.1
