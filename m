@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE2EC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE4720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1163E20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371487;
-	bh=CTGxW4HAeS9AfZqWdcoD0vkfG0UtNdWM6gNBiYfTMAI=;
+	s=default; t=1561371501;
+	bh=ZWzPHxVYO6d7ILI+35xWNGfP9V6kWW0cbdaUNlzXlDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQEIhQpTGUSLgPuLAp4P/cOh3lpfy3DkxlPpyaMYFUJT3/2a9yzLx+gL2RJ33qeWA
-	 hy8NHnI8/+K/7KDYR2zq44Ia2MZHZp4eihxfVYjkoHgH7jB8HELFZZxzbVcAZqgx1f
-	 E+zQ7460oZQj2dholVYcfsTFPeAD4+fj3l88/ENs=
+	b=HMuVTmmUVvqP1Ripisj5s+3FM9ih7h0e+sl7E/8hFf+U8Md5g/KL/6GqcdCmE+RFL
+	 v8uz5Rdx6/vXfuI8k2uo5fOWM+JZ0VNhnLXSnRO1d70c4yNUb8XO7bWqVyFPLkxVwq
+	 f/oiYcN1cy+FG94tXzDErn6nm26o05G8H79em4ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbfFXKQx (ORCPT
+        id S1729541AbfFXKST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730788AbfFXKQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:16:43 -0400
+        id S1729770AbfFXKQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:16:27 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F302089F;
-        Mon, 24 Jun 2019 10:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF272208E3;
+        Mon, 24 Jun 2019 10:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561371403;
-        bh=CTGxW4HAeS9AfZqWdcoD0vkfG0UtNdWM6gNBiYfTMAI=;
+        s=default; t=1561371387;
+        bh=ZWzPHxVYO6d7ILI+35xWNGfP9V6kWW0cbdaUNlzXlDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0dSVrC+W2lMtH6qady/KCXxharSjRppWs5pjF4c5xKxx2F+jhmJaT7f83g9amjZWS
-         GkGEQD8mSH/00rm3it/8vHLVjP/f6IqvvqESciKo//0hBG3USqaXhg/lC1GThoCGt/
-         nk3qDzJ7IcrSCS8ZC61ZzLfuDovgBhj8wTVkTZoY=
+        b=gjHDuDS5q969CBYr7xVYm6kH6H3AKJQC1ehb8wq3Gi2hejFNlppgwQWS1cuMeM9wM
+         DnDbXsOhCne9gVjLVxfg8veoSOPvBXWFZOAXhRuDo5UCtSOxMGx3hjCRl/D+aNivUh
+         U2qpDBJl5avr5SUIuXfIpk/t8jclDDHp77rf6KF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antti Antinoja <antti@fennosys.fi>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Eduardo Valentin <eduval@amazon.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 090/121] ovl: dont fail with disconnected lower NFS
-Date:   Mon, 24 Jun 2019 17:57:02 +0800
-Message-Id: <20190624092325.399144583@linuxfoundation.org>
+Subject: [PATCH 5.1 085/121] hwmon: (core) add thermal sensors only if dev->of_node is present
+Date:   Mon, 24 Jun 2019 17:56:57 +0800
+Message-Id: <20190624092325.180202592@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -60,77 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9179c21dc6ed1c993caa5fe4da876a6765c26af7 ]
+[ Upstream commit c41dd48e21fae3e55b3670ccf2eb562fc1f6a67d ]
 
-NFS mounts can be disconnected from fs root.  Don't fail the overlapping
-layer check because of this.
+Drivers may register to hwmon and request for also registering
+with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
+some of these driver, e.g. marvell phy, may be probed from
+Device Tree or being dynamically allocated, and in the later
+case, it will not have a dev->of_node entry.
 
-The check is not authoritative anyway, since topology can change during or
-after the check.
+Registering with hwmon without the dev->of_node may result in
+different outcomes depending on the device tree, which may
+be a bit misleading. If the device tree blob has no 'thermal-zones'
+node, the *hwmon_device_register*() family functions are going
+to gracefully succeed, because of-thermal,
+*thermal_zone_of_sensor_register() return -ENODEV in this case,
+and the hwmon error path handles this error code as success to
+cover for the case where CONFIG_THERMAL_OF is not set.
+However, if the device tree blob has the 'thermal-zones'
+entry, the *hwmon_device_register*() will always fail on callers
+with no dev->of_node, propagating -EINVAL.
 
-Reported-by: Antti Antinoja <antti@fennosys.fi>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
+If dev->of_node is not present, calling of-thermal does not
+make sense. For this reason, this patch checks first if the
+device has a of_node before going over the process of registering
+with the thermal subsystem of-thermal interface. And in this case,
+when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
+and no dev->of_node will still register with hwmon, but not with
+the thermal subsystem. If all the hwmon part bits are in place,
+the registration will succeed.
+
+Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/super.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+ drivers/hwmon/hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index c481bf5f6fe2..fa5060f59b88 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -1472,23 +1472,20 @@ out_err:
-  * Check if this layer root is a descendant of:
-  * - another layer of this overlayfs instance
-  * - upper/work dir of any overlayfs instance
-- * - a disconnected dentry (detached root)
-  */
- static int ovl_check_layer(struct super_block *sb, struct dentry *dentry,
- 			   const char *name)
- {
--	struct dentry *next, *parent;
--	bool is_root = false;
-+	struct dentry *next = dentry, *parent;
- 	int err = 0;
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index c22dc1e07911..c38883f748a1 100644
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -633,7 +633,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+ 	if (err)
+ 		goto free_hwmon;
  
--	if (!dentry || dentry == dentry->d_sb->s_root)
-+	if (!dentry)
- 		return 0;
- 
--	next = dget(dentry);
--	/* Walk back ancestors to fs root (inclusive) looking for traps */
--	do {
--		parent = dget_parent(next);
--		is_root = (parent == next);
-+	parent = dget_parent(next);
-+
-+	/* Walk back ancestors to root (inclusive) looking for traps */
-+	while (!err && parent != next) {
- 		if (ovl_is_inuse(parent)) {
- 			err = -EBUSY;
- 			pr_err("overlayfs: %s path overlapping in-use upperdir/workdir\n",
-@@ -1497,17 +1494,12 @@ static int ovl_check_layer(struct super_block *sb, struct dentry *dentry,
- 			err = -ELOOP;
- 			pr_err("overlayfs: overlapping %s path\n", name);
- 		}
--		dput(next);
- 		next = parent;
--	} while (!err && !is_root);
--
--	/* Did we really walk to fs root or found a detached root? */
--	if (!err && next != dentry->d_sb->s_root) {
--		err = -ESTALE;
--		pr_err("overlayfs: disconnected %s path\n", name);
-+		parent = dget_parent(next);
-+		dput(next);
- 	}
- 
--	dput(next);
-+	dput(parent);
- 
- 	return err;
- }
+-	if (dev && chip && chip->ops->read &&
++	if (dev && dev->of_node && chip && chip->ops->read &&
+ 	    chip->info[0]->type == hwmon_chip &&
+ 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
+ 		const struct hwmon_channel_info **info = chip->info;
 -- 
 2.20.1
 
