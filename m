@@ -2,200 +2,348 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D55C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4258DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693ED20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0291F20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IXdzHnBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbfFXOot (ORCPT
+        id S1728400AbfFXOq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:44:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56317 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfFXOot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:44:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XXBP2K0pz9s6w;
-        Tue, 25 Jun 2019 00:44:44 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     oss-security@lists.openwall.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linuxppc-users@lists.ozlabs.org
-Subject: CVE-2019-12817: Linux kernel: powerpc: Unrelated processes may be able to read/write to each other's virtual memory
-Date:   Tue, 25 Jun 2019 00:44:31 +1000
-Message-ID: <87lfxr82ls.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Mon, 24 Jun 2019 10:46:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57122 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfFXOq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:46:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OEiVPE045787;
+        Mon, 24 Jun 2019 14:46:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=iB5cj4fpTcntIV4pZwjDCBLm8ALadUuqm4GFDpVE4x4=;
+ b=IXdzHnBqXpK5+fDxqAgGcRjipq1ESU8y4RjCwVCxcwik4QZb9C+JJUAqv7EZqamp3CBY
+ iAriJYBW6miibNDbvlnptfra6tVbFxqSNxdB0barlz53Aunw3FTXKJXD+Mq3GLI78s49
+ L8y5V3J4iFXrV+xuyvxqt8oOOqGLOZBFdTo0BmRtZmNbhiC+vOML5B6m7VQJYaWMFoF5
+ MUQRNGQo5PDaEFuS1i9A+aPQF5fz0LFVWtBMHx4H2Ch3wGC5s34jK+SBjb9iH0K5oAr+
+ PXwh42TJKVVYKD7AM/QzWXY2aa8l4GO9bg6ozctfNnxAQCQSxr0BxHRKSBgaAzzk9f3E jA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t9cyq6tjg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 14:46:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OEjM2f072712;
+        Mon, 24 Jun 2019 14:46:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7bp6d6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 14:46:03 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OEk3tF002641;
+        Mon, 24 Jun 2019 14:46:03 GMT
+Received: from [10.30.3.10] (/213.57.127.2)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 07:46:02 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH] x86/kvm/nVMCS: fix VMCLEAR when Enlightened VMCS is in
+ use
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <87r27jdq68.fsf@vitty.brq.redhat.com>
+Date:   Mon, 24 Jun 2019 17:45:59 +0300
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <69274969-E2BE-442C-B2D2-0AF94338C31B@oracle.com>
+References: <20190624133028.3710-1-vkuznets@redhat.com>
+ <CEFF2A14-611A-417C-BC0A-8814862F26C6@oracle.com>
+ <87r27jdq68.fsf@vitty.brq.redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-The Linux kernel for powerpc since 4.17 has a bug where unrelated processes may
-be able to read/write to each other's virtual memory under certain conditions.
-
-This bug only affects machines using 64-bit CPUs with the hash page table MMU,
-see below for more detail on affected CPUs.
-
-To trigger the bug a process must allocate memory above 512TB. That only happens
-if userspace explicitly requests it with mmap(). That process must then fork(),
-at this point the child incorrectly inherits the "context id" of the parent
-associated with the mapping above 512TB. It may then be possible for the
-parent/child to write to each other's mappings above 512TB, which should not be
-possible, and constitutes memory corruption.
-
-If instead the child process exits, all its context ids are freed, including the
-context id that is still in use by the parent for the mapping above 512TB. That
-id can then be reallocated to a third process, that process can then read/write
-to the parent's mapping above 512TB. Additionally if the freed id is used for
-the third process's primary context id, then the parent is able to read/write to
-the third process's mappings *below* 512TB.
-
-If the parent and child both exit before another process is allocated the freed
-context id, the kernel will notice the double free of the id and print a warning
-such as:
-
-  ida_free called for id=103 which is not allocated.
-  WARNING: CPU: 8 PID: 7293 at lib/idr.c:520 ida_free_rc+0x1b4/0x1d0
-
-The bug was introduced in commit:
-  f384796c40dc ("powerpc/mm: Add support for handling > 512TB address in SLB miss")
-
-Which was originally merged in v4.17.
-
-Only machines using the hash page table (HPT) MMU are affected, eg. PowerPC 970
-(G5), PA6T, Power5/6/7/8/9. By default Power9 bare metal machines (powernv) use
-the Radix MMU and are not affected, unless the machine has been explicitly
-booted in HPT mode (using disable_radix on the kernel command line). KVM guests
-on Power9 may be affected if the host or guest is configured to use the HPT MMU.
-LPARs under PowerVM on Power9 are affected as they always use the HPT MMU.
-Kernels built with PAGE_SIZE=4K are not affected.
-
-The upstream fix is here:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca72d88378b2f2444d3ec145dd442d449d3fefbc
-
-There's also a kernel selftest to verify the fix:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=16391bfc862342f285195013b73c1394fab28b97
-
-Or a similar standalone version is included below.
-
-cheers
 
 
-cat > test.c <<EOF
-#undef NDEBUG
+> On 24 Jun 2019, at 17:16, Vitaly Kuznetsov <vkuznets@redhat.com> =
+wrote:
+>=20
+> Liran Alon <liran.alon@oracle.com> writes:
+>=20
+>>> On 24 Jun 2019, at 16:30, Vitaly Kuznetsov <vkuznets@redhat.com> =
+wrote:
+>>>=20
+>>> When Enlightened VMCS is in use, it is valid to do VMCLEAR and,
+>>> according to TLFS, this should "transition an enlightened VMCS from =
+the
+>>> active to the non-active state". It is, however, wrong to assume =
+that
+>>> it is only valid to do VMCLEAR for the eVMCS which is currently =
+active
+>>> on the vCPU performing VMCLEAR.
+>>>=20
+>>> Currently, the logic in handle_vmclear() is broken: in case, there =
+is no
+>>> active eVMCS on the vCPU doing VMCLEAR we treat the argument as a =
+'normal'
+>>> VMCS and kvm_vcpu_write_guest() to the 'launch_state' field =
+irreversibly
+>>> corrupts the memory area.
+>>>=20
+>>> So, in case the VMCLEAR argument is not the current active eVMCS on =
+the
+>>> vCPU, how can we know if the area it is pointing to is a normal or =
+an
+>>> enlightened VMCS?
+>>> Thanks to the bug in Hyper-V (see commit 72aeb60c52bf7 ("KVM: nVMX: =
+Verify
+>>> eVMCS revision id match supported eVMCS version on eVMCS VMPTRLD")) =
+we can
+>>> not, the revision can't be used to distinguish between them. So =
+let's
+>>> assume it is always enlightened in case enlightened vmentry is =
+enabled in
+>>> the assist page. Also, check if vmx->nested.enlightened_vmcs_enabled =
+to
+>>> minimize the impact for 'unenlightened' workloads.
+>>>=20
+>>> Fixes: b8bbab928fb1 ("KVM: nVMX: implement enlightened VMPTRLD and =
+VMCLEAR")
+>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> ---
+>>> arch/x86/kvm/vmx/evmcs.c  | 18 ++++++++++++++++++
+>>> arch/x86/kvm/vmx/evmcs.h  |  1 +
+>>> arch/x86/kvm/vmx/nested.c | 19 ++++++++-----------
+>>> 3 files changed, 27 insertions(+), 11 deletions(-)
+>>>=20
+>>> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+>>> index 1a6b3e1581aa..eae636ec0cc8 100644
+>>> --- a/arch/x86/kvm/vmx/evmcs.c
+>>> +++ b/arch/x86/kvm/vmx/evmcs.c
+>>> @@ -3,6 +3,7 @@
+>>> #include <linux/errno.h>
+>>> #include <linux/smp.h>
+>>>=20
+>>> +#include "../hyperv.h"
+>>> #include "evmcs.h"
+>>> #include "vmcs.h"
+>>> #include "vmx.h"
+>>> @@ -309,6 +310,23 @@ void evmcs_sanitize_exec_ctrls(struct =
+vmcs_config *vmcs_conf)
+>>> }
+>>> #endif
+>>>=20
+>>> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmptr)
+>>=20
+>> I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+>> In addition, I think you should return either -1ull or =
+assist_page.current_nested_vmcs.
+>> i.e. Don=E2=80=99t return evmcs_ptr by pointer but instead as a =
+return-value
+>> and get rid of the bool.
+>=20
+> Sure, can do in v2.
+>=20
+>>=20
+>>> +{
+>>> +	struct hv_vp_assist_page assist_page;
+>>> +
+>>> +	*evmptr =3D -1ull;
+>>> +
+>>> +	if (unlikely(!kvm_hv_get_assist_page(vcpu, &assist_page)))
+>>> +		return false;
+>>> +
+>>> +	if (unlikely(!assist_page.enlighten_vmentry))
+>>> +		return false;
+>>> +
+>>> +	*evmptr =3D assist_page.current_nested_vmcs;
+>>> +
+>>> +	return true;
+>>> +}
+>>> +
+>>> uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+>>> {
+>>>       struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>>> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+>>> index e0fcef85b332..c449e79a9c4a 100644
+>>> --- a/arch/x86/kvm/vmx/evmcs.h
+>>> +++ b/arch/x86/kvm/vmx/evmcs.h
+>>> @@ -195,6 +195,7 @@ static inline void =
+evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf) {}
+>>> static inline void evmcs_touch_msr_bitmap(void) {}
+>>> #endif /* IS_ENABLED(CONFIG_HYPERV) */
+>>>=20
+>>> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 =
+*evmptr);
+>>> uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu);
+>>> int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+>>> 			uint16_t *vmcs_version);
+>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>> index 9214b3aea1f9..ee8dda7d8a03 100644
+>>> --- a/arch/x86/kvm/vmx/nested.c
+>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>> @@ -1765,26 +1765,21 @@ static int =
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+>>> 						 bool from_launch)
+>>> {
+>>> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>>> -	struct hv_vp_assist_page assist_page;
+>>> +	u64 evmptr;
+>>=20
+>> I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+>>=20
+>=20
+> Sure.
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
+Sorry I meant evmcs_vmptr to be consistent with =
+vmx->nested.hv_evmcs_vmptr.
 
-#ifndef MAP_FIXED_NOREPLACE
-#define MAP_FIXED_NOREPLACE	MAP_FIXED	// "Should be safe" above 512TB
-#endif
+>=20
+>>>=20
+>>> 	if (likely(!vmx->nested.enlightened_vmcs_enabled))
+>>> 		return 1;
+>>>=20
+>>> -	if (unlikely(!kvm_hv_get_assist_page(vcpu, &assist_page)))
+>>> +	if (!nested_enlightened_vmentry(vcpu, &evmptr))
+>>> 		return 1;
+>>>=20
+>>> -	if (unlikely(!assist_page.enlighten_vmentry))
+>>> -		return 1;
+>>> -
+>>> -	if (unlikely(assist_page.current_nested_vmcs !=3D
+>>> -		     vmx->nested.hv_evmcs_vmptr)) {
+>>> -
+>>> +	if (unlikely(evmptr !=3D vmx->nested.hv_evmcs_vmptr)) {
+>>> 		if (!vmx->nested.hv_evmcs)
+>>> 			vmx->nested.current_vmptr =3D -1ull;
+>>>=20
+>>> 		nested_release_evmcs(vcpu);
+>>>=20
+>>> -		if (kvm_vcpu_map(vcpu, =
+gpa_to_gfn(assist_page.current_nested_vmcs),
+>>> +		if (kvm_vcpu_map(vcpu, gpa_to_gfn(evmptr),
+>>> 				 &vmx->nested.hv_evmcs_map))
+>>> 			return 0;
+>>>=20
+>>> @@ -1826,7 +1821,7 @@ static int =
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+>>> 		 */
+>>> 		vmx->nested.hv_evmcs->hv_clean_fields &=3D
+>>> 			~HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL;
+>>> -		vmx->nested.hv_evmcs_vmptr =3D =
+assist_page.current_nested_vmcs;
+>>> +		vmx->nested.hv_evmcs_vmptr =3D evmptr;
+>>>=20
+>>> 		/*
+>>> 		 * Unlike normal vmcs12, enlightened vmcs12 is not fully
+>>> @@ -4331,6 +4326,7 @@ static int handle_vmclear(struct kvm_vcpu =
+*vcpu)
+>>> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>>> 	u32 zero =3D 0;
+>>> 	gpa_t vmptr;
+>>> +	u64 evmptr;
+>>=20
+>> I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+>>=20
+>=20
+> Sure.
+>=20
+>>>=20
+>>> 	if (!nested_vmx_check_permission(vcpu))
+>>> 		return 1;
+>>> @@ -4346,7 +4342,8 @@ static int handle_vmclear(struct kvm_vcpu =
+*vcpu)
+>>> 		return nested_vmx_failValid(vcpu,
+>>> 			VMXERR_VMCLEAR_VMXON_POINTER);
+>>>=20
+>>> -	if (vmx->nested.hv_evmcs_map.hva) {
+>>> +	if (unlikely(vmx->nested.enlightened_vmcs_enabled) &&
+>>> +	    nested_enlightened_vmentry(vcpu, &evmptr)) {
+>>> 		if (vmptr =3D=3D vmx->nested.hv_evmcs_vmptr)
+>>=20
+>> Shouldn=E2=80=99t you also remove the (vmptr =3D=3D =
+vmx->nested.hv_evmcs_vmptr) condition?
+>> To my understanding, vmx->nested.hv_evmcs_vmptr represents the =
+address of the loaded eVMCS on current vCPU.
+>> But according to commit message, it is valid for vCPU to perform
+>> VMCLEAR on eVMCS that differ from loaded eVMCS on vCPU.
+>> E.g. The current vCPU may even have vmx->nested.hv_evmcs_vmptr set to
+>> -1ull.
+>=20
+> nested_release_evmcs() unmaps current eVMCS on the vCPU, we can't =
+easily
+> unmap eVMCS on other vCPUs without somehow synchronizing with
+> them. Actually, if we remove nested_release_evmcs() from here nothing =
+is
+> going to change: the fact that eVMCS is mapped doesn't hurt much. If =
+the
+> next enlightened vmentry is going to happen with the same evmptr we'll
+> have to map it back, in case a different one will be used - we'll =
+unmap
+> the old.
 
-int main(void)
-{
-	int p2c[2], c2p[2], rc, status, c, *p;
-	unsigned long page_size;
-	pid_t pid;
+Right.
 
-	page_size = sysconf(_SC_PAGESIZE);
-	if (page_size != 65536) {
-		printf("Unsupported page size - not affected\n");
-		return 1;
-	}
+>=20
+> In KVM, there's nothing we *have* to do to transition an eVMCS from
+> active to non-activer state. We, for example, don't enforce the
+> requirement that it can only be active on one vCPU at a time. =
+Enforcing
+> it is expensive (some synchronization is required) and if L1 =
+hypervisor
+> is misbehaving than, well, things are not going to work anyway.
 
-	// Create a mapping at 512TB to allocate an extended_id
-	p = mmap((void *)(512ul << 40), page_size, PROT_READ | PROT_WRITE,
-		MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
-	if (p == MAP_FAILED) {
-		perror("mmap");
-		printf("Error: couldn't mmap(), confirm kernel has 4TB support\n");
-		return 1;
-	}
+Right.
 
-	printf("parent writing %p = 1\n", p);
-	*p = 1;
+>=20
+> That said I'm ok with dropping nested_release_evmcs() for consistency
+> but we can't just drop 'if (vmptr =3D=3D =
+vmx->nested.hv_evmcs_vmptr)=E2=80=99.
 
-	assert(pipe(p2c) != -1 && pipe(c2p) != -1);
+Right. I meant that we can just change code to:
 
-	pid = fork();
-	if (pid == 0) {
-		close(p2c[1]);
-		close(c2p[0]);
-		assert(read(p2c[0], &c, 1) == 1);
+/* Add relevant comment here as this is not trivial why we do this */
+If (likely(!vmx->nested.enlightened_vmcs_enabled) ||
+    nested_enlightened_vmentry(vcpu, &evmptr)) {
 
-		pid = getpid();
-		printf("child writing  %p = %d\n", p, pid);
-		*p = pid;
+    if (vmptr =3D=3D vmx->nested.current_vmptr)
+        nested_release_vmcs12(vcpu);
 
-		assert(write(c2p[1], &c, 1) == 1);
-		assert(read(p2c[0], &c, 1) == 1);
-		exit(0);
-	}
-	close(p2c[0]);
-	close(c2p[1]);
-
-	c = 0;
-	assert(write(p2c[1], &c, 1) == 1);
-	assert(read(c2p[0], &c, 1) == 1);
-
-	// Prevent compiler optimisation
-	asm volatile("" : : : "memory");
-
-	rc = 0;
-	printf("parent reading %p = %d\n", p, *p);
-	if (*p != 1) {
-		printf("Error: BUG! parent saw child's write! *p = %d\n", *p);
-		rc = 1;
-	}
-
-	assert(write(p2c[1], &c, 1) == 1);
-	assert(waitpid(pid, &status, 0) != -1);
-	assert(WIFEXITED(status) && WEXITSTATUS(status) == 0);
-
-	if (rc == 0)
-		printf("success: test completed OK\n");
-
-	return rc;
+    kvm_vcpu_write_guest(=E2=80=A6);
 }
-EOF
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+-Liran
 
------BEGIN PGP SIGNATURE-----
+>=20
+> Thanks for your review!
+>=20
+> --=20
+> Vitaly
 
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl0Q4c8ACgkQUevqPMjh
-pYBBARAAqM95nzwHVCnSIMUqAqRSuLV3UOx4KxNylmdSu3ig42AgS75KeCYyBKuT
-q8bXq4sSKS5mZAp42/YgaIQpBtv8nOGutMSivZEJmMNnL3riEd7bT63BOw8EnA20
-ryhXsqf504anqzPXYv7P5xKeoQjEbK7MhuaN9d86erot/6cWh7tCcIF0SdiPGX3W
-PLlPrptRMnPCm0QhKCZxlKPxd3qd+HPNr2RVP2bIbv+8x0fldVTR+N2+gD+a5i5p
-rLsxERpaAsPvDbQNeXN/9Wck19wx+ZQMlCxStSY+VECM2jwsXty2f93hZmQ5Nm5E
-HV+nE57IF7tI/7lrlQfQ3Xml5bhVnFXwxQhbdeZfxg5vKm8YDSB0Vu0FaA59TqK7
-ANS2VLgGZV+F0VqCkWx3mVgmJsAAKfOrTjqsQAV0zH42siyYV9AvKZDdYYOxbbkf
-ZZjol8VGh684uKxZRlHeGMBL0kztUE32FiNqrhioJfpCkNhBKPcTljfVgHdPYfzz
-ULAd4QoIUcKa4RgNN5KQgMpxajXgaLxqk8K8R566dRz1KyZnpIn41v3Mq88ApBTv
-0UQarN0AYEyWyO+YI7Q0ngFWxrrcVhA9nFMRXdIdfI581hBqtWPbvItEMFVy30fZ
-3FXzj07zCVIqm7oy21QabFaLUPAEopARj7ByxutyPJT8efdhkRc=
-=21oU
------END PGP SIGNATURE-----
---=-=-=--
+
