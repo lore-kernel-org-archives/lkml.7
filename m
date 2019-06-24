@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.3 required=3.0 tests=DATE_IN_PAST_12_24,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2204C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC754C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8B20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C0F2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561456457;
-	bh=suqQEn40dkfTMVqWp+ZDCnbyVtG0cF57fNDNONs8EU8=;
+	s=default; t=1561456468;
+	bh=wcgMvcVDpuK5jcwPvIR2jhhTHxNps0emCnUkCQ8yiV8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qSgN5NTbI67eb/J1osvXqltwHmUu4x9BLE5HjFnyLqcdMZWQxIh7UbkjLKv0xjNE1
-	 dGjJ5rEeXwdlAaob6gdzFoA+08R07bHDblWxag+w1zy2pzbtOGddzVqD75eLIqsx4K
-	 BMbbhnD3NxdeIzxEAXmc0L83FhfnmXJwkXsajgqM=
+	b=x3kmTZ8GS2ucY8R4EFhwfJ8B+U8jlxk+QjecK4joKVMcRL2VElfP6VgoQNSlT+OHG
+	 xqYZ3u3sl2urbKZrOjQ0PwogCeHpIsz2REIAJTJ7kJ2+JVKJHH3x4YLgupH/IPpJIe
+	 dMhSjHtCcKL203TDwV8b7yGZq11EWpi4+60otQ2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbfFYJyQ (ORCPT
+        id S1731782AbfFYJy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:54:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37434 "EHLO
+        Tue, 25 Jun 2019 05:54:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37858 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729973AbfFYJyM (ORCPT
+        with ESMTP id S1727644AbfFYJy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:54:12 -0400
+        Tue, 25 Jun 2019 05:54:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=zx9LoJRA5VJOsRJ+xBMTylTkTEgRWd6viN1kglPW6EM=; b=uKFHQxrVpH8X
-        dVpD/orDeKDSABWJfcieBWLyp3ClSXXnpcDhLRzc3zeMTVQo6+BwUWzl3PoKSxu0f1SJDoWumFrT+
-        Yklo0nb7sxV1cZK4iRNN5jSsBeYVM/j8t3M1v54LvNzSL+VJ1A15g1ImipVt/yxSKPx+rEmYCVK+W
-        Zpba4=;
+        List-Archive; bh=g8e7LN5W+icCyPVPUZHVbZsiHWowuU5Bzf2USy1hwRc=; b=J52ajW99TBzE
+        dwXWMvIbw43krhBM2dpHWopP5KozXZUn96zPLHOvDcYumdIUZRvJoWr1L8ragsCp+m1GTq9GYmAFz
+        7HK6gedmdfH98/N4iFgxyx+oATXvyuzegF1uu4AFzsKtcpFaALgxY1j0rDQi2N4g+Y2qeJuKhl7A2
+        gFnI0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hfi9G-0004ma-Ha; Tue, 25 Jun 2019 09:53:58 +0000
+        id 1hfi9E-0004mN-Th; Tue, 25 Jun 2019 09:53:57 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 96F5D440046; Mon, 24 Jun 2019 17:32:13 +0100 (BST)
+        id 33351440055; Mon, 24 Jun 2019 17:32:14 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     alsa-devel@alsa-project.org, Benson Leung <bleung@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jaroslav Kysela <perex@perex.cz>, kernel@collabora.com,
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Xing Zheng <zhengxing@rock-chips.com>
-Subject: Applied "ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz sample rates" to the asoc tree
-In-Reply-To: <20190621155808.17182-1-enric.balletbo@collabora.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>
+Subject: Applied "ASoC: SOF: Intel: hda: remove duplicated include from hda.c" to the asoc tree
+In-Reply-To: <20190620145709.122498-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190624163213.96F5D440046@finisterre.sirena.org.uk>
-Date:   Mon, 24 Jun 2019 17:32:13 +0100 (BST)
+Message-Id: <20190624163214.33351440055@finisterre.sirena.org.uk>
+Date:   Mon, 24 Jun 2019 17:32:14 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz sample rates
+   ASoC: SOF: Intel: hda: remove duplicated include from hda.c
 
 has been applied to the asoc tree at
 
@@ -92,57 +94,32 @@ to this mail.
 Thanks,
 Mark
 
-From 30b233b1cb4291d39ca08a95566721e8a52e5ee3 Mon Sep 17 00:00:00 2001
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Fri, 21 Jun 2019 17:58:08 +0200
-Subject: [PATCH] ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz sample
- rates
+From a2438253ba73ae51d9521c90ad8d3989bcdda74e Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 20 Jun 2019 14:57:09 +0000
+Subject: [PATCH] ASoC: SOF: Intel: hda: remove duplicated include from hda.c
 
-According to the datasheet the max98357a also supports 32, 44.1 and
-88.2 kHz sample rate. This support was also introduced recently by
-commit fdf34366d324 ("ASoC: max98357a: add missing supported rates").
+Remove duplicated include.
 
-Actually the machine driver validates the supported sample rates but
-this is not really needed because the component driver can all apply
-whatever constraints are needed and do their own validation. So, remove
-the checks from the machine driver as are not needed at all. This way,
-we also support 32, 44.1 and 88.2 kHz sample rates and we get rid of the
-errors like the below.
-
-  rk3399-gru-sound sound: rockchip_sound_max98357a_hw_params() doesn't support this sample rate: 44100
-  rk3399-gru-sound sound: ASoC: machine hw_params failed: -22
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/rk3399_gru_sound.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ sound/soc/sof/intel/hda.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index 879069fc0b94..769d5795919c 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -66,19 +66,7 @@ static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substrea
- 	unsigned int mclk;
- 	int ret;
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 8754dfe75000..136f98bf5d7e 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -19,7 +19,6 @@
+ #include <sound/hda_register.h>
  
--	/* max98357a supports these sample rates */
--	switch (params_rate(params)) {
--	case 8000:
--	case 16000:
--	case 48000:
--	case 96000:
--		mclk = params_rate(params) * SOUND_FS;
--		break;
--	default:
--		dev_err(rtd->card->dev, "%s() doesn't support this sample rate: %d\n",
--				__func__, params_rate(params));
--		return -EINVAL;
--	}
-+	mclk = params_rate(params) * SOUND_FS;
- 
- 	ret = snd_soc_dai_set_sysclk(rtd->cpu_dai, 0, mclk, 0);
- 	if (ret) {
+ #include <linux/module.h>
+-#include <sound/hdaudio_ext.h>
+ #include <sound/sof.h>
+ #include <sound/sof/xtensa.h>
+ #include "../ops.h"
 -- 
 2.20.1
 
