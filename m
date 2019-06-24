@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99150C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0782C4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF8520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C32E208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 21:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561413572;
-	bh=ibdI3MOYXze5+qtScGOonZd47xurIBeNQtJRLtSZksI=;
+	s=default; t=1561413577;
+	bh=1FMTUbwLvY6wTmFzlMUeHwTuZJeaqJEkQnSn+S5GGgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yH/ZNx2+P5DW5/JLyFcS4cuidFTqYAXUuSrgtEOy3ZcP8iOIKPwcRsglLnpw9Aaq6
-	 QY3s/zX14+Mkc7uP5mnqfBTUFbww+jCYGa2kG0ml+k5OiaVioEmIm9A0U6G7k+8Ofa
-	 AOxSCPHtSvRtX6Cy7w7aYNx5Rz5V59pXARf77tIE=
+	b=fh/ySlqz7daPovfJkFZZao5YrSmdUNANSWe9/lIGyZVPvdi71e9p22ayyMby5WTme
+	 pJI+HzuQkCLSlyj1dWQ1oUfz1Pfj9cfR6b5KQuV9elDLYuenjoJYm1tm+KktcJCqSv
+	 +ZoLYmDO2qzLk9VLcKxot8IrhcMx9uybROSeqEqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732836AbfFXV7a (ORCPT
+        id S1732748AbfFXV7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 17:59:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44919 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732758AbfFXV7Q (ORCPT
+        Mon, 24 Jun 2019 17:59:14 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44878 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732677AbfFXV7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 17:59:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so375238iob.11;
-        Mon, 24 Jun 2019 14:59:15 -0700 (PDT)
+        Mon, 24 Jun 2019 17:59:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so374640iob.11;
+        Mon, 24 Jun 2019 14:59:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yESbo+i10idiBFWz3etXGo6XCmb8EOHmWEtPPGEz5fg=;
-        b=MJPnPFcx3FT6k1/keLY2A9rCgikbC5T3SIjQxbrf2+agyaGbfMJIkU+fl9h+At/N14
-         7jfSniV79nby1EZwcQ1gcyWD+VIrw2OdpBEQvD0CMsPWIe78CTZHV/OhyzJHsCwufz0t
-         oZbYlvkkIMqahkhbUUfkHBBC9WL6HZMJ/wEQUN3zcaRg9Tsq7t+fCk5DpvKT1b83M1Iu
-         5zAUGj9vgibc+3ysKZ2WgNBGp8FEtzKhFjSHMrXjMqFZ7txMr/eD11L4DUv25V3SsXcL
-         2+aO6xbgIuEWucueJLLmo8Gjp6ILDGa1iw1MhGp1+j4D1YleWI7NIHwZMtrzjTqFAmRT
-         g0uw==
-X-Gm-Message-State: APjAAAWPuiYCUf3ibpqqdD/GOfgjKEZyOyVkuUw4st8rRwbzIeuzTVev
-        IB6DaopZkLB6w3k5B4DOhw==
-X-Google-Smtp-Source: APXvYqzx4ePf7Uty9RR9tYKGcckhJ+bYViFIXE+QeRd8I8EaUvtcw0Nt5XfARxGLI3Ds4h7wBvKfOA==
-X-Received: by 2002:a6b:4e08:: with SMTP id c8mr33071155iob.217.1561413554728;
-        Mon, 24 Jun 2019 14:59:14 -0700 (PDT)
+        bh=mwUOQlLuJ3XhE9Np0zOsuYiPvKJ0VZzFo8+UtVJgieA=;
+        b=UTumO9WU8419zkGWlABUrSTnhrwtc9plOpfDCAzGzR/dFfP1g0UG/PYP/jqnyJWteV
+         4YRn1+lK2ZGOEjLbtn4uGHUQdyd9TJT39wcNPDTv9qOismnFtWJ2/7vLOPLynC2MWgjX
+         V5VL/RBWs0QHLstUUheyS7kJyWJHsHVb9MTME3lVUpqAnuqqBk8Zhj0XyBzjKyJRO6NY
+         2vi3Fn+GUABmhU2h0L3X/Mq1r5N7U4bLNNInm0FFTIKsz/TIGSzG18tP7Arl4ROpbnjL
+         Z80qqTTTppCaAEle5UhFXwfLdoRtgm2NNd53faxBQYCTsPi9iShA00EXBjUYW7paPUDk
+         IsEQ==
+X-Gm-Message-State: APjAAAWtXM+bZPlB1uk+Sv/DUnz9Av8JxFsd45LbrJ5DG15KQ/rvQojq
+        yk8u1dgM6zeIkxTcwpamHw==
+X-Google-Smtp-Source: APXvYqyxXnT1JtCb0RwdoHBwtx5v26EGMODkca/M/4MvZA3Oc1OC2p27IpM+tzl3ejOLPo5WWus1Zw==
+X-Received: by 2002:a6b:7d49:: with SMTP id d9mr1606554ioq.50.1561413547310;
+        Mon, 24 Jun 2019 14:59:07 -0700 (PDT)
 Received: from localhost.localdomain ([64.188.179.247])
-        by smtp.googlemail.com with ESMTPSA id l5sm14717301ioq.83.2019.06.24.14.59.13
+        by smtp.googlemail.com with ESMTPSA id l5sm14717301ioq.83.2019.06.24.14.59.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 14:59:14 -0700 (PDT)
+        Mon, 24 Jun 2019 14:59:06 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -57,10 +57,10 @@ Cc:     linux-kernel@vger.kernel.org,
         Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 15/15] dt-bindings: display: Convert sgd,gktw70sdae4se panel to DT schema
-Date:   Mon, 24 Jun 2019 15:56:49 -0600
-Message-Id: <20190624215649.8939-16-robh@kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel to DT schema
+Date:   Mon, 24 Jun 2019 15:56:44 -0600
+Message-Id: <20190624215649.8939-11-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
@@ -71,132 +71,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the sgd,gktw70sdae4se LVDS panel binding to DT schema.
+Convert the tpo,tpg110 panel binding to DT schema.
 
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../display/panel/sgd,gktw70sdae4se.txt       | 41 ------------
- .../display/panel/sgd,gktw70sdae4se.yaml      | 63 +++++++++++++++++++
- 2 files changed, 63 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
+ .../bindings/display/panel/tpo,tpg110.txt     |  70 ------------
+ .../bindings/display/panel/tpo,tpg110.yaml    | 101 ++++++++++++++++++
+ 2 files changed, 101 insertions(+), 70 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
 deleted file mode 100644
-index d06644b555bd..000000000000
---- a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+index 40f3d7c713bb..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
 +++ /dev/null
-@@ -1,41 +0,0 @@
--Solomon Goldentek Display GKTW70SDAE4SE LVDS Display Panel
--==========================================================
+@@ -1,70 +0,0 @@
+-TPO TPG110 Panel
+-================
 -
--The GKTW70SDAE4SE is a 7" WVGA TFT-LCD display panel.
+-This panel driver is a component that acts as an intermediary
+-between an RGB output and a variety of panels. The panel
+-driver is strapped up in electronics to the desired resolution
+-and other properties, and has a control interface over 3WIRE
+-SPI. By talking to the TPG110 over SPI, the strapped properties
+-can be discovered and the hardware is therefore mostly
+-self-describing.
 -
--These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
--with the following device-specific properties.
+-       +--------+
+-SPI -> |  TPO   | -> physical display
+-RGB -> | TPG110 |
+-       +--------+
+-
+-If some electrical strap or alternate resolution is desired,
+-this can be set up by taking software control of the display
+-over the SPI interface. The interface can also adjust
+-for properties of the display such as gamma correction and
+-certain electrical driving levels.
+-
+-The TPG110 does not know the physical dimensions of the panel
+-connected, so this needs to be specified in the device tree.
+-
+-It requires a GPIO line for control of its reset line.
+-
+-The serial protocol has line names that resemble I2C but the
+-protocol is not I2C but 3WIRE SPI.
 -
 -Required properties:
+-- compatible : one of:
+-  "ste,nomadik-nhk15-display", "tpo,tpg110"
+-  "tpo,tpg110"
+-- grestb-gpios : panel reset GPIO
+-- width-mm : see display/panel/panel-common.txt
+-- height-mm : see display/panel/panel-common.txt
 -
--- compatible: Shall contain "sgd,gktw70sdae4se" and "panel-lvds", in that order.
+-The device needs to be a child of an SPI bus, see
+-spi/spi-bus.txt. The SPI child must set the following
+-properties:
+-- spi-3wire
+-- spi-max-frequency = <3000000>;
+-as these are characteristics of this device.
+-
+-The device node can contain one 'port' child node with one child
+-'endpoint' node, according to the bindings defined in
+-media/video-interfaces.txt. This node should describe panel's video bus.
 -
 -Example
 --------
 -
--panel {
--	compatible = "sgd,gktw70sdae4se", "panel-lvds";
--
--	width-mm = <153>;
--	height-mm = <86>;
--
--	data-mapping = "jeida-18";
--
--	panel-timing {
--		clock-frequency = <32000000>;
--		hactive = <800>;
--		vactive = <480>;
--		hback-porch = <39>;
--		hfront-porch = <39>;
--		vback-porch = <29>;
--		vfront-porch = <13>;
--		hsync-len = <47>;
--		vsync-len = <2>;
--	};
+-panel: display@0 {
+-	compatible = "tpo,tpg110";
+-	reg = <0>;
+-	spi-3wire;
+-	/* 320 ns min period ~= 3 MHz */
+-	spi-max-frequency = <3000000>;
+-	/* Width and height from data sheet */
+-	width-mm = <116>;
+-	height-mm = <87>;
+-	grestb-gpios = <&foo_gpio 5 GPIO_ACTIVE_LOW>;
+-	backlight = <&bl>;
 -
 -	port {
--		panel_in: endpoint {
--			remote-endpoint = <&lvds_encoder>;
+-		nomadik_clcd_panel: endpoint {
+-			remote-endpoint = <&foo>;
 -		};
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
 new file mode 100644
-index 000000000000..487283288cb0
+index 000000000000..a51660b73f28
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+@@ -0,0 +1,101 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/sgd,gktw70sdae4se.yaml#
++$id: http://devicetree.org/schemas/display/panel/tpo,tpg110.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Solomon Goldentek Display GKTW70SDAE4SE 7" WVGA LVDS Display Panel
++title: TPO TPG110 Panel
 +
 +maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
++  - Linus Walleij <linus.walleij@linaro.org>
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
++description: |+
++  This panel driver is a component that acts as an intermediary
++  between an RGB output and a variety of panels. The panel
++  driver is strapped up in electronics to the desired resolution
++  and other properties, and has a control interface over 3WIRE
++  SPI. By talking to the TPG110 over SPI, the strapped properties
++  can be discovered and the hardware is therefore mostly
++  self-describing.
++
++         +--------+
++  SPI -> |  TPO   | -> physical display
++  RGB -> | TPG110 |
++         +--------+
++
++  If some electrical strap or alternate resolution is desired,
++  this can be set up by taking software control of the display
++  over the SPI interface. The interface can also adjust
++  for properties of the display such as gamma correction and
++  certain electrical driving levels.
++
++  The TPG110 does not know the physical dimensions of the panel
++  connected, so this needs to be specified in the device tree.
++
++  It requires a GPIO line for control of its reset line.
++
++  The serial protocol has line names that resemble I2C but the
++  protocol is not I2C but 3WIRE SPI.
++
++
 +allOf:
-+  - $ref: lvds.yaml#
++  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    items:
-+      - const: sgd,gktw70sdae4se
-+      - {} # panel-lvds, but not listed here to avoid false select
++    oneOf:
++      - items:
++          - enum:
++              - ste,nomadik-nhk15-display
++          - const: tpo,tpg110
++      - const: tpo,tpg110
 +
-+  data-mapping:
-+    const: jeida-18
++  reg: true
 +
-+  width-mm:
-+    const: 153
++  grestb-gpios:
++    maxItems: 1
++    description: panel reset GPIO
 +
-+  height-mm:
-+    const: 86
++  spi-3wire: true
++
++  spi-max-frequency:
++    const: 3000000
 +
 +required:
 +  - compatible
++  - reg
++  - grestb-gpios
++  - width-mm
++  - height-mm
++  - spi-3wire
++  - spi-max-frequency
++  - port
 +
 +examples:
 +  - |+
-+    panel {
-+      compatible = "sgd,gktw70sdae4se", "panel-lvds";
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+      width-mm = <153>;
-+      height-mm = <86>;
++      panel: display@0 {
++        compatible = "tpo,tpg110";
++        reg = <0>;
++        spi-3wire;
++        /* 320 ns min period ~= 3 MHz */
++        spi-max-frequency = <3000000>;
++        /* Width and height from data sheet */
++        width-mm = <116>;
++        height-mm = <87>;
++        grestb-gpios = <&foo_gpio 5 1>;
++        backlight = <&bl>;
 +
-+      data-mapping = "jeida-18";
-+
-+      panel-timing {
-+        clock-frequency = <32000000>;
-+        hactive = <800>;
-+        vactive = <480>;
-+        hback-porch = <39>;
-+        hfront-porch = <39>;
-+        vback-porch = <29>;
-+        vfront-porch = <13>;
-+        hsync-len = <47>;
-+        vsync-len = <2>;
-+      };
-+
-+      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
++        port {
++          nomadik_clcd_panel: endpoint {
++            remote-endpoint = <&foo>;
++          };
 +        };
 +      };
 +    };
