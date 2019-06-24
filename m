@@ -2,113 +2,580 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB00C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7665C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE08E208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9D7208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 05:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561353667;
+	bh=Sywvl8QUIWbXm3ut6KnxLqPmIbYE/gyJP0Sm97cDki8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=zQTxUnfArN1Kz3PbrA5JgmpfHyE4V9mwOXHbUqSQqNpYvUgoqB02Aex3QUimDLPBV
+	 7QwF2h38hLa/Oo7JzR/Oj3TBx+xSPGVJhAWiq4EtuJWuOVsWC+8StZZjqWpt4Y5qWe
+	 TMfc6v+YpsUjWlL1oZQRxKURzANsnNYgma0eE/B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfFXFQP (ORCPT
+        id S1726484AbfFXFVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 01:16:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:41224 "EHLO foss.arm.com"
+        Mon, 24 Jun 2019 01:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbfFXFQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 01:16:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95739344;
-        Sun, 23 Jun 2019 22:16:14 -0700 (PDT)
-Received: from [10.162.41.123] (p8cg001049571a15.blr.arm.com [10.162.41.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E82183F718;
-        Sun, 23 Jun 2019 22:18:00 -0700 (PDT)
-Subject: Re: [PATCH] mm/hugetlb: allow gigantic page allocation to migrate
- away smaller huge page
-To:     Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <1561350068-8966-1-git-send-email-kernelfans@gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <216a335d-f7c6-26ad-2ac1-427c8a73ca2f@arm.com>
-Date:   Mon, 24 Jun 2019 10:46:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726312AbfFXFVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 01:21:05 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82550208C3;
+        Mon, 24 Jun 2019 05:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561353662;
+        bh=Sywvl8QUIWbXm3ut6KnxLqPmIbYE/gyJP0Sm97cDki8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lx2h0REDu/DkRTFpVLrzaN42VfRY1vwN3GIb5oyJ6HWUN5jMjZgKKU0d/YSNfDJMw
+         azLHwzsMkqvkl5IQLaOTiPkmdKpTTWskwZxLHHegpafZcOlj0ULYAE6AIDnU5ie+rV
+         8wrhbQQf8i9R2s2YWI4X7p49MZfCv6aPcEYlmU7g=
+Date:   Sun, 23 Jun 2019 22:21:01 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 25 open syzbot bugs in kvm subsystem
+Message-ID: <20190624052101.GD30702@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <1561350068-8966-1-git-send-email-kernelfans@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better.]
 
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 25 of them as possibly being bugs in the kvm subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-On 06/24/2019 09:51 AM, Pingfan Liu wrote:
-> The current pfn_range_valid_gigantic() rejects the pud huge page allocation
-> if there is a pmd huge page inside the candidate range.
-> 
-> But pud huge resource is more rare, which should align on 1GB on x86. It is
-> worth to allow migrating away pmd huge page to make room for a pud huge
-> page.
-> 
-> The same logic is applied to pgd and pud huge pages.
+Of these 25 bugs, 4 were seen in mainline in the last week.
 
-The huge page in the range can either be a THP or HugeTLB and migrating them has
-different costs and chances of success. THP migration will involve splitting if
-THP migration is not enabled and all related TLB related costs. Are you sure
-that a PUD HugeTLB allocation really should go through these ? Is there any
-guarantee that after migration of multiple PMD sized THP/HugeTLB pages on the
-given range, the allocation request for PUD will succeed ?
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/hugetlb.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index ac843d3..02d1978 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1081,7 +1081,11 @@ static bool pfn_range_valid_gigantic(struct zone *z,
->  			unsigned long start_pfn, unsigned long nr_pages)
->  {
->  	unsigned long i, end_pfn = start_pfn + nr_pages;
-> -	struct page *page;
-> +	struct page *page = pfn_to_page(start_pfn);
-> +
-> +	if (PageHuge(page))
-> +		if (compound_order(compound_head(page)) >= nr_pages)
-> +			return false;
->  
->  	for (i = start_pfn; i < end_pfn; i++) {
->  		if (!pfn_valid(i))
-> @@ -1098,8 +1102,6 @@ static bool pfn_range_valid_gigantic(struct zone *z,
->  		if (page_count(page) > 0)
->  			return false;
->  
-> -		if (PageHuge(page))
-> -			return false;
->  	}
->  
->  	return true;
-> 
+If you believe I misattributed a bug to the kvm subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
-So except in the case where there is a bigger huge page in the range this will
-attempt migrating everything on the way. As mentioned before if it all this is
-a good idea, it needs to differentiate between HugeTLB and THP and also take
-into account costs of migrations and chance of subsequence allocation attempt
-into account.
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              unexpected kernel reboot (3)
+Last occurred:      0 days ago
+Reported:           345 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=321861b1588b44d064b779b92293c5d55cfe8430
+Original thread:    https://lkml.kernel.org/lkml/000000000000eb546f0570e84e90@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 2 replies; the last was 342 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+cce9ef2dd25246f815ee@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000eb546f0570e84e90@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in kvm_arch_vcpu_ioctl_run (3)
+Last occurred:      6 days ago
+Reported:           452 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4d7de0e6a195b6a5ffef01d2776e737a52c7de60
+Original thread:    https://lkml.kernel.org/lkml/000000000000d05a78056873bc47@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 1 reply, 452 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+760a73552f47a8cd0fd9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000d05a78056873bc47@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in kvm_vcpu_ioctl
+Last occurred:      6 days ago
+Reported:           285 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ab7b91f104d7f018e85924d8d109ec7f895d8b61
+Original thread:    https://lkml.kernel.org/lkml/000000000000e0d794057592192b@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e9b1e8f574404b6e4ed3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e0d794057592192b@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in init_srcu_struct_fields
+Last occurred:      0 days ago
+Reported:           174 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=213ca2ed63e07dd093373791a18f27ad08e91820
+Original thread:    https://lkml.kernel.org/lkml/00000000000023f74b057e4c0890@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+010232b93d20ef8abde5@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000023f74b057e4c0890@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in do_general_protection
+Last occurred:      62 days ago
+Reported:           393 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d5d780ebdea00d45e7dcca8b25d9d7d2aff7da6c
+Original thread:    https://lkml.kernel.org/lkml/0000000000006370c3056d1855e7@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 4 replies; the last was 368 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a1264132fc103340628f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006370c3056d1855e7@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Write in preempt_notifier_register (2)
+Last occurred:      275 days ago
+Reported:           316 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=29b67450152e0c106ab336b5bf3ccd58a91ecc62
+Original thread:    https://lkml.kernel.org/lkml/000000000000dcf0c905732d9766@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+d5d3b529a776503b24a2@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000dcf0c905732d9766@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: soft lockup in kvm_vm_ioctl
+Last occurred:      57 days ago
+Reported:           53 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=60ff874c7b251129e028c90b5d4926c5b3fccbe2
+Original thread:    https://lkml.kernel.org/lkml/000000000000fb78720587d46fe9@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug has received 8 replies; the last was 45 days
+ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8d9bb6157e7b379f740e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000fb78720587d46fe9@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in vmx_queue_exception
+Last occurred:      110 days ago
+Reported:           202 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=50d43beb06a4fa9c4f118b91a40782190b7a24df
+Original thread:    https://lkml.kernel.org/lkml/000000000000ba5be2057c1e01fa@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+788c6e0a154504bd4b99@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ba5be2057c1e01fa@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in kvm_write_guest_offset_cached
+Last occurred:      201 days ago
+Reported:           208 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=afea9ed76a23a523078c90db91357c7f63019754
+Original thread:    https://lkml.kernel.org/lkml/000000000000ce78d7057b9e2ee1@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug received 2 replies; the last was 208 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ff40b9bc4835ea83211c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ce78d7057b9e2ee1@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in __schedule (2)
+Last occurred:      107 days ago
+Reported:           325 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=8f063539d4ecf1faf3132624b57a641e923ee25a
+Original thread:    https://lkml.kernel.org/lkml/0000000000000cc0de0572736043@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ceded3495a1d59f2d244@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000000cc0de0572736043@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in vmx_vcpu_run
+Last occurred:      324 days ago
+Reported:           438 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=b67fcc95c0d84ea5424813a0d8703fc5c06de7ee
+Original thread:    https://lkml.kernel.org/lkml/001a113fe6c049450f05699315cb@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ef99b30646419e80cae3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a113fe6c049450f05699315cb@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: soft lockup in kvm_vm_release
+Last occurred:      130 days ago
+Reported:           130 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=eff432af8dea9e5e0d14acdae66b51ef49ccb5ee
+Original thread:    https://lkml.kernel.org/lkml/00000000000071be120581ca41ed@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 2 replies; the last was 89 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6349a512c2938b2ad058@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000071be120581ca41ed@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: spinlock cpu recursion on CPU, syz-executor
+Last occurred:      230 days ago
+Reported:           229 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f01676cbfa1ad4601b3c7e31384ff0ba286eeb46
+Original thread:    https://lkml.kernel.org/lkml/000000000000645f00057a092b8c@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e9a3960298616a5a5abc@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000645f00057a092b8c@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: kernel stack regs has bad value (2)
+Last occurred:      331 days ago
+Reported:           343 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0afc6db1b73dfa1659778cf6d03184bc5e4c2120
+Original thread:    https://lkml.kernel.org/lkml/00000000000063079a057109b225@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+adcfacd9eff46da50187@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000063079a057109b225@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in __schedule (2)
+Last occurred:      273 days ago
+Reported:           317 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=90cd06695bd4650a5228385b4b02f370ef9c219f
+Original thread:    https://lkml.kernel.org/lkml/000000000000e67a05057314ddf6@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e67a05057314ddf6@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in mmu_page_zap_pte
+Last occurred:      112 days ago
+Reported:           242 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9b2a57e149a6feaa03d7b21b17cff6d62f090ed4
+Original thread:    https://lkml.kernel.org/lkml/000000000000ba0e9c0578f7460f@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ba439f0471266afef763@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ba0e9c0578f7460f@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in mmu_spte_clear_track_bits (2)
+Last occurred:      164 days ago
+Reported:           176 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=921b1c05b62b10255ce0107b9ac04a3528861d40
+Original thread:    https://lkml.kernel.org/lkml/0000000000006f735c057e312722@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+9aaa207a0b90b704eeda@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006f735c057e312722@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in kvm_pv_send_ipi
+Last occurred:      199 days ago
+Reported:           298 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f8d5004f6f749ecefaa2843e429848795cc2023f
+Original thread:    https://lkml.kernel.org/lkml/000000000000a819440574900515@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+86c0a866f80d88349f1f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a819440574900515@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in vcpu_enter_guest
+Last occurred:      287 days ago
+Reported:           413 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=1fac0fd91219f3f2a03d6fa7deafc95fbed79cc2
+Original thread:    https://lkml.kernel.org/lkml/0000000000002b8fac056b863655@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug received 1 reply, 413 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f58b8603b48434ef07d3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002b8fac056b863655@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in x86_emulate_insn
+Last occurred:      519 days ago
+Reported:           565 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c71f503ed91564f669d67ea159101451973968ef
+Original thread:    https://lkml.kernel.org/lkml/001a1143d526c5b1aa055f9d604c@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 14 replies; the last was 558 days ago.
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a1143d526c5b1aa055f9d604c@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in __kvm_mmu_prepare_zap_page
+Last occurred:      107 days ago
+Reported:           118 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=341c5e4453a8c9943babf25c9d32ff11f81c805c
+Original thread:    https://lkml.kernel.org/lkml/00000000000062c2f60582b90e7d@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug received 1 reply, 118 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+222746e0104bbb617d51@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000062c2f60582b90e7d@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in _cleanup_srcu_struct
+Last occurred:      154 days ago
+Reported:           167 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=91cf59ba0ce7dd171877f2ec35d53e5e661033ba
+Original thread:    https://lkml.kernel.org/lkml/00000000000015955c057edb3905@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5a1bbe3f318ef61ece61@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000015955c057edb3905@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in kvm_set_tsc_khz
+Last occurred:      319 days ago
+Reported:           316 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0b7ea1ad0e2fa94a69f950c44da50bfe99298d1d
+Original thread:    https://lkml.kernel.org/lkml/0000000000007fc64805732b7f38@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007fc64805732b7f38@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: kernel stack regs has bad 'bp' value (4)
+Last occurred:      118 days ago
+Reported:           342 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f2be2d01521281be5055a39ed0cbdbfce0d31e30
+Original thread:    https://lkml.kernel.org/lkml/0000000000000696430571197fe9@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 1 reply, 342 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f337218531b644bdeb70@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000000696430571197fe9@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at arch/x86/kvm/x86.c:LINE! (3)
+Last occurred:      107 days ago
+Reported:           107 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=913a2603278d2a0656f8112cc9c229241d68fea9
+Original thread:    https://lkml.kernel.org/lkml/0000000000008adf52058398fa93@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+83a3e122f8c1b25b3111@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008adf52058398fa93@google.com
+
