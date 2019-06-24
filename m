@@ -2,181 +2,119 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB131C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1436BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE86420449
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC4A208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561374968;
+	bh=LFqck4CeV3jBrl7Yqgi21ZqUHc7BseQ2I38AyrN4b3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lBYCQ5F1up0vRZgB3ayssWDqlNEJiNYTSB+xz65kDhoGUgC+nyDgpGCAM5CvS9GCK
+	 h7gzpWm1Jry+DeRtTxqBAgr/sqcB2SEOZfeORegkBgGKaw8CV/MP3CVthKqQrNEnR5
+	 gtg4OFJwGLXmGqPWs6sONYB6tdkEiKD4tzIfKcTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfFXLNz (ORCPT
+        id S1728899AbfFXLQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:13:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50242 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbfFXLNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:13:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EE700AC20;
-        Mon, 24 Jun 2019 11:13:51 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 6211D1E2F23; Mon, 24 Jun 2019 13:13:49 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 13:13:49 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 1/7] mm/fs: don't allow writes to immutable files
-Message-ID: <20190624111349.GF32376@quack2.suse.cz>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
- <156116141836.1664939.12249697737780481978.stgit@magnolia>
+        Mon, 24 Jun 2019 07:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728657AbfFXLQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:16:07 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1020449;
+        Mon, 24 Jun 2019 11:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561374966;
+        bh=LFqck4CeV3jBrl7Yqgi21ZqUHc7BseQ2I38AyrN4b3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XSvX2o0P97KVpBlCPX61upv01HnSc9kZCztiFA3NLNpGco45CIh/rZ67XWlja2EVr
+         vksn2UCldeO7t0n/lzFgMDLAb+ugyZ8v5hdUSmooKB4SZEXomTxQOY3AJWcU1Zq7VW
+         ethUEz3+FgM9Le+Eh4bevMMllLhxj6571CK2n9Jk=
+Date:   Mon, 24 Jun 2019 12:16:01 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        Nadav Amit <namit@vmware.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 0/4] arm64: wire up VM_FLUSH_RESET_PERMS
+Message-ID: <20190624111600.b7e5kkfvuszj6522@willie-the-truck>
+References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
+ <20190528100413.GA20809@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156116141836.1664939.12249697737780481978.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528100413.GA20809@fuggles.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-06-19 16:56:58, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue, May 28, 2019 at 11:04:20AM +0100, Will Deacon wrote:
+> On Thu, May 23, 2019 at 11:22:52AM +0100, Ard Biesheuvel wrote:
+> > Wire up the code introduced in v5.2 to manage the permissions
+> > of executable vmalloc regions (and their linear aliases) more
+> > strictly.
+> > 
+> > One of the things that came up in the internal discussion is
+> > whether non-x86 architectures have any benefit at all from the
+> > lazy vunmap feature, and whether it would perhaps be better to
+> > implement eager vunmap instead.
+> > 
+> > Cc: Nadav Amit <namit@vmware.com>
+> > Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: James Morse <james.morse@arm.com>
+> > 
+> > Ard Biesheuvel (4):
+> >   arm64: module: create module allocations without exec permissions
+> >   arm64/mm: wire up CONFIG_ARCH_HAS_SET_DIRECT_MAP
+> >   arm64/kprobes: set VM_FLUSH_RESET_PERMS on kprobe instruction pages
+> >   arm64: bpf: do not allocate executable memory
+> > 
+> >  arch/arm64/Kconfig                  |  1 +
+> >  arch/arm64/include/asm/cacheflush.h |  3 ++
+> >  arch/arm64/kernel/module.c          |  4 +-
+> >  arch/arm64/kernel/probes/kprobes.c  |  4 +-
+> >  arch/arm64/mm/pageattr.c            | 48 ++++++++++++++++----
+> >  arch/arm64/net/bpf_jit_comp.c       |  2 +-
+> >  mm/vmalloc.c                        | 11 -----
+> >  7 files changed, 50 insertions(+), 23 deletions(-)
 > 
-> The chattr manpage has this to say about immutable files:
-> 
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
-> 
-> Once the flag is set, it is enforced for quite a few file operations,
-> such as fallocate, fpunch, fzero, rm, touch, open, etc.  However, we
-> don't check for immutability when doing a write(), a PROT_WRITE mmap(),
-> a truncate(), or a write to a previously established mmap.
-> 
-> If a program has an open write fd to a file that the administrator
-> subsequently marks immutable, the program still can change the file
-> contents.  Weird!
-> 
-> The ability to write to an immutable file does not follow the manpage
-> promise that immutable files cannot be modified.  Worse yet it's
-> inconsistent with the behavior of other syscalls which don't allow
-> modifications of immutable files.
-> 
-> Therefore, add the necessary checks to make the write, mmap, and
-> truncate behavior consistent with what the manpage says and consistent
-> with other syscalls on filesystems which support IMMUTABLE.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Thanks, this all looks good to me. I can get pick this up for 5.2 if
+> Rick's fixes [1] land soon enough.
 
-Looks good to me. You can add:
+Bah, I missed these landing in -rc5 and I think it's a bit too late for
+us to take this for 5.2. now particularly with our limited ability to
+fix any late regressions that might arise.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+In which case, Catalin, please can you take these for 5.3? You might run
+into some testing failures with for-next/core due to the late of Rick's
+fixes, but linux-next should be alright and I don't think you'll get any
+conflicts.
 
-								Honza
+Acked-by: Will Deacon <will@kernel.org>
 
-> ---
->  fs/attr.c    |   13 ++++++-------
->  mm/filemap.c |    3 +++
->  mm/memory.c  |    3 +++
->  mm/mmap.c    |    8 ++++++--
->  4 files changed, 18 insertions(+), 9 deletions(-)
-> 
-> 
-> diff --git a/fs/attr.c b/fs/attr.c
-> index d22e8187477f..1fcfdcc5b367 100644
-> --- a/fs/attr.c
-> +++ b/fs/attr.c
-> @@ -233,19 +233,18 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
->  
->  	WARN_ON_ONCE(!inode_is_locked(inode));
->  
-> -	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) {
-> -		if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
-> -			return -EPERM;
-> -	}
-> +	if (IS_IMMUTABLE(inode))
-> +		return -EPERM;
-> +
-> +	if ((ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) &&
-> +	    IS_APPEND(inode))
-> +		return -EPERM;
->  
->  	/*
->  	 * If utimes(2) and friends are called with times == NULL (or both
->  	 * times are UTIME_NOW), then we need to check for write permission
->  	 */
->  	if (ia_valid & ATTR_TOUCH) {
-> -		if (IS_IMMUTABLE(inode))
-> -			return -EPERM;
-> -
->  		if (!inode_owner_or_capable(inode)) {
->  			error = inode_permission(inode, MAY_WRITE);
->  			if (error)
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index aac71aef4c61..dad85e10f5f8 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2935,6 +2935,9 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
->  	loff_t count;
->  	int ret;
->  
-> +	if (IS_IMMUTABLE(inode))
-> +		return -EPERM;
-> +
->  	if (!iov_iter_count(from))
->  		return 0;
->  
-> diff --git a/mm/memory.c b/mm/memory.c
-> index ddf20bd0c317..4311cfdade90 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2235,6 +2235,9 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
->  
->  	vmf->flags = FAULT_FLAG_WRITE|FAULT_FLAG_MKWRITE;
->  
-> +	if (vmf->vma->vm_file && IS_IMMUTABLE(file_inode(vmf->vma->vm_file)))
-> +		return VM_FAULT_SIGBUS;
-> +
->  	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
->  	/* Restore original flags so that caller is not surprised */
->  	vmf->flags = old_flags;
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 7e8c3e8ae75f..ac1e32205237 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1483,8 +1483,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
->  		case MAP_SHARED_VALIDATE:
->  			if (flags & ~flags_mask)
->  				return -EOPNOTSUPP;
-> -			if ((prot&PROT_WRITE) && !(file->f_mode&FMODE_WRITE))
-> -				return -EACCES;
-> +			if (prot & PROT_WRITE) {
-> +				if (!(file->f_mode & FMODE_WRITE))
-> +					return -EACCES;
-> +				if (IS_IMMUTABLE(file_inode(file)))
-> +					return -EPERM;
-> +			}
->  
->  			/*
->  			 * Make sure we don't allow writing to an append-only
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Ard: are you ok with that?
+
+Thanks,
+
+Will
