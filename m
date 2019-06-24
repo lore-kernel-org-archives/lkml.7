@@ -2,218 +2,177 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1128AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDB9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6A12054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F7B205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YBhKFOTU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dawHkGuw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbfFXPqe (ORCPT
+        id S1730722AbfFXPsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:46:34 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54758 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730887AbfFXPqd (ORCPT
+        Mon, 24 Jun 2019 11:48:10 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37995 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbfFXPsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:46:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g135so13265356wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:46:31 -0700 (PDT)
+        Mon, 24 Jun 2019 11:48:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b11so10444672lfa.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VkRib9MjDERFnyai1bhB1E+iVO+Fk8rJH+jZvg2+AEA=;
-        b=YBhKFOTU2fXjolvY4Qy/+XKi9E/Cp+F6Bw0F+7n1AcoYyxFCZY6ypfkpAZg3yvFkne
-         9MbjCmwEOTZeSv3spSSBgvN3RPNUJEhi1KfrpwkqWrHSk+TIRnFdH0xBgmcKOhtUcjTc
-         K8Nr/PiV6tyA70wiFCVYRD/oQKFgHSQx2YAjMeihJQKNBh4u6EiD5Ae+J9oV2FMw47BB
-         Hjh/MqmFysFWh5KS4z+axkUZeMsX7MY59W5zBU9doO6VDZGYAjFSz+cC9guPoKZAasOu
-         AuLn5sybQegICFCpATc5Rv/JFcSe7yw88XJjqAvSgrkaGerCXts44A165QN7iWcnZxku
-         E/EA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RZEdkpcm2DoHjvk4iUfPQvATQTAXaYA2G42qvscInT4=;
+        b=dawHkGuwoexp/U6hls2tL0rd5MvFhGfNSloIQ+uyh77OZa7CX83DBpFsVz46qXyLqT
+         N9cKp33Sgbij/OFfl5O8Vb/6gDUmUBgod/uZsNoo1a5W0lJ4JcxR1jRVIHNYSfgdZRmT
+         3cba7yDMHC72BKn3lpDbP1L80zDGHeOzLQXJRS/MmBKjVkdZ3aZ0jV0uWTFATqjHyWZE
+         SegzHVNZvsVD9EQdsLJqCrXXfjG2P+DLZqM2k3mgQyAoGfYZyYQx8ktPllYpNu8qwhNx
+         RuUQuEPB98VMSi50jhKHSHv+z/Sh7ypGJuiNBktpxD2+tstBCGrmM0ca6tsB8vGIN0I+
+         vi8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VkRib9MjDERFnyai1bhB1E+iVO+Fk8rJH+jZvg2+AEA=;
-        b=LASVafGcDx754smzpOnNXHaMND0YdK59ne8GADfltLnDP4IunXrKmAHltIzOjc/B47
-         89mXa5cXqN1AbXQ0TjilPs7Y+lR/734US7bNrBqcuGvmYzt4c5NlWCabFYiEcfqN1vUW
-         skawwGZ+VnjcTqhIaxGpdfs60Ov6CEq+CvMDALFn2i/iZbyUB+u24uteQCrI183gz0Cl
-         Vz2WuKVz5b1RES2KTnNWFA1GUpP7R7QTPnNnDJyZmc4S9Xs76ujKEmjsT36cVOEDTAYc
-         iXwKUeFj9jkhilOhlkEpVHY1bC92hnUY1oAqxNWoJXuIM9qYa77UcjvDYfo5EGaJ+nwe
-         Tr9Q==
-X-Gm-Message-State: APjAAAXMOEpTOJUZSKAMyVN37sUjXDGYIblZo+HUixJoGiLybsdOLINe
-        qdy91XaetOQM/cgcPIkjvnuMlg==
-X-Google-Smtp-Source: APXvYqyJCeVLgWy2hZZ6ZYHRLkIgXsmBRb1EzM5JnZ45W5XFy3eHef+64qI8NKnV76mr+c/SgwP1XA==
-X-Received: by 2002:a1c:e341:: with SMTP id a62mr17120203wmh.165.1561391190915;
-        Mon, 24 Jun 2019 08:46:30 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id a67sm10295275wmh.40.2019.06.24.08.46.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 08:46:30 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 16:46:28 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190624154628.rq7ykltms7ovhawx@holly.lan>
-References: <20190522163428.7078-1-paul@crapouillou.net>
- <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
- <20190621135608.GB11839@ulmo>
- <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
- <1561386717.20436.0@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RZEdkpcm2DoHjvk4iUfPQvATQTAXaYA2G42qvscInT4=;
+        b=JVWiRtnfxoGm4QvwWD9INSelCyoyxMYVFO6lB1W4Ncs9wPgCb63ZDnNieJvSJMU/Md
+         1OavouTKjMPQYWJX5FYH+rvV/jYiMEdaktTzuJdmC1qf5CdkDd+CyzQVWf3IzcYHdMDX
+         WXhcwZAuoOP6LgTxkUSGE/AMUUrtQJNGzbZSW/g6OeS84pG7to5pBOuyolPMd2RoQmiy
+         AevZO+BeOUjgYIp81yAniSkgkRzieNR3Jy4Xwig+NBjejBJs2+jQJ2BUm/tBr2eVlh6b
+         noMoFrT8R3ETDfrWU7XuxkTV/6aMOmJUzS/TJJOZ/OdK9gB9dy22IFpKhaTqJmDmq9tF
+         uduQ==
+X-Gm-Message-State: APjAAAXUDEjEsyxH1EK46CAeR8+w/HX3OGqRSB+LnJfxNyrDSo15QMFm
+        DDC0UoezNnbTsOEh9LCxWJDOvSv4cdZiVSMubEmTuQ==
+X-Google-Smtp-Source: APXvYqxNqQUU12xxGQ7h+SpiZ3wpTHj5k3ZD3y0Vai59zG1U4M0mk/lKZRcyrF3ostVcAQAs9MKINZgIvPFiMFrQTGw=
+X-Received: by 2002:a19:671c:: with SMTP id b28mr8802495lfc.164.1561391288073;
+ Mon, 24 Jun 2019 08:48:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561386717.20436.0@crapouillou.net>
-User-Agent: NeoMutt/20180716
+References: <20190624092305.919204959@linuxfoundation.org>
+In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 24 Jun 2019 21:17:56 +0530
+Message-ID: <CA+G9fYvWbPPYeT+odDHhpq6QeOKOJyfo7cOeX_FBuFMUZ3POdA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/51] 4.14.130-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:31:57PM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le lun. 24 juin 2019 à 13:28, Daniel Thompson <daniel.thompson@linaro.org> a
-> écrit :
-> > On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
-> > >  On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
-> > >  > On 22/05/2019 17:34, Paul Cercueil wrote:
-> > >  > > When the driver probes, the PWM pin is automatically configured
-> > > to its
-> > >  > > default state, which should be the "pwm" function.
-> > >  >
-> > >  > At which point in the probe... and by who?
-> > > 
-> > >  The driver core will select the "default" state of a device right
-> > > before
-> > >  calling the driver's probe, see:
-> > > 
-> > >  	drivers/base/pinctrl.c: pinctrl_bind_pins()
-> > > 
-> > >  which is called from:
-> > > 
-> > >  	drivers/base/dd.c: really_probe()
-> > > 
-> > 
-> > Thanks. I assumed it would be something like that... although given
-> > pwm-backlight is essentially a wrapper driver round a PWM I wondered why
-> > the pinctrl was on the backlight node (rather than the PWM node).
-> > 
-> > Looking at the DTs in the upstream kernel it looks like ~20% of the
-> > backlight drivers have pinctrl on the backlight node. Others presumable
-> > have none or have it on the PWM node (and it looks like support for
-> > sleeping the pins is *very* rare amoung the PWM drivers).
-> 
-> If your PWM driver has more than one channel and has the pinctrl node, you
-> cannot fine-tune the state of individual pins. They all share the same
-> state.
+On Mon, 24 Jun 2019 at 15:29, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.130 release.
+> There are 51 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.130-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Good point. Thanks.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
+Summary
+------------------------------------------------------------------------
 
-> > >  > > However, at this
-> > >  > > point we don't know the actual level of the pin, which may be
-> > > active or
-> > >  > > inactive. As a result, if the driver probes without enabling the
-> > >  > > backlight, the PWM pin might be active, and the backlight would
-> > > be
-> > >  > > lit way before being officially enabled.
-> > >  > >
-> > >  > > To work around this, if the probe function doesn't enable the
-> > > backlight,
-> > >  > > the pin is set to its sleep state instead of the default one,
-> > > until the
-> > >  > > backlight is enabled. Whenk the backlight is disabled, the pin
-> > > is reset
-> > >  > > to its sleep state.
-> > >  > Doesn't this workaround result in a backlight flash between
-> > > whatever enables
-> > >  > it and the new code turning it off again?
-> > > 
-> > >  Yeah, I think it would. I guess if you're very careful on how you
-> > > set up
-> > >  the device tree you might be able to work around it. Besides the
-> > > default
-> > >  and idle standard pinctrl states, there's also the "init" state. The
-> > >  core will select that instead of the default state if available.
-> > > However
-> > >  there's also pinctrl_init_done() which will try again to switch to
-> > > the
-> > >  default state after probe has finished and the driver didn't switch
-> > > away
-> > >  from the init state.
-> > > 
-> > >  So you could presumably set up the device tree such that you have
-> > > three
-> > >  states defined: "default" would be the one where the PWM pin is
-> > > active,
-> > >  "idle" would be used when backlight is off (PWM pin inactive) and
-> > > then
-> > >  another "init" state that would be the same as "idle" to be used
-> > > during
-> > >  probe. During probe the driver could then switch to the "idle"
-> > > state so
-> > >  that the pin shouldn't glitch.
-> > > 
-> > >  I'm not sure this would actually work because I think the way that
-> > >  pinctrl handles states both "init" and "idle" would be the same
-> > > pointer
-> > >  values and therefore pinctrl_init_done() would think the driver
-> > > didn't
-> > >  change away from the "init" state because it is the same pointer
-> > > value
-> > >  as the "idle" state that the driver selected. One way to work around
-> > >  that would be to duplicate the "idle" state definition and
-> > > associate one
-> > >  instance of it with the "idle" state and the other with the "init"
-> > >  state. At that point both states should be different (different
-> > > pointer
-> > >  values) and we'd get the init state selected automatically before
-> > > probe,
-> > >  select "idle" during probe and then the core will leave it alone.
-> > > That's
-> > >  of course ugly because we duplicate the pinctrl state in DT, but
-> > > perhaps
-> > >  it's the least ugly solution.
-> > >  Adding Linus for visibility. Perhaps he can share some insight.
-> > 
-> > To be honest I'm happy to summarize in my head as "if it flashes then
-> > it's not
-> > a pwm_bl.c's problem" ;-).
-> 
-> It does not flash. But the backlight lits way too early, so we have a 1-2
-> seconds
-> of "white screen" before the panel driver starts.
-
-That's the current behaviour.
-
-What I original asked about is whether a panel that was dark before the
-driver probes could end up flashing after the patch because it is
-activated pre-probe and only goes to sleep afterwards.
-
-Anyhow I got an answer; if it flashes after the patch then the problem
-does not originate in pwm_bl.c and is likely a problem with the handling
-of the pinctrl idel state (i.e. probably DT misconfiguration)
-
-So I think that just leaves my comment about the spurious sleep in the
-probe function.
+kernel: 4.14.130-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 57f3c9aebc308dc826ec1191e750fc853e79fb3a
+git describe: v4.14.129-52-g57f3c9aebc30
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.129-52-g57f3c9aebc30
 
 
-Daniel.
+No regressions (compared to build v4.14.129)
+
+No fixes (compared to build v4.14.129)
+
+
+Ran 23741 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest
+* ltp-dio-tests
+* ltp-io-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
