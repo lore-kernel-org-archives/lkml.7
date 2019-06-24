@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1812C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B88BC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF5B2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44166205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370938;
-	bh=jIlfMerZzWk/pZXDKx+h7+Fdu6ct/+sUeYQ0rQ9U/ck=;
+	s=default; t=1561370944;
+	bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+R5KgBFdMCwz3HYCTtxOAiASHcf7Mt6GJpfQP4CC8VYGJ5XFhGCUr/sq+OZuxpjq
-	 vVesz40yTpp31IMT0KWf3Tz9sVtwLBsdq6QPciucit3fCdQsWUc+X/eEK5bXCcjqwM
-	 UOMAzcQhbt6AzaxddW9UFcVYJ1r2Xz2HvlFa5PlA=
+	b=rqfrUtWURM8xb5eFk4nGJjIJYvQabjsEJdQT7OYyeEtep4eZQZYZl8qzAL1vhyOKL
+	 Xr+Y1+0hO3bCTTvuJLEYWBNAnowh+5OK+/T1TxA6mSpVmgUyKqjZUBA8viLscYZ6Lx
+	 7nV+3F4SiaDHT8m3+ylfLClj//L4fLiwfDIBEPrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbfFXKI5 (ORCPT
+        id S1730587AbfFXKJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42702 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbfFXKIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:50 -0400
+        id S1730572AbfFXKJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:09:00 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF31A2089F;
-        Mon, 24 Jun 2019 10:08:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822B1205C9;
+        Mon, 24 Jun 2019 10:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370929;
-        bh=jIlfMerZzWk/pZXDKx+h7+Fdu6ct/+sUeYQ0rQ9U/ck=;
+        s=default; t=1561370940;
+        bh=OO5fToault7/iuM9p/Pfv6WWw4iMDInMVV1/WwyLUew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlpEIVD6s13S8Pcz8QCdGsN7UAExAJAV09LiOvkF4K4DIU61C+GQsg1lK6p77k0dW
-         WFRvUzYRR5ZrfbEXlrhzcBcfRDsR+t1fsBwPdtU3DOpIottvdYkFUWke5/qXceCpQa
-         aiItkwjBH3DlaF6hjd7o6SDUgZYDiDDcKHwLbKqk=
+        b=rcYxwUTPCq7fMw5Z+dsllLbIKFLWKvp+WjU/9bS8SximcnXhoAJnxTS5AOrbhMpAI
+         dU9kuSxFok+M6tUvaeY7pIBj2E1meWRKg/0IK/ejr/e0/ITfJT1NPXeo+vfWIj+RX1
+         EiwYWKNLbIsCwi0xwNDcZ5L4t0oF3xbTg0JR7yDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Kamenee Arumugam <kamenee.arumugam@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Alex Shi <alex.shi@linux.alibaba.com>,
+        Shuah Khan <shuah@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 053/121] IB/hfi1: Validate page aligned for a given virtual address
-Date:   Mon, 24 Jun 2019 17:56:25 +0800
-Message-Id: <20190624092323.432996036@linuxfoundation.org>
+Subject: [PATCH 5.1 057/121] kselftest/cgroup: fix unexpected testing failure on test_memcontrol
+Date:   Mon, 24 Jun 2019 17:56:29 +0800
+Message-Id: <20190624092323.608430796@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -63,39 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
+[ Upstream commit f6131f28057d4fd8922599339e701a2504e0f23d ]
 
-User applications can register memory regions for TID buffers that are not
-aligned on page boundaries. Hfi1 is expected to pin those pages in memory
-and cache the pages with mmu_rb. The rb tree will fail to insert pages
-that are not aligned correctly.
+The cgroup testing relies on the root cgroup's subtree_control setting,
+If the 'memory' controller isn't set, all test cases will be failed
+as following:
 
-Validate whether a given virtual address is page aligned before pinning.
+$ sudo ./test_memcontrol
+not ok 1 test_memcg_subtree_control
+not ok 2 test_memcg_current
+ok 3 # skip test_memcg_min
+not ok 4 test_memcg_low
+not ok 5 test_memcg_high
+not ok 6 test_memcg_max
+not ok 7 test_memcg_oom_events
+ok 8 # skip test_memcg_swap_max
+not ok 9 test_memcg_sock
+not ok 10 test_memcg_oom_group_leaf_events
+not ok 11 test_memcg_oom_group_parent_events
+not ok 12 test_memcg_oom_group_score_events
 
-Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+To correct this unexpected failure, this patch write the 'memory' to
+subtree_control of root to get a right result.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jay Kamat <jgkamat@fb.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-index 0cd71ce7cc71..3592a9ec155e 100644
---- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-+++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
- 	u32 *tidlist = NULL;
- 	struct tid_user_buf *tidbuf;
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index 6f339882a6ca..c19a97dd02d4 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -1205,6 +1205,10 @@ int main(int argc, char **argv)
+ 	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
+ 		ksft_exit_skip("memory controller isn't available\n");
  
-+	if (!PAGE_ALIGNED(tinfo->vaddr))
-+		return -EINVAL;
++	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
++		if (cg_write(root, "cgroup.subtree_control", "+memory"))
++			ksft_exit_skip("Failed to set memory controller\n");
 +
- 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
- 	if (!tidbuf)
- 		return -ENOMEM;
+ 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+ 		switch (tests[i].fn(root)) {
+ 		case KSFT_PASS:
 -- 
 2.20.1
 
