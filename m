@@ -2,118 +2,91 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1034C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A73CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8D2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8B4215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 08:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfFXH7X convert rfc822-to-8bit (ORCPT
+        id S1728098AbfFXIAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:59:23 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39168 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXH7X (ORCPT
+        Mon, 24 Jun 2019 04:00:34 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:27016 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725916AbfFXIAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:59:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so12611829otq.6;
-        Mon, 24 Jun 2019 00:59:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4YpoyfmTg/yJjXBJUEW8lIAq0BX0A3h1rodT0G3oFiE=;
-        b=OaVgX3dYDGfmHXyCBD02Dkeu7I+SJ3wvGnmeoA+qkx34DR/OFEVLzQEvZVvtY+08vO
-         NcOjqOvGt6ev857Kjcu1Z6eBK7/EslJjqcPsidgfkRBbYu28RjyVs5ASEnzrbiYbvaOb
-         ThP+JZWq6JyhEf+nVDK8W7jpcfEuZlrBzVAjda3mGwpfzIUxahtH2WjVCg8gD77Sf8PT
-         TxnnxGmxbhc2AvudyQIYktw19gjmrj8hEf/Jmt0LeH3KcONssYCLVrdB7LGM2AZzCg5d
-         TG3jGtk2q/mU2r1jSeQ6xR7O1IwxM1LpwqET1IcxCvtCYQw84bXmIzcphSwJU32SSsjr
-         5PnA==
-X-Gm-Message-State: APjAAAUA7SsS9pLApFjmt+1dhxayy+PURf3lB+UNBMS5mdFMJXkOhgLa
-        jzcGFbiC8D7YVfcCpTEMUugVhhcm8HfLUOpUH4g=
-X-Google-Smtp-Source: APXvYqwhwIK4NZgkquLOyqT8QbysnSfbWAaf17D1uMjFj2Kp4TzxuPY6nfGxD9epLJ/u1+zuUN+dib7gFMfkh1MQqQ0=
-X-Received: by 2002:a9d:69ce:: with SMTP id v14mr15870540oto.39.1561363162185;
- Mon, 24 Jun 2019 00:59:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190622114208.24427-1-sam@ravnborg.org>
-In-Reply-To: <20190622114208.24427-1-sam@ravnborg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Jun 2019 09:59:11 +0200
-Message-ID: <CAMuHMdXhVNGsEsUbmzYiFJcDN2uR5WFEFT5qdHdo0pF=0BGphA@mail.gmail.com>
-Subject: Re: [PATCH] sh: prevent warnings when using iounmap
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
+        Mon, 24 Jun 2019 04:00:33 -0400
+X-UUID: 4df9ad2db7f34262b2caaf3c9ba8a30a-20190624
+X-UUID: 4df9ad2db7f34262b2caaf3c9ba8a30a-20190624
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 260803277; Mon, 24 Jun 2019 16:00:23 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 24 Jun
+ 2019 16:00:21 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Mon, 24 Jun 2019 16:00:20 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
         Inki Dae <inki.dae@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [v2 0/2] add auo,kd101n80-45a panel driver
+Date:   Mon, 24 Jun 2019 15:59:59 +0800
+Message-ID: <20190624080001.67222-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Changes since v1:
+ - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
 
-On Sat, Jun 22, 2019 at 1:45 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> When building drm/exynos for sh, as part of an allmodconfig build,
-> the following warning triggered:
->
->   exynos7_drm_decon.c: In function ‘decon_remove’:
->   exynos7_drm_decon.c:769:24: warning: unused variable ‘ctx’
->     struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
->
-> The ctx variable is only used as argument to iounmap().
->
-> In sh - allmodconfig CONFIG_MMU is not defined
-> so it ended up in:
->
-> \#define __iounmap(addr)        do { } while (0)
-> \#define iounmap                __iounmap
->
-> Fix the warning by introducing a static inline
-> function for iounmap.
-> This is similar to several other architectures.
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+This patch is based on v5.2-rc1 and these patches:
+https://patchwork.kernel.org/cover/11012355/
+https://patchwork.kernel.org/patch/11012345/
+https://patchwork.kernel.org/patch/11012349/
 
-Thanks for your patch!
+Jitao Shi (2):
+  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
 
-> --- a/arch/sh/include/asm/io.h
-> +++ b/arch/sh/include/asm/io.h
-> @@ -369,7 +369,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
->
->  #define ioremap_nocache        ioremap
->  #define ioremap_uc     ioremap
-> -#define iounmap                __iounmap
-> +
-> +static inline void iounmap(void __iomem *addr)
-> +{
-> +       __iounmap(addr);
-> +}
-
-The alternative would be to make __iounmap() static inline, which may be
-better from the viewpoint of consistency within this header file.
-
-Regardless:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../display/panel/auo,kd101n80-45na.txt       | 34 ++++++++++++++++
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
