@@ -2,174 +2,65 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAE2C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09042C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1026320848
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370427;
-	bh=Owqbj2H+u1qefjgnGqlAEbY8nwPaQN5M1XZLbuJd03A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwjAP/oba77Fo3ZXj+XicSwVzHwDc7aLmoZ/LbU2xIfUz0hT/6FzpRKhLQHR+1OoI
-	 YJLGs276bFugCYaIi/m/GE33QnmP3Oe6aei3A3op76whn+p1h9gUyGZ4p0Tjrb7mCl
-	 /KirLT+YvsME0VxPAGIAEQKpYi/kHxkd7esS7yJU=
+	by mail.kernel.org (Postfix) with ESMTP id DB9B1208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfFXKAZ (ORCPT
+        id S1728608AbfFXKAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728620AbfFXJ7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:59:35 -0400
-Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CA02146F;
-        Mon, 24 Jun 2019 09:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370374;
-        bh=Owqbj2H+u1qefjgnGqlAEbY8nwPaQN5M1XZLbuJd03A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLHSqFOSlAETTRJqTf6tyP1JayxJdS3SnWx1vb3qvJboN8NYrmx8gTIOYcVGKKSge
-         LjXwuC8eXkeZbjI0Th2Ia/ZEFuJagfGpmzvsuqJjfoUngGt58fsespTVT9GqZf9Mmd
-         UMJE/uOOx+BFoTnwMFJCUbz3xF0rgLA+nBPvZN3U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Wang <yyuwang@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 50/51] mac80211: handle deauthentication/disassociation from TDLS peer
-Date:   Mon, 24 Jun 2019 17:57:08 +0800
-Message-Id: <20190624092311.499360810@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092305.919204959@linuxfoundation.org>
-References: <20190624092305.919204959@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Jun 2019 06:00:34 -0400
+Received: from goliath.siemens.de ([192.35.17.28]:33266 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbfFXKAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:00:31 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x5OA03Fp014621
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 12:00:03 +0200
+Received: from [167.87.13.35] ([167.87.13.35])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x5OA01AA023870;
+        Mon, 24 Jun 2019 12:00:02 +0200
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Subject: x86: Spurious vectors not handled robustly
+Message-ID: <e525108f-3749-4e1d-1ac2-0d0a2655f15f@siemens.com>
+Date:   Mon, 24 Jun 2019 12:00:00 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Wang <yyuwang@codeaurora.org>
+Hi all,
 
-commit 79c92ca42b5a3e0ea172ea2ce8df8e125af237da upstream.
+probably since "x86: Avoid building unused IRQ entry stubs" (2414e021ac8d), the 
+kernel can no longer tell spurious IRQs by the APIC apart from spuriously 
+triggered unused vectors. We've managed to trigger such a cause with the 
+Jailhouse hypervisor (incorrectly injected MANAGED_IRQ_SHUTDOWN_VECTOR), and the 
+result was not only a misreport of the vector number (0xff instead of 0xef - 
+took me a while...), but also stalled interrupts of equal and lower priority 
+because a spurious interrupt is not (and must not be) acknowledged.
 
-When receiving a deauthentication/disassociation frame from a TDLS
-peer, a station should not disconnect the current AP, but only
-disable the current TDLS link if it's enabled.
+How to address that best? I would say we should at least have separate entry 
+paths for APIC interrupt vs. vectors, to improve robustness in the faulty case.
 
-Without this change, a TDLS issue can be reproduced by following the
-steps as below:
+Jan
 
-1. STA-1 and STA-2 are connected to AP, bidirection traffic is running
-   between STA-1 and STA-2.
-2. Set up TDLS link between STA-1 and STA-2, stay for a while, then
-   teardown TDLS link.
-3. Repeat step #2 and monitor the connection between STA and AP.
-
-During the test, one STA may send a deauthentication/disassociation
-frame to another, after TDLS teardown, with reason code 6/7, which
-means: Class 2/3 frame received from nonassociated STA.
-
-On receive this frame, the receiver STA will disconnect the current
-AP and then reconnect. It's not a expected behavior, purpose of this
-frame should be disabling the TDLS link, not the link with AP.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Yu Wang <yyuwang@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/mac80211/ieee80211_i.h |    3 +++
- net/mac80211/mlme.c        |   12 +++++++++++-
- net/mac80211/tdls.c        |   23 +++++++++++++++++++++++
- 3 files changed, 37 insertions(+), 1 deletion(-)
-
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -2150,6 +2150,9 @@ void ieee80211_tdls_cancel_channel_switc
- 					  const u8 *addr);
- void ieee80211_teardown_tdls_peers(struct ieee80211_sub_if_data *sdata);
- void ieee80211_tdls_chsw_work(struct work_struct *wk);
-+void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
-+				      const u8 *peer, u16 reason);
-+const char *ieee80211_get_reason_code_string(u16 reason_code);
- 
- extern const struct ethtool_ops ieee80211_ethtool_ops;
- 
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2744,7 +2744,7 @@ static void ieee80211_rx_mgmt_auth(struc
- #define case_WLAN(type) \
- 	case WLAN_REASON_##type: return #type
- 
--static const char *ieee80211_get_reason_code_string(u16 reason_code)
-+const char *ieee80211_get_reason_code_string(u16 reason_code)
- {
- 	switch (reason_code) {
- 	case_WLAN(UNSPECIFIED);
-@@ -2809,6 +2809,11 @@ static void ieee80211_rx_mgmt_deauth(str
- 	if (len < 24 + 2)
- 		return;
- 
-+	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
-+		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
-+		return;
-+	}
-+
- 	if (ifmgd->associated &&
- 	    ether_addr_equal(mgmt->bssid, ifmgd->associated->bssid)) {
- 		const u8 *bssid = ifmgd->associated->bssid;
-@@ -2858,6 +2863,11 @@ static void ieee80211_rx_mgmt_disassoc(s
- 
- 	reason_code = le16_to_cpu(mgmt->u.disassoc.reason_code);
- 
-+	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
-+		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
-+		return;
-+	}
-+
- 	sdata_info(sdata, "disassociated from %pM (Reason: %u=%s)\n",
- 		   mgmt->sa, reason_code,
- 		   ieee80211_get_reason_code_string(reason_code));
---- a/net/mac80211/tdls.c
-+++ b/net/mac80211/tdls.c
-@@ -1988,3 +1988,26 @@ void ieee80211_tdls_chsw_work(struct wor
- 	}
- 	rtnl_unlock();
- }
-+
-+void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
-+				      const u8 *peer, u16 reason)
-+{
-+	struct ieee80211_sta *sta;
-+
-+	rcu_read_lock();
-+	sta = ieee80211_find_sta(&sdata->vif, peer);
-+	if (!sta || !sta->tdls) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	rcu_read_unlock();
-+
-+	tdls_dbg(sdata, "disconnected from TDLS peer %pM (Reason: %u=%s)\n",
-+		 peer, reason,
-+		 ieee80211_get_reason_code_string(reason));
-+
-+	ieee80211_tdls_oper_request(&sdata->vif, peer,
-+				    NL80211_TDLS_TEARDOWN,
-+				    WLAN_REASON_TDLS_TEARDOWN_UNREACHABLE,
-+				    GFP_ATOMIC);
-+}
-
-
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
