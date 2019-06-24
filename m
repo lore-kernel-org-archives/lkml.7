@@ -2,95 +2,128 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF01C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AADC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F189020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BCB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfFXH2Z (ORCPT
+        id S1727891AbfFXH24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:28:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:53057 "EHLO newverein.lst.de"
+        Mon, 24 Jun 2019 03:28:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51096 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfFXH2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:28:25 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 0DC7D68B02; Mon, 24 Jun 2019 09:27:53 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 09:27:52 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190624072752.GA3954@lst.de>
-References: <20190620161240.22738-1-logang@deltatee.com>
+        id S1726375AbfFXH2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:28:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56D955AFF8;
+        Mon, 24 Jun 2019 07:28:50 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC51B5C1B5;
+        Mon, 24 Jun 2019 07:28:36 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 15:28:31 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH -mm] mm, swap: Fix THP swap out
+Message-ID: <20190624072830.GA10539@ming.t460p>
+References: <20190624022336.12465-1-ying.huang@intel.com>
+ <20190624033438.GB6563@ming.t460p>
+ <87imsvbnie.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <87imsvbnie.fsf@yhuang-dev.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 24 Jun 2019 07:28:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is not going to fly.
+On Mon, Jun 24, 2019 at 12:44:41PM +0800, Huang, Ying wrote:
+> Ming Lei <ming.lei@redhat.com> writes:
+> 
+> > Hi Huang Ying,
+> >
+> > On Mon, Jun 24, 2019 at 10:23:36AM +0800, Huang, Ying wrote:
+> >> From: Huang Ying <ying.huang@intel.com>
+> >> 
+> >> 0-Day test system reported some OOM regressions for several
+> >> THP (Transparent Huge Page) swap test cases.  These regressions are
+> >> bisected to 6861428921b5 ("block: always define BIO_MAX_PAGES as
+> >> 256").  In the commit, BIO_MAX_PAGES is set to 256 even when THP swap
+> >> is enabled.  So the bio_alloc(gfp_flags, 512) in get_swap_bio() may
+> >> fail when swapping out THP.  That causes the OOM.
+> >> 
+> >> As in the patch description of 6861428921b5 ("block: always define
+> >> BIO_MAX_PAGES as 256"), THP swap should use multi-page bvec to write
+> >> THP to swap space.  So the issue is fixed via doing that in
+> >> get_swap_bio().
+> >> 
+> >> BTW: I remember I have checked the THP swap code when
+> >> 6861428921b5 ("block: always define BIO_MAX_PAGES as 256") was merged,
+> >> and thought the THP swap code needn't to be changed.  But apparently,
+> >> I was wrong.  I should have done this at that time.
+> >> 
+> >> Fixes: 6861428921b5 ("block: always define BIO_MAX_PAGES as 256")
+> >> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> >> Cc: Ming Lei <ming.lei@redhat.com>
+> >> Cc: Michal Hocko <mhocko@kernel.org>
+> >> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> >> Cc: Hugh Dickins <hughd@google.com>
+> >> Cc: Minchan Kim <minchan@kernel.org>
+> >> Cc: Rik van Riel <riel@redhat.com>
+> >> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+> >> ---
+> >>  mm/page_io.c | 7 ++-----
+> >>  1 file changed, 2 insertions(+), 5 deletions(-)
+> >> 
+> >> diff --git a/mm/page_io.c b/mm/page_io.c
+> >> index 2e8019d0e048..4ab997f84061 100644
+> >> --- a/mm/page_io.c
+> >> +++ b/mm/page_io.c
+> >> @@ -29,10 +29,9 @@
+> >>  static struct bio *get_swap_bio(gfp_t gfp_flags,
+> >>  				struct page *page, bio_end_io_t end_io)
+> >>  {
+> >> -	int i, nr = hpage_nr_pages(page);
+> >>  	struct bio *bio;
+> >>  
+> >> -	bio = bio_alloc(gfp_flags, nr);
+> >> +	bio = bio_alloc(gfp_flags, 1);
+> >>  	if (bio) {
+> >>  		struct block_device *bdev;
+> >>  
+> >> @@ -41,9 +40,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+> >>  		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+> >>  		bio->bi_end_io = end_io;
+> >>  
+> >> -		for (i = 0; i < nr; i++)
+> >> -			bio_add_page(bio, page + i, PAGE_SIZE, 0);
+> >
+> > bio_add_page() supposes to work, just wondering why it doesn't recently.
+> 
+> Yes.  Just checked and bio_add_page() works too.  I should have used
+> that.  The problem isn't bio_add_page(), but bio_alloc(), because nr ==
+> 512 > 256, mempool cannot be used during swapout, so swapout will fail.
 
-For one passing a dma_addr_t through the block layer is a layering
-violation, and one that I think will also bite us in practice.
-The host physical to PCIe bus address mapping can have offsets, and
-those offsets absolutely can be different for differnet root ports.
-So with your caller generated dma_addr_t everything works fine with
-a switched setup as the one you are probably testing on, but on a
-sufficiently complicated setup with multiple root ports it can break.
+Then we can pass 1 to bio_alloc(), together with single bio_add_page()
+for making the code more readable.
 
-Also duplicating the whole block I/O stack, including hooks all over
-the fast path is pretty much a no-go.
 
-I've been pondering for a while if we wouldn't be better off just
-passing a phys_addr_t + len instead of the page, offset, len tuple
-in the bio_vec, though.  If you look at the normal I/O path here
-is what we normally do:
-
- - we get a page as input, either because we have it at hand (e.g.
-   from the page cache) or from get_user_pages (which actually caculates
-   it from a pfn in the page tables)
- - once in the bio all the merging decisions are based on the physical
-   address, so we have to convert it to the physical address there,
-   potentially multiple times
- - then dma mapping all works off the physical address, which it gets
-   from the page at the start
- - then only the dma address is used for the I/O
- - on I/O completion we often but not always need the page again.  In
-   the direct I/O case for reference counting and dirty status, in the
-   file system also for things like marking the page uptodate
-
-So if we move to a phys_addr_t we'd need to go back to the page at least
-once.  But because of how the merging works we really only need to do
-it once per segment, as we can just do pointer arithmerics do get the
-following pages.  As we generally go at least once from a physical
-address to a page in the merging code even a relatively expensive vmem_map
-looks shouldn't be too bad.  Even more so given that the super hot path
-(small blkdev direct I/O) can actually trivially cache the affected pages
-as well.
-
-Linus kinda hates the pfn approach, but part of that was really that
-it was proposed for file system data, which we all found out really
-can't work as-is without pages the hard way.  Another part probably
-was potential performance issue, but between the few page lookups, and
-the fact that using a single phys_addr_t instead of pfn/page + offset
-should avoid quite a few calculations performance should not actually
-be affected, although we'll have to be careful to actually verify that.
+thanks,
+Ming
