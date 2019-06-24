@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08754C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90FDC48BE9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55D02146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793F9205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370566;
-	bh=rukFq4RrZFg9OQDZWu6H1lVu3OmS3h/nOWo/d04IVHo=;
+	s=default; t=1561370576;
+	bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wg8G2QMDNUFftaTtmoaS1jhvQdMTPWcranVz6eQACBhRoW0v/+9NN/ZtwoJ/JlEku
-	 1/YWgMZ/SM0WULlUS7fz9nrTE9iPTCoUy/AsrNYUU52anYO8cGA6NFckLPMpLavIwe
-	 gS2C5zKFJCz6CnFuIeWkVjHXcWNQVV1VSX9rRVnY=
+	b=WUPnCVm3ARB3L9kgGPjlEtpNIv6NE0a7jCjk6hx0svPjeqONU5mxV9BPsbfmMg+S8
+	 TKxKrTO+sskFe3mBYa01osSeCmKeCZp0uvF3PQ0vk2ZwUl2rQUpdiL0LWCAU9x24w6
+	 JNyKsct54xGnD2RyPTP8sF+Ow8kBYTJwUTE6h0i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfFXKCp (ORCPT
+        id S1729483AbfFXKCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbfFXKCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:02:38 -0400
+        id S1729448AbfFXKCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:02:49 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7819205ED;
-        Mon, 24 Jun 2019 10:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C37EA208E3;
+        Mon, 24 Jun 2019 10:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370558;
-        bh=rukFq4RrZFg9OQDZWu6H1lVu3OmS3h/nOWo/d04IVHo=;
+        s=default; t=1561370569;
+        bh=A1RrtKwHN0dBw+kQjkpEeeBB6NYU+o4WplT4dVU1GkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGNPEEbO7DdWJYKXgL43VKRdNyYkvgYMOIodRpbokZ+9sZE/SHqy0g8l0EAapQ7rM
-         tPv/X0XpWLOVg/K+1tQs8Mq3OrvtozOY3+QsOpCL/uxRP1OdDSc/oaj86pUUVSUS2t
-         GuagpUp6FK00p5Do4J0j3tVDMWbfd+FwwoCTmxDQ=
+        b=TECAI53UWwYQbVAnN0a4V7RoiDJF2yVkXMH1PJAAsxt6Q3fkX5bikd/vwmu6C8xAN
+         3SNrX+d3j8TmHHhhDq2rr1hda8qH2KcB9dOGUpfJLi6Huk2ab05mtj1LzMygFN5LoT
+         0C6gko7OJWRo7Bio4OM6nKMTbteS+Qwy4mYjOz/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 19/90] usb: xhci: Dont try to recover an endpoint if port is in error state.
-Date:   Mon, 24 Jun 2019 17:56:09 +0800
-Message-Id: <20190624092315.271088087@linuxfoundation.org>
+        Alexander Mikhaylenko <exalm7659@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 23/90] Input: synaptics - enable SMBus on ThinkPad E480 and E580
+Date:   Mon, 24 Jun 2019 17:56:13 +0800
+Message-Id: <20190624092315.584974854@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -60,118 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Alexander Mikhaylenko <exalm7659@gmail.com>
 
-commit b8c3b718087bf7c3c8e388eb1f72ac1108a4926e upstream.
+commit 9843f3e08e2144724be7148e08d77a195dea257a upstream.
 
-A USB3 device needs to be reset and re-enumarated if the port it
-connects to goes to a error state, with link state inactive.
+They are capable of using intertouch and it works well with
+psmouse.synaptics_intertouch=1, so add them to the list.
 
-There is no use in trying to recover failed transactions by resetting
-endpoints at this stage. Tests show that in rare cases, after multiple
-endpoint resets of a roothub port the whole host controller might stop
-completely.
+Without it, scrolling and gestures are jumpy, three-finger pinch gesture
+doesn't work and three- or four-finger swipes sometimes get stuck.
 
-Several retries to recover from transaction error can happen as
-it can take a long time before the hub thread discovers the USB3
-port error and inactive link.
-
-We can't reliably detect the port error from slot or endpoint context
-due to a limitation in xhci, see xhci specs section 4.8.3:
-"There are several cases where the EP State field in the Output
-Endpoint Context may not reflect the current state of an endpoint"
-and
-"Software should maintain an accurate value for EP State, by tracking it
-with an internal variable that is driven by Events and Doorbell accesses"
-
-Same appears to be true for slot state.
-
-set a flag to the corresponding slot if a USB3 roothub port link goes
-inactive to prevent both queueing new URBs and resetting endpoints.
-
-Reported-by: Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>
-Tested-by: Rapolu Chiranjeevi <chiranjeevi.rapolu@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alexander Mikhaylenko <exalm7659@gmail.com>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |   15 ++++++++++++++-
- drivers/usb/host/xhci.c      |    5 +++++
- drivers/usb/host/xhci.h      |    9 +++++++++
- 3 files changed, 28 insertions(+), 1 deletion(-)
+ drivers/input/mouse/synaptics.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1604,8 +1604,13 @@ static void handle_port_status(struct xh
- 		usb_hcd_resume_root_hub(hcd);
- 	}
- 
--	if (hcd->speed >= HCD_USB3 && (portsc & PORT_PLS_MASK) == XDEV_INACTIVE)
-+	if (hcd->speed >= HCD_USB3 &&
-+	    (portsc & PORT_PLS_MASK) == XDEV_INACTIVE) {
-+		slot_id = xhci_find_slot_id_by_port(hcd, xhci, hcd_portnum + 1);
-+		if (slot_id && xhci->devs[slot_id])
-+			xhci->devs[slot_id]->flags |= VDEV_PORT_ERROR;
- 		bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
-+	}
- 
- 	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_RESUME) {
- 		xhci_dbg(xhci, "port resume event for port %d\n", port_id);
-@@ -1793,6 +1798,14 @@ static void xhci_cleanup_halted_endpoint
- {
- 	struct xhci_virt_ep *ep = &xhci->devs[slot_id]->eps[ep_index];
- 	struct xhci_command *command;
-+
-+	/*
-+	 * Avoid resetting endpoint if link is inactive. Can cause host hang.
-+	 * Device will be reset soon to recover the link so don't do anything
-+	 */
-+	if (xhci->devs[slot_id]->flags & VDEV_PORT_ERROR)
-+		return;
-+
- 	command = xhci_alloc_command(xhci, false, GFP_ATOMIC);
- 	if (!command)
- 		return;
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1441,6 +1441,10 @@ static int xhci_urb_enqueue(struct usb_h
- 			xhci_dbg(xhci, "urb submitted during PCI suspend\n");
- 		return -ESHUTDOWN;
- 	}
-+	if (xhci->devs[slot_id]->flags & VDEV_PORT_ERROR) {
-+		xhci_dbg(xhci, "Can't queue urb, port error, link inactive\n");
-+		return -ENODEV;
-+	}
- 
- 	if (usb_endpoint_xfer_isoc(&urb->ep->desc))
- 		num_tds = urb->number_of_packets;
-@@ -3724,6 +3728,7 @@ static int xhci_discover_or_reset_device
- 	}
- 	/* If necessary, update the number of active TTs on this root port */
- 	xhci_update_tt_active_eps(xhci, virt_dev, old_active_eps);
-+	virt_dev->flags = 0;
- 	ret = 0;
- 
- command_cleanup:
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1010,6 +1010,15 @@ struct xhci_virt_device {
- 	u8				real_port;
- 	struct xhci_interval_bw_table	*bw_table;
- 	struct xhci_tt_bw_info		*tt_info;
-+	/*
-+	 * flags for state tracking based on events and issued commands.
-+	 * Software can not rely on states from output contexts because of
-+	 * latency between events and xHC updating output context values.
-+	 * See xhci 1.1 section 4.8.3 for more details
-+	 */
-+	unsigned long			flags;
-+#define VDEV_PORT_ERROR			BIT(0) /* Port error, link inactive */
-+
- 	/* The current max exit latency for the enabled USB3 link states. */
- 	u16				current_mel;
- 	/* Used for the debugfs interfaces. */
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -179,6 +179,8 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN200f", /* T450s */
++	"LEN2054", /* E480 */
++	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
+ 	NULL
 
 
