@@ -2,249 +2,137 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CAC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC70C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF51220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39F620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RGTicdS+"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="CKlrlyGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfFXUbh (ORCPT
+        id S1729343AbfFXUeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:31:37 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39048 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731796AbfFXUbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:31:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j2so8162690pfe.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 13:31:23 -0700 (PDT)
+        Mon, 24 Jun 2019 16:34:02 -0400
+Received: from mail-eopbgr730105.outbound.protection.outlook.com ([40.107.73.105]:59557
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727592AbfFXUeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 16:34:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9cvCddzp/rQ9gLoVz2Ohmj6GbBYXrvNQEIWOBydlqbk=;
-        b=RGTicdS+MgEOYEAHS+smvnz8GlVq6o2y1HVT5Balw5Aa4KWF33hdyuiXxr/N1xo7F+
-         Cjtl6Fev/1MRaF2vXjK9cwelIWWrUlUxQlbN+bA/ht0z5aX334sPz3PdN4Abm+SWsTsG
-         RpsNTk8Sl4N4t1+uRfbQo6YN+2AA71bqGKxso=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9cvCddzp/rQ9gLoVz2Ohmj6GbBYXrvNQEIWOBydlqbk=;
-        b=rkRarcv+zmsEM7CcJNCD7kZN8MX81prPWVHvcBsApoIqPC84oTuzIOadI+VOSqDhZM
-         F9i4Fdh+BF1mA9lXqNKOfFEklYw1AhVMkvdRmIwcwhKboU5qZmtWcZfDz40DZASl7xcM
-         hEnVy1I8tl3u0+Zt8JiGztDHqM0hBZNXuamJsC52u5cw0Dw2KOCwynW2oUl9Z7MXYgYg
-         nfhosXZJl9HG2DU3QbLfTkODe57ilK14Wq2LuIiR8mW9bP2wUxwC9Uk0JZapnAEAmLJn
-         2FtY7i3nso/7Q78Q/bo82javx80nqp3cGEsStmZngYHw4HjMoXmRSFTugIZhRV2tPye3
-         6yaQ==
-X-Gm-Message-State: APjAAAWJw7t31P26hW04QDqosuN3zJN219EqJkHaTcZulsI7mhaYBfjF
-        aVlwo56eBPOMMgUBTQUaGoQXDA==
-X-Google-Smtp-Source: APXvYqztkGD2Zm1lhfUGrYuukC/zkqi/1wiD2UFCDCf7MnzGHMPiBOntzubbs4r7XKjVQ5JRS7vvPw==
-X-Received: by 2002:a17:90a:206a:: with SMTP id n97mr27137163pjc.10.1561408283171;
-        Mon, 24 Jun 2019 13:31:23 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id c98sm315435pje.1.2019.06.24.13.31.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 13:31:22 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 2/4] backlight: Expose brightness curve type through sysfs
-Date:   Mon, 24 Jun 2019 13:31:11 -0700
-Message-Id: <20190624203114.93277-3-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190624203114.93277-1-mka@chromium.org>
-References: <20190624203114.93277-1-mka@chromium.org>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hpj2ln9PdF2iw8CTNKfMyvckw7/rfWmo7YDhUidEPTU=;
+ b=CKlrlyGmhJ/QCyiCLX8NQhhVLKb9sH2j/eupCg474rMbmvTDeCr7AGHihTiJuz2GzMGdwvAfc3ovxv2uyeRMyCVj0tNtAPsBb31uv1OwnJNGzQ7YW+2gk5MlVJ1+ufcKyvCgj9DcHy2yEAfXvDPAWPE8Xp88uLXquvXCcLan3Rg=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1054.namprd22.prod.outlook.com (10.174.169.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 20:33:58 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 20:33:58 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] asm-generic: remove ptrace.h
+Thread-Topic: [PATCH 5/5] asm-generic: remove ptrace.h
+Thread-Index: AQHVKlBfN/z+ea/vT02hAZbwmFNTNqarQ6qA
+Date:   Mon, 24 Jun 2019 20:33:58 +0000
+Message-ID: <20190624203357.cgybfqklcflll2ti@pburton-laptop>
+References: <20190624054728.30966-1-hch@lst.de>
+ <20190624054728.30966-6-hch@lst.de>
+In-Reply-To: <20190624054728.30966-6-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0016.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::26) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 00576424-0e94-4dec-ebb0-08d6f8e348bd
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1054;
+x-ms-traffictypediagnostic: MWHPR2201MB1054:
+x-microsoft-antispam-prvs: <MWHPR2201MB10547E2A5FAB871CBCBC78F0C1E00@MWHPR2201MB1054.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:324;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(346002)(366004)(136003)(39840400004)(396003)(199004)(189003)(4326008)(54906003)(8936002)(14454004)(58126008)(316002)(1076003)(7416002)(25786009)(6916009)(8676002)(73956011)(81166006)(81156014)(2906002)(66066001)(6436002)(66946007)(66446008)(3846002)(42882007)(64756008)(66556008)(6246003)(66476007)(6486002)(44832011)(6116002)(33716001)(9686003)(6512007)(486006)(26005)(11346002)(446003)(186003)(7736002)(68736007)(305945005)(476003)(229853002)(256004)(14444005)(478600001)(5660300002)(52116002)(76176011)(99286004)(53936002)(71190400001)(71200400001)(6506007)(386003)(102836004)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1054;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1o+p+e7S28HMuolVpWY64pfIILQb2dMbrDbcOGciaGoS1LXGJlr7ehnAHp9Ycl6pInnLSSHXLBrmjxD2nhzpvkx6BWCBDK9u52gqwDxJ5Fout54XxI2fy+MGo6qyttipUcv2XOOVnWqxCl/ILzLFSqGZVq5nKzK3lWtjeoHACRyLrV5zsqIYrfBupUjTEw33WanaTTvWYlcv+0mdWFX+DJsZ9kfHAoys2DAzHpb5kk5eWZEkcDMiY+t5uSNUS++2Xf7n8d+IVDrGCH1Z44Y9KNM2QJChm0zMIH8OPuwH6fU3+G65lSIQw1+O3zqWFgusIEIGrLtLxE+CapTrztWLmtxSFCG6D1aRDewri+FvG89kUg5pLHWFmexREBv+wmbnkWGGSSOGcbkW5TPEgJLSUdQnZhZaAx0W6d62WAPHBg8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B945272A94CC124191D61CF8D0443342@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00576424-0e94-4dec-ebb0-08d6f8e348bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 20:33:58.4037
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Backlight brightness curves can have different shapes. The two main
-types are linear and non-linear curves. The human eye doesn't
-perceive linearly increasing/decreasing brightness as linear (see
-also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-linearly to human eye"), hence many backlights use non-linear (often
-logarithmic) brightness curves. The type of curve currently is opaque
-to userspace, so userspace often uses more or less reliable heuristics
-(like the number of brightness levels) to decide whether to treat a
-backlight device as linear or non-linear.
+On Mon, Jun 24, 2019 at 07:47:28AM +0200, Christoph Hellwig wrote:
+> No one is using this header anymore.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  MAINTAINERS                    |  1 -
+>  arch/mips/include/asm/ptrace.h |  5 ---
+>  include/asm-generic/ptrace.h   | 73 ----------------------------------
+>  3 files changed, 79 deletions(-)
+>  delete mode 100644 include/asm-generic/ptrace.h
 
-Export the type of the brightness curve via the new sysfs attribute
-'scale'. The value of the attribute may be a simple string like
-'linear' or 'non-linear', or a composite string similar to
-'compatible' strings of the device tree. A composite string consists
-of different elements separated by commas, starting with the
-most-detailed description and ending with the least-detailed one. An
-example for a composite string is "cie-1931,perceptual,non-linear"
-This brightness curve was generated with the CIE 1931 algorithm, it
-is perceptually linear, but not actually linear in terms of the
-emitted light. If userspace doesn't know about 'cie-1931' or
-'perceptual' it should at least be able to interpret the 'non-linear'
-part.
+FWIW:
 
-For devices that don't provide information about the scale of their
-brightness curve the value of the 'scale' attribute is 'unknown'.
+    Acked-by: Paul Burton <paul.burton@mips.com>
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v2:
-- changed order of brightness scale enums, explicitly make 'unknown' zero
-- minor update of commit message
-- deleted excess blank line after 'backlight_scale_types'
-- s/curves/curve/ in sysfs doc
----
- .../ABI/testing/sysfs-class-backlight         | 32 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- drivers/video/backlight/backlight.c           | 21 ++++++++++++
- include/linux/backlight.h                     | 10 ++++++
- 4 files changed, 64 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+Thanks,
+    Paul
 
-diff --git a/Documentation/ABI/testing/sysfs-class-backlight b/Documentation/ABI/testing/sysfs-class-backlight
-new file mode 100644
-index 000000000000..da1ce9e5c55a
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-backlight
-@@ -0,0 +1,32 @@
-+What:		/sys/class/backlight/<backlight>/scale
-+Date:		June 2019
-+KernelVersion:	5.4
-+Contact:	Daniel Thompson <daniel.thompson@linaro.org>
-+Description:
-+		Description of the scale of the brightness curve. The
-+		description consists of one or more elements separated by
-+		commas, from the most detailed to the least detailed
-+		description.
-+
-+		Possible values are:
-+
-+		unknown
-+		  The scale of the brightness curve is unknown.
-+
-+		linear
-+		  The brightness changes linearly in terms of the emitted
-+		  light, changes are perceived as non-linear by the human eye.
-+
-+		non-linear
-+		  The brightness changes non-linearly in terms of the emitted
-+		  light, changes might be perceived as linear by the human eye.
-+
-+		perceptual,non-linear
-+		  The brightness changes non-linearly in terms of the emitted
-+		  light, changes should be perceived as linear by the human eye.
-+
-+		cie-1931,perceptual,non-linear
-+		  The brightness curve was calculated with the CIE 1931
-+		  algorithm. Brightness changes non-linearly in terms of the
-+		  emitted light, changes should be perceived as linear by the
-+		  human eye.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d51e74340870..c46812510ba5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2858,6 +2858,7 @@ F:	include/linux/backlight.h
- F:	include/linux/pwm_backlight.h
- F:	Documentation/devicetree/bindings/leds/backlight
- F:	Documentation/ABI/stable/sysfs-class-backlight
-+F:	Documentation/ABI/testing/sysfs-class-backlight
- 
- BATMAN ADVANCED
- M:	Marek Lindner <mareklindner@neomailbox.ch>
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 1ef8b6fd62ac..86612ec42ed0 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -32,6 +32,14 @@ static const char *const backlight_types[] = {
- 	[BACKLIGHT_FIRMWARE] = "firmware",
- };
- 
-+static const char *const backlight_scale_types[] = {
-+	[BACKLIGHT_SCALE_UNKNOWN]	= "unknown",
-+	[BACKLIGHT_SCALE_LINEAR]	= "linear",
-+	[BACKLIGHT_SCALE_NON_LINEAR]	= "non-linear",
-+	[BACKLIGHT_SCALE_PERCEPTUAL]	= "perceptual,non-linear",
-+	[BACKLIGHT_SCALE_CIE1931]	= "cie-1931,perceptual,non-linear",
-+};
-+
- #if defined(CONFIG_FB) || (defined(CONFIG_FB_MODULE) && \
- 			   defined(CONFIG_BACKLIGHT_CLASS_DEVICE_MODULE))
- /* This callback gets called when something important happens inside a
-@@ -246,6 +254,18 @@ static ssize_t actual_brightness_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(actual_brightness);
- 
-+static ssize_t scale_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct backlight_device *bd = to_backlight_device(dev);
-+
-+	if (WARN_ON(bd->props.scale > BACKLIGHT_SCALE_NON_LINEAR))
-+		return sprintf(buf, "unknown\n");
-+
-+	return sprintf(buf, "%s\n", backlight_scale_types[bd->props.scale]);
-+}
-+static DEVICE_ATTR_RO(scale);
-+
- static struct class *backlight_class;
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -292,6 +312,7 @@ static struct attribute *bl_device_attrs[] = {
- 	&dev_attr_brightness.attr,
- 	&dev_attr_actual_brightness.attr,
- 	&dev_attr_max_brightness.attr,
-+	&dev_attr_scale.attr,
- 	&dev_attr_type.attr,
- 	NULL,
- };
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 0b5897446dca..94d3559cd968 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -46,6 +46,14 @@ enum backlight_notification {
- 	BACKLIGHT_UNREGISTERED,
- };
- 
-+enum backlight_scale {
-+	BACKLIGHT_SCALE_UNKNOWN = 0,
-+	BACKLIGHT_SCALE_LINEAR,
-+	BACKLIGHT_SCALE_NON_LINEAR,	/* needed for backwards compatibility */
-+	BACKLIGHT_SCALE_PERCEPTUAL,
-+	BACKLIGHT_SCALE_CIE1931,
-+};
-+
- struct backlight_device;
- struct fb_info;
- 
-@@ -80,6 +88,8 @@ struct backlight_properties {
- 	enum backlight_type type;
- 	/* Flags used to signal drivers of state changes */
- 	unsigned int state;
-+	/* Type of the brightness scale (linear, non-linear, ...) */
-+	enum backlight_scale scale;
- 
- #define BL_CORE_SUSPENDED	(1 << 0)	/* backlight is suspended */
- #define BL_CORE_FBBLANK		(1 << 1)	/* backlight is under an fb blank event */
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+> diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrac=
+e.h
+> index b6578611dddb..1e76774b36dd 100644
+> --- a/arch/mips/include/asm/ptrace.h
+> +++ b/arch/mips/include/asm/ptrace.h
+> @@ -56,11 +56,6 @@ static inline unsigned long kernel_stack_pointer(struc=
+t pt_regs *regs)
+>  	return regs->regs[31];
+>  }
+> =20
+> -/*
+> - * Don't use asm-generic/ptrace.h it defines FP accessors that don't mak=
+e
+> - * sense on MIPS.  We rather want an error if they get invoked.
+> - */
+> -
+>  static inline void instruction_pointer_set(struct pt_regs *regs,
+>                                             unsigned long val)
+>  {
