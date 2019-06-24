@@ -2,111 +2,181 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D3C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB131C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1BB2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AU3Bg7yH"
+	by mail.kernel.org (Postfix) with ESMTP id AE86420449
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 11:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfFXLLm (ORCPT
+        id S1729730AbfFXLNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 07:11:42 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:35711 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbfFXLLk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 07:11:40 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190624111138epoutp02368236491a1ff98bccba731e3dd21ebb~rHgPv18pU1104411044epoutp02S
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:11:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190624111138epoutp02368236491a1ff98bccba731e3dd21ebb~rHgPv18pU1104411044epoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561374698;
-        bh=0ipUsXhHHvkzImu9lVdNjb311YCAGiFs18/62Vk99mM=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=AU3Bg7yHnBtJlmVI+It317fNYZ1N4n3lX2Oz9yRR6a78Fn9zqz6qlUmQ2c6Jv2ew9
-         zdK+PJP3lPto4RAOeZ/KE44Dp8d1YSQT5z9fGGs2ObVd09aoh27Ik7G2WCzws+0qya
-         U0tLc/I3pNIc/meKuq/AQIgJ5kNYzYmtTKC9kxVQ=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190624111135epcas1p3fddcc03adb0b79dfed24372b1c9a1ee1~rHgNTYg1M1149611496epcas1p3F;
-        Mon, 24 Jun 2019 11:11:35 +0000 (GMT)
-X-AuditID: b6c32a35-973ff7000000102b-bc-5d10afe7e825
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4B.1C.04139.7EFA01D5; Mon, 24 Jun 2019 20:11:35 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
-Date:   Mon, 24 Jun 2019 20:11:34 +0900
-X-CMS-MailID: 20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmge7z9QKxBu8fSFpc//Kc1WL1x8eM
-        Fi2zFrFYXN41h83ic+8RRovOL7PYLH7umsfiwO6xc9Zddo/e5ndsHn1bVjF6fN4kF8ASlW2T
-        kZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SBkkJZYk4p
-        UCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85P9fK0MDAyBSoMCE748Ps
-        VywFv9kqJl77z9zAeImti5GTQ0LAROLqwmMsILaQwA5Gid0v3LoYOTh4BQQl/u4QBgkLC7hJ
-        bLv2G6pESaLh5j5miLi+RMeDbYwgNpuArsTWDXfBakQE1CSWH/3D2sXIxcEscJpJYvPan1C7
-        eCVmtD9lgbClJbYv3wrWzClgK9Ez+xYjRFxU4ubqt+ww9vtj86HiIhKt984yQ9iCEg9+7maE
-        mTNjyn+omdUS16YvZgdZLCHQwijRu3oKVJG+xJm5J8GO4BXwlTi68RXYIBYBVYnGnb+glrlI
-        bJi1GizOLKAtsWzha2ZQQDALaEqs36UPUaIosfP3XEaIEj6Jd197WGH+2jHvCROErSZxaPcS
-        qJEyEqenL4S62UPixYl94EAREuhhkphw6x3zBEaFWYiwnoVk8yyEzQsYmVcxiqUWFOempxYb
-        Fhgix+4mRnBq1DLdwTjlnM8hRgEORiUeXoEN/LFCrIllxZW5hxglOJiVRHiXJgrECvGmJFZW
-        pRblxxeV5qQWH2I0BQbARGYp0eR8YNrOK4k3NDUyNja2MDE0MzU0VBLnjee+GSMkkJ5Ykpqd
-        mlqQWgTTx8TBKdXAmOTlamte1jz1sfyCK7fczp4+eORi53+5c5Oktqy74Zf0Tm+6y7k9TbPf
-        VZt2rNQ817uxQmmKyvP7i5QvmOWuTjIUteTdbHGyT6O3eaPQnMlm7Tz2FyUETQr0TTvDDfUc
-        pZoPhisuCNztlJ8u+cq1aK/KbOl223+lsl4rM3lW+Ttci71qL9qmxFKckWioxVxUnAgAW3CX
-        7KMDAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
-References: <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
-        <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
-        <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
-        <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p3>
+        Mon, 24 Jun 2019 07:13:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50242 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727103AbfFXLNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:13:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE700AC20;
+        Mon, 24 Jun 2019 11:13:51 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6211D1E2F23; Mon, 24 Jun 2019 13:13:49 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 13:13:49 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 1/7] mm/fs: don't allow writes to immutable files
+Message-ID: <20190624111349.GF32376@quack2.suse.cz>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+ <156116141836.1664939.12249697737780481978.stgit@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156116141836.1664939.12249697737780481978.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
->--------- Original Message ---------
->Sender : Dmitry Osipenko <digetx=40gmail.com>
->=20
->24.06.2019 10:34, MyungJoo Ham =D0=BF=D0=B8=D1=88=D0=B5=D1=82:=0D=0A>>>=0D=
-=0A>>>=20A=20question:=0D=0A>>>=0D=0A>>>=20Does=20this=20driver=20support=
-=20Tegra20=20as=20well?=0D=0A>>>=20I'm=20asking=20this=20because=20ARCH_TEG=
-RA=20includes=20ARCH_TEGRA_2x_SOC=0D=0A>>>=20according=20to=20/drivers/soc/=
-tegra/Kconfig.=0D=0A>>>=0D=0A>>=20=0D=0A>>=20For=20this=20matter,=20how=20a=
-bout=20updating=20your=2013/16=20patch=20as=20follows?=0D=0A>>=20=0D=0A=5B=
-=5D=0D=0A>=20=0D=0A>Good=20call=21=20I'll=20update=20this=20patch=20followi=
-ng=20yours=20suggestion,=20thanks.=0D=0A=0D=0AOr,=20you=20may=20approve=20t=
-he=20modified=20commits=20here:=0D=0Ahttps://git.kernel.org/pub/scm/linux/k=
-ernel/git/mzx/devfreq.git/log/?h=3Dfor-next=0D=0A=0D=0A=0D=0ACheers,=0D=0AM=
-yungJoo=0D=0A
+On Fri 21-06-19 16:56:58, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The chattr manpage has this to say about immutable files:
+> 
+> "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> or renamed, no link can be created to this file, most of the file's
+> metadata can not be modified, and the file can not be opened in write
+> mode."
+> 
+> Once the flag is set, it is enforced for quite a few file operations,
+> such as fallocate, fpunch, fzero, rm, touch, open, etc.  However, we
+> don't check for immutability when doing a write(), a PROT_WRITE mmap(),
+> a truncate(), or a write to a previously established mmap.
+> 
+> If a program has an open write fd to a file that the administrator
+> subsequently marks immutable, the program still can change the file
+> contents.  Weird!
+> 
+> The ability to write to an immutable file does not follow the manpage
+> promise that immutable files cannot be modified.  Worse yet it's
+> inconsistent with the behavior of other syscalls which don't allow
+> modifications of immutable files.
+> 
+> Therefore, add the necessary checks to make the write, mmap, and
+> truncate behavior consistent with what the manpage says and consistent
+> with other syscalls on filesystems which support IMMUTABLE.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/attr.c    |   13 ++++++-------
+>  mm/filemap.c |    3 +++
+>  mm/memory.c  |    3 +++
+>  mm/mmap.c    |    8 ++++++--
+>  4 files changed, 18 insertions(+), 9 deletions(-)
+> 
+> 
+> diff --git a/fs/attr.c b/fs/attr.c
+> index d22e8187477f..1fcfdcc5b367 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -233,19 +233,18 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
+>  
+>  	WARN_ON_ONCE(!inode_is_locked(inode));
+>  
+> -	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) {
+> -		if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+> -			return -EPERM;
+> -	}
+> +	if (IS_IMMUTABLE(inode))
+> +		return -EPERM;
+> +
+> +	if ((ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) &&
+> +	    IS_APPEND(inode))
+> +		return -EPERM;
+>  
+>  	/*
+>  	 * If utimes(2) and friends are called with times == NULL (or both
+>  	 * times are UTIME_NOW), then we need to check for write permission
+>  	 */
+>  	if (ia_valid & ATTR_TOUCH) {
+> -		if (IS_IMMUTABLE(inode))
+> -			return -EPERM;
+> -
+>  		if (!inode_owner_or_capable(inode)) {
+>  			error = inode_permission(inode, MAY_WRITE);
+>  			if (error)
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index aac71aef4c61..dad85e10f5f8 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2935,6 +2935,9 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
+>  	loff_t count;
+>  	int ret;
+>  
+> +	if (IS_IMMUTABLE(inode))
+> +		return -EPERM;
+> +
+>  	if (!iov_iter_count(from))
+>  		return 0;
+>  
+> diff --git a/mm/memory.c b/mm/memory.c
+> index ddf20bd0c317..4311cfdade90 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2235,6 +2235,9 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
+>  
+>  	vmf->flags = FAULT_FLAG_WRITE|FAULT_FLAG_MKWRITE;
+>  
+> +	if (vmf->vma->vm_file && IS_IMMUTABLE(file_inode(vmf->vma->vm_file)))
+> +		return VM_FAULT_SIGBUS;
+> +
+>  	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
+>  	/* Restore original flags so that caller is not surprised */
+>  	vmf->flags = old_flags;
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 7e8c3e8ae75f..ac1e32205237 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1483,8 +1483,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+>  		case MAP_SHARED_VALIDATE:
+>  			if (flags & ~flags_mask)
+>  				return -EOPNOTSUPP;
+> -			if ((prot&PROT_WRITE) && !(file->f_mode&FMODE_WRITE))
+> -				return -EACCES;
+> +			if (prot & PROT_WRITE) {
+> +				if (!(file->f_mode & FMODE_WRITE))
+> +					return -EACCES;
+> +				if (IS_IMMUTABLE(file_inode(file)))
+> +					return -EPERM;
+> +			}
+>  
+>  			/*
+>  			 * Make sure we don't allow writing to an append-only
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
