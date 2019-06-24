@@ -2,141 +2,168 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A52C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5075AC48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB40920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0EB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Emj72WPP"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="fRuTNwa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbfFXPzq (ORCPT
+        id S1731372AbfFXP4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:55:46 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:21637 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbfFXPzq (ORCPT
+        Mon, 24 Jun 2019 11:56:15 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62564 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726774AbfFXP4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:55:46 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,412,1557212400"; 
-   d="scan'208";a="38666742"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2019 08:55:45 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 08:55:43 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 24 Jun 2019 08:54:46 -0700
+        Mon, 24 Jun 2019 11:56:14 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OEw7ew031348;
+        Mon, 24 Jun 2019 11:14:03 -0400
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2056.outbound.protection.outlook.com [104.47.46.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2t9h86dvj7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 11:14:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dSAL7ZUDnNnvwDnja2X3H+nPz0McQEvLa6pPV2s10AA=;
- b=Emj72WPPgHDHOW3QnD+lPQy3U3+4XvQCCGk7Mf9K5vN5JgpJBH4z67aIfGMm9IkbmnGsUQlawbhWVMz98u/ySi+3EW3Lz1RLl0zPD+KOV9eIGEsJNeXxwncn8g3gH5s4CGiSTrF/ouNsTObfjbC+qh1VY803WHejCwsdW1DS2PE=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1999.namprd11.prod.outlook.com (10.169.232.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Mon, 24 Jun 2019 15:55:42 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
- 15:55:42 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <antoine.tenart@bootlin.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net] net: macb: do not copy the mac address if NULL
-Thread-Topic: [PATCH net] net: macb: do not copy the mac address if NULL
-Thread-Index: AQHVKqVGsoNXrtPxPk6+LOJezvU7tA==
-Date:   Mon, 24 Jun 2019 15:55:41 +0000
-Message-ID: <0dceaf8f-0a08-8515-5054-1f9395e9b60f@microchip.com>
-References: <20190621152635.29689-1-antoine.tenart@bootlin.com>
-In-Reply-To: <20190621152635.29689-1-antoine.tenart@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0257.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8a::29) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 578956ea-04ad-46f5-29ce-08d6f8bc68bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1999;
-x-ms-traffictypediagnostic: MWHPR11MB1999:
-x-microsoft-antispam-prvs: <MWHPR11MB1999C3517C82AE085FFACC82E0E00@MWHPR11MB1999.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(366004)(39860400002)(199004)(189003)(31686004)(186003)(256004)(14444005)(25786009)(305945005)(52116002)(102836004)(7736002)(99286004)(4326008)(6116002)(3846002)(6506007)(386003)(8676002)(476003)(229853002)(2906002)(11346002)(26005)(446003)(2616005)(68736007)(486006)(36756003)(316002)(6246003)(53546011)(110136005)(478600001)(54906003)(31696002)(2501003)(5660300002)(66066001)(14454004)(6512007)(81156014)(81166006)(66556008)(72206003)(66946007)(73956011)(66476007)(64756008)(66446008)(53936002)(6436002)(6486002)(76176011)(86362001)(8936002)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1999;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dikfw+ARIqM3QthXMSCBaJkWlovxnpzbqms7MeqTeculbdwzlu0X3a0104feIid5dpp8bsPP6zBn7vYybWSFwSRIu+hN+HiyPHXuuMsUT/LBahz4Ii5lzY2ogjvnbIg+E0kdtXMqci89EM84+54cTUzMB5LcSnBRKEOxvlXDQzeHaIxgynGuSrKfB8U+T8qCghm18V52aUBkO6CKMiYXoBL5lsPGLonm62DPTg/PHENdrInSYy4MaQXkqZ6lHMwdwGhIf7ZYWu1ljMZgGI8DI0JIiIvL/xLn9JrZ7GCL/Fa/QSsMRn5QnXefRQFdLOZEpHgC/erpqruyDNzNHkwgyeX8e7G8p1bh9AfBTRiTbJCkzYqedNyo84/1uLY9QfsX2EUTtICYSApNEW/gQNoboi1SgDX+jT+QPR4Xcz4hip4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <86D8B851C2653D4A818D7CB3A6A763E0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ bh=vww7HDk56cmYccz3zZ5GIDpckPeL++iVrcsHf+rTX/A=;
+ b=fRuTNwa+7KbtBWIVJ3bcd9gdXgJEETiJmT6V5axbIrtxNVWPN0Y0wcLkMTEW/4cN82Sj1LH77J+Cfzxl6ChG/UX2+rptrEX4fyDXLEmq1yHbiCIkGhRkdV2WlpT5+8LHYiP2Cmf9lhrjRr+yLWsoYh/nvxrsm5wyZ2IuxxTLFRA=
+Received: from CY4PR03CA0004.namprd03.prod.outlook.com (2603:10b6:903:33::14)
+ by BN3PR03MB2258.namprd03.prod.outlook.com (2a01:111:e400:7bbf::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.15; Mon, 24 Jun
+ 2019 15:14:01 +0000
+Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::205) by CY4PR03CA0004.outlook.office365.com
+ (2603:10b6:903:33::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16 via Frontend
+ Transport; Mon, 24 Jun 2019 15:14:01 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Mon, 24 Jun 2019 15:14:00 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5OFE0Ve005078
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 24 Jun 2019 08:14:00 -0700
+Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Mon, 24 Jun 2019
+ 11:14:00 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stefan.popa@analog.com>
+Subject: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
+Date:   Mon, 24 Jun 2019 18:13:56 +0300
+Message-ID: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 578956ea-04ad-46f5-29ce-08d6f8bc68bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 15:55:41.9866
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(376002)(346002)(2980300002)(199004)(189003)(8676002)(50466002)(8936002)(48376002)(72206003)(7696005)(50226002)(51416003)(356004)(6666004)(77096007)(316002)(16586007)(47776003)(5660300002)(186003)(26005)(486006)(107886003)(7636002)(305945005)(476003)(126002)(2906002)(246002)(426003)(44832011)(7416002)(2616005)(110136005)(14444005)(54906003)(36756003)(4326008)(70586007)(70206006)(336012)(106002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR03MB2258;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 114e134d-9bc0-4324-a7b0-08d6f8b6965d
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN3PR03MB2258;
+X-MS-TrafficTypeDiagnostic: BN3PR03MB2258:
+X-Microsoft-Antispam-PRVS: <BN3PR03MB22580F797F34475FE9ACD33C9DE00@BN3PR03MB2258.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 007814487B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: V1b3skHKnU76/cFd4+ln50URT19VYShvobTzmsR9A+rpN+3IvFtkWqNS1kdFq8RYAFb48WzQXbNwW7/miO0K9w8S5GVvWwWKdPdyk+b0V8YOkN+/RxesJnbJzP6dH4UTj3rrB6MG9Luyt+zS/WLbiQiEHTLOPmN3IZRtXCcnlwnh+NroORGKiACy8GTgVpx+wrPjukUAVtVo7W2npl9HaeVajCmovZ8XVnjeWMayX6Q6dVVHRaLjoSZ8DfPDkXDHlAuaYhOHw/+Scki/YMOCF5kM4pmuOGcJnes1bhMQR4MLql43hsX7bNJe4kQYtcjIEtU0nZCPJxm7gmHU+Uo9Nneqhb4HnAt61VMCZPYPONcSG6dcwsN3YCg6xULV2SJYvFC0UkswAQTfruuvlTFOcbSOdpxlXwZs4Z968fgCiYQ=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 15:14:00.8989
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1999
+X-MS-Exchange-CrossTenant-Network-Message-Id: 114e134d-9bc0-4324-a7b0-08d6f8b6965d
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR03MB2258
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjEvMDYvMjAxOSBhdCAxNzoyNiwgQW50b2luZSBUZW5hcnQgd3JvdGU6DQo+IFRoaXMgcGF0
-Y2ggZml4ZXMgdGhlIE1BQyBhZGRyZXNzIHNldHVwIGluIHRoZSBwcm9iZS4gVGhlIE1BQyBhZGRy
-ZXNzDQo+IHJldHJpZXZlZCB1c2luZyBvZl9nZXRfbWFjX2FkZHJlc3Mgd2FzIGNoZWNrZWQgZm9y
-IG5vdCBjb250YWluaW5nIGFuDQo+IGVycm9yLCBidXQgaXQgbWF5IGFsc28gYmUgTlVMTCB3aGlj
-aCB3YXNuJ3QgdGVzdGVkLiBGaXggaXQgYnkgcmVwbGFjaW5nDQo+IElTX0VSUiB3aXRoIElTX0VS
-Ul9PUl9OVUxMLg0KPiANCj4gRml4ZXM6IDU0MWRkYzY2ZDY2NSAoIm5ldDogbWFjYjogc3VwcG9y
-dCBvZl9nZXRfbWFjX2FkZHJlc3MgbmV3IEVSUl9QVFIgZXJyb3IiKQ0KPiBTaWduZWQtb2ZmLWJ5
-OiBBbnRvaW5lIFRlbmFydCA8YW50b2luZS50ZW5hcnRAYm9vdGxpbi5jb20+DQoNCkFja2VkLWJ5
-OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNCkl0IGNvdWxk
-IGJlIGdvb2QgdG8gaGF2ZSB0aGlzIGZpeCBmb3IgNS4yLWZpbmFsLi4uDQoNClRoYW5rcyENCg0K
-PiAtLS0NCj4gICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jIHwgMiAr
-LQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMg
-Yi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IGluZGV4IDEyNDFh
-MmE3MzQzOC4uMWNkMWYyYzM2ZDZmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5l
-dC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVu
-Y2UvbWFjYl9tYWluLmMNCj4gQEAgLTQzMDQsNyArNDMwNCw3IEBAIHN0YXRpYyBpbnQgbWFjYl9w
-cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAlpZiAoUFRSX0VSUihtYWMp
-ID09IC1FUFJPQkVfREVGRVIpIHsNCj4gICAJCWVyciA9IC1FUFJPQkVfREVGRVI7DQo+ICAgCQln
-b3RvIGVycl9vdXRfZnJlZV9uZXRkZXY7DQo+IC0JfSBlbHNlIGlmICghSVNfRVJSKG1hYykpIHsN
-Cj4gKwl9IGVsc2UgaWYgKCFJU19FUlJfT1JfTlVMTChtYWMpKSB7DQo+ICAgCQlldGhlcl9hZGRy
-X2NvcHkoYnAtPmRldi0+ZGV2X2FkZHIsIG1hYyk7DQo+ICAgCX0gZWxzZSB7DQo+ICAgCQltYWNi
-X2dldF9od2FkZHIoYnApOw0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+Another feature of the ADF4371/ADF4372 is that the supply current to the
+RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
+as measured by the digital lock detect circuitry. The mute to lock
+detect bit (MUTE_LD) in REG25 enables this function.
+
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++
+ drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+index a268a9d..6db8742 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -32,6 +32,12 @@ properties:
+     items:
+       - clkin
+ 
++  adi,mute-till-lock-en:
++    description:
++      If this property is present, then the supply current to RF8P and RF8N
++      output stage will shut down until the ADF4371/ADF4372 achieves lock as
++      measured by the digital lock detect circuitry.
++
+ required:
+   - compatible
+   - reg
+diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
+index f874219..e48f15c 100644
+--- a/drivers/iio/frequency/adf4371.c
++++ b/drivers/iio/frequency/adf4371.c
+@@ -45,6 +45,10 @@
+ #define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
+ #define ADF4371_RF_DIV_SEL(x)		FIELD_PREP(ADF4371_RF_DIV_SEL_MSK, x)
+ 
++/* ADF4371_REG25 */
++#define ADF4371_MUTE_LD_MSK		BIT(7)
++#define ADF4371_MUTE_LD(x)		FIELD_PREP(ADF4371_MUTE_LD_MSK, x)
++
+ /* ADF4371_REG32 */
+ #define ADF4371_TIMEOUT_MSK		GENMASK(1, 0)
+ #define ADF4371_TIMEOUT(x)		FIELD_PREP(ADF4371_TIMEOUT_MSK, x)
+@@ -484,6 +488,15 @@ static int adf4371_setup(struct adf4371_state *st)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Mute to Lock Detect */
++	if (device_property_read_bool(&st->spi->dev, "adi,mute-till-lock-en")) {
++		ret = regmap_update_bits(st->regmap, ADF4371_REG(0x25),
++					 ADF4371_MUTE_LD_MSK,
++					 ADF4371_MUTE_LD(1));
++		if (ret < 0)
++			return ret;
++	}
++
+ 	/* Set address in ascending order, so the bulk_write() will work */
+ 	ret = regmap_update_bits(st->regmap, ADF4371_REG(0x0),
+ 				 ADF4371_ADDR_ASC_MSK | ADF4371_ADDR_ASC_R_MSK,
+-- 
+2.7.4
+
