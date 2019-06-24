@@ -2,91 +2,110 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C97CC48BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F1C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B5120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBBF20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 16:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BeRjHkB5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lq5xNcua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbfFXQMx (ORCPT
+        id S1731747AbfFXQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 12:12:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39826 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729467AbfFXQMw (ORCPT
+        Mon, 24 Jun 2019 12:13:12 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40218 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729467AbfFXQNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:12:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z23so13969189wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 09:12:51 -0700 (PDT)
+        Mon, 24 Jun 2019 12:13:12 -0400
+Received: by mail-lf1-f68.google.com with SMTP id a9so10493003lff.7;
+        Mon, 24 Jun 2019 09:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rMN3NSCV14U/djjBqah6itWb6YLCN7v9XBQWW70vOiE=;
-        b=BeRjHkB5wYZcB0jrLUQae5J+2zrr8Fi+4ULgoGxmhOTCEhZaCQWl9uoSw20Kwytdtp
-         HFBr4/cRhHhBi734UmikNXERcSu7e0qyFPJqfh0IaXGf0iLwr65cwOuXwV7xb02cN22y
-         zrxBXMPYsWoDIoEfdLmyfQEzNFobWQqwCzgzHh/0xWh5vtnxpwMiei3OgqOExDl02rbh
-         1EQvfX1RjPlMHJVLO8G8tyYpcEn3teDS5EP55YmZ21lmfLWJYjUEJ0RFCs+sGjt0Myft
-         sEOYfRwUIulLKMvCrjL3UmxuT00e5rkhzZMRJSVTfpTk+8VDjxCgwgCZy3fJxq8/wmW7
-         2S0A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/GZPxaE4LPUF9+J5HPzKoEU19i8mw9pm9OwqCmXFx/U=;
+        b=Lq5xNcua1mi5U4qn9dT42BftsIszZlSpZZBUj17GZ1uG6Fe0nW/3v1hVO9AHREiul6
+         hLc7Z3BVLRPgBZ7oyFnDtYNipFqViKYVjlJB7hnP6oJStr+tm3yUCMkE12D6nZWkvQ5s
+         siA+nTZtbq8EEvEIUt/hGxcIYFgvNRlUXQjaMfCDAeQpCpqdI6OburRt3HmHKr/AYgNB
+         MepAdaWUnXGI7od7JnYyNbq0kmjXHDzwMomFt+0CnqGFMCjawuJDYg5V3gs9j0m9eu/I
+         tYM4XNa0/RsOVKntoQNGKqoOikRgaMiCt+RkoW/DkC9xO/BySbqATIYr6D/quf3e4e3W
+         /cOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rMN3NSCV14U/djjBqah6itWb6YLCN7v9XBQWW70vOiE=;
-        b=MaD/BOHFyEZTEKd3R6X1j/fkSxRg05Q48jaEccw4QL29K1Mj+HxZXd3Zml1Pd7QoIq
-         EX6Wp5KHbLi5BuKpHSZhoUFPzWDzb5bEmE09ClAjT50cGby+EnNCYOKavgTlxthpGCh+
-         WCgph46KdhLLVj3Nvm7ZKhJeAI0I+Kn+WXE6wvkLahU7XHswF0CetEFNhvu+4zNZyCl4
-         70iqxp3jcfnvkd3vOWkooTJxyq46nb2WKNPvTIO9aNKE5KeqLmpnaL5KpCBF6FlAwETb
-         xuU336V/YwgRGDUC47Lwb1n4N8Sg/Z+yPrA0scZnMnTd8kPSNkZ5mr+U5bo2KyJtW2DB
-         cFBw==
-X-Gm-Message-State: APjAAAXS0rYEBf5YBKVGOxlb8iebVATpUMjPS10MVDRRJnY8afDHp/sn
-        LAxKsZSYwwdAGFIk8tZFf29jJg==
-X-Google-Smtp-Source: APXvYqxvj+TKqmmdbdKdA9FT/+f9mo+PTcoV+zToyGdDKDe5WcV9XGyShouys4BnvOkWQTBFTD7dpg==
-X-Received: by 2002:a1c:343:: with SMTP id 64mr17469148wmd.116.1561392770706;
-        Mon, 24 Jun 2019 09:12:50 -0700 (PDT)
-Received: from [172.20.10.174] ([85.184.65.84])
-        by smtp.gmail.com with ESMTPSA id a81sm15903831wmh.3.2019.06.24.09.12.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 09:12:50 -0700 (PDT)
-Subject: Re: [PATCH BUGFIX V2] block, bfq: fix operator in BFQQ_TOTALLY_SEEKY
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name
-References: <20190622204416.33871-1-paolo.valente@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aec3e7b1-c235-ddb1-62b2-4ad7a7246a35@kernel.dk>
-Date:   Mon, 24 Jun 2019 10:12:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/GZPxaE4LPUF9+J5HPzKoEU19i8mw9pm9OwqCmXFx/U=;
+        b=OQVl0jiXdekRYe0SXsGNhtSMR93zL/yX+WQXVyU8CbsfKJ243jMLcwT9NmJpLQ6mv+
+         ABCnSEsEVNXXGUQx5NE6m67Z9Cymi9ZuXALONuITR4SkfUtvhSDGrjnw7aP6Z0TpO3DN
+         rbjv4lLosTvaBrlnxLMhZ8Hj2DlHDPFxrKm3zOqqEshg7dZuX9zeBin6xeLdqLzbi7of
+         h5ZeiiI2/O4tGRy1NUYnn/5WP7MIz9beWW1KAwYrMMXxcjNixz1bnWzzutTW4bZSaYv1
+         DvgRwrf1bb7j28Xq80BhF+4UEFArTXlqj+w4Wo/+QLye7vFW2+NX3SD0NonHBdu1QvFT
+         PUeQ==
+X-Gm-Message-State: APjAAAWS1RtGJjwhEF4DRz+ADiO9wrV6JPOZh9ehVVDvo/30AsUqGpv0
+        q+Ie+z9OD0Exe2fTC2wTl6Bu/7AeZaF8xUIQNpE=
+X-Google-Smtp-Source: APXvYqxdP+JVlW5k+mSxUHwcly0JYp6JIPTVU2yVYp4LrSzBHV3NclYDyyL6oWgS9snh6oT01HXaRzoS5AtTl62eGn0=
+X-Received: by 2002:a19:5046:: with SMTP id z6mr28946753lfj.185.1561392789879;
+ Mon, 24 Jun 2019 09:13:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190622204416.33871-1-paolo.valente@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
+ <1561037428-13855-3-git-send-email-robert.chiras@nxp.com> <CAOMZO5DS2v15h9E=qKg2vKuFkBSQQwdBHA5Th5mZ+ca6DWgQsw@mail.gmail.com>
+ <1561362278.9328.83.camel@nxp.com>
+In-Reply-To: <1561362278.9328.83.camel@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 24 Jun 2019 13:12:58 -0300
+Message-ID: <CAOMZO5CVPJqE0dR2PZvKem4WHztvTF=FT9K1x-b7TduH-yYb7A@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v3 2/2] drm/panel: Add support for Raydium
+ RM67191 panel driver
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/19 2:44 PM, Paolo Valente wrote:
-> By mistake, there is a '&' instead of a '==' in the definition of the
-> macro BFQQ_TOTALLY_SEEKY. This commit replaces the wrong operator with
-> the correct one.
+Hi Robert,
 
-A bit worrying that this wasn't caught in testing, as it would have
-resulted in _any_ queue being positive for totally seeky?
+On Mon, Jun 24, 2019 at 4:44 AM Robert Chiras <robert.chiras@nxp.com> wrote:
 
-Anyway, applied.
+> > You did not handle the "power" regulator.
+> There is no need for a power regulator.
 
--- 
-Jens Axboe
+I am sure the panel requires power to be applied so that it can work :-)
 
+> > Can't you simply remove them?
+> The reset gpio pin is shared between the DSI display controller and
+
+Looking at the imx8mq-evk schematics it is not clear for me what pin
+in shared between the OLED display and touch screen.
+
+Could you please clarify which pin you are referring to?
+
+> touch controller, both found on the same panel. Since, the touch driver
+> also acceses this gpio pin, in some cases the display can be put to
+> sleep, but the touch is still active. This is why, during suspend I
+> release the gpio resource, and I have to take it back in resume.
+> Without this release/acquire mechanism during suspend/resume, stress-
+> tests showed some failures: the resume freezes completly.
+
+Looking at the imx8mq-evk dts from the vendor tree I see that the
+touchscreen is not supported in mainline yet.
+
+Maybe there is a better way to solve this, so what if you don't
+introduce the suspend/resume hooks for now and then we revisit this
+after the touchscreen driver is added?
