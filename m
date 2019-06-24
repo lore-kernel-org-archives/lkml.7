@@ -2,105 +2,397 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E93DC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD299C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A83208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="nDmzM6de"
+	by mail.kernel.org (Postfix) with ESMTP id A4FC7208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfFXOlP (ORCPT
+        id S1728971AbfFXOmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:41:15 -0400
-Received: from m15-41.126.com ([220.181.15.41]:33066 "EHLO m15-41.126.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfFXOlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:41:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=+sdgh
-        JB/TLNpVA12VTC+HwIxrI+KvMHiMNktZnWRL0I=; b=nDmzM6deNuzbSwrhibezr
-        9HRUmNgQwaPkgOLR/tLJWvg9VdbeCmCCq4XWftTp7b1lvGlRvRJ/D0bnDnugkck4
-        8XL93ko6VLkMun3KxTMiCzwXnVuC1B5+HoatRWX+nt3Rq4nPQvPm+eJtjwuf+FQt
-        rvCtj0IlZWZ2L7YvigS3ng=
-Received: from liuxiang_1999$126.com ( [222.209.17.143] ) by
- ajax-webmail-wmsvr41 (Coremail) ; Mon, 24 Jun 2019 22:38:35 +0800 (CST)
-X-Originating-IP: [222.209.17.143]
-Date:   Mon, 24 Jun 2019 22:38:35 +0800 (CST)
-From:   "Liu Xiang" <liuxiang_1999@126.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     liu.xiang6@zte.com.cn, linux-mtd@lists.infradead.org,
-        bbrezillon@kernel.org, richard@nod.at,
-        linux-kernel@vger.kernel.org, marek.vasut@gmail.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        nagasure@xilinx.com, vigneshr@ti.com
-Subject: Re:Re: [PATCH v3] mtd: spi-nor: fix nor->addr_width when its value
- configured from SFDP does not match the actual width
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
- 20190614(cb3344cf) Copyright (c) 2002-2019 www.mailtech.cn 126com
-In-Reply-To: <5ffc9e32-ff69-9819-7bfd-ad9f793bb629@microchip.com>
-References: <1554018157-10860-1-git-send-email-liu.xiang6@zte.com.cn>
- <5ffc9e32-ff69-9819-7bfd-ad9f793bb629@microchip.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Mon, 24 Jun 2019 10:42:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50312 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbfFXOmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 10:42:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A72D1AD4E;
+        Mon, 24 Jun 2019 14:42:00 +0000 (UTC)
+From:   Roman Penyaev <rpenyaev@suse.de>
+Cc:     Roman Penyaev <rpenyaev@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Azat Khuzhin <azat@libevent.org>, Eric Wong <e@80x24.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/14] epoll: support pollable epoll from userspace
+Date:   Mon, 24 Jun 2019 16:41:37 +0200
+Message-Id: <20190624144151.22688-1-rpenyaev@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Message-ID: <675ae013.8c92.16b89eca4a9.Coremail.liuxiang_1999@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: KcqowAD3VIFs4BBduQhHAA--.19543W
-X-CM-SenderInfo: xolx5x5dqjsiqzzzqiyswou0bp/1tbi2wndsFpD9RwKmQABsd
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpIaSwgdGEKClRoYW5rcyBmb3IgeW91ciBhZHZpY2UhIEkgd2lsbCBzZW5kIHRoZSB1cGRhdGUg
-cGF0Y2ggaW4gc29vbi4KCgoKCkF0IDIwMTktMDYtMjIgMTk6NDk6MjUsIFR1ZG9yLkFtYmFydXNA
-bWljcm9jaGlwLmNvbSB3cm90ZToKPkhpLCBMaXUsCj4KPk9uIDAzLzMxLzIwMTkgMTA6NDIgQU0s
-IExpdSBYaWFuZyB3cm90ZToKPgo+PiBTb21lIGlzMjVscDI1NiBnZXQgQkZQVF9EV09SRDFfQURE
-UkVTU19CWVRFU18zX09OTFkgZnJvbSBCRlBUIHRhYmxlIGZvcgo+PiBhZGRyZXNzIHdpZHRoLiBC
-dXQgaW4gYWN0dWFsIGZhY3QgdGhlIGZsYXNoIGNhbiBzdXBwb3J0IDQtYnl0ZSBhZGRyZXNzLgo+
-PiBTbyB3ZSBzaG91bGQgZml4IGl0Lgo+Cj5JdCdzIGJldHRlciB0byBiZSBpbXBlcmF0aXZlLiBT
-dWJzdGl0dXRlICJTbyB3ZSBzaG91bGQgZml4IGl0IiB3aXRoIHNvbWV0aGluZwo+bGlrZSAiVXNl
-IGEgcG9zdCBiZnB0IGZpeHVwIGhvb2sgdG8gb3ZlcndyaXRlIHRoZSBhZGRyZXNzIHdpZHRoIGFk
-dmVydGlzZWQgYnkKPnRoZSBCRlBUIi4KPgo+Pgo+Cj5XZSdsbCBuZWVkIGEgZml4ZXMgdGFnIGhl
-cmUuPiBTdWdnZXN0ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8YmJyZXppbGxvbkBrZXJuZWwub3Jn
-Pgo+PiBTdWdnZXN0ZWQtYnk6IFZpZ25lc2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT4K
-Pgo+V2hlbj8gSWYgdGhleSBkaWRuJ3QgZXhwbGljaXRseSBzdWdnZXN0ZWQgdGhpcyBhcHByb2Fj
-aCwgbGV0cyBkcm9wIHRoZSBTLWIgdGFncy4KPgo+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWGlhbmcg
-PGxpdS54aWFuZzZAenRlLmNvbS5jbj4KPj4gLS0tCj4+IAo+PiBDaGFuZ2VzIGluIHYzOgo+PiAg
-YWRkIGEgZml4dXAgZm9yIGlzMjVscDI1NiB0byBzb2x2ZSB0aGUgYWRkcmVzcyB3aWR0aCBwcm9i
-bGVtLgo+PiAKPj4gIGRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIHwgMjUgKysrKysrKysr
-KysrKysrKysrKysrKysrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDEg
-ZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1u
-b3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+IGluZGV4IDZlMTNiYmQuLmQy
-NTJhNjYgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+ICsr
-KyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jCj4+IEBAIC0xNjgyLDYgKzE2ODIsMjgg
-QEAgc3RhdGljIGludCBzcjJfYml0N19xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQo+
-PiAgCQkuZmxhZ3MgPSBTUElfTk9SX05PX0ZSIHwgU1BJX1MzQU4sCj4+ICAKPj4gIHN0YXRpYyBp
-bnQKPj4gK2lzMjVscDI1Nl9wb3N0X2JmcHRfZml4dXBzKHN0cnVjdCBzcGlfbm9yICpub3IsCj4+
-ICsJCQkgICBjb25zdCBzdHJ1Y3Qgc2ZkcF9wYXJhbWV0ZXJfaGVhZGVyICpiZnB0X2hlYWRlciwK
-Pj4gKwkJCSAgIGNvbnN0IHN0cnVjdCBzZmRwX2JmcHQgKmJmcHQsCj4+ICsJCQkgICBzdHJ1Y3Qg
-c3BpX25vcl9mbGFzaF9wYXJhbWV0ZXIgKnBhcmFtcykKPj4gK3sKPj4gKwkvKgo+PiArCSAqIElT
-MjVMUDI1NiBzdXBwb3J0cyA0QiBvcGNvZGVzLgo+PiArCSAqIFVuZm9ydHVuYXRlbHksIHNvbWUg
-ZGV2aWNlcyBnZXQgQkZQVF9EV09SRDFfQUREUkVTU19CWVRFU18zX09OTFkKPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBeIHdoaWNoIGRldmljZXMsIGRpZCB5b3UgZ2V0IGEgbGlzdCBmcm9t
-IGlzc2k/Cj4KPj4gKwkgKiBmcm9tIEJGUFQgdGFibGUgZm9yIGFkZHJlc3Mgd2lkdGguIFdlIHNo
-b3VsZCBmaXggaXQuCj4KPkhvdyBhYm91dCAiSVMyNUxQMjU2IHN1cHBvcnRzIDRCIG9wY29kZXMs
-IGJ1dCB0aGUgQkZQVCBhZHZlcnRpc2VzIGEKPkJGUFRfRFdPUkQxX0FERFJFU1NfQllURVNfM19P
-TkxZIGFkZHJlc3Mgd2lkdGguIE92ZXJ3cml0ZSB0aGUgYWRkcmVzcyB3aWR0aAo+YWR2ZXJ0aXNl
-ZCBieSB0aGUgQkZQVC4iCj4KPj4gKwkgKi8KPj4gKwlpZiAoKGJmcHQtPmR3b3Jkc1tCRlBUX0RX
-T1JEKDEpXSAmIEJGUFRfRFdPUkQxX0FERFJFU1NfQllURVNfTUFTSykgPT0KPj4gKwkJQkZQVF9E
-V09SRDFfQUREUkVTU19CWVRFU18zX09OTFkpCj4+ICsJCW5vci0+YWRkcl93aWR0aCA9IDQ7Cj4+
-ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGljIHN0cnVjdCBzcGlfbm9yX2Zp
-eHVwcyBpczI1bHAyNTZfZml4dXBzID0gewo+Cj5OYWdhIHdpbGwgdXNlICJpczI1bHAyNTZfZml4
-dXBzIiBmb3IgdGhlIGlzMjV3cDI1NiB0b28sIGJ1dCBpdCdzIG5vdCB0aGUgY2FzZSB0bwo+Y2hh
-bmdlIHRoZSBuYW1lIHlldC4gQWxsIGdvb2QgaGVyZS4KPgo+SSByZWFsbHkgd2FudCB0byBoYXZl
-IHRoaXMgaW4gbmV4dCwgY2FuIEkgaGF2ZSBhbiB1cGRhdGUgaW4gdGhlIG5leHQgZmV3IGRheXM/
-Cj4KPkNoZWVycywKPnRhCg==
+Hi all,
+
+This is v5 which introduces pollable epoll from userspace.
+
+v5:
+  - Do not support architectures with reduced set of atomic ops,
+    namely arc-plat-eznps, sparc32, parisc.  Return -EOPNOTSUP on
+    attempt to create uepoll on these archs.
+
+  - Explicitly hint compiler, that return value of 'xchg()' call
+    is not used, this fixes compilation on ia64.
+    Reported-by: kbuild test robot <lkp@intel.com>
+
+v4:
+  Changes based on Peter Zijlstra remarks:
+
+  - remove wmb() which was used incorrectly on event path
+  - remove "atomic_" prefix from some local helpers in order not to
+    mix them with the atomic_t API.
+  - store and read all member shared with userspace using WRITE/READ_ONCE
+    in order to avoid store/load tearing.
+  - do xchg(&epi->event.events, event->events) in ep_modify() instead of
+    plain write to avoid value corruption on archs (parisc, sparc32 and
+	arc-eznps) where atomic ops support is limited.
+  - change lockless algorithm which adds events to the uring, mainly
+    get rid of busy loop on user side, which can last uncontrollably
+	long. The drawbacks are additional 2 cmpxchg ops on hot event path
+	and complexity of the add_event_to_uring() logic.
+  - no gcc atomic builtins are used
+
+  - add epoll_create2 syscall to all syscall*.tbl files (Arnd Bergmann)
+  - add uepoll kselftests: testing/selftests/uepoll/* (Andrew Morton)
+  - reduce size of epitem structure for the original epoll case (Eric Wong)
+
+  - queue work to the system's high priority workqueue
+
+v3:
+ - Measurements made, represented below.
+
+ - Fix alignment for epoll_uitem structure on all 64-bit archs except
+   x86-64. epoll_uitem should be always 16 bit, proper BUILD_BUG_ON
+   is added. (Linus)
+
+ - Check pollflags explicitly on 0 inside work callback, and do nothing
+   if 0.
+
+v2:
+ - No reallocations, the max number of items (thus size of the user ring)
+   is specified by the caller.
+
+ - Interface is simplified: -ENOSPC is returned on attempt to add a new
+   epoll item if number is reached the max, nothing more.
+
+ - Alloced pages are accounted using user->locked_vm and limited to
+   RLIMIT_MEMLOCK value.
+
+ - EPOLLONESHOT is handled.
+
+This series introduces pollable epoll from userspace, i.e. user creates
+epfd with a new EPOLL_USERPOLL flag, mmaps epoll descriptor, gets header
+and ring pointers and then consumes ready events from a ring, avoiding
+epoll_wait() call.  When ring is empty, user has to call epoll_wait()
+in order to wait for new events.  epoll_wait() returns -ESTALE if user
+ring has events in the ring (kind of indication, that user has to consume
+events from the user ring first, I could not invent anything better than
+returning -ESTALE).
+
+For user header and user ring allocation I used vmalloc_user().  I found
+that it is much easy to reuse remap_vmalloc_range_partial() instead of
+dealing with page cache (like aio.c does).  What is also nice is that
+virtual address is properly aligned on SHMLBA, thus there should not be
+any d-cache aliasing problems on archs with vivt or vipt caches.
+
+** Measurements
+
+In order to measure polling from userspace libevent was modified [1] and
+bench_http benchmark (client and server) was used:
+
+ o EPOLLET, original epoll:
+
+    20000 requests in 0.551306 sec. (36277.49 throughput)
+    Each took about 5.54 msec latency
+    1600000bytes read. 0 errors.
+
+ o EPOLLET + polling from userspace:
+
+    20000 requests in 0.475585 sec. (42053.47 throughput)
+    Each took about 4.78 msec latency
+    1600000bytes read. 0 errors.
+
+So harvesting events from userspace gives 15% gain.  Though bench_http
+is not ideal benchmark, but at least it is the part of libevent and was
+easy to modify.
+
+Worth to mention that uepoll is very sensible to CPU, e.g. the gain above
+is observed on desktop "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz", but on
+"Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz" measurements are almost the
+same for both runs.
+
+** Limitations
+
+1. No support on architectures with reduced set of atomic ops,
+   namely arc-plat-eznps, sparc32, parisc.  For these archs
+   -EOPNOTSUP is returned.
+
+2. Expect always EPOLLET flag for new epoll items (Edge Triggered behavior)
+     obviously we can't call vfs_epoll() from userpace to have level
+     triggered behaviour.
+
+3. No support for EPOLLWAKEUP
+     events are consumed from userspace, thus no way to call __pm_relax()
+
+4. No support for EPOLLEXCLUSIVE
+     If device does not pass pollflags to wake_up() there is no way to
+     call poll() from the context under spinlock, thus special work is
+     scheduled to offload polling.  In this specific case we can't
+     support exclusive wakeups, because we do not know actual result
+     of scheduled work and have to wake up every waiter.
+
+** Principle of operation
+
+* Basic structures shared with userspace:
+
+In order to consume events from userspace all inserted items should be
+stored in items array, which has original epoll_event field and u32
+field for keeping ready events, i.e. each item has the following struct:
+
+ struct epoll_uitem {
+        __poll_t ready_events;
+        __poll_t events;
+        __u64 data;
+ };
+ BUILD_BUG_ON(sizeof(struct epoll_uitem) != 16);
+
+And the following is a header, which is seen by userspace:
+
+ struct epoll_uheader {
+    u32 magic;          /* epoll user header magic */
+    u32 header_length;  /* length of the header + items */
+    u32 index_length;   /* length of the index ring, always pow2 */
+    u32 max_items_nr;   /* max num of items */
+    u32 head;           /* updated by userland */
+    u32 int tail;       /* updated by kernel */
+
+	struct epoll_uitem items[] __aligned(128);
+ };
+
+ /* Header is 128 bytes, thus items are aligned on CPU cache */
+ BUILD_BUG_ON(sizeof(struct epoll_uheader) != 128);
+
+In order to poll epfd from userspace application has to call:
+
+   epoll_create2(EPOLL_USERPOLL, max_items_nr);
+
+Ready events are kept in a ring buffer, which is simply an index table,
+where each element points to an item in a header:
+
+ unsinged int *user_index;
+
+* How is new event accounted on kernel side?  Hot it is consumed from
+* userspace?
+
+When new event comes for some epoll item kernel does the following:
+
+ struct epoll_uitem *uitem;
+
+ /* Each item has a bit (index in user items array), discussed later */
+ uitem = user_header->items[epi->bit];
+
+ if (!atomic_fetch_or(uitem->ready_events, pollflags)) {
+     /* Increase all three subcounters at once */
+     cnt = atomic64_add_return_acquire(0x100010001, &ep->shadow_cnt);
+
+     idx = cnt_to_monotonic(cnt) - 1;
+     item_idx = &ep->user_index[idx & index_mask];
+
+     /* Add a bit to the uring */
+     WRITE_ONCE(*item_idx, uepi->bit);
+
+     do {
+         old = cnt;
+         if (cnt_to_refs(cnt) == 1) {
+             /* We are the last, we will advance the tail */
+             advance = cnt_to_advance(cnt);
+             WARN_ON(!advance);
+             /* Zero out all fields except monotonic counter */
+             cnt &= ~MONOTONIC_MASK;
+         } else {
+             /* Someone else will advance, only drop the ref */
+             advance = 0;
+             cnt -= 1;
+         }
+     } while ((cnt = atomic64_cmpxchg_release(&ep->shadow_cnt,
+                                              old, cnt)) != old);
+
+     if (advance) {
+         /*
+          * Advance the tail.  Tail is shared with userspace, thus we
+          * can't use kernel atomic_t for just atomic add, so use
+          * cmpxchg().  Sigh.
+          *
+          * We can race here with another cpu which also advances the
+          * tail.  This is absolutely ok, since the tail is advanced
+          * in one direction and eventually addition is commutative.
+          */
+         unsigned int old, tail = READ_ONCE(ep->user_header->tail);
+         do {
+             old = tail;
+         } while ((tail = cmpxchg(&ep->user_header->tail,
+                      old, old + advance)) != old);
+     }
+ }
+
+The most complicated part is how new event is added to the ring locklessly.
+To achieve that ->shadow_cnt is split on 3 subcounters and the whole
+layout of the counter can be represented as follows:
+
+   struct counter_t {
+       unsigned long long monotonic :32;
+       unsigned long long advance   :16;
+       unsigned long long refs      :16;
+   };
+
+   'monotonic' - Monotonically increases on each event insertion,
+                 never decreases.  Used as an index for an event
+                 in the uring.
+
+   'advance'   - Represents number of events on which user ->tail
+                 has to be advanced.  Monotonically increases if
+                 events are coming in parallel from different cpus
+                 while reference number keeps > 1.
+
+  'refs'       - Represents reference number, i.e. number of cpus
+                 inserting events in parallel.  Once there is a
+                 last inserter (the reference is 1), it should
+                 zero out 'advance' member and advance the tail
+                 for the userspace.
+
+What this is all about?  The main problem is that since event can be
+inserted from many cpus in parallel, we can't advance the tail if
+previous insertion has not been fully completed.  The idea to solve
+this is simple: the last one advances the tail.  Who is exactly the
+last?  Who detects the reference number is equal to 1.
+
+The other thing is worth to mention is that the ring can't infinitely
+grow and corrupt other elements, because kernel always checks that item
+was marked as ready, so userspace has to clear ready_events field.
+
+On userside events the following code should be used in order to consume
+events:
+
+ tail = READ_ONCE(header->tail);
+ for (i = 0; header->head != tail; header->head++) {
+     item_idx_ptr = &index[idx & indeces_mask];
+
+     /* Load index */
+     idx = __atomic_load_n(item_idx_ptr, __ATOMIC_ACQUIRE);
+
+     item = &header->items[idx];
+
+     /*
+      * Fetch data first, if event is cleared by the kernel we drop the data
+      * returning false.
+      */
+     event->data = item->event.data;
+     event->events = __atomic_exchange_n(&item->ready_events, 0,
+                         __ATOMIC_RELEASE);
+
+ }
+
+* How new epoll item gets its index inside user items array?
+
+Kernel has a bitmap for that and gets free bit on attempt to insert a new
+epoll item.  When bitmap is full -ENOSPC is returned.
+
+* Is there any testing app available?
+
+There is a small app [2] which starts many threads with many event fds and
+produces many events, while single consumer fetches them from userspace
+and goes to kernel from time to time in order to wait.
+
+Also libevent modification [1] is available, see "measurements" section
+above.
+
+[1] https://github.com/libevent/libevent/pull/801
+[2] https://github.com/rouming/test-tools/blob/master/userpolled-epoll.c
+
+Roman Penyaev (14):
+  epoll: move private helpers from a header to the source
+  epoll: introduce user structures for polling from userspace
+  epoll: allocate user header and user events ring for polling from
+    userspace
+  epoll: some sanity flags checks for epoll syscalls for polling from
+    userspace
+  epoll: offload polling to a work in case of epfd polled from userspace
+  epoll: introduce helpers for adding/removing events to uring
+  epoll: call ep_add_event_to_uring() from ep_poll_callback()
+  epoll: support polling from userspace for ep_insert()
+  epoll: support polling from userspace for ep_remove()
+  epoll: support polling from userspace for ep_modify()
+  epoll: support polling from userspace for ep_poll()
+  epoll: support mapping for epfd when polled from userspace
+  epoll: implement epoll_create2() syscall
+  kselftest: add uepoll-test which tests polling from userspace
+
+ arch/alpha/kernel/syscalls/syscall.tbl        |   2 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd.h               |   2 +-
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   2 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   2 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   2 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   2 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   2 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |   2 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   2 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   2 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   2 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   2 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/eventpoll.c                                | 951 ++++++++++++++++--
+ include/linux/syscalls.h                      |   1 +
+ include/uapi/asm-generic/unistd.h             |   4 +-
+ include/uapi/linux/eventpoll.h                |  47 +-
+ kernel/sys_ni.c                               |   1 +
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/uepoll/.gitignore     |   1 +
+ tools/testing/selftests/uepoll/Makefile       |  16 +
+ .../uepoll/atomic-builtins-support.c          |  13 +
+ tools/testing/selftests/uepoll/uepoll-test.c  | 603 +++++++++++
+ 28 files changed, 1566 insertions(+), 103 deletions(-)
+ create mode 100644 tools/testing/selftests/uepoll/.gitignore
+ create mode 100644 tools/testing/selftests/uepoll/Makefile
+ create mode 100644 tools/testing/selftests/uepoll/atomic-builtins-support.c
+ create mode 100644 tools/testing/selftests/uepoll/uepoll-test.c
+
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Azat Khuzhin <azat@libevent.org>
+Cc: Eric Wong <e@80x24.org>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+-- 
+2.21.0
+
