@@ -2,76 +2,103 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D78C4646B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24FC4646B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6C120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561419317;
-	bh=yVTF8w/bzxzzwjKjirb84YOUkp8C13yHKMBgkRlLO8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W+IBstI4pPk2ixKz8E5AxjeEX3CidJrqnpvz4532C05QpxA06PBnWHQ0wbEX8dEX9
-	 ftbWiIKvK1TtPBMhMknqvDf5ZNuh2cwjE9KbTjgow+K+/yW0qx8RWXyA0OAg8Z/okx
-	 zIJabjBcK8Nxc7FRBcC3alVsVXD6rID95dP9wfd8=
+	by mail.kernel.org (Postfix) with ESMTP id 3CDE5212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZexGESd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfFXXfQ (ORCPT
+        id S1728522AbfFXXfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:35:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34840 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfFXXfQ (ORCPT
+        Mon, 24 Jun 2019 19:35:21 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37021 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfFXXfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:35:16 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so15365398otq.2;
-        Mon, 24 Jun 2019 16:35:16 -0700 (PDT)
+        Mon, 24 Jun 2019 19:35:19 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so14301585ljf.4;
+        Mon, 24 Jun 2019 16:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IvGfUsEsPfILP2JsuYFvKK2rmUrap93sJGjxp5w61WY=;
+        b=ZexGESd2sbrcoHawQOWaaPxCngJqUh4OV23ETrO6o22YScx//Qbj3/ocqGOZGCIZUy
+         GcPca+zC8Su66++qVCX4TpMs09R0syQMTjIiTJ1pRuHX7QLOgmVrO3Q9Nu4R9rNkeDPV
+         hMibTNmHxr+H8W/p3iZdoQOocQehqUdjwdQvp61vga2WviZUNEqIUbp/q4dHrtLLQd5X
+         Fky8UBT+kRcLF7pcMANeuMYWvnW1SfpD0cI+Ti+cMwELgxMX7vigpZiec4T/yxfoE9wB
+         uedXRbL4KWsG7gYBhBigccWi/R6cCl68qR3obOdIbWTgnYD2rsUBwM3BsZk2WnGlsvrr
+         7oSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yVTF8w/bzxzzwjKjirb84YOUkp8C13yHKMBgkRlLO8g=;
-        b=GPpkEuo+T6BYzCHnNw1ZDvNOGW3ZPWCrYS7ASbOTWQQ8mRYEND+0OZy1U0HpYtF+3h
-         qXQJH5x3vHqPRogpRo3Dpl5S9sQPWJX7I8pk6xZYX8BMXN8f1QlmynXJPhG/mYVLbGju
-         tG8AJTi01RzAboH8W/zq3wxoNqA2dkhRtV0Qi3Lh1sPyQh6uXtXtNHKBwue9bJc5h4qp
-         ZUponajRTmvbD6gVopIqyZ+V8jLc0j1DeXSonpcxJIRtbkkcWazyIH5JunXZa4wmDUQT
-         xSnfyWj/6Oh5ft0N4x1YkIV0ebOtarTzbuiDs9jFI4L3LDddcRBo7BdRPiRs2AFeYBAW
-         qYFg==
-X-Gm-Message-State: APjAAAXBqSGvZOK7xKe1cd0hpLrP94r6BQqo+MTaUyJQVujo4fEYuFFy
-        Qf+roxTEYXqDvfOfXWImL5xDpUqr6tnfy2OPMK2Jog==
-X-Google-Smtp-Source: APXvYqyFQkUx+xbPfx+5gzJAsHNW3cvKrczeO9rQxKYaPCCOA7T4Fjyjd7gESq4zedpVyar64cOnspuEaWq6wzgCQus=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr25954887otp.189.1561419315644;
- Mon, 24 Jun 2019 16:35:15 -0700 (PDT)
+        bh=IvGfUsEsPfILP2JsuYFvKK2rmUrap93sJGjxp5w61WY=;
+        b=K7XTBp8pxOw62zx0najiSZ20/QpTT9VmGhmBJi+kahiSEqKiqVjHoRKfAcYtMM8AAZ
+         hm9btwLdDo+3eqsvuuvtl2xma6P81Ol24+Wq/x46iPqNT6rqhGK9Q77ZiomuhomQFY5y
+         u78E+3+1Z6rrl4yXUiiLfhE71c7jarKc4mUorjxjWoHHDToGDNz/uRqUYX2/HkOJ4E2M
+         hOE5+Z1pJQbyVGLEdQjQVDZCMdxaqWMcO5b4mJZtT0bT0OCMjTWkTSxeGdnHbaXDNHKd
+         P23AqqksU5eGmetpDxTr3RD2Zj4/j2QpEQ3o7TNLs9KXPg8RZp7/jH7h5HgrS9l0DjSP
+         m8Dw==
+X-Gm-Message-State: APjAAAUWgsXidzGfApbBvFRv96LDBBOXju7YbPrtMQiUhJw+Ky6ScT60
+        Q8i2Jjclvky4u05HOpEExSWcrvQrvEikOR3ZzZ8=
+X-Google-Smtp-Source: APXvYqziSryBpZbr4FqRjAhwFUa0RwgdClngxZGrqEXbOXHzWLAm2wr6tgY3okW5B8Ea57NLNHi94eFducexe72BgxI=
+X-Received: by 2002:a2e:b047:: with SMTP id d7mr10251853ljl.8.1561419316476;
+ Mon, 24 Jun 2019 16:35:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190619175142.237794-1-ravisadineni@chromium.org> <CAEZbON4e1=w6G4KEqq2qP0nTD4z00fcqHErWTBVGFGb17f=+1Q@mail.gmail.com>
-In-Reply-To: <CAEZbON4e1=w6G4KEqq2qP0nTD4z00fcqHErWTBVGFGb17f=+1Q@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Jun 2019 01:35:04 +0200
-Message-ID: <CAJZ5v0hKtp0vqHzk1Gkh6fUPGWVFfUvHropCZMs5SRfMv2ORFA@mail.gmail.com>
-Subject: Re: [PATCH] power: Do not clear events_check_enabled in pm_wakeup_pending()
-To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Todd Broch <tbroch@google.com>, Rajat Jain <rajatja@google.com>
+References: <20190621231650.32073-1-brianvv@google.com> <20190621231650.32073-3-brianvv@google.com>
+ <20190624154558.65c31561@cakuba.netronome.com>
+In-Reply-To: <20190624154558.65c31561@cakuba.netronome.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Mon, 24 Jun 2019 16:35:05 -0700
+Message-ID: <CABCgpaUhHmLaWUg-x_X+yYD6pnoAcMLw9jr1BPnv5vrM-NYmqQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/6] bpf: add BPF_MAP_DUMP command to access more than
+ one entry per call
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 1:25 AM Ravi Chandra Sadineni
-<ravisadineni@chromium.org> wrote:
+On Mon, Jun 24, 2019 at 3:46 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
 >
-> Hi,
+> On Fri, 21 Jun 2019 16:16:46 -0700, Brian Vazquez wrote:
+> > @@ -385,6 +386,14 @@ union bpf_attr {
+> >               __u64           flags;
+> >       };
+> >
+> > +     struct { /* struct used by BPF_MAP_DUMP command */
+> > +             __u32           map_fd;
 >
-> Just wanted to check if this is o.k.
-
-It is in my "for review" queue, I'll let you know.
-
-Thanks!
+> There is a hole here, perhaps flags don't have to be 64 bit?
+The command implementation is wrapping BPF_MAP_*_ELEM commands, I
+would expect this one to handle the same flags which are 64 bit.
+Note that there's a hole in the anonymous structure used by the other
+commands too:
+        struct { /* anonymous struct used by BPF_MAP_*_ELEM commands */
+                __u32           map_fd;
+                __aligned_u64   key;
+                union {
+                        __aligned_u64 value;
+                        __aligned_u64 next_key;
+                };
+                __u64           flags;
+        };
