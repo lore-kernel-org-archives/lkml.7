@@ -2,164 +2,139 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0CEC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE2C48BE8
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730092133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8396204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlUMdKFk"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Z1jEVJMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbfFXNLl (ORCPT
+        id S1730717AbfFXNMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:11:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42523 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfFXNLk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:11:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so13836005wrl.9;
-        Mon, 24 Jun 2019 06:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=npt0LXugKTy+hAXtUpWeDiX4zCU8WFS28RZle6+ljmk=;
-        b=AlUMdKFkaAbuuNWDpspDhpDXIsefNdvWQeU2ySenv/4woxswMeXIzkgKRpDG8qfeg1
-         ZcVbi8IFJNDw6XZzeCHRn2VqWnVDN6YkwyQdkDC18yrZwLlgVoK0Go9YL2cAkPQBzV5e
-         RDk5OyEI7gYbeWAbWcJjAVanEbOtcES0QpVjiZ0Vi7y4ibE+2V5qwZ9It6TtHUH9YEwA
-         kYDJn3q35o4XWJ562xayC8Tsu0bJzqQn9/X1fvww6I743/Q2vtFF7bMRV9CuWQvxBtSS
-         LSqYgzYRMa5KAA3SMsXudxswpJqAMNQ4n+GGXSTpU2nkBk+Dz8u1Zrt9DEy5KqpnpnrX
-         HNBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npt0LXugKTy+hAXtUpWeDiX4zCU8WFS28RZle6+ljmk=;
-        b=aFJRnLuF+S5tnCqKQ+u3HSofkEKpzlTUUnV259Ju3xP33s9KlKtTm7dNWAaH622Ku3
-         T1TIAiM6DYlbbLNciTA5W8lqaRg4x8pbFs8kMwjzEjBsAZ/eB++UDPq++2TmMVejy/oE
-         z0Fx/ZBrxq9xUwD6IXnEtiXfIeD5kYIgsQXbEOC0mmB19S5olrm/eSiddcD0MYdgW1S6
-         Ro4yUGv5XtQzc3EDrxkMJI2EFekYls2wQKqTjFGrNPJ2SN3BLSSCK/WOg8ghYoWeJgPr
-         6rn2Mn2b4gx404Meig5ePO/BPgMC8Hae+SRUO94Q47wRLL/az80FYKKqp2OiWIn2zmv2
-         fcLA==
-X-Gm-Message-State: APjAAAVpC2nRimOT+Onz8RQGe23w+bFTdZbDGR/y+xZiOyk+Z32ty3Ni
-        qBEKL/haP7+HOqUp0uQ8Litn5Hhwq+ywLTrflfrS2no+
-X-Google-Smtp-Source: APXvYqy1Y8YGwOQzqj7pKOAJDq1n7rwcOgvdN6WttWDlITIKxna9HmlE4pg5VUG3+w9B0qwfXyULF0PYyBQswmnngCA=
-X-Received: by 2002:adf:fe86:: with SMTP id l6mr1332207wrr.330.1561381897960;
- Mon, 24 Jun 2019 06:11:37 -0700 (PDT)
+        Mon, 24 Jun 2019 09:12:38 -0400
+Received: from mail-eopbgr50046.outbound.protection.outlook.com ([40.107.5.46]:16288
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727065AbfFXNMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bJKNsiWuopGsFiwJtfSmHwT6t9upZDeCWjBmCmeA7XQ=;
+ b=Z1jEVJMZeA2aVFeQjyVX7/o4DJ+7JCvRf4WB7j5DitZp9Eec4o34k6ZMPdBc8DRs9251E7fBsr40IgTR+/qGaLd5Ce2yN5fUuin90BVN/A4n61Dlhc8rIJpghdvWQbcEo+NvAKhD6BjynMtbuzDfvbufD3a3XZFwNSOsl4cwFyg=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5662.eurprd05.prod.outlook.com (20.178.120.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 13:12:30 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 13:12:30 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ajay Kaher <akaher@vmware.com>
+CC:     "aarcange@redhat.com" <aarcange@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "riandrews@android.com" <riandrews@android.com>,
+        "arve@android.com" <arve@android.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "sean.hefty@intel.com" <sean.hefty@intel.com>,
+        "hal.rosenstock@gmail.com" <hal.rosenstock@gmail.com>,
+        Matan Barak <matanb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "srivatsab@vmware.com" <srivatsab@vmware.com>,
+        "amakhalov@vmware.com" <amakhalov@vmware.com>
+Subject: Re: [PATCH v4 2/3][v4.9.y] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Thread-Topic: [PATCH v4 2/3][v4.9.y] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Thread-Index: AQHVKo0oRBGkKYxOxkqZ7SBtAl/moqaqx9UA
+Date:   Mon, 24 Jun 2019 13:12:30 +0000
+Message-ID: <20190624131226.GA7418@mellanox.com>
+References: <1561410186-3919-1-git-send-email-akaher@vmware.com>
+ <1561410186-3919-2-git-send-email-akaher@vmware.com>
+In-Reply-To: <1561410186-3919-2-git-send-email-akaher@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2P264CA0011.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::23)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [66.187.232.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1279592d-f3e3-4d7c-f79c-08d6f8a59cb2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5662;
+x-ms-traffictypediagnostic: VI1PR05MB5662:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-microsoft-antispam-prvs: <VI1PR05MB5662688FC277DCA3E4A171D3CFE00@VI1PR05MB5662.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:407;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(136003)(396003)(366004)(199004)(189003)(5660300002)(478600001)(6506007)(53936002)(33656002)(2616005)(6486002)(81156014)(86362001)(14444005)(3846002)(256004)(8676002)(81166006)(7736002)(229853002)(2906002)(446003)(66446008)(11346002)(68736007)(6916009)(486006)(66556008)(66476007)(36756003)(71190400001)(71200400001)(476003)(73956011)(99286004)(64756008)(66946007)(54906003)(76176011)(6512007)(102836004)(1076003)(4744005)(52116002)(386003)(25786009)(6116002)(6246003)(6436002)(316002)(66066001)(14454004)(4326008)(7416002)(8936002)(186003)(26005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5662;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 40jUzpU9CguJn2eIvgacEOcIi2CYrA0fIWmsrZEo49I+3EgVJp2pRrgkltjExJd0cjLBr/ZjZlNwxkj3odOMuDp291oxCEbrf3qoTyS3t50EwIjNffVdqGTeH6SCwGNP75qu35Wfr9Fgt5LrVmv2KNlC0hj671ZjeDtCZGFuGl7uZoYiJsrZdi4d6ionXc5Hiw4AyN1GqbfMpsRhTIk04KKLL4BQOMw0SERrzFPOOZ3ElIE3NiCP6fv0/k+bGED0ir5nSBe1nGavp8idteCEzizj2yiReEGiw+Jv1jpp3+eI21DhvKqarSVs8wjJQAGdjWFsi/LMX1xvw6PCN8mBZivSW/3TKHejjD7JWQl00Jp9rHUnCy4wwss0fSFbTacnV6ybN+BzydI38iRxeDsA2x+8r0/iw5rWc1H41b2zd7M=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <626B17CC09D07E449465C19358AB7DB5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <00000000000064c849058c0cbdc9@google.com>
-In-Reply-To: <00000000000064c849058c0cbdc9@google.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 24 Jun 2019 21:11:26 +0800
-Message-ID: <CADvbK_egxQekOXY2aZy_EkyLcEkR9N7Cgd+yd44xFGcCvk9Nog@mail.gmail.com>
-Subject: Re: memory leak in sctp_v4_create_accept_sk
-To:     syzbot <syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com>
-Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1279592d-f3e3-4d7c-f79c-08d6f8a59cb2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 13:12:30.5998
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 3:28 PM syzbot
-<syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13470eb2a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=56f1da14935c3cce
-> dashboard link: https://syzkaller.appspot.com/bug?extid=afabda3890cc2f765041
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15100a91a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c46026a00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
->
-> ffffffffda RBX: 00000000006fbc38 RCX: 0000000000446a79
-> BUG: memory leak
-> unreferenced object 0xffff888118137680 (size 1352):
->    comm "syz-executor360", pid 7164, jiffies 4294941839 (age 13.960s)
->    hex dump (first 32 bytes):
->      ac 14 ff aa 0a 80 01 1a 00 00 00 00 00 00 00 00  ................
->      02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
->    backtrace:
->      [<000000006c358063>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:43 [inline]
->      [<000000006c358063>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<000000006c358063>] slab_alloc mm/slab.c:3326 [inline]
->      [<000000006c358063>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
->      [<00000000f2fb26e7>] sk_prot_alloc+0x41/0x170 net/core/sock.c:1596
->      [<000000003c036edc>] sk_alloc+0x35/0x2f0 net/core/sock.c:1656
->      [<00000000c25725a4>] sctp_v4_create_accept_sk+0x32/0xb0
-> net/sctp/protocol.c:556
->      [<0000000049bd7e55>] sctp_accept+0x1df/0x290 net/sctp/socket.c:4913
->      [<00000000d287a63e>] inet_accept+0x4e/0x1d0 net/ipv4/af_inet.c:734
->      [<00000000acb0fc20>] __sys_accept4+0x12a/0x280 net/socket.c:1760
->      [<00000000bbdaf60b>] __do_sys_accept4 net/socket.c:1795 [inline]
->      [<00000000bbdaf60b>] __se_sys_accept4 net/socket.c:1792 [inline]
->      [<00000000bbdaf60b>] __x64_sys_accept4+0x22/0x30 net/socket.c:1792
->      [<000000006da547ee>] do_syscall_64+0x76/0x1a0
-> arch/x86/entry/common.c:301
->      [<00000000025f5c93>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-The same issue as "memory leak in sctp_v6_create_accept_sk" one.
-Fix:
-
-diff --git a/net/sctp/endpointola.c b/net/sctp/endpointola.c
-index e358437..69cebb2 100644
---- a/net/sctp/endpointola.c
-+++ b/net/sctp/endpointola.c
-@@ -118,10 +118,6 @@ static struct sctp_endpoint
-*sctp_endpoint_init(struct sctp_endpoint *ep,
-        /* Initialize the bind addr area */
-        sctp_bind_addr_init(&ep->base.bind_addr, 0);
-
--       /* Remember who we are attached to.  */
--       ep->base.sk = sk;
--       sock_hold(ep->base.sk);
--
-        /* Create the lists of associations.  */
-        INIT_LIST_HEAD(&ep->asocs);
-
-@@ -154,6 +150,10 @@ static struct sctp_endpoint
-*sctp_endpoint_init(struct sctp_endpoint *ep,
-        ep->prsctp_enable = net->sctp.prsctp_enable;
-        ep->reconf_enable = net->sctp.reconf_enable;
-
-+       /* Remember who we are attached to.  */
-+       ep->base.sk = sk;
-+       sock_hold(ep->base.sk);
-+
-        return ep;
-
- nomem_shkey:
-
->
->
->
+On Tue, Jun 25, 2019 at 02:33:04AM +0530, Ajay Kaher wrote:
+> This patch is the extension of following upstream commit to fix
+> the race condition between get_task_mm() and core dumping
+> for IB->mlx4 and IB->mlx5 drivers:
+>=20
+> commit 04f5866e41fb ("coredump: fix race condition between
+> mmget_not_zero()/get_task_mm() and core dumping")'
+>=20
+> Thanks to Jason for pointing this.
+>=20
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+>  drivers/infiniband/hw/mlx4/main.c | 4 +++-
+>  drivers/infiniband/hw/mlx5/main.c | 3 +++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+
+Looks OK
+
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Thanks
+Jason
