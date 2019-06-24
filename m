@@ -2,496 +2,169 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82B6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB37DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D272063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561340849;
-	bh=cpSGSmm/kURiWlNaTfui8DywiRIeRNlWNGYYmkVeqEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u+myLxtYhSaMj+vYzTwCwLYuK7gAVeKdh7G0tAA6Ku/FeOIRu8iPPHVme7CPByoHd
-	 8x3++5nsrBmyBrwG9dNLELo/NYnJA8EI7cqbHbUO8mbx3nLjM90E8i4b340G2BJYXV
-	 /jGxxVXzROYOk6SEF35irj0oF7wXdSzqt/cOHH48=
+	by mail.kernel.org (Postfix) with ESMTP id BA8C62063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 01:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="nhOu5pQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfFXBr1 (ORCPT
+        id S1726518AbfFXBso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Jun 2019 21:47:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfFXBrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:47:24 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4282133F;
-        Mon, 24 Jun 2019 00:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561336147;
-        bh=cpSGSmm/kURiWlNaTfui8DywiRIeRNlWNGYYmkVeqEI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0NjCYYEEoahcoOj0mI5V5d3pNNfhzvqU/mSzk7Gv9IIpImvyUHc+o5AQSxLafC0E4
-         Z+G8ivwt1Fu4nkZV81PoZ55ThOVFn/QaKoyRByebuHPBKy6ZkXh1FoAga91aN2L/h9
-         cjmE93pkt0FScMdX8JoylMKELBIgdhubj8ccaBVc=
-Date:   Mon, 24 Jun 2019 08:28:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bob Langer <Bob.Langer@zii.aero>,
-        Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
-Message-ID: <20190624002853.GC3800@dragon>
-References: <20190617153025.12120-1-andrew.smirnov@gmail.com>
+        Sun, 23 Jun 2019 21:48:44 -0400
+Received: from mail-eopbgr710137.outbound.protection.outlook.com ([40.107.71.137]:35616
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726323AbfFXBsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Jun 2019 21:48:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SOGvsTl5VBUMZTk9VOns1JEnrxSE8KpyXTSWsXmy9cY92VbGDTExCFTlTJ7vAcRCkphOCTCNXwFkAoaoD1DscyUtCDbM+4Ip20UwipmmRaTYrHRm6xgQ3n3rvCW87ZGO9LnofF9ZCsvYfkAS0cvLFlDum+gtKJUc1ediONkQJd+rQKNk1rjFEsJvXefCUzd3H5lJryImK6XHOXLJE/JAnrTS0FpPSQ+z/NF7eFP0e6lZsbmACwX/TZY+gu5gt9Apum3i49szwl3yMnrl/VbDBgecWK+K9EbohiExJgju41nOC0HeADFeluYA3S19z0aAHDxUC5HQx6CPAkozxmYPzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ip99Eigxfyj3FmkSDrLW1pUfeGPZFRdb6oIWo1lGz/0=;
+ b=NMJSEEA/Q4a6RhNogPE7NAddk9ISjPr+F/tz0m1jq53SSGBFZYTrueaWYXyfGoD8Czcp9sm0nJs3WlVWbXhK9cM2cKpu1YY6aTTbjKiqxm9tFXu6aWrCA9FFCe4DPmkF2mBntxVpYPMhDXKzxeFGVfDHbHJspeeKwJh1bOa6mCi/eOV4znuwA+PEtjKW9L6nL+n/qTIkCw5qCLB+jo3VolQsHndFVrrD06NLRRYpoqsmMcR+7uXELQoW1bpcvuUe8ygCHWSonuD4O3upahgVQH6EZ4fys8p5/dClT8VqcCjEdCaOX8yNtoPOheYbmJ7Ov8i87YrWSQBmpPIEK3fWlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ip99Eigxfyj3FmkSDrLW1pUfeGPZFRdb6oIWo1lGz/0=;
+ b=nhOu5pQEOa4UzkKpspUNJVuns3+Xowkuo5p3cbWYjqLH4EHAKlwkCLOUzSWai0rhZGZtiaj11PP56yn7WJWf/nd9z1BAR/eWzQfGi4uzsru3+prNeSV2da1Hnx5asoUh02ho/nflcrT1KoiLYMW2ukao5jHKGV5rLsSKEpa8OXg=
+Received: from BYAPR21MB1352.namprd21.prod.outlook.com (20.179.60.214) by
+ BYAPR21MB1301.namprd21.prod.outlook.com (20.179.58.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.6; Mon, 24 Jun 2019 00:04:06 +0000
+Received: from BYAPR21MB1352.namprd21.prod.outlook.com
+ ([fe80::b52f:faf3:6bc6:32de]) by BYAPR21MB1352.namprd21.prod.outlook.com
+ ([fe80::b52f:faf3:6bc6:32de%5]) with mapi id 15.20.2032.005; Mon, 24 Jun 2019
+ 00:04:06 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+CC:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: RE: [PATCH v6 18/19] x86: Add support for generic vDSO
+Thread-Topic: [PATCH v6 18/19] x86: Add support for generic vDSO
+Thread-Index: AQHVFvJX/FWqgsMYXUWDuWvrdwhvDKaDyyHwgBdL5YCAAKgjAIAMJX0AgAHb0oCAADMqgIAAGq6A
+Date:   Mon, 24 Jun 2019 00:04:06 +0000
+Message-ID: <BYAPR21MB135202F46C4B023B51EBBFD0D7E00@BYAPR21MB1352.namprd21.prod.outlook.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-19-vincenzo.frascino@arm.com>
+ <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+ <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+ <20190614211710.GQ1513@sasha-vm>
+ <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
+ <20190623190929.GL2226@sasha-vm>
+ <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-24T00:04:04.8777887Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e048b72d-2ff1-4f2d-bcd5-a23a499f2ba1;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4dbb63a6-0779-43fa-f69c-08d6f83779cc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1301;
+x-ms-traffictypediagnostic: BYAPR21MB1301:
+x-microsoft-antispam-prvs: <BYAPR21MB1301C5BD6394A1921BD73681D7E00@BYAPR21MB1301.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39860400002)(346002)(396003)(54534003)(199004)(189003)(76116006)(3846002)(305945005)(7736002)(10290500003)(55016002)(5660300002)(478600001)(486006)(73956011)(6436002)(81156014)(53936002)(52536014)(8676002)(25786009)(11346002)(66476007)(71200400001)(71190400001)(66556008)(64756008)(66446008)(33656002)(66946007)(6116002)(186003)(229853002)(81166006)(446003)(476003)(8936002)(256004)(8990500004)(7696005)(10090500001)(6246003)(74316002)(102836004)(7416002)(4326008)(9686003)(99286004)(26005)(76176011)(68736007)(316002)(22452003)(54906003)(110136005)(2906002)(14454004)(86362001)(66066001)(6506007)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1301;H:BYAPR21MB1352.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NssyykIjQ9mRtBfcrKUSGwo+J2+usrM0gyLhCizMFEI0GK9jzfMgcyGOvMrAFOjc8WlvHQRndRleFierKlODV6tRz8kShtZf9+xjBBWbvX31il1byFxCIxl2jG/5eWed/5U5rA6eCf/LyR3FNTQwZJgiBcGL6IVkHRsjk3fN3Q7Zqox6w8JAhfDxMNlrsl/BJVE8XTrXPsRsHNg2XDl/ZemrkkCn3AaIJkrl4BUzzl1WArWWos3tD5K99/Q4KQgvLw6c+OD635ePgxStD/pivt/JHC/KeLYyq5l89uhkzRKtWnDoIiyHS2o2i7vnRwB4SWxUL1u06jJcDLLSUt7Wd+r3ieiUtHvBaWhXEBEIcmvMXaOA2IjcVH6WjPYgXY4GgnVEQdgZmft0wjPsu+duwx1TWM/C+g9RqSPvq/YZhqQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617153025.12120-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dbb63a6-0779-43fa-f69c-08d6f83779cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 00:04:06.7387
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1301
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 08:30:24AM -0700, Andrey Smirnov wrote:
-> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Bob Langer <Bob.Langer@zii.aero>
-> Cc: Liang Pan <Liang.Pan@zii.aero>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
-> 
-> Changes since [v1]:
-> 
->     - Added missing #address-cells and #size-cells
->     
->     - Replaced reset-gpio -> reset-gpios
-> 
-> 
-> [v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
-> 
->  arch/arm/boot/dts/Makefile           |   1 +
->  arch/arm/boot/dts/imx7d-zii-rmu2.dts | 361 +++++++++++++++++++++++++++
->  2 files changed, 362 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5559028b770e..516e2912236d 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
->  	imx7d-sdb.dtb \
->  	imx7d-sdb-reva.dtb \
->  	imx7d-sdb-sht11.dtb \
-> +	imx7d-zii-rmu2.dtb \
->  	imx7d-zii-rpu2.dtb \
->  	imx7s-colibri-eval-v3.dtb \
->  	imx7s-mba7.dtb \
-> diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> new file mode 100644
-> index 000000000000..e60b3232a090
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> @@ -0,0 +1,361 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Device tree file for ZII's RMU2 board
-> + *
-> + * RMU - Remote Modem Unit
-> + *
-> + * Copyright (C) 2019 Zodiac Inflight Innovations
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/thermal/thermal.h>
-> +#include "imx7d.dtsi"
-> +
-> +/ {
-> +	model = "ZII RMU2 Board";
-> +	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
-> +
-> +	chosen {
-> +		stdout-path = &uart2;
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&pinctrl_leds_debug>;
-> +		pinctrl-names = "default";
-> +
-> +		debug {
-> +			label = "zii:green:debug1";
-> +			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	arm-supply = <&sw1a_reg>;
-> +};
-> +
-> +&ecspi1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi1>;
-> +	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet1>;
-> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
-> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
-> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
-> +	assigned-clock-rates = <0>, <100000000>;
-> +	phy-mode = "rgmii";
-> +	phy-handle = <&fec1_phy>;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		fec1_phy: phy@0 {
+From: Thomas Gleixner <tglx@linutronix.de> Sent: Sunday, June 23, 2019 3:13=
+ PM
+>=20
+> I have no objections if you collect hyper-v stuff, quite the contrary, bu=
+t
+> changes which touch other subsystems need to be coordinated upfront. That=
+'s
+> all I'm asking for.
+>=20
+> Btw, that clocksource stuff looks good code wise, just the change logs ne=
+ed
+> some care and after the VDSO stuff hits next we need to sort out the
+> logistics. I hope these changes are completely self contained. If not we'=
+ll
+> find a solution.
+>
 
-ethernet-phy for node name.
+In my view, the only thing that potentially needs a solution is where the
+Hyper-V clock code used by VDSO ends up in the code tree.  I think the
+right long term place is include/clocksource/hyperv_timer.h.   That locatio=
+n
+is architecture neutral, and the same Hyper-V clock code will be shared by
+the Hyper-V on ARM64 support that's in process.
 
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
-> +				    <&pinctrl_enet1_phy_interrupt>;
-> +			reg = <0>;
-> +			interrupt-parent = <&gpio1>;
-> +			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-> +			reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	pmic: pmic@8 {
+Vincenzo's patch set creates a new file arch/x86/include/asm/mshyperv-tsc.h=
+,
+which I will want to move when creating the separate Hyper-V clocksource
+driver.   If you're OK with that file existing for a release and then going=
+ away,
+that's fine.  Alternatively, put the code in include/clocksource/hyperv_tim=
+er.h
+now as part of the VDSO patch set so it's in the right place from the start=
+.  My
+subsequent patch set will add a few additional tweaks to remove x86-isms
+and fully integrate with the separate Hyper-V clocksource driver.
 
-Label can be more specific, so maybe:
-
-	pfuze3000: pmic@8
-
-> +		compatible = "fsl,pfuze3000";
-> +		reg = <0x08>;
-> +
-> +		regulators {
-> +			sw1a_reg: sw1a {
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <6250>;
-> +			};
-> +
-> +			sw1c_reg: sw1b {
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1475000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <6250>;
-> +			};
-> +
-> +			sw2_reg: sw2 {
-> +				regulator-min-microvolt = <1500000>;
-> +				regulator-max-microvolt = <1850000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			sw3a_reg: sw3 {
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1650000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			swbst_reg: swbst {
-> +				regulator-min-microvolt = <5000000>;
-> +				regulator-max-microvolt = <5150000>;
-> +			};
-> +
-> +			snvs_reg: vsnvs {
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vref_reg: vrefddr {
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen1_reg: vldo1 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen2_reg: vldo2 {
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1550000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen3_reg: vccsd {
-> +				regulator-min-microvolt = <2850000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen4_reg: v33 {
-> +				regulator-min-microvolt = <2850000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen5_reg: vldo3 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen6_reg: vldo4 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "atmel,24c04";
-> +		reg = <0x50>;
-> +	};
-> +
-> +	eeprom@52 {
-> +		compatible = "atmel,24c04";
-> +		reg = <0x52>;
-> +	};
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart4>;
-> +	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-> +	status = "okay";
-> +
-> +	rave-sp {
-> +		compatible = "zii,rave-sp-rdu2";
-> +		current-speed = <1000000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		watchdog {
-> +			compatible = "zii,rave-sp-watchdog";
-> +		};
-> +
-> +		eeprom@a3 {
-> +			compatible = "zii,rave-sp-eeprom";
-> +			reg = <0xa3 0x4000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			zii,eeprom-name = "main-eeprom";
-> +		};
-> +	};
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	bus-width = <4>;
-> +	no-1-8-v;
-> +	no-sdio;
-> +	keep-power-in-suspend;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc3>;
-> +	bus-width = <8>;
-> +	no-1-8-v;
-> +	non-removable;
-> +	no-sdio;
-> +	no-sd;
-> +	keep-power-in-suspend;
-> +	status = "okay";
-> +};
-> +
-> +&wdog1 {
-> +	status = "disabled";
-> +};
-> +
-> +&snvs_rtc {
-> +	status = "disabled";
-> +};
-
-Please sort it alphabetically in label name.
-
-> +
-> +&snvs_pwrkey {
-> +	status = "disabled";
-> +};
-
-We already queued up the patch below to disable snvs_pwrkey by default.
-
-https://lkml.org/lkml/2019/6/13/1170
-
-> +
-> +&iomuxc {
-> +	pinctrl_ecspi1: ecspi1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
-> +			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
-> +			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
-> +			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet1: enet1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
-> +			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
-> +			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
-> +			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
-> +			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
-> +			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet1_phy_reset: enet1phyresetgrp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
-> +
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1: i2c1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
-> +			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
-> +		>;
-> +	};
-> +
-> +	pinctrl_leds_debug: debuggrp {
-
-ledsgrp?
-
-Shawn
-
-> +		fsl,pins = <
-> +			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
-> +		>;
-> +	};
-> +
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
-> +			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart4: uart4grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
-> +			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-> +			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-> +			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-> +			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-> +			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-> +			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3: usdhc3grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
-> +			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
-> +			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
-> +			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
-> +			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
-> +			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
-> +			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
-> +			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
-> +			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
-> +			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
-> +			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
-> +		>;
-> +	};
-> +};
-> +
-> +&iomuxc_lpsr {
-> +	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
-> +		fsl,phy = <
-> +			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.21.0
-> 
+Michael=20
