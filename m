@@ -2,115 +2,119 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2564C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B8AC4646C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8651B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD2520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 22:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xa4GSngO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UWoOJ7XM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0+65RFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFXW0K (ORCPT
+        id S1726713AbfFXW1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 18:26:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48616 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfFXW0J (ORCPT
+        Mon, 24 Jun 2019 18:27:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36702 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfFXW1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 18:26:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 943936070D; Mon, 24 Jun 2019 22:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561415168;
-        bh=xXLrVZUW84vLiT46gepdIB2NIgD+nbn9CbrTZViA3W8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Xa4GSngO0qeinbV+h+75FQ7AbcQs6yPjXQ/18SQpVHWUMTB1TRSleAk2D1y2eYvuD
-         cMJYf+P0Bb+XQUy7mEwWwWowIN3pTO6rI2hOSZ44AyEZCCdWcavLAGCboa8XKzrPLN
-         lqNT2KQBFepU04E1BEjxmTXyoNY2NqGQ7lVA8Ugo=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D1040602DD;
-        Mon, 24 Jun 2019 22:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561415167;
-        bh=xXLrVZUW84vLiT46gepdIB2NIgD+nbn9CbrTZViA3W8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UWoOJ7XMfNsrY7pS8bihXfs4tRnzpW+Mh5erh4GLvw26vjqJBMqNEySBJRYTSj3cb
-         mqixmffSuUq0LPsk1NbtRjHZ/is4+QSkCpOFAtH+32VZXdnFDim3pLXF6HR5SLCpyJ
-         79bbY7Kt5yByj7uRnEArstz7DDqBI/CyQW8pGwYc=
+        Mon, 24 Jun 2019 18:27:10 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q26so11211490lfc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 15:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D1Rlg1a8ZKYuDCntE03T6/myds69XNXDdwDRLbB08rM=;
+        b=W0+65RFplxg7FJBqvGyEEYhcSSHIXtuCxUV3EOx4sCMAy1E/tGXaw619uogXQlf4/v
+         arI1Noxe+VFGQcFPeo0uXk/yPQV0OsGTTtYL59YzaSLDKhfbrOPo3FfdUjbBaf1qF+A9
+         DIdX+DjwBZkBuZaAqq4gEnBSJAtFoIHTnZ6ee50APMVKSU5ZaTmn1pi6zKdcUZz5brHa
+         d2YLv81hdQWWEKw9g3wBqJkQrmvp9ht2bdfD+dHy017j/b2rLZZAnQ3kdl0aUS+tMo3R
+         Q2bFou//IQURdOneN5ESjWah4+8ZpHc2+nGU3Z4Y2li3AX25x3PHqVMQGpG3GkaFQ5G0
+         yYTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D1Rlg1a8ZKYuDCntE03T6/myds69XNXDdwDRLbB08rM=;
+        b=LPFA17v2zcBdlT/BKnQSm3FjIPKNPJqgmuW+w5nyMDKQ0phLmAqdwwZueHohcX3/UA
+         3g2nuV943i/YH9E7XmVV8/A0/3XgIsW8vVfYWxalNpoMdDrpUtByxnUuNmFiDFaR63PZ
+         6AaawkVRHJUaT0dTymOyucMucyUu8th67SyrNDkaAK7WUbZBCbydxWs2hSvaI8mQwf+u
+         GV2DpVeM1qcd3e5SoMG8rYRqvdst/QCa6xQBjfqOQjW9xNthSEyeN4rjxO/IfJ9dnpvl
+         PyZS9L609BJaTkTsBgRDN6aLe8uwMFXveJa+Kis5i1i4F5BG9UAFZTvTzineeem0cWUH
+         qzCA==
+X-Gm-Message-State: APjAAAW6NFz+WW9Iv/2iKQhuE0Lg1VRx8tAvwZtDyK+Ipkk1rXzSdkd/
+        Yug/khZInuUUYQU5JYgkOcb9s/9iRNspcr+mjtvgTA==
+X-Google-Smtp-Source: APXvYqzoxXxGolVXHsGr5DX1bR7Oc/15VXiuxkHWINNtUCFObv1LwJeDEVUzXneuF6ixTRhkIKr218mXmzBCHyIvfis=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr27237792lfc.60.1561415228788;
+ Mon, 24 Jun 2019 15:27:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Jun 2019 15:26:07 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     Shubhashree Dhar <dhar@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, chandanu@codeaurora.org,
-        nganji@codeaurora.org, jshekhar@codeaurora.org
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-In-Reply-To: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
-Message-ID: <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <20190621151725.20414-1-thierry.reding@gmail.com>
+In-Reply-To: <20190621151725.20414-1-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 00:26:56 +0200
+Message-ID: <CACRpkdY-07VEn1YU42Ris6mpw+hj4TJOWfgzykc57Ai8t+G_5A@mail.gmail.com>
+Subject: Re: [PATCH v3] driver: core: Allow subsystems to continue deferring probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-23 23:27, Shubhashree Dhar wrote:
-> dpu encoder spinlock should be initialized during dpu encoder
-> init instead of dpu encoder setup which is part of commit.
-> There are chances that vblank control uses the uninitialized
-> spinlock if not initialized during encoder init.
-Not much can be done if someone is performing a vblank operation
-before encoder_setup is done.
-Can you point to the path where this lock is acquired before
-the encoder_setup?
+On Fri, Jun 21, 2019 at 5:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Thanks
-Jeykumar S.
-> 
-> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
+>
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
+>
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
+>
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
+>
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 5f085b5..22938c7 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
-> struct
-> drm_encoder *enc,
->  	if (ret)
->  		goto fail;
-> 
-> -	spin_lock_init(&dpu_enc->enc_spinlock);
-> -
->  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->  	timer_setup(&dpu_enc->frame_done_timer,
->  			dpu_encoder_frame_done_timeout, 0);
-> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
-> drm_device *dev,
-> 
->  	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
-> 
-> +	spin_lock_init(&dpu_enc->enc_spinlock);
->  	dpu_enc->enabled = false;
-> 
->  	return &dpu_enc->base;
+> Changes in v3:
+> - add new function rather than extend the existing function with flags
 
--- 
-Jeykumar S
+I see you need something like this and I can't think of anything
+better so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
