@@ -2,115 +2,141 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC09C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E763CC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A365B20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvgv4lXq"
+	by mail.kernel.org (Postfix) with ESMTP id C58E820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 15:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfFXPMX (ORCPT
+        id S1730420AbfFXPM7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 11:12:23 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34159 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730435AbfFXPMV (ORCPT
+        Mon, 24 Jun 2019 11:12:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34417 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727454AbfFXPM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:12:21 -0400
-Received: by mail-io1-f68.google.com with SMTP id k8so2397645iot.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 08:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i6RP5sEIUQVe7K2Xxca+vDWdrwxXZnb7gXo4fjhFOrI=;
-        b=jvgv4lXqQaoTaUCCgSqFt7dA1UG8exJvGDZ8+KtKxJ/F1Y3nXoRjm3mDxBFqek2yPa
-         6+vxZZK7y20j65gwxGP1TZgLx/GKaAMRMeotexYhGiKkgr37FscTGeHpnWfkup4MQBr7
-         kVxvBPx8VMwMyBZCYCSMzStUhOKfpSYUOOQNP1hG5P9YNsNt6Hqx3aziwKkU0BVMlqW5
-         XwuM0TSzS42G1XJIYxd1+xd1q7vW9P7SovoLT4e4ilPznQYjhpoSBkE7NXsIzj1AHE0l
-         W1m+hPlUxfwPUS1qbPsmfFXhOaK94yklTADYhpuaQtZALjOAMeIsSx6O8N77qkEgoEW0
-         dCVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i6RP5sEIUQVe7K2Xxca+vDWdrwxXZnb7gXo4fjhFOrI=;
-        b=bBmcy4UJHrIQ8xq/bh1JaKIjcNgzpyEdRROaSenX+Kpjz7bGXHK7L47Qlpm8dui1/C
-         mJT+lS3/8tejchL2aW5Tl45yYm9nIl/hQprS1BXBAhpZxhD0Tw9AhutTujj+Q3oh/ynL
-         dm46+NGhQDfXh8XsETHxBkk405Lu14tT6qSU40UhKzmXNpP8+RibeARjTTLNTK0p+yoc
-         Y+3bLf471VNOkxilw3JDT73eu/60p1rj6VjIqvNP8apAMU565uC/8XuCgCWNvxfXqyel
-         fHfSCGyjVWbktNUbZyY75AdDtZRGW1sUW2vGMlot2NpmUw2ODI9pOOSULm/7gVtHY2Ks
-         DI0A==
-X-Gm-Message-State: APjAAAX4UyxQtTt2hOKL89eA1lJUryMZELzkdwBbYpQcstDgORr/oA8r
-        x77/10h9DENe6th1KY852HUr0H+jq9IUmA==
-X-Google-Smtp-Source: APXvYqxhCdDitnoCJq15metdrBXJXKIUUa7soKbJdiR2x1Uo/Def9XZLDCqSPhNc0JhCX6SVb8UL6w==
-X-Received: by 2002:a02:2a8f:: with SMTP id w137mr127594244jaw.50.1561389140370;
-        Mon, 24 Jun 2019 08:12:20 -0700 (PDT)
-Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id f17sm25760614ioc.2.2019.06.24.08.12.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 08:12:19 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 09:12:17 -0600
-From:   Ross Zwisler <zwisler@google.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Ross Zwisler <zwisler@chromium.org>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ext4: use jbd2_inode dirty range scoping
-Message-ID: <20190624151217.GA249955@google.com>
-References: <20190620151839.195506-4-zwisler@google.com>
- <201906240244.12r4nktI%lkp@intel.com>
+        Mon, 24 Jun 2019 11:12:59 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-130-OoVrAoe7MWG74k3yi9X8Ig-1; Mon, 24 Jun 2019 16:12:51 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 24 Jun 2019 16:12:50 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 24 Jun 2019 16:12:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Xiaoyao Li " <xiaoyao.li@intel.com>,
+        "Sai Praneeth Prakhya" <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v9 03/17] x86/split_lock: Align x86_capability to unsigned
+ long to avoid split locked access
+Thread-Topic: [PATCH v9 03/17] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Thread-Index: AQHVJihj4k0PM5XU4kKltrhDxHB06Kaq7sOQ
+Date:   Mon, 24 Jun 2019 15:12:49 +0000
+Message-ID: <746b5a8752cc40b1b954913f786ed9a6@AcuMS.aculab.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-4-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <1560897679-228028-4-git-send-email-fenghua.yu@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201906240244.12r4nktI%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: OoVrAoe7MWG74k3yi9X8Ig-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 02:54:49AM +0800, kbuild test robot wrote:
-> Hi Ross,
+From: Fenghua Yu
+> Sent: 18 June 2019 23:41
 > 
-> Thank you for the patch! Yet something to improve:
+> set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
+> operate on bitmap defined in x86_capability.
 > 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v5.2-rc6 next-20190621]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
+> the location is at:
+> base address of x86_capability + (bit offset in x86_capability / 64) * 8
 > 
-> url:    https://github.com/0day-ci/linux/commits/Ross-Zwisler/mm-add-filemap_fdatawait_range_keep_errors/20190623-181603
-> config: x86_64-rhel-7.6 (attached as .config)
-> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
+> Since base address of x86_capability may not be aligned to unsigned long,
+> the single unsigned long location may cross two cache lines and
+> accessing the location by locked BTS/BTR introductions will cause
+> split lock.
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+> To fix the split lock issue, align x86_capability to size of unsigned long
+> so that the location will be always within one cache line.
 > 
-> All errors (new ones prefixed by >>):
-> 
-> >> ERROR: "jbd2_journal_inode_ranged_wait" [fs/ext4/ext4.ko] undefined!
-> >> ERROR: "jbd2_journal_inode_ranged_write" [fs/ext4/ext4.ko] undefined!
+> Changing x86_capability's type to unsigned long may also fix the issue
+> because x86_capability will be naturally aligned to size of unsigned long.
+> But this needs additional code changes. So choose the simpler solution
+> by setting the array's alignment to size of unsigned long.
 
-Yep, this is caused by the lack of EXPORT_SYMBOL() calls for these two new
-jbd2 functions.  Ted also pointed this out and fixed this up when he was
-committing:
+As I've pointed out several times before this isn't the only int[] data item
+in this code that gets passed to the bit operations.
+Just because you haven't got a 'splat' from the others doesn't mean they don't
+need fixing at the same time.
 
-https://patchwork.kernel.org/patch/11007139/#22717091
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+>  arch/x86/include/asm/processor.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index c34a35c78618..d3e017723634 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -93,7 +93,9 @@ struct cpuinfo_x86 {
+>  	__u32			extended_cpuid_level;
+>  	/* Maximum supported CPUID level, -1=no CPUID: */
+>  	int			cpuid_level;
+> -	__u32			x86_capability[NCAPINTS + NBUGINTS];
+> +	/* Aligned to size of unsigned long to avoid split lock in atomic ops */
 
-Thank you for the report!
+Wrong comment.
+Something like:
+	/* Align to sizeof (unsigned long) because the array is passed to the
+	 * atomic bit-op functions which require an aligned unsigned long []. */
+
+> +	__u32			x86_capability[NCAPINTS + NBUGINTS]
+> +				__aligned(sizeof(unsigned long));
+
+It might be better to use a union (maybe unnamed) here.
+
+>  	char			x86_vendor_id[16];
+>  	char			x86_model_id[64];
+>  	/* in KB - valid for CPUS which support this call: */
+> --
+> 2.19.1
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
