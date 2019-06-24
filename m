@@ -2,54 +2,53 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FE6C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4046C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB95205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD920205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371168;
-	bh=J5xjZ0JdK0UapEOr+jfVUnHqFAm4TWfgo/4Ge+VZ7Qw=;
+	s=default; t=1561371170;
+	bh=LiMkDk0A3ef731YpjvZFVVVUe3S59l1oevaiy1sIbeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06UvLn0gUnMkkyqhmeDDRBbzxCSQJFhD69HURF3VZa3V+O9DyoEuD2F7nX/PheeP/
-	 MIowWp6nBwlcpVEVcpZF/l20DteCSvYgrePtNqX712h8InKzHPt2l8XVTxOGcrSDum
-	 G7BKyFGw469KAjLiMsGXrmolw/k0Vi1SmBysvSJI=
+	b=R3qDr3x8VTWuql4QPid4cjsxo4e6Ai3uuw94xBwEeO8vRMerRs4izfS+Ms4KbVdcs
+	 dhc5DU/FzVSu9kHSija1HrzZhb38bSv1KjkoAYW7k/qTYgVcuopQYzSHaD+pQV3bOM
+	 55MOCN8P00Do7svhuUqUJNj8t41GGnc3q5dovt4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbfFXKMr (ORCPT
+        id S1729553AbfFXKF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbfFXKF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:05:29 -0400
+        id S1729909AbfFXKFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:05:23 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87F1208E3;
-        Mon, 24 Jun 2019 10:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 484CA2145D;
+        Mon, 24 Jun 2019 10:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370728;
-        bh=J5xjZ0JdK0UapEOr+jfVUnHqFAm4TWfgo/4Ge+VZ7Qw=;
+        s=default; t=1561370722;
+        bh=LiMkDk0A3ef731YpjvZFVVVUe3S59l1oevaiy1sIbeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzuf7iCPpiHfII103pBXhlW+2cbveJiOBW2+pefn81njAwFbm28RZ28DPreBt5qnR
-         gh1UkZLbb/UG3kngNyAJXYsoitqjZHpnC6FCgh6pSO1LBVA/4s54uvH2O+bawSxsyb
-         1bRANB3XGyfJNP8JGHRuuGMujExq2HyDFxmkUGds=
+        b=conVvIGW6yTYugNe1wHwpq+6wgoLm5x69HJ1jsA8X+zP612ctQq1+8XrM03ZaPnq9
+         VHN9VM9Cla7IE1aaF/2KqxgVU3tLHrj8J5qqIuEnsf6cY2ULn2I5SkP1vYHAuik3Jx
+         nYSD32Z6wsCClossRUNSZt8T8gSeGrdidXY/KBHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-        Anssi Hannula <anssi.hannula@bitwise.fi>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 69/90] can: xilinx_can: use correct bittiming_const for CAN FD core
-Date:   Mon, 24 Jun 2019 17:56:59 +0800
-Message-Id: <20190624092318.556365935@linuxfoundation.org>
+        stable@vger.kernel.org, Jaesoo Lee <jalee@purestorage.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 67/90] nvme: Fix u32 overflow in the number of namespace list calculation
+Date:   Mon, 24 Jun 2019 17:56:57 +0800
+Message-Id: <20190624092318.451220287@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
 References: <20190624092313.788773607@linuxfoundation.org>
@@ -62,42 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
+[ Upstream commit c8e8c77b3bdbade6e26e8e76595f141ede12b692 ]
 
-commit 904044dd8fff43e289c11a2f90fa532e946a1d8b upstream.
+The Number of Namespaces (nn) field in the identify controller data structure is
+defined as u32 and the maximum allowed value in NVMe specification is
+0xFFFFFFFEUL. This change fixes the possible overflow of the DIV_ROUND_UP()
+operation used in nvme_scan_ns_list() by casting the nn to u64.
 
-Commit 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD
-core") added a new can_bittiming_const structure for CAN FD cores that
-support larger values for tseg1, tseg2, and sjw than previous Xilinx CAN
-cores, but the commit did not actually take that into use.
-
-Fix that.
-
-Tested with CAN FD core on a ZynqMP board.
-
-Fixes: 9e5f1b273e6a ("can: xilinx_can: add support for Xilinx CAN FD core")
-Reported-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jaesoo Lee <jalee@purestorage.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/xilinx_can.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -1424,7 +1424,7 @@ static const struct xcan_devtype_data xc
- 		 XCAN_FLAG_RXMNF |
- 		 XCAN_FLAG_TX_MAILBOXES |
- 		 XCAN_FLAG_RX_FIFO_MULTI,
--	.bittiming_const = &xcan_bittiming_const,
-+	.bittiming_const = &xcan_bittiming_const_canfd,
- 	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT_CANFD,
- 	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT_CANFD,
- 	.bus_clk_name = "s_axi_aclk",
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index a867a139bb35..d8869d978c34 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3228,7 +3228,8 @@ static int nvme_scan_ns_list(struct nvme_ctrl *ctrl, unsigned nn)
+ {
+ 	struct nvme_ns *ns;
+ 	__le32 *ns_list;
+-	unsigned i, j, nsid, prev = 0, num_lists = DIV_ROUND_UP(nn, 1024);
++	unsigned i, j, nsid, prev = 0;
++	unsigned num_lists = DIV_ROUND_UP_ULL((u64)nn, 1024);
+ 	int ret = 0;
+ 
+ 	ns_list = kzalloc(NVME_IDENTIFY_DATA_SIZE, GFP_KERNEL);
+-- 
+2.20.1
+
 
 
