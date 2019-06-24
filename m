@@ -2,182 +2,219 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4907EC48BE3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239F0C48BE3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8D020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="OPLzPTRi"
+	by mail.kernel.org (Postfix) with ESMTP id 0423920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 07:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfFXHYQ (ORCPT
+        id S1727905AbfFXHYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 03:24:16 -0400
-Received: from sonic308-54.consmr.mail.gq1.yahoo.com ([98.137.68.30]:45702
-        "EHLO sonic308-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbfFXHYP (ORCPT
+        Mon, 24 Jun 2019 03:24:37 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59104 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726719AbfFXHYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:24:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1561361054; bh=XN4/4Mvu/C7mSe5qfL8p8XSrY/AwGHjOVtbeNaoCeoU=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject; b=OPLzPTRiWq/vAyaAy/KRePopVnFkCjp6GT7neMxxViud8D6p5yUE7pvn9KuNtkwDQFvZtwTgpfsU6FlmUf9n1bn55Dc8b37wvISpfaujwDujv363NWncpYQ4+moV1WV/QCeRw2BE7pkEb1tVVFMlfprNuU2K1AoahD20sbhzGf44DsGStlLsVgdIeUsGB6IR30I3E05o1rt4YigjQBqmVZhNh93yWJQ1ycCGxEkPErd2/RT6fzmg+H8YKK24nj/gNIKgXtT36P+5/Ip5uSbnh2tud+T5BbIiV0Wl5slvzoY6S/2/Edug28xGo7tRXVH3NAhMP5LjlArDMFY5rFaMRw==
-X-YMail-OSG: U0qtGfoVM1lm2ob0MAZnt3RoHiQSuOYpYGXFrMHsws5KWuEBH61kjNYc.tDVWny
- F3ITfK1tLWI89XIw2WjTexsNGS0jY.ijPmKJbIlnenGs6Q5MW5r6K8KcV10nZACy_d3BsAqEwnq4
- pw3l2GuhmTIrBhZ_0e581dG_SKKJ70hNeh1ahHSBI7fU1C0wlbTvU8_bq66iZ7cL__HSwT4Z.swT
- FVYjneZ91zS3x4fE8GMamiYiLicsZjkYW9JL9OR2gfq.0IAin0MOlLwpPbmytT7hLtTw7LBcHJ.T
- cTfHRXVV8_2qkv4mpWoQ_lyTJzsK3ujdKcpl9y7KywNAVor05vriAUdeLXXnSDS6YtnkNG4vCrMp
- 2aDJW663lmF9xjkT.9UICjm8yWACMQQ6TdgDPDiQzcB1xQOa_xPyDs43KfoYwlTRrPFPzHiZqOr3
- 3kc.oLZHLqpAHnZmsLVzAYVVQPg8vvTemP4qudjblO2e6V8ptmjKQV1pficM8mtIyhZkhSuj2xnK
- JlYNNnuRtgbvRdaStqAIDo30VRVVR8mfKl.KjzaEHFHrNygcLZypGYxJG2EAZZ.laXbCslV.kqdZ
- gTjZ205wQfmdwuvPhjJ9yY5QVHN9UywHHGtOg3QCh_.Vlus0kL26aa.inJ8tvIHm1CJ86pLXcpW0
- noAAj.WNYbN4l3FCHLwxhYVI5weBmfOj2ZezBokSPtYB22xrlitEEi9AlOnkUk7YaBGHDDIdlcuz
- NgKlE.kgmIzM2F8HupSETKT6rF2s0_lUGpAu2xwNXS2E9BL.qH_GyPL18W7wNN5ZCjtgndvDgIaV
- AkcQC3my28eEo55jKv990wKjAplpvQ0xMfFF0aSFpHddgSOxVRnrJ1i19ukorHXptcrGZJC128JA
- o9vPZ6uJYJnNjI6eDXbfEgKpZh4lxhJWtS66VdjEzQTWGHR1xwaHWvlJBcNXlLhaXi6Op2xyEVSC
- FHoNl1UtVJskDJZMPa2Qtv_N0bsKYDD4ICgKL37rA8S0gsyV4rN.a387bS1k3YJpsZwKdavAbVvt
- LoIjveqPRsMWqsXhhw0jv6DtkAKEhRnMNQhJijjA.A.wbxgKOZgUpxxyGUPEqIGRrLPzama0gBZZ
- R2Fbic0eD.ltBw5lw6oA_vZDQH_rzFgP1dvvZGyzLJjIkDHh7ANT_JNMCfgyhVg9cb9yU7..PJZr
- JP5E18ae3yXHTMpmxftCAk1mMqyk76YLDn_.BNtzKiLf1ZQDOCYgXirvYeFPYWHm_f_E0
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Mon, 24 Jun 2019 07:24:14 +0000
-Received: from 116.226.249.212 (EHLO localhost.localdomain) ([116.226.249.212])
-          by smtp415.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 6d1878af4efb7cadb69856afeea1b125;
-          Mon, 24 Jun 2019 07:24:09 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Du Wei <weidu.du@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 8/8] staging: erofs: integrate decompression inplace
-Date:   Mon, 24 Jun 2019 15:22:58 +0800
-Message-Id: <20190624072258.28362-9-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624072258.28362-1-hsiangkao@aol.com>
-References: <20190624072258.28362-1-hsiangkao@aol.com>
+        Mon, 24 Jun 2019 03:24:37 -0400
+X-UUID: f99ff83372764d82ac28946816a925de-20190624
+X-UUID: f99ff83372764d82ac28946816a925de-20190624
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 176232665; Mon, 24 Jun 2019 15:24:30 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 24 Jun 2019 15:24:29 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 24 Jun 2019 15:24:28 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        Crystal Guo <Crystal.Guo@mediatek.com>,
+        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v4 3/3] hwrng: add mtk-sec-rng driver
+Date:   Mon, 24 Jun 2019 15:24:12 +0800
+Message-ID: <1561361052-13072-4-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+entropy sources is not accessible from normal world (linux) and
+rather accessible from secure world (ATF/TEE) only. This driver aims
+to provide a generic interface to ATF rng service.
 
-Decompressor needs to know whether it's a partial
-or full decompression since only full decompression
-can be decompressed in-place.
-
-On kirin980 platform, sequential read is finally
-increased to 812MiB/s after decompression inplace
-is enabled.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 ---
- drivers/staging/erofs/internal.h  |  3 +++
- drivers/staging/erofs/unzip_vle.c | 15 +++++++++++----
- drivers/staging/erofs/unzip_vle.h |  1 +
- drivers/staging/erofs/zmap.c      |  1 +
- 4 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/char/hw_random/Kconfig       |   16 ++++++
+ drivers/char/hw_random/Makefile      |    1 +
+ drivers/char/hw_random/mtk-sec-rng.c |   97 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
+ create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
 
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 6c8767d4a1d5..963cc1b8b896 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -441,6 +441,7 @@ extern const struct address_space_operations z_erofs_vle_normalaccess_aops;
-  */
- enum {
- 	BH_Zipped = BH_PrivateStart,
-+	BH_FullMapped,
- };
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 25a7d8f..6c82a3b 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -398,6 +398,22 @@ config HW_RANDOM_MTK
  
- /* Has a disk mapping */
-@@ -449,6 +450,8 @@ enum {
- #define EROFS_MAP_META		(1 << BH_Meta)
- /* The extent has been compressed */
- #define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The length of extent is full */
-+#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
+ 	  If unsure, say Y.
  
- struct erofs_map_blocks {
- 	erofs_off_t m_pa, m_la;
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index cb870b83f3c8..316382d33783 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -469,6 +469,9 @@ z_erofs_vle_work_register(const struct z_erofs_vle_work_finder *f,
- 				    Z_EROFS_VLE_WORKGRP_FMT_LZ4 :
- 				    Z_EROFS_VLE_WORKGRP_FMT_PLAIN);
- 
-+	if (map->m_flags & EROFS_MAP_FULL_MAPPED)
-+		grp->flags |= Z_EROFS_VLE_WORKGRP_FULL_LENGTH;
++config HW_RANDOM_MTK_SEC
++	tristate "MediaTek Security Random Number Generator support"
++	depends on HW_RANDOM
++	depends on ARCH_MEDIATEK || COMPILE_TEST
++	default HW_RANDOM
++	help
++	  This driver provides kernel-side support for the Random Number
++	  Generator hardware found on MediaTek SoCs. The difference with
++	  mtk-rng is the Random Number Generator hardware is secure
++	  access only.
 +
- 	/* new workgrps have been claimed as type 1 */
- 	WRITE_ONCE(grp->next, *f->owned_head);
- 	/* primary and followed work for all new workgrps */
-@@ -901,7 +904,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	unsigned int i, outputsize;
- 
- 	enum z_erofs_page_type page_type;
--	bool overlapped;
-+	bool overlapped, partial;
- 	struct z_erofs_vle_work *work;
- 	int err;
- 
-@@ -1009,10 +1012,13 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	if (unlikely(err))
- 		goto out;
- 
--	if (nr_pages << PAGE_SHIFT >= work->pageofs + grp->llen)
-+	if (nr_pages << PAGE_SHIFT >= work->pageofs + grp->llen) {
- 		outputsize = grp->llen;
--	else
-+		partial = !(grp->flags & Z_EROFS_VLE_WORKGRP_FULL_LENGTH);
-+	} else {
- 		outputsize = (nr_pages << PAGE_SHIFT) - work->pageofs;
-+		partial = true;
++	  To compile this driver as a module, choose M here. the
++	  module will be called mtk-sec-rng.
++
++	  If unsure, say Y.
++
+ config HW_RANDOM_S390
+ 	tristate "S390 True Random Number Generator support"
+ 	depends on S390
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+index 7c9ef4a..0ae4993 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
+ obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
+ obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
+ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
++obj-$(CONFIG_HW_RANDOM_MTK_SEC) += mtk-sec-rng.o
+ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+ obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+ obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+diff --git a/drivers/char/hw_random/mtk-sec-rng.c b/drivers/char/hw_random/mtk-sec-rng.c
+new file mode 100644
+index 0000000..ecd2e29
+--- /dev/null
++++ b/drivers/char/hw_random/mtk-sec-rng.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 MediaTek Inc.
++ */
++
++#include <linux/arm-smccc.h>
++#include <linux/hw_random.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/soc/mediatek/mtk_sip_svc.h>
++
++#define MT67XX_RNG_MAGIC	0x74726e67
++#define SMC_RET_NUM		4
++#define MTK_SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
++
++struct mtk_sec_rng_priv {
++	struct hwrng rng;
++};
++
++static void mtk_sec_get_rnd(uint32_t *val)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(MTK_SIP_KERNEL_GET_RND,
++		      MT67XX_RNG_MAGIC, 0, 0, 0, 0, 0, 0, &res);
++
++	val[0] = res.a0;
++	val[1] = res.a1;
++	val[2] = res.a2;
++	val[3] = res.a3;
++}
++
++static int mtk_sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++{
++	u32 val[4] = {0};
++	int retval = 0;
++	int i;
++
++	while (max >= MTK_SEC_RND_SIZE) {
++		mtk_sec_get_rnd(val);
++
++		for (i = 0; i < SMC_RET_NUM; i++) {
++			*(u32 *)buf = val[i];
++			buf += sizeof(u32);
++		}
++
++		retval += MTK_SEC_RND_SIZE;
++		max -= MTK_SEC_RND_SIZE;
 +	}
- 
- 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN)
- 		algorithm = Z_EROFS_COMPRESSION_SHIFTED;
-@@ -1028,7 +1034,8 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 					.outputsize = outputsize,
- 					.alg = algorithm,
- 					.inplace_io = overlapped,
--					.partial_decoding = true }, page_pool);
-+					.partial_decoding = partial
-+				 }, page_pool);
- 
- out:
- 	/* must handle all compressed pages before endding pages */
-diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index a2d9b60beebd..ab509d75aefd 100644
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -46,6 +46,7 @@ struct z_erofs_vle_work {
- #define Z_EROFS_VLE_WORKGRP_FMT_PLAIN        0
- #define Z_EROFS_VLE_WORKGRP_FMT_LZ4          1
- #define Z_EROFS_VLE_WORKGRP_FMT_MASK         1
-+#define Z_EROFS_VLE_WORKGRP_FULL_LENGTH      2
- 
- typedef void *z_erofs_vle_owned_workgrp_t;
- 
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index 1e75cef11db4..9c0bd65c46bf 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -424,6 +424,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 			goto unmap_out;
- 		}
- 		end = (m.lcn << lclusterbits) | m.clusterofs;
-+		map->m_flags |= EROFS_MAP_FULL_MAPPED;
- 		m.delta[0] = 1;
- 		/* fallthrough */
- 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
++
++	return retval;
++}
++
++static int mtk_sec_rng_probe(struct platform_device *pdev)
++{
++	struct mtk_sec_rng_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->rng.name = pdev->name;
++	priv->rng.read = mtk_sec_rng_read;
++	priv->rng.priv = (unsigned long)&pdev->dev;
++	priv->rng.quality = 900;
++
++	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id mtk_sec_rng_match[] = {
++	{ .compatible = "mediatek,mtk-sec-rng", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mtk_sec_rng_match);
++
++static struct platform_driver mtk_sec_rng_driver = {
++	.probe = mtk_sec_rng_probe,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.owner = THIS_MODULE,
++		.of_match_table = mtk_sec_rng_match,
++	},
++};
++
++module_platform_driver(mtk_sec_rng_driver);
++
++MODULE_DESCRIPTION("MediaTek Security Random Number Generator Driver");
++MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
++MODULE_LICENSE("GPL");
 -- 
-2.17.1
+1.7.9.5
 
