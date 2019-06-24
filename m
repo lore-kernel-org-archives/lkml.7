@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57204C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE29C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BDD21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74149205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371048;
-	bh=n9x9Eb4z4CC4l3c7Nba6QN2m62zKHw0k2+ln8QZSuw0=;
+	s=default; t=1561371054;
+	bh=hJ4L5RuYPxc94/K1BgdZzHGyztCi/po+0Lvxp83P6pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2WntRU1YkKRl02UJPByqlsx93sRWuEkpDX/1fV5EruENh3tS9XvLDAB0S+M8XIc7k
-	 TllwPXmhSWjsSnYeisU0jHb1Aw572ovj225lUDKc3r3jeFFBE/noLDn25kJ8HLix4q
-	 mWMFnoP4LKW5GmjF8x6WrfJPEsQfsEj8ma2s4qDg=
+	b=qZBFdFrjLlnoZl7YSd3gY4VnEP/j6bQPQ/FeW+D2+nEhGdumlM025CS+MP9fcRRvS
+	 PeLxgBfGxdoVI4AUctBv3FJuTN7T85xHWYc36qjWoIn0BHSL+fEbKKhxaD81cs4IIR
+	 zi8OGwYkC43tlC8Q9kYfeX49yNBZjfCVkUr83QVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730641AbfFXKKq (ORCPT
+        id S1730644AbfFXKKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 06:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbfFXKHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:07:38 -0400
+        id S1729928AbfFXKH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:07:29 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E48A205C9;
-        Mon, 24 Jun 2019 10:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AC5A205C9;
+        Mon, 24 Jun 2019 10:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370857;
-        bh=n9x9Eb4z4CC4l3c7Nba6QN2m62zKHw0k2+ln8QZSuw0=;
+        s=default; t=1561370848;
+        bh=hJ4L5RuYPxc94/K1BgdZzHGyztCi/po+0Lvxp83P6pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLyX6mxy8AOw2oiWVkWOyijmB7/BClPFd9cYYkx+UZSKQupZt2ErFGtLNRh/Vrx8W
-         wkIc4W1zzObdbBazKRyc1vEiBlx2wYec0fXACh0qn1D7KhcCCG2Zr74HlifHt/zo8C
-         Gj9ElDKxHTTGL+MNpRxFKoejqbZhObpdP6P/0HZY=
+        b=zhDzs7Lsj7+sYC73soYI8wFLM0St/0EDCMWxyj5G/mqiNVdNSq6kGG72L1WJAMJVZ
+         KGXiz0zGqOLoqK4NbVjluIKZA/ESDBFYQyKlohb/S1iufhKXoegdog2/39KudJBRLO
+         dmhfCmKpgV3Q9u6e+sh3SKGtsWNX5fyYVKxHGR+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 5.1 026/121] apparmor: enforce nullbyte at end of tag string
-Date:   Mon, 24 Jun 2019 17:55:58 +0800
-Message-Id: <20190624092322.060980111@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.1 023/121] Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
+Date:   Mon, 24 Jun 2019 17:55:55 +0800
+Message-Id: <20190624092321.846986024@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
 References: <20190624092320.652599624@linuxfoundation.org>
@@ -59,38 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-commit 8404d7a674c49278607d19726e0acc0cae299357 upstream.
+commit 7c7da40da1640ce6814dab1e8031b44e19e5a3f6 upstream.
 
-A packed AppArmor policy contains null-terminated tag strings that are read
-by unpack_nameX(). However, unpack_nameX() uses string functions on them
-without ensuring that they are actually null-terminated, potentially
-leading to out-of-bounds accesses.
+In the case of compat syscall ioctl numbers for UI_BEGIN_FF_UPLOAD and
+UI_END_FF_UPLOAD need to be adjusted before being passed on
+uinput_ioctl_handler() since code built with -m32 will be passing
+slightly different values. Extend the code already covering
+UI_SET_PHYS to cover UI_BEGIN_FF_UPLOAD and UI_END_FF_UPLOAD as well.
 
-Make sure that the tag string is null-terminated before passing it to
-strcmp().
-
+Reported-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: stable@vger.kernel.org
-Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/policy_unpack.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/misc/uinput.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -276,7 +276,7 @@ static bool unpack_nameX(struct aa_ext *
- 		char *tag = NULL;
- 		size_t size = unpack_u16_chunk(e, &tag);
- 		/* if a name is specified it must match. otherwise skip tag */
--		if (name && (!size || strcmp(name, tag)))
-+		if (name && (!size || tag[size-1] != '\0' || strcmp(name, tag)))
- 			goto fail;
- 	} else if (name) {
- 		/* if a name is specified and there is no name tag fail */
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -1051,13 +1051,31 @@ static long uinput_ioctl(struct file *fi
+ 
+ #ifdef CONFIG_COMPAT
+ 
+-#define UI_SET_PHYS_COMPAT	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
++/*
++ * These IOCTLs change their size and thus their numbers between
++ * 32 and 64 bits.
++ */
++#define UI_SET_PHYS_COMPAT		\
++	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
++#define UI_BEGIN_FF_UPLOAD_COMPAT	\
++	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload_compat)
++#define UI_END_FF_UPLOAD_COMPAT		\
++	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload_compat)
+ 
+ static long uinput_compat_ioctl(struct file *file,
+ 				unsigned int cmd, unsigned long arg)
+ {
+-	if (cmd == UI_SET_PHYS_COMPAT)
++	switch (cmd) {
++	case UI_SET_PHYS_COMPAT:
+ 		cmd = UI_SET_PHYS;
++		break;
++	case UI_BEGIN_FF_UPLOAD_COMPAT:
++		cmd = UI_BEGIN_FF_UPLOAD;
++		break;
++	case UI_END_FF_UPLOAD_COMPAT:
++		cmd = UI_END_FF_UPLOAD;
++		break;
++	}
+ 
+ 	return uinput_ioctl_handler(file, cmd, arg, compat_ptr(arg));
+ }
 
 
