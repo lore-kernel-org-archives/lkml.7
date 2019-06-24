@@ -2,87 +2,72 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A706C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB0DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F870212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CE42133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561383306;
+	bh=BQGVU6wnUXnrUAs+anIzQsv2wkb2UrWnODiCFrUiWH8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=F3aMoHpaLuOc9bhtSrkJIYUDz9CW+k9QefvFrP+x87Y+1VihsvP2dDlem/JuKQc7D
+	 OzCm2Yfwt/dwvRmlQxLBnQ/vtgcCWWlgmLlDL9cfNMtpn/037WYujgeb9HR+Xr2v5Y
+	 P54f4kUNGQAGMORZGvhP3WkT9/iqwAJRYfAHmiKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfFXNdt (ORCPT
+        id S1731207AbfFXNfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:33:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728884AbfFXNdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:33:49 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D7DD23998DC962976001;
-        Mon, 24 Jun 2019 21:33:43 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Jun 2019
- 21:33:37 +0800
-Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
- max_softirq_time_usecs
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <corbet@lwn.net>, <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>,
-        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
-        <dvyukov@google.com>, <feng.tang@intel.com>,
-        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
-        <linux@leemhuis.info>, <alex.popov@linux.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
-        Eric Dumazet <edumazet@google.com>
-References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
- <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
- <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com>
- <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <e870e089-efb6-53a7-4299-8468f2ba8852@huawei.com>
-Date:   Mon, 24 Jun 2019 21:32:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+        Mon, 24 Jun 2019 09:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729876AbfFXNfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:35:04 -0400
+Subject: Re: [GIT PULL] auxdisplay for v5.2-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561383303;
+        bh=BQGVU6wnUXnrUAs+anIzQsv2wkb2UrWnODiCFrUiWH8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=yEduAXM40bL5jKD+y9igwx5DixAOtxOC43pi03wnknVN9xVc+3HipMe+UPBDAQFq0
+         91vm4nYGBtMvNnrCwv5M+ndYwISOdGx8IM1mdgaG0rP3baeT0OGvy5zXTo12yMMLHd
+         4bjbcTV0oqvqU6qHrhrcHfGIjoUm4h9kDhM4dJyw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190623135038.GA29791@gmail.com>
+References: <20190623135038.GA29791@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190623135038.GA29791@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ojeda/linux.git
+ tags/auxdisplay-for-linus-v5.2-rc7
+X-PR-Tracked-Commit-Id: f4bb1f895aa07dfcb96169192ff7c9154620df87
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9216514602ac436c116664ac9eaf18127ccf34df
+Message-Id: <156138330350.1016.15579604788445805815.pr-tracker-bot@kernel.org>
+Date:   Mon, 24 Jun 2019 13:35:03 +0000
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Robin van der Gracht <robin@protonic.nl>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/24 17:45, Thomas Gleixner wrote:
-> Zhiqiang,
-> 
-> On Mon, 24 Jun 2019, Zhiqiang Liu wrote:
->> ÔÚ 2019/6/24 0:38, Thomas Gleixner Ð´µÀ:
->>
->> Thanks again for your detailed advice.
->> As your said, the max_softirq_time_usecs setting without explaining the
->> relationship with CONFIG_HZ will give a false sense of controlability. And
->> the time accuracy of jiffies will result in a certain difference between the
->> max_softirq_time_usecs set value and the actual value, which is in one jiffies
->> range.
->>
->> I will add these infomation in the sysctl documentation and changelog in v2 patch.
-> 
-> Please make the sysctl milliseconds based. That's the closest approximation
-> of useful units for this. This still has the same issues as explained
-> before but it's not off by 3 orders of magitude anymore.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-Thanks for your suggestion.
-I will adopt max_softirq_time_ms to replace MAX_SOFTIRQ_TIME in v2.
+The pull request you sent on Sun, 23 Jun 2019 15:50:38 +0200:
 
+> https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.2-rc7
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9216514602ac436c116664ac9eaf18127ccf34df
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
