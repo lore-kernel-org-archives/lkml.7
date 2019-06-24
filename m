@@ -2,96 +2,146 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C9FC4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE706C48BD3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F13320665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8869620665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 23:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="q/WqUD0h"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2DbmdT88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfFXXYi (ORCPT
+        id S1728401AbfFXXZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 19:24:38 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44112 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfFXXYi (ORCPT
+        Mon, 24 Jun 2019 19:25:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42158 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfFXXZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 19:24:38 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so7890912pgp.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 16:24:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=97J2mQ8W9rxbq9xESMLvP971OTTkTA5uAArzuGfjVX8=;
-        b=q/WqUD0hfVCG+bMiazVQEDX1BfPkf+2pUEhLqUL0KLAh7VEB54OkzB4glqfypnW1Vi
-         JYJHp7jpzLg8iCwrFF4v9i/wNJm0f4KFcLQn2sJ+65DRtI/W2kniOHzCpcUcm9igWdgB
-         4VwveWtICtwDSWbVZWAsrL2oDMD/CSjIOF6h5EimvwMtoi0Gy7GQSmI747P+E0aqeKVs
-         jebJ/M3g/YzXrFslWpv5ExSiZtx6pQpkHlzCZyha0zeDRNp9IWXOCNhfVRrpF4PvsDD/
-         j1flPIXcRJ4r0HQZc1LMMFO7T8dMliZD6E3xJUjuLbqCvastIIG3Wl03BdjT3a1sUiSz
-         KNrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=97J2mQ8W9rxbq9xESMLvP971OTTkTA5uAArzuGfjVX8=;
-        b=YmmtEcIWTBugVF5NXriQJOsOed8E7jJhjb85OEz9k2FlH6S1qUwAHOgpmph6oqbkXo
-         Ok1FukVOeP5SBQPSK0apK+QjAPxZVKdCOB2fdTH1YMHiw0net9BYn7MzQ3yyOovCR6zx
-         s1EzoB9UxHmBFk1YbYwF30vptbMlj+n4yzZSWAVBmgS7taE7+KPv6T9aV/4ZP7WCm35/
-         rJaDiXVmfqUnBSdX78LvGWMvgI3H3rBH+yoQ0EKNk78iZJ9E3q5pOwGH1pvG/vy/B0TJ
-         7FeVpNwTFlwmYCLgvyXmJ5rG8XfsJEEDjMlY7d+OZlWyZO6G3cK3ok83noYyGm1cT6OJ
-         uocQ==
-X-Gm-Message-State: APjAAAWNx/qJ8qSX/IUZOHBn74W/KijGNj/VCjYRKJyqgA7jSrqQtl7y
-        GEyjw/mzm3BMfpJdO+kRXqTzhw==
-X-Google-Smtp-Source: APXvYqyJ4qa0FiXJgxfwOsACg9uzcWq9QV35TxSpj/Rhhn6aABo5DnNey+XA0cB/QHxSOT2N21tfLw==
-X-Received: by 2002:a63:f746:: with SMTP id f6mr11806300pgk.56.1561418677315;
-        Mon, 24 Jun 2019 16:24:37 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:559b:6f10:667f:4354])
-        by smtp.googlemail.com with ESMTPSA id q1sm15808527pfn.178.2019.06.24.16.24.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Jun 2019 16:24:36 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Julien Masson <jmasson@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
-Subject: Re: [PATCH 0/9] drm: meson: global clean-up (use proper macros, update comments ...)
-In-Reply-To: <86zhm782g5.fsf@baylibre.com>
-References: <86zhm782g5.fsf@baylibre.com>
-Date:   Mon, 24 Jun 2019 16:24:35 -0700
-Message-ID: <7ho92mwor0.fsf@baylibre.com>
+        Mon, 24 Jun 2019 19:25:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ONJB6c147243;
+        Mon, 24 Jun 2019 23:24:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=aTZd3V8YKxC9aVHKIjLqupfycJYEaoqqnVsM2irnK+k=;
+ b=2DbmdT8817TsXxhodPMLfTrvd92O0rNIIIESCqWO+JWnGoSLMSp1lGpHLe8j4HYqEBHt
+ UoErpCJKAltSbnB9HLyrF8MsZ4RF4lovMvm8pcshAaoJrIbGIyic3c7W2rcUN90+SAyq
+ gq2gtPcFK4rB79is4KWZCSSb5LOICXZXzVFDiCLHFYCkfb11Q4Q72FYfC4BrXFri3Yfe
+ DYgqoMvLZEHKc1+m4cJAKLGAUBeP4CRRHejw/+b5tnaaMd3P9g/avAf+569vgv9OhCkq
+ ApvuizHTO+jv1uN1FkkUpL/W4jjI1o//KcFkB04yRnBOvRXWnCzRSUx78N1ht5ovzn6R hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pgy89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 23:24:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ONNS9m134943;
+        Mon, 24 Jun 2019 23:24:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7bwgg5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 23:24:54 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ONOnLt013227;
+        Mon, 24 Jun 2019 23:24:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 16:24:49 -0700
+To:     Eric Wheeler <bcache@lists.ewheeler.net>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list\:BCACHE \(BLOCK LAYER CACHE\)" 
+        <linux-bcache@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
+        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
+        <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
+        <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
+Date:   Mon, 24 Jun 2019 19:24:44 -0400
+In-Reply-To: <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net> (Eric
+        Wheeler's message of "Mon, 24 Jun 2019 18:14:59 +0000 (UTC)")
+Message-ID: <yq17e9ao9c3.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Julien Masson <jmasson@baylibre.com> writes:
 
-> This patch series aims to clean-up differents parts of the drm meson
-> code source.
->
-> Couple macros have been defined and used to set several registers
-> instead of using magic constants.
->
-> I also took the opportunity to:
-> - add/remove/update comments
-> - remove useless code
-> - minor fix/improvment
+Eric,
 
-Nice set of cleanups, thanks!  I especially like the extra in-code
-comments.
+> Perhaps they do not set stripe_width using io_opt? I did a grep to see
+> if any of them did, but I didn't see them. How is stripe_width
+> indicated by RAID controllers?
 
-Could you also add to the cover-letter how this was tested, and on what
-platforms so we know it's not going to introduce any regressions.
+The values are reported in the Block Limits VPD page for each SCSI block
+device and are thus set by the SCSI disk driver. IOW, the RAID
+controller device drivers have nothing to do with this.
 
-Thanks,
+For RAID controllers specifically, the controller firmware will fill out
+the VPD fields for each virtual SCSI disk when you configure a RAID
+set. For pretty much everything else, the Block Limits come straight
+from the device itself.
 
-Kevin
+Also note that these values aren't specific to RAID controllers at
+all. Most new SCSI devices, including disk drives and SSDs, will fill
+out the Block Limits VPD page one way or the other. Even some USB
+storage devices are providing this page.
+
+> If they do set io_opt, then at least my Areca 1883 does not set io_opt
+> as of 4.19.x. I also have a LSI MegaRAID 3108 which does not report
+> io_opt as of 4.1.x, but that is an older kernel so maybe support has
+> been added since then.
+
+I have several MegaRAIDs that all report it. But it depends on the
+controller firmware.
+
+> Is it visible through sysfs or debugfs so I can check my hardware
+> support without hacking debugging the kernel?
+
+To print the block device topology:
+
+  # lsblk -t
+
+or look up io_opt in sysfs:
+
+  # grep . /sys/block/sdX/queue/optimal_io_size
+
+You can also query a SCSI device's Block Limits directly:
+
+  # sg_vpd -p bl /dev/sdX
+
+If you want to tinker, you can simulate a SCSI disk with your choice of
+io_opt:
+
+  # modprobe scsi_debug opt_blks=N
+
+where N is the number of logical blocks to report as being the optimal
+I/O size.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
