@@ -2,99 +2,93 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B47C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3483DC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DD521473
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561370981;
-	bh=FqfyOE32pGG0nTN2uey/6HiKT1i752OzCJIa1JzZZJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9huVAf2pdwmlNp2UoHgNBw3fm1wSRefxFpFTv89QDWo5GJjdDfJofSn5vkO4+bQ9
-	 9qutNPoEQprRCGIuE7siKf6QRTEJ7IWdzUvp41Eq+ct/VuBRhqKD+RONoKZWx2hbnl
-	 TJneDOTPISMhGre3Pz0Nj4MhjBs/y+8WmdtqEfZo=
+	by mail.kernel.org (Postfix) with ESMTP id 0DBF12063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbfFXKJk (ORCPT
+        id S1730537AbfFXKJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730489AbfFXKIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:08:42 -0400
-Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0782A2089F;
-        Mon, 24 Jun 2019 10:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370921;
-        bh=FqfyOE32pGG0nTN2uey/6HiKT1i752OzCJIa1JzZZJM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PusuoNYsjL9oKhXYSb6hJc1r05w6hbCDX/wbezzDLoK0FBy/iC1vXDL8i9kSQOa/A
-         U8VCyQcfHoAkQpY9nWlrOfEaWpGCXarBXu5PHZaZNkkcqGR20O4R3dhaatiT5FF2x2
-         +4OnWwrXHr7pgZ43ecdRfedSzgiklIQX1PUdMoVE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 051/121] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
-Date:   Mon, 24 Jun 2019 17:56:23 +0800
-Message-Id: <20190624092323.346979705@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
-References: <20190624092320.652599624@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Jun 2019 06:09:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35542 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728434AbfFXKJg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:09:36 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfLuj-0005CU-L6; Mon, 24 Jun 2019 12:09:29 +0200
+Date:   Mon, 24 Jun 2019 12:09:28 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: x86: Spurious vectors not handled robustly
+In-Reply-To: <e525108f-3749-4e1d-1ac2-0d0a2655f15f@siemens.com>
+Message-ID: <alpine.DEB.2.21.1906241204430.32342@nanos.tec.linutronix.de>
+References: <e525108f-3749-4e1d-1ac2-0d0a2655f15f@siemens.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
+Jan,
 
-By code inspection, the freeze_work is never canceled.
+On Mon, 24 Jun 2019, Jan Kiszka wrote:
+> probably since "x86: Avoid building unused IRQ entry stubs" (2414e021ac8d),
+> the kernel can no longer tell spurious IRQs by the APIC apart from spuriously
+> triggered unused vectors.
 
-Fix by adding a cancel_work_sync in the shutdown path to insure it is no
-longer running.
+Err. It does.
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/hfi1/chip.c | 1 +
- 1 file changed, 1 insertion(+)
+> We've managed to trigger such a cause with the Jailhouse hypervisor
+> (incorrectly injected MANAGED_IRQ_SHUTDOWN_VECTOR), and the result was
+> not only a misreport of the vector number (0xff instead of 0xef - took me
+> a while...), but also stalled interrupts of equal and lower priority
+> because a spurious interrupt is not (and must not be) acknowledged.
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index e02d9a739e9c..597f2f02f3a8 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -9848,6 +9848,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
- 
- 	/* disable the port */
- 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
-+	cancel_work_sync(&ppd->freeze_work);
- }
- 
- static inline int init_cpu_counters(struct hfi1_devdata *dd)
--- 
-2.20.1
+That does not make sense.
 
+__visible void __irq_entry smp_spurious_interrupt(struct pt_regs *regs)
+{
+        u8 vector = ~regs->orig_ax;
+        u32 v;
 
+        entering_irq();
+        trace_spurious_apic_entry(vector);
+        /*
+         * Check if this really is a spurious interrupt and ACK it
+         * if it is a vectored one.  Just in case...
+         */
+        v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
+        if (v & (1 << (vector & 0x1f)))
+                ack_APIC_irq();
 
+If it is a vectored one it _IS_ acked.
+
+        inc_irq_stat(irq_spurious_count);
+
+ 	/* see sw-dev-man vol 3, chapter 7.4.13.5 */
+        pr_info("spurious APIC interrupt through vector %02x on CPU#%d, "
+                "should never happen.\n", vector, smp_processor_id());
+
+and the vector through which that comes is printed correctly, unless
+regs->orig_ax is hosed.
+
+Thanks,
+
+	tglx
