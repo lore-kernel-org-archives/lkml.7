@@ -2,247 +2,214 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C397C4646C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14292C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756C6208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561371252;
-	bh=TG0TjBa9mw6J7otx5tv6YLaiVZ41FrBRxhyigiSb6go=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oZkRaOYzDvUYce1+dZPYYKkqfFqId0oCSSdyEN1fBhn39A5xr0RJ9BLqsnhm1xCBi
-	 5e8qayhHv3VqaVwt8qLpl0WTTgiDU9q24lDbgcagZ6jagX1JV+dRDBXVuu0Lvwe1Go
-	 xExg7wLjkRVddm1VwjhOuoPGqlWeqwFnpx+0Bny8=
+	by mail.kernel.org (Postfix) with ESMTP id 9E79D205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 10:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="a16f48n1";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Bz2dtP77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfFXKCS (ORCPT
+        id S1729835AbfFXKO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 06:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbfFXKCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:02:15 -0400
-Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C8B208E3;
-        Mon, 24 Jun 2019 10:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561370534;
-        bh=TG0TjBa9mw6J7otx5tv6YLaiVZ41FrBRxhyigiSb6go=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=em3oVJR2pWTQCNZ8dG8YuUN45HFYkHPThf7snUZv/4QKmxnyGC3uv7UgMrNTnnUsc
-         13HiU9sRBm3v9ZUh9lD/kKt3ILzgQL2odwaRvXx7VbD497VbzWy3N9n4EBLjS3p2o9
-         pGGPZSlwXuF1EAmpEiQ+fOB51C7Vt75/LWx+QHow=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allan Xavier <allan.x.xavier@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 02/90] objtool: Support per-function rodata sections
-Date:   Mon, 24 Jun 2019 17:55:52 +0800
-Message-Id: <20190624092313.998819325@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
-References: <20190624092313.788773607@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Jun 2019 06:14:58 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:8706 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727730AbfFXKO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 06:14:57 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5OADjcZ003210;
+        Mon, 24 Jun 2019 03:14:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=PGG92Jwe85r2s+rfBND0QCvpRuKfPpVJwCiRVOzdo1s=;
+ b=a16f48n1BtRQOTUWsUL2yRW7a0ooVTs2CqXOPQ6GkIBuwt0gYlG9NQ7x97jVlA6BpsOP
+ AGlrKVdNdnNnfXTKVkEAHgjNtV2nZ+FXFz4pG1/BJwCWA19NgiDkIg/zfoBrLX0FfJr7
+ GwJef97Lcb2YnSMSD/B6/Kt1Ypbi6JZZeNSNQJBk9omp7mfVk0Icj9v1hchLtNHNpmXW
+ +wGOynSWB4Qv9vXjW8aeUg57zGYUcq471B2h+cdXu0ln7dzIB0f+KfrqsKCnQWScX1oq
+ c2LVU+T2IjO+LHf+6Dc9+v6KiZxtbBm02hugICcF/mpNUDeT3Xc7np0d0OvFSfuLGD1J xA== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2055.outbound.protection.outlook.com [104.47.46.55])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t9fwtqe4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 03:14:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PGG92Jwe85r2s+rfBND0QCvpRuKfPpVJwCiRVOzdo1s=;
+ b=Bz2dtP77jSBDyT5McK5KdDWnry39I92YxD2hUARswVYPRcX6GUPEZOlBzZS0/lFRMgPm/fTo+28nqbs15eyGfsMBmbWcSYOQK8VjO2eOo8m7vCm2MRuzHCtkYzqgEweue88G7oPrpDm8EQCJ7BCyskXqlfKzfPNtGlSlbDG3NpI=
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
+ CO2PR07MB2520.namprd07.prod.outlook.com (10.166.95.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 10:14:42 +0000
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1987.014; Mon, 24 Jun 2019
+ 10:14:42 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: RE: [PATCH v4 2/5] net: macb: add support for sgmii MAC-PHY interface
+Thread-Topic: [PATCH v4 2/5] net: macb: add support for sgmii MAC-PHY
+ interface
+Thread-Index: AQHVKaVHMt019Pka20mPugoFl8ah06apBQMAgAFRdiCAADaTgIAABQ5Q
+Date:   Mon, 24 Jun 2019 10:14:41 +0000
+Message-ID: <CO2PR07MB24699250A3773DE76B6D2E9EC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
+ <1561281781-13479-1-git-send-email-pthombar@cadence.com>
+ <20190623101224.nzwodgfo6vvv65cx@shell.armlinux.org.uk>
+ <CO2PR07MB246931C79F736F39D0523D3BC1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+ <20190624093533.4vhvjmqqrucq2ixf@shell.armlinux.org.uk>
+In-Reply-To: <20190624093533.4vhvjmqqrucq2ixf@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1kZjMzNWQxZC05NjY4LTExZTktODRmOS0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcZGYzMzVkMWUtOTY2OC0xMWU5LTg0ZjktMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIzNTA4IiB0PSIxMzIwNTg0NDg3ODc0NTAwNjMiIGg9IitWWGFGcXVGRmZpbGlsT3BUOFl1TTJvWjFrbz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93f675ba-10e0-4b8d-731b-08d6f88cc5fa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2520;
+x-ms-traffictypediagnostic: CO2PR07MB2520:
+x-microsoft-antispam-prvs: <CO2PR07MB2520A9D42387576D9314CFB9C1E00@CO2PR07MB2520.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(136003)(396003)(346002)(199004)(189003)(36092001)(26005)(7736002)(81156014)(81166006)(7696005)(99286004)(8936002)(55236004)(256004)(33656002)(305945005)(76176011)(6506007)(186003)(6116002)(74316002)(486006)(73956011)(6916009)(446003)(11346002)(3846002)(229853002)(476003)(6436002)(66066001)(478600001)(5660300002)(52536014)(55016002)(102836004)(8676002)(53936002)(71200400001)(71190400001)(4326008)(6246003)(78486014)(54906003)(25786009)(76116006)(2906002)(66556008)(9686003)(86362001)(66446008)(64756008)(66476007)(14454004)(66946007)(68736007)(107886003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2520;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LNPxW90ZkRdisnwEt//o9weqCqjmALzStdxmbKoaGfxSC9H4Q4LtBuicBAf9bjWo99ms1Anm23G030A9fBlIVSpaOCak39skqYebVusiC4BQzk3wN8F74WhntcnhLDIkAttl1YBuaXDvQ3N86Pg8Afoi7V8i0jRcudQhrA9gcZZ/0I2XJ+G3OaNuADFCL7NRq0FofpFDHViltYi9hkEe2uwQ0vjLBLLT/GqjQvmKzma2G96vDGEl4QZmE32G3oFILhLWaQT72BQJq3ncyE6TNHe2WWLnDjpNw82pI8QjGIALmN1XunS0qQrGXYN+JzyI6KM/CSsSV3RRJHdomv4mzl0OTVv0feGxcw9xK4Pr8AKv1CY+SZUa+k60lK1XwVQddUvYH39KWjZV/HGALeMwqRdkX/yle/0vUZucZ8en2mg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93f675ba-10e0-4b8d-731b-08d6f88cc5fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 10:14:41.9197
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2520
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allan Xavier <allan.x.xavier@oracle.com>
+>> >I still don't think this makes much sense, splitting the interface
+>> > configuration between here and below.
+>> Do you mean splitting mac_config in two *_configure functions ?
+>> This was done as per Andrew's suggestion to make code mode readable
+>> and easy to manage by splitting MAC configuration for different interfac=
+es.
+>No, I mean here you disable SGMII if we're switching away from SGMII
+>mode.... (note, this means there is more to come for this sentence)
+Sorry, I misunderstood your original question. I think disabling old interf=
+ace
+and enabling new one can be done in single place. I will do this change.
 
-commit 4a60aa05a0634241ce17f957bf9fb5ac1eed6576 upstream.
+>> >This will only be executed when we are not using inband mode, which
+>> >basically means it's not possible to switch to SGMII in-band mode.
+>> SGMII is used in default PHY mode. And above code is to program MAC to
+>> select PCS and SGMII interface.
+>... and here you enable it for SGMII mode, but only for non-inband
+>modes.
+>
+>Why not:
+>	if (change_interface)  {
+>		if (state->interface =3D=3D PHY_INTERFACE_MODE_SGMII) {
+>			// Enable SGMII mode and PCS
+>			gem_writel(bp, NCFGR, ncfgr | GEM_BIT(SGMIIEN) |
+>				   GEM_BIT(PCSSEL));
+>		} else {
+>			// Disable SGMII mode and PCS
+>			gem_writel(bp, NCFGR, ncfgr & ~(GEM_BIT(SGMIIEN)
+>				   GEM_BIT(PCSSEL)));
+>			// Reset PCS
+>			gem_writel(bp, PCS_CTRL, gem_readl(bp, PCS_CTRL)
+>				   GEM_BIT(PCS_CTRL_RST));
+>		}
+>	}
+>	if (!phylink_autoneg_inband(mode) &&
+>	    (bp->speed !=3D state->speed || bp->duplex !=3D state->duplex)) {
+>?
+Ok
 
-Add support for processing switch jump tables in objects with multiple
-.rodata sections, such as those created by '-ffunction-sections' and
-'-fdata-sections'.  Currently, objtool always looks in .rodata for jump
-table information, which results in many "sibling call from callable
-instruction with modified stack frame" warnings with objects compiled
-using those flags.
+>> >> +
+>> >> +		if (!interface_supported) {
+>> >> +			netdev_err(dev, "Phy mode %s not supported",
+>> >> +				   phy_modes(phy_mode));
+>> >> +			goto err_out_free_netdev;
+>> >> +		}
+>> >> +
+>> >>  		bp->phy_interface =3D phy_mode;
+>> >> +	} else {
+>> >> +		bp->phy_interface =3D phy_mode;
+>> >> +	}
+>> >If bp->phy_interface is PHY_INTERFACE_MODE_SGMII here, and
+>> > mac_config()
+>> >is called with state->interface =3D PHY_INTERFACE_MODE_SGMII, then
+>> >mac_config() won't configure the MAC for the interface type - is that
+>> >intentional?
+>> In mac_config configure MAC for non in-band mode, there is also check fo=
+r
+>> speed, duplex
+>> changes. bp->speed and bp->duplex are initialized to SPEED_UNKNOWN
+>> and DUPLEX_UNKNOWN
+>> values so it is expected that for non in band mode state contains valid =
+speed
+>> and duplex mode
+>> which are different from *_UNKNOWN values.
 
-The fix is comprised of three parts:
+>Sorry, this reply doesn't answer my question.  I'm not asking about
+>bp->speed and bp->duplex.  I'm asking:
+>1) why you are initialising bp->phy_interface here
+>2) you to consider the impact that has on the mac_config() implementation
+>  you are proposing
+> because I think it's buggy.
+bp->phy_interface is to store phy mode value from device tree. This is used=
+ later=20
+to know what phy interface user has selected for PHY-MAC. Same is used
+to configure MAC correctly and based on your suggestion code is
+added to handle PHY dynamically changing phy interface, in which=20
+case bp->phy_interface is also updated. Though it may not be what user want=
+,=20
+if phy interface is totally decided by PHY and is anyway going to be differ=
+ent from what user
+has selected in DT, initializing it here doesn't make sense.
+But in case of PHY not changing phy_interface dynamically bp->phy_interface=
+ need to be
+initialized with value from DT.
 
-1. Flagging all .rodata sections when importing ELF information for
-   easier checking later.
-
-2. Keeping a reference to the section each relocation is from in order
-   to get the list_head for the other relocations in that section.
-
-3. Finding jump tables by following relocations to .rodata sections,
-   rather than always referencing a single global .rodata section.
-
-The patch has been tested without data sections enabled and no
-differences in the resulting orc unwind information were seen.
-
-Note that as objtool adds terminators to end of each .text section the
-unwind information generated between a function+data sections build and
-a normal build aren't directly comparable. Manual inspection suggests
-that objtool is now generating the correct information, or at least
-making more of an effort to do so than it did previously.
-
-Signed-off-by: Allan Xavier <allan.x.xavier@oracle.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/099bdc375195c490dda04db777ee0b95d566ded1.1536325914.git.jpoimboe@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/objtool/check.c |   38 ++++++++++++++++++++++++++++++++------
- tools/objtool/check.h |    4 ++--
- tools/objtool/elf.c   |    1 +
- tools/objtool/elf.h   |    3 ++-
- 4 files changed, 37 insertions(+), 9 deletions(-)
-
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -839,7 +839,7 @@ static int add_switch_table(struct objto
- 	struct symbol *pfunc = insn->func->pfunc;
- 	unsigned int prev_offset = 0;
- 
--	list_for_each_entry_from(rela, &file->rodata->rela->rela_list, list) {
-+	list_for_each_entry_from(rela, &table->rela_sec->rela_list, list) {
- 		if (rela == next_table)
- 			break;
- 
-@@ -929,6 +929,7 @@ static struct rela *find_switch_table(st
- {
- 	struct rela *text_rela, *rodata_rela;
- 	struct instruction *orig_insn = insn;
-+	struct section *rodata_sec;
- 	unsigned long table_offset;
- 
- 	/*
-@@ -956,10 +957,13 @@ static struct rela *find_switch_table(st
- 		/* look for a relocation which references .rodata */
- 		text_rela = find_rela_by_dest_range(insn->sec, insn->offset,
- 						    insn->len);
--		if (!text_rela || text_rela->sym != file->rodata->sym)
-+		if (!text_rela || text_rela->sym->type != STT_SECTION ||
-+		    !text_rela->sym->sec->rodata)
- 			continue;
- 
- 		table_offset = text_rela->addend;
-+		rodata_sec = text_rela->sym->sec;
-+
- 		if (text_rela->type == R_X86_64_PC32)
- 			table_offset += 4;
- 
-@@ -967,10 +971,10 @@ static struct rela *find_switch_table(st
- 		 * Make sure the .rodata address isn't associated with a
- 		 * symbol.  gcc jump tables are anonymous data.
- 		 */
--		if (find_symbol_containing(file->rodata, table_offset))
-+		if (find_symbol_containing(rodata_sec, table_offset))
- 			continue;
- 
--		rodata_rela = find_rela_by_dest(file->rodata, table_offset);
-+		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
- 		if (rodata_rela) {
- 			/*
- 			 * Use of RIP-relative switch jumps is quite rare, and
-@@ -1055,7 +1059,7 @@ static int add_switch_table_alts(struct
- 	struct symbol *func;
- 	int ret;
- 
--	if (!file->rodata || !file->rodata->rela)
-+	if (!file->rodata)
- 		return 0;
- 
- 	for_each_sec(file, sec) {
-@@ -1201,10 +1205,33 @@ static int read_retpoline_hints(struct o
- 	return 0;
- }
- 
-+static void mark_rodata(struct objtool_file *file)
-+{
-+	struct section *sec;
-+	bool found = false;
-+
-+	/*
-+	 * This searches for the .rodata section or multiple .rodata.func_name
-+	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
-+	 * rodata sections are ignored as they don't contain jump tables.
-+	 */
-+	for_each_sec(file, sec) {
-+		if (!strncmp(sec->name, ".rodata", 7) &&
-+		    !strstr(sec->name, ".str1.")) {
-+			sec->rodata = true;
-+			found = true;
-+		}
-+	}
-+
-+	file->rodata = found;
-+}
-+
- static int decode_sections(struct objtool_file *file)
- {
- 	int ret;
- 
-+	mark_rodata(file);
-+
- 	ret = decode_instructions(file);
- 	if (ret)
- 		return ret;
-@@ -2176,7 +2203,6 @@ int check(const char *_objname, bool orc
- 	INIT_LIST_HEAD(&file.insn_list);
- 	hash_init(file.insn_hash);
- 	file.whitelist = find_section_by_name(file.elf, ".discard.func_stack_frame_non_standard");
--	file.rodata = find_section_by_name(file.elf, ".rodata");
- 	file.c_file = find_section_by_name(file.elf, ".comment");
- 	file.ignore_unreachables = no_unreachable;
- 	file.hints = false;
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -60,8 +60,8 @@ struct objtool_file {
- 	struct elf *elf;
- 	struct list_head insn_list;
- 	DECLARE_HASHTABLE(insn_hash, 16);
--	struct section *rodata, *whitelist;
--	bool ignore_unreachables, c_file, hints;
-+	struct section *whitelist;
-+	bool ignore_unreachables, c_file, hints, rodata;
- };
- 
- int check(const char *objname, bool orc);
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -390,6 +390,7 @@ static int read_relas(struct elf *elf)
- 			rela->offset = rela->rela.r_offset;
- 			symndx = GELF_R_SYM(rela->rela.r_info);
- 			rela->sym = find_symbol_by_index(elf, symndx);
-+			rela->rela_sec = sec;
- 			if (!rela->sym) {
- 				WARN("can't find rela entry symbol %d for %s",
- 				     symndx, sec->name);
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -48,7 +48,7 @@ struct section {
- 	char *name;
- 	int idx;
- 	unsigned int len;
--	bool changed, text;
-+	bool changed, text, rodata;
- };
- 
- struct symbol {
-@@ -68,6 +68,7 @@ struct rela {
- 	struct list_head list;
- 	struct hlist_node hash;
- 	GElf_Rela rela;
-+	struct section *rela_sec;
- 	struct symbol *sym;
- 	unsigned int type;
- 	unsigned long offset;
-
-
+Regards,
+Parshuram Thombare
