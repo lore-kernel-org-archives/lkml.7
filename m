@@ -2,186 +2,178 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71422C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC707C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6332083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E1C208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 09:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZ8L9ZFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfFXJF0 (ORCPT
+        id S1728278AbfFXJH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 05:05:26 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:13719 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfFXJFZ (ORCPT
+        Mon, 24 Jun 2019 05:07:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32857 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfFXJH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 05:05:25 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x5O95Gw0035152;
-        Mon, 24 Jun 2019 17:05:16 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 81A6019632B11D4E365C;
-        Mon, 24 Jun 2019 17:05:16 +0800 (CST)
-In-Reply-To: <20190619100904.6b759377@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
-        <20190617143510.4ded5728@xps13> <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-        <20190618081436.5d488320@collabora.com> <20190618092901.3bdd9f61@collabora.com>
-        <OF5EAF94EB.AE31CF59-ON4825841E.002A2C38-4825841E.002C60BF@mxic.com.tw> <20190619100904.6b759377@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        broonie@kernel.org, christophe.kerello@st.com,
-        computersforpeace@gmail.com, devicetree@vger.kernel.org,
-        dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com,
-        marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com,
-        richard@nod.at, robh+dt@kernel.org, stefan@agner.ch,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+        Mon, 24 Jun 2019 05:07:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so13069902wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 02:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k29AjLMqDhxEIDlSdq9AAwEV4DK8Ghj3tBdr4zWxit8=;
+        b=nZ8L9ZFBg+4jZFrQWURhuTrpRnHE9JbJuqRQ9wDiRsDHFc98S+dURr7RFLoLSh8KDk
+         ms6UzvRNPYYGK2LCC07eGua1aNenCl6s/qsyQFMx2hvaHig7horlImC8dL4/Vzjwunbb
+         sGqQDtGmSn/Mo/5pOipvE7fpqLZSVUfYDax56OYkjVPEFVMJtfBEUJW/dkLSPvT386Ua
+         D3Nc2jcAoWb6C8/fvKxS7Gd+Sh2XPSfsAKoyFV1RwFiAYYpC2BV0ZNGt12y0ZgTUis6G
+         gbvo7H1YU+HDsAJYtmQPSd80CRrXlFF6fPdI0AHt3Ia3u198nUJQxHM+BuC6HJADNRPy
+         5pdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=k29AjLMqDhxEIDlSdq9AAwEV4DK8Ghj3tBdr4zWxit8=;
+        b=gaJE0z6+eFF3/MZmMbBGjUywNaI9bjYhSKZ/ffhZnT+PR/V2RDGNTcosjJpHQ+joTE
+         rBg1Fav63FtTqw0FffUqLT2G+1DUqJDSU6FceXVRwhDPRNP5qzVL2/qCeAbSGsbe/BAB
+         Mtf/PLkFsBFiM2pYKlmbSRzv8Z3eXrHprYSWe5bJvNlPDTYzmZdeh8nAa3OTuKdG5Zro
+         Q9Ca1Ysbw4Uc29yYqeUXHarG0Fe0UYEgs2aV286yZQgAXa7/Q2qWYqM71QHjQqPgYxhb
+         r+rh2fs+x93LJ0TD5jF1cVwXNz0GqdK3Jcbh+y7ozKYdNeexa1PnU0vmynkXYJZSdArP
+         0MMg==
+X-Gm-Message-State: APjAAAWXUNPRYnk4YcKeDTgFHbupiZLKhW6pqPG1FYJA+L98BdegHb59
+        QEXQF1YAC4mvKKLzfq3dB2M3pQ==
+X-Google-Smtp-Source: APXvYqw2mjxk5N2vLx9uUUxWxOlEHpDQKQx8XyoXIk49LR8pU+BwAuepBFwNwAXYzm3kmJiaYakuMQ==
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr21606648wrx.39.1561367275527;
+        Mon, 24 Jun 2019 02:07:55 -0700 (PDT)
+Received: from [192.168.0.41] (209.94.129.77.rev.sfr.net. [77.129.94.209])
+        by smtp.googlemail.com with ESMTPSA id 35sm11674125wrj.87.2019.06.24.02.07.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 02:07:54 -0700 (PDT)
+Subject: Re: [PATCH 1/6] cpufreq: Use existing stub functions instead of
+ IS_ENABLED macro
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+References: <20190621132302.30414-1-daniel.lezcano@linaro.org>
+ <0ce0d1ca-154d-fca3-f739-573ecbd2b0db@linaro.org>
+ <CAJZ5v0gR1O=21FRXrDvCi_wingO5W74w9PX8s5s2=1aesYo4yg@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <48264d1c-7669-845f-ce09-58663588410b@linaro.org>
+Date:   Mon, 24 Jun 2019 11:07:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-KeepSent: FCBB8981:B840C87C-48258423:00311FA8;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFFCBB8981.B840C87C-ON48258423.00311FA8-48258423.0031EBDD@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 24 Jun 2019 17:05:16 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/24 PM 05:05:16,
-        Serialize complete at 2019/06/24 PM 05:05:16
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x5O95Gw0035152
+In-Reply-To: <CAJZ5v0gR1O=21FRXrDvCi_wingO5W74w9PX8s5s2=1aesYo4yg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Miquel, 
+Hi Rafael,
 
-
-> > > > > > > > > How to make all #CS keep high for NAND to enter 
-> > > > > > > > > low-power standby mode if driver don't use 
-> > "legacy.select_chip()" 
-> > > > > ? 
-> > > > > > > > 
-> > > > > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make 
-->select_chip() 
-> > > > > optional 
-> > > > > > > > when ->exec_op() is implemented") which states:
-> > > > > > > > 
-> > > > > > > >         "When [->select_chip() is] not implemented, the 
-core 
-> > is 
-> > > > > assuming 
-> > > > > > > >    the CS line is automatically asserted/deasserted by the 
- 
-> > driver 
-> > > > > > > >    ->exec_op() implementation." 
-> > > > > > > > 
-> > > > > > > > Of course, the above is right only when the controller 
-driver 
-> > 
-> > > > > supports 
-> > > > > > > > the ->exec_op() interface. 
-> > > > > > > 
-> > > > > > > Currently, it seems that we will get the incorrect data and  
-
-> > error
-> > > > > > > operation due to CS in error toggling if CS line is 
-controlled 
-> > in 
-> > > > > > > ->exec_op(). 
-> > > 
-> > > Oh, and please provide the modifications you added on top of this 
-patch.
-> > > Right now we're speculating on what you've done which is definitely 
-not
-> > > an efficient way to debug this sort of issues. 
-> > 
+On 24/06/2019 11:00, Rafael J. Wysocki wrote:
+> On Mon, Jun 24, 2019 at 10:53 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>>
+>> Hi Viresh,
+>>
+>> On 21/06/2019 15:22, Daniel Lezcano wrote:
+>>> The functions stub already exist for the condition the IS_ENABLED
+>>> is trying to avoid.
+>>>
+>>> Remove the IS_ENABLED macros as they are pointless.
+>>>
+>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>
+>> what about this one?
 > 
-> We really need to see the datasheet of the NAND chip which has a
-> problem and how this LPM mode is advertized to understand what the
-> chip expects and eventually how to work-around it.
-> 
-> > The patch is to add in beginning of ->exec_op() to control CS# low and 
+> Care to respond to my question regarding this one in the first place, please?
 
-> > before return from ->exec_op() to control CS# High.
-> > i.e,.
-> > static in mxic_nand_exec_op( )
-> > {
-> >  cs_to_low();
-> > 
-> > 
-> > 
-> >  cs_to_high();
-> >  return;
-> > }
-> > 
-> > But for nand_onfi_detect(), 
-> > it calls nand_read_param_page_op() and then nand_read_data_op().
-> > mxic_nand_exec_op() be called twice for nand_onfi_detect()
-> 
-> Yes, this is expected and usually chips don't care.
-
-As I replied to Boris's email previously.
-I think I have fixed the problem and the root cause is the our NFC's TX 
-FIFO 
-counter do a unnecessary reset in CS control function.
-currently, doing CS# control in ->exec_op() is OK to me.
-
-In addition, by Jones's comments about MFD, 
-I will re-submit this raw NAND ctlr driver instead of MFD and raw-nand. 
------------------------------------------------------------------------>
-MFD is for registering child devices of chips which offer 
-genuine cross-subsystem functionality. 
-
-It is not designed for mode selecting, or as a place to shove shared code 
-just because a better location doesn't appear to exist. 
-------------------------------------------------------------------------<
-
-thanks & best regards,
-Mason
+Ah yes, sorry, I missed your email.
 
 
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
