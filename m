@@ -2,187 +2,277 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF626C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72783C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D721208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3292133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 13:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I/TDON5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbfFXNlg (ORCPT
+        id S1731236AbfFXNl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 09:41:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42086 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfFXNlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 09:41:35 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 20D583086220;
-        Mon, 24 Jun 2019 13:41:35 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E9F060143;
-        Mon, 24 Jun 2019 13:41:28 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 21:41:25 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kyle Pelton <kyle.d.pelton@intel.com>
-Subject: Re: [PATCHv2] x86/mm: Handle physical-virtual alignment mismatch in
- phys_p4d_init()
-Message-ID: <20190624134125.GN24419@MiWiFi-R3L-srv>
-References: <20190624123150.920-1-kirill.shutemov@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624123150.920-1-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 24 Jun 2019 13:41:35 +0000 (UTC)
+        Mon, 24 Jun 2019 09:41:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50198 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729954AbfFXNl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 09:41:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODdAlE182899;
+        Mon, 24 Jun 2019 13:41:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=Xtzw3ZUeQeMRndTM5HdMstKSbvMDR5ztBK/KHoGXKiM=;
+ b=I/TDON5E8IIkq0h9BlGW7mEuZl2/u3P+lZ9T5s0Rww3D1JzZnNDpDeIXE/XZIHB0v9jN
+ Kwk/ElJz24UhJTxQPkf8QM6hp7tA3uPDCMNSEqgXbh+XNdc2kfdb+gJwyJlA2UfeozNB
+ PfhF+tcFwqGFGIf/SIin4yAU45TkpTLvbqB3Glfj1iZTNQmMdQm7+sNQT2PLMNrJ1nHV
+ mMwgyxvlJsT1Thx2I2yM6WHPC0N1OMWuZgqNYPE/QnD7wB+IgRIQxAMXPjUyE50tTdKF
+ IW91hLqWVNn+mM943aJ1GjXXMe54UIi2kSnEvssSt/JWk/0Q1nSczl0pOnvRp1muwSMj KQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t9cyq6e7g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:41:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODdn89027667;
+        Mon, 24 Jun 2019 13:41:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t99f39dky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:41:19 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5ODfIKR022728;
+        Mon, 24 Jun 2019 13:41:18 GMT
+Received: from [192.168.14.112] (/109.64.216.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 06:41:18 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH] x86/kvm/nVMCS: fix VMCLEAR when Enlightened VMCS is in
+ use
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190624133028.3710-1-vkuznets@redhat.com>
+Date:   Mon, 24 Jun 2019 16:41:14 +0300
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CEFF2A14-611A-417C-BC0A-8814862F26C6@oracle.com>
+References: <20190624133028.3710-1-vkuznets@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/19 at 03:31pm, Kirill A. Shutemov wrote:
-> Kyle has reported that kernel crashes sometimes when it boots in
-> 5-level paging mode with KASLR enabled:
-> 
->   WARNING: CPU: 0 PID: 0 at arch/x86/mm/init_64.c:87 phys_p4d_init+0x1d4/0x1ea
->   RIP: 0010:phys_p4d_init+0x1d4/0x1ea
->   Call Trace:
->    __kernel_physical_mapping_init+0x10a/0x35c
->    kernel_physical_mapping_init+0xe/0x10
->    init_memory_mapping+0x1aa/0x3b0
->    init_range_memory_mapping+0xc8/0x116
->    init_mem_mapping+0x225/0x2eb
->    setup_arch+0x6ff/0xcf5
->    start_kernel+0x64/0x53b
->    ? copy_bootdata+0x1f/0xce
->    x86_64_start_reservations+0x24/0x26
->    x86_64_start_kernel+0x8a/0x8d
->    secondary_startup_64+0xb6/0xc0
-> 
-> which causes later:
-> 
->   BUG: unable to handle page fault for address: ff484d019580eff8
->   #PF: supervisor read access in kernel mode
->   #PF: error_code(0x0000) - not-present page
->   BAD
->   Oops: 0000 [#1] SMP NOPTI
->   RIP: 0010:fill_pud+0x13/0x130
->   Call Trace:
->    set_pte_vaddr_p4d+0x2e/0x50
->    set_pte_vaddr+0x6f/0xb0
->    __native_set_fixmap+0x28/0x40
->    native_set_fixmap+0x39/0x70
->    register_lapic_address+0x49/0xb6
->    early_acpi_boot_init+0xa5/0xde
->    setup_arch+0x944/0xcf5
->    start_kernel+0x64/0x53b
-> 
-> Kyle bisected the issue to commit b569c1843498 ("x86/mm/KASLR: Reduce
-> randomization granularity for 5-level paging to 1GB")
-> 
-> Before the commit PAGE_OFFSET is always aligned to P4D_SIZE if we boot in
-> 5-level paging mode. But now only PUD_SIZE alignment is guaranteed.
-> 
-> For phys_p4d_init() it means that 'paddr_next' after the first iteration
-> can belong to the same p4d entry.
-> 
-> In the case I was able to reproduce the 'vaddr' on the first iteration
-> is 0xff4228027fe00000 and 'paddr' is 0x33fe00000. On the second
-> iteration 'vaddr' becomes 0xff42287f40000000 and 'paddr' is
-> 0x8000000000. The 'vaddr' in both cases belong to the same p4d entry.
-> 
-> It screws up 'i' count: we miss the last entry in the page table
-> completely.  And it confuses the branch under 'paddr >= paddr_end'
-> condition: the p4d entry can be cleared where must not to.
-> 
-> The patch makes phys_p4d_init() walk by virtual address space, like
-> __kernel_physical_mapping_init() does. It makes it work correctly with
-> phys-virt mismatch.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-and-tested-by: Kyle Pelton <kyle.d.pelton@intel.com>
-> Fixes: b569c1843498 ("x86/mm/KASLR: Reduce randomization granularity for 5-level paging to 1GB")
-> Cc: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+
+
+> On 24 Jun 2019, at 16:30, Vitaly Kuznetsov <vkuznets@redhat.com> =
+wrote:
+>=20
+> When Enlightened VMCS is in use, it is valid to do VMCLEAR and,
+> according to TLFS, this should "transition an enlightened VMCS from =
+the
+> active to the non-active state". It is, however, wrong to assume that
+> it is only valid to do VMCLEAR for the eVMCS which is currently active
+> on the vCPU performing VMCLEAR.
+>=20
+> Currently, the logic in handle_vmclear() is broken: in case, there is =
+no
+> active eVMCS on the vCPU doing VMCLEAR we treat the argument as a =
+'normal'
+> VMCS and kvm_vcpu_write_guest() to the 'launch_state' field =
+irreversibly
+> corrupts the memory area.
+>=20
+> So, in case the VMCLEAR argument is not the current active eVMCS on =
+the
+> vCPU, how can we know if the area it is pointing to is a normal or an
+> enlightened VMCS?
+> Thanks to the bug in Hyper-V (see commit 72aeb60c52bf7 ("KVM: nVMX: =
+Verify
+> eVMCS revision id match supported eVMCS version on eVMCS VMPTRLD")) we =
+can
+> not, the revision can't be used to distinguish between them. So let's
+> assume it is always enlightened in case enlightened vmentry is enabled =
+in
+> the assist page. Also, check if vmx->nested.enlightened_vmcs_enabled =
+to
+> minimize the impact for 'unenlightened' workloads.
+>=20
+> Fixes: b8bbab928fb1 ("KVM: nVMX: implement enlightened VMPTRLD and =
+VMCLEAR")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/mm/init_64.c | 24 +++++++++++++-----------
->  1 file changed, 13 insertions(+), 11 deletions(-)
+> arch/x86/kvm/vmx/evmcs.c  | 18 ++++++++++++++++++
+> arch/x86/kvm/vmx/evmcs.h  |  1 +
+> arch/x86/kvm/vmx/nested.c | 19 ++++++++-----------
+> 3 files changed, 27 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+> index 1a6b3e1581aa..eae636ec0cc8 100644
+> --- a/arch/x86/kvm/vmx/evmcs.c
+> +++ b/arch/x86/kvm/vmx/evmcs.c
+> @@ -3,6 +3,7 @@
+> #include <linux/errno.h>
+> #include <linux/smp.h>
+>=20
+> +#include "../hyperv.h"
+> #include "evmcs.h"
+> #include "vmcs.h"
+> #include "vmx.h"
+> @@ -309,6 +310,23 @@ void evmcs_sanitize_exec_ctrls(struct vmcs_config =
+*vmcs_conf)
+> }
+> #endif
+>=20
+> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmptr)
 
-Looks good to me, thanks.
+I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+In addition, I think you should return either -1ull or =
+assist_page.current_nested_vmcs.
+i.e. Don=E2=80=99t return evmcs_ptr by pointer but instead as a =
+return-value and get rid of the bool.
 
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> 
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 693aaf28d5fe..0f01c7b1d217 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -671,23 +671,25 @@ static unsigned long __meminit
->  phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
->  	      unsigned long page_size_mask, bool init)
->  {
-> -	unsigned long paddr_next, paddr_last = paddr_end;
-> -	unsigned long vaddr = (unsigned long)__va(paddr);
-> -	int i = p4d_index(vaddr);
-> +	unsigned long vaddr, vaddr_end, vaddr_next, paddr_next, paddr_last;
+> +{
+> +	struct hv_vp_assist_page assist_page;
 > +
-> +	paddr_last = paddr_end;
-> +	vaddr = (unsigned long)__va(paddr);
-> +	vaddr_end = (unsigned long)__va(paddr_end);
->  
->  	if (!pgtable_l5_enabled())
->  		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
->  				     page_size_mask, init);
->  
-> -	for (; i < PTRS_PER_P4D; i++, paddr = paddr_next) {
-> -		p4d_t *p4d;
-> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
-> +		p4d_t *p4d = p4d_page + p4d_index(vaddr);
->  		pud_t *pud;
->  
-> -		vaddr = (unsigned long)__va(paddr);
-> -		p4d = p4d_page + p4d_index(vaddr);
-> -		paddr_next = (paddr & P4D_MASK) + P4D_SIZE;
-> +		vaddr_next = (vaddr & P4D_MASK) + P4D_SIZE;
-> +		paddr = __pa(vaddr);
->  
->  		if (paddr >= paddr_end) {
-> +			paddr_next = __pa(vaddr_next);
->  			if (!after_bootmem &&
->  			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
->  					     E820_TYPE_RAM) &&
-> @@ -699,13 +701,13 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
->  
->  		if (!p4d_none(*p4d)) {
->  			pud = pud_offset(p4d, 0);
-> -			paddr_last = phys_pud_init(pud, paddr, paddr_end,
-> -						   page_size_mask, init);
-> +			paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
-> +					page_size_mask, init);
->  			continue;
->  		}
->  
->  		pud = alloc_low_page();
-> -		paddr_last = phys_pud_init(pud, paddr, paddr_end,
-> +		paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
->  					   page_size_mask, init);
->  
->  		spin_lock(&init_mm.page_table_lock);
-> -- 
-> 2.21.0
-> 
+> +	*evmptr =3D -1ull;
+> +
+> +	if (unlikely(!kvm_hv_get_assist_page(vcpu, &assist_page)))
+> +		return false;
+> +
+> +	if (unlikely(!assist_page.enlighten_vmentry))
+> +		return false;
+> +
+> +	*evmptr =3D assist_page.current_nested_vmcs;
+> +
+> +	return true;
+> +}
+> +
+> uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+> {
+>        struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+> index e0fcef85b332..c449e79a9c4a 100644
+> --- a/arch/x86/kvm/vmx/evmcs.h
+> +++ b/arch/x86/kvm/vmx/evmcs.h
+> @@ -195,6 +195,7 @@ static inline void =
+evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf) {}
+> static inline void evmcs_touch_msr_bitmap(void) {}
+> #endif /* IS_ENABLED(CONFIG_HYPERV) */
+>=20
+> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmptr);
+> uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu);
+> int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+> 			uint16_t *vmcs_version);
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 9214b3aea1f9..ee8dda7d8a03 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1765,26 +1765,21 @@ static int =
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+> 						 bool from_launch)
+> {
+> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> -	struct hv_vp_assist_page assist_page;
+> +	u64 evmptr;
+
+I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+
+>=20
+> 	if (likely(!vmx->nested.enlightened_vmcs_enabled))
+> 		return 1;
+>=20
+> -	if (unlikely(!kvm_hv_get_assist_page(vcpu, &assist_page)))
+> +	if (!nested_enlightened_vmentry(vcpu, &evmptr))
+> 		return 1;
+>=20
+> -	if (unlikely(!assist_page.enlighten_vmentry))
+> -		return 1;
+> -
+> -	if (unlikely(assist_page.current_nested_vmcs !=3D
+> -		     vmx->nested.hv_evmcs_vmptr)) {
+> -
+> +	if (unlikely(evmptr !=3D vmx->nested.hv_evmcs_vmptr)) {
+> 		if (!vmx->nested.hv_evmcs)
+> 			vmx->nested.current_vmptr =3D -1ull;
+>=20
+> 		nested_release_evmcs(vcpu);
+>=20
+> -		if (kvm_vcpu_map(vcpu, =
+gpa_to_gfn(assist_page.current_nested_vmcs),
+> +		if (kvm_vcpu_map(vcpu, gpa_to_gfn(evmptr),
+> 				 &vmx->nested.hv_evmcs_map))
+> 			return 0;
+>=20
+> @@ -1826,7 +1821,7 @@ static int =
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+> 		 */
+> 		vmx->nested.hv_evmcs->hv_clean_fields &=3D
+> 			~HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL;
+> -		vmx->nested.hv_evmcs_vmptr =3D =
+assist_page.current_nested_vmcs;
+> +		vmx->nested.hv_evmcs_vmptr =3D evmptr;
+>=20
+> 		/*
+> 		 * Unlike normal vmcs12, enlightened vmcs12 is not fully
+> @@ -4331,6 +4326,7 @@ static int handle_vmclear(struct kvm_vcpu *vcpu)
+> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> 	u32 zero =3D 0;
+> 	gpa_t vmptr;
+> +	u64 evmptr;
+
+I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
+readable and sufficiently short.
+
+>=20
+> 	if (!nested_vmx_check_permission(vcpu))
+> 		return 1;
+> @@ -4346,7 +4342,8 @@ static int handle_vmclear(struct kvm_vcpu *vcpu)
+> 		return nested_vmx_failValid(vcpu,
+> 			VMXERR_VMCLEAR_VMXON_POINTER);
+>=20
+> -	if (vmx->nested.hv_evmcs_map.hva) {
+> +	if (unlikely(vmx->nested.enlightened_vmcs_enabled) &&
+> +	    nested_enlightened_vmentry(vcpu, &evmptr)) {
+> 		if (vmptr =3D=3D vmx->nested.hv_evmcs_vmptr)
+
+Shouldn=E2=80=99t you also remove the (vmptr =3D=3D =
+vmx->nested.hv_evmcs_vmptr) condition?
+To my understanding, vmx->nested.hv_evmcs_vmptr represents the address =
+of the loaded eVMCS on current vCPU.
+But according to commit message, it is valid for vCPU to perform VMCLEAR =
+on eVMCS that differ from loaded eVMCS on vCPU.
+E.g. The current vCPU may even have vmx->nested.hv_evmcs_vmptr set to =
+-1ull.
+
+-Liran
+
+> 			nested_release_evmcs(vcpu);
+> 	} else {
+> --=20
+> 2.20.1
+>=20
+
