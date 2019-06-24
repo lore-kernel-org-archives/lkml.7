@@ -2,127 +2,182 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A252C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1170AC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E03120673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D617320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 18:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fTbb0Niw"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hV9Hginv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfFXSpN (ORCPT
+        id S1728650AbfFXSp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 14:45:13 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:16171 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbfFXSpM (ORCPT
+        Mon, 24 Jun 2019 14:45:59 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38608 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbfFXSp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:45:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1561401910;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=s0LbhSknlCM5hc8ANHokTmG0D8Dtvf0T0SdiBQitSTY=;
-        b=fTbb0NiwuBQ0VbR5R9c/m30pxhd8Q2KsH1atqNSCJt9Q76rh8E48Jrh5ixhjfxfjXV
-        Rvbi+esRxMofHc6sKYLFbGRsbjD0omlbgnJphUXuc6FM0ddbxcZUfgq04xCCRZ1dZaEK
-        qh6n9JVaEZk0zTEKKwcltmvsmSW31/yzJ6gNdEPBltC714syrZZQU5S0UJ7EEVw12H28
-        6RHvlaiW5dp2J9cIn0wY/ZChLgXGFt1sNDfb9A49NQiY6+NJQL/lN4tpwYip3x89j7yv
-        1H+a1jcQ/yxGSnxCpXNlv/p9hZrOaZKwJi6eWnd6g/AP+0yu1zUrvYe3gsBjS2CgyLIB
-        GdkQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw4vuNw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id V09459v5OIj0Rvj
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 24 Jun 2019 20:45:00 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <cover.1559905870.git.hns@goldelico.com>
-Date:   Mon, 24 Jun 2019 20:44:59 +0200
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
-        devicetree@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com>
-References: <cover.1559905870.git.hns@goldelico.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
-        imirkin@alum.mit.edu, marek.belisko@gmail.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 24 Jun 2019 14:45:59 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so4371041qtl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 11:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r7vmIFoMsLv6AsnWiTP/27K1ZwOU/uez0zA/43q6sf8=;
+        b=hV9Hginvi+G8TJyLdFMXeusvL3jKgQeZ98y9O6WGRT8Lj4OL7/hTzbF1SbIu9vAQ5y
+         KHr6CiTlqIoq0p/yWkLE00/bQd14rCQytxBXYchlWzPlq8nkHLXnMLYb0b+sHVxaoqSq
+         DE0YShUZYUMvzHlQ3leSkTcQznouO4lQVt3mA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r7vmIFoMsLv6AsnWiTP/27K1ZwOU/uez0zA/43q6sf8=;
+        b=GvAKGRW1QvWxVO8jH3NTiHIC3gcCwefdcOatPMwkdX4dhzpq1lr1jeXSVN7Oqo6ntv
+         t+ff4NZLZCtjuuJtHpC4zmZkoOFaDdcN12VCHkE+EjsSF1wpSJuewPVsIUmc/x2mIHOF
+         Sl5ALlptJLgNFppydNWlxTbBLbwL7bA+ifcK3Y4WYqSjiNCcOPUseNfpAezYs+viJXAy
+         0UWYcTnJIaDnXcKm+ywiaTOABOQmco4xxbn6L/tx2mGYrfvid2gW8tQcHNTWXs6mO+ik
+         ndts/mAj3aTufSCFSS3BDGVe5w27vqShDJiwsvUaOUs2x8cHbK7UYBE+motkcwTOb1Yq
+         iYGw==
+X-Gm-Message-State: APjAAAVhlm/bndSVdVMKhe1g/k0o/MFj/n+7iITuGrX8nV+KUaPAZuM7
+        8FsDRG+P85LkUEtEbSZNMTLt8eDUm1yJEg==
+X-Google-Smtp-Source: APXvYqxn2Nn5FET3LlhRWVj/WXwyovGkegdYS6rULBlkCwmq2MHqiEV8acU6rL6Nn0X0HEwP582EYA==
+X-Received: by 2002:a0c:8a26:: with SMTP id 35mr58659957qvt.158.1561401957565;
+        Mon, 24 Jun 2019 11:45:57 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id f1sm5964663qke.117.2019.06.24.11.45.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 11:45:56 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        jannh@google.com, oleg@redhat.com, mathieu.desnoyers@efficios.com,
+        willy@infradead.org, peterz@infradead.org, will.deacon@arm.com,
+        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
+        keescook@chromium.org, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH RFC v2] Convert struct pid count to refcount_t
+Date:   Mon, 24 Jun 2019 14:45:34 -0400
+Message-Id: <20190624184534.209896-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+struct pid's count is an atomic_t field used as a refcount. Use
+refcount_t for it which is basically atomic_t but does additional
+checking to prevent use-after-free bugs.
 
-> Am 07.06.2019 um 13:11 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> V3:
-> * add bindings documentation (suggested by sam@ravnborg.org)
->=20
-> V2 2019-06-05 07:07:05:
-> * fix typo in 99dtc panel compatible string (reported by =
-imirkin@alum.mit.edu)
->=20
-> V1 2019-06-04 14:53:00:
->=20
-> Since v5.2-rc1 OMAP is no longer using a special display driver =
-architecture
-> for DPI panels, but uses the general drm/panel/panel-simple.
->=20
-> So we finally can add SoC independent panel definitions for two panel =
-models
-> which we already had worked on quite a while ago (before device tree =
-was
-> introduced):
->=20
-> 	https://patchwork.kernel.org/patch/2851295/
->=20
->=20
->=20
-> H. Nikolaus Schaller (5):
->  drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
->  drm/panel: simple: Add Ortustech COM37H3M panel support
->  dt-bindings: drm/panel: simple: add ortustech,com37h3m05dtc panel
->  dt-bindings: drm/panel: simple: add ortustech,com37h3m99dtc panel
->  dt-bindings: drm/panel: simple: add sharp,lq070y3dg3b panel
->=20
-> .../display/panel/ortustech,com37h3m05dtc.txt | 12 ++++
-> .../display/panel/ortustech,com37h3m99dtc.txt | 12 ++++
-> .../display/panel/sharp,lq070y3dg3b.txt       | 12 ++++
-> drivers/gpu/drm/panel/panel-simple.c          | 63 +++++++++++++++++++
-> 4 files changed, 99 insertions(+)
-> create mode 100644 =
-Documentation/devicetree/bindings/display/panel/ortustech,com37h3m05dtc.tx=
-t
-> create mode 100644 =
-Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.tx=
-t
-> create mode 100644 =
-Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
->=20
-> --=20
-> 2.19.1
->=20
+For memory ordering, the only change is with the following:
+ -	if ((atomic_read(&pid->count) == 1) ||
+ -	     atomic_dec_and_test(&pid->count)) {
+ +	if (refcount_dec_and_test(&pid->count)) {
+ 		kmem_cache_free(ns->pid_cachep, pid);
 
-any progress towards merging this somewhere? It did not yet arrive in =
-linux-next.
+Here the change is from:
+Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
+This ACQUIRE should take care of making sure the free happens after the
+refcount_dec_and_test().
 
-BTW: should also be applied to 5.2
+The above hunk also removes atomic_read() since it is not needed for the
+code to work and it is unclear how beneficial it is. The removal lets
+refcount_dec_and_test() check for cases where get_pid() happened before
+the object was freed.
 
-BR and thanks,
-Nikolaus
+Cc: jannh@google.com
+Cc: oleg@redhat.com
+Cc: mathieu.desnoyers@efficios.com
+Cc: willy@infradead.org
+Cc: peterz@infradead.org
+Cc: will.deacon@arm.com
+Cc: paulmck@linux.vnet.ibm.com
+Cc: elena.reshetova@intel.com
+Cc: keescook@chromium.org
+Cc: kernel-team@android.com
+Cc: kernel-hardening@lists.openwall.com
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
+---
+Changed to RFC to get any feedback on the memory ordering.
+
+
+ include/linux/pid.h | 5 +++--
+ kernel/pid.c        | 7 +++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 14a9a39da9c7..8cb86d377ff5 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_PID_H
+ 
+ #include <linux/rculist.h>
++#include <linux/refcount.h>
+ 
+ enum pid_type
+ {
+@@ -56,7 +57,7 @@ struct upid {
+ 
+ struct pid
+ {
+-	atomic_t count;
++	refcount_t count;
+ 	unsigned int level;
+ 	/* lists of tasks that use this pid */
+ 	struct hlist_head tasks[PIDTYPE_MAX];
+@@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
+ static inline struct pid *get_pid(struct pid *pid)
+ {
+ 	if (pid)
+-		atomic_inc(&pid->count);
++		refcount_inc(&pid->count);
+ 	return pid;
+ }
+ 
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 20881598bdfa..89c4849fab5d 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -37,7 +37,7 @@
+ #include <linux/init_task.h>
+ #include <linux/syscalls.h>
+ #include <linux/proc_ns.h>
+-#include <linux/proc_fs.h>
++#include <linux/refcount.h>
+ #include <linux/sched/task.h>
+ #include <linux/idr.h>
+ 
+@@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
+ 		return;
+ 
+ 	ns = pid->numbers[pid->level].ns;
+-	if ((atomic_read(&pid->count) == 1) ||
+-	     atomic_dec_and_test(&pid->count)) {
++	if (refcount_dec_and_test(&pid->count)) {
+ 		kmem_cache_free(ns->pid_cachep, pid);
+ 		put_pid_ns(ns);
+ 	}
+@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+ 	}
+ 
+ 	get_pid_ns(ns);
+-	atomic_set(&pid->count, 1);
++	refcount_set(&pid->count, 1);
+ 	for (type = 0; type < PIDTYPE_MAX; ++type)
+ 		INIT_HLIST_HEAD(&pid->tasks[type]);
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
