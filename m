@@ -2,282 +2,148 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31EBC48BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88996C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB8620665
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4736020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 19:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Vd/Fux5c";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="MZFKcOED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfFXTNl (ORCPT
+        id S1730276AbfFXTNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 15:13:41 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:43528 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfFXTNk (ORCPT
+        Mon, 24 Jun 2019 15:13:47 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:54650 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725881AbfFXTNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:13:40 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23992973AbfFXTNhSGk7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Mon, 24 Jun 2019 21:13:37 +0200
-Date:   Mon, 24 Jun 2019 20:13:37 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Paul Burton <paul.burton@mips.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Mon, 24 Jun 2019 15:13:46 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6837AC016F;
+        Mon, 24 Jun 2019 19:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561403625; bh=IyQcSOT5phDqPIxpqTAJLZWOKuI5yxfsa6BkTsQXkpE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Vd/Fux5cMf3TkVNXFGODYhjzaOew3Z7Nm2z+74S8qfpqPLW+e+h14kjL8eYPqmJUL
+         HCqWcsm/GZd/L8giNDm2RmO+l84ZkgxcFI8JmcHWhm7kZZa5NRXbjUnjKZKYA9297I
+         lAGnLxMjFPvUxeVBPEzRa8dRCp+E1YSmT9p6gLBGJ5NzcrAEFjP8Ha0gb3KLgaGQR/
+         Rx8ShrdibRw1qZgP1V+pUl1LMkb9ouYUdEd94MwQiHh1lrzTnBmDK1i8RD8LeYnOmT
+         v9nbp1nyplCDShm0RLXoVWPm/sS070aVOm1WQJV6sR3Dasfpsm8TmVnnN8roNCncqt
+         BawwuYcdoU3XA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D5776A0096;
+        Mon, 24 Jun 2019 19:13:43 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 24 Jun 2019 12:13:20 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 24 Jun 2019 12:13:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IyQcSOT5phDqPIxpqTAJLZWOKuI5yxfsa6BkTsQXkpE=;
+ b=MZFKcOED8DPBn+ydGCyMPh0pj/Oa7kOV0EuvmcuxyaBDDOOgewPfnzyWxFRQwU20byUZvL6aviK+ZyW2keGrKjCkGx8Dp4iv/2JUpevaj/zlMI2+y2NcGOSTfp/GVihHFiIBz9t/JhV6qfUgtQBcw/slnkOwkNHkMG23FEBoEe0=
+Received: from SN6PR12MB2670.namprd12.prod.outlook.com (52.135.103.23) by
+ SN6PR12MB2800.namprd12.prod.outlook.com (52.135.107.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Mon, 24 Jun 2019 19:13:17 +0000
+Received: from SN6PR12MB2670.namprd12.prod.outlook.com
+ ([fe80::bd34:8d2b:911e:e495]) by SN6PR12MB2670.namprd12.prod.outlook.com
+ ([fe80::bd34:8d2b:911e:e495%5]) with mapi id 15.20.2008.014; Mon, 24 Jun 2019
+ 19:13:17 +0000
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     "hch@lst.de" <hch@lst.de>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-In-Reply-To: <CAK8P3a0Vw-DPjRxsOKiqQmACztdKW5Drkdza8eb6yeEkjdsxoQ@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.1906241822460.28103@eddie.linux-mips.org>
-References: <20190614063341.1672-1-fancer.lancer@gmail.com> <20190620174002.tgayzon7dc5d57fh@pburton-laptop> <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org> <CAK8P3a28Dp3UygNyomDPDxDmCmey37VS7TJkmDogaKUGZMF2mw@mail.gmail.com>
- <alpine.LFD.2.21.1906211048360.21654@eddie.linux-mips.org> <CAK8P3a3HWn7RXjcT0KA_qOc+C1SgWd2qXSdCTTAmRKHdc4qNbQ@mail.gmail.com> <alpine.LFD.2.21.1906211230170.21654@eddie.linux-mips.org> <CAK8P3a0Vw-DPjRxsOKiqQmACztdKW5Drkdza8eb6yeEkjdsxoQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH 7/7] arc: use the generic remapping allocator for coherent
+ DMA allocations
+Thread-Topic: [PATCH 7/7] arc: use the generic remapping allocator for
+ coherent DMA allocations
+Thread-Index: AQHVIsAMmlRh09Vs6Ea+qlthrKcWyaabcdSAgADzXACADnLDgIAAZD4A
+Date:   Mon, 24 Jun 2019 19:13:17 +0000
+Message-ID: <d9ed8f6a82801b94d1d7792eb74effdbce09ce51.camel@synopsys.com>
+References: <20190614144431.21760-1-hch@lst.de>
+         <20190614144431.21760-8-hch@lst.de>
+         <78ac563f2815a9a14bfab6076d0ef948497f5b9f.camel@synopsys.com>
+         <20190615083554.GC23406@lst.de> <20190624131417.GA10593@lst.de>
+In-Reply-To: <20190624131417.GA10593@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=paltsev@synopsys.com; 
+x-originating-ip: [84.204.78.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e9bf598d-5d1a-4ac0-430b-08d6f8d8038d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2800;
+x-ms-traffictypediagnostic: SN6PR12MB2800:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB2800D1C5DE499564F45D549ADEE00@SN6PR12MB2800.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 007814487B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39860400002)(346002)(396003)(366004)(189003)(199004)(6506007)(186003)(6486002)(8676002)(966005)(118296001)(36756003)(26005)(2501003)(71200400001)(71190400001)(25786009)(86362001)(5660300002)(73956011)(66446008)(66556008)(4326008)(478600001)(14454004)(66946007)(76116006)(91956017)(64756008)(66476007)(68736007)(81156014)(81166006)(486006)(476003)(3846002)(102836004)(256004)(6116002)(229853002)(446003)(11346002)(305945005)(2616005)(7736002)(8936002)(2906002)(316002)(54906003)(66066001)(110136005)(99286004)(6246003)(107886003)(76176011)(53936002)(6436002)(6306002)(6512007)(2201001)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR12MB2800;H:SN6PR12MB2670.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iJ00g2zT/4WhtbWYRO981jCmUehKik1S1XFkB9HJQGGcK95tVTzVfBQNZLobYZ8zhzgJjVXLEiaDth6my/r3oYrXJXo/24LiZpw3wfuCFbkKb6gJNWKx8Ttgy6X1XhFqE78PYHqUWojTGu9V0k9i+W4AfI9Rc9FCELfjTnL+jdXD5OVs4EDJ0XiM5IOpcoBIjDBRqJ04OlpLZB8wxT6P2wvMdx8AOlEmbAJrPnl++7HkS3ncI8c0VjL/gWTU3y6jQ22GRNBb3dPvilvFuVr3KZV/Pa+Zd7uRH+Zk5E/vkt7GDzdW+Cdjk4OYPmw2Ld5cumswQla+lF0r2VRx4KrW/B23elVDn4ymvWLeySeq2Mdy9aj+ec9b2BovBpMD+RAgS1huJqyvD69bLWKGzLME7lxsqBZlPYBU6QNYA1OxLps=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <023BB888034E2E4CB28D67BF3924C4C3@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9bf598d-5d1a-4ac0-430b-08d6f8d8038d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 19:13:17.4978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: paltsev@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2800
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd,
-
- We're getting into MMIO and barriers again, sigh.  Cc-ing people recently 
-involved then.
-
-On Fri, 21 Jun 2019, Arnd Bergmann wrote:
-
-> > > > > The other property of packet memory and similar things is that you
-> > > > > basically want memcpy()-behavior with no byteswaps. This is one
-> > > > > of the few cases in which __raw_readq() is actually the right accessor
-> > > > > in (mostly) portable code.
-> > > >
-> > > >  Correct, but we're missing an `__raw_readq_relaxed', etc. interface and
-> > > > having additional barriers applied on every access would hit performance
-> > > > very badly;
-> > >
-> > > How so? __raw_readq() by definition has the least barriers of
-> > > all, you can't make it more relaxed than it already is.
-> >
-> >  Well, `__raw_readq' has all the barriers plain `readq' has except it does
-> > not ever do byte-swapping (which may be bad where address swizzling is
-> > also present).  Whereas `readq_relaxed' at least avoids the trailing DMA
-> > barrier.
-> >
-> >  This is what the MIPS version has:
-> >
-> > #define __BUILD_MEMORY_SINGLE(pfx, bwlq, type, barrier, relax, irq)     \
-> > [...]
-> >
-> > #define __BUILD_MEMORY_PFX(bus, bwlq, type, relax)                      \
-> >                                                                         \
-> > __BUILD_MEMORY_SINGLE(bus, bwlq, type, 1, relax, 1)
-> >
-> > #define BUILDIO_MEM(bwlq, type)                                         \
-> >                                                                         \
-> > __BUILD_MEMORY_PFX(__raw_, bwlq, type, 0)                               \
-> > __BUILD_MEMORY_PFX(__relaxed_, bwlq, type, 1)                           \
-> > __BUILD_MEMORY_PFX(__mem_, bwlq, type, 0)                               \
-> > __BUILD_MEMORY_PFX(, bwlq, type, 0)
-> >
-> > So `barrier' is always passed 1 and consequently all the accessors have a
-> > leading MMIO ordering barrier inserted and only `__relaxed_*' ones have
-> > `relax' set to 0 making them skip the trailing MMIO read vs DMA ordering
-> > barrier.  This is in accordance to Documentation/memory-barriers.txt I
-> > believe.
-> 
-> It is definitely not what other architectures do here. In particular, the
-> asm-generic implementation that is now used on most of them
-> defines raw_readl() as
-> 
-> static inline u32 __raw_readl(const volatile void __iomem *addr)
-> {
->         return *(const volatile u32 __force *)addr;
-> }
-> 
-> and there are a number of drivers that depend on this behavior.
-> readl_relaxed() typically adds the byteswap on this, and readl() adds
-> the barriers on top of readl_relaxed().
-
- If the lack of any ordering barriers with `__raw_*' accessors is indeed 
-intended, then we need to document it in `memory-barriers.txt' as the 
-expected semantics.
-
- This however does not make the interface suitable for accesses to 
-memory-like MMIO resources, e.g. string I/O, but also the ATA data port, 
-unless you want to make/keep the nomenclature more confusing than it has 
-to be.
-
- First some backgound information.
-
-1. For systems that have a uniform endianness throughout there's obviously 
-   no issue.  We only need to choose between strongly-ordered and, if 
-   applicable weakly-ordered accesses.  As the minimum and at the cost of 
-   performance we can enforce strong MMIO ordering everywhere.
-
-2. For systems parts of which have the opposite endianness we can have two 
-   variants (or endianness policies) implemented in hardware for accesses 
-   that cross the boundary of the two endiannesses:
-
-   a. Byte lane matching.
-
-      In this case individual byte addresses are preserved while accessing 
-      a device and byte enables are generated directly from the least 
-      significant bits of the CPU address, meaning that the device is 
-      addressed within its decoding window directly as documented.
-
-      The data quantity accessed, however, has to be byte-swapped to be 
-      interpreted within the domain of the opposite endianness as a 
-      numerical value or a bit pattern if wider than 8 bits.
-
-   b. Bit lane matching.
-
-      In this case individual byte addresses are mangled while accessing a 
-      device and byte enables are generated from the inverse of the 
-      leastsignificant bits of the CPU address, meaning that to calculate 
-      a device address the CPU address has to be transformed, unless 
-      accessing an aligned data quantity of the bus width.
-
-      The data quantity accessed, however, can be used directly to be 
-      interpreted within the domain of the opposite endianness as a 
-      numerical value or a bit pattern regardless of its width.
-
-   Like with the systems of a uniform endianness ordering is to be 
-   considered separately.
-
-Existing computer systems based on the MIPS processor implement either 
-endianness policy or both.  The existence of systems that do bit lane 
-matching is why we have all the arch/mips/include/asm/mach-*/mangle-port.h 
-headers.
-
- I actually own a SOC-based system that implements both, when strapped at 
-reset for the big endianness, by having two MMIO windows defined in its 
-address space, which assume each of the policies respectively, and the 
-boundary between the two endianness domains is at the PCI host bridge.  
-This means that device accesses that cross the PCI bridge need address 
-mangling or byte-swapping as necessary while device accesses that access 
-onchip SOC devices or external devices wired to SOC's interfaces other 
-than PCI require straight through accesses.
-
- The implementers of our Linux port for this system chose to use the byte 
-lane matching policy exclusively, although for performance reason it might 
-make sense to switch between the two policies depending on whether data is 
-to be interpreted as a value or memory contents as the offset between the 
-two windows is fixed.
-
- Anyway, for a system like this and regardless of any ordering requirement 
-we clearly need to have three kinds of accessors:
-
-1. Native (pass-through data, never with address mangling).
-
-2. Value (data byte-swapped if required, possibly with address mangling).
-
-3. Memory (data byte-swapped if required, possibly with address mangling).
-
-And I think the natural nomenclature for the three kinds of accessors 
-respectively is:
-
-1. `__raw_*'.
-
-2. `*' (no prefix by long-established practice, although `__val_*' would 
-   do too, IMO).
-
-3. `__mem_*'.
-
-So I think the MIPS port got it right (and the rest is confused, IMHO).
-
- Furthermore, going back to the ordering requirement, I think we also need 
-to have strongly-ordered native accessors, so that driver writers do not 
-have to be bothered about sprinkling barriers in the common case.
-
- The MIPS port currently meets all the requirements, although it does not 
-provide weakly ordered accessors.
-
-> >  NB I got one part wrong in the previous e-mail, sorry, as for packet
-> > memory accesses etc. the correct accessors are actually `__mem_*' rather
-> > than `__raw_*' ones, but the former ones are not portable.  I always
-> > forget about this peculiarity and it took us years to get it right with
-> > the MIPS port and the old IDE subsystem when doing PIO.
-> >
-> >  The `__mem_*' handlers still do whetever system-specific transformation
-> > is required to present data in the memory rather than CPU byte ordering.
-> > See arch/mips/include/asm/mach-ip27/mangle-port.h for a non-trivial
-> > example and arch/mips/include/asm/mach-generic/mangle-port.h for the
-> > general case.  Whereas `__raw_*' pass raw data unchanged and are generally
-> > only suitable for accesses to onchip SOC MMIO or similar resources that do
-> > not traverse any external bus where a system's endianness may be observed.
-> 
-> Ok, so what you have for __mem_* is actually what I had expected from
-> __raw_* for an architecture, except for the barriers that should have been
-> left out.
-
- Please see above for an explanation as to why `__mem_*' is equivalent to 
-neither `__raw_*' nor plain `*'.
-
-> >  So contrary to what I have written before for the theoretical case of a
-> > big-endian system possibly doing address swizzling we'd have to define and
-> > use `__mem_readq_unordered', etc. here rather than `__raw_readq_relaxed',
-> > etc.
-> 
-> Right.
-> 
-> > > > in fact even the barriers `*_relaxed' accessors imply would
-> > > > best be removed in this use (which is why defza.c uses `readw_o' vs
-> > > > `readw_u', etc. internally), but after all the struggles over the years
-> > > > for weakly ordered internal APIs x86 people are so averse to I'm not sure
-> > > > if I want to start another one.  We can get away with `readq_relaxed' in
-> > > > this use though as all the systems this device can be used with are
-> > > > little-endian as is TURBOchannel, so no byte-swapping will ever actually
-> > > > occur.
-> > >
-> > > I still don't see any downside of using __raw_readq() here, while the
-> > > upsides are:
-> > >
-> > > - makes the driver portable to big-endian kernels (even though we don't
-> > >   care)
-> > > - avoids all barriers
-> > > - fixes the build regression.
-> >
-> >  Giving my observations above it would only address item #3 on your list,
-> > while addressing #1 and #2 would require defining `__mem_readq_unordered',
-> > etc. I am afraid.
-> >
-> >  Have I missed anything?
-> 
-> No, I think you are right based on how mips defines __raw_readl().
-> 
-> Unfortunately, this also means that all portable drivers using the
-> __raw_ accessors to do what you want here are broken on mips
-> (at least on big-endian), while mips drivers using __raw_* are not
-> portable to anything else.
-
- I guess your conclusion is correct then, but I maintain that the 
-nomenclature chosen for the MIPS port years ago is the correct one.  This 
-goes back to commit 4912ba72d6e2 ("Define mem_*() I/O accessory functions 
-that preserve byte addresses.") which defined `mem_*' accessors later 
-renamed to `__mem_*' with commit 290f10ae4230 ("mips: namespace pollution
-- mem_... -> __mem_... in io.h").  I don't know at what stage of awareness 
-of the three scenarios other ports were back then.
-
- Questions, comments, thoughts?
-
-  Maciej
+SGkgQ2hyaXN0b3BoLA0KDQpZZXAgSSd2ZSByZXZpZXdlZCBhbmQgdGVzdGVkIGl0IGZvciBib3Ro
+IGNhc2VzOg0KLSBjb2hlcmVudC9ub25jb2hlcmVudCBkbWENCi0gYWxsb2NhdGlvbiBmcm9tIGF0
+b21pY19wb29sL3JlZ3VsYXIgYWxsb2NhdGlvbg0KDQpldmVyeXRoaW5nIHdvcmtzIGZpbmUgZm9y
+IEFSQy4NCg0KU28sDQoNClJldmlld2VkLWJ5OiBFdmdlbml5IFBhbHRzZXYgPHBhbHRzZXZAc3lu
+b3BzeXMuY29tPg0KVGVzdGVkLWJ5OiBFdmdlbml5IFBhbHRzZXYgPHBhbHRzZXZAc3lub3BzeXMu
+Y29tPg0KDQpmb3IgYm90aA0KW1BBVENIIDIvN10gYXJjOiByZW1vdmUgdGhlIHBhcnRpYWwgRE1B
+X0FUVFJfTk9OX0NPTlNJU1RFTlQgc3VwcG9ydA0KW1BBVENIIDcvN10gYXJjOiB1c2UgdGhlIGdl
+bmVyaWMgcmVtYXBwaW5nIGFsbG9jYXRvciBmb3IgY29oZXJlbnQgRE1BIGFsbG9jYXRpb25zDQoN
+Cg0KT24gTW9uLCAyMDE5LTA2LTI0IGF0IDE1OjE0ICswMjAwLCBoY2hAbHN0LmRlIHdyb3RlOg0K
+PiBPbiBTYXQsIEp1biAxNSwgMjAxOSBhdCAxMDozNTo1NEFNICswMjAwLCBoY2hAbHN0LmRlIHdy
+b3RlOg0KPiA+IE9uIEZyaSwgSnVuIDE0LCAyMDE5IGF0IDA2OjA1OjAxUE0gKzAwMDAsIEV1Z2Vu
+aXkgUGFsdHNldiB3cm90ZToNCj4gPiA+IEhpIENocmlzdG9waCwNCj4gPiA+IA0KPiA+ID4gUmVn
+dWxhciBxdWVzdGlvbiAtIGRvIHlvdSBoYXZlIGFueSBwdWJsaWMgZ2l0IHJlcG9zaXRvcnkgd2l0
+aCBhbGwgdGhpcyBkbWEgY2hhbmdlcz8NCj4gPiA+IEkgd2FudCB0byB0ZXN0IGl0IGZvciBBUkMu
+DQo+ID4gPiANCj4gPiA+IFByZXR0eSBzdXJlIHRoZQ0KPiA+ID4gIFtQQVRDSCAyLzddIGFyYzog
+cmVtb3ZlIHRoZSBwYXJ0aWFsIERNQV9BVFRSX05PTl9DT05TSVNURU5UIHN1cHBvcnQNCj4gPiA+
+IGlzIGZpbmUuDQo+ID4gPiANCj4gPiA+IE5vdCBzbyBzdXJlIGFib3V0DQo+ID4gPiAgW1BBVENI
+IDcvN10gYXJjOiB1c2UgdGhlIGdlbmVyaWMgcmVtYXBwaW5nIGFsbG9jYXRvciBmb3IgY29oZXJl
+bnQgRE1BIGFsbG9jYXRpb25zDQo+ID4gPiA6KQ0KPiA+IA0KPiA+ICAgIGdpdDovL2dpdC5pbmZy
+YWRlYWQub3JnL3VzZXJzL2hjaC9taXNjLmdpdCBkbWEtbm90LWNvbnNpc3RlbnQtY2xlYW51cA0K
+PiA+IA0KPiA+IEdpdHdlYjoNCj4gPiANCj4gPiAgICANCj4gPiBodHRwczovL3VybGRlZmVuc2Uu
+cHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fZ2l0LmluZnJhZGVhZC5vcmdfdXNlcnNf
+aGNoX21pc2MuZ2l0X3Nob3J0bG9nX3JlZnNfaGVhZHNfZG1hLTJEbm90LTJEY29uc2lzdGVudC0y
+RGNsZWFudXAmZD1Ed0lCQWcmYz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRnJnI9WmxKTjFNcmlQVVRr
+QktDclBTeDY3R21hcGxFVUdjQUVrOXlQdENMZFVYSSZtPWlwWUFtWDNyd0x4RElkWFV6dFRNWUJa
+a0tGR1pCWTl2eWtKVkJ3cV9LWEUmcz11UldLUW9EVDhwUEtSUFlDQjZrNG9PM210UkZSTnlMb2xS
+RGVCQklWdE5RJmU9DQo+ID4gIA0KPiANCj4gRGlkIHlvdSBnZXQgYSBjaGFuY2UgdG8gbG9vayBp
+bnRvIHRoZXNlIHBhdGNoZXM/DQotLSANCiBFdWdlbml5IFBhbHRzZXYNCg==
