@@ -2,187 +2,184 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B47C43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2B9C43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486A320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E33212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 14:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="taqQtVSy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2Fo6XRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfFXOFc (ORCPT
+        id S1729717AbfFXOHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 10:05:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44829 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfFXOFc (ORCPT
+        Mon, 24 Jun 2019 10:07:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41677 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfFXOHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 10:05:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so12732093ljc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 07:05:30 -0700 (PDT)
+        Mon, 24 Jun 2019 10:07:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id w25so1782245ioc.8;
+        Mon, 24 Jun 2019 07:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gjx1On7f1VuMt9pjHPrhxleD/jqhPbFIKT7N3KSr3NM=;
-        b=taqQtVSyBzuZ4c+2VF7FW4RLKaX/Cp/CaiXZ1tvthUGsTt/1mjyGJaT8LzDEYV+x+2
-         ayswVg645HrxsJ54YVhWs92jFhvJTxTsIYHqJaHrFzOFaJLHdBXB0irvPVysbJXoWUAv
-         Twn96UY1OHsftdpH95LB5pw/K7gynmkGD4Jvan0g4TZyjZmtz6UFua2/cxf9eBRfgiPs
-         EY0NxGieJmyuSnMyQ1XYQboxwl/mV9SfVLJp5hFXfCLxrE4Mj8pLPh/LXeRgwtAacHw4
-         ojdmCnGGPCTMUP/z8Sr+6cfNkQX2PuaF+wdsHgJtl5YNaG8m1JWG+keKmIqHuzTFEwcO
-         xHFA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
+        b=I2Fo6XRAMMVOjvK9E4plBFmE6GbrgJNAzyqNah9iq40Vff1Sw1lpbcprdLQnGMx0eX
+         xlzZChXLaTQXOyI22/oiBXxsGauWHWJoqH9029TFw6qyRQcnIRC/gDVZYqeTZVO/9/ny
+         x/vHEcTt1jha1w58oRB6H9f2iJX0p/tSvZo5TIOk5x4NFIjQAn+nA1vNlrqf1DP3asNE
+         lAnhxpsOMxb1xsuRRPUjobmfukOlvQ1DETmQUIXj8Sq8l4vGUCHzAtmp75+gaGegyo1X
+         84V+T86qp0e3GuFTf6Z+v8yV8zgTzDwqZoLeNq0BOmMlLyJjTw/MySnlGVfPhXpYa1qj
+         YLXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gjx1On7f1VuMt9pjHPrhxleD/jqhPbFIKT7N3KSr3NM=;
-        b=FP8/khCkUi6+T/vTQAQN+nO69PerLLaSk0RA+1est1h+xx7bVeNdsE9htXdQf67vvq
-         NlIs6yw9yhWbfcoun/U1g+G96J69Lkt1ZUQHvdWrfArZM1/iql+XOKmk259u8YHKxfqQ
-         oOWocf2gxiSRTj5LFxcwpLeq0mqcKm3htDySSxwhR/iXgDWzsHIVhP9bYMntiQMYe/xF
-         cehIj015c/XbFU4NXepv8ZcgL/j7S2RAcK8xs+mB+LBQX0Duf3wYP5S5MgDwbCM4e3VI
-         JX3o5OZqQzawkRr0G0NcXMbaQbkidPK40j3MkwnGrF4ltMnIm4PaI4vP4bARttW4KEwX
-         0Mtg==
-X-Gm-Message-State: APjAAAVngk/bnevLck/H/ZPj5Hu9AX+wQLWYebKaPy0aOdGOBlQ3MKqU
-        8qvAecwW8YHTH3Ydu85WLZPojmt9oXHKsDK0y0mqAw==
-X-Google-Smtp-Source: APXvYqy1v/JREDF0Z2UI1o9VWF2fFyKN2OstLEsW5Et4kEIc//QPnE+TIqkrxCyn741ldFWGAnTrC3kuxwBMW34Q+pA=
-X-Received: by 2002:a2e:994:: with SMTP id 142mr8590901ljj.130.1561385129002;
- Mon, 24 Jun 2019 07:05:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560959396-13969-1-git-send-email-pbonzini@redhat.com>
- <87zhmcfo0w.fsf@vitty.brq.redhat.com> <8ab81435-d94a-1883-a7e0-e2eba6a1ba68@redhat.com>
-In-Reply-To: <8ab81435-d94a-1883-a7e0-e2eba6a1ba68@redhat.com>
-From:   Aaron Lewis <aaronlewis@google.com>
-Date:   Mon, 24 Jun 2019 07:05:16 -0700
-Message-ID: <CAAAPnDFJmjjzsELo68zvJY1n_g_WGfS73ZUA1NOVQniYyF5Zdw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: reorganize initial steps of vmx_set_nested_state
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
+        b=KQeZB8J3ZZZcd5DjoJ+rByBfgZLJVlVVIpzPl5JP1/vbkTYPOwYH4dAJnkJXEYy+Ne
+         I7Y5LgzmFXYu+HuIJ0yq6UY/eNWQLCm9ur3b31hyx49dlyZykp6YMCf6AEUh/SFkms75
+         29p4uHf4xknaYRtnYZSo7o+7qny/Vu3EMaC60mFCFvgzCSE0jy4rW4Dgk6fk1ZJhKyTs
+         gOIJISSQCSbsCwP3//wuEtE/0nruX0vJ2k37w89+55PVhQQN/92YZttejohSO+cY8nuO
+         EiJuNXzsRvri6G9V5EIj3eOKmq2TZUdh88fBI8qryu/328GB8k1k277MeGNXzxH2G5kp
+         UwUg==
+X-Gm-Message-State: APjAAAVY09PJkSwMbJdJFoWoR+9rGZ4cubPwBFQFB6VVZuwbrz1AHWCC
+        mTQzqA87lB9AMeLHupYfEuS+Q3i3
+X-Google-Smtp-Source: APXvYqyyScY1CjudlFtny0U4SJFuFhECkaYbbnN7rZimu7Yub+mmjUoXj+OQyw0DAdw//wlggWdGLA==
+X-Received: by 2002:a5d:9703:: with SMTP id h3mr21151624iol.152.1561385256497;
+        Mon, 24 Jun 2019 07:07:36 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id d17sm13210813iom.28.2019.06.24.07.07.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 07:07:35 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Mon, 24 Jun 2019 10:07:31 -0400
+Message-Id: <20190624140731.24080-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 6:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 20/06/19 14:18, Vitaly Kuznetsov wrote:
-> > There's also something wrong with the patch as it fails to apply because
-> > of (not only?) whitespace issues or maybe I'm just applying it to the
-> > wrong tree...
->
-> Yes, there's a change to KVM_GET/SET_NESTED_STATE structs from Liran.
->
-> Paolo
+If probe() fails anywhere beyond the point where
+sdma_get_firmware() is called, then a kernel oops may occur.
 
-Below is a revised patch for vmx_set_nested_state_test based on your
-changes.  If I applied your patch correctly I think they should look
-something like this.  I don't have your changes to kvm_nested_state,
-so those still have to be applied, but I think they are good
-otherwise.
+Problematic sequence of events:
+1. probe() calls sdma_get_firmware(), which schedules the
+   firmware callback to run when firmware becomes available,
+   using the sdma instance structure as the context
+2. probe() encounters an error, which deallocates the
+   sdma instance structure
+3. firmware becomes available, firmware callback is
+   called with deallocated sdma instance structure
+4. use after free - kernel oops !
 
+Solution: only attempt to load firmware when we're certain
+that probe() will succeed. This guarantees that the firmware
+callback's context will remain valid.
+
+Note that the remove() path is unaffected by this issue: the
+firmware loader will increment the driver module's use count,
+ensuring that the module cannot be unloaded while the
+firmware callback is pending or running.
+
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- .../kvm/x86_64/vmx_set_nested_state_test.c    | 59 ++++++++++---------
- 1 file changed, 32 insertions(+), 27 deletions(-)
+ drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index 9d62e2c7e024..17cf72749ca8 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -113,25 +113,6 @@ void test_vmx_nested_state(struct kvm_vm *vm)
-  state->format = 1;
-  test_nested_state_expect_einval(vm, state);
-
-- /*
-- * We cannot virtualize anything if the guest does not have VMX
-- * enabled.
-- */
-- set_default_vmx_state(state, state_sz);
-- test_nested_state_expect_einval(vm, state);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 99d9f431ae2c..3f0f41d16e1c 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (pdata && pdata->script_addrs)
+ 		sdma_add_scripts(sdma, pdata->script_addrs);
+ 
+-	if (pdata) {
+-		ret = sdma_get_firmware(sdma, pdata->fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
+-	} else {
+-		/*
+-		 * Because that device tree does not encode ROM script address,
+-		 * the RAM script in firmware is mandatory for device tree
+-		 * probe, otherwise it fails.
+-		 */
+-		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+-					      &fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware name\n");
+-		else {
+-			ret = sdma_get_firmware(sdma, fw_name);
+-			if (ret)
+-				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
+-		}
+-	}
 -
-- /*
-- * We cannot virtualize anything if the guest does not have VMX
-- * enabled.  We expect KVM_SET_NESTED_STATE to return 0 if vmxon_pa
-- * is set to -1ull.
-- */
-- set_default_vmx_state(state, state_sz);
-- state->vmx.vmxon_pa = -1ull;
-- test_nested_state(vm, state);
--
-- /* Enable VMX in the guest CPUID. */
-- vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
--
-  /* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
-  set_default_vmx_state(state, state_sz);
-  state->vmx.vmxon_pa = -1ull;
-@@ -139,19 +120,28 @@ void test_vmx_nested_state(struct kvm_vm *vm)
-  test_nested_state_expect_einval(vm, state);
-
-  /* It is invalid to have vmxon_pa == -1ull and vmcs_pa != -1ull. */
-- set_default_vmx_state(state, state_sz);
-- state->vmx.vmxon_pa = -1ull;
-- state->vmx.vmcs_pa = 0;
-+ state->vmx.smm.flags = 0;
-  test_nested_state_expect_einval(vm, state);
-
-  /*
-- * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
-- * setting the nested state.
-+ * It is invalid to have vmxon_pa == -1ull and have one or both of the
-+ * flags KVM_STATE_NESTED_RUN_PENDING or KVM_STATE_NESTED_GUEST_MODE
-+ * set.
-  */
-- set_default_vmx_state(state, state_sz);
-- state->vmx.vmxon_pa = -1ull;
-+ state->flags = KVM_STATE_NESTED_RUN_PENDING |
-+        KVM_STATE_NESTED_GUEST_MODE;
-  state->vmx.vmcs_pa = -1ull;
-- test_nested_state(vm, state);
-+ test_nested_state_expect_einval(vm, state);
+ 	sdma->dma_device.dev = &pdev->dev;
+ 
+ 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
+@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
+ 		of_node_put(spba_bus);
+ 	}
+ 
++	/*
++	 * Kick off firmware loading as the very last step:
++	 * attempt to load firmware only if we're not on the error path, because
++	 * the firmware callback requires a fully functional and allocated sdma
++	 * instance.
++	 */
++	if (pdata) {
++		ret = sdma_get_firmware(sdma, pdata->fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
++	} else {
++		/*
++		 * Because that device tree does not encode ROM script address,
++		 * the RAM script in firmware is mandatory for device tree
++		 * probe, otherwise it fails.
++		 */
++		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
++					      &fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware name\n");
++		else {
++			ret = sdma_get_firmware(sdma, fw_name);
++			if (ret)
++				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
++		}
++	}
 +
-+ /*
-+ * We cannot virtualize anything if the guest does not have VMX
-+ * enabled.
-+ */
-+ set_default_vmx_state(state, state_sz);
-+ test_nested_state_expect_einval(vm, state);
-+
-+ /* Enable VMX in the guest CPUID. */
-+ vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+ 	return 0;
+ 
+ err_register:
+-- 
+2.17.1
 
-  /* It is invalid to have vmxon_pa set to a non-page aligned address. */
-  set_default_vmx_state(state, state_sz);
-@@ -195,11 +185,26 @@ void test_vmx_nested_state(struct kvm_vm *vm)
-  state->vmx.vmcs_pa = 0;
-  test_nested_state_expect_einval(vm, state);
-
-+ /*
-+ * It is invalid to not have the vmcs_pa set when the flag
-+ * KVM_STATE_NESTED_EVMCS is not set.
-+ */
-+ set_default_vmx_state(state, state_sz);
-+ state->vmx.vmcs_pa = -1ull;
-+ state->flags = KVM_STATE_NESTED_GUEST_MODE  |
-+ KVM_STATE_NESTED_RUN_PENDING;
-+ test_nested_state_expect_einval(vm, state);
-+
-  /* The revision id for vmcs12 must be VMCS12_REVISION. */
-  set_default_vmx_state(state, state_sz);
-  set_revision_id_for_vmcs12(state, 0);
-  test_nested_state_expect_einval(vm, state);
-
-+ /* The KVM_STATE_NESTED_GUEST_MODE flag must be set */
-+ set_default_vmx_state(state, state_sz);
-+ state->flags = KVM_STATE_NESTED_EVMCS;
-+ test_nested_state(vm, state);
-+
-  /*
-  * Test that if we leave nesting the state reflects that when we get
-  * it again.
---
