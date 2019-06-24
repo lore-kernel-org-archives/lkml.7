@@ -2,69 +2,80 @@ Return-Path: <SRS0=hO5d=UX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10AC43613
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA38FC43613
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57CD20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8053220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Jun 2019 20:25:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j/0ZkCN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbfFXUZB convert rfc822-to-8bit (ORCPT
+        id S1731676AbfFXUZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 16:25:01 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60448 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfFXUZA (ORCPT
+        Mon, 24 Jun 2019 16:25:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49274 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfFXUZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 16:25:00 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 378BE126B52D0;
-        Mon, 24 Jun 2019 13:24:59 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 13:24:56 -0700 (PDT)
-Message-Id: <20190624.132456.2013417744691373807.davem@davemloft.net>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com,
-        wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
-References: <20190620134748.17866-1-megous@megous.com>
-        <20190624.102927.1268781741493594465.davem@davemloft.net>
-        <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Jun 2019 13:24:59 -0700 (PDT)
+        Mon, 24 Jun 2019 16:25:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AUV6wzqFGOvsTTeYrR44Nj82du0wTNXHOtoyFZVKw/Y=; b=j/0ZkCN2v0H11dfDEeqkL4AYn
+        on/3Xy4NrfW7jBQyzTJWA8q1xmXX+StrLMqf7itI6KyaOrGm/x0YttA2qu5AUnttrPzKy0kXNeyzI
+        zrysCBLf3ajYzaFYV1GV8ZFFBfxqJkaEwEk1b9Vv44nebFziM3nSZdzgs7/m+cc4gKLYm+bjcTiUo
+        mh3fgd5Bqne+hZArmoUFHC32rHNtz9EwRZaBe37ZL1MWQQtWa8vBxM8pB6QTESvWNCJUNLI0l0FQy
+        oiCHCDNRglo9Fn4hxR4bjWQuAfTYIRubPxlZHCNTuwDBA3GjsBxTUTe06cRg7a8rNFnFyUgEsHSGm
+        xsMkSutDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfVWb-0003Yj-G7; Mon, 24 Jun 2019 20:25:13 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 11E5520A0EACA; Mon, 24 Jun 2019 22:25:12 +0200 (CEST)
+Date:   Mon, 24 Jun 2019 22:25:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] get_maintainer: Add --cc option
+Message-ID: <20190624202512.GK3436@hirez.programming.kicks-ass.net>
+References: <20190624130323.14137-1-bigeasy@linutronix.de>
+ <20190624133333.GW3419@hirez.programming.kicks-ass.net>
+ <9528bb2c4455db9e130576120c8b985b9dd94e3d.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9528bb2c4455db9e130576120c8b985b9dd94e3d.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondøej Jirman <megous@megous.com>
-Date: Mon, 24 Jun 2019 19:46:37 +0200
-
-> This series was even longer before, with patches all around for various
-> maintainers. I'd expect that relevant maintainers pick the range of patches
-> meant for them. I don't know who's exactly responsible for what, but I think,
-> this should work:
+On Mon, Jun 24, 2019 at 07:27:47AM -0700, Joe Perches wrote:
+> On Mon, 2019-06-24 at 15:33 +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 24, 2019 at 03:03:23PM +0200, Sebastian Andrzej Siewior wrote:
+> > > The --cc adds a Cc: prefix infront of the email address so it can be
+> > > used by other Scripts directly instead of adding another wrapper for
+> > > this.
 > 
-> - 2 stmmac patches should go together via some networking tree (is there
->   something specific for stmmac?)
-> - all DTS patches should go via sunxi
-> - hdmi patches via some drm tree
+> Not sure I like the "--cc" option naming.
+> Maybe "--prefix [string]" to be a bit more generic.
+> 
+> > Would it make sense to make '--cc' imply --no-roles --no-rolestats ?
+> 
+> Maybe.
+> 
+> It's also unlikely to be sensibly used with mailing
+> lists so maybe --nol too.
 
-Thank you.  So I'll merge the first two patches that touch the stmmac
-driver via my net-next tree.
+Is there also an option to exclude moderated lists? --no-s doesn't seem
+to do that. I hate it when people cross-post to moderated lists, and
+this thing just made me do it :-(
