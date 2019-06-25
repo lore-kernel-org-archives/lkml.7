@@ -2,169 +2,92 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF0C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBDBC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12499215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5699215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXr+rfS/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="oq9m6q3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbfFYKD2 (ORCPT
+        id S1731831AbfFYKED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:03:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41318 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFYKD2 (ORCPT
+        Tue, 25 Jun 2019 06:04:03 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49824 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfFYKEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:03:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so9211972pff.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 03:03:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uZBl3YBCGr2TkoynfSi6k0BV9mYucHFfZB7RzFEuUl4=;
-        b=WXr+rfS/rszZ4yQsdLfXsyMkLO6mhuPEzfQ87IU+Ico7psF7w4ljJ+GK97Zpfddrhq
-         PB366eC9oTuaqMgZ2x2E0e55033ERqbA+bAtEZ/LngETvGbdMZfftPEKFNeyIRi40vUe
-         wee42/h5Rqv1SwmaAnAg0ssDEG7hg629ABhooO3IpXEoRKBxLHFsL4hFwwbqWAYc5otk
-         TwRjxKToFUmwVExWKMyTYbgpAsV487CdnOzYNof3Is0agTeSD8Wr9xPuH1S/krDY+0db
-         aXxP4hTCwetawDInx97AOtp+89E5NVj2d46jdbc/Pt5Sk93RJzulH+kTJT34nQ175/Lw
-         kxcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uZBl3YBCGr2TkoynfSi6k0BV9mYucHFfZB7RzFEuUl4=;
-        b=o6R64rSFR5SGKpdrkaoiV9H83f6hC6gZDqwcdOecHoBe3yOjCKSP1DW1GHZVE5wUYC
-         n5jW+qgaheok/syI5HSJNgZppcUQqSpt3U/ibqdMkfmh/XHMY1MFVczoQGz16PrU0hU5
-         SmTrE0l8O4oEblXfK1PxAjkM5b/325m/RmnXf2EEt72QwrR4+YykoyqhmxLUFU8dVmnU
-         3+M1QGdmZhJvQcscQASgOgMwPQlz43K22ZXtoPUPs30TS6DngW7LmGQZ8LXstrRI6lYL
-         j4rwhtMSGZvEQvMKV1Lm8bTfSX8P042C1PPAHgq5UICPIKk9+LBHSUo7YqxMxDI6odxh
-         5sRQ==
-X-Gm-Message-State: APjAAAWhZzM+p9n3n22VElAW6CmyobgVDX345l7K7wvBC4uAb4PXltOm
-        oj61UxoBUZOZd66XX6iv4Fw=
-X-Google-Smtp-Source: APXvYqyifQUMisgnYyI/ZiqlDTise+qowJ2uoRmtol0JbCRaNSkTVvO4EnTV7O09mHwqeH7NDX5MWw==
-X-Received: by 2002:a65:40cb:: with SMTP id u11mr39968946pgp.333.1561457007433;
-        Tue, 25 Jun 2019 03:03:27 -0700 (PDT)
-Received: from localhost ([175.223.22.38])
-        by smtp.gmail.com with ESMTPSA id z13sm5336351pjn.32.2019.06.25.03.03.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 03:03:26 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 19:03:22 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Tue, 25 Jun 2019 06:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4yfZs4/ThCrYgiLeGh1TAYd7N0nWcLtcO65UGF7jKL8=; b=oq9m6q3Kox2FooWO0Am5oLHJe
+        PMDVQvjbOGmV6+EYXqlzy8VtHHsxUohQbJxIq+DHgSBclpN7gExON5bgBKujZ0sI7rvjDkU3UY887
+        OZDcLMu3WE6t4afKI08sesNCKe0LUFC6/t47IwTf/2iuKdIKA9jsDU3wcomZnjvha2ol8p+haHlU7
+        /dT8CmadCWsevk94t4cKTN5Zr1GANzIWDzJ97URuA3SdVn8l4nBr+SNmDzMByaxdVJ4dFbxrwOyek
+        WojKMosB8ZZmGVBTZPB9jxzmH0f4OtSpeFO44AohUYXHvUsxQC5adtmJbSPGXnZ2eKLbzdwb0Vflr
+        Oo6B1aEiA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58978)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfiIw-0005g7-K5; Tue, 25 Jun 2019 11:03:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfiIq-00077V-3W; Tue, 25 Jun 2019 11:03:52 +0100
+Date:   Tue, 25 Jun 2019 11:03:52 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-samsung-soc@vger.kernel.org,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
- implementation
-Message-ID: <20190625100322.GD532@jagdpanzerIV>
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
- <20190607162349.18199-2-john.ogness@linutronix.de>
- <20190618045117.GA7419@jagdpanzerIV>
- <87imt2bl0k.fsf@linutronix.de>
- <20190625064543.GA19050@jagdpanzerIV>
- <20190625071500.GB19050@jagdpanzerIV>
- <875zoujbq4.fsf@linutronix.de>
- <20190625090620.wufhvdxxiryumdra@pathway.suse.cz>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@collabora.com,
+        Sean Paul <sean@poorly.run>,
+        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Subject: Re: [PATCH 0/2] Associate ddc adapters with connectors
+Message-ID: <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
+References: <cover.1561452052.git.andrzej.p@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625090620.wufhvdxxiryumdra@pathway.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <cover.1561452052.git.andrzej.p@collabora.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (06/25/19 11:06), Petr Mladek wrote:
-> On Tue 2019-06-25 10:44:19, John Ogness wrote:
-> > On 2019-06-25, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
-> > > In vprintk_emit(), are we going to always reserve 1024-byte
-> > > records, since we don't know the size in advance, e.g.
-> > > 
-> > > 	printk("%pS %s\n", regs->ip, current->name)
-> > > 		prb_reserve(&e, &rb, ????);
-> > > 
-> > > or are we going to run vscnprintf() on a NULL buffer first,
-> > > then reserve the exactly required number of bytes and afterwards
-> > > vscnprintf(s) -> prb_commit(&e)?
-> > 
-> > (As suggested by Petr) I want to use vscnprintf() on a NULL
-> > buffer. However, a NULL buffer is not sufficient because things like the
-> > loglevel are sometimes added via %s (for example, in /dev/kmsg). So
-> > rather than a NULL buffer, I would use a small buffer on the stack
-> > (large enough to store loglevel/cont information). This way we can use
-> > vscnprintf() to get the exact size _and_ printk_get_level() will see
-> > enough of the formatted string to parse what it needs.
+On Tue, Jun 25, 2019 at 11:46:34AM +0200, Andrzej Pietrasiewicz wrote:
+> It is difficult for a user to know which of the i2c adapters is for which
+> drm connector. This series addresses this problem.
 > 
-> vscnprintf() with NULL pointer is perfectly fine. Only the formatted
-> string has variable size.
+> The idea is to have a symbolic link in connector's sysfs directory, e.g.:
+> 
+> ls -l /sys/class/drm/card0-HDMI-A-1/i2c-2
+> lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/i2c-2 \
+> 	-> ../../../../soc/13880000.i2c/i2c-2
 
-Yeah, that should work. Probably. Can't think of any issues, except
-for increased CPU usage. Some sprintf() format specifiers are heavier
-than the rest (pS/pF on ia64/ppc/hppa).
+Don't you want the symlink name to be "i2c" or something fixed, rather
+than the name of the i2c adapter?  Otherwise, you seem to be encumbering
+userspace with searching the directory to try and find the symlink.
 
-OK, very theoretically.
-
-There is a difference.
-
-Doing "sz = vscprintf(NULL, msg); vscnprintf(buf, sz, msg)" for
-msg_print_text() and msg_print_ext_header() was safe, because the
-data - msg - would not change under us, we would work with logbuf
-records, IOW with data which is owned by printk() and printk only.
-
-But doing
-		sz = vcsprintf(NULL, "xxx", random_pointer);
-		if ((buf = prb_reserve(... sz))) {
-			vscnprintf(buf, sz, "xxx", random_pointer);
-			prb_commit(...);
-		}
-
-might have different outcome sometimes. We probably (!!!) can have
-some race conditions. The problem is that, unlike msg_print_text()
-and msg_print_ext_header(), printk() works with pointers which it
-does not own nor control. IOW within single printk() we will access
-some random kernel pointers, then do prb stuff, then access those
-same pointers, expecting that none of them will ever change their
-state. A very simple example
-
-		printk("Comm %s\n", current->comm)
-
-Suppose printk on CPU0 and ia64_mca_modify_comm on CPU1
-
-CPU0								CPU1
-printk(...)
- sz = vscprintf(NULL, "Comm %s\n", current->comm);
-								ia64_mca_modify_comm()
-								  snprintf(comm, sizeof(comm), "%s %d", current->comm, previous_current->pid);
-								  memcpy(current->comm, comm, sizeof(current->comm));
- if ((buf = prb_reserve(... sz))) {
-   vscnprintf(buf, "Comm %s\n", current->comm);
-				^^^^^^^^^^^^^^ ->comm has changed.
-					       Nothing critical, we
-					       should not corrupt
-					       anything, but we will
-					       truncate ->comm if its
-					       new size is larger than
-					       what it used to be when
-					       we did vscprintf(NULL).
-   prb_commit(...);
- }
-
-Probably there can be other examples.
-
-	-ss
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
