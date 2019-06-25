@@ -2,130 +2,268 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D130EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1B8C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F590208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fVY3ICfX"
+	by mail.kernel.org (Postfix) with ESMTP id 67DEB216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfFYPHM (ORCPT
+        id S1732127AbfFYPHe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:07:12 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38734 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732067AbfFYPHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:07:12 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n11so7517968qtl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MlFm0RSUDJWR/dpFwmu8HNr471hEX79YQx8dujmGuTY=;
-        b=fVY3ICfXakhtVfbzcDEtsi9F/GE7Aeb5Q8NxEHcRpOfvNIEa7ZHeVpZ1LXNQKE8eSd
-         vqN6KiG0165nartNEfdqe4JzSg8yaALuv9CoTSD7fYD2bxerXjngGFOKyuPepYPQETyX
-         ybUXyr6JOCICPvL18Wn+PCsbXig0qOG8x4CIs7tRnaFgJf4jdwC8OshLFaoPEzTrK8JD
-         uDy1T1gQia3lfsOzVCtVCiU54zrpuW6jKvcX9mLoDT8AaO0Xr5N4uO9EtMHuqr4yjyYm
-         pez17k3OKDsbC43eZDrg9ZfAWdOS/RHVzI951MCp/oiH7S/trI++NRhvG1fQqdMxicd3
-         DN3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MlFm0RSUDJWR/dpFwmu8HNr471hEX79YQx8dujmGuTY=;
-        b=rc16uU1DyaqaVJpgO9V5/uty0Ye411YvzkoKIkNs/cjskg0hm5MV4xRYIT9yj8Q/g5
-         hOR0jF0aFw604lzD068+/n6yEEn8zx32BvyeGP9GL/RyHcSgsV7cb+ROBtBNvWTTyR6U
-         G7ukIeStn8YMu6VxsRGVJhcze/k6S/YclGpHRea1i8Rpjk+N4TYDwz4ZY1TqetjzQNMp
-         gdUOvwavuzaRkg2RB7TBoM1gWCYVDVBCOiX/rDUY7Ilt4GWQWttRU/3FnY5AbCTC3R0b
-         25fS8X9os7HJj9osXGS11GZBu9GijXGuXUffrfB4Ke1UD9I1bK29GId6GtYOQrt6t+1a
-         otiA==
-X-Gm-Message-State: APjAAAVfWiTE7+azp7F0eUvj7mBaA36g+KvRT+mbp8KBxk4TvVwS+Scl
-        NJ6nZyfM8m5fA7wFJ9R4grVHhQ==
-X-Google-Smtp-Source: APXvYqx5qq+RXjT0mopAm4rY8YxlQmok9dJ/vgId4MGAW9BSZbFsk13S7wC2nyjHTouIC5AdCKBLnQ==
-X-Received: by 2002:ac8:2d17:: with SMTP id n23mr72728077qta.132.1561475231316;
-        Tue, 25 Jun 2019 08:07:11 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d17sm6781843qtp.84.2019.06.25.08.07.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 08:07:10 -0700 (PDT)
-Message-ID: <1561475229.5154.74.camel@lca.pw>
-Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
-From:   Qian Cai <cai@lca.pw>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, valentin.schneider@arm.com,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 25 Jun 2019 11:07:09 -0400
-In-Reply-To: <20190625142508.GE3419@hirez.programming.kicks-ass.net>
-References: <1561466662-22314-1-git-send-email-cai@lca.pw>
-         <20190625135238.GA3419@hirez.programming.kicks-ass.net>
-         <1561471459.5154.70.camel@lca.pw>
-         <20190625142508.GE3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Jun 2019 11:07:34 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14395 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730777AbfFYPHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:07:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 08:07:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
+   d="scan'208";a="182907469"
+Received: from triedme-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.180])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2019 08:07:28 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Furquan Shaikh <furquan@google.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, rajatja@google.com,
+        marcheu@chromium.org, Furquan Shaikh <furquan@google.com>,
+        "Lee\, Shawn C" <shawn.c.lee@intel.com>
+Subject: Re: [PATCH] i915: intel_dp_aux_backlight: Fix max backlight calculations
+In-Reply-To: <20190618062628.133783-1-furquan@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190618062628.133783-1-furquan@google.com>
+Date:   Tue, 25 Jun 2019 18:09:20 +0300
+Message-ID: <87v9wtog67.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 16:25 +0200, Peter Zijlstra wrote:
-> On Tue, Jun 25, 2019 at 10:04:19AM -0400, Qian Cai wrote:
-> > On Tue, 2019-06-25 at 15:52 +0200, Peter Zijlstra wrote:
-> > Yes, -Wmissing-prototype makes no sense, but "-Wunused-but-set-variable" is
-> > pretty valid to catch certain developer errors. For example,
-> > 
-> > https://lists.linuxfoundation.org/pipermail/iommu/2019-May/035680.html
-> > 
-> > > 
-> > > As to this one, ideally the compiler would not be stupid, and understand
-> > > the below, but alas.
-> > 
-> > Pretty sure that won't work, as the compiler will complain something like,
-> > 
-> > ISO C90 forbids mixed declarations and code
-> 
-> No, it builds just fine, it's a new block and C allows new variables at
-> every block start -- with the scope of that block.
+On Mon, 17 Jun 2019, Furquan Shaikh <furquan@google.com> wrote:
+> Max backlight value for the panel was being calculated using byte
+> count i.e. 0xffff if 2 bytes are supported for backlight brightness
+> and 0xff if 1 byte is supported. However, EDP_PWMGEN_BIT_COUNT
+> determines the number of active control bits used for the brightness
+> setting. Thus, even if the panel uses 2 byte setting, it might not use
+> all the control bits. Thus, max backlight should be set based on the
+> value of EDP_PWMGEN_BIT_COUNT instead of assuming 65535 or 255.
+>
+> Additionally, EDP_PWMGEN_BIT_COUNT was being updated based on the VBT
+> frequency which results in a different max backlight value. Thus,
+> setting of EDP_PWMGEN_BIT_COUNT is moved to setup phase instead of
+> enable so that max backlight can be calculated correctly. Only the
+> frequency divider is set during the enable phase using the value of
+> EDP_PWMGEN_BIT_COUNT.
 
-I remember I tried that before but recalled the error code wrong. Here it is,
+The eDP aux backlight is another fine example of simple made
+difficult. Ugh.
 
-kernel/sched/core.c:5940:17: warning: unused variable 'ptr' [-Wunused-variable]
-                unsigned long ptr = (unsigned long)kzalloc(alloc_size,
-GFP_NOWAIT);
+Shawn (Cc'd) has recently submitted patches to this code. Shawn, please
+also look through this and provide your comments, if any.
 
-> 
-> And for our config, alloc_size is an unconditional 0, so it should DCE
-> the whole block and with that our variable. But clearly the passes are
-> the other way around :/
-> 
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index fa43ce3962e7..cb652e165570 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -6369,7 +6369,7 @@ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
-> > >  
-> > >  void __init sched_init(void)
-> > >  {
-> > > -	unsigned long alloc_size = 0, ptr;
-> > > +	unsigned long alloc_size = 0;
-> > >  	int i;
-> > >  
-> > >  	wait_bit_init();
-> > > @@ -6381,7 +6381,7 @@ void __init sched_init(void)
-> > >  	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
-> > >  #endif
-> > >  	if (alloc_size) {
-> > > -		ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
-> > > +		unsigned long ptr = (unsigned long)kzalloc(alloc_size,
-> > > GFP_NOWAIT);
-> > >  
-> > >  #ifdef CONFIG_FAIR_GROUP_SCHED
-> > >  		root_task_group.se = (struct sched_entity **)ptr;
+One comment inline.
+
+> Signed-off-by: Furquan Shaikh <furquan@google.com>
+> Reviewed-by: Stéphane Marchesin <marcheu@chromium.org>
+> ---
+>  drivers/gpu/drm/i915/intel_dp_aux_backlight.c | 132 ++++++++++++------
+>  1 file changed, 88 insertions(+), 44 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
+> index 357136f17f85..4636c8e8ae8a 100644
+> --- a/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
+> +++ b/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
+> @@ -110,61 +110,34 @@ static bool intel_dp_aux_set_pwm_freq(struct intel_connector *connector)
+>  {
+>  	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
+>  	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
+> -	int freq, fxp, fxp_min, fxp_max, fxp_actual, f = 1;
+> -	u8 pn, pn_min, pn_max;
+> +	int freq, fxp, f, fxp_actual, fxp_min, fxp_max;
+> +	u8 pn;
+>  
+> -	/* Find desired value of (F x P)
+> -	 * Note that, if F x P is out of supported range, the maximum value or
+> -	 * minimum value will applied automatically. So no need to check that.
+> -	 */
+>  	freq = dev_priv->vbt.backlight.pwm_freq_hz;
+> -	DRM_DEBUG_KMS("VBT defined backlight frequency %u Hz\n", freq);
+>  	if (!freq) {
+>  		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
+>  		return false;
+>  	}
+>  
+> -	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
+> -
+> -	/* Use highest possible value of Pn for more granularity of brightness
+> -	 * adjustment while satifying the conditions below.
+> -	 * - Pn is in the range of Pn_min and Pn_max
+> -	 * - F is in the range of 1 and 255
+> -	 * - FxP is within 25% of desired value.
+> -	 *   Note: 25% is arbitrary value and may need some tweak.
+> -	 */
+> -	if (drm_dp_dpcd_readb(&intel_dp->aux,
+> -			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min) != 1) {
+> -		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap min\n");
+> +	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_EDP_PWMGEN_BIT_COUNT,
+> +			      &pn) < 0) {
+> +		DRM_DEBUG_KMS("Failed to read aux pwmgen bit count\n");
+>  		return false;
+>  	}
+> -	if (drm_dp_dpcd_readb(&intel_dp->aux,
+> -			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max) != 1) {
+> -		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap max\n");
+> -		return false;
+> -	}
+> -	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> -	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+>  
+> +	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
+> +	f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
+> +	fxp_actual = f << pn;
+> +
+> +	/* Ensure frequency is within 25% of desired value */
+>  	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
+>  	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
+> -	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
+> -		DRM_DEBUG_KMS("VBT defined backlight frequency out of range\n");
+> -		return false;
+> -	}
+>  
+> -	for (pn = pn_max; pn >= pn_min; pn--) {
+> -		f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
+> -		fxp_actual = f << pn;
+> -		if (fxp_min <= fxp_actual && fxp_actual <= fxp_max)
+> -			break;
+> -	}
+> -
+> -	if (drm_dp_dpcd_writeb(&intel_dp->aux,
+> -			       DP_EDP_PWMGEN_BIT_COUNT, pn) < 0) {
+> -		DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
+> +	if (fxp_min > fxp_actual || fxp_actual > fxp_max) {
+> +		DRM_DEBUG_KMS("Actual frequency out of range\n");
+>  		return false;
+>  	}
+> +
+>  	if (drm_dp_dpcd_writeb(&intel_dp->aux,
+>  			       DP_EDP_BACKLIGHT_FREQ_SET, (u8) f) < 0) {
+>  		DRM_DEBUG_KMS("Failed to write aux backlight freq\n");
+> @@ -224,16 +197,87 @@ static void intel_dp_aux_disable_backlight(const struct drm_connector_state *old
+>  	set_aux_backlight_enable(enc_to_intel_dp(old_conn_state->best_encoder), false);
+>  }
+>  
+> +static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
+> +{
+> +	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
+> +	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
+> +	u32 max_backlight = 0;
+> +	int freq, fxp, fxp_min, fxp_max, fxp_actual, f = 1;
+> +	u8 pn, pn_min, pn_max;
+> +
+> +	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_EDP_PWMGEN_BIT_COUNT, &pn)) {
+> +		pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +		max_backlight = (1 << pn) - 1;
+> +	}
+
+If the dpcd read fails, pn may be uninitialized; need to check the
+return value properly here.
+
+Otherwise, seems fine, though unnecessarily complicated but that's
+hardly your fault...
+
+
+BR,
+Jani.
+
+> +
+> +	/* Find desired value of (F x P)
+> +	 * Note that, if F x P is out of supported range, the maximum value or
+> +	 * minimum value will applied automatically. So no need to check that.
+> +	 */
+> +	freq = dev_priv->vbt.backlight.pwm_freq_hz;
+> +	DRM_DEBUG_KMS("VBT defined backlight frequency %u Hz\n", freq);
+> +	if (!freq) {
+> +		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
+> +		return max_backlight;
+> +	}
+> +
+> +	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
+> +
+> +	/* Use highest possible value of Pn for more granularity of brightness
+> +	 * adjustment while satifying the conditions below.
+> +	 * - Pn is in the range of Pn_min and Pn_max
+> +	 * - F is in the range of 1 and 255
+> +	 * - FxP is within 25% of desired value.
+> +	 *   Note: 25% is arbitrary value and may need some tweak.
+> +	 */
+> +	if (drm_dp_dpcd_readb(&intel_dp->aux,
+> +			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min) != 1) {
+> +		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap min\n");
+> +		return max_backlight;
+> +	}
+> +	if (drm_dp_dpcd_readb(&intel_dp->aux,
+> +			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max) != 1) {
+> +		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap max\n");
+> +		return max_backlight;
+> +	}
+> +	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +
+> +	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
+> +	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
+> +	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
+> +		DRM_DEBUG_KMS("VBT defined backlight frequency out of range\n");
+> +		return max_backlight;
+> +	}
+> +
+> +	for (pn = pn_max; pn >= pn_min; pn--) {
+> +		f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
+> +		fxp_actual = f << pn;
+> +		if (fxp_min <= fxp_actual && fxp_actual <= fxp_max)
+> +			break;
+> +	}
+> +
+> +	if (drm_dp_dpcd_writeb(&intel_dp->aux,
+> +			       DP_EDP_PWMGEN_BIT_COUNT, pn) < 0) {
+> +		DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
+> +		return max_backlight;
+> +	}
+> +
+> +	max_backlight = (1 << pn) - 1;
+> +
+> +	return max_backlight;
+> +}
+> +
+>  static int intel_dp_aux_setup_backlight(struct intel_connector *connector,
+>  					enum pipe pipe)
+>  {
+>  	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
+>  	struct intel_panel *panel = &connector->panel;
+>  
+> -	if (intel_dp->edp_dpcd[2] & DP_EDP_BACKLIGHT_BRIGHTNESS_BYTE_COUNT)
+> -		panel->backlight.max = 0xFFFF;
+> -	else
+> -		panel->backlight.max = 0xFF;
+> +	panel->backlight.max = intel_dp_aux_calc_max_backlight(connector);
+> +
+> +	if (!panel->backlight.max)
+> +		return -ENODEV;
+>  
+>  	panel->backlight.min = 0;
+>  	panel->backlight.level = intel_dp_aux_get_backlight(connector);
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
