@@ -2,135 +2,150 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2568C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBBBC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE10216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AD4208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KzABVjnx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsNPVD3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfFYJJc (ORCPT
+        id S1731327AbfFYJJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:09:32 -0400
-Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:56134
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731294AbfFYJJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:09:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KNzkn/a0IqunK1Yi9Xo6xRbN57iI7q+LcT+L41q2PKE=;
- b=KzABVjnxVn6ypctwJSGEPMqX+qUN1ultl40IRdfT2qbWUIRmk9eS0JY8ZXQA56J0EVvOLz8ezxwD7be2D18fnWvJ9ZOFrXjUShIprysUnM0x2aVwdtgrzMsBQroMFTA4zhGTpDE0aDTuKvP9p0p9tLimyoW4Id0NG9JwWM8F9dk=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6746.eurprd04.prod.outlook.com (20.179.251.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 09:09:28 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::93a:4344:1120:4ca0]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::93a:4344:1120:4ca0%6]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
- 09:09:28 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>
-CC:     Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv7 4/7] PCI: mobiveil: Add 8-bit and 16-bit CSR register
- accessors
-Thread-Topic: [PATCHv7 4/7] PCI: mobiveil: Add 8-bit and 16-bit CSR register
- accessors
-Thread-Index: AQHVKzWxDgZokwi9zUOCFYG14230nQ==
-Date:   Tue, 25 Jun 2019 09:09:28 +0000
-Message-ID: <20190625091039.18933-5-Zhiqiang.Hou@nxp.com>
-References: <20190625091039.18933-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20190625091039.18933-1-Zhiqiang.Hou@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR03CA0116.apcprd03.prod.outlook.com
- (2603:1096:203:b0::32) To DB8PR04MB6747.eurprd04.prod.outlook.com
- (2603:10a6:10:10b::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eefafff2-85f6-4280-4ac3-08d6f94cd374
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6746;
-x-ms-traffictypediagnostic: DB8PR04MB6746:
-x-microsoft-antispam-prvs: <DB8PR04MB6746D132B4579F63EF4BBDF584E30@DB8PR04MB6746.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(396003)(366004)(346002)(189003)(199004)(4326008)(386003)(446003)(26005)(102836004)(3846002)(478600001)(71190400001)(186003)(11346002)(71200400001)(7416002)(6116002)(25786009)(66946007)(50226002)(110136005)(8936002)(54906003)(81166006)(8676002)(305945005)(81156014)(316002)(2201001)(5660300002)(66556008)(7736002)(66476007)(66446008)(64756008)(1076003)(66066001)(486006)(2616005)(2501003)(73956011)(68736007)(6436002)(6486002)(256004)(6512007)(86362001)(6506007)(53936002)(36756003)(14454004)(99286004)(2906002)(52116002)(476003)(76176011)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6746;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Gt2Am9JVtGIsu0SPXF0hdh22vv5J+/2Er/5zoVrRzAP4AwLCf+EbHbu8Vc3aQ6VmVBtwaWba5aU4iBz0WoQVKx6dxfd42xAKOPSW/QnNhHVE7vdxYDWP3WL6D0Hx2VPaSw85jhETqGaMLsXoIisoYfoL7JGu1G0uVZ3uO3Ta/hdZaD2TPy0bNcTSmil6i+HNQnX9ReiGFh74lRAi16iDz8n7fXB9o/Ahlv1WJ3OXxnEFurinHEGuueDW0eICrWSVDYiIK6+bQvc3REpOKOp1Akj8P5iVg48vyaA6CXIGc3jo4e2pEJiZwteJVpvhMPgegOFzKcAAPL4tVBuhDpm4joRVnTTvNhn0iuJBY+zhbk38cIzYhqR1pG73Kqh3Sks1CWhxK3AGtDjl22Q/6XRYX4N5VWQnWBPrT2iUO5mQg6w=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 05:09:39 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35493 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731314AbfFYJJi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:09:38 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so623567plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/xsE8Oljl3nRngapJ6cvpa9DKAM6pp9nHBYJlwN4zFA=;
+        b=XsNPVD3TOLq6mbGnPcv7RM4b8uEx0q+XOo/ARsD4ynS5Qam8xoyEO25jzbENhvnfw3
+         /stNkW+1n6ob32KKaz5DPDnHdj2nYvd8cKVLHB0EI1O6F8hsh1Yr/hhPqu2GRkQ8eH4e
+         TvnaTzHpto5Lt3dFkdws2kkte3ZKGVzfkmy4m2M+DInCd6JuoZlSxR7qQloDJ1XNYncY
+         RP2sCGJ+xw3HGgWdy9UnhVOhCq+voelz78es8FMsFzHvU7MI93ypd8eS/P2DAVrTOMXq
+         kbokFHZu7V5whwwOOD42FMS/+ZU6qe526lOU1L1Ty3vqDNf1vj4YsBtvh6g9jbSVnv2j
+         AlBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/xsE8Oljl3nRngapJ6cvpa9DKAM6pp9nHBYJlwN4zFA=;
+        b=AoXnSFf6+Qn5j6aJiVYmW5K1lub1I/a8NR6NaWQdiWm6iKHKspHpBJTVEsWSJQ04Vp
+         WnkPbQsl4r10sCOWZYqWwgDXJhMe/VdWl1viKIk17XAo/3VDtJs8tinfiBn5+4lGq0XP
+         uE4iktLRAJAimxt2GqXahwwMXIg1C9iaYchd8ERzzbbshs5UU31eSyKdlcq4+gpGZks+
+         qt1ApnN75eBipdDW945vAHyNyRLnj5DXrhbfzur//rimQCqlB4zko9cBCfU7dQGEcRew
+         w/Ffb/nnkfVMqHRGlh5TKg+ZJM6nsTWvCSNxdREmBg+ccaDAGsY3GlkpsDTuhMW6gbME
+         7hkA==
+X-Gm-Message-State: APjAAAURtVk2gVRaemZChikAA+1oNjvyhAv9paZDhBrye+j2ghWT+Q3B
+        oxTwjutqpIyexK62FU+z664=
+X-Google-Smtp-Source: APXvYqy2SXifW9Wh+TIZjJEBWxUvzzZzLLa3dxQOfAQm3G/mPhgXCx6lvNnUV8I20uwZlx3IYvcPZQ==
+X-Received: by 2002:a17:902:a9cb:: with SMTP id b11mr15020053plr.69.1561453778061;
+        Tue, 25 Jun 2019 02:09:38 -0700 (PDT)
+Received: from localhost ([175.223.22.38])
+        by smtp.gmail.com with ESMTPSA id f197sm13990109pfa.161.2019.06.25.02.09.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 02:09:37 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 18:09:34 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190625090934.GC532@jagdpanzerIV>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
+ <20190618045117.GA7419@jagdpanzerIV>
+ <87imt2bl0k.fsf@linutronix.de>
+ <20190625064543.GA19050@jagdpanzerIV>
+ <20190625071500.GB19050@jagdpanzerIV>
+ <875zoujbq4.fsf@linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eefafff2-85f6-4280-4ac3-08d6f94cd374
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 09:09:28.3646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6746
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zoujbq4.fsf@linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhlcmUgYXJlIHNv
-bWUgOC1iaXQgYW5kIDE2LWJpdCByZWdpc3RlcnMgaW4gUENJZSBjb25maWd1cmF0aW9uDQpzcGFj
-ZSwgc28gYWRkIHRoZXNlIGFjY2Vzc29ycyBhY2NvcmRpbmdseS4NCg0KU2lnbmVkLW9mZi1ieTog
-SG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NClJldmlld2VkLWJ5OiBNaW5naHVh
-biBMaWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQpSZXZpZXdlZC1ieTogU3VicmFobWFueWEg
-TGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW4+DQotLS0NClY3Og0KIC0gTmV3
-IHBhdGNoIG1vdmVkIGZyb20gdGhlIGZpeGVzIHNlcmllcy4NCg0KIC4uLi9wY2kvY29udHJvbGxl
-ci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICB8IDIwICsrKysrKysrKysrKysrKysrKysNCiAx
-IGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KaW5kZXggMTU5YjAxNDJhMmJjLi5hNzI5
-YTRmODc5ZmUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3Bj
-aWUtbW9iaXZlaWwuaA0KKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2ll
-LW1vYml2ZWlsLmgNCkBAIC0xODUsOSArMTg1LDI5IEBAIHN0YXRpYyBpbmxpbmUgdTMyIGNzcl9y
-ZWFkbChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwgdTMyIG9mZikNCiAJcmV0dXJuIGNzcl9y
-ZWFkKHBjaWUsIG9mZiwgMHg0KTsNCiB9DQogDQorc3RhdGljIGlubGluZSB1MzIgY3NyX3JlYWR3
-KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgb2ZmKQ0KK3sNCisJcmV0dXJuIGNzcl9y
-ZWFkKHBjaWUsIG9mZiwgMHgyKTsNCit9DQorDQorc3RhdGljIGlubGluZSB1MzIgY3NyX3JlYWRi
-KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgb2ZmKQ0KK3sNCisJcmV0dXJuIGNzcl9y
-ZWFkKHBjaWUsIG9mZiwgMHgxKTsNCit9DQorDQogc3RhdGljIGlubGluZSB2b2lkIGNzcl93cml0
-ZWwoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiB2YWwsIHUzMiBvZmYpDQogew0KIAlj
-c3Jfd3JpdGUocGNpZSwgdmFsLCBvZmYsIDB4NCk7DQogfQ0KIA0KK3N0YXRpYyBpbmxpbmUgdm9p
-ZCBjc3Jfd3JpdGV3KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzIgb2Zm
-KQ0KK3sNCisJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDIpOw0KK30NCisNCitzdGF0aWMg
-aW5saW5lIHZvaWQgY3NyX3dyaXRlYihzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwgdTMyIHZh
-bCwgdTMyIG9mZikNCit7DQorCWNzcl93cml0ZShwY2llLCB2YWwsIG9mZiwgMHgxKTsNCit9DQor
-DQogI2VuZGlmIC8qIF9QQ0lFX01PQklWRUlMX0ggKi8NCi0tIA0KMi4xNy4xDQoNCg==
+On (06/25/19 10:44), John Ogness wrote:
+> > In vprintk_emit(), are we going to always reserve 1024-byte
+> > records, since we don't know the size in advance, e.g.
+> > 
+> > 	printk("%pS %s\n", regs->ip, current->name)
+> > 		prb_reserve(&e, &rb, ????);
+> > 
+> > or are we going to run vscnprintf() on a NULL buffer first,
+> > then reserve the exactly required number of bytes and afterwards
+> > vscnprintf(s) -> prb_commit(&e)?
+> 
+> (As suggested by Petr) I want to use vscnprintf() on a NULL
+> buffer. However, a NULL buffer is not sufficient because things like the
+> loglevel are sometimes added via %s (for example, in /dev/kmsg). So
+> rather than a NULL buffer, I would use a small buffer on the stack
+> (large enough to store loglevel/cont information). This way we can use
+> vscnprintf() to get the exact size _and_ printk_get_level() will see
+> enough of the formatted string to parse what it needs.
+
+OK. I guess this should work except for the cases when we want to
+printk that we are running out of stack :)
+
+More seriously, tho, sometimes messages come with dictionaries of
+key/value pairs. I don't think we impose any strict limits on the
+number of key/value pair or on the overall size of the dictionary
+each record can have (up to a single PAGE, I'd guess. I really need
+to check printk code). Finding a sufficiently large buffer size
+might be a bit of a task.
+
+> > I'm asking this because, well, if the most common usage
+> > pattern (printk->prb_reserve) will always reserve fixed
+> > size records (aka data blocks), then you _probably_ (??)
+> > can drop the 'variable size records' requirement from prb
+> > design and start looking at records (aka data blocks) as
+> > fixed sized chunks of bytes, which are always located at
+> > fixed offsets.
+>
+> The average printk message size is well under 128 bytes.
+
+Do you also count in dictionary of properties (key/value pairs) which
+records can carry?
+
+For printks from core kernel 128 bytes would be a good estimation,
+for dev_printk() and so on - I'm not exactly sure.
+
+cat /dev/kmsg
+
+This one, for instance, is a single logbuf record
+
+6,560,2470340,-;hid-generic 0003:093A:2510.0001: input,hidraw0: USB HID v1.11 Mouse [PixArt USB Optical Mouse] on usb-0000:00:14.0-3/input0
+ SUBSYSTEM=hid
+ DEVICE=+hid:0003:093A:2510.0001
+
+I suspect that it's larger than 128 bytes.
+
+> It would be quite wasteful to always reserve 1K blocks.
+
+Agreed.
+
+	-ss
