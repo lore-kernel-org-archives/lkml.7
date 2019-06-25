@@ -2,165 +2,120 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC447C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1933C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881EE20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="L3DRRk/c"
+	by mail.kernel.org (Postfix) with ESMTP id A73B92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561449145;
+	bh=nyNszpfiaOPivEGutVbzOgMkeimehfcQz+veqfeZZXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Myiovg/6djwOuzoY4Szo9VFGJQ/dBK2q+sT+F+aFua/r2uS8MsLDNgyPxDrDCPWpV
+	 /rWD/FtKz37AfXG36iVVXs3VIuZq/dAEPLh1tE3hdGCJX/aBWo8i+4GHVhQXGXH+hI
+	 wgGkusFhffBidhBc7XqMZj60ebuNFX97tnH02uuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfFYHv7 (ORCPT
+        id S1728137AbfFYHwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:51:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43781 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfFYHv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:51:58 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P7pFZr3517263
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 00:51:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P7pFZr3517263
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561449076;
-        bh=aFmnl0HnacgdSpp5Nb6Ff86EZt32FjBCA+Fqh/ZVgww=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=L3DRRk/cKfD3JMYs1p3bGnQRM0olcp93NPxQEzVnBZSOn2/WixtFfLI90QQlpk5lb
-         bKlkWkJ2/IxxmNVsRwF74qcEyGuif6h5tK+YxFVX3hnNws77fy1YGgfPf2LqJ0lhfO
-         KqODp2KGd9Qj/5TOHHlc/RoVjHuzqu/twyvXSNB8Enep6npA/pTv8c6nvMmXyOaIp3
-         l3SZuckb5yOR+kCxZnzQBasoQO6G5jOAjeruZqB0UiGClwAxvR16DAOqkZVfgOGC3Y
-         +c+y8YoSsuCXAX4oXH9S4/Uv87mB82kDN3So1Vgzbv/o+GM5azNSoT2ixCmxQOllzf
-         p47Ib+VztP11A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P7pDBi3517260;
-        Tue, 25 Jun 2019 00:51:13 -0700
-Date:   Tue, 25 Jun 2019 00:51:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-c82d735b3d3f0bbfd49a6a4da96bd27c4ba57eb0@git.kernel.org>
-Cc:     luto@kernel.org, linux-arm-kernel@lists.infradead.org,
-        0x7f454c46@gmail.com, linux@armlinux.org.uk,
-        catalin.marinas@arm.com, mingo@kernel.org, shuah@kernel.org,
-        dima@arista.com, tglx@linutronix.de, avagin@openvz.org,
-        will.deacon@arm.com, arnd@arndb.de, andre.przywara@arm.com,
-        sashal@kernel.org, daniel.lezcano@linaro.org, huw@codeweavers.com,
-        paul.burton@mips.com, pcc@google.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, salyzyn@android.com, ralf@linux-mips.org,
-        vincenzo.frascino@arm.com, linux@rasmusvillemoes.dk,
-        sthotton@marvell.com, hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-          salyzyn@android.com, ralf@linux-mips.org,
-          vincenzo.frascino@arm.com, linux@rasmusvillemoes.dk,
-          sthotton@marvell.com, hpa@zytor.com, daniel.lezcano@linaro.org,
-          huw@codeweavers.com, paul.burton@mips.com, pcc@google.com,
-          torvalds@linux-foundation.org, mingo@kernel.org,
-          shuah@kernel.org, tglx@linutronix.de, dima@arista.com,
-          avagin@openvz.org, will.deacon@arm.com, andre.przywara@arm.com,
-          arnd@arndb.de, sashal@kernel.org, luto@kernel.org,
-          linux-arm-kernel@lists.infradead.org, 0x7f454c46@gmail.com,
-          linux@armlinux.org.uk, catalin.marinas@arm.com
-In-Reply-To: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/vdso] MAINTAINERS: Add entry for the generic VDSO
- library
-Git-Commit-ID: c82d735b3d3f0bbfd49a6a4da96bd27c4ba57eb0
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 03:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbfFYHwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:52:23 -0400
+Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FBBB20665;
+        Tue, 25 Jun 2019 07:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561449142;
+        bh=nyNszpfiaOPivEGutVbzOgMkeimehfcQz+veqfeZZXM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c9oPEbSzQ71W7SK0QFmDGaV4vKsZ5g1p5Rrlx4ckF6BKBk+fJboJ12Oix62mFkuB/
+         kO+XQvmLKZ/OwST/4/K8CO3i4EwWfan/EiYiAz35jHfsy+FPkstK+q4PgpwlgVS4fb
+         O7JvbaDaBRxhKRfU4nrucorZ4sn4kdVUi8Oo/Za4=
+Date:   Tue, 25 Jun 2019 15:50:29 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ignat Korchagin <ignat@cloudflare.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Linux 4.19 and GCC 9
+Message-ID: <20190625075029.GC19452@kroah.com>
+References: <20190517085126.GA3249@kroah.com>
+ <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517152200.GI8945@kernel.org>
+ <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
+ <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org>
+ <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
+ <20190610151407.GS21245@kernel.org>
+ <20190610152542.GA4132@kroah.com>
+ <20190610191417.GW21245@kernel.org>
+ <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c82d735b3d3f0bbfd49a6a4da96bd27c4ba57eb0
-Gitweb:     https://git.kernel.org/tip/c82d735b3d3f0bbfd49a6a4da96bd27c4ba57eb0
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Mon, 24 Jun 2019 02:34:24 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 25 Jun 2019 09:44:08 +0200
+On Mon, Jun 24, 2019 at 11:42:34AM +0100, Ignat Korchagin wrote:
+> Hi Greg,
+> 
+> > > For us it seems applying the following 4 mainline patches makes 4.19.x
+> > > branch perf compile with GCC-9:
+> > >
+> > > 4d0f16d059ddb91424480d88473f7392f24aebdc: perf ui helpline: Use
+> > > strlcpy() as a shorter form of strncpy() + explicit set nul
+> > > b6313899f4ed2e76b8375cf8069556f5b94fbff0: perf help: Remove needless
+> > > use of strncpy()
+> > > 5192bde7d98c99f2cd80225649e3c2e7493722f7: perf header: Fix unchecked
+> > > usage of strncpy()
+> > > 97acec7df172cd1e450f81f5e293c0aa145a2797: perf data: Fix 'strncat may
+> > > truncate' build failure with recent gcc
+> > >
+> > > I also checked that 4.19.49 compiles fine with GCC 9, although with a
+> > > lot of warnings, mostly from objtool, like "warning: objtool:
+> > > sock_register()+0xd: sibling call from callable instruction with
+> > > modified stack frame". But it's a start.
+> > >
+> > > Can we apply the above-mentioned patches, please?
+> 
+> > I'll look into these after the next round of kernels are released.  I
+> 
+> Did you by any chance forget to queue these patches? :) (the build is
+> still broken for GCC 9.1)
 
-MAINTAINERS: Add entry for the generic VDSO library
+I am on the road and getting to backports for this stuff is on the
+bottom of my list until next week at the earliest, sorry.
 
-Assign the following folks in alphabetic order:
+> > guess I'll go find a distro that has gcc9 on it to actually test
+> > things...
+> 
+> BTW, Arch already has GCC 9.1 package, so no need to compile your own
+> anymore for testing:
+> https://www.archlinux.org/packages/core/x86_64/gcc/
 
- - Andy for being the VDSO wizard of x86 and in general. He's also the
-   performance monitor of choice and the code in the generic library is
-   heavily influenced by his previous x86 VDSO work.
+Yes, my laptop just updated, so I'm building here.  Some gcc9 patches
+did just get backported, but not for perf.
 
- - Thomas for being the dude who has to deal with any form of time(r)
-   nonsense anyway
+thanks,
 
- - Vincenzo for being the poor sod who went through all the different
-   architecture implementations in order to unify them. A lot of knowledge
-   gained from VDSO implementation details to the intricacies of taming the
-   build system.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-arch@vger.kernel.org
-Cc: LAK <linux-arm-kernel@lists.infradead.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Salyzyn <salyzyn@android.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Huw Davies <huw@codeweavers.com>
-Cc: Shijith Thotton <sthotton@marvell.com>
-Cc: Andre Przywara <andre.przywara@arm.com>
-Cc: Dmitry Safonov <dima@arista.com>
-Cc: Andrei Vagin <avagin@openvz.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0ed735994a5..13ece5479167 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6664,6 +6664,18 @@ L:	kvm@vger.kernel.org
- S:	Supported
- F:	drivers/uio/uio_pci_generic.c
- 
-+GENERIC VDSO LIBRARY:
-+M:	Andy Lutomirksi <luto@kernel.org>
-+M:	Thomas Gleixner <tglx@linutronix.de>
-+M:	Vincenzo Frascino <vincenzo.frascino@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
-+S:	Maintained
-+F:	lib/vdso
-+F:	kernel/time/vsyscall.c
-+F:	include/vdso
-+F:	include/asm-generic/vdso/vsyscall.h
-+
- GENWQE (IBM Generic Workqueue Card)
- M:	Frank Haverkamp <haver@linux.ibm.com>
- S:	Supported
+greg k-h
