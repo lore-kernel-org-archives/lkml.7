@@ -2,111 +2,114 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF6AC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28558C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5EC208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08215214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfFYLHF (ORCPT
+        id S1730371AbfFYLHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:07:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49856 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730028AbfFYLHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:07:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 63EC2ACA7;
-        Tue, 25 Jun 2019 11:07:03 +0000 (UTC)
+        Tue, 25 Jun 2019 07:07:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55919 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730314AbfFYLHI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:07:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id f22so25817197ioh.22
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 04:07:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qzgsIU1dRxRmXgOlEkre4AMGP4RvzeRe5DGSMkE/ppw=;
+        b=bvcsmyqxKHp5cOXnkOLlfic9sIr7KtqmCnboj+ewbu9YGJpbVuMZoPzrpV+0YveEbZ
+         D5KzFDUKolQzG5tyLUXYbOFg3zfAy6wfRevnptoAG7Cmw+NfoevxRHiY5t7gTEx86zIk
+         7nu8i2gvi0lCwnHueBXBUNfxxQUhCw4nqn848dRZYv1ldwr1IGs5qKAC0EFyr8/Vt/YU
+         WrHOk9rh1YWVjlYKLpk6hU0Ms9SRKI625xm/ueGhx3XyZYUCVFwzmyXeawj519SVkRBG
+         XYl5npINr65mjysUkdnF6eVy3vMhcL6Sh1+flGNht/VmSLqoQ/UCTZ7yHNYZajoBZ1xm
+         rsGQ==
+X-Gm-Message-State: APjAAAU/ezWeM5TIDhg7Os7i1YKNh5QS8Mwnc/sFcYrl/MarrZEEfpYm
+        btqIo05+bUg15tY/GDXyXNrG5CNHnRfaoYazfep8RxOFDT41
+X-Google-Smtp-Source: APXvYqx5xkRPTcPbrwX3dp6qoJ7Ik+fjSNqoEAi4q4LrTMrWd+mlMliOkXtkb0uRGSylTGfbpKB0hStImkiG+yiGncsw+j8B/92+
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Jun 2019 13:07:02 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Eric Wong <e@80x24.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Azat Khuzhin <azat@libevent.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/14] epoll: support pollable epoll from userspace
-In-Reply-To: <20190625002456.unhdqihvs5lqcjn6@dcvr>
-References: <20190624144151.22688-1-rpenyaev@suse.de>
- <20190625002456.unhdqihvs5lqcjn6@dcvr>
-Message-ID: <1e50e45cfc832320999f21a81790a060@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+X-Received: by 2002:a5e:d615:: with SMTP id w21mr6768839iom.0.1561460827606;
+ Tue, 25 Jun 2019 04:07:07 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 04:07:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f5d536058c23ed60@google.com>
+Subject: memory leak in genl_register_family
+From:   syzbot <syzbot+fc577f12f25f2ac3b211@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dsahern@gmail.com, johannes.berg@intel.com,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-25 02:24, Eric Wong wrote:
-> Roman Penyaev <rpenyaev@suse.de> wrote:
->> Hi all,
-> 
-> +cc Jason Baron
-> 
->> ** Limitations
-> 
-> <snip>
-> 
->> 4. No support for EPOLLEXCLUSIVE
->>      If device does not pass pollflags to wake_up() there is no way to
->>      call poll() from the context under spinlock, thus special work is
->>      scheduled to offload polling.  In this specific case we can't
->>      support exclusive wakeups, because we do not know actual result
->>      of scheduled work and have to wake up every waiter.
-> 
-> Lacking EPOLLEXCLUSIVE support is probably a showstopper for
-> common applications using per-task epoll combined with
-> non-blocking accept4() (e.g. nginx).
+Hello,
 
-For the 'accept' case it seems SO_REUSEPORT can be used:
+syzbot found the following crash on:
 
-    https://lwn.net/Articles/542629/
+HEAD commit:    4b972a01 Linux 5.2-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1305b385a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1db8bd6825f9661c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fc577f12f25f2ac3b211
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bd1385a00000
 
-Although I've never tried it in O_NONBLOCK + epoll scenario.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fc577f12f25f2ac3b211@syzkaller.appspotmail.com
 
-But I've just again dived into this add-wait-exclusive logic and it
-seems possible to support EPOLLEXCLUSIVE by iterating over all "epis"
-for a particular fd, which has been woken up.
-
-For now I want to leave it as is just not to overcomplicate the code.
-
-> Fwiw, I'm still a weirdo who prefers a dedicated thread doing
-> blocking accept4 for distribution between tasks (so epoll never
-> sees a listen socket).  But, depending on what runtime/language
-> I'm using, I can't always dedicate a blocking thread, so I
-> recently started using EPOLLEXCLUSIVE from Perl5 where I
-> couldn't rely on threads being available.
-> 
-> 
-> If I could dedicate time to improving epoll; I'd probably
-> add writev() support for batching epoll_ctl modifications
-> to reduce syscall traffic, or pick-up the kevent()-like interface
-> started long ago:
-> https://lore.kernel.org/lkml/1393206162-18151-1-git-send-email-n1ght.4nd.d4y@gmail.com/
-> (but I'm not sure I want to increase the size of the syscall table).
-
-There is also fresh fs/io_uring.c thingy, which supports polling and
-batching (among other IO things).  But polling there acts only as a
-single-shot, so it might make sense to support there event subscription
-instead of resurrecting kevent and co.
-
---
-Roman
+BUG: memory leak
+unreferenced object 0xffff88812a7f0c80 (size 64):
+   comm "swapper/0", pid 1, jiffies 4294937561 (age 881.930s)
+   hex dump (first 32 bytes):
+     2f 64 65 76 69 63 65 73 2f 76 69 72 74 75 61 6c  /devices/virtual
+     2f 6e 65 74 2f 6c 6f 2f 71 75 65 75 65 73 2f 74  /net/lo/queues/t
+   backtrace:
+     [<00000000d629f5fa>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000d629f5fa>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000d629f5fa>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000d629f5fa>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000d629f5fa>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<000000003291d450>] kmalloc_array include/linux/slab.h:670 [inline]
+     [<000000003291d450>] genl_register_family net/netlink/genetlink.c:355  
+[inline]
+     [<000000003291d450>] genl_register_family+0x5e1/0x7e0  
+net/netlink/genetlink.c:322
+     [<00000000f8e2dd0d>] netlbl_unlabel_genl_init+0x15/0x17  
+net/netlabel/netlabel_unlabeled.c:1387
+     [<00000000189b4a0c>] netlbl_netlink_init+0x39/0x46  
+net/netlabel/netlabel_user.c:65
+     [<0000000083adc8f0>] netlbl_init+0x65/0xa8  
+net/netlabel/netlabel_kapi.c:1502
+     [<000000003a053024>] do_one_initcall+0x5c/0x2ca init/main.c:915
+     [<00000000d70991fc>] do_initcall_level init/main.c:983 [inline]
+     [<00000000d70991fc>] do_initcalls init/main.c:991 [inline]
+     [<00000000d70991fc>] do_basic_setup init/main.c:1009 [inline]
+     [<00000000d70991fc>] kernel_init_freeable+0x1af/0x26c init/main.c:1169
+     [<00000000232b80c4>] kernel_init+0x10/0x155 init/main.c:1087
+     [<000000006b3bb174>] ret_from_fork+0x1f/0x30  
+arch/x86/entry/entry_64.S:352
 
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
