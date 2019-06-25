@@ -2,112 +2,109 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27853C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D3BC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0576220883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16308215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfFYJzh (ORCPT
+        id S1728773AbfFYJ5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:55:37 -0400
-Received: from sauhun.de ([88.99.104.3]:43854 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfFYJzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:55:37 -0400
-Received: from localhost (p54B333A7.dip0.t-ipconnect.de [84.179.51.167])
-        by pokefinder.org (Postfix) with ESMTPSA id 275C22C376D;
-        Tue, 25 Jun 2019 11:55:34 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 11:55:33 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Eugen.Hristev@microchip.com, peda@axentia.se, robh+dt@kernel.org,
-        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add
- binding for enable-ana-filt)
-Message-ID: <20190625095533.GC1688@kunai>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
- <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
- <20190625093156.GF5690@piout.net>
+        Tue, 25 Jun 2019 05:57:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33031 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfFYJ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:57:47 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id ED49D12DE61E0138AA32;
+        Tue, 25 Jun 2019 10:57:45 +0100 (IST)
+Received: from [127.0.0.1] (10.202.227.157) by LHREML713-CAH.china.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server id 14.3.408.0; Tue, 25 Jun 2019
+ 10:57:37 +0100
+Subject: Re: [PATCH v2 0/6] Fixes for HiSilicon LPC driver and logical PIO
+ code
+To:     John Garry <john.garry@huawei.com>, <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <arnd@arndb.de>, <olof@lixom.net>, <rjw@rjwysocki.net>
+References: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <162ae8fa-46a1-6962-27ad-672415e5cf53@hisilicon.com>
+Date:   Tue, 25 Jun 2019 10:57:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
-Content-Disposition: inline
-In-Reply-To: <20190625093156.GF5690@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1561386908-31884-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.157]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
 
---PuGuTyElPB9bOcsM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/24/2019 3:35 PM, John Garry wrote:
+> As reported in [1], the hisi-lpc driver has certain issues in handling
+> logical PIO regions, specifically unregistering regions.
+> 
+> This series add a method to unregister a logical PIO region, and fixes up
+> the driver to use them.
+> 
+> RCU usage in logical PIO code looks to always have been broken, so that
+> is fixed also. This is not a major fix as the list which RCU protects
+> would be rarely modified.
+> 
+> There is another patch to simplify logical PIO registration, made possible
+> by the fixes.
+> 
+> At this point, there are still separate ongoing discussions about how to
+> stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
+> 
+> Hopefully this series can go through the arm soc tree and the maintainers
+> have no issue with that. I'm talking specifically about the logical PIO
+> code, which went through PCI tree on only previous upstreaming.
 
-On Tue, Jun 25, 2019 at 11:31:56AM +0200, Alexandre Belloni wrote:
-> On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
-> > > Perhaps
-> > >=20
-> > > 	microchip,digital-filter;
-> > > 	microchip,analog-filter;
-> > >=20
-> > > ?
-> >=20
-> > Hi Peter,
-> >=20
-> > Thanks for reviewing. The name of the property does not matter much to=
-=20
-> > me, and we have properties prefixed with vendor, and some are not.
-> >=20
-> > @Alexandre Belloni: which name you think it's best ?
-> >=20
->=20
-> I'm not sure, it depends on whether Wolfram thinks it is generic enough
-> to be used without a vendor prefix.
+Thanks!
+Series applied to the hisilicon fix tree.
+But I am not sure it is proper for me to apply and send the pull request
+for this patch set.
+I will give it a try.
 
-I could imagine that we design a generic property for filters. The ones
-above make me wonder, though, because they are bool. I'd think you can
-configure the filters in some way, too?
+Best Regards,
+Wei
 
-I never used such filtering, so I am unaware of the parameters needed /
-suitable. Quick grepping through I2C master drivers reveals that
-i2c-stm32f7.c also handles filters, but only with default values. Maybe
-DT configuration would be benefitial to that driver, too?
+> 
+> Cc. linux-pci@vger.kernel.org
+> 
+> [1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
+> [2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+> 
+> Changes since v1:
+> - Add more reasoning in RCU fix patch
+> - Create separate patch to change LOGIC_PIO_CPU_MMIO registration to
+>   accomodate unregistration
+> 
+> John Garry (6):
+>   lib: logic_pio: Fix RCU usage
+>   lib: logic_pio: Avoid possible overlap for unregistering regions
+>   lib: logic_pio: Add logic_pio_unregister_range()
+>   bus: hisi_lpc: Unregister logical PIO range to avoid potential
+>     use-after-free
+>   bus: hisi_lpc: Add .remove method to avoid driver unbind crash
+>   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
+>     registration
+> 
+>  drivers/bus/hisi_lpc.c    | 43 +++++++++++++++++---
+>  include/linux/logic_pio.h |  1 +
+>  lib/logic_pio.c           | 86 +++++++++++++++++++++++++++------------
+>  3 files changed, 99 insertions(+), 31 deletions(-)
+> 
 
-Adding some people to CC.
-
-
---PuGuTyElPB9bOcsM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0R75EACgkQFA3kzBSg
-KbaFyA//UefpasMtRS97YQqN/2m6N9Xgl7LiXTof1v53GW/mee1Y8ce675X8tAHL
-H2Hcvak1eeDIBiN+FPopoUSZ3EhxO3jsMeuR4cAXAKgbFS9lngHGyQcYWd8EZG3p
-lxcbnahpnUOBnvFKHet1j84f3RAkk8tksxEc7sFaV5puN3dReSBA5e++trJz73yk
-oUjx+42R9Zytrt27IsH+Vy86znzzuDboc+ngLwl+deTGG3E56xLAUNX4U5eGLJiJ
-jL7Ot0GUBIw+iHI610z+HrzuKREIQGY3XkGowq+ZU6RxgSnpdf0faRp8EqfRaJdb
-i0379EM5C0Hb4O0l7RLMmlNPWaIGPVhoh7Hr2cBSEXMmL4Fr8uBWNlpkKU1aFM4v
-4mq4KBULWYfihJ2CfFqWyKOLzY4320whOiHcq0O+81nYSrRoXCEpYyxHMLpfTicW
-YSysulIyWNbAv+j+Cns7y6SRE/Pm6HBaWsHuP8gqKha0+wjmAs+eE6zwZ4RiUYez
-tSqP31BTOQw7UG26/FOX+N/fAtBGQP2NcBePPSAmMBLTGAiAXWnEIZv/x9MO9qJ1
-kVEs2wtgeyX93qxwedyL9ueTa/d5HbmMpYDN0R3PFwpqGyC+qkyNlatWd/DJutwP
-oXKFHwEdabgjoSwYIaIfHkP4gxF/5BJp3F0H+vR/n+sDlQoaWp4=
-=qB/9
------END PGP SIGNATURE-----
-
---PuGuTyElPB9bOcsM--
