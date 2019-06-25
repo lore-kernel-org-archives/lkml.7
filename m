@@ -2,92 +2,115 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C7DC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FB9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F50D20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgGXKq67"
+	by mail.kernel.org (Postfix) with ESMTP id 23038208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561483282;
+	bh=y3gHH2+O9Ql5mg2OLCYxLt0FlNiFmTJg7bWVV64XY6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HHB77ifz76fkEPrxG7Elg3ACmwYv1fJIIReT32Y5DwxiVjzarzLe0gFfesLROb6iU
+	 K32yiAYTsGPetErrrEH5oaW0MyedbcSmihZi+HsqRh5KYwbKMAJi8qFxtLJf2VkNpV
+	 JfrzALwQwOBbUifVx33HABbrjo8fLzCYc0ymH25U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfFYRTf (ORCPT
+        id S1729957AbfFYRVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:19:35 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:45181 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfFYRTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:19:35 -0400
-Received: by mail-pl1-f176.google.com with SMTP id bi6so9186270plb.12;
-        Tue, 25 Jun 2019 10:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DOwCBQyZRzVGfYg9SNTddzZDAkrsd0M2owTZiePG8Y0=;
-        b=YgGXKq67re3Lt45hm2dx1e0cgK2kXEbyhwGGG/6S5n3yg+YKs0E1xfzmNt4gwDa3NU
-         1Hi0CuBKLTcaoAR15Nv9umUB2s0C3ZWtGeQUXUa2Mj25ijLQ+rhuAJ0P01CrINH2PRlP
-         cWQuhemKcXEnR7vuuUDnj+m4Cll7fn5d9Zov+7TX/Xnae/KIKQio6dPbJq39PAeO6nRI
-         aLrQ+nrYUNFmKpdpRi0cJTXk+is/fJqFaS6FGZx4gaNcGsAqMC3Slq3USWHY/JKF88zN
-         DZIdRTQiQsEdNo68FE4HbE423VCSaQCR5n/Z4sNf8/GZQHiqrGq5XNDP+D3nC2rU0FSo
-         F74A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DOwCBQyZRzVGfYg9SNTddzZDAkrsd0M2owTZiePG8Y0=;
-        b=pVIm1UuriS6dCnRjxN3SVd3yEu0q2JvnADB2ZMODpcb12qUYLMcyNCfZfg6Ajc7ArA
-         yaXIwsdGzuZhhjArIiFXjPg2C3e4WIo/rPnQae93q7eoeEEAhCGRb/Jc3Qtqlmls8W/x
-         DF01qaaO6ypmQrbNm0KyJELfwLhgVo64k4elbuxUKAjA7rVL0GxwXdvpOv4h2BRB0MGT
-         DzbpSz43MhlDbLdYUahVFl8p5ewrsV3tuCEMlSe54qINw9GrqEhfi1oQScvCJBFwsMqt
-         9SAdsBw4Spow75RjETEa7aX14o0CeEbeKDVHkyoWsCl5QMGUH0PQ//4mDtZf2D/VYK0Q
-         g6og==
-X-Gm-Message-State: APjAAAW6jE0wCk7EWoc8C5uYerHpqGBb45tofwv+wC1XU6DzSRZgGKpY
-        kWa2jZwxHQXMMAQsJ4VcPFpFfonqPAJc2+5ZTlimbw==
-X-Google-Smtp-Source: APXvYqw0kb2X1B48/T4JKum7mtgX1P5q8n7X+39Ox3+V7IHev2oOY8mTnadreHiVQbLC+pJrrj1pfTM91AHoY3/VOck=
-X-Received: by 2002:a17:902:20b:: with SMTP id 11mr23320790plc.78.1561483174312;
- Tue, 25 Jun 2019 10:19:34 -0700 (PDT)
+        Tue, 25 Jun 2019 13:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbfFYRVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:21:20 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F311A20883;
+        Tue, 25 Jun 2019 17:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561483279;
+        bh=y3gHH2+O9Ql5mg2OLCYxLt0FlNiFmTJg7bWVV64XY6A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l0X8y69GjzACRoWboU+YWIzW7at90jv3ub3xnAcXiI2AY8/5/o+s3FRVzpgcgow0s
+         qZmJE2x8/1tEeCUA18QS4W+Yz1mC+61cO3nOBUjQHVQcXFkkCUKwIEfAS1tx+d6aG5
+         CA/HKhKBrcyp62GzhIdzWDjDAQIaPUIBh0JBfMOI=
+Date:   Tue, 25 Jun 2019 18:21:07 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        alexander.sverdlin@gmail.com, allison@lohutok.net, andrew@lunn.ch,
+        ast@kernel.org, bgolaszewski@baylibre.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
+        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
+        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
+        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
+        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
+        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
+        krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk,
+        liviu.dudau@arm.com, lkundrak@v3.sk, lorenzo.pieralisi@arm.com,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, nsekhar@ti.com, peterz@infradead.org,
+        robert.jarzmik@free.fr, s.hauer@pengutronix.de,
+        sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
+        songliubraving@fb.com, sudeep.holla@arm.com, swinslow@gmail.com,
+        tglx@linutronix.de, tony@atomide.com, yhs@fb.com
+Subject: Re: [PATCH V3 01/15] arm: perf: cleanup cppcheck shifting error
+Message-ID: <20190625172106.26xxbeiwpn4avykh@willie-the-truck>
+References: <20190624135105.15579-1-tranmanphong@gmail.com>
+ <20190625040356.27473-1-tranmanphong@gmail.com>
+ <20190625040356.27473-2-tranmanphong@gmail.com>
 MIME-Version: 1.0
-References: <20190625210821.6907304a@canb.auug.org.au>
-In-Reply-To: <20190625210821.6907304a@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 25 Jun 2019 12:19:22 -0500
-Message-ID: <CAH2r5msJzRBZSKua7VffD+dkHu+4xU=QQ3KGRKa34fm-6M9CRg@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625040356.27473-2-tranmanphong@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed
+On Tue, Jun 25, 2019 at 11:03:42AM +0700, Phong Tran wrote:
+> There is error from cppcheck tool
+> "Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
+> change to use BIT() marco for improvement.
 
-On Tue, Jun 25, 2019 at 6:08 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   c1ed2864526e ("smb3: minor cleanup of compound_send_recv")
->
-> is missing a Signed-off-by from its committer.
->
-> --
-> Cheers,
-> Stephen Rothwell
+s/marco/macro/
 
+As Peter pointed out, this "error" is also a false positive also for the
+kernel.
 
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  arch/arm/kernel/perf_event_v7.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/kernel/perf_event_v7.c b/arch/arm/kernel/perf_event_v7.c
+> index a4fb0f8b8f84..2924d7910b10 100644
+> --- a/arch/arm/kernel/perf_event_v7.c
+> +++ b/arch/arm/kernel/perf_event_v7.c
+> @@ -697,9 +697,9 @@ static struct attribute_group armv7_pmuv2_events_attr_group = {
+>  /*
+>   * Event filters for PMUv2
+>   */
+> -#define	ARMV7_EXCLUDE_PL1	(1 << 31)
+> -#define	ARMV7_EXCLUDE_USER	(1 << 30)
+> -#define	ARMV7_INCLUDE_HYP	(1 << 27)
+> +#define	ARMV7_EXCLUDE_PL1	BIT(31)
+> +#define	ARMV7_EXCLUDE_USER	BIT(30)
+> +#define	ARMV7_INCLUDE_HYP	BIT(27)
 
--- 
-Thanks,
+Acked-by: Will Deacon <will.deacon@arm.com>
 
-Steve
+You can drop this into Russell's patch system[1].
+
+Will
+
+[1] https://www.arm.linux.org.uk/developer/patches/
