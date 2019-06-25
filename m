@@ -2,107 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90879C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EC7C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BC92133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D77C213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561469973;
+	bh=3muJjXWRycZv3Y/JtYQgT9Oc/WMSWIxkkMKqCMNX5RI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LpLppftnwERHnKMhsGvpkiyvcUgeXYBV57L4ZtqZ5BKcvMGC/O+oHg6KpLFJgAm1x
+	 s/Eu8C00ihsAv6RgCtF1NLFehj7D5zVY19blxdXwSyEfdc1V5nEMWCNkM1H2Dm0Rtu
+	 Ze9kYQWiZJzI1YSm9yrsZt63QhSrs3tkQJ1mu4/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfFYNjK (ORCPT
+        id S1730772AbfFYNjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:39:10 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35129 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbfFYNjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:39:10 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 1C7AD4000C;
-        Tue, 25 Jun 2019 13:38:59 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>, alpawi@amazon.com
-Cc:     Benjamin Herrenschmidt <benh@amazon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
-In-Reply-To: <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
-References: <20190618160105.26343-1-alpawi@amazon.com> <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
-Date:   Tue, 25 Jun 2019 15:38:59 +0200
-Message-ID: <871rzhlr7w.fsf@FE-laptop>
+        Tue, 25 Jun 2019 09:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727406AbfFYNjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:39:31 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A042133F;
+        Tue, 25 Jun 2019 13:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561469970;
+        bh=3muJjXWRycZv3Y/JtYQgT9Oc/WMSWIxkkMKqCMNX5RI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hiUdQSgP3fzkh9uQINSrEWWxdCpnUcZOSUINFQIWpnmazGlfb+eIkvMic2wa1obwq
+         MOYLBIk3dgpziyQsVjbfSEPXsH6+/BUjsU3tczSc0CNj21IRV5UqpLgjpqguUV3p1v
+         BvJY98/KPveTSOl42McksrdQHTu0QRNQQWXrFSnU=
+Date:   Tue, 25 Jun 2019 14:39:25 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Message-ID: <20190625133924.fqq3y7p3i3fqem5p@willie-the-truck>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+ <20190618175218.GH4270@fuggles.cambridge.arm.com>
+ <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+ <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
+ <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jun 25, 2019 at 12:34:56PM +0530, Vivek Gautam wrote:
+> On Mon, Jun 24, 2019 at 10:33 PM Will Deacon <will@kernel.org> wrote:
+> > Instead, I think this needs to be part of a separate file that is maintained
+> > by you, which follows on from the work that Krishna is doing for nvidia
+> > built on top of Robin's prototype patches:
+> >
+> > http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
+> 
+> Looking at this branch quickly, it seem there can be separate implementation
+> level configuration file that can be added.
+> But will this also handle separate page table ops when required in future.
 
-> On Tue, Jun 18, 2019 at 6:01 PM <alpawi@amazon.com> wrote:
->
->> From: Patrick Williams <alpawi@amazon.com>
->>
->> The 37xx GPIO config registers are only 32 bits long and
->> span 2 registers for the NB GPIO controller.  The function
->> to calculate the offset was missing the increase to the
->> config register.
->>
->> I have tested both raw gpio access and interrupts using
->> libgpiod utilities on an Espressonbin.
->>
->> The first patch is a simple rename of a function because
->> the original name implied it was doing IO itself ("update
->> reg").  This patch could be dropped if undesired.
->>
->> The second patch contains the fix for GPIOs 32+.
+Nothing's set in stone, but having the implementation-specific code
+constrain the page-table format (especially wrt quirks) sounds reasonable to
+me. I'm currently waiting for Krishna to respin the nvidia changes [1] on
+top of this so that we can see how well the abstractions are holding up.
 
-First you can add my
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+I certainly won't merge the stuff until we have a user.
 
-Then as the second patch is a fix, you should add the fix tag: "Fixes:
-5715092a458c ("pinctrl: armada-37xx: Add gpio support") " as well as the
-'CC: <stable@vger.kernel.org>" tags.
+Will
 
-But your change in the first patch made this second patch more difficult
-to backport.
-
-Actually, when I wrote "_update_reg" I was thinking to the update of the
-variable, whereas with a function named "_calculate_reg" I am expecting
-having the result as a return of the function.
-
-However I am not against your change, as I pointed my main concern is
-about the backport of the patch to the stable branch.
-
-Maybe you could change the order of those 2 patches?
-
-Thanks,
-
-Gregory
-
->
-> This looks good overall. I am waiting for a maintainer review.
-> If nothing happens in a week, poke me and I'll just apply
-> the patches.
->
-> Yours,
-> Linus Walleij
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+[1] https://lkml.kernel.org/r/1543887414-18209-1-git-send-email-vdumpa@nvidia.com
