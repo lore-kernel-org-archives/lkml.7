@@ -2,108 +2,113 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465A8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D12DC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7DE213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:22:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IUbkxvew"
+	by mail.kernel.org (Postfix) with ESMTP id 77D5B213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbfFYPWt (ORCPT
+        id S1732287AbfFYPXO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:22:49 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:64963 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbfFYPWq (ORCPT
+        Tue, 25 Jun 2019 11:23:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33280 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbfFYPXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:22:46 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x5PFMJsk024772
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:22:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5PFMJsk024772
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561476140;
-        bh=I4gn4zhWUu8CS8xq7uHMDWTl3vK+1KN7KiPYqeN5XG4=;
-        h=From:Date:Subject:To:Cc:From;
-        b=IUbkxvew3coDHXBh1wbNW8DZulxXDMMOC9ub60hnqscwj+VHOAQjk9M6qqzlIHfpU
-         M+4qUigtcanahmxyTVa4ODzwHkzmu1d273V7sHpQGtWfbcX1MWjY2XxRzmQHgQzF6l
-         GCIcYl/ylkcyTxXjm3P8EGKOraWIElrrMNt3d7ujNPizRBYABz/4LWrT2VdCTn1DFb
-         YjPiizwRj46lCNS+1vRN63XY9Qlu7LDMI138BjWmGHJFTpCSZYuJHL32ow9X4RJnnR
-         HeLVGonywzEdigD7MZxzGzV9ggFHlv/fixRv9QH+ZJ2q91Kqo9//4rvgifawv53itL
-         XSGP5b7mVnKlA==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id j26so11154734vsn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:22:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWKfeshD8sG57nMyi1x9sFhy3yxC03f2QQKNYPPao+lppEbJudQ
-        DvVr9iRxNMUoamEUAcOZgZqDRo6hnm89fWAsBik=
-X-Google-Smtp-Source: APXvYqwWtj7ZIxvvgGhAtUAx2CLtVniyMTTW+OkeTFlWaM/0Lwm1ata1J+FSKX2nmJVuupuYCeIa5nm9RLoFWJql2Ws=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr1416351vsn.181.1561476138869;
- Tue, 25 Jun 2019 08:22:18 -0700 (PDT)
+        Tue, 25 Jun 2019 11:23:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i4so17893210otk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:23:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gRnFrYoEfNfsdoVhVQW0Fet9FOWwAVGxt1dsfE11KLs=;
+        b=gsQ05BH1W2doRe9AhawoKzkKtJi/NImQA31FF/d5awDQMGYWcnvJnFmTnoA1325Sjj
+         w8hiLsiMlwwYf7brouFjVSYjMNrdf7yQJsiUp/82lxKMtkjRNCqmwpUCPYlg6GhmsqOL
+         C84T69gewCl/WaN5q3/yqfkpItmysVvLMApBvMv91kABB4VK9kcV5u0o6CxiNEA8EEve
+         f3kzGRyNTu5dzPOepqeDl+b41qFB471aiVmVsctC2XIcth15t5rZiOBf054xxliPKCus
+         O9Bbemqo6GQAjqZkIBlBJhYMZkeHymen3ZG3m32q6FbOjuo3lTFGc0VR1nWiUrWwNF4Z
+         jJIg==
+X-Gm-Message-State: APjAAAV2HN9O22/L1f/5f2VPCe4o7xXwc+6CKDmXOaypUazN/Ci1+DTO
+        Kv1/wRyuUpxP7S2XjR18hOzSGy4/OPR3atavQc4=
+X-Google-Smtp-Source: APXvYqx7FUyHJAxzoNmkzQVpQoKhqHv22N+bGY9kRSc3sstmCdqnILXmddt697oOtVxwiUyqQV69PSEDOuLGztoUKmQ=
+X-Received: by 2002:a9d:2f03:: with SMTP id h3mr91953526otb.107.1561476193134;
+ Tue, 25 Jun 2019 08:23:13 -0700 (PDT)
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 26 Jun 2019 00:21:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQKmSUkXtJOOcr1q8b_yTU_NRcgCvDAo8aZ+CkOXGTWNA@mail.gmail.com>
-Message-ID: <CAK7LNAQKmSUkXtJOOcr1q8b_yTU_NRcgCvDAo8aZ+CkOXGTWNA@mail.gmail.com>
-Subject: [GIT PULL] arm64: dts: uniphier: UniPhier DT updates for v5.3
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm-soc <arm@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        masahiroy@kernel.org
+References: <20190614150638.28383-1-piotrs@cadence.com> <20190614150956.31244-1-piotrs@cadence.com>
+ <dd96bd1b-e944-e95d-31c9-6dd1d0b5720f@gmail.com> <20190625130231.GA31865@global.cadence.com>
+ <20110899-d456-8403-f9be-663be5fcd07e@gmail.com>
+In-Reply-To: <20110899-d456-8403-f9be-663be5fcd07e@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Jun 2019 17:23:01 +0200
+Message-ID: <CAMuHMdXJ=DQgNzvwXiZd2-Xm=GwO0gFywOxpuX+xwHc3J7q+3g@mail.gmail.com>
+Subject: Re: [v3 1/2] mtd: nand: Add Cadence NAND controller driver
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Piotr Sroka <piotrs@cadence.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        MTD Maling List <linux-mtd@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Olof,
+On Tue, Jun 25, 2019 at 4:45 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> 25.06.2019 16:02, Piotr Sroka пишет:
+> > The 06/16/2019 16:42, Dmitry Osipenko wrote:
+> >> 14.06.2019 18:09, Piotr Sroka пишет:
+> >>> +/* Cadnence NAND flash controller capabilities get from driver data. */
+> >>> +struct cadence_nand_dt_devdata {
+> >>> +    /* Skew value of the output signals of the NAND Flash interface. */
+> >>> +    u32 if_skew;
+> >>> +    /* It informs if aging feature in the DLL PHY supported. */
+> >>> +    u8 phy_dll_aging;
+> >>> +    /*
+> >>> +     * It informs if per bit deskew for read and write path in
+> >>> +     * the PHY is supported.
+> >>> +     */
+> >>> +    u8 phy_per_bit_deskew;
+> >>> +    /* It informs if slave DMA interface is connected to DMA engine. */
+> >>> +    u8 has_dma;
+> >>
+> >> There is no needed to dedicate 8 bits to a variable if you only care about a single
+> >> bit. You may write this as:
+> >>
+> >> bool has_dma : 1;
+> > I modified it locally but it looks that checkpatch does not like such
+> > notation
+> > "WARNING: Avoid using bool as bitfield.  Prefer bool bitfields as
+> > unsigned int or u<8|16|32>"
+> > So maybe I will leave it as is.
+>
+> You may also use the "u8 : 1" form then, to satisfy the checkpatch. Probably
+> "unsigned int : 1" will be the best in this case, it's up to you.
 
-Please pull UniPhier DT updates (64bit) for the v5.3 MW.
+Exactly. The compiler will allocate the sufficient amount of space to store the
+bitfield.
 
-Thanks.
+Gr{oetje,eeting}s,
 
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-tags/uniphier-dt64-v5.3
-
-for you to fetch changes up to aa38571246c6ac279ebebd141157297bcb959d76:
-
-  arm64: dts: uniphier: add reserved-memory for secure memory
-(2019-06-26 00:08:47 +0900)
-
-----------------------------------------------------------------
-UniPhier ARM64 SoC DT updates for v5.3
-
-- Migrate to the new binding for the Denali NAND controller
-
-- Use reserved-memory node instead of /memreserve/ for the
-  secure memory area
-
-----------------------------------------------------------------
-Masahiro Yamada (2):
-      arm64: dts: uniphier: update to new Denali NAND binding
-      arm64: dts: uniphier: add reserved-memory for secure memory
-
- arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts |  4 ++++
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi       | 15 +++++++++++++--
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi       | 15 +++++++++++++--
- arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    |  4 ++++
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi       | 15 +++++++++++++--
- 5 files changed, 47 insertions(+), 6 deletions(-)
-
+                        Geert
 
 -- 
-Best Regards
-Masahiro Yamada
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
