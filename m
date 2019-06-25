@@ -2,148 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB139C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651C0C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6562054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DAF20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:43:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZOsUs5qS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfFYHmg (ORCPT
+        id S1729066AbfFYHnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:42:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40349 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728771AbfFYHmf (ORCPT
+        Tue, 25 Jun 2019 03:43:01 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54378 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfFYHnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:42:35 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfg5v-0004yl-BO; Tue, 25 Jun 2019 09:42:23 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfg5s-0005kx-EO; Tue, 25 Jun 2019 09:42:20 +0200
-Date:   Tue, 25 Jun 2019 09:42:20 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
-References: <20190522163428.7078-1-paul@crapouillou.net>
+        Tue, 25 Jun 2019 03:43:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3Woq6Ijx79j2u1qvlhauxGczuuE2pOnfE5TxDoYwUlo=; b=ZOsUs5qSf57Dj/Pk5RYzsxw59
+        UEljXgjEtZQvU9qf0h/H8kknIf7OPGmcSz8smyBFHiroy9ujI8Qo/4ckFOQzdG/uelI5b6DAirzy6
+        Deq5BLpWD9gsZsC0HfxvFd9u8xeHoKc6t3lE8UHCjzBetzSIdrTiNTZOKyfN2taQgp8CnXLEEPpno
+        0etHTcBjiIS3jz8xF40mDJIRn+dWXflSvl2dS9xAZScTCCvOTPrjD3oiNkgdt4nCj1//4PCBe4A8i
+        DbOAA+hulLsM7sGPx247bRBzMA47vpqf9vhJRSSqMrJxqdq+acP818QPbjp1s4nSdOzxTUwQMULTc
+        KwuD+LPhA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfg5n-0002my-Rq; Tue, 25 Jun 2019 07:42:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7C1BA20A0642F; Tue, 25 Jun 2019 09:42:14 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 09:42:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Frank Ch. Eigler" <fche@redhat.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, jikos@kernel.org,
+        mbenes@suse.cz, Petr Mladek <pmladek@suse.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robert Richter <rric@kernel.org>,
+        rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        paulmck <paulmck@linux.ibm.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        oprofile-list@lists.sf.net, netdev <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 2/3] module: Fix up module_notifier return values.
+Message-ID: <20190625074214.GR3436@hirez.programming.kicks-ass.net>
+References: <20190624091843.859714294@infradead.org>
+ <20190624092109.805742823@infradead.org>
+ <320564860.243.1561384864186.JavaMail.zimbra@efficios.com>
+ <20190624205810.GD26422@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522163428.7078-1-paul@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190624205810.GD26422@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
-> When the driver probes, the PWM pin is automatically configured to its
-> default state, which should be the "pwm" function. However, at this
-> point we don't know the actual level of the pin, which may be active or
-> inactive. As a result, if the driver probes without enabling the
-> backlight, the PWM pin might be active, and the backlight would be
-> lit way before being officially enabled.
+On Mon, Jun 24, 2019 at 04:58:10PM -0400, Frank Ch. Eigler wrote:
+> Hi -
+> 
+> > > While auditing all module notifiers I noticed a whole bunch of fail
+> > > wrt the return value. Notifiers have a 'special' return semantics.
+> 
+> From peterz's comments, the patches, it's not obvious to me how one is
+> to choose between 0 (NOTIFY_DONE) and 1 (NOTIFY_OK) in the case of a
+> routine success.
 
-I'm not sure I understand the problem completely here. Let me try to
-summarize the problem you solve here:
+I'm not sure either; what I think I choice was:
 
-The backlight device's default pinctrl contains the PWM function of the
-PWM pin. As the PWM is (or at least might be) in an undefined state the
-default pinctrl should only be switched to when it's clear if the
-backlight should be on or off.
+ - if I want to completely ignore the callback, use DONE (per the
+   "Don't care" comment).
 
-So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
-state and by switching to "sleep" you prevent "default" getting active.
+ - if we finished the notifier without error, use OK or
+   notifier_from_errno(0).
 
-Did I get this right? If not, please correct me.
-
-What is the PWM pin configured to in "init" in your case? Is the pinctrl
-just empty? Or is it a gpio-mode (together with a gpio-hog)?
-
-My thoughts to this is are:
-
- a) This is a general problem that applies (I think) to most if not all
-    PWM consumers. If the PWM drives a motor, or makes your mobile
-    vibrate, or drives an LED, or a clk, the PWM shouldn't start
-    to do something before its consumer is ready.
-
- b) Thierry made it quite clear[1] that the PWM pin should be configured
-    in a pinctrl of the pwm device, not the backlight (or more general:
-    the consumer) device.
-
-While I don't entirely agree with b) I think that even a) alone
-justifies to think a bit more about the problem and preferably come up
-with a solution that helps other consumers, too. Ideally if the
-bootloader sets up the PWM to do something sensible, probing the
-lowlevel PWM driver and the consumer driver should not interfere with
-the bootloader's intention until the situation reaches a controlled
-state. (I.e. if the backlight was left on by the bootloader to show a
-nice logo, it should not flicker until a userspace program takes over
-the display device.)
-
-A PWM is special in contrast to other devices as its intended behaviour
-is only fixed once a consumer is present. Without a consumer it is
-unknown if the PWM is inverted or not. And so the common approach that
-pinctrl is setup by the device core only doesn't work without drawbacks
-for PWMs.
-
-So if a PWM driver is probing and the PWM hardware already runs at say
-constant one, some instance must define if the pin is supposed to be
-configured in its "default" or "sleep" pinctrl. IMHO this isn't possible
-in general without knowing the polarity of the PWM. (And even if it were
-known that the polarity is inversed, it might be hard to say if your
-PWM's hardware doesn't implement a disabled state and has to simulate
-that using a 0% duty cycle.)
-
-Another thing that complicates the matter is that at least pwm-imx27 has
-the annoying property that disabling it (in hardware) drives the pin low
-irrespective of the configured polarity. So if you want this type of
-device to behave properly on disable, it must first drive a 0% duty
-cycle, then switch the pinctrl state and only then disable the hardware.
-This rules out that the lowlevel driver is unaware of the pinctrl stuff
-which would be nice (or an inverted PWM won't be disabled in hardware or
-you need an ugly sequence of callbacks to disable glitch-free). Also if
-there is no sleep state, you better don't disable an inversed pwm-imx27
-at all (in hardware)? (Alternatively we could drop the (undocumented)
-guarantee that a disabled PWM results in the pin staying in its idle
-level.)
-
-What are the ways out? I think that if we go and apply your patch, we
-should at least write some documentation with the details to provide some
-"standard" way to solve similar problems.
-
-Also it might be a good idea to let a PWM know if it is inverted or not
-such that even without the presence of a consumer it can determine if
-the hardware is active or not at probe time (in most cases at least).
-
-Best regards
-Uwe
-
-[1] https://www.spinics.net/lists/linux-pwm/msg08246.html
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+But yes, its a bit of a shit interface.
