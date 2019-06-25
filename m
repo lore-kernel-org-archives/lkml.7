@@ -6,66 +6,110 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33C2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38629C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6555205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D370205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561495076;
-	bh=OVSKbYEmCYUYFKXz6+Jf3XDclNFQmS6oG/sdiBhVaIQ=;
+	s=default; t=1561495184;
+	bh=j3KZFviB5Xle6qBDzGdMd3VNiDKlu0Os1FHRxXh+iWE=;
 	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=wfN0MaBzouQxcSa6V8Ci7GqAc2Aq6qMpcqiVk2X1e7rKJ1AMeXtJ0Nzt+ouFqTbwY
-	 7yyXZWOYPVOxCD3rdmgxZ67RqCWKJcf3T6Edwr4Kkmh77xsk9k16hXVkUueNNeNWu8
-	 PZmrkwt0WDWr/X1hh1QEBUgYMDfKPW5hStmgYi+k=
+	b=Uvo2wVxRhQZlygb1kXdkh9w8cJvphA+ZnZDnWrcyiaRMjwZJZ0AfAzY9++nuwMxKv
+	 g/3magzLfYCMzSJI/zNTSn1F174Qxb842beNeHTLbB3hxDDAyiXE2EqXg9SBsa1oNG
+	 +Isu6PBQNZP5gJyyO1e2OsAMW4tJHw6+iflt0zWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfFYUhz (ORCPT
+        id S1727148AbfFYUjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 16:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbfFYUhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:37:52 -0400
+        id S1726053AbfFYUjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:39:42 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2894205ED;
-        Tue, 25 Jun 2019 20:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C94205ED;
+        Tue, 25 Jun 2019 20:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561495072;
-        bh=OVSKbYEmCYUYFKXz6+Jf3XDclNFQmS6oG/sdiBhVaIQ=;
+        s=default; t=1561495181;
+        bh=j3KZFviB5Xle6qBDzGdMd3VNiDKlu0Os1FHRxXh+iWE=;
         h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=WYrqLsdF9x+U2qx5X8JPx1eqRVT8OGTYf88O00aPUuYonHhVuQQd6EEfMeFlnyzn8
-         bf79OlKkuZemWxjs6nfzsqeOrrCQfULmgsm1luVkvTbNmSUOaXHMNW3SCCmWBGXP7g
-         2rxzTAjJ/7YqD5V0AJV0QAYZ4OW6UqnOHT2G60lg=
+        b=xUFoVMMARF1CYfZ3FYmhyNeW9XHtmic9ocPCrbnTXm90L1w97pfhFjGEWr55wLxa4
+         ROSkUwmC8AKfCd63ZqTeQh1+ic2CEJIeGW/yM8H0Y67yBEdMYOnvEOkCOISqoh0h6t
+         tfDb3nBB6leXGBqFZc1m+hvKt4/dzPM7a92iMM+c=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190625070602.37670-2-Anson.Huang@nxp.com>
-References: <20190625070602.37670-1-Anson.Huang@nxp.com> <20190625070602.37670-2-Anson.Huang@nxp.com>
-To:     Anson.Huang@nxp.com, festevam@gmail.com, kernel@pengutronix.de,
-        leonard.crestez@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com, peng.fan@nxp.com, ping.bai@nxp.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org
+In-Reply-To: <1561373672-3533-1-git-send-email-abel.vesa@nxp.com>
+References: <1561373672-3533-1-git-send-email-abel.vesa@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be sys_pll1_80m
-Cc:     Linux-imx@nxp.com
+Subject: Re: [PATCH] clk: imx8mm: Switch to platform driver
+Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
 User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 13:37:51 -0700
-Message-Id: <20190625203751.E2894205ED@mail.kernel.org>
+Date:   Tue, 25 Jun 2019 13:39:40 -0700
+Message-Id: <20190625203941.15C94205ED@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Anson.Huang@nxp.com (2019-06-25 00:06:02)
-> From: Anson Huang <Anson.Huang@nxp.com>
->=20
-> i.MX8MM's GPT1 clock mux option #5 should be sys_pll1_80m,
-> NOT sys_pll1_800m, correct it.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Quoting Abel Vesa (2019-06-24 03:54:32)
+> In order to make the clock provider a platform driver
+> all the data and code needs to be outside of .init section.
 
-Any Fixes tags?
+Yes, but why are you making this change in general?
 
+>=20
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+[...]
+> @@ -480,7 +481,7 @@ static int __init imx8mm_clocks_init(struct device_no=
+de *ccm_node)
+>         clks[IMX8MM_SYS_PLL2_500M] =3D imx_clk_fixed_factor("sys_pll2_500=
+m", "sys_pll2_out", 1, 2);
+>         clks[IMX8MM_SYS_PLL2_1000M] =3D imx_clk_fixed_factor("sys_pll2_10=
+00m", "sys_pll2_out", 1, 1);
+> =20
+> -       np =3D ccm_node;
+> +       np =3D dev->of_node;
+>         base =3D of_iomap(np, 0);
+
+If we're using platform device here it would be nice to also use
+platform device APIs to map memory and request resources, etc.
+
+>         if (WARN_ON(!base))
+>                 return -ENOMEM;
+> @@ -682,4 +683,19 @@ static int __init imx8mm_clocks_init(struct device_n=
+ode *ccm_node)
+> =20
+>         return 0;
+>  }
+> -CLK_OF_DECLARE_DRIVER(imx8mm, "fsl,imx8mm-ccm", imx8mm_clocks_init);
+> +
+> +static const struct of_device_id imx8mm_clk_of_match[] =3D {
+> +       { .compatible =3D "fsl,imx8mm-ccm" },
+> +       { /* Sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx8mm_clk_of_match);
+> +
+> +
+
+Nitpick: Drop the second newline.
+
+> +static struct platform_driver imx8mm_clk_driver =3D {
+> +       .probe =3D imx8mm_clocks_probe,
+> +       .driver =3D {
+> +               .name =3D "imx8mm-ccm",
+> +               .of_match_table =3D of_match_ptr(imx8mm_clk_of_match),
+> +       },
+> +};
+> +module_platform_driver(imx8mm_clk_driver);
