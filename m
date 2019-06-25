@@ -2,81 +2,129 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76377C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BBAC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48CD920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F1D20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b8O+q8+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfFYLcU (ORCPT
+        id S1730765AbfFYLdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:32:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41902 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbfFYLcT (ORCPT
+        Tue, 25 Jun 2019 07:33:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34818 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728940AbfFYLdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:32:19 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfjgD-00052H-4e; Tue, 25 Jun 2019 13:32:05 +0200
-Date:   Tue, 25 Jun 2019 13:32:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rong Chen <rong.a.chen@intel.com>
-cc:     tipbuild@zytor.com, "H. Peter Anvin" <hpa@zytor.com>, lkp@01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [LKP] [x86/hotplug] e1056a25da:
- WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
-In-Reply-To: <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com>
-Message-ID: <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de>
-References: <20190620021856.GP7221@shao2-debian> <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de> <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com> <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de>
- <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 25 Jun 2019 07:33:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f15so7577425wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 04:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Jb+mp+rDj9DLSvOVTi217/rhPZn5ckg46P7fvQWw8bI=;
+        b=b8O+q8+prWiPegbdgjjfIFOuD5BkeaA7JfC1MHz+Tc9x43b1tRTTjSTLnGoMlFQ6ul
+         6aPkd4to4AnqNt1LUjRofjOUM3WGxDCGW6r/LDUCpIt71dR8i78wdpcep75jh7hjCjlI
+         NOB//JopuNBp6KX8Nakjz+38eK4WMv6pIjMIUqWF8hSPUTD1zl9rREM4NNJ/IxniZN94
+         n/GrA2nFH/lMlM8bACKhMEzqvlJT2YsaQ4Vog3WehS2DK6a/hp8sBQEf6hVbGRFkKtFd
+         Ogqz5CUtiy2m8PfP5NtZ5/BgFkvchuk8P0m9F8fe/MyuaH58/HbhixDhKiZf83g5NjSJ
+         4SXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jb+mp+rDj9DLSvOVTi217/rhPZn5ckg46P7fvQWw8bI=;
+        b=airkmmn+VBQhdc6FG6lDGpFzXbTjbjc/pgG6I4rFz4DbjXBxHo3kR6K614s9nrfXZK
+         CvAa1gqNSo972W8Bp00xZT+9PK9HSZ1kJWbuGPrQdOEU3kI73XHtNsD8MldRlcbHUfS6
+         66OS/QPV4jRZuJYBoHwXY9JuoxrrduUR2HLxHctlfTKGb1Ig9497THDkMxhrjiSyzylx
+         6arWEdhmlkLA15OP8y/hPJ6jZ8LfTQZmTdsja6fAjiYDHUHulgwOL+h8Yds7hRXz3xAZ
+         Mn5EH5VPWRPAuLnq9Oba07gFVyFDHIUvz9kpABJGOQCBDwCh38AOdnBS4m0xxSvp8FUx
+         Cj2A==
+X-Gm-Message-State: APjAAAUAhWrSvmLpdCG2/aD/TaDSg2yKyZdKE8Z5/vzwCxaLLJA/JYEK
+        4x5Rmx+arGMlK9xF1+kjwqJ5RQ==
+X-Google-Smtp-Source: APXvYqyDTRsg9JgGOVVsxssqrY+oHBPFPg8nvRzQM0sR5MIPPyTAr34aqUlQ3cxCDkSStjDs+UDDug==
+X-Received: by 2002:adf:b78c:: with SMTP id s12mr49273824wre.264.1561462379160;
+        Tue, 25 Jun 2019 04:32:59 -0700 (PDT)
+Received: from clegane.local (191.184.66.86.rev.sfr.net. [86.66.184.191])
+        by smtp.gmail.com with ESMTPSA id j7sm19254284wru.54.2019.06.25.04.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 04:32:58 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     viresh.kumar@linaro.org
+Cc:     rjw@rjwysocki.net, edubezval@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK)
+Subject: [PATCH V3 1/3] cpufreq: Move the IS_ENABLED(CPU_THERMAL) macro in a stub
+Date:   Tue, 25 Jun 2019 13:32:41 +0200
+Message-Id: <20190625113244.18146-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rong,
+The cpufreq_online and the cpufreq_offline [un]register the driver as
+a cooling device. This is done if the driver is flagged as a cooling
+device in addition with a IS_ENABLED macro to compile out the branching
+code.
 
-On Tue, 25 Jun 2019, Rong Chen wrote:
-> On 6/25/19 2:24 PM, Thomas Gleixner wrote:
-> > > On 6/22/19 3:08 AM, Thomas Gleixner wrote:
-> > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp
-> > > > > 2 -m
-> > > > > 2G
-> > > > I cannot reproduce that issue. What's the underlying hardware machine?
-> > > brand: Genuine Intel(R) CPU 000 @ 2.27GHz
-> > > model: Westmere-EX
-> > > memory: 256G
-> > > nr_node: 4
-> > > nr_cpu: 80
-> > Ok. I'll try to find something similar. Can please you rerun that test on
-> > that particular configuration with the updated branch?
-> > 
-> >     git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/ipi
-> > 
-> I have tested commit e0b179bc1a ("x86/apic/x2apic: Add conditional IPI
-> shorthands support"), the problem is still exist.
+Group this test in a stub function added in the cpufreq header instead
+of having the IS_ENABLED in the code path.
 
-the head of that branch is:
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/cpufreq/cpufreq.c | 6 ++----
+ include/linux/cpufreq.h   | 6 ++++++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-      4f3f6d6a7f8e ("x86/apic/x2apic: Add conditional IPI shorthands support")
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 85ff958e01f1..aee024e42618 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1378,8 +1378,7 @@ static int cpufreq_online(unsigned int cpu)
+ 	if (cpufreq_driver->ready)
+ 		cpufreq_driver->ready(policy);
+ 
+-	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
+-	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
++	if (cpufreq_thermal_control_enabled(cpufreq_driver))
+ 		policy->cdev = of_cpufreq_cooling_register(policy);
+ 
+ 	pr_debug("initialization complete\n");
+@@ -1469,8 +1468,7 @@ static int cpufreq_offline(unsigned int cpu)
+ 		goto unlock;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
+-	    cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
++	if (cpufreq_thermal_control_enabled(cpufreq_driver)) {
+ 		cpufreq_cooling_unregister(policy->cdev);
+ 		policy->cdev = NULL;
+ 	}
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index d01a74fbc4db..a1467aa7f58b 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -409,6 +409,12 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver_data);
+ const char *cpufreq_get_current_driver(void);
+ void *cpufreq_get_driver_data(void);
+ 
++static inline int cpufreq_thermal_control_enabled(struct cpufreq_driver *drv)
++{
++	return IS_ENABLED(CONFIG_CPU_THERMAL) &&
++		(drv->flags & CPUFREQ_IS_COOLING_DEV);
++}
++
+ static inline void cpufreq_verify_within_limits(struct cpufreq_policy *policy,
+ 		unsigned int min, unsigned int max)
+ {
+-- 
+2.17.1
 
-This is WIP and force pushed. There are no incremental changes. Could you
-please check again?
-
-Thanks,
-
-	tglx
