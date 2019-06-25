@@ -7,62 +7,58 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB2C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB99C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0964B215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1237D215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ip/wsRJV"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mCjjhY47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfFYIqo (ORCPT
+        id S1730807AbfFYIrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:46:44 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44029 "EHLO
+        Tue, 25 Jun 2019 04:47:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34457 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYIqo (ORCPT
+        with ESMTP id S1727916AbfFYIrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:46:44 -0400
+        Tue, 25 Jun 2019 04:47:08 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8k8kS3535912
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8kpbf3535966
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:46:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8k8kS3535912
+        Tue, 25 Jun 2019 01:46:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8kpbf3535966
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561452369;
-        bh=zWD0RszlywYoxCwhvgC52O1JPWIYLiOShSE1SjW60rs=;
+        s=2019061801; t=1561452412;
+        bh=r6tnFvU39VmjCmnbfgkD0LslLgpQaPrkkhyNC3Y3hjs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Ip/wsRJVVKkPzI0rBelkmmpJXXUDU3ywtfNdMtt4Ovvx5gXKhgIK4aOzLs/FS9m29
-         e5hi143Qa5DE6UmtrKBdnoOvONoy97zGeohr4F9eDWsXPvAYeojRIxoJc4/c16oo3x
-         AztbnevreC2vP7ymPrLnIoP/6/hPlmlzXx+TyPw+xEisz7wDBh/3URfBqG1wZGSIzd
-         eml968QxMQZOGamYYHPU+rUsahk8dKKQuQUzso5BmWoezjCqMD7GfsXk34RVd89mjR
-         5aknVg2Whz/vxuKiRYzQwYJn+fpRKJaWO8Ieol97KOk1qhyv7fe6/ek0poM5te0Cyy
-         dkApEZ+oq9FdA==
+        b=mCjjhY47eiUszmbb/d7Jzohnfenrjyf93AZGYlUXTZOqnjxRM7j920CVKDepGzI4o
+         uClSgoyYkVPq8aKCBQMQdwlPmdATYvDuBNmSAOrk3XUROjzvNwa6m39Ky4J38td7Nz
+         qEwlAz0uRk2ws0h2DmBeeowEG6+HdJC8Mh8slf6Ite1J5bV+17ucaQK1JIM3gMYnPj
+         06gXQhsMoC6ZvqEc+Nqbp80mU3PfjLH5BbYzqHgEfyB0rE/XtkDo4boZWey+9i9kT6
+         kaV1p3H2TQqicedltuxYTShnwV4Hwew7sycq/wgPFPP6kmph35CHh4XaOLhQ/41XNs
+         srRqOutnt8d/g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8k7Vb3535909;
-        Tue, 25 Jun 2019 01:46:07 -0700
-Date:   Tue, 25 Jun 2019 01:46:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8kpN63535963;
+        Tue, 25 Jun 2019 01:46:51 -0700
+Date:   Tue, 25 Jun 2019 01:46:51 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
-Message-ID: <tip-886532aee3cd42d95196601ed16d7c3d4679e9e5@git.kernel.org>
-Cc:     mingo@kernel.org, frederic@kernel.org, longman@redhat.com,
-        paulmck@linux.vnet.ibm.com, bvanassche@acm.org,
-        will.deacon@arm.com, tglx@linutronix.de, duyuyang@gmail.com,
-        arnd@arndb.de, torvalds@linux-foundation.org, hpa@zytor.com,
-        peterz@infradead.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Reply-To: will.deacon@arm.com, tglx@linutronix.de, frederic@kernel.org,
-          mingo@kernel.org, longman@redhat.com, bvanassche@acm.org,
-          paulmck@linux.vnet.ibm.com, peterz@infradead.org,
-          akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-          arnd@arndb.de, duyuyang@gmail.com, torvalds@linux-foundation.org,
-          hpa@zytor.com
-In-Reply-To: <20190617124718.1232976-1-arnd@arndb.de>
-References: <20190617124718.1232976-1-arnd@arndb.de>
+From:   tip-bot for Michael Forney <tipbot@zytor.com>
+Message-ID: <tip-ebf8d82bbb32720878a3867b28e655950ccee992@git.kernel.org>
+Cc:     mingo@kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mforney@mforney.org, hpa@zytor.com,
+        will.deacon@arm.com, boqun.feng@gmail.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de
+Reply-To: torvalds@linux-foundation.org, tglx@linutronix.de,
+          boqun.feng@gmail.com, hpa@zytor.com, will.deacon@arm.com,
+          linux-kernel@vger.kernel.org, mforney@mforney.org,
+          mingo@kernel.org, peterz@infradead.org
+In-Reply-To: <20190618053306.730-1-mforney@mforney.org>
+References: <20190618053306.730-1-mforney@mforney.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Move mark_lock() inside
- CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
-Git-Commit-ID: 886532aee3cd42d95196601ed16d7c3d4679e9e5
+Subject: [tip:locking/core] locking/atomics: Use sed(1) instead of
+ non-standard head(1) option
+Git-Commit-ID: ebf8d82bbb32720878a3867b28e655950ccee992
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,176 +72,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  886532aee3cd42d95196601ed16d7c3d4679e9e5
-Gitweb:     https://git.kernel.org/tip/886532aee3cd42d95196601ed16d7c3d4679e9e5
-Author:     Arnd Bergmann <arnd@arndb.de>
-AuthorDate: Mon, 17 Jun 2019 14:47:05 +0200
+Commit-ID:  ebf8d82bbb32720878a3867b28e655950ccee992
+Gitweb:     https://git.kernel.org/tip/ebf8d82bbb32720878a3867b28e655950ccee992
+Author:     Michael Forney <mforney@mforney.org>
+AuthorDate: Mon, 17 Jun 2019 22:33:06 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Tue, 25 Jun 2019 10:17:07 +0200
 
-locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
+locking/atomics: Use sed(1) instead of non-standard head(1) option
 
-The last cleanup patch triggered another issue, as now another function
-should be moved into the same section:
+POSIX says the -n option must be a positive decimal integer. Not all
+implementations of head(1) support negative numbers meaning offset from
+the end of the file.
 
- kernel/locking/lockdep.c:3580:12: error: 'mark_lock' defined but not used [-Werror=unused-function]
-  static int mark_lock(struct task_struct *curr, struct held_lock *this,
+Instead, the sed expression '$d' has the same effect of removing the
+last line of the file.
 
-Move mark_lock() into the same #ifdef section as its only caller, and
-remove the now-unused mark_lock_irq() stub helper.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Michael Forney <mforney@mforney.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Yuyang Du <duyuyang@gmail.com>
-Fixes: 0d2cc3b34532 ("locking/lockdep: Move valid_state() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-Link: https://lkml.kernel.org/r/20190617124718.1232976-1-arnd@arndb.de
+Link: https://lkml.kernel.org/r/20190618053306.730-1-mforney@mforney.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 73 ++++++++++++++++++++++--------------------------
- 1 file changed, 34 insertions(+), 39 deletions(-)
+ scripts/atomic/check-atomics.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 5e368f485330..341f52117f88 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -437,13 +437,6 @@ static int verbose(struct lock_class *class)
- 	return 0;
- }
+diff --git a/scripts/atomic/check-atomics.sh b/scripts/atomic/check-atomics.sh
+index cfa0c2f71c84..8378c63a1e09 100755
+--- a/scripts/atomic/check-atomics.sh
++++ b/scripts/atomic/check-atomics.sh
+@@ -22,7 +22,7 @@ while read header; do
+ 	OLDSUM="$(tail -n 1 ${LINUXDIR}/include/${header})"
+ 	OLDSUM="${OLDSUM#// }"
  
--/*
-- * Stack-trace: tightly packed array of stack backtrace
-- * addresses. Protected by the graph_lock.
-- */
--unsigned long nr_stack_trace_entries;
--static unsigned long stack_trace[MAX_STACK_TRACE_ENTRIES];
--
- static void print_lockdep_off(const char *bug_msg)
- {
- 	printk(KERN_DEBUG "%s\n", bug_msg);
-@@ -453,6 +446,15 @@ static void print_lockdep_off(const char *bug_msg)
- #endif
- }
+-	NEWSUM="$(head -n -1 ${LINUXDIR}/include/${header} | sha1sum)"
++	NEWSUM="$(sed '$d' ${LINUXDIR}/include/${header} | sha1sum)"
+ 	NEWSUM="${NEWSUM%% *}"
  
-+unsigned long nr_stack_trace_entries;
-+
-+#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
-+/*
-+ * Stack-trace: tightly packed array of stack backtrace
-+ * addresses. Protected by the graph_lock.
-+ */
-+static unsigned long stack_trace[MAX_STACK_TRACE_ENTRIES];
-+
- static int save_trace(struct lock_trace *trace)
- {
- 	unsigned long *entries = stack_trace + nr_stack_trace_entries;
-@@ -475,6 +477,7 @@ static int save_trace(struct lock_trace *trace)
- 
- 	return 1;
- }
-+#endif
- 
- unsigned int nr_hardirq_chains;
- unsigned int nr_softirq_chains;
-@@ -488,6 +491,7 @@ unsigned int max_lockdep_depth;
- DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
- #endif
- 
-+#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
- /*
-  * Locking printouts:
-  */
-@@ -505,6 +509,7 @@ static const char *usage_str[] =
- #undef LOCKDEP_STATE
- 	[LOCK_USED] = "INITIAL USE",
- };
-+#endif
- 
- const char * __get_key_name(struct lockdep_subclass_key *key, char *str)
- {
-@@ -2964,12 +2969,10 @@ static void check_chain_key(struct task_struct *curr)
- #endif
- }
- 
-+#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
- static int mark_lock(struct task_struct *curr, struct held_lock *this,
- 		     enum lock_usage_bit new_bit);
- 
--#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
--
--
- static void print_usage_bug_scenario(struct held_lock *lock)
- {
- 	struct lock_class *class = hlock_class(lock);
-@@ -3545,35 +3548,6 @@ static int separate_irq_context(struct task_struct *curr,
- 	return 0;
- }
- 
--#else /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
--
--static inline
--int mark_lock_irq(struct task_struct *curr, struct held_lock *this,
--		enum lock_usage_bit new_bit)
--{
--	WARN_ON(1); /* Impossible innit? when we don't have TRACE_IRQFLAG */
--	return 1;
--}
--
--static inline int
--mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
--{
--	return 1;
--}
--
--static inline unsigned int task_irq_context(struct task_struct *task)
--{
--	return 0;
--}
--
--static inline int separate_irq_context(struct task_struct *curr,
--		struct held_lock *hlock)
--{
--	return 0;
--}
--
--#endif /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
--
- /*
-  * Mark a lock with a usage bit, and validate the state transition:
-  */
-@@ -3634,6 +3608,27 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
- 	return ret;
- }
- 
-+#else /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
-+
-+static inline int
-+mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
-+{
-+	return 1;
-+}
-+
-+static inline unsigned int task_irq_context(struct task_struct *task)
-+{
-+	return 0;
-+}
-+
-+static inline int separate_irq_context(struct task_struct *curr,
-+		struct held_lock *hlock)
-+{
-+	return 0;
-+}
-+
-+#endif /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
-+
- /*
-  * Initialize a lock instance's lock-class mapping info:
-  */
+ 	if [ "${OLDSUM}" != "${NEWSUM}" ]; then
