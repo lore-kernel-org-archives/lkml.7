@@ -2,150 +2,174 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C2BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C62C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076BD2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561495604;
-	bh=4zflnPJOjSzJah74cHqrZgjnWn4XRJGSe8xqS8yMJt4=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=hJOrClJoDxBsql7hYRnPtTBaMAwPrM+xYRH4eppQ1rTbN8ihjvz+w0FrIlT+vtsId
-	 txBJvGiuygae10nRyIWv8DO0TMIKsDl+WLRbgUIyZDEVfvKjz21768yfMs5x0ixnAv
-	 hRfS6JKktgtqaFuL53qz+fBmXiu6Ihim4zwDXahk=
+	by mail.kernel.org (Postfix) with ESMTP id 6DB91205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfFYUqm (ORCPT
+        id S1727738AbfFYUr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 16:47:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:47968 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfFYUqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:46:42 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D640E205ED;
-        Tue, 25 Jun 2019 20:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561495600;
-        bh=4zflnPJOjSzJah74cHqrZgjnWn4XRJGSe8xqS8yMJt4=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=1IBQKZ4QdO9mARvZO4fdimMmjFiTYyPvYCcleQH84/+xvmlxpz2ZLt+7vlYvJO/Rd
-         MetUEuXkt6V+Mf82FiEQb7OL3AjJEWviaNLdmYjswYyq7kIa5yAPxZ9jVKnmPmdfBU
-         +uvHaijX0g2RMbCAesFySwxy8qll5906VdBCxCO8=
-Content-Type: text/plain; charset="utf-8"
+        id S1726053AbfFYUr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:47:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 13:47:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
+   d="p7s'?scan'208";a="313202257"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga004.jf.intel.com with ESMTP; 25 Jun 2019 13:47:28 -0700
+Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 25 Jun 2019 13:47:27 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.95]) by
+ ORSMSX126.amr.corp.intel.com ([169.254.4.136]) with mapi id 14.03.0439.000;
+ Tue, 25 Jun 2019 13:47:27 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
+        <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: Re: [PATCH v2 0/3] block: sed-opal: add support for shadow MBR done
+ flag and write
+Thread-Topic: [PATCH v2 0/3] block: sed-opal: add support for shadow MBR
+ done flag and write
+Thread-Index: AQHVEBZWhQ8AkVDDnEqL0mdelPmWUKatg5AA
+Date:   Tue, 25 Jun 2019 20:47:26 +0000
+Message-ID: <7ee5d705c12d770bf7566bce7d664bf733b25206.camel@intel.com>
+References: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
+In-Reply-To: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.162]
+Content-Type: multipart/signed; micalg=sha-1;
+        protocol="application/x-pkcs7-signature"; boundary="=-QSYtafHroO9uY8TINCAl"
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com> <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
-        jonathanh@nvidia.com, linus.walleij@linaro.org,
-        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
-        tglx@linutronix.de, thierry.reding@gmail.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 13:46:40 -0700
-Message-Id: <20190625204640.D640E205ED@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-06-18 00:46:20)
-> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> index 1583f5fc992f..4b0ed8fc6268 100644
-> --- a/drivers/clk/tegra/clk-pll.c
-> +++ b/drivers/clk/tegra/clk-pll.c
-> @@ -1008,6 +1008,54 @@ static unsigned long clk_plle_recalc_rate(struct c=
-lk_hw *hw,
->         return rate;
->  }
-> =20
-> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
-> +{
-> +       if (!__clk_get_enable_count(hw->clk))
-> +               clk_pll_disable(hw);
-> +       else
-> +               clk_pll_enable(hw);
-> +}
-> +
-> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
-> +{
-> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
-> +
-> +       pll->rate =3D clk_hw_get_rate(hw);
-> +
-> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb"))
-> +               pll->pllbase_ctx =3D pll_readl_base(pll);
-> +       else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco"))
-> +               pll->pllbase_ctx =3D pll_readl_base(pll) & (0xf << 16);
-> +
-> +       return 0;
-> +}
-> +
-> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-> +{
-> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
-> +       u32 val;
-> +
-> +       if (clk_pll_is_enabled(hw))
-> +               return;
-> +
-> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb")) {
+--=-QSYtafHroO9uY8TINCAl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Is there any way to avoid doing a string comparison here, and instead do
-something like a pointer comparison? Or maybe look at some flag in the
-tegra_clk_pll to figure out what to do differently? Using a string
-comparison is not too nice. Or even have different clk ops for the
-different clks and then do different things in this restore clk_op?
+These are still good with me and we'll likely have a similar future use
+for passing data through the ioctl.
 
-> +               pll_writel_base(pll->pllbase_ctx, pll);
-> +       } else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco")) {
-> +               val =3D pll_readl_base(pll);
-> +               val &=3D ~(0xf << 16);
-> +               pll_writel_base(pll->pllbase_ctx | val, pll);
-> +       }
-> +
-> +       if (pll->params->set_defaults)
-> +               pll->params->set_defaults(pll);
-> +
-> +       clk_set_rate(hw->clk, pll->rate);
+Could we get this staged for 5.3?
 
-Do you need to call clk_set_rate() here to change the frequency of the
-clk or just the parents of the clk, or both? I'd think that when we're
-restoring the clk the cached rate of the clk would match whatever we're
-restoring to, so this is a NOP. So does this do anything?
+On Tue, 2019-05-21 at 22:46 +0200, David Kozub wrote:
+> This patch series extends SED Opal support: it adds IOCTL for setting the=
+ shadow
+> MBR done flag which can be useful for unlocking an Opal disk on boot and =
+it adds
+> IOCTL for writing to the shadow MBR.
+>=20
+> This applies on current master.
+>=20
+> I successfully tested toggling the MBR done flag and writing the shadow M=
+BR
+> using some tools I hacked together[1] with a Samsung SSD 850 EVO drive.
+>=20
+> Changes from v1:
+> * PATCH 2/3: remove check with access_ok, just rely on copy_from_user as
+> suggested in [2] (I tested passing data =3D=3D 0 and I got the expected E=
+FAULT)
+>=20
+> [1] https://gitlab.com/zub2/opalctl
+> [2] https://lore.kernel.org/lkml/20190501134833.GB24132@infradead.org/
+>=20
+> Jonas Rabenstein (3):
+>   block: sed-opal: add ioctl for done-mark of shadow mbr
+>   block: sed-opal: ioctl for writing to shadow mbr
+>   block: sed-opal: check size of shadow mbr
+>=20
+>  block/opal_proto.h            |  16 ++++
+>  block/sed-opal.c              | 157 +++++++++++++++++++++++++++++++++-
+>  include/linux/sed-opal.h      |   2 +
+>  include/uapi/linux/sed-opal.h |  20 +++++
+>  4 files changed, 193 insertions(+), 2 deletions(-)
+>=20
 
-I'd prefer that the restore ops just restore the clk hardware state of
-the clk_hw passed in, and not try to fix up the entire tree around a
-certain clk, if that's even possible.
+--=-QSYtafHroO9uY8TINCAl
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-> +
-> +       /* do not sync pllx state here. pllx is sync'd after dfll resume =
-*/
-> +       if (strcmp(__clk_get_name(hw->clk), "pll_x"))
-> +               tegra_clk_sync_state_pll(hw);
-> +}
-> +
->  const struct clk_ops tegra_clk_pll_ops =3D {
->         .is_enabled =3D clk_pll_is_enabled,
->         .enable =3D clk_pll_enable,
-> @@ -1015,6 +1063,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
->         .recalc_rate =3D clk_pll_recalc_rate,
->         .round_rate =3D clk_pll_round_rate,
->         .set_rate =3D clk_pll_set_rate,
-> +       .save_context =3D tegra_clk_pll_save_context,
-> +       .restore_context =3D tegra_clk_pll_restore_context,
+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
+PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
+AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
+HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
+b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
+JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
+bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
+SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
+MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
+gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
+AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
+gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
+ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
+p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
+7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
+NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
+CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
+FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
+bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
+IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDYyNTIwNDcyNlowIwYJ
+KoZIhvcNAQkEMRYEFI1Xf8MGLVD983KUoHjwtrMARpJaMA0GCSqGSIb3DQEBAQUABIIBAFMqfdzS
+H6WhP7YBYq8nhjWRGyKRyFxRGzq4zzO8O8GkagZffVImWO5r0o/XSk71kDM3gOwjJ9jfALAiGAZG
+eICe4Y+ojOUgFPpmaunB66hIENeQlDtQwTxqtL1OslXuKOnz6A+m+LPzu5KMzUVR90yByNihumQ6
+dPKkwo1juIPNVMo49T3Lf83a6L/5YcUQxKfFgi3giDbfjBmrYTgoWsfPS3MkF/sGsUwyx7LEo8QR
+8Jn1+d4SKn4eTfelfJqaCD7q49l8ur1yKKstJm5VDc4BPyuxiKwU3s75WA3zb0JYHhSlKJyEuD+0
+wVJqI/SBDYy7SBV/QtgTGx13H4z0deoAAAAAAAA=
+
+
+--=-QSYtafHroO9uY8TINCAl--
