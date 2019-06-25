@@ -2,112 +2,103 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7827FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539AFC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D2421738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB63213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbfFYM3u (ORCPT
+        id S1728328AbfFYMbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:29:50 -0400
-Received: from gofer.mess.org ([88.97.38.141]:51013 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727661AbfFYM3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:29:50 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 122E160E3B; Tue, 25 Jun 2019 13:29:49 +0100 (BST)
-Date:   Tue, 25 Jun 2019 13:29:48 +0100
-From:   Sean Young <sean@mess.org>
-To:     Andrei Koshkosh <andreykosh000@mail.ru>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: dvbsky: use a single mutex and state buffers for
- all R/W ops
-Message-ID: <20190625122948.3ktliary5towfxym@gofer.mess.org>
-References: <1560584848-10278-1-git-send-email-andreykosh000@mail.ru>
+        Tue, 25 Jun 2019 08:31:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbfFYMbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:31:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 41B9DAF86;
+        Tue, 25 Jun 2019 12:31:06 +0000 (UTC)
+Subject: Re: [PATCH v2 5/7] x86/xen: nopv parameter support for HVM guest
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        peterz@infradead.org, srinivas.eeda@oracle.com,
+        Ingo Molnar <mingo@redhat.com>, xen-devel@lists.xenproject.org
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1561377779-28036-6-git-send-email-zhenzhong.duan@oracle.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <99a28880-c2bf-e328-ee52-afc782af3b74@suse.com>
+Date:   Tue, 25 Jun 2019 14:31:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560584848-10278-1-git-send-email-andreykosh000@mail.ru>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1561377779-28036-6-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 10:47:28AM +0300, Andrei Koshkosh wrote:
-> ---
->  drivers/media/usb/dvb-usb-v2/dvbsky.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
+On 24.06.19 14:02, Zhenzhong Duan wrote:
+> PVH guest needs PV extentions to work, so nopv parameter is ignored
+> for PVH but not for HVM guest.
 > 
+> In order for nopv parameter to take effect for HVM guest, we need to
+> distinguish between PVH and HVM guest early in hypervisor detection
+> code. By moving the detection of PVH in xen_platform_hvm(),
+> xen_pvh_domain() could be used for that purpose.
+> 
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: xen-devel@lists.xenproject.org
+> ---
+>   arch/x86/xen/enlighten_hvm.c | 18 ++++++++++++------
+>   1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+> index 7fcb4ea..26939e7 100644
+> --- a/arch/x86/xen/enlighten_hvm.c
+> +++ b/arch/x86/xen/enlighten_hvm.c
+> @@ -25,6 +25,7 @@
+>   #include "mmu.h"
+>   #include "smp.h"
+>   
+> +extern bool nopv;
+>   static unsigned long shared_info_pfn;
+>   
+>   void xen_hvm_init_shared_info(void)
+> @@ -226,20 +227,24 @@ static uint32_t __init xen_platform_hvm(void)
+>   	if (xen_pv_domain())
+>   		return 0;
+>   
+> +#ifdef CONFIG_XEN_PVH
+> +	/* Test for PVH domain (PVH boot path taken overrides ACPI flags). */
+> +	if (!x86_platform.legacy.rtc && x86_platform.legacy.no_vga)
+> +		xen_pvh = true;
 
-Missing signed-off-by. Please read:
+Sorry, this won't work, as ACPI tables are scanned only some time later.
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
-> diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-> index c41e10b..0b5da891 100644
-> --- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
-> +++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-> @@ -22,7 +22,7 @@ MODULE_PARM_DESC(disable_rc, "Disable inbuilt IR receiver.");
->  DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
->  
->  struct dvbsky_state {
-> -	struct mutex stream_mutex;
-> +	//struct mutex stream_mutex;
-
-Please remove rather comment out.
+You can test for xen_pvh being true here (for the case where the guest
+has been booted via the Xen-PVH boot entry) and handle that case, but
+the case of a PVH guest started via the normal boot entry (like via
+grub2) and nopv specified is difficult. The only idea I have right now
+would be to use another struct hypervisor_x86 for that case which will
+only be used for Xen HVM/PVH _and_ nopv specified. It should be a copy
+of the bare metal variant, but a special guest_late_init member issuing
+a big fat warning in case PVH is being detected.
 
 
->  	u8 ibuf[DVBSKY_BUF_LEN];
->  	u8 obuf[DVBSKY_BUF_LEN];
->  	u8 last_lock;
-> @@ -61,16 +61,18 @@ static int dvbsky_stream_ctrl(struct dvb_usb_device *d, u8 onoff)
->  {
->  	struct dvbsky_state *state = d_to_priv(d);
->  	int ret;
-> -	u8 obuf_pre[3] = { 0x37, 0, 0 };
-> -	u8 obuf_post[3] = { 0x36, 3, 0 };
-> +	static u8 obuf_pre[3] = { 0x37, 0, 0 };
-> +	static u8 obuf_post[3] = { 0x36, 3, 0 };
-
-Can these be const?
->
-> -	mutex_lock(&state->stream_mutex);
-> -	ret = dvbsky_usb_generic_rw(d, obuf_pre, 3, NULL, 0);
-> +	mutex_lock(&d->usb_mutex);
-> +	memcpy(state->obuf, obuf_pre, 3);
-> +	ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
->  	if (!ret && onoff) {
->  		msleep(20);
-> -		ret = dvbsky_usb_generic_rw(d, obuf_post, 3, NULL, 0);
-> +		memcpy(state->obuf, obuf_post, 3);
-> +		ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
->  	}
-> -	mutex_unlock(&state->stream_mutex);
-> +	mutex_unlock(&d->usb_mutex);
->  	return ret;
->  }
->  
-> @@ -599,7 +601,7 @@ static int dvbsky_init(struct dvb_usb_device *d)
->  	if (ret)
->  		return ret;
->  	*/
-> -	mutex_init(&state->stream_mutex);
-> +	//mutex_init(&state->stream_mutex);
-
-Remove.
-
->  
->  	state->last_lock = 0;
->  
-> -- 
-> 2.7.4
-
-Thanks,
-Sean
+Juergen
