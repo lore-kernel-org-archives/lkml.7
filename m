@@ -2,157 +2,123 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D592DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DD8214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="KFOFwyQc";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="R7WHNZ0E"
+	by mail.kernel.org (Postfix) with ESMTP id B943320883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbfFYJ3U (ORCPT
+        id S1731535AbfFYJ33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:29:20 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:46920 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbfFYJ3U (ORCPT
+        Tue, 25 Jun 2019 05:29:29 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:37927 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfFYJ33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:29:20 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P9Qnse002261;
-        Tue, 25 Jun 2019 02:29:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=6S4cxwY403t+Tzj/kL/XlLMglD5BHrtd+ww9ytMz/FE=;
- b=KFOFwyQcXuNNNWtLjqQlinJI8Yt2w/KNBzxddgKYhbdOPxXumRLxLRz1MlzE4EEFxVyb
- CAQPVsZfMp/c5xFOUvYKjkb5qvokAILvVvRrNuF6yUjNiURCbV5QyMW0LNy1h9d6o7E5
- 6obXn8WVQpB6jNDkxWMEZumi6TtmMxuK5ABTfGanB8Ag3JSU7oAHkJ96Ho+oYeZ5FY2+
- 1mc1iU/+T3voIAyJCo/bfgBMYMJu4Uv2xYH+o1wRTFA+GJHXJhRvOgiPscwc0n3utqME
- LTz+X9WywBJeddfquaIYIM1VMsxubfjYfYyPHVuldXoBMG5c1YdBHgAQW9oNrRsDeufK qQ== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2057.outbound.protection.outlook.com [104.47.32.57])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2t9gvsbv4m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 02:29:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6S4cxwY403t+Tzj/kL/XlLMglD5BHrtd+ww9ytMz/FE=;
- b=R7WHNZ0Ek28muCiU4ExylNGLz3oUE+757IARFnLg6lwOJl9LkRbmbiwWvSzUmJ1G2rfCizinsz4oD7RNBMAU/RIBQZZp7JWACROcHULxrRfHctB5A8E0sb0gdbr7oN4jKuLticiqbdrWpy/5Z+76w3zTRRvhIFjWKLYVcJtM2hI=
-Received: from SN2PR07MB2480.namprd07.prod.outlook.com (10.166.212.14) by
- SN2PR07MB2559.namprd07.prod.outlook.com (10.167.15.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 09:29:03 +0000
-Received: from SN2PR07MB2480.namprd07.prod.outlook.com
- ([fe80::7dc9:f52a:3020:d0ba]) by SN2PR07MB2480.namprd07.prod.outlook.com
- ([fe80::7dc9:f52a:3020:d0ba%10]) with mapi id 15.20.2008.014; Tue, 25 Jun
- 2019 09:29:03 +0000
-From:   Parshuram Raju Thombare <pthombar@cadence.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: RE: [PATCH v5 4/5] net: macb: add support for high speed interface
-Thread-Topic: [PATCH v5 4/5] net: macb: add support for high speed interface
-Thread-Index: AQHVKoYfMA9Li9EuT0O4O+K54hF+RKaq0c2AgAE8gRCAAAZVAIAABn8w
-Date:   Tue, 25 Jun 2019 09:29:03 +0000
-Message-ID: <SN2PR07MB2480AE208D1C5A3D6AB7E16EC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
-References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
- <1561378355-14048-1-git-send-email-pthombar@cadence.com>
- <20190624134755.u3oq3xr6uergnfs5@shell.armlinux.org.uk>
- <SN2PR07MB2480CF15E11D54DA8C3B7319C1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
- <20190625090324.c6tq2neksatfwljw@shell.armlinux.org.uk>
-In-Reply-To: <20190625090324.c6tq2neksatfwljw@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1hOWY1NzIxOS05NzJiLTExZTktODRmOS0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcYTlmNTcyMWItOTcyYi0xMWU5LTg0ZjktMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIxNDYxIiB0PSIxMzIwNTkyODU0MTI1NTMxNDUiIGg9InFnK3BXNUJFc0xUeDROSkY5QTJhTml1d2ZHcz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e4d94863-ee2e-41d2-a7a6-08d6f94f9035
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN2PR07MB2559;
-x-ms-traffictypediagnostic: SN2PR07MB2559:
-x-microsoft-antispam-prvs: <SN2PR07MB25590C663EE49ABE48385685C1E30@SN2PR07MB2559.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(36092001)(78486014)(6436002)(73956011)(86362001)(107886003)(55016002)(256004)(81166006)(486006)(476003)(9686003)(53936002)(99286004)(2906002)(6916009)(229853002)(66066001)(76176011)(6246003)(33656002)(6506007)(55236004)(14454004)(14444005)(478600001)(3846002)(25786009)(6116002)(446003)(4326008)(7696005)(102836004)(11346002)(26005)(316002)(66476007)(64756008)(66446008)(81156014)(7736002)(66556008)(52536014)(68736007)(8676002)(8936002)(66946007)(54906003)(76116006)(5660300002)(186003)(71190400001)(74316002)(305945005)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR07MB2559;H:SN2PR07MB2480.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Tfa++H2ooJ0Yv113Z0dGeQapxmbLZ2nK+L1fF03TbvSYjMafMHm2b5EDvjrKslYrfvxDHwdbxPO5JtKBH+0a7Tqo87zc7vVnevh9CoHVANekMPOWOjjxtbdLCxFJt713i4TOEeA4MHRQBNdTiTaMXXadJ7bPFovr8KnqsmzSv3gvqo+1bWQ4yWW2XMV00UI4pTiRQAceW2cDkVM/8KYtPOIgBB6BssIXq3gleeD41sLHkdayoWXkbVVnTfk0Xchh/N/PcPlMKDsjg0B8Kae5fe8ObVvvuYJk7V1Nb4ecWxgHY43Rs7os2B9Yz2CplLmpKWq2gYzB+xvWfPLr6VcRXy3yyLXWIWm5C5BkHJmRjVqMcC/YUUcnYagX7gtF8m+qgGb/5oWkOfRxX9cEXtYOokWYjmKX17MIjc0VluvGH/E=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Jun 2019 05:29:29 -0400
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9B34A240003;
+        Tue, 25 Jun 2019 09:29:26 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 11:29:26 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, userm57@yahoo.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
+ doesn't
+Message-ID: <20190625092926.GE5690@piout.net>
+References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
+ <20190624195705.GD5690@piout.net>
+ <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4d94863-ee2e-41d2-a7a6-08d6f94f9035
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 09:29:03.5010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR07MB2559
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=667 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> >>  	switch (state->interface) {
->> >>  	case PHY_INTERFACE_MODE_NA:
->> >> +	case PHY_INTERFACE_MODE_USXGMII:
->> >> +	case PHY_INTERFACE_MODE_10GKR:
->> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
->> >> +			phylink_set(mask, 10000baseCR_Full);
->> >> +			phylink_set(mask, 10000baseER_Full);
->> >> +			phylink_set(mask, 10000baseKR_Full);
->> >> +			phylink_set(mask, 10000baseLR_Full);
->> >> +			phylink_set(mask, 10000baseLRM_Full);
->> >> +			phylink_set(mask, 10000baseSR_Full);
->> >> +			phylink_set(mask, 10000baseT_Full);
->> >> +			phylink_set(mask, 5000baseT_Full);
->> >> +			phylink_set(mask, 2500baseX_Full);
->> >> +			phylink_set(mask, 1000baseX_Full);
->> >> +		}
->> >If MACB_CAPS_GIGABIT_MODE_AVAILABLE is not set, are these interface
->> >modes supported by the hardware?  If the PHY interface mode is not
->> >supported, then the returned support mask must be cleared.[]
->> There are some configs which uses this macro to limit data rate to 100M
->> even if hardware support higher rates.
->I'm sorry, this response does not address my statement, maybe I wasn't
->clear enough.  I am asking about the *PHY* interface modes, in
->other words (e.g.) PHY_INTERFACE_MODE_USXGMII.
+On 25/06/2019 11:53:49+1000, Finn Thain wrote:
+> On Mon, 24 Jun 2019, Alexandre Belloni wrote:
+> 
+> > On 21/06/2019 11:51:26+1000, Finn Thain wrote:
+> > > Some machines store local time in the Real Time Clock. The hard-coded 
+> > > "UTC" string is wrong on those machines so just omit that string. 
+> > > Update the log parser so it doesn't require the string "UTC".
+> > > 
+> > 
+> > I don't agree, hctossys will always think the RTC is in UTC.
+> 
+> Well, I wasn't speculating about a theoretical problem. This is a bug that 
+> was reported to me by a user of Debian/powerpc system.
+> 
+> I was able to confirm that the bug also affects dual-boot Windows/Linux on 
+> x86 with CONFIG_RTC_HCTOSYS=y.
+> 
+> > If you store local time in the RTC, then you are probably not using 
+> > hctosys because it definitively doesn't know about the timezone and will 
+> > incorrectly set the system time. That information is usually kept in 
+> > /etc/adjtime.
+> > 
+> 
+> In the Debian/powerpc bug report, the timezone is obtained from the NVRAM:
+> 
+> [    0.000000] PowerMac motherboard: PowerBook Wallstreet
+> ...
+> [    0.000000] GMT Delta read from XPRAM: -360 minutes, DST: on
+> ...
+> [   37.605859] rtc-generic rtc-generic: rtc core: registered rtc-generic as rtc0
+> ...
+> [   40.346255] rtc-generic rtc-generic: setting system clock to 2019-06-19 15:17:35 UTC (1560957455)
+> ...
+> 
+> Though I don't know whether the sys_tz value is relevant here.
+> 
+> Anyway, here's the bug reproduced on x86 --
+> 
+> # dmesg | grep rtc_cmos
+> [    0.543878] rtc_cmos 00:02: RTC can wake from S4
+> [    0.544090] rtc_cmos 00:02: rtc core: registered rtc_cmos as rtc0
+> [    0.544090] rtc_cmos 00:02: alarms up to one month, y3k, 114 bytes nvram, hpet irqs
+> [    0.545807] rtc_cmos 00:02: setting system clock to 2019-06-25 11:24:14 UTC (1561461854)
+> # grep . /etc/adjtime /etc/timezone
+> /etc/adjtime:0.000120 1550184138 0.000000
+> /etc/adjtime:1550184138
+> /etc/adjtime:LOCAL
+> /etc/timezone:Australia/Melbourne
+> # hwclock --show
+> 2019-06-25 11:47:49.702660+10:00
+> # date --iso-8601=s
+> 2019-06-25T11:48:01+10:00
+> # 
+> 
+> Looks wrong to me. What am I missing?
+> 
 
-If interface is not supported by hardware probe returns with error, so net=
-=20
-device is not registered at all.
+Userspace is certainly adjusting the timezone after the kernel did. Can
+you run the same commands without running your init? 
 
-Regards,
-Parshuram Thombare
+On stable, you have /etc/init.d/hwclock.sh that still runs and does the
+correct thing. My understanding is that systemd also handles the TZ
+properly after hctosys (see clock_is_localtime()).
+
+Seriously, hctosys does a really bad job at setting the system time, it
+is guaranteed to be always wrong on most platforms. My plan is still to
+try to get distros to stop enabling it and do that properly in
+userspace. This is already ok when using sysV but systemd would need a
+few changes to stop relying on it when then is no hwclock initscript.
+Unfortunately, I didn't have time to work on that yet.
+
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
