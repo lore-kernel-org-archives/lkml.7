@@ -2,79 +2,106 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26366C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF82B2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9D42063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="naD61bgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfFYRY4 (ORCPT
+        id S1730838AbfFYR0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:24:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:46084 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbfFYRYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:24:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ABC9360;
-        Tue, 25 Jun 2019 10:24:55 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AC343F718;
-        Tue, 25 Jun 2019 10:24:49 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 18:24:42 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        alexander.sverdlin@gmail.com, allison@lohutok.net, andrew@lunn.ch,
-        ast@kernel.org, bgolaszewski@baylibre.com, bpf@vger.kernel.org,
-        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
-        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
-        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
-        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
-        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
-        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
-        krzk@kernel.org, kstewart@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk,
-        liviu.dudau@arm.com, lkundrak@v3.sk, lorenzo.pieralisi@arm.com,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, nsekhar@ti.com, peterz@infradead.org,
-        robert.jarzmik@free.fr, s.hauer@pengutronix.de,
-        sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
-        songliubraving@fb.com, swinslow@gmail.com, tglx@linutronix.de,
-        tony@atomide.com, will@kernel.org, yhs@fb.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V3 12/15] ARM: vexpress: cleanup cppcheck shifting error
-Message-ID: <20190625172442.GA19852@e107155-lin>
-References: <20190624135105.15579-1-tranmanphong@gmail.com>
- <20190625040356.27473-1-tranmanphong@gmail.com>
- <20190625040356.27473-13-tranmanphong@gmail.com>
+        Tue, 25 Jun 2019 13:26:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46754 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFYR0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:26:42 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so17058961ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6gq84utB8K04TkFkVIjVVbqj+RReCP6QFmHdu5HDrdE=;
+        b=naD61bgrphwvsuQeh7I3S2TOG7WlFTu05G05sniZdPLkEFxpVLI4QzWmwpfPA9CiN2
+         ATfzx5rBs7HjKcRc1YDoStMPiGwTbE/QZWGQPVuWefMqhX47HS5O9BFNQFOGzfMmdXPX
+         IVJXBGv0G6J/Vm5nvfJK/lyKs9vJ4Qmi6I9GU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6gq84utB8K04TkFkVIjVVbqj+RReCP6QFmHdu5HDrdE=;
+        b=qTqFGVcClNgBurTPKnRdq17O7D81WHYiL0tHb6oauerrw7BDsJso6iV/+lf53f2jFC
+         lYwl7fsS/WfMBqOioElaApnwVS3v0Xm09GJZaT3oMlfGWYMm8hQkWYx0OlRiAlDtbAqF
+         F8tAtT1BQVWl51/r05g7sqvGEtMa2xKcjpe9bqW009lFuhUPRtbLxKO8IQFCX/DBYk3K
+         6JzOgwk1g6mXzhCO9PB8dmWp+G1kSHE65VnvizjlbsfsKONFqUL+TpKMkBoh4abKCXAd
+         KKIx7VGpoc1h/Ug2zQk+OBcGSi08sLSQork2T+3obm9vtr/1N8svDhmFICByKf7lWNVe
+         hE1g==
+X-Gm-Message-State: APjAAAWhQcZVX/rj9aJE2fTH3V/gzmccQMrsL7WWfRATg4pKWreVs0li
+        7EU4cMjk3G2bsuOVInmKW50iqYV/n9c=
+X-Google-Smtp-Source: APXvYqx6owkLDuWzHNsdFbI4dR7//+vrm9KeJ4KlrDvRWQyYelg1WwIznZ8SY0xsvu5wWk3SYOU2yg==
+X-Received: by 2002:a2e:9b10:: with SMTP id u16mr38601399lji.231.1561483600197;
+        Tue, 25 Jun 2019 10:26:40 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id c19sm2014827lfi.39.2019.06.25.10.26.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 10:26:38 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id q26so13256266lfc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:26:37 -0700 (PDT)
+X-Received: by 2002:a19:5515:: with SMTP id n21mr22825839lfe.26.1561483597150;
+ Tue, 25 Jun 2019 10:26:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625040356.27473-13-tranmanphong@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190604205323.200361-2-briannorris@chromium.org> <20190625044525.846A8607DE@smtp.codeaurora.org>
+In-Reply-To: <20190625044525.846A8607DE@smtp.codeaurora.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 25 Jun 2019 10:26:25 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXP2xY_7BXk6L25FVFf1yyhnXOZygYwreGYGVY7aK0TVkg@mail.gmail.com>
+Message-ID: <CA+ASDXP2xY_7BXk6L25FVFf1yyhnXOZygYwreGYGVY7aK0TVkg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mwifiex: dispatch/rotate from reorder table atomically
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:03:53AM +0700, Phong Tran wrote:
-> There is error from cppcheck tool
-> "Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
-> change to use BIT() marco for improvement.
+On Mon, Jun 24, 2019 at 9:45 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+> New warning:
 >
+> drivers/net/wireless/marvell/mwifiex/wmm.c: In function 'mwifiex_wmm_process_tx':
+> drivers/net/wireless/marvell/mwifiex/wmm.c:1438:4: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>     mwifiex_11n_aggregate_pkt(priv, ptr, ptr_index, flags);
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/wmm.c:1406:16: note: 'flags' was declared here
+>   unsigned long flags;
+>                 ^~~~~
 
-What's your plan for merging this series ? I can take this for v5.4
-If not,
+Yikes! Not sure how I missed that, as I *thought* I had -Werror
+enabled. Maybe things got lost a bit in the shuffles from GCC to Clang
+for building our kernels internally.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Anyway, "used" is a bit generous here, since these are just useless
+function arguments (never *actually* used now). I should remove these
+args entirely.
 
---
-Regards,
-Sudeep
+> 2 patches set to Changes Requested.
+
+Will send a v2.
+
+Thanks,
+Brian
