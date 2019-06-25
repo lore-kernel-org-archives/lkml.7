@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC05DC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2E0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813F02168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C2821655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Po6yPSIb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUuIF6rH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfFYKnM (ORCPT
+        id S1732116AbfFYKnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:43:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35379 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfFYKnL (ORCPT
+        Tue, 25 Jun 2019 06:43:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43404 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfFYKnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:43:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so8777705pgl.2;
-        Tue, 25 Jun 2019 03:43:10 -0700 (PDT)
+        Tue, 25 Jun 2019 06:43:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so8611976plb.10;
+        Tue, 25 Jun 2019 03:43:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3jHKxS9Kogr9qqdX19ENZz0Qw2yWpRAgexX6QLS/rnc=;
-        b=Po6yPSIbbWGLrfDa4V7fOtDKBArKnI5y9ekQZD2WUtoNTNkKBWC+AgyTwjt0CQ5GIM
-         qlcxNytMoY0tYDp2vWF6XqgXeaTLunFRIVafN77Jb8cImPqBtg4gUTM01OL70kOg2z4m
-         CTPXvk58hkItaFaZg+REyUGx7RFUsTSnQQhqYXwtwEYh5uAwIrQXQ0sEVnlxKPFpuY/i
-         J37oorJzpwI0AwFSLc6wOzrSNlqFrcWP9S0JiNSlWtMc/Ron30hQZArGZuTdxYV4s7w/
-         rANUxTU5/So+w/r5ASVy4WkdJjY+6p//mI1wlt40qsV0Z8eSKSAVfqYArn3aMI5hLX0M
-         +0oA==
+        bh=rkU+SjzCEWdgQCPJHmPaU3HbLqD9ceb7FSy53eQ0IIE=;
+        b=kUuIF6rHI5NKBa5iWf2twpG18ea8+rZHSY1Kax01fxVPvrvjYf9h+7itV2ANaHaT4S
+         0wXmGNs1c1XvV5YWxiFZW5J2iynhf+YLlkfLnTN3QQoY5KN3oqXr6/A1Gv/VVY08ZVB2
+         Y/OSPQMKwzsVXe7KuIbBd6CiXikmUoYcJ35JT1qV1fHn++ZnWK+Yr9ley14eD+aVuD79
+         DLycYsfIqXwGL+rz1pPWUF+Hgk05kzp+3w8ys2UzNednQ1E0ptHsiIprP9o4zN2aUguG
+         K8GzkUQB7pvVNBp1Hi+eJjU/Qnz3CE+DYOyz82XW/46iAn7D9hYHXJJHM2AGVMynzFpe
+         Zd9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3jHKxS9Kogr9qqdX19ENZz0Qw2yWpRAgexX6QLS/rnc=;
-        b=F1+lj5zOBuNLc0ujyWJXLWZ3ZmAEnc88YzipqPBLLu8F+MyPxjoyIe82TwPm8Clsa2
-         iQ6i0zcDz3sMniVlz0xgiT1lJZm3jxy701jjxpYLUM+/vvYTYWJTsuTxWMZ6Pi5J/VLk
-         +0elUCx0TMRbfgkz5UGkb+LwGwksYOpurvRIMNCVLY5B5VBYRavT0SSqa3i/Sn2l0azV
-         9LDY18hklo9NPLpNoGUzACXmTkbSJB8BGlw8w9V2I+WokAgutHMdL21MwklZ7pLK0Fts
-         yBtBdbgCpVdVbFktC+qbmdQustpqImWlo4SdzgoNv1aQo0Tv/VUt+o+igNNlD3FdGgfS
-         fLmQ==
-X-Gm-Message-State: APjAAAXf6CX0uKsWv4UfU4wcr/3PA3av9Ox58kDosqGLDW7PE2FomQZf
-        Zm2hQPbXBmf+6EJc60YER/4=
-X-Google-Smtp-Source: APXvYqwNh9AJL+27sY07DzBTihEQMlT3d5EQd6GP5q9N2fehLoVqGOUbYiLPYolNd15XJSUo3vs9AA==
-X-Received: by 2002:a63:a61:: with SMTP id z33mr20274329pgk.154.1561459390566;
-        Tue, 25 Jun 2019 03:43:10 -0700 (PDT)
+        bh=rkU+SjzCEWdgQCPJHmPaU3HbLqD9ceb7FSy53eQ0IIE=;
+        b=oESAx17mpGUdkFBliSQgQbriZDSZAe7Iny2MzbGUB41ONxsvSclJxKBH/VKnNBQpX4
+         R1IQXz96oMdf9tT2oXFPuuUSXGY+ghEhzJisGIETgz/HwG3gtDW/9FQvS3YUx0lEUMd3
+         LX/8edDw0122As31RdABu0P0nmPf09bWwT/yM9XYG+J7JWkHxSS6cbKIfjCYJZe1fqUO
+         DaAFuMsQX8/3n5ooJu9lte4Vj2kZgiyJYLg1jcWKyqPV1ronhVnPr0wklGO3bJnkvqd+
+         i7rrnGrqWhyjVqFZhGTJfG3cMl5jYTsraPNRBHBF5OrPRHUoYiCJOqWfBvJ/biTRs0Ds
+         bLUw==
+X-Gm-Message-State: APjAAAU17tWbbgsLLZl8wSHr3Jzx3NjSmi09Z4a/Gz5wNQD0Jwj/PcKk
+        apC9xu76nm6bbDV/fuMIGDo=
+X-Google-Smtp-Source: APXvYqzZn/CgQDrn7rDPGw4KYvyAuYwZGm7rkrHHdSrHZZfcaTfeRmErNwWLBQ9WwkiMPzzf74Eh1g==
+X-Received: by 2002:a17:902:4201:: with SMTP id g1mr45846094pld.300.1561459396428;
+        Tue, 25 Jun 2019 03:43:16 -0700 (PDT)
 Received: from Pilot130.192.168.0.22 (211-20-114-70.HINET-IP.hinet.net. [211.20.114.70])
-        by smtp.googlemail.com with ESMTPSA id 14sm22026759pfj.36.2019.06.25.03.43.07
+        by smtp.googlemail.com with ESMTPSA id 14sm22026759pfj.36.2019.06.25.03.43.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 03:43:10 -0700 (PDT)
+        Tue, 25 Jun 2019 03:43:15 -0700 (PDT)
 From:   "sudheer.v" <open.sudheer@gmail.com>
 To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
         andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org,
@@ -65,9 +65,9 @@ To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
 Cc:     sudheer veliseti <sudheer.open@gmail.com>,
         linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
         devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
-Subject: [patch v3 4/5] defconfig and MAINTAINERS updated for AST2500 DMA UART driver
-Date:   Tue, 25 Jun 2019 16:14:35 +0530
-Message-Id: <1561459476-14268-5-git-send-email-open.sudheer@gmail.com>
+Subject: [patch v3 5/5] Documentation: DT bindings AST2500 DMA UART driver
+Date:   Tue, 25 Jun 2019 16:14:36 +0530
+Message-Id: <1561459476-14268-6-git-send-email-open.sudheer@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
 References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
@@ -78,54 +78,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: sudheer veliseti <sudheer.open@gmail.com>
 
-defconfig changes to add DMA based UART in AST2500
-Maintainers File updated.
+documentation for Dt bindings for DMA based UARTs in AST2500
+
 Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
 ---
 
 Changes in v3:
-- Added changes logs 
+- change logs added
 
- MAINTAINERS                          | 13 +++++++++++++
- arch/arm/configs/aspeed_g5_defconfig |  1 +
- 2 files changed, 14 insertions(+)
+.../bindings/serial/ast2500-dma-uart.txt      | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 997e27ab492f..c9a9790b97f6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1347,6 +1347,19 @@ F:	drivers/crypto/axis
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
-+ARM/ASPEED DMA UART DRIVER
-+M:	sudheer v <sudheer.open@gmail.com>
-+M:	ShivahShankar <shivahshankar.shankarnarayanrao@aspeedtech.com>
-+R:	Joel Stanley <joel@jms.id.au>
-+R:	Andrew Jeffery <andrew@aj.id.au>
-+R:	Vinod Koul <vkoul@kernel.org>
-+L:	dmaengine@vger.kernel.org
-+L:	openbmc@lists.ozlabs.org
-+L:	linux-aspeed@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-+F:	Documentation/devicetree/bindings/serial/ast-sdma-uart.txt
+diff --git a/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+new file mode 100644
+index 000000000000..6f01ddecba56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+@@ -0,0 +1,40 @@
 +
- ARM/ASPEED I2C DRIVER
- M:	Brendan Higgins <brendanhiggins@google.com>
- R:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index 1849cbc161b4..25bf26630939 100644
---- a/arch/arm/configs/aspeed_g5_defconfig
-+++ b/arch/arm/configs/aspeed_g5_defconfig
-@@ -144,6 +144,7 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=6
- CONFIG_SERIAL_8250_RUNTIME_UARTS=6
-+CONFIG_AST_SERIAL_DMA_UART=y
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_ASPEED_VUART=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
++node for DMA controller:
++                       ast_uart_sdma: uart_sdma@1e79e000 {
++                               compatible = "aspeed,ast-uart-sdma";
++                               reg = <0x1e79e000 0x400>;
++                               interrupts = <50>;
++                               status = "disabled";
++                       };
++this node  doesn't binds with any driver.
++DMA controller is handled as a separate SW layer,and is included in the same driver.
++This DMA controller node is included in DT just for Register base and interrupt details
++
++
++
++node for DMA-UART :
++
++
++Required properties:
++
++- compatible: "aspeed,ast-sdma-uart"
++- reg: The base address of the UART register bank
++- interrupts: should contain interrupt specifier.
++- clocks: Clock driving the hardware;
++- pinctrl-0 : list of pinconfigurations
++- dma-channel: channel of DMA-controller which is used
++
++Example:
++
++                 dma_uart1: dma_uart1@1e783000{
++                          compatible = "aspeed,ast-sdma-uart";
++                          reg = <0x1e783000 0x1000>;
++                          reg-shift = <2>;
++                          interrupts = <9>;
++                          clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
++                          dma-channel = <0>;
++                          no-loopback-test;
++                          pinctrl-names = "default";
++                          pinctrl-0 = <&pinctrl_txd1_default &pinctrl_rxd1_default>;
++                          status = "disabled";
++                       };
 -- 
 2.17.1
 
