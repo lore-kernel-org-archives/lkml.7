@@ -7,230 +7,399 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CE3C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48800C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6CB20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0759A20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wCc/S002"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VIe/l6jM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbfFYK6R (ORCPT
+        id S1732301AbfFYK6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:58:17 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:50852 "EHLO pegase1.c-s.fr"
+        Tue, 25 Jun 2019 06:58:22 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53434 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfFYK6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732239AbfFYK6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 06:58:13 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45Y36V2cfHz9v18M;
+        by localhost (Postfix) with ESMTP id 45Y36V2cl9z9v18N;
         Tue, 25 Jun 2019 12:58:10 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wCc/S002; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=VIe/l6jM; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id e_qvDbPCj_zQ; Tue, 25 Jun 2019 12:58:10 +0200 (CEST)
+        with ESMTP id FcjUiROpiEUK; Tue, 25 Jun 2019 12:58:10 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45Y36V1bDgz9v18K;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Y36V1YJFz9v17d;
         Tue, 25 Jun 2019 12:58:10 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1561460290; bh=auZsk5+eXrNvOomMroEmyexOA4o1/bt7OLpPEQ8iQig=;
+        t=1561460290; bh=StjUch5P01PzFEUUOhMMbjBSfN9wcs3cPr5gebdfa+8=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wCc/S002LSEYMxe9E5YjJfdXSaOQabgDCIWkB5YCkfxAXLNUYEpcF8IObxS7YmDfM
-         DBWzChnZV10lyhbc57Ow2bOo0PYWREixLvwsqtaUYybLUE2Nd3tLTVKXXVoZkepAvx
-         WxIPbLYvzc53ZQE4BEooA8R/ARPoJX20hSBQ+xtU=
+        b=VIe/l6jMiLVslJR4MCXn/1Fs73YSBfMRl32z+ZsGmE3LLfSG1n20Lu0evKCfW31C6
+         1sUE5H0DH+pCM8RqanCX8d5x/rzYev9eGah0998B/gUSnJXfeFZwKUFdwVRSxn4ytO
+         aZl2lWt4n8PrH+PGBOA8EeThyY91MCS6pa/UOgos=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 608448B87B;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F47B8B87A;
         Tue, 25 Jun 2019 12:58:11 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id mHQJVfIzuIjk; Tue, 25 Jun 2019 12:58:11 +0200 (CEST)
+        with ESMTP id UGa8wxA1cLAX; Tue, 25 Jun 2019 12:58:11 +0200 (CEST)
 Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F25EC8B874;
-        Tue, 25 Jun 2019 12:58:10 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 073038B879;
+        Tue, 25 Jun 2019 12:58:11 +0200 (CEST)
 Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DAB9F68E1C; Tue, 25 Jun 2019 10:58:07 +0000 (UTC)
-Message-Id: <80d3dfc4799faa2f173d88589a5c9cb4e586eda4.1561459983.git.christophe.leroy@c-s.fr>
+        id EE8C068E1B; Tue, 25 Jun 2019 10:58:10 +0000 (UTC)
+Message-Id: <c87868803da367b6424063c4dd9058a71a110ba6.1561459984.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1561459983.git.christophe.leroy@c-s.fr>
 References: <cover.1561459983.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v1 02/13] powerpc/ptrace: drop unnecessary #ifdefs
- CONFIG_PPC64
+Subject: [RFC PATCH v1 05/13] powerpc/ptrace: split out ALTIVEC related
+ functions.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 25 Jun 2019 10:58:07 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 10:58:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop a bunch of #ifdefs CONFIG_PPC64 that are not vital.
+Move CONFIG_ALTIVEC functions out of ptrace.c, into
+ptrace-altivec.c
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/ptrace.h      |  9 ++++-----
- arch/powerpc/include/uapi/asm/ptrace.h | 12 ++++--------
- arch/powerpc/kernel/ptrace/ptrace.c    | 24 +++---------------------
- 3 files changed, 11 insertions(+), 34 deletions(-)
+ arch/powerpc/kernel/ptrace/Makefile         |   1 +
+ arch/powerpc/kernel/ptrace/ptrace-altivec.c | 151 ++++++++++++++++++++++++++++
+ arch/powerpc/kernel/ptrace/ptrace-decl.h    |   9 ++
+ arch/powerpc/kernel/ptrace/ptrace.c         | 124 -----------------------
+ 4 files changed, 161 insertions(+), 124 deletions(-)
+ create mode 100644 arch/powerpc/kernel/ptrace/ptrace-altivec.c
 
-diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
-index faa5a338ac5a..1506a9c61d50 100644
---- a/arch/powerpc/include/asm/ptrace.h
-+++ b/arch/powerpc/include/asm/ptrace.h
-@@ -36,11 +36,10 @@ struct pt_regs
- 			unsigned long link;
- 			unsigned long xer;
- 			unsigned long ccr;
--#ifdef CONFIG_PPC64
--			unsigned long softe;
--#else
--			unsigned long mq;
--#endif
-+			union {
-+				unsigned long softe;
-+				unsigned long mq;
-+			};
- 			unsigned long trap;
- 			unsigned long dar;
- 			unsigned long dsisr;
-diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-index f5f1ccc740fc..37d7befbb8dc 100644
---- a/arch/powerpc/include/uapi/asm/ptrace.h
-+++ b/arch/powerpc/include/uapi/asm/ptrace.h
-@@ -43,12 +43,11 @@ struct pt_regs
- 	unsigned long link;
- 	unsigned long xer;
- 	unsigned long ccr;
--#ifdef __powerpc64__
--	unsigned long softe;		/* Soft enabled/disabled */
--#else
--	unsigned long mq;		/* 601 only (not used at present) */
-+	union {
-+		unsigned long softe;	/* Soft enabled/disabled */
-+		unsigned long mq;	/* 601 only (not used at present) */
- 					/* Used on APUS to hold IPL value. */
--#endif
-+	};
- 	unsigned long trap;		/* Reason for being here */
- 	/* N.B. for critical exceptions on 4xx, the dar and dsisr
- 	   fields are overloaded to hold srr0 and srr1. */
-@@ -105,11 +104,8 @@ struct pt_regs
- #define PT_LNK	36
- #define PT_XER	37
- #define PT_CCR	38
--#ifndef __powerpc64__
- #define PT_MQ	39
--#else
- #define PT_SOFTE 39
--#endif
- #define PT_TRAP	40
- #define PT_DAR	41
- #define PT_DSISR 42
+diff --git a/arch/powerpc/kernel/ptrace/Makefile b/arch/powerpc/kernel/ptrace/Makefile
+index 238c27189078..522e6fd0b5b8 100644
+--- a/arch/powerpc/kernel/ptrace/Makefile
++++ b/arch/powerpc/kernel/ptrace/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_VSX)		+= ptrace-vsx.o
+ ifneq ($(CONFIG_VSX),y)
+ obj-y				+= ptrace-novsx.o
+ endif
++obj-$(CONFIG_ALTIVEC)		+= ptrace-altivec.o
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-altivec.c b/arch/powerpc/kernel/ptrace/ptrace-altivec.c
+new file mode 100644
+index 000000000000..0cb749164269
+--- /dev/null
++++ b/arch/powerpc/kernel/ptrace/ptrace-altivec.c
+@@ -0,0 +1,151 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#include <linux/kernel.h>
++#include <linux/sched.h>
++#include <linux/mm.h>
++#include <linux/smp.h>
++#include <linux/errno.h>
++#include <linux/ptrace.h>
++#include <linux/regset.h>
++#include <linux/tracehook.h>
++#include <linux/elf.h>
++#include <linux/user.h>
++#include <linux/security.h>
++#include <linux/signal.h>
++#include <linux/seccomp.h>
++#include <linux/audit.h>
++#include <trace/syscall.h>
++#include <linux/hw_breakpoint.h>
++#include <linux/perf_event.h>
++#include <linux/context_tracking.h>
++#include <linux/nospec.h>
++
++#include <linux/uaccess.h>
++#include <linux/pkeys.h>
++#include <asm/page.h>
++#include <asm/pgtable.h>
++#include <asm/switch_to.h>
++#include <asm/tm.h>
++#include <asm/asm-prototypes.h>
++#include <asm/debug.h>
++#include <asm/hw_breakpoint.h>
++
++/*
++ * Get/set all the altivec registers vr0..vr31, vscr, vrsave, in one go.
++ * The transfer totals 34 quadword.  Quadwords 0-31 contain the
++ * corresponding vector registers.  Quadword 32 contains the vscr as the
++ * last word (offset 12) within that quadword.  Quadword 33 contains the
++ * vrsave as the first word (offset 0) within the quadword.
++ *
++ * This definition of the VMX state is compatible with the current PPC32
++ * ptrace interface.  This allows signal handling and ptrace to use the
++ * same structures.  This also simplifies the implementation of a bi-arch
++ * (combined (32- and 64-bit) gdb.
++ */
++
++int vr_active(struct task_struct *target, const struct user_regset *regset)
++{
++	flush_altivec_to_thread(target);
++	return target->thread.used_vr ? regset->n : 0;
++}
++
++/*
++ * Regardless of transactions, 'vr_state' holds the current running
++ * value of all the VMX registers and 'ckvr_state' holds the last
++ * checkpointed value of all the VMX registers for the current
++ * transaction to fall back on in case it aborts.
++ *
++ * Userspace interface buffer layout:
++ *
++ * struct data {
++ *	vector128	vr[32];
++ *	vector128	vscr;
++ *	vector128	vrsave;
++ * };
++ */
++int vr_get(struct task_struct *target, const struct user_regset *regset,
++	   unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf)
++{
++	int ret;
++
++	flush_altivec_to_thread(target);
++
++	BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
++		     offsetof(struct thread_vr_state, vr[32]));
++
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++				  &target->thread.vr_state, 0,
++				  33 * sizeof(vector128));
++	if (!ret) {
++		/*
++		 * Copy out only the low-order word of vrsave.
++		 */
++		int start, end;
++		union {
++			elf_vrreg_t reg;
++			u32 word;
++		} vrsave;
++		memset(&vrsave, 0, sizeof(vrsave));
++
++		vrsave.word = target->thread.vrsave;
++
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
++					  start, end);
++	}
++
++	return ret;
++}
++
++/*
++ * Regardless of transactions, 'vr_state' holds the current running
++ * value of all the VMX registers and 'ckvr_state' holds the last
++ * checkpointed value of all the VMX registers for the current
++ * transaction to fall back on in case it aborts.
++ *
++ * Userspace interface buffer layout:
++ *
++ * struct data {
++ *	vector128	vr[32];
++ *	vector128	vscr;
++ *	vector128	vrsave;
++ * };
++ */
++int vr_set(struct task_struct *target, const struct user_regset *regset,
++	   unsigned int pos, unsigned int count,
++	   const void *kbuf, const void __user *ubuf)
++{
++	int ret;
++
++	flush_altivec_to_thread(target);
++
++	BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
++		     offsetof(struct thread_vr_state, vr[32]));
++
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &target->thread.vr_state, 0,
++				 33 * sizeof(vector128));
++	if (!ret && count > 0) {
++		/*
++		 * We use only the first word of vrsave.
++		 */
++		int start, end;
++		union {
++			elf_vrreg_t reg;
++			u32 word;
++		} vrsave;
++		memset(&vrsave, 0, sizeof(vrsave));
++
++		vrsave.word = target->thread.vrsave;
++
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
++		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
++					 start, end);
++		if (!ret)
++			target->thread.vrsave = vrsave.word;
++	}
++
++	return ret;
++}
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+index fc4dc598bc1d..35c1d127fc64 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
++++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+@@ -16,3 +16,12 @@ int vsr_get(struct task_struct *target, const struct user_regset *regset,
+ int vsr_set(struct task_struct *target, const struct user_regset *regset,
+ 	    unsigned int pos, unsigned int count,
+ 	    const void *kbuf, const void __user *ubuf);
++
++/* ptrace-altivec */
++
++int vr_active(struct task_struct *target, const struct user_regset *regset);
++int vr_get(struct task_struct *target, const struct user_regset *regset,
++	   unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf);
++int vr_set(struct task_struct *target, const struct user_regset *regset,
++	   unsigned int pos, unsigned int count,
++	   const void *kbuf, const void __user *ubuf);
 diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-index 684b0b315c32..0afb223c4d57 100644
+index 621a0181f6f7..141dc0b8f502 100644
 --- a/arch/powerpc/kernel/ptrace/ptrace.c
 +++ b/arch/powerpc/kernel/ptrace/ptrace.c
-@@ -113,11 +113,8 @@ static const struct pt_regs_offset regoffset_table[] = {
- 	REG_OFFSET_NAME(link),
- 	REG_OFFSET_NAME(xer),
- 	REG_OFFSET_NAME(ccr),
--#ifdef CONFIG_PPC64
- 	REG_OFFSET_NAME(softe),
--#else
- 	REG_OFFSET_NAME(mq),
--#endif
- 	REG_OFFSET_NAME(trap),
- 	REG_OFFSET_NAME(dar),
- 	REG_OFFSET_NAME(dsisr),
-@@ -289,17 +286,15 @@ int ptrace_get_reg(struct task_struct *task, int regno, unsigned long *data)
- 	if (regno == PT_DSCR)
- 		return get_user_dscr(task, data);
- 
--#ifdef CONFIG_PPC64
- 	/*
- 	 * softe copies paca->irq_soft_mask variable state. Since irq_soft_mask is
- 	 * no more used as a flag, lets force usr to alway see the softe value as 1
- 	 * which means interrupts are not soft disabled.
- 	 */
--	if (regno == PT_SOFTE) {
-+	if (IS_ENABLED(CONFIG_PPC64) && regno == PT_SOFTE) {
- 		*data = 1;
- 		return  0;
- 	}
--#endif
- 
- 	regs_max = sizeof(struct user_pt_regs) / sizeof(unsigned long);
- 	if (regno < regs_max) {
-@@ -2013,7 +2008,6 @@ static const struct user_regset_view user_ppc_native_view = {
- 	.regsets = native_regsets, .n = ARRAY_SIZE(native_regsets)
- };
- 
--#ifdef CONFIG_PPC64
- #include <linux/compat.h>
- 
- static int gpr32_get_common(struct task_struct *target,
-@@ -2287,14 +2281,11 @@ static const struct user_regset_view user_ppc_compat_view = {
- 	.name = "ppc", .e_machine = EM_PPC, .ei_osabi = ELF_OSABI,
- 	.regsets = compat_regsets, .n = ARRAY_SIZE(compat_regsets)
- };
--#endif	/* CONFIG_PPC64 */
- 
- const struct user_regset_view *task_user_regset_view(struct task_struct *task)
- {
--#ifdef CONFIG_PPC64
--	if (test_tsk_thread_flag(task, TIF_32BIT))
-+	if (IS_ENABLED(CONFIG_PPC64) && test_tsk_thread_flag(task, TIF_32BIT))
- 		return &user_ppc_compat_view;
--#endif
- 	return &user_ppc_native_view;
+@@ -417,130 +417,6 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
+ 	return ret;
  }
  
-@@ -3081,11 +3072,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 		else
- 			dbginfo.num_data_bps = 0;
- 		dbginfo.num_condition_regs = 0;
--#ifdef CONFIG_PPC64
--		dbginfo.data_bp_alignment = 8;
--#else
--		dbginfo.data_bp_alignment = 4;
--#endif
-+		dbginfo.data_bp_alignment = sizeof(long);
- 		dbginfo.sizeof_condition = 0;
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- 		dbginfo.features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
-@@ -3322,12 +3309,10 @@ long do_syscall_trace_enter(struct pt_regs *regs)
- 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
- 		trace_sys_enter(regs, regs->gpr[0]);
+-#ifdef CONFIG_ALTIVEC
+-/*
+- * Get/set all the altivec registers vr0..vr31, vscr, vrsave, in one go.
+- * The transfer totals 34 quadword.  Quadwords 0-31 contain the
+- * corresponding vector registers.  Quadword 32 contains the vscr as the
+- * last word (offset 12) within that quadword.  Quadword 33 contains the
+- * vrsave as the first word (offset 0) within the quadword.
+- *
+- * This definition of the VMX state is compatible with the current PPC32
+- * ptrace interface.  This allows signal handling and ptrace to use the
+- * same structures.  This also simplifies the implementation of a bi-arch
+- * (combined (32- and 64-bit) gdb.
+- */
+-
+-static int vr_active(struct task_struct *target,
+-		     const struct user_regset *regset)
+-{
+-	flush_altivec_to_thread(target);
+-	return target->thread.used_vr ? regset->n : 0;
+-}
+-
+-/*
+- * Regardless of transactions, 'vr_state' holds the current running
+- * value of all the VMX registers and 'ckvr_state' holds the last
+- * checkpointed value of all the VMX registers for the current
+- * transaction to fall back on in case it aborts.
+- *
+- * Userspace interface buffer layout:
+- *
+- * struct data {
+- *	vector128	vr[32];
+- *	vector128	vscr;
+- *	vector128	vrsave;
+- * };
+- */
+-static int vr_get(struct task_struct *target, const struct user_regset *regset,
+-		  unsigned int pos, unsigned int count,
+-		  void *kbuf, void __user *ubuf)
+-{
+-	int ret;
+-
+-	flush_altivec_to_thread(target);
+-
+-	BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
+-		     offsetof(struct thread_vr_state, vr[32]));
+-
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  &target->thread.vr_state, 0,
+-				  33 * sizeof(vector128));
+-	if (!ret) {
+-		/*
+-		 * Copy out only the low-order word of vrsave.
+-		 */
+-		int start, end;
+-		union {
+-			elf_vrreg_t reg;
+-			u32 word;
+-		} vrsave;
+-		memset(&vrsave, 0, sizeof(vrsave));
+-
+-		vrsave.word = target->thread.vrsave;
+-
+-		start = 33 * sizeof(vector128);
+-		end = start + sizeof(vrsave);
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					  start, end);
+-	}
+-
+-	return ret;
+-}
+-
+-/*
+- * Regardless of transactions, 'vr_state' holds the current running
+- * value of all the VMX registers and 'ckvr_state' holds the last
+- * checkpointed value of all the VMX registers for the current
+- * transaction to fall back on in case it aborts.
+- *
+- * Userspace interface buffer layout:
+- *
+- * struct data {
+- *	vector128	vr[32];
+- *	vector128	vscr;
+- *	vector128	vrsave;
+- * };
+- */
+-static int vr_set(struct task_struct *target, const struct user_regset *regset,
+-		  unsigned int pos, unsigned int count,
+-		  const void *kbuf, const void __user *ubuf)
+-{
+-	int ret;
+-
+-	flush_altivec_to_thread(target);
+-
+-	BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
+-		     offsetof(struct thread_vr_state, vr[32]));
+-
+-	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-				 &target->thread.vr_state, 0,
+-				 33 * sizeof(vector128));
+-	if (!ret && count > 0) {
+-		/*
+-		 * We use only the first word of vrsave.
+-		 */
+-		int start, end;
+-		union {
+-			elf_vrreg_t reg;
+-			u32 word;
+-		} vrsave;
+-		memset(&vrsave, 0, sizeof(vrsave));
+-
+-		vrsave.word = target->thread.vrsave;
+-
+-		start = 33 * sizeof(vector128);
+-		end = start + sizeof(vrsave);
+-		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					 start, end);
+-		if (!ret)
+-			target->thread.vrsave = vrsave.word;
+-	}
+-
+-	return ret;
+-}
+-#endif /* CONFIG_ALTIVEC */
+-
+ #ifdef CONFIG_SPE
  
--#ifdef CONFIG_PPC64
- 	if (!is_32bit_task())
- 		audit_syscall_entry(regs->gpr[0], regs->gpr[3], regs->gpr[4],
- 				    regs->gpr[5], regs->gpr[6]);
- 	else
--#endif
- 		audit_syscall_entry(regs->gpr[0],
- 				    regs->gpr[3] & 0xffffffff,
- 				    regs->gpr[4] & 0xffffffff,
-@@ -3382,13 +3367,10 @@ void __init pt_regs_check(void)
- 		     offsetof(struct user_pt_regs, xer));
- 	BUILD_BUG_ON(offsetof(struct pt_regs, ccr) !=
- 		     offsetof(struct user_pt_regs, ccr));
--#ifdef __powerpc64__
- 	BUILD_BUG_ON(offsetof(struct pt_regs, softe) !=
- 		     offsetof(struct user_pt_regs, softe));
--#else
- 	BUILD_BUG_ON(offsetof(struct pt_regs, mq) !=
- 		     offsetof(struct user_pt_regs, mq));
--#endif
- 	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
- 		     offsetof(struct user_pt_regs, trap));
- 	BUILD_BUG_ON(offsetof(struct pt_regs, dar) !=
+ /*
 -- 
 2.13.3
 
