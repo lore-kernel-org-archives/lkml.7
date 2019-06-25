@@ -4,798 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF39C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4B1C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DE920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AD220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfFYGie (ORCPT
+        id S1729547AbfFYGmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:38:34 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.214]:44260 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727141AbfFYGid (ORCPT
+        Tue, 25 Jun 2019 02:42:12 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41853 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727141AbfFYGmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:38:33 -0400
-Received: from [67.219.250.198] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-west-2.aws.symcld.net id D2/58-12929-061C11D5; Tue, 25 Jun 2019 06:38:24 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRWlGSWpSXmKPExsWSLveKVTf+oGC
-  swedf5ha7LnNYzNj7gNli/pFzrBa/z/9lttj0+BqrRfPqc8wWl3fNYbNYev0ik8WplhcsFq17
-  j7Bb7D2wkcWB2+Nq+y52jzXz1jB6LNhU6nHx4zFmj02rOtk8Ni+p9zg/YyGjx+dNcgEcUayZe
-  Un5FQmsGf0LtjEVHEyvmPCqqoGxK6SLkYtDSKCDSeLqtfOsXYycQM58Rom+OSkgNpuAmsTJ2f
-  dYQYpEBD4ySvw/eYcNxGEW2MQocbfjPAtIlbCAh8TDsy+Zuxg5OFgEVCXOdHiAhHkFnCVeLp3
-  KDmJLCMhJ3DzXyTyBkXMBI8MqRvOkosz0jJLcxMwcXUMDA11DQyNdQ2MTXUsTvcQq3SS90mLd
-  8tTiEl0jvcTyYr3iytzknBS9vNSSTYzAcEspaIvbwXj4yGu9Q4ySHExKorxGHYKxQnxJ+SmVG
-  YnFGfFFpTmpxYcYZTg4lCR4E/YD5QSLUtNTK9Iyc4ChD5OW4OBREuHNAEnzFhck5hZnpkOkTj
-  EqSonzch4ASgiAJDJK8+DaYPF2iVFWSpiXkYGBQYinILUoN7MEVf4VozgHo5Iw7ySQ8TyZeSV
-  w018BLWYCWrx5Ah/I4pJEhJRUA1Pq/4WGMQvjiq71xN84fnDzT905ATdE/huYd31cd/fxpU8i
-  LAtzUhgf2cnxbNrSs4bXZHmV/mbBWRuFyx/6O3Le9Vsy4eXaT11HEl+fyHvevPlty61zrhefP
-  NujvTz33dnfy3rlElxuB6+/Ka1dcUVfraX1OFuFWV/75tN8i10kt/5aOuNAY9LKhxpT9lw/Vv
-  DHZxNPIt9hpW4ZHiOZK4J/EoMme82/0r3JM1ts0b2HdtJeJ0vjZxS7NPiKv3rqUPt5Ut6SH2m
-  dZyV2MTybvz7gfYXO403fVplcaPlob+V3a+6JY/vXLGJ5b1pfeMbvymFTt1UcE4+bcNzwXrTa
-  +W7Jm9Al8TNfPJp1Ptal/d4qLiWW4oxEQy3mouJEAGGKzQ4yAwAA
-X-Env-Sender: pengms1@lenovo.com
-X-Msg-Ref: server-24.tower-346.messagelabs.com!1561444700!627677!1
-X-Originating-IP: [103.30.234.5]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13416 invoked from network); 25 Jun 2019 06:38:23 -0000
-Received: from unknown (HELO apsmtp.lenovo.com) (103.30.234.5)
-  by server-24.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 25 Jun 2019 06:38:23 -0000
-Received: from smtpinternal.lenovo.com (unknown [10.96.80.15])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 077FF567FA3A098124E5;
-        Tue, 25 Jun 2019 14:38:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.245.100.154])
-        by Forcepoint Email with ESMTP id 57556246F6FB00A0590D;
-        Tue, 25 Jun 2019 14:38:19 +0800 (CST)
-From:   Andrew Peng <pengms1@lenovo.com>
-To:     venture@google.com, benjaminfair@google.com,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        andrew@aj.id.au, mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     pengms1@lenovo.com, liuyj19@lenovo.com, dukh@lenovo.com,
-        liuyh21@lenovo.com, hsung1@lenovo.com, joel@jms.id.au,
-        openbmc@lists.ozlabs.org, Derek Lin <dlin23@lenovo.com>
-Subject: [PATCH] [PATCH v1] ARM: dts: aspeed: Adding Lenovo Hr855xg2 BMC
-Date:   Tue, 25 Jun 2019 14:38:16 +0800
-Message-Id: <1561444696-446373-1-git-send-email-pengms1@lenovo.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 25 Jun 2019 02:42:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=zhiyuan2048@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TV90xp4_1561444928;
+Received: from localhost(mailfrom:zhiyuan2048@linux.alibaba.com fp:SMTPD_---0TV90xp4_1561444928)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 25 Jun 2019 14:42:08 +0800
+From:   Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+To:     zhiyuan2048@linux.alibaba.com, davem@davemloft.net,
+        idosch@mellanox.com, daniel@iogearbox.net, petrm@mellanox.com,
+        jiri@mellanox.com, tglx@linutronix.de, linmiaohe@huawei.com
+Cc:     zhabin@linux.alibaba.com, caspar@linux.alibaba.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: ipvlan: forward ingress packet to slave's l2 in l3s mode
+Date:   Tue, 25 Jun 2019 14:42:08 +0800
+Message-Id: <20190625064208.2256-1-zhiyuan2048@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initial introduction of Lenovo Hr855xg2 family equipped with
-Aspeed 2500 BMC SoC. Hr855xg2 is a x86 server development kit
-with a ASPEED ast2500 BMC manufactured by Lenovo.
-Specifically, This adds the Hr855xg2 platform device tree file
-used by the Hr855xg2 BMC machines.
+In ipvlan l3s mode,  ingress packet is switched to slave interface and
+delivers to l4 stack. This may cause two problems:
 
-This also adds an entry of Hr855xg2 device tree file in Makefile
+  1. When slave is in an ns different from master, the behavior of stack
+  in slave ns may cause confusion for users. For example, iptables, tc,
+  and other l2/l3 functions are not available for ingress packet.
 
-Signed-off-by: Andrew Peng <pengms1@lenovo.com>
-Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
-Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
-Signed-off-by: Harry Sung <hsung1@lenovo.com>
-Signed-off-by: Derek Lin <dlin23@lenovo.com>
+  2. l3s mode is not used for tap device, and cannot support ipvtap. But
+  in VM or container based VM cases, tap device is a very common device.
+
+In l3s mode's input nf_hook, this patch calles the skb_forward_dev() to
+forward ingress packet to slave and uses nf_conntrack_confirm() to make
+conntrack work with new mode.
+
+Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+Signed-off-by: Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
 ---
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts | 687 +++++++++++++++++++++++
- 2 files changed, 688 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
+ drivers/net/ipvlan/ipvlan.h     |  9 ++++++++-
+ drivers/net/ipvlan/ipvlan_l3s.c | 16 ++++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914f..d874777 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1269,6 +1269,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-facebook-cmm.dtb \
- 	aspeed-bmc-facebook-tiogapass.dtb \
- 	aspeed-bmc-intel-s2600wf.dtb \
-+	aspeed-bmc-lenovo-hr855xg2.dtb \
- 	aspeed-bmc-opp-lanyang.dtb \
- 	aspeed-bmc-opp-palmetto.dtb \
- 	aspeed-bmc-opp-romulus.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
-new file mode 100644
-index 0000000..d8dbf3a
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
-@@ -0,0 +1,687 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Device Tree file for Lenovo Hr855xg2 platform
-+ *
-+ * Copyright (C) 2019-present Lenovo
-+ */
-+
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "HR855XG2 BMC";
-+	compatible = "lenovo,hr855xg2-bmc", "aspeed,ast2500";
-+
-+	aliases {
-+		i2c14 = &i2c_riser1;
-+		i2c15 = &i2c_riser2;
-+		i2c16 = &i2c_riser3;
-+		i2c17 = &i2c_M2;
-+		i2c18 = &channel_0;
-+		i2c19 = &channel_1;
-+		i2c20 = &channel_2;
-+		i2c21 = &channel_3;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x00100000>; /* 1M */
-+		};
-+
-+		gfx_memory: framebuffer {
-+			size = <0x01000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		heartbeat {
-+			gpios = <&gpio ASPEED_GPIO(C, 7) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		fault {
-+			gpios = <&gpio ASPEED_GPIO(G, 3) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
-+		<&adc 8>, <&adc 9>, <&adc 10>,<&adc 11>,
-+		<&adc 12>,<&adc 13>,<&adc 14>;
-+	};
-+
-+	iio-hwmon-battery {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 15>;
-+	};
-+
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+			&pinctrl_rxd1_default>;
-+};
-+
-+&uart2 {
-+	/* Rear RS-232 connector */
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd2_default
-+			&pinctrl_rxd2_default
-+			&pinctrl_nrts2_default
-+			&pinctrl_ndtr2_default
-+			&pinctrl_ndsr2_default
-+			&pinctrl_ncts2_default
-+			&pinctrl_ndcd2_default
-+			&pinctrl_nri2_default>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&ibt {
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&mac1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-+};
-+
-+&adc{
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&peci0 {
-+	status = "okay";
-+
-+	peci-client@30 {
-+		compatible = "intel,peci-client";
-+		reg = <0x30>;
-+	};
-+
-+	peci-client@31 {
-+		compatible = "intel,peci-client";
-+		reg = <0x31>;
-+	};
-+
-+	peci-client@32 {
-+		compatible = "intel,peci-client";
-+		reg = <0x32>;
-+	};
-+
-+	peci-client@33 {
-+		compatible = "intel,peci-client";
-+		reg = <0x33>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9545";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c_riser1: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c_riser2: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		i2c_riser3: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c_M2: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	bus-frequency = <90000>;
-+	HotSwap@10 {
-+		compatible = "adm1272";
-+		reg = <0x10>;
-+	};
-+
-+	VR@45 {
-+		compatible = "pmbus";
-+		reg = <0x45>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9546";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel_0: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_2: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_3: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+	/* temp1 */
-+	tmp75@49 {
-+		compatible = "national,lm75";
-+		reg = <0x49>;
-+	};
-+
-+	/* temp2 */
-+	tmp75@4d {
-+		compatible = "national,lm75";
-+		reg = <0x4d>;
-+	};
-+
-+	eeprom@54 {
-+		compatible = "atmel,24c256";
-+		reg = <0x54>;
-+		pagesize = <16>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c13 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&uhci {
-+	status = "okay";
-+};
-+
-+&gfx {
-+	status = "okay";
-+	memory-region = <&gfx_memory>;
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default
-+	&pinctrl_pwm1_default
-+	&pinctrl_pwm2_default
-+	&pinctrl_pwm3_default
-+	&pinctrl_pwm4_default
-+	&pinctrl_pwm5_default
-+	&pinctrl_pwm6_default
-+	&pinctrl_pwm7_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+
-+	fan@2 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+
-+	fan@3 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
-+	};
-+
-+	fan@4 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-+	};
-+
-+	fan@5 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
-+	};
-+
-+	fan@6 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
-+	};
-+
-+	fan@7 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
-+	};
-+
-+	fan@8 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
-+	};
-+
-+	fan@9 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
-+	};
-+
-+	fan@10 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
-+	};
-+
-+	fan@11 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
-+	};
-+
-+	fan@12 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
-+	};
-+
-+	fan@13 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
-+	};
-+
-+	fan@14 {
-+		reg = <0x07>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0e>;
-+	};
-+
-+	fan@15 {
-+		reg = <0x07>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0f>;
-+	};
-+
-+	fan@16 {
-+		reg = <0x07>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0f>;
-+	};
-+};
-+
-+&gpio {
-+
-+	pin_gpio_a1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-+		output-high;
-+		line-name = "BMC_EMMC_RST_N";
-+	};
-+
-+	pin_gpio_a3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
-+		output-high;
-+		line-name = "PCH_PWROK_BMC_FPGA";
-+	};
-+
-+	pin_gpio_b5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
-+	};
-+
-+	pin_gpio_b7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(B, 7) GPIO_ACTIVE_LOW>;
-+		output-low;
-+		line-name = "CPU_SM_WP";
-+	};
-+
-+	pin_gpio_e0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(E, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PDB_PSU_SEL";
-+	};
-+
-+	pin_gpio_e2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(E, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "LOCATOR_LED_N";
-+	};
-+
-+	pin_gpio_e5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(E, 5) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_BMC_DBP_PRESENT_R1_N";
-+	};
-+
-+	pin_gpio_e6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(E, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_ME_SECURITY_OVERRIDE_N";
-+	};
-+
-+	pin_gpio_f0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "IRQ_BMC_PCH_NMI_R";
-+	};
-+
-+	pin_gpio_f1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "CPU2_PROCDIS_BMC_N";
-+	};
-+
-+	pin_gpio_f2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "RM_THROTTLE_EN_N";
-+	};
-+
-+	pin_gpio_f3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "FM_PMBUS_ALERT_B_EN";
-+	};
-+
-+	pin_gpio_f4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_FORCE_NM_THROTTLE_N";
-+	};
-+
-+	pin_gpio_f6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_BMC_CPU_PWR_DEBUG_N";
-+	};
-+
-+	pin_gpio_g7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_PCIE_I2C_MUX_RST_N";
-+	};
-+
-+	pin_gpio_h6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_BMC_DBP_PRESENT_R2_N";
-+	};
-+
-+	pin_gpio_i3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "SPI_BMC_BIOS_WP_N";
-+	};
-+
-+	pin_gpio_j1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(J, 1) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_USB_SEL";
-+	};
-+
-+	pin_gpio_j2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PDB_SMB_RST_N";
-+	};
-+
-+	pin_gpio_j3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "SPI_BMC_BIOS_HOLD_N";
-+	};
-+
-+	pin_gpio_l0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 0) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PDB_FAN_TACH_SEL";
-+	};
-+
-+	pin_gpio_l1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 1) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "SYS_RESET_BMC_FPGA_N";
-+	};
-+
-+	pin_gpio_l4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 4) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_EFUSE_FAN_G1_EN";
-+	};
-+
-+	pin_gpio_l5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 5) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_EFUSE_FAN_G2_EN";
-+	};
-+
-+	pin_gpio_r6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "CPU3_PROCDIS_BMC_N";
-+	};
-+
-+	pin_gpio_r7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "CPU4_PROCDIS_BMC_N";
-+	};
-+
-+	pin_gpio_s1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "DBP_SYSPWROK_BMC";
-+	};
-+
-+	pin_gpio_s2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PCH_RST_RSMRST_N";
-+	};
-+
-+	pin_gpio_s6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_HW_STRAP_5";
-+	};
-+
-+	pin_gpio_z3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_BMC_PCH_SCI_LPC_N";
-+	};
-+
-+	pin_gpio_aa0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "FW_PSU_ALERT_EN_N";
-+	};
-+
-+	pin_gpio_aa4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "DBP_CPU_PREQ_N";
-+	};
-+
-+	pin_gpio_ab3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "BMC_WDTRST";
-+	};
-+
-+	pin_gpio_ac6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AC, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "ESPI_BMC_ALERT_N";
-+	};
-+
-+};
+diff --git a/drivers/net/ipvlan/ipvlan.h b/drivers/net/ipvlan/ipvlan.h
+index 3837c897832e..48c814e24c3f 100644
+--- a/drivers/net/ipvlan/ipvlan.h
++++ b/drivers/net/ipvlan/ipvlan.h
+@@ -172,6 +172,14 @@ void ipvlan_link_delete(struct net_device *dev, struct list_head *head);
+ void ipvlan_link_setup(struct net_device *dev);
+ int ipvlan_link_register(struct rtnl_link_ops *ops);
+ #ifdef CONFIG_IPVLAN_L3S
++
++#include <net/netfilter/nf_conntrack_core.h>
++
++static inline int ipvlan_confirm_conntrack(struct sk_buff *skb)
++{
++	return nf_conntrack_confirm(skb);
++}
++
+ int ipvlan_l3s_register(struct ipvl_port *port);
+ void ipvlan_l3s_unregister(struct ipvl_port *port);
+ void ipvlan_migrate_l3s_hook(struct net *oldnet, struct net *newnet);
+@@ -206,5 +214,4 @@ static inline bool netif_is_ipvlan_port(const struct net_device *dev)
+ {
+ 	return rcu_access_pointer(dev->rx_handler) == ipvlan_handle_frame;
+ }
+-
+ #endif /* __IPVLAN_H */
+diff --git a/drivers/net/ipvlan/ipvlan_l3s.c b/drivers/net/ipvlan/ipvlan_l3s.c
+index 943d26cbf39f..ed210002f593 100644
+--- a/drivers/net/ipvlan/ipvlan_l3s.c
++++ b/drivers/net/ipvlan/ipvlan_l3s.c
+@@ -95,14 +95,26 @@ static unsigned int ipvlan_nf_input(void *priv, struct sk_buff *skb,
+ {
+ 	struct ipvl_addr *addr;
+ 	unsigned int len;
++	int ret = NF_ACCEPT;
++	bool success;
+ 
+ 	addr = ipvlan_skb_to_addr(skb, skb->dev);
+ 	if (!addr)
+ 		goto out;
+ 
+-	skb->dev = addr->master->dev;
+ 	len = skb->len + ETH_HLEN;
+-	ipvlan_count_rx(addr->master, len, true, false);
++
++	ret = ipvlan_confirm_conntrack(skb);
++	if (ret != NF_ACCEPT) {
++		ipvlan_count_rx(addr->master, len, false, false);
++		goto out;
++	}
++
++	skb_push_rcsum(skb, ETH_HLEN);
++	success = dev_forward_skb(addr->master->dev, skb) == NET_RX_SUCCESS;
++	ipvlan_count_rx(addr->master, len, success, false);
++	return NF_STOLEN;
++
+ out:
+ 	return NF_ACCEPT;
+ }
 -- 
-2.7.4
+2.18.0
 
