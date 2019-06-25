@@ -2,94 +2,63 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BAEC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2217EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B3820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0602A20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfFYHRz (ORCPT
+        id S1729991AbfFYHS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:17:55 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:40453 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726661AbfFYHRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:17:55 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ffi6hOBa9F85OffiAhckq4; Tue, 25 Jun 2019 09:17:53 +0200
-Subject: Re: [PATCH 1/1] staging: media: fix style problem
-To:     Aliasgar Surti <aliasgar.surti500@gmail.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, sakari.ailus@linux.intel.com,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <1561099192-19638-1-git-send-email-aliasgar.surti500@gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6536b57d-fea2-e16d-2092-e9e27c51c0f1@xs4all.nl>
-Date:   Tue, 25 Jun 2019 09:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 25 Jun 2019 03:18:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:60200 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbfFYHS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:18:56 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0E82368B02; Tue, 25 Jun 2019 09:18:24 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 09:18:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190625071823.GA30350@lst.de>
+References: <20190620161240.22738-1-logang@deltatee.com> <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com> <20190620193353.GF19891@ziepe.ca> <20190624073126.GB3954@lst.de> <20190624134641.GA8268@ziepe.ca> <1041d2c6-f22c-81f2-c141-fb821b35c0c1@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <1561099192-19638-1-git-send-email-aliasgar.surti500@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFSLZTilMRg48ay4S06h8lKaxnNMeKtWBgoxiLCEN52Iocq8ZPUUrYyonWGG7QOqNwZdiIYnXLm2GIdRMsnRp3Z6Kii2JzVujiRdii7MH4RG1Ss/Oqmt
- 7tohfhZmPwWmBiPz3adw/ILzO5bmVQDdi2l0TieHZxCj33WyvtDAAb4GDwAS1j242Dp645dNJoVwlFny2RKGdv2RWOUGu2+v3STSmO362WZXKrYTxhLx8J37
- hwb1eOI3qfHkVI2WigOct7oEn03GklCKSDyFls3OQCW9l7TcQDayQyqViElAwYHKY/YWdUEpDSN7O9bEP6fdqQMIs3ktRyGN7tpsZ9qjI4A4QtXj53dUMcGU
- JSOMaqYoiSZHozH9I5k1BEy12Xjgo4tTlLPM4DK4ftLRdJevdwqxW0giDtae+2MQ7SkY1XSc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1041d2c6-f22c-81f2-c141-fb821b35c0c1@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/21/19 8:39 AM, Aliasgar Surti wrote:
-> From: Aliasgar Surti <aliasgar.surti500@gmail.com>
-> 
-> checkpatch reported "WARNING: line over 80 characters".
-> This patch fixes the warning for file soc_camera/soc_ov5642.c
+On Mon, Jun 24, 2019 at 10:10:16AM -0600, Logan Gunthorpe wrote:
+> Yes, that's correct. The intent was to invert it so the dma_map could
+> happen at the start of the process so that P2PDMA code could be called
+> with all the information it needs to make it's decision on how to map;
+> without having to hook into the mapping process of every driver that
+> wants to participate.
 
-FYI: we're not accepting patches for staging/media/soc_camera: these
-are obsolete and broken drivers.
-
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
-> ---
->  drivers/staging/media/soc_camera/soc_ov5642.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/soc_camera/soc_ov5642.c b/drivers/staging/media/soc_camera/soc_ov5642.c
-> index 94696d7..39ae24dc 100644
-> --- a/drivers/staging/media/soc_camera/soc_ov5642.c
-> +++ b/drivers/staging/media/soc_camera/soc_ov5642.c
-> @@ -687,7 +687,8 @@ static int reg_write16(struct i2c_client *client, u16 reg, u16 val16)
->  }
->  
->  #ifdef CONFIG_VIDEO_ADV_DEBUG
-> -static int ov5642_get_register(struct v4l2_subdev *sd, struct v4l2_dbg_register *reg)
-> +static int ov5642_get_register(struct v4l2_subdev *sd,
-> +			       struct v4l2_dbg_register *reg)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(sd);
->  	int ret;
-> @@ -705,7 +706,8 @@ static int ov5642_get_register(struct v4l2_subdev *sd, struct v4l2_dbg_register
->  	return ret;
->  }
->  
-> -static int ov5642_set_register(struct v4l2_subdev *sd, const struct v4l2_dbg_register *reg)
-> +static int ov5642_set_register(struct v4l2_subdev *sd,
-> +			       const struct v4l2_dbg_register *reg)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(sd);
->  
-> 
-
+And that just isn't how things work in layering.  We need to keep
+generating the dma addresses in the driver in the receiving end, as
+there are all kinds of interesting ideas how we do that.  E.g. for the
+Mellanox NICs addressing their own bars is not done by PCIe bus
+addresses but by relative offsets.  And while NVMe has refused to go
+down that route in the current band aid fix for CMB addressing I suspect
+it will sooner or later have to do the same to deal with the addressing
+problems in a multiple PASID world.
